@@ -1,0 +1,33 @@
+{
+  "exclude": [
+    "**/__pycache__",
+    "**/.pytest_cache",
+    "**/.mypy_cache",
+    "**/node_modules",
+    "**/.venv"
+  ],
+  "extraPaths": [
+    "."
+  ],
+  "include": [
+    "services",
+    "shared",
+    "tests"
+  ],
+  "pythonPlatform": "Darwin",
+  "pythonVersion": "3.12",
+  "reportDuplicateImport": true,
+  "reportGeneralTypeIssues": true,
+  "reportMissingImports": true,
+  "reportMissingTypeStubs": false,
+  "reportOptionalMemberAccess": true,
+  "reportOptionalSubscript": true,
+  "reportTypedDictNotRequiredAccess": false,
+  "reportUnusedImport": true,
+  "reportUnusedVariable": true,
+  "reportWildcardImportFromLibrary": true,
+  "typeCheckingMode": "basic",
+  "useLibraryCodeForTypes": true,
+  "venv": ".venv",
+  "venvPath": "."
+}
