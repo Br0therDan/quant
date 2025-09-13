@@ -1,9 +1,21 @@
-"""
-Data Service - Alpha Vantage API 연동 및 DuckDB 데이터 관리
+"""데이터 서비스
 
-이 서비스는 다음과 같은 책임을 가집니다:
-- Alpha Vantage API를 통한 시장 데이터 수집
-- DuckDB를 이용한 로컬 데이터 저장 및 관리
-- 데이터 검증 및 정제 처리
-- 캐싱 메커니즘을 통한 API 호출 최적화
+Alpha Vantage API를 통한 주식 데이터 수집 및 DuckDB 저장
 """
+
+from .alpha_vantage_client import AlphaVantageClient, get_stock_data
+from .database import DatabaseManager, get_database
+from .mock_data import MockDataGenerator, generate_mock_response
+from .pipeline import DataPipeline, setup_default_symbols, update_watchlist
+
+__all__ = [
+    "AlphaVantageClient",
+    "get_stock_data",
+    "DatabaseManager",
+    "get_database",
+    "DataPipeline",
+    "update_watchlist",
+    "setup_default_symbols",
+    "MockDataGenerator",
+    "generate_mock_response",
+]
