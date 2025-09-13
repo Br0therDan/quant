@@ -136,6 +136,4 @@ exclude_dirs = ["tests", ".venv", "build"]
 skips = ["B101", "B601"]
 
 [dependency-groups]
-dev = [
-    "ruff>=0.13.0",
-]
+dev = ["ruff>=0.13.0"]
