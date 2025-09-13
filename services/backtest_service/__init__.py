@@ -1,9 +1,26 @@
 """
-Backtest Service - vectorbt 기반 백테스트 실행 엔진
+백테스트 서비스
 
-이 서비스는 다음과 같은 책임을 가집니다:
-- vectorbt를 이용한 고성능 백테스트 실행
-- 거래 시뮬레이션 및 포지션 관리
-- 수수료 및 슬리피지 모델링
-- 백테스트 결과 저장 및 관리
+전략의 과거 성과를 시뮬레이션하고 분석하는 서비스입니다.
 """
+
+from .backtest_engine import (
+    BacktestEngine,
+    PerformanceCalculator,
+    ResultManager,
+    TradingSimulator,
+)
+from .models import BacktestConfig, BacktestResult, Portfolio, Trade
+
+__all__ = [
+    # 모델
+    "BacktestConfig",
+    "BacktestResult",
+    "Trade",
+    "Portfolio",
+    # 엔진
+    "BacktestEngine",
+    "PerformanceCalculator",
+    "TradingSimulator",
+    "ResultManager",
+]

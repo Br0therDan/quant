@@ -230,12 +230,20 @@ class DataPipeline:
                 # 데이터가 없으면 전체 기간
                 return [("2020-01-01", datetime.now().strftime("%Y-%m-%d"))]
 
+            # 날짜를 문자열로 변환
+            from datetime import date
+
+            if isinstance(end_date, date):
+                end_date_str = end_date.strftime("%Y-%m-%d")
+            else:
+                end_date_str = str(end_date)
+
             missing_ranges = []
 
             # 최신 데이터 확인 (어제까지 있어야 함)
             yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
-            if end_date < yesterday:
-                missing_ranges.append((end_date, yesterday))
+            if end_date_str < yesterday:
+                missing_ranges.append((end_date_str, yesterday))
 
             return missing_ranges
 
