@@ -484,8 +484,64 @@ curl http://localhost:8501/api/v1/market-data/symbols
 MIT License - 자세한 내용은 [LICENSE](LICENSE) 파일을 참조하세요.
 
 
+## ✅ **서비스 연동성 검증**
+
+### **의존성 매트릭스 (최종 확인됨)**
+
+| 서비스 | 의존하는 서비스 | 사용되는 곳 | 상태 |
+|--------|----------------|-------------|------|
+| **ServiceFactory** | - | 모든 API 엔드포인트 | ✅ 정상 |
+| **MarketDataService** | Alpha Vantage API | DataPipeline, IntegratedExecutor | ✅ 정상 |
+| **StrategyService** | MongoDB | IntegratedExecutor, Strategy API | ✅ 정상 |
+| **BacktestService** | MarketData + Strategy | Backtest API, IntegratedExecutor | ✅ 정상 |
+| **DataPipeline** | MarketDataService, MongoDB | Pipeline API | ✅ 정상 |
+| **IntegratedExecutor** | 모든 서비스 | Integrated Backtest API | ✅ 정상 |
+
+### **API 엔드포인트 현황**
+
+| 라우터 | 엔드포인트 수 | 주요 기능 | 연동 서비스 |
+|--------|---------------|-----------|-------------|
+| `/health` | 1 | 시스템 상태 체크 | - |
+| `/market-data` | 6 | 시장 데이터 관리 | MarketDataService |
+| `/strategies` | 8 | 전략 관리 | StrategyService |
+| `/backtests` | 10 | 백테스트 + 통합 실행 | All Services |
+| `/pipeline` | 12 | 데이터 파이프라인 | DataPipeline |
+
+### **데이터 모델 관계**
+
+```mermaid
+erDiagram
+    Company ||--o{ MarketData : has
+    Strategy ||--o{ StrategyExecution : executes
+    Backtest ||--o{ BacktestExecution : runs
+    BacktestExecution ||--|| BacktestResult : produces
+    BacktestResult }o--|| PerformanceMetrics : contains
+    Watchlist }o--o{ Company : monitors
+
+    Company {
+        string symbol PK
+        string name
+        string sector
+        float market_cap
+    }
+
+    Strategy {
+        ObjectId id PK
+        string name
+        StrategyType type
+        dict parameters
+    }
+
+    Backtest {
+        ObjectId id PK
+        string name
+        BacktestConfig config
+        BacktestStatus status
+    }
+```
+
 ---
 
-## 📝 라이선스
+## 📝 라이센스
 
 MIT License
