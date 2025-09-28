@@ -18,6 +18,7 @@ from app.schemas.backtest import (
     BacktestResultResponse,
     BacktestUpdateRequest,
 )
+from app.services.service_factory import service_factory
 from app.services.backtest_service import BacktestService
 
 router = APIRouter(prefix="/backtests", tags=["Backtests"])
@@ -25,11 +26,11 @@ router = APIRouter(prefix="/backtests", tags=["Backtests"])
 
 async def get_backtest_service() -> AsyncGenerator[BacktestService, None]:
     """Dependency to get backtest service with proper cleanup"""
-    service = BacktestService()
+    service = service_factory.get_backtest_service()
     try:
         yield service
     finally:
-        pass  # No cleanup needed for this service
+        pass  # ServiceFactory manages cleanup
 
 
 @router.post("/", response_model=BacktestResponse)

@@ -1,6 +1,7 @@
 """
 Data Service Main Application
 """
+
 import logging
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
@@ -33,6 +34,13 @@ async def lifespan(app: FastAPI):
 
     # Shutdown
     logger.info("🛑 Shutting down Quant Service...")
+
+    # Cleanup services
+    from app.services.service_factory import service_factory
+
+    await service_factory.cleanup()
+
+    logger.info("✅ Quant Service shutdown completed")
 
 
 # Create FastAPI app

@@ -370,3 +370,51 @@ class StrategyService:
         except Exception as e:
             logger.error(f"Failed to calculate performance metrics: {e}")
             return None
+
+    async def get_strategy_instance(
+        self, strategy_type: StrategyType, parameters: dict = None
+    ):
+        """전략 타입에 따른 전략 인스턴스 생성"""
+
+        if not STRATEGY_IMPORTS_AVAILABLE:
+            logger.error("Strategy classes not available")
+            return None
+
+        if strategy_type not in self.strategy_classes:
+            logger.error(f"Unknown strategy type: {strategy_type}")
+            return None
+
+        try:
+            strategy_class = self.strategy_classes[strategy_type]
+
+            # 기본 파라미터와 사용자 파라미터 병합
+            default_params = self._get_default_parameters(strategy_type)
+            final_params = {**default_params, **(parameters or {})}
+
+            # 전략 인스턴스 생성
+            instance = strategy_class(**final_params)
+
+            logger.info(
+                f"Created strategy instance: {strategy_type} with params: {final_params}"
+            )
+            return instance
+
+        except Exception as e:
+            logger.error(f"Failed to create strategy instance {strategy_type}: {e}")
+            return None
+
+    def _get_default_parameters(self, strategy_type: StrategyType) -> dict:
+        """전략 타입별 기본 파라미터 반환"""
+
+        defaults = {
+            StrategyType.BUY_AND_HOLD: {},
+            StrategyType.SMA_CROSSOVER: {"short_window": 20, "long_window": 50},
+            StrategyType.RSI_MEAN_REVERSION: {
+                "period": 14,
+                "oversold": 30,
+                "overbought": 70,
+            },
+            StrategyType.MOMENTUM: {"lookback_period": 20, "threshold": 0.02},
+        }
+
+        return defaults.get(strategy_type, {})

@@ -13,6 +13,7 @@ from app.schemas.market_data import (
     DataRequestStatus,
     BulkDataRequest,
 )
+from app.services.service_factory import service_factory
 from app.services.market_data_service import MarketDataService
 
 router = APIRouter(prefix="/market-data", tags=["Market Data"])
@@ -20,11 +21,11 @@ router = APIRouter(prefix="/market-data", tags=["Market Data"])
 
 async def get_market_data_service() -> AsyncGenerator[MarketDataService, None]:
     """Dependency to get market data service with proper cleanup"""
-    service = MarketDataService()
+    service = service_factory.get_market_data_service()
     try:
         yield service
     finally:
-        await service.close()
+        pass  # ServiceFactory manages cleanup
 
 
 @router.get("/symbols", response_model=List[str])

@@ -21,6 +21,7 @@ from app.models.backtest import (
     Trade,
     TradeType,
 )
+from app.services.integrated_backtest_executor import IntegratedBacktestExecutor
 
 logger = logging.getLogger(__name__)
 
@@ -181,8 +182,24 @@ class TradingSimulator:
 class BacktestService:
     """백테스트 서비스"""
 
-    def __init__(self):
+    def __init__(self, market_data_service=None, strategy_service=None):
         self.performance_calculator = PerformanceCalculator()
+        self.market_data_service = market_data_service
+        self.strategy_service = strategy_service
+
+    def set_dependencies(self, market_data_service, strategy_service):
+        """서비스 의존성 설정"""
+        self.market_data_service = market_data_service
+        self.strategy_service = strategy_service
+
+        # 통합 실행기 생성
+        if market_data_service and strategy_service:
+            self.integrated_executor = IntegratedBacktestExecutor(
+                market_data_service=market_data_service,
+                strategy_service=strategy_service,
+            )
+        else:
+            self.integrated_executor = None
 
     async def create_backtest(
         self,

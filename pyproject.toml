@@ -8,7 +8,7 @@ members = ["backend"]
 [project]
 name = "quant-workspace"
 version = "0.1.0"
-description = "Alpha Vantage 기반 단일 사용자용 퀀트 백테스트 앱"
+description = "통합 퀀트 백테스트 플랫폼 - Data/Strategy/Backtest 통합 서비스"
 authors = [{ name = "Your Name", email = "your.email@example.com" }]
 readme = "README.md"
 requires-python = ">=3.12"
@@ -24,7 +24,16 @@ classifiers = [
 ]
 
 dependencies = [
-    "mysingle-quant>=0.1.0",
+    "mysingle-quant>=0.1.7",
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "pydantic>=2.10.7",
+    "beanie>=1.21.0",
+    "motor>=3.3.0",
+    "pymongo>=4.5.0",
+    "pandas>=2.0.0,<3.0.0",
+    "numpy>=1.24.0,<2.0.0",
+    "httpx>=0.25.0",
     "duckdb>=0.6.0",
 ]
 
@@ -36,19 +45,22 @@ packages = [] # 루트 프로젝트는 패키지를 포함하지 않음
 
 [tool.uv]
 dev-dependencies = [
-    "pytest>=7.4.0",
+    "pytest>=8.4.1",
+    "pytest-asyncio>=0.24.0",
     "pytest-cov>=4.1.0",
+    "pytest-mock>=3.14.0",
     "black>=23.9.0",
-    "ruff>=0.1.0",
-    "mypy>=1.6.0",
+    "ruff>=0.7.1",
+    "mypy>=1.17.0",
     "pre-commit>=3.5.0",
     "bandit>=1.7.5",
     "safety>=2.3.0",
     "types-requests>=2.31.0",
+    "httpx>=0.25.0",
 ]
 
 [project.scripts]
-quant = "shared.cli:app"
+quant-server = "run_server:main"
 
 
 [tool.ruff]
@@ -102,12 +114,18 @@ namespace_packages = true
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-addopts = "-ra -q --cov=services --cov=shared --cov-report=term-missing"
-testpaths = ["tests", "services", "shared"]
+addopts = "-ra -q --cov=backend --cov-report=term-missing"
+testpaths = ["tests", "backend/tests"]
 
 [tool.coverage.run]
-source = ["services", "shared"]
-omit = ["*/tests/*", "*/__pycache__/*", "*/venv/*", "*/.venv/*"]
+source = ["backend"]
+omit = [
+    "*/tests/*",
+    "*/__pycache__/*",
+    "*/venv/*",
+    "*/.venv/*",
+    "backend/tests/*",
+]
 
 [tool.coverage.report]
 exclude_lines = [

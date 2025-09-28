@@ -18,6 +18,7 @@ from app.schemas.strategy import (
     StrategyResponse,
     StrategyUpdateRequest,
 )
+from app.services.service_factory import service_factory
 from app.services.strategy_service import StrategyService
 
 router = APIRouter(prefix="/strategies", tags=["Strategies"])
@@ -25,11 +26,11 @@ router = APIRouter(prefix="/strategies", tags=["Strategies"])
 
 async def get_strategy_service() -> AsyncGenerator[StrategyService, None]:
     """Dependency to get strategy service with proper cleanup"""
-    service = StrategyService()
+    service = service_factory.get_strategy_service()
     try:
         yield service
     finally:
-        pass  # No cleanup needed for this service
+        pass  # ServiceFactory manages cleanup
 
 
 @router.post("/", response_model=StrategyResponse)

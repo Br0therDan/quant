@@ -1,123 +1,164 @@
-# Quant Backtest App (Alpha Vantage 기반)
+# 통합 퀀트 백테스트 플랫폼
 
-단일 사용자용 **퀀트 전략 백테스트 앱**
-실시간 트레이딩 없이 **전략 수립·검증**에 집중한 개인 퀀트 연구 도구
+Alpha Vantage 기반의 통합 퀀트 백테스트 플랫폼입니다. 데이터 수집, 전략 실행, 백테스트 분석이 하나의 백엔드 서비스에 통합되어 있습니다.
 
----
+## 🏗️ **프로젝트 구조**
 
-## 📌 핵심 기능
-
-* **시장 데이터 수집**: Alpha Vantage API로 주식/ETF 시계열(OHLCV) 수집
-* **데이터 캐싱**: DuckDB로 빠르고 안정적인 로컬 데이터 저장
-* **전략 개발**: vectorbt 또는 backtrader 기반의 SMA, RSI, 모멘텀 등 전략 구현
-* **백테스트 엔진**: 수수료, 슬리피지 반영 / 기간·자본금 설정 가능
-* **성과 분석 & 리포트**: CAGR, Sharpe, Sortino, Max Drawdown 지표 및 시각화
-
----
-
-## 🏗️ 아키텍처 개요
-
-```mermaid
-flowchart TD
-    CLI[CLI -Typer] --> DS[Data Service]
-    CLI --> SS[Strategy Service]
-    CLI --> BS[Backtest Service]
-    CLI --> AS[Analytics Service]
-
-    DS --> |Alpha Vantage API| AV[Market Data]
-    DS --> |Local Storage| DB[(DuckDB)]
-
-    SS --> |Strategy Logic| ST[Strategy Templates]
-    BS --> |vectorbt| VBT[Backtest Engine]
-    AS --> |Analysis| RPT[Reports & Charts]
-
-    DB --> BS
-    ST --> BS
-    VBT --> AS
+```
+quant/
+├── backend/                    # 통합 백엔드 서비스
+│   ├── app/
+│   │   ├── api/               # FastAPI 라우터
+│   │   │   └── routes/        # API 엔드포인트
+│   │   ├── models/            # 데이터 모델 (Beanie ODM)
+│   │   ├── services/          # 비즈니스 로직
+│   │   ├── strategies/        # 전략 구현체
+│   │   └── utils/             # 유틸리티
+│   ├── tests/                 # 테스트 코드
+│   └── pyproject.toml         # 백엔드 의존성
+├── frontend/                  # 프론트엔드 (향후 구현)
+├── docs/                      # 문서
+├── scripts/                   # 개발 스크립트
+├── run_server.py             # 서버 실행 스크립트
+└── pyproject.toml            # 프로젝트 설정
 ```
 
-**마이크로서비스 구조**:
-- **data-service**: Alpha Vantage API 연동 및 DuckDB 데이터 관리
-- **strategy-service**: 전략 로직 및 파라미터 관리
-- **backtest-service**: vectorbt 기반 백테스트 실행 엔진
-- **analytics-service**: 성과 분석, 리포트, 시각화
+## 📊 **주요 기능**
 
----
+### **통합 서비스 아키텍처**
+- **Data Service**: Alpha Vantage API를 통한 실시간 시장 데이터 수집
+- **Strategy Service**: 다양한 퀀트 전략 구현 및 관리
+- **Backtest Service**: 통합 백테스트 실행 및 성과 분석
 
-## ⚡ 기술 스택
+### **지원 전략**
+- **Buy & Hold**: 매수 후 보유 전략
+- **SMA Crossover**: 단순이동평균선 교차 전략
+- **RSI Mean Reversion**: RSI 기반 평균 회귀 전략
+- **Momentum**: 모멘텀 기반 전략
 
-* **Python 3.12+**
-* **UV** (패키지 관리)
-* **vectorbt** 또는 **backtrader**
-* **DuckDB** (시계열 DB)
-* **Typer, Rich** (CLI)
-* **ruff**, **mypy**, **pytest**
+### **백테스트 기능**
+- 실시간 데이터 수집 및 검증
+- 전략 신호 생성 및 검증
+- 거래 시뮬레이션 (수수료 포함)
+- 성과 지표 계산 (수익률, 샤프비율, 최대낙폭 등)
 
----
+## 🚀 **빠른 시작**
 
-## 🚀 초기 설치 및 설정
-
-### 1. 프로젝트 클론
+### 1. 환경 설정
 ```bash
-git clone https://github.com/Br0therDan/quant.git
+# 저장소 클론
+git clone <repository-url>
 cd quant
-```
 
-### 2. UV를 통한 의존성 설치
-```bash
-# UV 설치 (없는 경우)
-curl -LsSf https://astral.sh/uv/install.sh | sh
+# UV를 사용한 의존성 설치
+uv sync
 
-# 프로젝트 의존성 설치 (개발 의존성 포함)
-uv sync --dev
-
-# 개발 도구 설정
-uv run pre-commit install
-```
-
-### 3. 환경 변수 설정
-```bash
-# .env 파일 생성 및 설정
+# 환경 변수 설정
 cp .env.example .env
-
-# Alpha Vantage API 키 설정 (https://www.alphavantage.co/support/#api-key)
-# .env 파일에서 ALPHAVANTAGE_API_KEY 값을 실제 API 키로 변경
+# .env 파일에서 ALPHA_VANTAGE_API_KEY 설정
 ```
 
-### 4. 데이터 디렉토리 생성
+### 2. 서버 실행
 ```bash
-mkdir -p data logs
+# 간단한 실행
+python run_server.py
+
+# 또는 직접 실행
+cd backend
+uvicorn app.main:app --reload --port 8501
 ```
 
----
+### 3. API 접속
+- **서버 주소**: http://localhost:8501
+- **API 문서**: http://localhost:8501/docs
+- **서비스 테스트**: http://localhost:8501/api/v1/integrated/test-services
 
-## ▶️ 사용 예시
+## 🔧 **API 사용법**
 
+### **통합 백테스트 실행**
 ```bash
-# 데이터 수집
-uv run quant data fetch --symbol AAPL --interval daily --period 2y
+POST /api/v1/integrated/backtest
+Content-Type: application/json
 
-# 전략 생성 (템플릿 기반)
-uv run quant strategy create --template sma_cross --symbol AAPL --params '{"fast": 10, "slow": 20}'
-
-# 백테스트 실행
-uv run quant backtest run --strategy my_sma_strategy --start 2022-01-01 --end 2023-12-31 --capital 100000
-
-# 결과 리포트 생성
-uv run quant report show --backtest-id bt_20240913_001 --format table
-uv run quant report chart --backtest-id bt_20240913_001 --type equity_curve
-
-# 전략 최적화 (Phase 4)
-uv run quant optimize --strategy sma_cross --symbol AAPL --param-range '{"fast": [5,15], "slow": [20,30]}'
+{
+  "name": "AAPL SMA Crossover Test",
+  "symbols": ["AAPL"],
+  "start_date": "2023-01-01T00:00:00",
+  "end_date": "2023-12-31T23:59:59",
+  "strategy_type": "SMA_CROSSOVER",
+  "strategy_params": {
+    "short_window": 20,
+    "long_window": 50
+  },
+  "initial_capital": 100000
+}
 ```
 
----
+### **서비스 상태 확인**
+```bash
+GET /api/v1/integrated/test-services
+```
 
-## 🔮 로드맵
+### **시장 데이터 조회**
+```bash
+GET /api/v1/market-data/data/AAPL?start_date=2023-01-01&end_date=2023-12-31
+```
 
-* **단기**: 기본 전략 백테스트 완성 (Phase 1\~2)
-* **중기**: 전략 자동 최적화, 다중 전략 포트폴리오 (Phase 3)
-* **장기**: 실거래 API 연동 옵션 및 웹 대시보드 (Phase 4)
+## 🛠️ **개발 환경**
+
+### **기술 스택**
+- **Backend**: Python 3.12+, FastAPI, Beanie ODM
+- **Database**: MongoDB
+- **Data Source**: Alpha Vantage API
+- **Analysis**: pandas, numpy, vectorbt
+- **Package Manager**: UV
+
+### **개발 도구**
+```bash
+# 코드 포맷팅
+uv run ruff format
+
+# 린팅
+uv run ruff check
+
+# 테스트 실행
+uv run pytest
+
+# 타입 체크
+uv run mypy backend/app
+```
+
+## 📈 **성과 지표**
+
+백테스트 결과로 제공되는 주요 성과 지표:
+- **총 수익률** (Total Return)
+- **연환산 수익률** (Annualized Return)
+- **변동성** (Volatility)
+- **샤프 비율** (Sharpe Ratio)
+- **최대 낙폭** (Maximum Drawdown)
+- **승률** (Win Rate)
+- **수익 인수** (Profit Factor)
+
+## 🔐 **보안 설정**
+
+### **환경 변수**
+```bash
+# .env 파일 설정
+ALPHA_VANTAGE_API_KEY=your_api_key_here
+MONGODB_URL=mongodb://localhost:27017
+SERVICE_NAME=backend
+LOG_LEVEL=INFO
+```
+
+### **API 키 관리**
+- Alpha Vantage API 키는 `.env` 파일에만 저장
+- 프로덕션 환경에서는 환경 변수로 주입
+- Rate limiting 준수 (5 calls/min, 500 calls/day)
+
+## 📝 **라이센스**
+
+MIT License - 자세한 내용은 [LICENSE](LICENSE) 파일을 참조하세요.
+
 
 ---
 
