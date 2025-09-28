@@ -8,7 +8,6 @@ from .templates import router as templates_router
 from .pipeline import router as pipeline_router
 from .backtests import router as backtests_router
 from .health import router as health_router
-from .integrated import router as integrated_router
 
 __all__ = [
     "market_data_router",
@@ -17,5 +16,4 @@ __all__ = [
     "pipeline_router",
     "strategies_router",
     "templates_router",
-    "integrated_router",
 ]

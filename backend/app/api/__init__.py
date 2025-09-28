@@ -10,7 +10,6 @@ from .routes import (
     backtests_router,
     strategies_router,
     templates_router,
-    integrated_router,
 )
 
 # Create main API router
@@ -23,6 +22,5 @@ api_router.include_router(health_router)
 api_router.include_router(backtests_router)
 api_router.include_router(strategies_router)
 api_router.include_router(templates_router)
-api_router.include_router(integrated_router)
 
 __all__ = ["api_router"]

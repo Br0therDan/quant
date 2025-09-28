@@ -2,7 +2,7 @@
 Data Pipeline API Routes
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Optional, AsyncGenerator
 from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
 from pydantic import BaseModel
@@ -24,6 +24,14 @@ class WatchlistUpdate(BaseModel):
     """Watchlist update model"""
 
     symbols: List[str]
+
+
+class WatchlistCreate(BaseModel):
+    """Watchlist creation model"""
+
+    name: str
+    symbols: List[str]
+    description: str = ""
 
 
 async def get_data_pipeline() -> AsyncGenerator[DataPipeline, None]:
@@ -49,7 +57,7 @@ async def run_pipeline_update(
         return {
             "message": "Pipeline update started in background",
             "symbols": request.symbols or "default watchlist",
-            "started_at": datetime.utcnow(),
+            "started_at": datetime.now(timezone.utc),
         }
 
     except Exception as e:
@@ -78,10 +86,24 @@ async def update_watchlist(
 async def get_pipeline_status(
     pipeline: DataPipeline = Depends(get_data_pipeline),
 ):
-    """Get current pipeline status"""
+    """Get current pipeline status with detailed coverage information"""
     try:
         status = await pipeline.get_update_status()
         return status
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/coverage/{symbol}")
+async def get_symbol_coverage(
+    symbol: str,
+    pipeline: DataPipeline = Depends(get_data_pipeline),
+):
+    """Get detailed data coverage for a specific symbol"""
+    try:
+        coverage = await pipeline._get_symbol_coverage(symbol.upper())
+        return coverage
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -156,6 +178,152 @@ async def collect_daily_data(
                 "symbol": symbol.upper(),
                 "success": False,
             }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/company/{symbol}")
+async def get_company_info(
+    symbol: str,
+    pipeline: DataPipeline = Depends(get_data_pipeline),
+):
+    """Get stored company information for a symbol"""
+    try:
+        company = await pipeline.get_company_info(symbol.upper())
+
+        if company:
+            return {
+                "symbol": company.symbol,
+                "name": company.name,
+                "description": company.description,
+                "sector": company.sector,
+                "industry": company.industry,
+                "country": company.country,
+                "currency": company.currency,
+                "market_cap": company.market_cap,
+                "pe_ratio": company.pe_ratio,
+                "dividend_yield": company.dividend_yield,
+                "updated_at": company.updated_at,
+            }
+        else:
+            raise HTTPException(
+                status_code=404, detail=f"Company information not found for {symbol}"
+            )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/companies")
+async def get_all_companies(
+    pipeline: DataPipeline = Depends(get_data_pipeline),
+):
+    """Get all stored companies"""
+    try:
+        companies = await pipeline.get_all_companies()
+
+        return {
+            "companies": [
+                {
+                    "symbol": company.symbol,
+                    "name": company.name,
+                    "sector": company.sector,
+                    "industry": company.industry,
+                    "market_cap": company.market_cap,
+                    "updated_at": company.updated_at,
+                }
+                for company in companies
+            ],
+            "total_count": len(companies),
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/watchlists")
+async def create_watchlist(
+    request: WatchlistCreate,
+    pipeline: DataPipeline = Depends(get_data_pipeline),
+):
+    """Create a new watchlist"""
+    try:
+        watchlist = await pipeline.create_watchlist(
+            name=request.name,
+            symbols=request.symbols,
+            description=request.description,
+        )
+
+        if watchlist:
+            return {
+                "message": f"Watchlist '{request.name}' created successfully",
+                "name": watchlist.name,
+                "symbols": watchlist.symbols,
+                "description": watchlist.description,
+                "created_at": watchlist.created_at,
+            }
+        else:
+            raise HTTPException(
+                status_code=400, detail=f"Failed to create watchlist '{request.name}'"
+            )
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/watchlists/{name}")
+async def get_watchlist(
+    name: str,
+    pipeline: DataPipeline = Depends(get_data_pipeline),
+):
+    """Get a specific watchlist by name"""
+    try:
+        watchlist = await pipeline.get_watchlist(name)
+
+        if watchlist:
+            return {
+                "name": watchlist.name,
+                "description": watchlist.description,
+                "symbols": watchlist.symbols,
+                "auto_update": watchlist.auto_update,
+                "update_interval": watchlist.update_interval,
+                "last_updated": watchlist.last_updated,
+                "created_at": watchlist.created_at,
+            }
+        else:
+            raise HTTPException(status_code=404, detail=f"Watchlist '{name}' not found")
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/watchlists")
+async def list_watchlists(
+    pipeline: DataPipeline = Depends(get_data_pipeline),
+):
+    """List all watchlists"""
+    try:
+        watchlists = await pipeline.list_watchlists()
+
+        return {
+            "watchlists": [
+                {
+                    "name": wl.name,
+                    "description": wl.description,
+                    "symbol_count": len(wl.symbols),
+                    "auto_update": wl.auto_update,
+                    "last_updated": wl.last_updated,
+                    "created_at": wl.created_at,
+                }
+                for wl in watchlists
+            ],
+            "total_count": len(watchlists),
+        }
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

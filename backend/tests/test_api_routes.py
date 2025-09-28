@@ -3,7 +3,7 @@ Test for API Routes
 """
 
 import pytest
-from datetime import datetime
+from datetime import datetime, timezone
 from fastapi.testclient import TestClient
 from unittest.mock import AsyncMock, patch
 
@@ -32,7 +32,10 @@ def test_health_check(client):
         mock_settings.return_value.alpha_vantage_api_key = "test_key"
         mock_aggregate.return_value.to_list = AsyncMock(
             return_value=[
-                {"unique_symbols": ["AAPL", "GOOGL"], "latest_date": datetime.utcnow()}
+                {
+                    "unique_symbols": ["AAPL", "GOOGL"],
+                    "latest_date": datetime.now(timezone.utc),
+                }
             ]
         )
 
@@ -140,7 +143,7 @@ def test_analyze_data_quality(client):
         mock_quality.duplicate_records = 0
         mock_quality.price_anomalies = 0
         mock_quality.quality_score = 100.0
-        mock_quality.analyzed_at = datetime.utcnow()
+        mock_quality.analyzed_at = datetime.now(timezone.utc)
 
         mock_service.analyze_data_quality.return_value = mock_quality
         mock_get_service.return_value = mock_service

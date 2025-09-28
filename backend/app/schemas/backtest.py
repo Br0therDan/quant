@@ -147,3 +147,30 @@ class BacktestResultListResponse(BaseModel):
 
     results: list[BacktestResultResponse] = Field(..., description="결과 목록")
     total: int = Field(..., description="총 개수")
+
+
+# Integrated Backtest Schemas
+class IntegratedBacktestRequest(BaseModel):
+    """통합 백테스트 요청"""
+
+    name: str = Field(..., description="백테스트 이름")
+    description: str = Field(default="", description="백테스트 설명")
+    symbols: list[str] = Field(..., description="심볼 목록")
+    start_date: datetime = Field(..., description="시작일")
+    end_date: datetime = Field(..., description="종료일")
+    strategy_type: str = Field(..., description="전략 타입")
+    strategy_params: dict[str, Any] = Field(default_factory=dict, description="전략 매개변수")
+    initial_capital: float = Field(default=100000.0, description="초기 자본")
+
+
+class IntegratedBacktestResponse(BaseModel):
+    """통합 백테스트 응답"""
+
+    backtest_id: str = Field(..., description="백테스트 ID")
+    execution_id: str | None = Field(None, description="실행 ID")
+    result_id: str | None = Field(None, description="결과 ID")
+    status: BacktestStatus = Field(..., description="상태")
+    message: str = Field(..., description="메시지")
+    performance: PerformanceMetrics | None = Field(None, description="성과 지표")
+    start_time: datetime | None = Field(None, description="시작 시간")
+    end_time: datetime | None = Field(None, description="종료 시간")

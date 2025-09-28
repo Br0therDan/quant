@@ -9,6 +9,7 @@ from datetime import datetime, timedelta, timezone
 from typing import List, Optional, Dict, Any
 
 from app.services.market_data_service import MarketDataService
+from app.models.company import Company, Watchlist
 from app.core.config import get_settings
 
 logger = logging.getLogger(__name__)
@@ -24,6 +25,19 @@ class DataPipeline:
 
     async def setup_default_symbols(self) -> None:
         """Setup default watchlist symbols"""
+        # Try to load from database first
+        try:
+            watchlist = await Watchlist.find_one(Watchlist.name == "default")
+            if watchlist and watchlist.symbols:
+                self.symbols_to_update = watchlist.symbols
+                logger.info(
+                    f"Loaded {len(watchlist.symbols)} symbols from database watchlist"
+                )
+                return
+        except Exception as e:
+            logger.warning(f"Failed to load watchlist from database: {e}")
+
+        # Fall back to hardcoded defaults
         default_symbols = [
             "AAPL",
             "MSFT",
@@ -40,23 +54,131 @@ class DataPipeline:
         logger.info(f"Setting up default symbols: {default_symbols}")
         self.symbols_to_update = default_symbols
 
+        # Save to database for future use
+        await self._update_default_watchlist(default_symbols)
+
     async def update_watchlist(self, symbols: List[str]) -> None:
         """Update the watchlist with new symbols"""
         self.symbols_to_update = symbols
         logger.info(f"Watchlist updated with {len(symbols)} symbols")
+
+        # Update or create default watchlist in database
+        await self._update_default_watchlist(symbols)
+
+    async def _update_default_watchlist(self, symbols: List[str]) -> None:
+        """Update the default watchlist in database"""
+        try:
+            watchlist = await Watchlist.find_one(Watchlist.name == "default")
+
+            if watchlist:
+                watchlist.symbols = symbols
+                watchlist.updated_at = datetime.now(timezone.utc)
+                await watchlist.save()
+            else:
+                watchlist = Watchlist(
+                    name="default",
+                    description="Default pipeline watchlist",
+                    symbols=symbols,
+                    auto_update=True,
+                    update_interval=3600,
+                    last_updated=datetime.now(timezone.utc),
+                )
+                await watchlist.insert()
+
+            logger.debug("Default watchlist updated in database")
+        except Exception as e:
+            logger.error(f"Failed to update default watchlist: {e}")
 
     async def collect_stock_info(self, symbol: str) -> bool:
         """Collect basic stock information"""
         try:
             info = await self.market_service.get_company_overview(symbol)
             if info:
-                # TODO: Store company information in a separate collection
+                # Store company information in a separate collection
+                await self._store_company_info(symbol, info)
                 logger.info(f"Stock info collected for {symbol}")
                 return True
             return False
         except Exception as e:
             logger.error(f"Failed to collect stock info for {symbol}: {e}")
             return False
+
+    async def _store_company_info(self, symbol: str, info: Dict[str, Any]) -> None:
+        """Store company information in the database"""
+        try:
+            # Check if company already exists
+            existing_company = await Company.find_one(Company.symbol == symbol)
+
+            company_data = {
+                "symbol": symbol,
+                "name": info.get("Name", f"{symbol} Inc."),
+                "description": info.get("Description"),
+                "sector": info.get("Sector"),
+                "industry": info.get("Industry"),
+                "country": info.get("Country"),
+                "currency": info.get("Currency"),
+                "exchange": info.get("Exchange"),
+                "market_cap": self._parse_market_cap(info.get("MarketCapitalization")),
+                "shares_outstanding": self._parse_int(info.get("SharesOutstanding")),
+                "pe_ratio": self._parse_float(info.get("PERatio")),
+                "dividend_yield": self._parse_float(info.get("DividendYield")),
+                "updated_at": datetime.now(timezone.utc),
+            }
+
+            if existing_company:
+                # Update existing company
+                for key, value in company_data.items():
+                    if value is not None:
+                        setattr(existing_company, key, value)
+                await existing_company.save()
+                logger.debug(f"Updated company info for {symbol}")
+            else:
+                # Create new company record
+                company_data["created_at"] = datetime.now(timezone.utc)
+                company = Company(**company_data)
+                await company.insert()
+                logger.debug(f"Created new company record for {symbol}")
+
+        except Exception as e:
+            logger.error(f"Failed to store company info for {symbol}: {e}")
+
+    def _parse_market_cap(self, value: Any) -> Optional[int]:
+        """Parse market capitalization value"""
+        if not value:
+            return None
+        try:
+            if isinstance(value, str):
+                # Remove common suffixes and convert
+                value = value.replace(",", "").replace("$", "")
+                if "B" in value.upper():
+                    return int(
+                        float(value.replace("B", "").replace("b", "")) * 1_000_000_000
+                    )
+                elif "M" in value.upper():
+                    return int(
+                        float(value.replace("M", "").replace("m", "")) * 1_000_000
+                    )
+            return int(float(value))
+        except (ValueError, TypeError):
+            return None
+
+    def _parse_float(self, value: Any) -> Optional[float]:
+        """Parse float value safely"""
+        if not value or value == "None":
+            return None
+        try:
+            return float(value)
+        except (ValueError, TypeError):
+            return None
+
+    def _parse_int(self, value: Any) -> Optional[int]:
+        """Parse integer value safely"""
+        if not value or value == "None":
+            return None
+        try:
+            return int(float(str(value).replace(",", "")))
+        except (ValueError, TypeError):
+            return None
 
     async def collect_daily_data(
         self,
@@ -155,7 +277,7 @@ class DataPipeline:
             # Get data coverage for watchlist symbols
             coverage_info = []
             for symbol in self.symbols_to_update:
-                coverage = await self.market_service.get_data_coverage(symbol)
+                coverage = await self._get_symbol_coverage(symbol)
                 coverage_info.append(coverage)
 
             return {
@@ -168,6 +290,85 @@ class DataPipeline:
         except Exception as e:
             logger.error(f"Failed to get update status: {e}")
             return {"error": str(e)}
+
+    async def _get_symbol_coverage(self, symbol: str) -> Dict[str, Any]:
+        """Get data coverage information for a symbol"""
+        try:
+            # Check if company info exists
+            company = await Company.find_one(Company.symbol == symbol)
+            company_info_exists = company is not None
+
+            # Get market data coverage - this would ideally check the actual data
+            # For now, provide basic coverage info
+            coverage = {
+                "symbol": symbol,
+                "company_info": company_info_exists,
+                "market_data": False,  # Would need to check MarketData collection
+                "last_update": company.updated_at if company else None,
+                "data_points": 0,  # Would count actual data points
+            }
+
+            return coverage
+        except Exception as e:
+            logger.error(f"Failed to get coverage for {symbol}: {e}")
+            return {
+                "symbol": symbol,
+                "company_info": False,
+                "market_data": False,
+                "error": str(e),
+            }
+
+    async def get_company_info(self, symbol: str) -> Optional[Company]:
+        """Get stored company information"""
+        try:
+            return await Company.find_one(Company.symbol == symbol)
+        except Exception as e:
+            logger.error(f"Failed to get company info for {symbol}: {e}")
+            return None
+
+    async def get_all_companies(self) -> List[Company]:
+        """Get all stored companies"""
+        try:
+            return await Company.find_all().to_list()
+        except Exception as e:
+            logger.error(f"Failed to get all companies: {e}")
+            return []
+
+    async def create_watchlist(
+        self, name: str, symbols: List[str], description: str = ""
+    ) -> Optional[Watchlist]:
+        """Create a new watchlist"""
+        try:
+            watchlist = Watchlist(
+                name=name,
+                description=description,
+                symbols=symbols,
+                auto_update=True,
+                update_interval=3600,
+                last_updated=datetime.now(timezone.utc),
+            )
+            await watchlist.insert()
+            logger.info(f"Created watchlist '{name}' with {len(symbols)} symbols")
+            return watchlist
+        except Exception as e:
+            logger.error(f"Failed to create watchlist '{name}': {e}")
+            return None
+
+    async def get_watchlist(self, name: str) -> Optional[Watchlist]:
+        """Get a watchlist by name"""
+        try:
+            return await Watchlist.find_one(Watchlist.name == name)
+        except Exception as e:
+            logger.error(f"Failed to get watchlist '{name}': {e}")
+            return None
+
+    async def list_watchlists(self) -> List[Watchlist]:
+        """List all watchlists"""
+        try:
+            return await Watchlist.find_all().to_list()
+        except Exception as e:
+            logger.error(f"Failed to list watchlists: {e}")
+            return []
 
     async def cleanup(self) -> None:
         """Cleanup pipeline resources"""

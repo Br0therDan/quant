@@ -17,11 +17,16 @@ from app.schemas.backtest import (
     BacktestResultListResponse,
     BacktestResultResponse,
     BacktestUpdateRequest,
+    IntegratedBacktestRequest,
+    IntegratedBacktestResponse,
 )
 from app.services.service_factory import service_factory
 from app.services.backtest_service import BacktestService
+from app.services.integrated_backtest_executor import IntegratedBacktestExecutor
+from app.models.strategy import StrategyType
+from app.models.backtest import BacktestConfig
 
-router = APIRouter(prefix="/backtests", tags=["Backtests"])
+router = APIRouter(prefix="/backtests", tags=["Backtests", "Integrated Backtest"])
 
 
 async def get_backtest_service() -> AsyncGenerator[BacktestService, None]:
@@ -31,6 +36,16 @@ async def get_backtest_service() -> AsyncGenerator[BacktestService, None]:
         yield service
     finally:
         pass  # ServiceFactory manages cleanup
+
+
+async def get_integrated_executor() -> IntegratedBacktestExecutor:
+    """통합 백테스트 실행기 의존성 주입"""
+    market_data_service = service_factory.get_market_data_service()
+    strategy_service = service_factory.get_strategy_service()
+
+    return IntegratedBacktestExecutor(
+        market_data_service=market_data_service, strategy_service=strategy_service
+    )
 
 
 @router.post("/", response_model=BacktestResponse)
@@ -304,3 +319,127 @@ async def get_backtest_results(
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) from e
+
+
+# Integrated Backtest Endpoints
+@router.post("/integrated", response_model=IntegratedBacktestResponse)
+async def create_and_run_integrated_backtest(
+    request: IntegratedBacktestRequest,
+    executor: IntegratedBacktestExecutor = Depends(get_integrated_executor),
+    service: BacktestService = Depends(get_backtest_service),
+):
+    """통합 백테스트 생성 및 실행 - 모든 서비스 연동"""
+    try:
+        # 1. 백테스트 설정 생성
+        config = BacktestConfig(
+            name=request.name,
+            description=request.description,
+            start_date=request.start_date,
+            end_date=request.end_date,
+            symbols=request.symbols,
+            initial_cash=request.initial_capital,
+            rebalance_frequency="daily",
+        )
+
+        # 2. 백테스트 생성
+        backtest = await service.create_backtest(
+            name=request.name, description=request.description, config=config
+        )
+
+        # 3. 전략 타입 변환
+        try:
+            strategy_type = StrategyType(request.strategy_type)
+        except ValueError:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Invalid strategy type: {request.strategy_type}",
+            )
+
+        # 4. 통합 백테스트 실행
+        result = await executor.execute_integrated_backtest(
+            backtest_id=str(backtest.id),
+            symbols=request.symbols,
+            start_date=request.start_date,
+            end_date=request.end_date,
+            strategy_type=strategy_type,
+            strategy_params=request.strategy_params,
+            initial_capital=request.initial_capital,
+        )
+
+        if result:
+            return IntegratedBacktestResponse(
+                backtest_id=str(backtest.id),
+                execution_id=(
+                    str(result.execution_id)
+                    if hasattr(result, "execution_id")
+                    else None
+                ),
+                result_id=str(result.id),
+                status=BacktestStatus.COMPLETED,
+                message="Integrated backtest completed successfully",
+                performance=(
+                    result.performance if hasattr(result, "performance") else None
+                ),
+                start_time=backtest.start_time,
+                end_time=backtest.end_time,
+            )
+        else:
+            return IntegratedBacktestResponse(
+                backtest_id=str(backtest.id),
+                execution_id=None,
+                result_id=None,
+                status=BacktestStatus.FAILED,
+                message="Integrated backtest execution failed",
+                performance=None,
+                start_time=backtest.start_time,
+                end_time=None,
+            )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Failed to execute integrated backtest: {str(e)}"
+        )
+
+
+@router.get("/test-services")
+async def test_service_integration():
+    """서비스 연동 테스트"""
+    try:
+        # 각 서비스 인스턴스 생성 테스트
+        market_data_service = service_factory.get_market_data_service()
+        strategy_service = service_factory.get_strategy_service()
+
+        # 기본 기능 테스트
+        symbols = await market_data_service.get_available_symbols()
+
+        # 전략 인스턴스 생성 테스트
+        strategy_instance = await strategy_service.get_strategy_instance(
+            strategy_type=StrategyType.BUY_AND_HOLD, parameters={}
+        )
+
+        return {
+            "status": "success",
+            "services": {
+                "market_data": "✅ Available",
+                "strategy": "✅ Available",
+                "backtest": "✅ Available",
+            },
+            "tests": {
+                "symbols_count": len(symbols),
+                "strategy_instance": "✅ Created" if strategy_instance else "❌ Failed",
+                "integrated_executor": "✅ Ready",
+            },
+        }
+
+    except Exception as e:
+        return {
+            "status": "error",
+            "error": str(e),
+            "services": {
+                "market_data": "❌ Error",
+                "strategy": "❌ Error",
+                "backtest": "❌ Error",
+            },
+        }

@@ -24,9 +24,9 @@ def main():
 
     try:
         print("🚀 통합 퀀트 백엔드 서버 시작...")
-        print("📍 서버 주소: http://localhost:8503")
-        print("📋 API 문서: http://localhost:8503/docs")
-        print("⚡ 통합 테스트: http://localhost:8503/api/v1/integrated/test-services")
+        print("📍 서버 주소: http://localhost:8000")
+        print("📋 API 문서: http://localhost:8000/docs")
+        print("⚡ 통합 테스트: http://localhost:8000/api/v1/integrated/test-services")
         print("=" * 60)
 
         # uvicorn으로 서버 실행
@@ -37,7 +37,7 @@ def main():
                 "--host",
                 "0.0.0.0",
                 "--port",
-                "8503",
+                "8000",
                 "--reload",
             ],
             check=True,
