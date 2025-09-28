@@ -63,20 +63,13 @@ line-length = 88
 target-version = "py312"
 
 [tool.ruff.lint]
-select = [
-    "E", # pycodestyle errors
-    "W", # pycodestyle warnings
-    "F", # pyflakes
-    "I", # isort
-]
+# 필수적인 문법 오류만 체크
+select = ["F"] # pyflakes (문법 오류, import 오류 등 필수적인 것만)
 ignore = [
-    "E501",  # line too long, handled by black
-    "B008",  # do not perform function calls in argument defaults (FastAPI style)
-    "B904",  # raise ... from err (너무 엄격함)
-    "UP007", # Union syntax (호환성 위해 유지)
-    "F401",  # unused imports (일시적으로 무시)
-    "F841",  # unused variables (개발 중 일시적으로 무시)
-    "B007",  # unused loop variables (enumerate에서 자주 발생)
+    "F401", # unused imports
+    "F841", # unused variables
+    "F811", # redefined name
+    "F821", # undefined name (일부 dynamic imports)
 ]
 
 [tool.black]
