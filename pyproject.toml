@@ -3,7 +3,7 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.uv.workspace]
-members = ["microservices/*"]
+members = ["backend"]
 
 [project]
 name = "quant-workspace"
@@ -25,18 +25,11 @@ classifiers = [
 
 dependencies = [
     "mysingle-quant>=0.1.0",
-    "data-service",
-    "strategy-service",
-    "backtest-service",
-    "gateway-service",
     "duckdb>=0.6.0",
 ]
 
 [tool.uv.sources]
-data-service = { workspace = true }
-strategy-service = { workspace = true }
-backtest-service = { workspace = true }
-gateway-service = { workspace = true }
+backend = { workspace = true }
 
 [tool.setuptools]
 packages = [] # 루트 프로젝트는 패키지를 포함하지 않음
