@@ -45,7 +45,9 @@ async def create_strategy(
             strategy_type=request.strategy_type,
             description=request.description,
             parameters=request.parameters,
-            tags=request.tags,
+            tags=[tag for tag in request.tags if tag is not None]
+            if request.tags
+            else None,
         )
 
         return StrategyResponse(
@@ -157,7 +159,9 @@ async def update_strategy(
             description=request.description,
             parameters=request.parameters,
             is_active=request.is_active,
-            tags=request.tags,
+            tags=[tag for tag in request.tags if tag is not None]
+            if request.tags
+            else None,
         )
 
         if not strategy:
