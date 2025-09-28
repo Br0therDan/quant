@@ -83,3 +83,7 @@ dmypy.json
 # 백테스트 결과
 backtest_results/
 reports/
+
+
+# 기타
+services/*

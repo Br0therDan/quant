@@ -2,7 +2,7 @@
 Health Check API Routes
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from fastapi import APIRouter
 
 from app.schemas.market_data import HealthCheckResponse
@@ -44,13 +44,13 @@ async def health_check():
         database_connected = False
 
     # Check Alpha Vantage API (simple check)
-    alpha_vantage_available = bool(settings.alpha_vantage_api_key)
+    alpha_vantage_available = bool(settings.ALPHA_VANTAGE_API_KEY)
 
     status = "healthy" if database_connected else "unhealthy"
 
     return HealthCheckResponse(
         status=status,
-        timestamp=datetime.utcnow(),
+        timestamp=datetime.now(timezone.utc),
         database_connected=database_connected,
         alpha_vantage_available=alpha_vantage_available,
         total_symbols=total_symbols,

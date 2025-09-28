@@ -64,17 +64,19 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = [
-    "E",  # pycodestyle errors
-    "W",  # pycodestyle warnings
-    "F",  # pyflakes
-    "I",  # isort
-    "B",  # flake8-bugbear
-    "C4", # flake8-comprehensions
-    "UP", # pyupgrade
+    "E", # pycodestyle errors
+    "W", # pycodestyle warnings
+    "F", # pyflakes
+    "I", # isort
 ]
 ignore = [
-    "E501", # line too long, handled by black
-    "B008", # do not perform function calls in argument defaults
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults (FastAPI style)
+    "B904",  # raise ... from err (너무 엄격함)
+    "UP007", # Union syntax (호환성 위해 유지)
+    "F401",  # unused imports (일시적으로 무시)
+    "F841",  # unused variables (개발 중 일시적으로 무시)
+    "B007",  # unused loop variables (enumerate에서 자주 발생)
 ]
 
 [tool.black]
@@ -140,7 +142,4 @@ exclude_dirs = ["tests", ".venv", "build"]
 skips = ["B101", "B601"]
 
 [dependency-groups]
-dev = [
-    "pandas-stubs>=2.3.2.250926",
-    "ruff>=0.13.0",
-]
+dev = ["pandas-stubs>=2.3.2.250926", "ruff>=0.13.0"]

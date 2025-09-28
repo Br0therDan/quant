@@ -1,5 +1,5 @@
 """
-Strategy Service Main Application
+Data Service Main Application
 """
 
 
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 app = create_fastapi_app(
     service_name=settings.SERVICE_NAME,
     service_version=settings.API_VERSION,
-    description="Strategy Service API",
+    description="Backtest Service API",
     enable_database=True,
     document_models=models.collections,
     database_name="data_service",
