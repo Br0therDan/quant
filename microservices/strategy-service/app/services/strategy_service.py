@@ -3,10 +3,6 @@ Strategy Management Service Layer
 """
 
 import logging
-import os
-
-# Import strategy classes from original services
-import sys
 from datetime import datetime
 from typing import Any
 
@@ -20,13 +16,11 @@ from app.models.strategy import (
     StrategyType,
 )
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "../../../.."))
-
 try:
-    from services.strategy_service.buy_and_hold import BuyAndHoldStrategy
-    from services.strategy_service.momentum import MomentumStrategy
-    from services.strategy_service.rsi_mean_reversion import RSIMeanReversionStrategy
-    from services.strategy_service.sma_crossover import SMACrossoverStrategy
+    from app.strategies.buy_and_hold import BuyAndHoldStrategy
+    from app.strategies.momentum import MomentumStrategy
+    from app.strategies.rsi_mean_reversion import RSIMeanReversionStrategy
+    from app.strategies.sma_crossover import SMACrossoverStrategy
 
     STRATEGY_IMPORTS_AVAILABLE = True
 except ImportError as e:
