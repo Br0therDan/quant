@@ -7,9 +7,11 @@
     "**/.venv"
   ],
   "extraPaths": [
-    "."
+    ".",
+    "backend"
   ],
   "include": [
+    "backend",
     "services",
     "shared",
     "tests"
