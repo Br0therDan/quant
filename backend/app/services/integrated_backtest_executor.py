@@ -3,7 +3,7 @@
 """
 
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
 import numpy as np
@@ -57,14 +57,17 @@ class IntegratedBacktestExecutor:
                 return None
 
             backtest.status = BacktestStatus.RUNNING
-            backtest.start_time = datetime.utcnow()
+            backtest.start_time = datetime.now(timezone.utc)
             await backtest.save()
 
             # 2. 실행 기록 생성
             execution = BacktestExecution(
-                backtest_id=backtest.id,
+                backtest_id=str(backtest.id),
+                execution_id=f"exec_{datetime.now(timezone.utc).timestamp()}_{backtest_id}",
                 status=BacktestStatus.RUNNING,
-                start_time=datetime.utcnow(),
+                start_time=datetime.now(timezone.utc),
+                end_time=None,
+                error_message=None,
             )
             await execution.insert()
 
@@ -114,24 +117,27 @@ class IntegratedBacktestExecutor:
 
             # 7. 결과 저장
             result = BacktestResult(
-                backtest_id=backtest.id,
-                execution_id=execution.id,
-                trades=trades,
-                portfolio_values=portfolio_values,
+                backtest_id=str(backtest.id),
+                execution_id=str(execution.id),
                 performance=performance,
-                metadata={
-                    "strategy_type": strategy_type.value,
-                    "symbols": symbols,
-                    "total_trades": len(trades),
-                    "data_points": len(portfolio_values),
-                    "parameters": strategy_params,
-                },
+                final_portfolio_value=(
+                    portfolio_values[-1] if portfolio_values else initial_capital
+                ),
+                cash_remaining=0.0,  # 체크 필요
+                total_invested=initial_capital,
+                var_95=None,
+                var_99=None,
+                calmar_ratio=None,
+                sortino_ratio=None,
+                benchmark_return=None,
+                alpha=None,
+                beta=None,
             )
             await result.insert()
 
             # 8. 백테스트 완료 처리
             backtest.status = BacktestStatus.COMPLETED
-            backtest.end_time = datetime.utcnow()
+            backtest.end_time = datetime.now(timezone.utc)
             backtest.duration_seconds = (
                 backtest.end_time - backtest.start_time
             ).total_seconds()
@@ -139,8 +145,9 @@ class IntegratedBacktestExecutor:
             await backtest.save()
 
             execution.status = BacktestStatus.COMPLETED
-            execution.end_time = datetime.utcnow()
-            execution.result_id = result.id
+            execution.end_time = datetime.now(timezone.utc)
+            execution.trades = trades
+            execution.portfolio_values = portfolio_values
             await execution.save()
 
             logger.info(f"Integrated backtest completed successfully: {backtest_id}")
@@ -152,13 +159,13 @@ class IntegratedBacktestExecutor:
             # 실패 처리
             if backtest:
                 backtest.status = BacktestStatus.FAILED
-                backtest.end_time = datetime.utcnow()
+                backtest.end_time = datetime.now(timezone.utc)
                 backtest.error_message = str(e)
                 await backtest.save()
 
             if execution:
                 execution.status = BacktestStatus.FAILED
-                execution.end_time = datetime.utcnow()
+                execution.end_time = datetime.now(timezone.utc)
                 execution.error_message = str(e)
                 await execution.save()
 
@@ -262,12 +269,17 @@ class IntegratedBacktestExecutor:
                 if total_cost <= current_capital:
                     # 매수 실행
                     trade = Trade(
+                        trade_id=f"trade_{datetime.now(timezone.utc).timestamp()}_{symbol}_BUY",
                         symbol=symbol,
                         trade_type=TradeType.BUY,
                         quantity=quantity,
                         price=price,
-                        timestamp=day_data[symbol].get("date", datetime.utcnow()),
+                        timestamp=day_data[symbol].get(
+                            "date", datetime.now(timezone.utc)
+                        ),
                         commission=commission,
+                        strategy_signal_id=None,
+                        notes=None,
                     )
                     trades.append(trade)
                     positions[symbol] = positions.get(symbol, 0) + quantity
@@ -282,12 +294,17 @@ class IntegratedBacktestExecutor:
                     commission = revenue * 0.001  # 0.1% 수수료
 
                     trade = Trade(
+                        trade_id=f"trade_{datetime.now(timezone.utc).timestamp()}_{symbol}_SELL",
                         symbol=symbol,
                         trade_type=TradeType.SELL,
                         quantity=sell_quantity,
                         price=price,
-                        timestamp=day_data[symbol].get("date", datetime.utcnow()),
+                        timestamp=day_data[symbol].get(
+                            "date", datetime.now(timezone.utc)
+                        ),
                         commission=commission,
+                        strategy_signal_id=None,
+                        notes=None,
                     )
                     trades.append(trade)
                     positions[symbol] -= sell_quantity
@@ -320,8 +337,10 @@ class IntegratedBacktestExecutor:
                 volatility=0.0,
                 sharpe_ratio=0.0,
                 max_drawdown=0.0,
+                total_trades=0,
+                winning_trades=0,
+                losing_trades=0,
                 win_rate=0.0,
-                profit_factor=1.0,
             )
 
         final_value = portfolio_values[-1]
@@ -350,7 +369,8 @@ class IntegratedBacktestExecutor:
         max_drawdown = self._calculate_max_drawdown(portfolio_values)
 
         # 거래 성과
-        win_rate, profit_factor = self._calculate_trade_metrics(trades)
+        win_rate, winning_trades, losing_trades = self._calculate_trade_metrics(trades)
+        total_trades = len(trades)
 
         return PerformanceMetrics(
             total_return=total_return,
@@ -358,8 +378,10 @@ class IntegratedBacktestExecutor:
             volatility=volatility,
             sharpe_ratio=sharpe_ratio,
             max_drawdown=max_drawdown,
+            total_trades=total_trades,
+            winning_trades=winning_trades,
+            losing_trades=losing_trades,
             win_rate=win_rate,
-            profit_factor=profit_factor,
         )
 
     def _calculate_max_drawdown(self, values: List[float]) -> float:
@@ -378,10 +400,10 @@ class IntegratedBacktestExecutor:
 
         return max_dd
 
-    def _calculate_trade_metrics(self, trades: List[Trade]) -> tuple[float, float]:
+    def _calculate_trade_metrics(self, trades: List[Trade]) -> tuple[float, int, int]:
         """거래 성과 지표 계산"""
         if not trades or len(trades) < 2:
-            return 0.0, 1.0
+            return 0.0, 0, 0
 
         # 매수/매도 쌍 찾기
         winning_trades = 0
@@ -435,6 +457,6 @@ class IntegratedBacktestExecutor:
                         remaining_quantity = 0
 
         win_rate = winning_trades / total_trades if total_trades > 0 else 0.0
-        profit_factor = gross_profit / gross_loss if gross_loss > 0 else 1.0
+        losing_trades = total_trades - winning_trades
 
-        return win_rate, profit_factor
+        return win_rate, winning_trades, losing_trades

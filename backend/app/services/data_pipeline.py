@@ -5,7 +5,7 @@ Port of the original data_service pipeline functionality
 
 import asyncio
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import List, Optional, Dict, Any
 
 from app.services.market_data_service import MarketDataService
@@ -162,7 +162,7 @@ class DataPipeline:
                 "watchlist_size": total_symbols,
                 "symbols": self.symbols_to_update,
                 "coverage": coverage_info,
-                "last_check": datetime.utcnow(),
+                "last_check": datetime.now(timezone.utc),
             }
 
         except Exception as e:

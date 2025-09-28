@@ -5,10 +5,14 @@ Backtest Service Implementation
 import logging
 import uuid
 from datetime import datetime
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
 import numpy as np
 from beanie import PydanticObjectId
+
+if TYPE_CHECKING:
+    from app.services.market_data_service import MarketDataService
+    from app.services.strategy_service import StrategyService
 
 from app.models.backtest import (
     Backtest,
@@ -133,6 +137,7 @@ class TradingSimulator:
 
                         # 거래 기록
                         trade = Trade(
+                            trade_id=str(uuid.uuid4()),
                             symbol=symbol,
                             trade_type=TradeType.BUY,
                             quantity=quantity,
@@ -141,6 +146,8 @@ class TradingSimulator:
                             commission=quantity
                             * current_price
                             * self.config.commission_rate,
+                            strategy_signal_id=None,
+                            notes=None,
                         )
                         trades.append(trade)
 
@@ -154,6 +161,7 @@ class TradingSimulator:
 
                         # 거래 기록
                         trade = Trade(
+                            trade_id=str(uuid.uuid4()),
                             symbol=symbol,
                             trade_type=TradeType.SELL,
                             quantity=quantity,
@@ -162,6 +170,8 @@ class TradingSimulator:
                             commission=quantity
                             * current_price
                             * self.config.commission_rate,
+                            strategy_signal_id=None,
+                            notes=None,
                         )
                         trades.append(trade)
 
@@ -186,8 +196,13 @@ class BacktestService:
         self.performance_calculator = PerformanceCalculator()
         self.market_data_service = market_data_service
         self.strategy_service = strategy_service
+        self.integrated_executor = None
 
-    def set_dependencies(self, market_data_service, strategy_service):
+    def set_dependencies(
+        self,
+        market_data_service: "MarketDataService",
+        strategy_service: "StrategyService",
+    ):
         """서비스 의존성 설정"""
         self.market_data_service = market_data_service
         self.strategy_service = strategy_service
@@ -205,13 +220,34 @@ class BacktestService:
         self,
         name: str,
         description: str = "",
-        config: BacktestConfig = None,
+        config: BacktestConfig | None = None,
     ) -> Backtest:
         """백테스트 생성"""
+        from app.models.backtest import BacktestConfig  # 순환 import 방지
+
+        if config is None:
+            config = BacktestConfig(
+                name=name,
+                symbols=["AAPL"],
+                start_date=datetime.now(),
+                end_date=datetime.now(),
+                initial_cash=100000.0,
+                commission_rate=0.001,
+                rebalance_frequency=None,
+            )
+
         backtest = Backtest(
             name=name,
             description=description,
             config=config,
+            start_time=None,
+            end_time=None,
+            duration_seconds=None,
+            performance=None,
+            portfolio_history_path=None,
+            trades_history_path=None,
+            error_message=None,
+            created_by="system",
             created_at=datetime.now(),
         )
 
@@ -305,9 +341,10 @@ class BacktestService:
                     positions[trade.symbol] = Position(
                         symbol=trade.symbol,
                         quantity=0,
-                        average_price=0.0,
-                        market_value=0.0,
+                        avg_price=0.0,
+                        current_price=0.0,
                         unrealized_pnl=0.0,
+                        first_buy_date=datetime.now(),
                     )
 
                 if trade.trade_type == TradeType.BUY:
@@ -320,7 +357,7 @@ class BacktestService:
                         else 0
                     )
                     positions[trade.symbol].quantity = new_qty
-                    positions[trade.symbol].average_price = new_avg
+                    positions[trade.symbol].avg_price = new_avg
                 else:  # SELL
                     positions[trade.symbol].quantity -= trade.quantity
 
@@ -336,6 +373,7 @@ class BacktestService:
                 portfolio_values=portfolio_values,
                 trades=trades,
                 positions=positions,
+                error_message=None,
                 created_at=datetime.now(),
             )
 
@@ -405,7 +443,7 @@ class BacktestService:
             await BacktestExecution.find(BacktestExecution.backtest_id == backtest_id)
             .skip(skip)
             .limit(limit)
-            .sort([("start_time", -1)])
+            .sort("-start_time")
             .to_list()
         )
 
@@ -430,6 +468,9 @@ class BacktestService:
         backtest_id: str,
         execution_id: str,
         performance_metrics: PerformanceMetrics,
+        final_portfolio_value: float = 0.0,
+        cash_remaining: float = 0.0,
+        total_invested: float = 100000.0,
         portfolio_history_path: str | None = None,
         trades_history_path: str | None = None,
     ) -> BacktestResult:
@@ -437,17 +478,17 @@ class BacktestService:
         result = BacktestResult(
             backtest_id=backtest_id,
             execution_id=execution_id,
-            total_return=performance_metrics.total_return,
-            annualized_return=performance_metrics.annualized_return,
-            volatility=performance_metrics.volatility,
-            sharpe_ratio=performance_metrics.sharpe_ratio,
-            max_drawdown=performance_metrics.max_drawdown,
-            total_trades=performance_metrics.total_trades,
-            winning_trades=performance_metrics.winning_trades,
-            losing_trades=performance_metrics.losing_trades,
-            win_rate=performance_metrics.win_rate,
-            portfolio_history_path=portfolio_history_path,
-            trades_history_path=trades_history_path,
+            performance=performance_metrics,
+            final_portfolio_value=final_portfolio_value,
+            cash_remaining=cash_remaining,
+            total_invested=total_invested,
+            var_95=None,
+            var_99=None,
+            calmar_ratio=None,
+            sortino_ratio=None,
+            benchmark_return=None,
+            alpha=None,
+            beta=None,
             created_at=datetime.now(),
         )
 

@@ -2,7 +2,7 @@
 Market Data Service Layer
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Dict, Any, Optional
 import logging
 
@@ -308,7 +308,7 @@ class MarketDataService:
             if records_count is not None:
                 request.records_count = records_count
             if status in ["completed", "failed"]:
-                request.completed_at = datetime.utcnow()
+                request.completed_at = datetime.now(timezone.utc)
 
             await request.save()
 

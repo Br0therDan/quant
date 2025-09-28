@@ -69,7 +69,7 @@ class StrategyTemplate(Document):
     default_parameters: dict[str, Any] = Field(
         default_factory=dict, description="기본 파라미터"
     )
-    parameter_schema: dict[str, Any | None] = Field(None, description="파라미터 스키마")
+    parameter_schema: dict[str, Any] | None = Field(None, description="파라미터 스키마")
 
     # 사용 통계
     usage_count: int = Field(default=0, description="사용 횟수")

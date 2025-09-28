@@ -3,7 +3,7 @@ Strategy Management Service Layer
 """
 
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any
 
 from app.core.config import get_settings
@@ -51,8 +51,8 @@ class StrategyService:
         name: str,
         strategy_type: StrategyType,
         description: str | None = None,
-        parameters: dict[str, Any | None] = None,
-        tags: list[str | None] = None,
+        parameters: dict[str, Any] | None = None,
+        tags: list[str] | None = None,
     ) -> Strategy:
         """Create a new strategy"""
 
@@ -62,6 +62,7 @@ class StrategyService:
             description=description or "",
             parameters=parameters or {},
             tags=tags or [],
+            created_by="system",  # 시스템 기본값
         )
 
         await strategy.insert()
@@ -102,9 +103,9 @@ class StrategyService:
         strategy_id: str,
         name: str | None = None,
         description: str | None = None,
-        parameters: dict[str, Any | None] = None,
+        parameters: dict[str, Any] | None = None,
         is_active: bool | None = None,
-        tags: list[str | None] = None,
+        tags: list[str] | None = None,
     ) -> Strategy | None:
         """Update strategy"""
 
@@ -123,7 +124,7 @@ class StrategyService:
         if tags is not None:
             strategy.tags = tags
 
-        strategy.updated_at = datetime.utcnow()
+        strategy.updated_at = datetime.now(timezone.utc)
         await strategy.save()
 
         logger.info(f"Updated strategy: {strategy.name}")
@@ -137,7 +138,7 @@ class StrategyService:
             return False
 
         strategy.is_active = False
-        strategy.updated_at = datetime.utcnow()
+        strategy.updated_at = datetime.now(timezone.utc)
         await strategy.save()
 
         logger.info(f"Deleted strategy: {strategy.name}")
@@ -171,8 +172,9 @@ class StrategyService:
             # Create strategy instance (simplified - would need proper config mapping)
             # This is a simplified implementation - real implementation would need
             # proper configuration object creation based on strategy type
-            mock_config = type("Config", (), strategy.parameters)()
-            mock_config.name = strategy.name
+            mock_config = type(
+                "Config", (), {"name": strategy.name, **strategy.parameters}
+            )
 
             _ = strategy_class(mock_config)  # Create instance but don't use it
 
@@ -187,8 +189,9 @@ class StrategyService:
                 signal_type=signal_type,
                 signal_strength=signal_strength,
                 price=market_data.get("close", 100.0),  # Mock price
-                timestamp=datetime.utcnow(),
+                timestamp=datetime.now(timezone.utc),
                 metadata=market_data,
+                backtest_id=None,  # 단독 실행의 경우 None
             )
 
             await execution.insert()
@@ -228,8 +231,8 @@ class StrategyService:
         strategy_type: StrategyType,
         description: str,
         default_parameters: dict[str, Any],
-        parameter_schema: dict[str, Any | None] = None,
-        tags: list[str | None] = None,
+        parameter_schema: dict[str, Any] | None = None,
+        tags: list[str] | None = None,
     ) -> StrategyTemplate:
         """Create strategy template"""
 
@@ -263,7 +266,7 @@ class StrategyService:
         self,
         template_id: str,
         name: str,
-        parameter_overrides: dict[str, Any | None] = None,
+        parameter_overrides: dict[str, Any] | None = None,
     ) -> Strategy | None:
         """Create strategy instance from template"""
 
@@ -348,6 +351,16 @@ class StrategyService:
                 avg_signal_strength=avg_signal_strength,
                 start_date=executions[-1].timestamp if executions else None,
                 end_date=executions[0].timestamp if executions else None,
+                # 필수 필드 기본값 설정
+                total_return=0.0,
+                win_rate=0.0,
+                avg_return_per_trade=0.0,
+                max_drawdown=0.0,
+                sharpe_ratio=0.0,
+                calmar_ratio=0.0,
+                volatility=0.0,
+                backtest_id=None,
+                accuracy=0.0,
             )
 
             # Check if performance record exists
@@ -359,7 +372,7 @@ class StrategyService:
                 existing.sell_signals = performance.sell_signals
                 existing.hold_signals = performance.hold_signals
                 existing.avg_signal_strength = performance.avg_signal_strength
-                existing.updated_at = datetime.utcnow()
+                existing.updated_at = datetime.now(timezone.utc)
                 await existing.save()
                 return existing
             else:
@@ -372,7 +385,7 @@ class StrategyService:
             return None
 
     async def get_strategy_instance(
-        self, strategy_type: StrategyType, parameters: dict = None
+        self, strategy_type: StrategyType, parameters: dict[str, Any] | None = None
     ):
         """전략 타입에 따른 전략 인스턴스 생성"""
 
