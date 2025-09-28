@@ -7,7 +7,7 @@
 """
 
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
 
 import pandas as pd
 from pydantic import Field
@@ -24,7 +24,7 @@ class BuyAndHoldConfig(StrategyConfig):
     """Buy & Hold 전략 설정"""
 
     # 보유 기간 설정
-    hold_period_days: Optional[int] = Field(
+    hold_period_days: int | None = Field(
         default=None, description="보유 기간 (일, None이면 무제한)"
     )
     auto_sell_at_end: bool = Field(default=True, description="데이터 종료시 자동 매도 여부")
@@ -70,17 +70,17 @@ class BuyAndHoldStrategy(BaseStrategy):
 
         # 전략별 상태
         self._initial_buy_made = False
-        self._buy_date: Optional[datetime] = None
-        self._buy_price: Optional[float] = None
+        self._buy_date: datetime | None = None
+        self._buy_price: float | None = None
         self._current_position = SignalType.HOLD
 
         # DCA 관련 상태
         self._dca_count = 0
-        self._last_dca_date: Optional[datetime] = None
+        self._last_dca_date: datetime | None = None
         self._dca_prices: list[float] = []
 
         # 리밸런싱 관련
-        self._last_rebalance_date: Optional[datetime] = None
+        self._last_rebalance_date: datetime | None = None
 
         # 성과 추적
         self._total_invested = 0.0
@@ -341,7 +341,7 @@ class BuyAndHoldStrategy(BaseStrategy):
 
 def create_buy_and_hold_strategy(
     name: str = "Buy & Hold",
-    hold_period_days: Optional[int] = None,
+    hold_period_days: int | None = None,
     auto_sell_at_end: bool = True,
     enable_dca: bool = False,
     dca_frequency_days: int = 7,

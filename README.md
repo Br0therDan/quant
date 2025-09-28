@@ -19,7 +19,7 @@
 
 ```mermaid
 flowchart TD
-    CLI[CLI (Typer)] --> DS[Data Service]
+    CLI[CLI -Typer] --> DS[Data Service]
     CLI --> SS[Strategy Service]
     CLI --> BS[Backtest Service]
     CLI --> AS[Analytics Service]

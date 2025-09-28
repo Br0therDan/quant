@@ -5,7 +5,6 @@
 
 import logging
 from pathlib import Path
-from typing import Optional
 
 import duckdb
 import pandas as pd
@@ -18,10 +17,10 @@ logger = logging.getLogger(__name__)
 class DatabaseManager:
     """DuckDB 데이터베이스 관리 클래스"""
 
-    def __init__(self, db_path: Optional[str] = None):
+    def __init__(self, db_path: str | None = None):
         self.settings = Settings()
         self.db_path = db_path or self.settings.database_path
-        self.connection: Optional[duckdb.DuckDBPyConnection] = None
+        self.connection: duckdb.DuckDBPyConnection | None = None
 
         # 데이터베이스 디렉토리 생성
         Path(self.db_path).parent.mkdir(parents=True, exist_ok=True)
@@ -303,8 +302,8 @@ class DatabaseManager:
     def get_daily_prices(
         self,
         symbol: str,
-        start_date: Optional[str] = None,
-        end_date: Optional[str] = None,
+        start_date: str | None = None,
+        end_date: str | None = None,
     ) -> pd.DataFrame:
         """일일 주가 데이터 조회"""
         if not self.connection:
@@ -349,7 +348,7 @@ class DatabaseManager:
 
         return [row[0] for row in result]
 
-    def get_data_range(self, symbol: str) -> tuple[Optional[str], Optional[str]]:
+    def get_data_range(self, symbol: str) -> tuple[str | None, str | None]:
         """특정 심볼의 데이터 기간 조회"""
         if not self.connection:
             raise RuntimeError("데이터베이스에 연결되지 않음")

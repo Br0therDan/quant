@@ -5,7 +5,6 @@
 """
 
 from datetime import datetime
-from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -22,7 +21,7 @@ class TradingSignal(BaseModel):
     )
     timestamp: datetime = Field(..., description="신호 시간")
     confidence: float = Field(default=1.0, description="신뢰도")
-    notes: Optional[str] = Field(None, description="메모")
+    notes: str | None = Field(None, description="메모")
 
 
 class DataLoader:

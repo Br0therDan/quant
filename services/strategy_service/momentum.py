@@ -7,7 +7,7 @@
 """
 
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -77,8 +77,8 @@ class MomentumStrategy(BaseStrategy):
 
         # 전략별 상태
         self._current_position = SignalType.HOLD
-        self._entry_price: Optional[float] = None
-        self._entry_date: Optional[datetime] = None
+        self._entry_price: float | None = None
+        self._entry_date: datetime | None = None
         self._position_days = 0
 
         # 기술적 지표 저장
@@ -466,7 +466,6 @@ def create_momentum_strategy(
 
 if __name__ == "__main__":
     # 사용 예시
-    import numpy as np
 
     # 테스트 데이터 생성 (추세가 있는 데이터)
     dates = pd.date_range("2023-01-01", periods=150, freq="D")

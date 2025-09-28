@@ -6,7 +6,7 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
 from enum import Enum
-from typing import Any, Optional
+from typing import Any
 
 import pandas as pd
 from pydantic import BaseModel, Field
@@ -30,13 +30,13 @@ class StrategyConfig(BaseModel):
     parameters: dict[str, Any] = Field(default_factory=dict)
 
     # 공통 설정
-    lookback_period: int = 252
-    min_data_points: int = 30
+    lookback_period: int = 252  # 기본 조회 기간 (일 단위)
+    min_data_points: int = 30  # 최소 데이터 포인트 수
 
     # 리스크 관리
-    max_position_size: float = 1.0
-    stop_loss_pct: Optional[float] = None
-    take_profit_pct: Optional[float] = None
+    max_position_size: float = 1.0  # 최대 포지션 크기 (0-1)
+    stop_loss_pct: float | None = None  # 손절 비율 (예: 0.05 = 5%)
+    take_profit_pct: float | None = None  # 익절 비율 (예: 0.1 = 10%)
 
 
 class StrategySignal(BaseModel):
@@ -58,7 +58,7 @@ class StrategyMetrics(BaseModel):
     sell_signals: int
     hold_signals: int
 
-    accuracy: Optional[float] = None  # 정확도 (실제 백테스트 후 계산)
+    accuracy: float | None = None  # 정확도 (실제 백테스트 후 계산)
     avg_signal_strength: float
 
     # 기술적 지표 관련
@@ -80,7 +80,7 @@ class BaseStrategy(ABC):
         # 내부 상태
         self._is_initialized = False
         self._signals: list[StrategySignal] = []
-        self._last_signal: Optional[StrategySignal] = None
+        self._last_signal: StrategySignal | None = None
 
     @property
     def is_initialized(self) -> bool:
@@ -93,7 +93,7 @@ class BaseStrategy(ABC):
         return self._signals.copy()
 
     @property
-    def last_signal(self) -> Optional[StrategySignal]:
+    def last_signal(self) -> StrategySignal | None:
         """마지막 신호"""
         return self._last_signal
 
@@ -261,8 +261,8 @@ class TechnicalIndicators:
         """RSI (Relative Strength Index)"""
         delta = data.diff()
         # 타입 체크 무시하고 계산
-        gain = delta.where(delta > 0, 0.0).rolling(window=window).mean()  # type: ignore
-        loss = (-delta.where(delta < 0, 0.0)).rolling(window=window).mean()  # type: ignore
+        gain = delta.where(delta > 0, 0.0).rolling(window=window).mean()
+        loss = (-delta.where(delta < 0, 0.0)).rolling(window=window).mean()
         rs = gain / loss
         return 100 - (100 / (1 + rs))
 

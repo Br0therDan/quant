@@ -12,7 +12,7 @@ import json
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any
 
 import pandas as pd
 from pydantic import BaseModel, Field, ValidationError
@@ -63,14 +63,14 @@ class StrategyPerformance(BaseModel):
     total_signals: int
     buy_signals: int
     sell_signals: int
-    total_return: Optional[float] = None
-    win_rate: Optional[float] = None
-    avg_return_per_trade: Optional[float] = None
-    max_drawdown: Optional[float] = None
-    sharpe_ratio: Optional[float] = None
-    calmar_ratio: Optional[float] = None
-    start_date: Optional[datetime] = None
-    end_date: Optional[datetime] = None
+    total_return: float | None = None
+    win_rate: float | None = None
+    avg_return_per_trade: float | None = None
+    max_drawdown: float | None = None
+    sharpe_ratio: float | None = None
+    calmar_ratio: float | None = None
+    start_date: datetime | None = None
+    end_date: datetime | None = None
 
 
 class StrategyManager:
@@ -203,8 +203,8 @@ class StrategyManager:
 
     def create_strategy(
         self,
-        strategy_type: Union[str, StrategyType],
-        name: Optional[str] = None,
+        strategy_type: str | StrategyType,
+        name: str | None = None,
         **parameters: Any,
     ) -> BaseStrategy:
         """전략 생성"""
@@ -230,7 +230,7 @@ class StrategyManager:
     def create_strategy_from_template(
         self,
         template_name: str,
-        strategy_name: Optional[str] = None,
+        strategy_name: str | None = None,
         **override_parameters: Any,
     ) -> BaseStrategy:
         """템플릿으로부터 전략 생성"""
@@ -254,7 +254,7 @@ class StrategyManager:
         )
 
     def list_templates(
-        self, strategy_type: Optional[Union[str, StrategyType]] = None
+        self, strategy_type: str | StrategyType | None = None
     ) -> list[StrategyTemplate]:
         """템플릿 목록 반환"""
         templates = list(self._templates.values())

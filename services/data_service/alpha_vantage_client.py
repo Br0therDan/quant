@@ -6,7 +6,6 @@ Alpha Vantage API를 통해 주식 시계열 데이터를 수집하는 클라이
 import asyncio
 import time
 from datetime import datetime
-from typing import Optional
 
 import aiohttp
 import pandas as pd
@@ -51,11 +50,11 @@ class AlphaVantageClient:
 
     BASE_URL = "https://www.alphavantage.co/query"
 
-    def __init__(self, api_key: Optional[str] = None):
+    def __init__(self, api_key: str | None = None):
         self.settings = Settings()
         self.api_key = api_key or self.settings.alphavantage_api_key
         self.rate_limiter = RateLimiter(calls_per_minute=5)  # 무료 계정 기준
-        self.session: Optional[aiohttp.ClientSession] = None
+        self.session: aiohttp.ClientSession | None = None
 
     async def __aenter__(self):
         """컨텍스트 매니저 진입"""

@@ -6,7 +6,6 @@
 
 from datetime import datetime
 from enum import Enum
-from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -45,8 +44,8 @@ class Trade(BaseModel):
     slippage: float = Field(default=0.0, description="슬리피지")
 
     # 메타데이터
-    strategy_signal_id: Optional[str] = Field(None, description="전략 신호 ID")
-    notes: Optional[str] = Field(None, description="메모")
+    strategy_signal_id: str | None = Field(None, description="전략 신호 ID")
+    notes: str | None = Field(None, description="메모")
 
 
 class Position(BaseModel):
@@ -115,7 +114,7 @@ class BacktestConfig(BaseModel):
     slippage_rate: float = Field(default=0.0005, description="슬리피지율")
 
     # 리밸런싱
-    rebalance_frequency: Optional[str] = Field(
+    rebalance_frequency: str | None = Field(
         None, description="리밸런싱 주기 (daily, weekly, monthly)"
     )
 
@@ -153,12 +152,12 @@ class BacktestResult(BaseModel):
     win_rate: float = Field(..., description="승률")
 
     # 데이터 경로 (큰 데이터는 별도 저장)
-    portfolio_history_path: Optional[str] = Field(None, description="포트폴리오 히스토리 파일 경로")
-    trades_history_path: Optional[str] = Field(None, description="거래 히스토리 파일 경로")
+    portfolio_history_path: str | None = Field(None, description="포트폴리오 히스토리 파일 경로")
+    trades_history_path: str | None = Field(None, description="거래 히스토리 파일 경로")
 
     # 메타데이터
     status: str = Field(default="completed", description="상태")
-    error_message: Optional[str] = Field(None, description="오류 메시지")
+    error_message: str | None = Field(None, description="오류 메시지")
 
     class Config:
         json_encoders = {datetime: lambda v: v.isoformat()}

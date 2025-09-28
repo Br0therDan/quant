@@ -323,7 +323,7 @@ if __name__ == "__main__":
     # 평균회귀 특성을 가진 가격 데이터 생성
     prices = []
     price = 100
-    for i in range(200):
+    for _i in range(200):
         # 평균으로의 회귀 + 랜덤 노이즈
         mean_reversion = (100 - price) * 0.02
         random_change = np.random.randn() * 2

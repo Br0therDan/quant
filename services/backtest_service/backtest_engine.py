@@ -7,7 +7,6 @@
 import logging
 import uuid
 from datetime import datetime
-from typing import Optional
 
 import numpy as np
 
@@ -123,7 +122,7 @@ class ResultManager:
         logger.info(f"백테스트 결과 저장: {result.backtest_id}")
         return result.backtest_id
 
-    def get_result(self, backtest_id: str) -> Optional[BacktestResult]:
+    def get_result(self, backtest_id: str) -> BacktestResult | None:
         """결과 조회"""
         return self.results.get(backtest_id)
 

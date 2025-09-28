@@ -6,7 +6,6 @@ Alpha Vantage API에서 데이터를 수집하고 DuckDB에 저장하는 파이�
 import asyncio
 import logging
 from datetime import datetime, timedelta
-from typing import Optional
 
 import pandas as pd
 
@@ -19,7 +18,7 @@ logger = logging.getLogger(__name__)
 class DataPipeline:
     """데이터 수집 및 저장 파이프라인"""
 
-    def __init__(self, db_manager: Optional[DatabaseManager] = None):
+    def __init__(self, db_manager: DatabaseManager | None = None):
         self.db_manager = db_manager or DatabaseManager()
         self.symbols_to_update: list[str] = []
 
