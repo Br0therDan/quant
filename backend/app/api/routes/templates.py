@@ -179,7 +179,10 @@ async def delete_template(
         if not success:
             raise HTTPException(status_code=404, detail="템플릿을 찾을 수 없습니다")
 
-        return {"message": "템플릿이 성공적으로 삭제되었습니다", "template_id": template_id}
+        return {
+            "message": "템플릿이 성공적으로 삭제되었습니다",
+            "template_id": template_id,
+        }
 
     except HTTPException:
         raise
@@ -228,9 +231,9 @@ async def get_template_usage_stats(
             "statistics": {
                 "total_templates": total_templates,
                 "total_usage": total_usage,
-                "average_usage": total_usage / total_templates
-                if total_templates > 0
-                else 0,
+                "average_usage": (
+                    total_usage / total_templates if total_templates > 0 else 0
+                ),
                 "type_distribution": type_distribution,
                 "popular_templates": popular_list,
             },
