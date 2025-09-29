@@ -20,6 +20,8 @@ class Settings(CommonSettings):
     API_PREFIX: str = "/api/v1"
     API_VERSION: str = "v1"
 
+    DUCKDB_PATH: str = "./data/quant.duckdb"
+
 
 settings = Settings()
 

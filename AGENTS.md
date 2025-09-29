@@ -6,7 +6,6 @@
 
 - **Backend**: FastAPI + Beanie ODM + MongoDB (포트 8000)
 - **Frontend**: Next.js 15 + React 19 + Material-UI (포트 3000)
-- **Services**: 마이크로서비스 모듈들 (`services/`)
 - **Database**: MongoDB (메타데이터) + DuckDB (시계열 캐시)
 
 ## 핵심 개발 패턴

@@ -9,7 +9,7 @@ from pathlib import Path
 import duckdb
 import pandas as pd
 
-from shared.config.settings import Settings
+from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -18,8 +18,7 @@ class DatabaseManager:
     """DuckDB 데이터베이스 관리 클래스"""
 
     def __init__(self, db_path: str | None = None):
-        self.settings = Settings()
-        self.db_path = db_path or self.settings.database_path
+        self.db_path = db_path or settings.DUCKDB_PATH
         self.connection: duckdb.DuckDBPyConnection | None = None
 
         # 데이터베이스 디렉토리 생성

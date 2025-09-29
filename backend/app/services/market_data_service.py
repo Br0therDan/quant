@@ -5,21 +5,24 @@ Market Data Service Layer
 from datetime import datetime, timezone
 from typing import List, Dict, Any, Optional
 import logging
+import pandas as pd
 
 from app.models.market_data import MarketData, DataRequest, DataQuality
 from app.core.config import get_settings
 from mysingle_quant import AlphaVantageClient
+from app.services.database_manager import DatabaseManager
 
 
 logger = logging.getLogger(__name__)
 
 
 class MarketDataService:
-    """Service for managing market data operations"""
+    """Service for managing market data operations with DuckDB caching"""
 
-    def __init__(self):
+    def __init__(self, database_manager: Optional[DatabaseManager] = None):
         self.settings = get_settings()
         self._alpha_vantage = None
+        self.database_manager = database_manager
 
     async def __aenter__(self):
         """Async context manager entry"""
@@ -96,9 +99,28 @@ class MarketDataService:
         end_date: datetime,
         force_refresh: bool = False,
     ) -> List[MarketData]:
-        """Get market data for symbol and date range"""
+        """Get market data for symbol and date range with DuckDB caching"""
 
-        # Check if data exists in database
+        # First, try DuckDB cache for high-speed access
+        if not force_refresh and self.database_manager:
+            try:
+                start_str = start_date.strftime("%Y-%m-%d")
+                end_str = end_date.strftime("%Y-%m-%d")
+
+                cached_df = self.database_manager.get_daily_prices(
+                    symbol=symbol, start_date=start_str, end_date=end_str
+                )
+
+                if not cached_df.empty and self._is_duckdb_data_complete(
+                    cached_df, start_date, end_date
+                ):
+                    logger.info(f"Returning DuckDB cached data for {symbol}")
+                    return self._convert_df_to_market_data_list(cached_df, symbol)
+
+            except Exception as e:
+                logger.warning(f"DuckDB cache lookup failed for {symbol}: {e}")
+
+        # Fallback to MongoDB check
         if not force_refresh:
             existing_data = (
                 await MarketData.find(
@@ -113,19 +135,23 @@ class MarketDataService:
             if existing_data and self._is_data_complete(
                 existing_data, start_date, end_date
             ):
-                logger.info(f"Returning cached data for {symbol}")
+                logger.info(f"Returning MongoDB cached data for {symbol}")
                 return existing_data
 
-        logger.info(f"Fetching data from Alpha Vantage for {symbol}")
+        # Fetch fresh data from Alpha Vantage
+        logger.info(f"Fetching fresh data from Alpha Vantage for {symbol}")
         raw_data = await self.alpha_vantage.get_daily_data(symbol, start_date, end_date)
 
         if not raw_data:
             logger.warning(f"No data received from Alpha Vantage for {symbol}")
             return []
 
-        # Convert and save to database
+        # Convert and save to both MongoDB and DuckDB
         market_data_list = []
+        df_data = []
+
         for data_point in raw_data:
+            # MongoDB format
             market_data = MarketData(
                 symbol=symbol,
                 date=data_point["date"],
@@ -141,10 +167,41 @@ class MarketDataService:
             )
             market_data_list.append(market_data)
 
-        # Bulk insert
+            # DuckDB format
+            df_data.append(
+                {
+                    "symbol": symbol,
+                    "open": data_point["open"],
+                    "high": data_point["high"],
+                    "low": data_point["low"],
+                    "close": data_point["close"],
+                    "adjusted_close": data_point.get(
+                        "adjusted_close", data_point["close"]
+                    ),
+                    "volume": data_point["volume"],
+                    "dividend_amount": data_point.get("dividend_amount", 0.0),
+                    "split_coefficient": data_point.get("split_coefficient", 1.0),
+                }
+            )
+
+        # Save to MongoDB (bulk insert)
         if market_data_list:
             await MarketData.insert_many(market_data_list)
-            logger.info(f"Saved {len(market_data_list)} records for {symbol}")
+            logger.info(
+                f"Saved {len(market_data_list)} records to MongoDB for {symbol}"
+            )
+
+        # Save to DuckDB cache for high-speed access
+        if df_data and self.database_manager:
+            try:
+                df = pd.DataFrame(df_data)
+                df.index = pd.to_datetime([dp["date"] for dp in raw_data])
+
+                inserted_count = self.database_manager.insert_daily_prices(df)
+                logger.info(f"Cached {inserted_count} records in DuckDB for {symbol}")
+
+            except Exception as e:
+                logger.error(f"Failed to cache data in DuckDB for {symbol}: {e}")
 
         return market_data_list
 
@@ -351,3 +408,55 @@ class MarketDataService:
 
         quality_score = completeness_score - duplicate_penalty - anomaly_penalty
         return max(quality_score, 0.0)
+
+    def _is_duckdb_data_complete(
+        self, df: pd.DataFrame, start_date: datetime, end_date: datetime
+    ) -> bool:
+        """Check if DuckDB cached data is complete for the date range"""
+        if df.empty:
+            return False
+
+        # Check date range coverage
+        data_start = df.index.min().to_pydatetime()
+        data_end = df.index.max().to_pydatetime()
+
+        return data_start <= start_date and data_end >= end_date
+
+    def _convert_df_to_market_data_list(
+        self, df: pd.DataFrame, symbol: str
+    ) -> List[MarketData]:
+        """Convert pandas DataFrame from DuckDB to MarketData list"""
+        market_data_list = []
+
+        # Reset index to make 'date' a regular column
+        df_reset = df.reset_index()
+
+        for _, row in df_reset.iterrows():
+            # Extract date from the index column
+            date_value = row["date"] if "date" in row else row.iloc[0]
+
+            # Convert to datetime if it's not already
+            if isinstance(date_value, str):
+                date_obj = datetime.strptime(date_value, "%Y-%m-%d")
+            elif hasattr(date_value, "date"):
+                date_obj = datetime.combine(date_value.date(), datetime.min.time())
+            else:
+                # Fallback - assume it's already a datetime
+                date_obj = date_value
+
+            market_data = MarketData(
+                symbol=symbol,
+                date=date_obj,
+                open=float(row["open"]),
+                high=float(row["high"]),
+                low=float(row["low"]),
+                close=float(row["close"]),
+                volume=int(row["volume"]),
+                adjusted_close=float(row.get("adjusted_close", row["close"])),
+                dividend_amount=float(row.get("dividend_amount", 0.0)),
+                split_coefficient=float(row.get("split_coefficient", 1.0)),
+                source="duckdb_cache",
+            )
+            market_data_list.append(market_data)
+
+        return market_data_list

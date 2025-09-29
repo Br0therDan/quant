@@ -1,5 +1,5 @@
 """
-Backtest Service Implementation
+Backtest Service Implementation with DuckDB Integration
 """
 
 import logging
@@ -26,6 +26,7 @@ from app.models.backtest import (
     TradeType,
 )
 from app.services.integrated_backtest_executor import IntegratedBacktestExecutor
+
 
 logger = logging.getLogger(__name__)
 
@@ -190,12 +191,15 @@ class TradingSimulator:
 
 
 class BacktestService:
-    """백테스트 서비스"""
+    """백테스트 서비스 with DuckDB Integration"""
 
-    def __init__(self, market_data_service=None, strategy_service=None):
+    def __init__(
+        self, market_data_service=None, strategy_service=None, database_manager=None
+    ):
         self.performance_calculator = PerformanceCalculator()
         self.market_data_service = market_data_service
         self.strategy_service = strategy_service
+        self.database_manager = database_manager
         self.integrated_executor = None
 
     def set_dependencies(
@@ -493,4 +497,205 @@ class BacktestService:
         )
 
         await result.insert()
+
+        # DuckDB에도 백테스트 결과 저장 (고속 쿼리용)
+        if self.database_manager:
+            try:
+                await self._save_result_to_duckdb(result)
+            except Exception as e:
+                logger.error(f"DuckDB 백테스트 결과 저장 실패: {e}")
+
         return result
+
+    async def _save_result_to_duckdb(self, result: BacktestResult) -> None:
+        """백테스트 결과를 DuckDB에 저장"""
+        if not self.database_manager:
+            return
+
+        backtest = await Backtest.get(result.backtest_id)
+        if not backtest:
+            logger.warning(f"백테스트를 찾을 수 없음: {result.backtest_id}")
+            return
+
+        result_data = {
+            "strategy_name": backtest.name,
+            "symbols": backtest.config.symbols,
+            "start_date": backtest.config.start_date.date(),
+            "end_date": backtest.config.end_date.date(),
+            "initial_cash": backtest.config.initial_cash,
+            "final_value": result.final_portfolio_value,
+            "total_return": result.performance.total_return,
+            "annual_return": result.performance.annualized_return,
+            "volatility": result.performance.volatility,
+            "sharpe_ratio": result.performance.sharpe_ratio,
+            "max_drawdown": result.performance.max_drawdown,
+            "parameters": {},  # TODO: 전략 파라미터 필드 추가 후 업데이트
+        }
+
+        result_id = self.database_manager.save_backtest_result(result_data)
+        logger.info(f"백테스트 결과가 DuckDB에 저장됨: {result.execution_id} -> {result_id}")
+
+        # 거래 기록도 DuckDB에 저장 (선택적)
+        await self._save_trades_to_duckdb(result.execution_id, [])
+
+    def get_duckdb_results_summary(self) -> list[dict]:
+        """DuckDB에서 백테스트 결과 요약 조회"""
+        if not self.database_manager:
+            return []
+
+        try:
+            query = """
+                SELECT id, strategy_name, symbols, start_date, end_date,
+                       total_return, annual_return, sharpe_ratio, max_drawdown,
+                       created_at
+                FROM backtest_results
+                ORDER BY created_at DESC
+                LIMIT 50
+            """
+            result = self.database_manager.connection.execute(query).fetchall()
+
+            columns = [
+                "id",
+                "strategy_name",
+                "symbols",
+                "start_date",
+                "end_date",
+                "total_return",
+                "annual_return",
+                "sharpe_ratio",
+                "max_drawdown",
+                "created_at",
+            ]
+
+            return [dict(zip(columns, row)) for row in result]
+
+        except Exception as e:
+            logger.error(f"DuckDB 결과 조회 실패: {e}")
+            return []
+
+    async def _save_trades_to_duckdb(
+        self, execution_id: str, trades: list[Trade]
+    ) -> None:
+        """거래 기록을 DuckDB에 저장"""
+        if not self.database_manager or not trades:
+            return
+
+        try:
+            for trade in trades:
+                self.database_manager.connection.execute(
+                    """
+                    INSERT INTO trades
+                    (id, backtest_id, symbol, datetime, action, quantity,
+                     price, commission, value)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                    [
+                        trade.trade_id,
+                        execution_id,
+                        trade.symbol,
+                        trade.timestamp,
+                        trade.trade_type.value,
+                        trade.quantity,
+                        trade.price,
+                        trade.commission,
+                        trade.quantity * trade.price,
+                    ],
+                )
+
+            logger.info(f"거래 기록 {len(trades)}건이 DuckDB에 저장됨: {execution_id}")
+
+        except Exception as e:
+            logger.error(f"거래 기록 DuckDB 저장 실패: {e}")
+
+    def get_duckdb_trades_by_execution(self, execution_id: str) -> list[dict]:
+        """실행 ID별 거래 기록 조회 (DuckDB)"""
+        if not self.database_manager:
+            return []
+
+        try:
+            query = """
+                SELECT id, symbol, datetime, action, quantity, price, commission, value
+                FROM trades
+                WHERE backtest_id = ?
+                ORDER BY datetime
+            """
+            result = self.database_manager.connection.execute(
+                query, [execution_id]
+            ).fetchall()
+
+            columns = [
+                "id",
+                "symbol",
+                "datetime",
+                "action",
+                "quantity",
+                "price",
+                "commission",
+                "value",
+            ]
+            return [dict(zip(columns, row)) for row in result]
+
+        except Exception as e:
+            logger.error(f"DuckDB 거래 기록 조회 실패: {e}")
+            return []
+
+    def get_duckdb_performance_stats(self) -> dict[str, Any]:
+        """DuckDB에서 성과 통계 조회"""
+        if not self.database_manager:
+            return {}
+
+        try:
+            # 전체 통계
+            overall_query = """
+                SELECT
+                    COUNT(*) as total_backtests,
+                    AVG(total_return) as avg_return,
+                    AVG(sharpe_ratio) as avg_sharpe,
+                    AVG(max_drawdown) as avg_drawdown,
+                    MAX(total_return) as best_return,
+                    MIN(total_return) as worst_return
+                FROM backtest_results
+            """
+            overall_stats = self.database_manager.connection.execute(
+                overall_query
+            ).fetchone()
+
+            # 전략별 통계
+            strategy_query = """
+                SELECT
+                    strategy_name,
+                    COUNT(*) as count,
+                    AVG(total_return) as avg_return,
+                    AVG(sharpe_ratio) as avg_sharpe
+                FROM backtest_results
+                GROUP BY strategy_name
+                ORDER BY avg_return DESC
+                LIMIT 10
+            """
+            strategy_stats = self.database_manager.connection.execute(
+                strategy_query
+            ).fetchall()
+
+            return {
+                "overall": {
+                    "total_backtests": overall_stats[0] if overall_stats else 0,
+                    "avg_return": round(overall_stats[1] or 0, 4),
+                    "avg_sharpe": round(overall_stats[2] or 0, 4),
+                    "avg_drawdown": round(overall_stats[3] or 0, 4),
+                    "best_return": round(overall_stats[4] or 0, 4),
+                    "worst_return": round(overall_stats[5] or 0, 4),
+                },
+                "by_strategy": [
+                    {
+                        "strategy_name": row[0],
+                        "count": row[1],
+                        "avg_return": round(row[2] or 0, 4),
+                        "avg_sharpe": round(row[3] or 0, 4),
+                    }
+                    for row in strategy_stats
+                ],
+            }
+
+        except Exception as e:
+            logger.error(f"DuckDB 성과 통계 조회 실패: {e}")
+            return {}
