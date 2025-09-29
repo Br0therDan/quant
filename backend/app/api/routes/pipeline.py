@@ -21,6 +21,6 @@ from .watchlists import router as watchlists_router
 router = APIRouter()
 
 # Include all sub-routers
-router.include_router(status_router)
-router.include_router(companies_router)
-router.include_router(watchlists_router)
+router.include_router(status_router, prefix="/status", tags=["Pipeline Status"])
+router.include_router(companies_router, prefix="/companies", tags=["Company Data"])
+router.include_router(watchlists_router, prefix="/watchlists", tags=["Watchlists"])

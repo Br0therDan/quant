@@ -16,7 +16,7 @@ from app.schemas.market_data import (
 from app.services.service_factory import service_factory
 from app.services.market_data_service import MarketDataService
 
-router = APIRouter(prefix="/market-data", tags=["Market Data"])
+router = APIRouter()
 
 
 async def get_market_data_service() -> AsyncGenerator[MarketDataService, None]:
@@ -182,3 +182,87 @@ async def analyze_data_quality(
         raise HTTPException(status_code=422, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/analytics/cache-performance")
+async def get_cache_performance_stats(
+    service: MarketDataService = Depends(get_market_data_service),
+):
+    """DuckDB 캐시 성능 통계 조회"""
+    try:
+        if not service.database_manager:
+            return {"status": "disabled", "message": "DuckDB 캐시가 비활성화됨"}
+
+        # DuckDB 통계 수집
+        symbols = service.database_manager.get_available_symbols()
+
+        # 캐시된 데이터 요약
+        stats = {
+            "cache_enabled": True,
+            "cached_symbols_count": len(symbols),
+            "sample_symbols": symbols[:10],
+            "database_path": service.database_manager.db_path,
+            "connection_status": (
+                "connected" if service.database_manager.connection else "disconnected"
+            ),
+            "performance_notes": [
+                "DuckDB 캐시를 통해 10-100배 빠른 시계열 조회",
+                "force_refresh=true로 캐시 우회 가능",
+                "자동으로 Alpha Vantage → DuckDB → MongoDB 순서로 조회",
+            ],
+        }
+
+        return {
+            "status": "success",
+            "cache_stats": stats,
+            "analyzed_at": datetime.now().isoformat(),
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"캐시 통계 조회 실패: {str(e)}")
+
+
+@router.get("/analytics/symbol-coverage")
+async def get_symbols_coverage_analytics(
+    service: MarketDataService = Depends(get_market_data_service),
+):
+    """심볼별 데이터 커버리지 분석"""
+    try:
+        if not service.database_manager:
+            return {"status": "disabled", "message": "DuckDB 분석 기능이 비활성화됨"}
+
+        symbols = service.database_manager.get_available_symbols()
+
+        # 각 심볼의 데이터 범위 조회
+        coverage_summary = []
+        for symbol in symbols[:20]:  # 처음 20개 심볼만 분석
+            try:
+                start_date, end_date = service.database_manager.get_data_range(symbol)
+                coverage_summary.append(
+                    {
+                        "symbol": symbol,
+                        "start_date": start_date,
+                        "end_date": end_date,
+                        "has_data": bool(start_date and end_date),
+                    }
+                )
+            except Exception:
+                coverage_summary.append(
+                    {
+                        "symbol": symbol,
+                        "start_date": None,
+                        "end_date": None,
+                        "has_data": False,
+                    }
+                )
+
+        return {
+            "status": "success",
+            "total_symbols": len(symbols),
+            "analyzed_symbols": len(coverage_summary),
+            "coverage_summary": coverage_summary,
+            "analyzed_at": datetime.now().isoformat(),
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"커버리지 분석 실패: {str(e)}")

@@ -9,7 +9,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from app.schemas.watchlist import WatchlistCreate, WatchlistUpdate
 from app.services.data_pipeline import DataPipeline
 
-router = APIRouter(prefix="/pipeline", tags=["Watchlist Management"])
+router = APIRouter()
 
 
 async def get_data_pipeline() -> AsyncGenerator[DataPipeline, None]:

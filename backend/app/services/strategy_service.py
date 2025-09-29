@@ -262,6 +262,29 @@ class StrategyService:
         templates = await StrategyTemplate.find(query).to_list()
         return templates
 
+    async def get_template_by_id(self, template_id: str) -> StrategyTemplate | None:
+        """Get template by ID"""
+        try:
+            template = await StrategyTemplate.get(template_id)
+            return template
+        except Exception as e:
+            logger.error(f"Failed to get template {template_id}: {e}")
+            return None
+
+    async def delete_template(self, template_id: str) -> bool:
+        """Delete template by ID"""
+        try:
+            template = await StrategyTemplate.get(template_id)
+            if not template:
+                return False
+
+            await template.delete()
+            logger.info(f"Template {template_id} deleted successfully")
+            return True
+        except Exception as e:
+            logger.error(f"Failed to delete template {template_id}: {e}")
+            return False
+
     async def create_strategy_from_template(
         self,
         template_id: str,

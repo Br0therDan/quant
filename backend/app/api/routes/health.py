@@ -9,7 +9,7 @@ from app.schemas.market_data import HealthCheckResponse
 from app.core.config import get_settings
 from app.models.market_data import MarketData
 
-router = APIRouter(prefix="/health", tags=["Health"])
+router = APIRouter()
 
 
 @router.get("/", response_model=HealthCheckResponse)

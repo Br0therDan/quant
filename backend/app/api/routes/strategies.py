@@ -21,7 +21,7 @@ from app.schemas.strategy import (
 from app.services.service_factory import service_factory
 from app.services.strategy_service import StrategyService
 
-router = APIRouter(prefix="/strategies", tags=["Strategies"])
+router = APIRouter()
 
 
 async def get_strategy_service() -> AsyncGenerator[StrategyService, None]:

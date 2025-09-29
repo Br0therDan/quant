@@ -9,7 +9,7 @@ from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
 from app.schemas.watchlist import UpdateRequest
 from app.services.data_pipeline import DataPipeline
 
-router = APIRouter(prefix="/pipeline", tags=["Pipeline Status"])
+router = APIRouter()
 
 
 async def get_data_pipeline() -> AsyncGenerator[DataPipeline, None]:

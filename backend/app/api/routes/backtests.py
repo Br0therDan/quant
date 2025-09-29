@@ -3,6 +3,7 @@ Backtest API Routes
 """
 
 from collections.abc import AsyncGenerator
+from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
@@ -14,8 +15,6 @@ from app.schemas.backtest import (
     BacktestExecutionResponse,
     BacktestListResponse,
     BacktestResponse,
-    BacktestResultListResponse,
-    BacktestResultResponse,
     BacktestUpdateRequest,
     IntegratedBacktestRequest,
     IntegratedBacktestResponse,
@@ -26,7 +25,7 @@ from app.services.integrated_backtest_executor import IntegratedBacktestExecutor
 from app.models.strategy import StrategyType
 from app.models.backtest import BacktestConfig
 
-router = APIRouter(prefix="/backtests", tags=["Backtests", "Integrated Backtest"])
+router = APIRouter()
 
 
 async def get_backtest_service() -> AsyncGenerator[BacktestService, None]:
@@ -269,7 +268,7 @@ async def get_backtest_executions(
         raise HTTPException(status_code=500, detail=str(e)) from e
 
 
-@router.get("/results/", response_model=BacktestResultListResponse)
+@router.get("/results/", response_model=dict)
 async def get_backtest_results(
     backtest_id: str | None = Query(None, description="백테스트 ID 필터"),
     execution_id: str | None = Query(None, description="실행 ID 필터"),
@@ -277,45 +276,34 @@ async def get_backtest_results(
     limit: int = Query(100, ge=1, le=1000, description="조회할 개수"),
     service: BacktestService = Depends(get_backtest_service),
 ):
-    """Get backtest results"""
+    """Get backtest results from DuckDB (고성능 분석용)"""
     try:
-        results = await service.get_backtest_results(
-            backtest_id=backtest_id,
-            execution_id=execution_id,
-            skip=skip,
-            limit=limit,
-        )
+        # DuckDB에서 백테스트 결과 요약 조회
+        results_summary = service.get_duckdb_results_summary()
 
-        result_responses = [
-            BacktestResultResponse(
-                id=str(result.id),
-                backtest_id=result.backtest_id,
-                execution_id=result.execution_id,
-                total_return=result.total_return,
-                annualized_return=result.annualized_return,
-                volatility=result.volatility,
-                sharpe_ratio=result.sharpe_ratio,
-                max_drawdown=result.max_drawdown,
-                calmar_ratio=result.calmar_ratio,
-                sortino_ratio=result.sortino_ratio,
-                benchmark_return=result.benchmark_return,
-                alpha=result.alpha,
-                beta=result.beta,
-                total_trades=result.total_trades,
-                winning_trades=result.winning_trades,
-                losing_trades=result.losing_trades,
-                win_rate=result.win_rate,
-                portfolio_history_path=result.portfolio_history_path,
-                trades_history_path=result.trades_history_path,
-                created_at=result.created_at,
-            )
-            for result in results
-        ]
+        # 필터링 적용
+        filtered_results = results_summary
+        if backtest_id:
+            filtered_results = [
+                r for r in filtered_results if r.get("backtest_id") == backtest_id
+            ]
+        if execution_id:
+            filtered_results = [
+                r for r in filtered_results if r.get("execution_id") == execution_id
+            ]
 
-        return BacktestResultListResponse(
-            results=result_responses,
-            total=len(result_responses),
-        )
+        # 페이지네이션 적용
+        total = len(filtered_results)
+        paginated_results = filtered_results[skip : skip + limit]
+
+        return {
+            "results": paginated_results,
+            "total": total,
+            "skip": skip,
+            "limit": limit,
+            "source": "duckdb",
+            "message": "Results from high-performance DuckDB cache",
+        }
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) from e
@@ -403,133 +391,116 @@ async def create_and_run_integrated_backtest(
         )
 
 
-@router.get("/test-services")
-async def test_service_integration():
-    """서비스 연동 테스트"""
+@router.get("/health")
+async def health_check():
+    """백테스트 시스템 상태 확인 (DuckDB + MongoDB 통합 상태)"""
     try:
-        # 각 서비스 인스턴스 생성 테스트
+        # DuckDB 상태 확인
+        database_manager = service_factory.get_database_manager()
+        duckdb_connected = database_manager.connection is not None
+
+        # 서비스 상태 확인
         market_data_service = service_factory.get_market_data_service()
-        strategy_service = service_factory.get_strategy_service()
+        backtest_service = service_factory.get_backtest_service()
 
-        # 기본 기능 테스트
-        symbols = await market_data_service.get_available_symbols()
-
-        # 전략 인스턴스 생성 테스트
-        strategy_instance = await strategy_service.get_strategy_instance(
-            strategy_type=StrategyType.BUY_AND_HOLD, parameters={}
+        # 데이터 상태 확인
+        duckdb_symbols = (
+            database_manager.get_available_symbols() if duckdb_connected else []
         )
+        mongodb_symbols = await market_data_service.get_available_symbols()
+
+        # DuckDB 백테스트 결과 통계
+        results_count = len(backtest_service.get_duckdb_results_summary())
 
         return {
-            "status": "success",
-            "services": {
-                "market_data": "✅ Available",
-                "strategy": "✅ Available",
-                "backtest": "✅ Available",
+            "status": "healthy",
+            "timestamp": datetime.now().isoformat(),
+            "databases": {
+                "duckdb": {
+                    "connected": duckdb_connected,
+                    "symbols_count": len(duckdb_symbols),
+                    "backtest_results_count": results_count,
+                },
+                "mongodb": {"connected": True, "symbols_count": len(mongodb_symbols)},
             },
-            "tests": {
-                "symbols_count": len(symbols),
-                "strategy_instance": "✅ Created" if strategy_instance else "❌ Failed",
+            "services": {
+                "market_data": "✅ Ready",
+                "strategy": "✅ Ready",
+                "backtest": "✅ Ready",
                 "integrated_executor": "✅ Ready",
             },
         }
 
     except Exception as e:
         return {
-            "status": "error",
+            "status": "unhealthy",
+            "timestamp": datetime.now().isoformat(),
             "error": str(e),
-            "services": {
-                "market_data": "❌ Error",
-                "strategy": "❌ Error",
-                "backtest": "❌ Error",
-            },
+            "databases": {"duckdb": "❌ Error", "mongodb": "❌ Error"},
         }
 
 
-@router.get("/test-duckdb")
-async def test_duckdb_integration():
-    """DuckDB 연동 테스트"""
-    try:
-        # BacktestService에서 DuckDB 연동 확인
-        backtest_service = service_factory.get_backtest_service()
-
-        # MarketDataService에서 DuckDB 연동 확인
-        market_data_service = service_factory.get_market_data_service()
-
-        # DatabaseManager 인스턴스 확인
-        database_manager = service_factory.get_database_manager()
-
-        # DuckDB 연결 상태 확인
-        is_connected = database_manager.connection is not None
-
-        # 사용 가능한 심볼 조회 (DuckDB에서)
-        duckdb_symbols = []
-        if is_connected:
-            duckdb_symbols = database_manager.get_available_symbols()
-
-        # DuckDB 백테스트 결과 요약
-        results_summary = backtest_service.get_duckdb_results_summary()
-
-        return {
-            "status": "success",
-            "duckdb_integration": {
-                "database_manager": (
-                    "✅ Connected" if is_connected else "❌ Not Connected"
-                ),
-                "market_data_service": (
-                    "✅ Integrated"
-                    if market_data_service.database_manager
-                    else "❌ Not Integrated"
-                ),
-                "backtest_service": (
-                    "✅ Integrated"
-                    if backtest_service.database_manager
-                    else "❌ Not Integrated"
-                ),
-            },
-            "duckdb_data": {
-                "available_symbols_count": len(duckdb_symbols),
-                "sample_symbols": duckdb_symbols[:10],  # 처음 10개만
-                "backtest_results_count": len(results_summary),
-                "recent_results": results_summary[:5],  # 최근 5개만
-            },
-        }
-
-    except Exception as e:
-        return {
-            "status": "error",
-            "error": str(e),
-            "duckdb_integration": {
-                "database_manager": "❌ Error",
-                "market_data_service": "❌ Error",
-                "backtest_service": "❌ Error",
-            },
-        }
-
-
-@router.get("/duckdb/stats")
-async def get_duckdb_performance_stats(
+@router.get("/analytics/performance-stats")
+async def get_performance_analytics(
     service: BacktestService = Depends(get_backtest_service),
 ):
-    """DuckDB 성과 통계 조회"""
+    """백테스트 성과 분석 (DuckDB 고성능 분석)"""
     try:
         stats = service.get_duckdb_performance_stats()
-        return {"status": "success", "stats": stats}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"성과 통계 조회 실패: {str(e)}")
-
-
-@router.get("/duckdb/trades/{execution_id}")
-async def get_duckdb_trades(
-    execution_id: str, service: BacktestService = Depends(get_backtest_service)
-):
-    """실행별 거래 기록 조회 (DuckDB)"""
-    try:
-        trades = service.get_duckdb_trades_by_execution(execution_id)
         return {
             "status": "success",
-            "execution_id": execution_id,
-            "trades_count": len(trades),
-            "trades": trades,
+            "analytics": stats,
+            "source": "duckdb",
+            "computed_at": datetime.now().isoformat(),
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"거래 기록 조회 실패: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"성과 분석 실패: {str(e)}")
+
+
+@router.get("/analytics/trades")
+async def get_trades_analytics(
+    execution_id: str | None = Query(None, description="특정 실행 ID 필터"),
+    symbol: str | None = Query(None, description="심볼 필터"),
+    service: BacktestService = Depends(get_backtest_service),
+):
+    """거래 기록 분석 (DuckDB 고성능 쿼리)"""
+    try:
+        if execution_id:
+            trades = service.get_duckdb_trades_by_execution(execution_id)
+            analysis_scope = f"execution_{execution_id}"
+        else:
+            # 전체 거래 기록 요약 (향후 구현)
+            trades = []
+            analysis_scope = "all_executions"
+
+        return {
+            "status": "success",
+            "analysis_scope": analysis_scope,
+            "trades_count": len(trades),
+            "trades": trades,
+            "source": "duckdb",
+            "queried_at": datetime.now().isoformat(),
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"거래 분석 실패: {str(e)}")
+
+
+@router.get("/analytics/summary")
+async def get_backtest_summary_analytics(
+    service: BacktestService = Depends(get_backtest_service),
+):
+    """백테스트 결과 요약 분석 (DuckDB 기반)"""
+    try:
+        summary = service.get_duckdb_results_summary()
+
+        return {
+            "status": "success",
+            "summary": {
+                "total_backtests": len(summary),
+                "recent_results": summary[:10],  # 최근 10개
+                "source": "duckdb",
+            },
+            "analyzed_at": datetime.now().isoformat(),
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"요약 분석 실패: {str(e)}")

@@ -8,7 +8,7 @@ from fastapi import APIRouter, HTTPException, Depends
 
 from app.services.data_pipeline import DataPipeline
 
-router = APIRouter(prefix="/pipeline", tags=["Company Data"])
+router = APIRouter()
 
 
 async def get_data_pipeline() -> AsyncGenerator[DataPipeline, None]:
