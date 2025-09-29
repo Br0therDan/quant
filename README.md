@@ -8,45 +8,70 @@ Alpha Vantage 기반의 현대적인 마이크로서비스 아키텍처 퀀트 �
 
 ```mermaid
 graph TB
-    subgraph "API Layer"
-        A[FastAPI Gateway] --> B[Health Check]
-        A --> C[Market Data Routes]
-        A --> D[Strategy Routes]
-        A --> E[Backtest Routes]
-        A --> F[Pipeline Routes]
+    subgraph API["🌐 API Layer"]
+        A[FastAPI Gateway]
+        B[Health Check]
+        C[Market Data Routes]
+        D[Strategy Routes]
+        E[Backtest Routes]
+        F[Pipeline Routes]
     end
 
-    subgraph "Service Layer"
-        G[MarketDataService] --> G1[Alpha Vantage Client]
-        H[StrategyService] --> H1[Strategy Factory]
-        I[BacktestService] --> I1[Trading Simulator]
-        J[DataPipeline] --> J1[Data Collection]
-        K[IntegratedExecutor] --> L[All Services]
+    subgraph SERVICE["⚙️ Service Layer"]
+        G[MarketDataService]
+        G1[Alpha Vantage Client]
+        H[StrategyService]
+        H1[Strategy Factory]
+        I[BacktestService]
+        I1[Trading Simulator]
+        J[DataPipeline]
+        J1[Data Collection]
+        K[IntegratedExecutor]
     end
 
-    subgraph "Data Layer"
+    subgraph DATA["💾 Data Layer"]
         M[(MongoDB)]
         N[(DuckDB Cache)]
         O[Alpha Vantage API]
     end
 
-    subgraph "Service Factory"
+    subgraph FACTORY["🏭 Service Factory"]
         SF[ServiceFactory]
         DM[DatabaseManager]
     end
 
+    %% API Layer Connections
+    A --> B
+    A --> C
+    A --> D
+    A --> E
+    A --> F
+
+    %% Service Layer Internal
+    G --> G1
+    H --> H1
+    I --> I1
+    J --> J1
+    K --> G
+    K --> H
+    K --> I
+
+    %% API to Service Connections
     C --> G
     D --> H
     E --> I
     F --> J
     E --> K
 
+    %% Service Factory Connections
     G --> SF
     H --> SF
     I --> SF
     K --> SF
     SF --> DM
     DM --> N
+
+    %% Data Connections
     G --> O
     G --> N
     H --> M
