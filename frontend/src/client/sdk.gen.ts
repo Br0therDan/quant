@@ -3,1679 +3,1679 @@
 import type { Client, Options as Options2, TDataShape } from "./client";
 import { client } from "./client.gen";
 import type {
-  BacktestsCreateAndRunIntegratedBacktestData,
-  BacktestsCreateAndRunIntegratedBacktestErrors,
-  BacktestsCreateAndRunIntegratedBacktestResponses,
-  BacktestsCreateBacktestData,
-  BacktestsCreateBacktestErrors,
-  BacktestsCreateBacktestResponses,
-  BacktestsDeleteBacktestData,
-  BacktestsDeleteBacktestErrors,
-  BacktestsDeleteBacktestResponses,
-  BacktestsExecuteBacktestData,
-  BacktestsExecuteBacktestErrors,
-  BacktestsExecuteBacktestResponses,
-  BacktestsGetBacktestData,
-  BacktestsGetBacktestErrors,
-  BacktestsGetBacktestExecutionsData,
-  BacktestsGetBacktestExecutionsErrors,
-  BacktestsGetBacktestExecutionsResponses,
-  BacktestsGetBacktestResponses,
-  BacktestsGetBacktestResultsData,
-  BacktestsGetBacktestResultsErrors,
-  BacktestsGetBacktestResultsResponses,
-  BacktestsGetBacktestsData,
-  BacktestsGetBacktestsErrors,
-  BacktestsGetBacktestsResponses,
-  BacktestsGetBacktestSummaryAnalyticsData,
-  BacktestsGetBacktestSummaryAnalyticsResponses,
-  BacktestsGetPerformanceAnalyticsData,
-  BacktestsGetPerformanceAnalyticsResponses,
-  BacktestsGetTradesAnalyticsData,
-  BacktestsGetTradesAnalyticsErrors,
-  BacktestsGetTradesAnalyticsResponses,
-  BacktestsHealthCheckData,
-  BacktestsHealthCheckResponses,
-  BacktestsUpdateBacktestData,
-  BacktestsUpdateBacktestErrors,
-  BacktestsUpdateBacktestResponses,
-  CompanyDataCollectDailyDataData,
-  CompanyDataCollectDailyDataErrors,
-  CompanyDataCollectDailyDataResponses,
-  CompanyDataCollectStockInfoData,
-  CompanyDataCollectStockInfoErrors,
-  CompanyDataCollectStockInfoResponses,
-  CompanyDataGetAllCompaniesData,
-  CompanyDataGetAllCompaniesResponses,
-  CompanyDataGetCompanyInfoData,
-  CompanyDataGetCompanyInfoErrors,
-  CompanyDataGetCompanyInfoResponses,
-  CompanyDataGetSymbolCoverageData,
-  CompanyDataGetSymbolCoverageErrors,
-  CompanyDataGetSymbolCoverageResponses,
-  HealthHealthCheck2Data,
-  HealthHealthCheck2Responses,
-  HealthHealthCheckData,
-  HealthHealthCheckResponses,
-  HealthLivenessProbeData,
-  HealthLivenessProbeResponses,
-  HealthReadinessProbeData,
-  HealthReadinessProbeResponses,
-  MarketDataAnalyzeDataQualityData,
-  MarketDataAnalyzeDataQualityErrors,
-  MarketDataAnalyzeDataQualityResponses,
-  MarketDataGetAvailableSymbolsData,
-  MarketDataGetAvailableSymbolsResponses,
-  MarketDataGetCachePerformanceStatsData,
-  MarketDataGetCachePerformanceStatsResponses,
-  MarketDataGetDataCoverageData,
-  MarketDataGetDataCoverageErrors,
-  MarketDataGetDataCoverageResponses,
-  MarketDataGetMarketDataData,
-  MarketDataGetMarketDataErrors,
-  MarketDataGetMarketDataResponses,
-  MarketDataGetSymbolsCoverageAnalyticsData,
-  MarketDataGetSymbolsCoverageAnalyticsResponses,
-  MarketDataRequestBulkDataData,
-  MarketDataRequestBulkDataErrors,
-  MarketDataRequestBulkDataResponses,
-  PipelineStatusGetPipelineStatusData,
-  PipelineStatusGetPipelineStatusResponses,
-  PipelineStatusRunPipelineUpdateData,
-  PipelineStatusRunPipelineUpdateErrors,
-  PipelineStatusRunPipelineUpdateResponses,
-  PipelineStatusSetupDefaultSymbolsData,
-  PipelineStatusSetupDefaultSymbolsResponses,
-  StrategiesCreateStrategyData,
-  StrategiesCreateStrategyErrors,
-  StrategiesCreateStrategyResponses,
-  StrategiesDeleteStrategyData,
-  StrategiesDeleteStrategyErrors,
-  StrategiesDeleteStrategyResponses,
-  StrategiesExecuteStrategyData,
-  StrategiesExecuteStrategyErrors,
-  StrategiesExecuteStrategyResponses,
-  StrategiesGetStrategiesData,
-  StrategiesGetStrategiesErrors,
-  StrategiesGetStrategiesResponses,
-  StrategiesGetStrategyData,
-  StrategiesGetStrategyErrors,
-  StrategiesGetStrategyExecutionsData,
-  StrategiesGetStrategyExecutionsErrors,
-  StrategiesGetStrategyExecutionsResponses,
-  StrategiesGetStrategyPerformanceData,
-  StrategiesGetStrategyPerformanceErrors,
-  StrategiesGetStrategyPerformanceResponses,
-  StrategiesGetStrategyResponses,
-  StrategiesUpdateStrategyData,
-  StrategiesUpdateStrategyErrors,
-  StrategiesUpdateStrategyResponses,
-  TemplatesCreateStrategyFromTemplateData,
-  TemplatesCreateStrategyFromTemplateErrors,
-  TemplatesCreateStrategyFromTemplateResponses,
-  TemplatesCreateTemplateData,
-  TemplatesCreateTemplateErrors,
-  TemplatesCreateTemplateResponses,
-  TemplatesDeleteTemplateData,
-  TemplatesDeleteTemplateErrors,
-  TemplatesDeleteTemplateResponses,
-  TemplatesGetTemplateData,
-  TemplatesGetTemplateErrors,
-  TemplatesGetTemplateResponses,
-  TemplatesGetTemplatesData,
-  TemplatesGetTemplatesErrors,
-  TemplatesGetTemplatesResponses,
-  TemplatesGetTemplateUsageStatsData,
-  TemplatesGetTemplateUsageStatsResponses,
-  WatchlistsCreateWatchlistData,
-  WatchlistsCreateWatchlistErrors,
-  WatchlistsCreateWatchlistResponses,
-  WatchlistsDeleteWatchlistData,
-  WatchlistsDeleteWatchlistErrors,
-  WatchlistsDeleteWatchlistResponses,
-  WatchlistsGetWatchlistData,
-  WatchlistsGetWatchlistErrors,
-  WatchlistsGetWatchlistResponses,
-  WatchlistsListWatchlistsData,
-  WatchlistsListWatchlistsResponses,
-  WatchlistsUpdateWatchlistByNameData,
-  WatchlistsUpdateWatchlistByNameErrors,
-  WatchlistsUpdateWatchlistByNameResponses,
-  WatchlistsUpdateWatchlistData,
-  WatchlistsUpdateWatchlistErrors,
-  WatchlistsUpdateWatchlistResponses,
+	BacktestsCreateAndRunIntegratedBacktestData,
+	BacktestsCreateAndRunIntegratedBacktestErrors,
+	BacktestsCreateAndRunIntegratedBacktestResponses,
+	BacktestsCreateBacktestData,
+	BacktestsCreateBacktestErrors,
+	BacktestsCreateBacktestResponses,
+	BacktestsDeleteBacktestData,
+	BacktestsDeleteBacktestErrors,
+	BacktestsDeleteBacktestResponses,
+	BacktestsExecuteBacktestData,
+	BacktestsExecuteBacktestErrors,
+	BacktestsExecuteBacktestResponses,
+	BacktestsGetBacktestData,
+	BacktestsGetBacktestErrors,
+	BacktestsGetBacktestExecutionsData,
+	BacktestsGetBacktestExecutionsErrors,
+	BacktestsGetBacktestExecutionsResponses,
+	BacktestsGetBacktestResponses,
+	BacktestsGetBacktestResultsData,
+	BacktestsGetBacktestResultsErrors,
+	BacktestsGetBacktestResultsResponses,
+	BacktestsGetBacktestsData,
+	BacktestsGetBacktestsErrors,
+	BacktestsGetBacktestsResponses,
+	BacktestsGetBacktestSummaryAnalyticsData,
+	BacktestsGetBacktestSummaryAnalyticsResponses,
+	BacktestsGetPerformanceAnalyticsData,
+	BacktestsGetPerformanceAnalyticsResponses,
+	BacktestsGetTradesAnalyticsData,
+	BacktestsGetTradesAnalyticsErrors,
+	BacktestsGetTradesAnalyticsResponses,
+	BacktestsHealthCheckData,
+	BacktestsHealthCheckResponses,
+	BacktestsUpdateBacktestData,
+	BacktestsUpdateBacktestErrors,
+	BacktestsUpdateBacktestResponses,
+	CompanyDataCollectDailyDataData,
+	CompanyDataCollectDailyDataErrors,
+	CompanyDataCollectDailyDataResponses,
+	CompanyDataCollectStockInfoData,
+	CompanyDataCollectStockInfoErrors,
+	CompanyDataCollectStockInfoResponses,
+	CompanyDataGetAllCompaniesData,
+	CompanyDataGetAllCompaniesResponses,
+	CompanyDataGetCompanyInfoData,
+	CompanyDataGetCompanyInfoErrors,
+	CompanyDataGetCompanyInfoResponses,
+	CompanyDataGetSymbolCoverageData,
+	CompanyDataGetSymbolCoverageErrors,
+	CompanyDataGetSymbolCoverageResponses,
+	HealthHealthCheck2Data,
+	HealthHealthCheck2Responses,
+	HealthHealthCheckData,
+	HealthHealthCheckResponses,
+	HealthLivenessProbeData,
+	HealthLivenessProbeResponses,
+	HealthReadinessProbeData,
+	HealthReadinessProbeResponses,
+	MarketDataAnalyzeDataQualityData,
+	MarketDataAnalyzeDataQualityErrors,
+	MarketDataAnalyzeDataQualityResponses,
+	MarketDataGetAvailableSymbolsData,
+	MarketDataGetAvailableSymbolsResponses,
+	MarketDataGetCachePerformanceStatsData,
+	MarketDataGetCachePerformanceStatsResponses,
+	MarketDataGetDataCoverageData,
+	MarketDataGetDataCoverageErrors,
+	MarketDataGetDataCoverageResponses,
+	MarketDataGetMarketDataData,
+	MarketDataGetMarketDataErrors,
+	MarketDataGetMarketDataResponses,
+	MarketDataGetSymbolsCoverageAnalyticsData,
+	MarketDataGetSymbolsCoverageAnalyticsResponses,
+	MarketDataRequestBulkDataData,
+	MarketDataRequestBulkDataErrors,
+	MarketDataRequestBulkDataResponses,
+	PipelineStatusGetPipelineStatusData,
+	PipelineStatusGetPipelineStatusResponses,
+	PipelineStatusRunPipelineUpdateData,
+	PipelineStatusRunPipelineUpdateErrors,
+	PipelineStatusRunPipelineUpdateResponses,
+	PipelineStatusSetupDefaultSymbolsData,
+	PipelineStatusSetupDefaultSymbolsResponses,
+	StrategiesCreateStrategyData,
+	StrategiesCreateStrategyErrors,
+	StrategiesCreateStrategyResponses,
+	StrategiesDeleteStrategyData,
+	StrategiesDeleteStrategyErrors,
+	StrategiesDeleteStrategyResponses,
+	StrategiesExecuteStrategyData,
+	StrategiesExecuteStrategyErrors,
+	StrategiesExecuteStrategyResponses,
+	StrategiesGetStrategiesData,
+	StrategiesGetStrategiesErrors,
+	StrategiesGetStrategiesResponses,
+	StrategiesGetStrategyData,
+	StrategiesGetStrategyErrors,
+	StrategiesGetStrategyExecutionsData,
+	StrategiesGetStrategyExecutionsErrors,
+	StrategiesGetStrategyExecutionsResponses,
+	StrategiesGetStrategyPerformanceData,
+	StrategiesGetStrategyPerformanceErrors,
+	StrategiesGetStrategyPerformanceResponses,
+	StrategiesGetStrategyResponses,
+	StrategiesUpdateStrategyData,
+	StrategiesUpdateStrategyErrors,
+	StrategiesUpdateStrategyResponses,
+	TemplatesCreateStrategyFromTemplateData,
+	TemplatesCreateStrategyFromTemplateErrors,
+	TemplatesCreateStrategyFromTemplateResponses,
+	TemplatesCreateTemplateData,
+	TemplatesCreateTemplateErrors,
+	TemplatesCreateTemplateResponses,
+	TemplatesDeleteTemplateData,
+	TemplatesDeleteTemplateErrors,
+	TemplatesDeleteTemplateResponses,
+	TemplatesGetTemplateData,
+	TemplatesGetTemplateErrors,
+	TemplatesGetTemplateResponses,
+	TemplatesGetTemplatesData,
+	TemplatesGetTemplatesErrors,
+	TemplatesGetTemplatesResponses,
+	TemplatesGetTemplateUsageStatsData,
+	TemplatesGetTemplateUsageStatsResponses,
+	WatchlistsCreateWatchlistData,
+	WatchlistsCreateWatchlistErrors,
+	WatchlistsCreateWatchlistResponses,
+	WatchlistsDeleteWatchlistData,
+	WatchlistsDeleteWatchlistErrors,
+	WatchlistsDeleteWatchlistResponses,
+	WatchlistsGetWatchlistData,
+	WatchlistsGetWatchlistErrors,
+	WatchlistsGetWatchlistResponses,
+	WatchlistsListWatchlistsData,
+	WatchlistsListWatchlistsResponses,
+	WatchlistsUpdateWatchlistByNameData,
+	WatchlistsUpdateWatchlistByNameErrors,
+	WatchlistsUpdateWatchlistByNameResponses,
+	WatchlistsUpdateWatchlistData,
+	WatchlistsUpdateWatchlistErrors,
+	WatchlistsUpdateWatchlistResponses,
 } from "./types.gen";
 
 export type Options<
-  TData extends TDataShape = TDataShape,
-  ThrowOnError extends boolean = boolean,
+	TData extends TDataShape = TDataShape,
+	ThrowOnError extends boolean = boolean,
 > = Options2<TData, ThrowOnError> & {
-  /**
-   * You can provide a client instance returned by `createClient()` instead of
-   * individual options. This might be also useful if you want to implement a
-   * custom client.
-   */
-  client?: Client;
-  /**
-   * You can pass arbitrary values through the `meta` object. This can be
-   * used to access values that aren't defined as part of the SDK function.
-   */
-  meta?: Record<string, unknown>;
+	/**
+	 * You can provide a client instance returned by `createClient()` instead of
+	 * individual options. This might be also useful if you want to implement a
+	 * custom client.
+	 */
+	client?: Client;
+	/**
+	 * You can pass arbitrary values through the `meta` object. This can be
+	 * used to access values that aren't defined as part of the SDK function.
+	 */
+	meta?: Record<string, unknown>;
 };
 
 export class Health {
-  /**
-   * Health Check
-   * Get comprehensive health status.
-   */
-  public static healthHealthCheck<ThrowOnError extends boolean = false>(
-    options?: Options<HealthHealthCheckData, ThrowOnError>,
-  ) {
-    return (options?.client ?? client).get<
-      HealthHealthCheckResponses,
-      unknown,
-      ThrowOnError
-    >({
-      url: "/health/",
-      ...options,
-    });
-  }
+	/**
+	 * Health Check
+	 * Get comprehensive health status.
+	 */
+	public static healthHealthCheck<ThrowOnError extends boolean = false>(
+		options?: Options<HealthHealthCheckData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			HealthHealthCheckResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/health/",
+			...options,
+		});
+	}
 
-  /**
-   * Liveness Probe
-   * Kubernetes liveness probe endpoint.
-   */
-  public static healthLivenessProbe<ThrowOnError extends boolean = false>(
-    options?: Options<HealthLivenessProbeData, ThrowOnError>,
-  ) {
-    return (options?.client ?? client).get<
-      HealthLivenessProbeResponses,
-      unknown,
-      ThrowOnError
-    >({
-      url: "/health/live",
-      ...options,
-    });
-  }
+	/**
+	 * Liveness Probe
+	 * Kubernetes liveness probe endpoint.
+	 */
+	public static healthLivenessProbe<ThrowOnError extends boolean = false>(
+		options?: Options<HealthLivenessProbeData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			HealthLivenessProbeResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/health/live",
+			...options,
+		});
+	}
 
-  /**
-   * Readiness Probe
-   * Kubernetes readiness probe endpoint.
-   */
-  public static healthReadinessProbe<ThrowOnError extends boolean = false>(
-    options?: Options<HealthReadinessProbeData, ThrowOnError>,
-  ) {
-    return (options?.client ?? client).get<
-      HealthReadinessProbeResponses,
-      unknown,
-      ThrowOnError
-    >({
-      url: "/health/ready",
-      ...options,
-    });
-  }
+	/**
+	 * Readiness Probe
+	 * Kubernetes readiness probe endpoint.
+	 */
+	public static healthReadinessProbe<ThrowOnError extends boolean = false>(
+		options?: Options<HealthReadinessProbeData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			HealthReadinessProbeResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/health/ready",
+			...options,
+		});
+	}
 
-  /**
-   * Health Check
-   * Health check endpoint
-   */
-  public static healthHealthCheck2<ThrowOnError extends boolean = false>(
-    options?: Options<HealthHealthCheck2Data, ThrowOnError>,
-  ) {
-    return (options?.client ?? client).get<
-      HealthHealthCheck2Responses,
-      unknown,
-      ThrowOnError
-    >({
-      url: "/api/v1/health/",
-      ...options,
-    });
-  }
+	/**
+	 * Health Check
+	 * Health check endpoint
+	 */
+	public static healthHealthCheck2<ThrowOnError extends boolean = false>(
+		options?: Options<HealthHealthCheck2Data, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			HealthHealthCheck2Responses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/health/",
+			...options,
+		});
+	}
 }
 
 export class MarketData {
-  /**
-   * Get Available Symbols
-   * Get list of all available symbols
-   */
-  public static marketDataGetAvailableSymbols<
-    ThrowOnError extends boolean = false,
-  >(options?: Options<MarketDataGetAvailableSymbolsData, ThrowOnError>) {
-    return (options?.client ?? client).get<
-      MarketDataGetAvailableSymbolsResponses,
-      unknown,
-      ThrowOnError
-    >({
-      url: "/api/v1/market-data/symbols",
-      ...options,
-    });
-  }
+	/**
+	 * Get Available Symbols
+	 * Get list of all available symbols
+	 */
+	public static marketDataGetAvailableSymbols<
+		ThrowOnError extends boolean = false,
+	>(options?: Options<MarketDataGetAvailableSymbolsData, ThrowOnError>) {
+		return (options?.client ?? client).get<
+			MarketDataGetAvailableSymbolsResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/market-data/symbols",
+			...options,
+		});
+	}
 
-  /**
-   * Get Market Data
-   * Get market data for a specific symbol and date range
-   */
-  public static marketDataGetMarketData<ThrowOnError extends boolean = false>(
-    options: Options<MarketDataGetMarketDataData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).get<
-      MarketDataGetMarketDataResponses,
-      MarketDataGetMarketDataErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/market-data/data/{symbol}",
-      ...options,
-    });
-  }
+	/**
+	 * Get Market Data
+	 * Get market data for a specific symbol and date range
+	 */
+	public static marketDataGetMarketData<ThrowOnError extends boolean = false>(
+		options: Options<MarketDataGetMarketDataData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MarketDataGetMarketDataResponses,
+			MarketDataGetMarketDataErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/market-data/data/{symbol}",
+			...options,
+		});
+	}
 
-  /**
-   * Request Bulk Data
-   * Request bulk market data for multiple symbols
-   */
-  public static marketDataRequestBulkData<ThrowOnError extends boolean = false>(
-    options: Options<MarketDataRequestBulkDataData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).post<
-      MarketDataRequestBulkDataResponses,
-      MarketDataRequestBulkDataErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/market-data/data/bulk",
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
-    });
-  }
+	/**
+	 * Request Bulk Data
+	 * Request bulk market data for multiple symbols
+	 */
+	public static marketDataRequestBulkData<ThrowOnError extends boolean = false>(
+		options: Options<MarketDataRequestBulkDataData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MarketDataRequestBulkDataResponses,
+			MarketDataRequestBulkDataErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/market-data/data/bulk",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
 
-  /**
-   * Get Data Coverage
-   * Get data coverage information for a symbol
-   */
-  public static marketDataGetDataCoverage<ThrowOnError extends boolean = false>(
-    options: Options<MarketDataGetDataCoverageData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).get<
-      MarketDataGetDataCoverageResponses,
-      MarketDataGetDataCoverageErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/market-data/coverage/{symbol}",
-      ...options,
-    });
-  }
+	/**
+	 * Get Data Coverage
+	 * Get data coverage information for a symbol
+	 */
+	public static marketDataGetDataCoverage<ThrowOnError extends boolean = false>(
+		options: Options<MarketDataGetDataCoverageData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MarketDataGetDataCoverageResponses,
+			MarketDataGetDataCoverageErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/market-data/coverage/{symbol}",
+			...options,
+		});
+	}
 
-  /**
-   * Analyze Data Quality
-   * Analyze data quality for a symbol and date range
-   */
-  public static marketDataAnalyzeDataQuality<
-    ThrowOnError extends boolean = false,
-  >(options: Options<MarketDataAnalyzeDataQualityData, ThrowOnError>) {
-    return (options.client ?? client).get<
-      MarketDataAnalyzeDataQualityResponses,
-      MarketDataAnalyzeDataQualityErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/market-data/quality/{symbol}",
-      ...options,
-    });
-  }
+	/**
+	 * Analyze Data Quality
+	 * Analyze data quality for a symbol and date range
+	 */
+	public static marketDataAnalyzeDataQuality<
+		ThrowOnError extends boolean = false,
+	>(options: Options<MarketDataAnalyzeDataQualityData, ThrowOnError>) {
+		return (options.client ?? client).get<
+			MarketDataAnalyzeDataQualityResponses,
+			MarketDataAnalyzeDataQualityErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/market-data/quality/{symbol}",
+			...options,
+		});
+	}
 
-  /**
-   * Get Cache Performance Stats
-   * DuckDB 캐시 성능 통계 조회
-   */
-  public static marketDataGetCachePerformanceStats<
-    ThrowOnError extends boolean = false,
-  >(options?: Options<MarketDataGetCachePerformanceStatsData, ThrowOnError>) {
-    return (options?.client ?? client).get<
-      MarketDataGetCachePerformanceStatsResponses,
-      unknown,
-      ThrowOnError
-    >({
-      url: "/api/v1/market-data/analytics/cache-performance",
-      ...options,
-    });
-  }
+	/**
+	 * Get Cache Performance Stats
+	 * DuckDB 캐시 성능 통계 조회
+	 */
+	public static marketDataGetCachePerformanceStats<
+		ThrowOnError extends boolean = false,
+	>(options?: Options<MarketDataGetCachePerformanceStatsData, ThrowOnError>) {
+		return (options?.client ?? client).get<
+			MarketDataGetCachePerformanceStatsResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/market-data/analytics/cache-performance",
+			...options,
+		});
+	}
 
-  /**
-   * Get Symbols Coverage Analytics
-   * 심볼별 데이터 커버리지 분석
-   */
-  public static marketDataGetSymbolsCoverageAnalytics<
-    ThrowOnError extends boolean = false,
-  >(
-    options?: Options<MarketDataGetSymbolsCoverageAnalyticsData, ThrowOnError>,
-  ) {
-    return (options?.client ?? client).get<
-      MarketDataGetSymbolsCoverageAnalyticsResponses,
-      unknown,
-      ThrowOnError
-    >({
-      url: "/api/v1/market-data/analytics/symbol-coverage",
-      ...options,
-    });
-  }
+	/**
+	 * Get Symbols Coverage Analytics
+	 * 심볼별 데이터 커버리지 분석
+	 */
+	public static marketDataGetSymbolsCoverageAnalytics<
+		ThrowOnError extends boolean = false,
+	>(
+		options?: Options<MarketDataGetSymbolsCoverageAnalyticsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MarketDataGetSymbolsCoverageAnalyticsResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/market-data/analytics/symbol-coverage",
+			...options,
+		});
+	}
 }
 
 export class PipelineStatus {
-  /**
-   * Get Pipeline Status
-   * Get comprehensive pipeline status and health information.
-   *
-   * Returns detailed information about the current state of the data pipeline,
-   * including data coverage statistics, update timestamps, and system health metrics.
-   * This endpoint is essential for monitoring the overall health of the data
-   * collection and processing system.
-   *
-   * Returns:
-   * dict: Pipeline status containing:
-   * - overall_status: Current pipeline health status
-   * - last_update: Timestamp of last successful update
-   * - coverage_stats: Data coverage statistics per symbol
-   * - active_symbols: Currently monitored symbols count
-   * - error_count: Number of recent errors
-   *
-   * Raises:
-   * HTTPException: 500 if status retrieval fails
-   */
-  public static pipelineStatusGetPipelineStatus<
-    ThrowOnError extends boolean = false,
-  >(options?: Options<PipelineStatusGetPipelineStatusData, ThrowOnError>) {
-    return (options?.client ?? client).get<
-      PipelineStatusGetPipelineStatusResponses,
-      unknown,
-      ThrowOnError
-    >({
-      url: "/api/v1/pipeline/status/status",
-      ...options,
-    });
-  }
+	/**
+	 * Get Pipeline Status
+	 * Get comprehensive pipeline status and health information.
+	 *
+	 * Returns detailed information about the current state of the data pipeline,
+	 * including data coverage statistics, update timestamps, and system health metrics.
+	 * This endpoint is essential for monitoring the overall health of the data
+	 * collection and processing system.
+	 *
+	 * Returns:
+	 * dict: Pipeline status containing:
+	 * - overall_status: Current pipeline health status
+	 * - last_update: Timestamp of last successful update
+	 * - coverage_stats: Data coverage statistics per symbol
+	 * - active_symbols: Currently monitored symbols count
+	 * - error_count: Number of recent errors
+	 *
+	 * Raises:
+	 * HTTPException: 500 if status retrieval fails
+	 */
+	public static pipelineStatusGetPipelineStatus<
+		ThrowOnError extends boolean = false,
+	>(options?: Options<PipelineStatusGetPipelineStatusData, ThrowOnError>) {
+		return (options?.client ?? client).get<
+			PipelineStatusGetPipelineStatusResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/pipeline/status/status",
+			...options,
+		});
+	}
 
-  /**
-   * Setup Default Symbols
-   * Initialize default watchlist with standard symbols.
-   *
-   * Sets up the pipeline with a predefined set of popular stock symbols
-   * for immediate use. This is typically called during initial system setup
-   * or when resetting the pipeline to defaults. Creates the 'default' watchlist
-   * if it doesn't exist.
-   *
-   * Default symbols include major tech stocks: AAPL, MSFT, GOOGL, AMZN, etc.
-   *
-   * Returns:
-   * dict: Setup confirmation containing:
-   * - message: Success confirmation message
-   * - symbols: List of symbols that were set up
-   *
-   * Raises:
-   * HTTPException: 500 if default setup fails
-   */
-  public static pipelineStatusSetupDefaultSymbols<
-    ThrowOnError extends boolean = false,
-  >(options?: Options<PipelineStatusSetupDefaultSymbolsData, ThrowOnError>) {
-    return (options?.client ?? client).post<
-      PipelineStatusSetupDefaultSymbolsResponses,
-      unknown,
-      ThrowOnError
-    >({
-      url: "/api/v1/pipeline/status/setup-defaults",
-      ...options,
-    });
-  }
+	/**
+	 * Setup Default Symbols
+	 * Initialize default watchlist with standard symbols.
+	 *
+	 * Sets up the pipeline with a predefined set of popular stock symbols
+	 * for immediate use. This is typically called during initial system setup
+	 * or when resetting the pipeline to defaults. Creates the 'default' watchlist
+	 * if it doesn't exist.
+	 *
+	 * Default symbols include major tech stocks: AAPL, MSFT, GOOGL, AMZN, etc.
+	 *
+	 * Returns:
+	 * dict: Setup confirmation containing:
+	 * - message: Success confirmation message
+	 * - symbols: List of symbols that were set up
+	 *
+	 * Raises:
+	 * HTTPException: 500 if default setup fails
+	 */
+	public static pipelineStatusSetupDefaultSymbols<
+		ThrowOnError extends boolean = false,
+	>(options?: Options<PipelineStatusSetupDefaultSymbolsData, ThrowOnError>) {
+		return (options?.client ?? client).post<
+			PipelineStatusSetupDefaultSymbolsResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/pipeline/status/setup-defaults",
+			...options,
+		});
+	}
 
-  /**
-   * Run Pipeline Update
-   * Execute comprehensive data pipeline update for specified symbols.
-   *
-   * Initiates a full data collection and update process for the specified
-   * symbols or the default watchlist. The update runs asynchronously in the
-   * background to avoid blocking the API response. Includes company information
-   * retrieval, historical price data collection, and data validation.
-   *
-   * Args:
-   * request: Update configuration containing:
-   * - symbols: Optional list of symbols to update (uses default if None)
-   * - start_date: Optional start date for data collection
-   * - end_date: Optional end date for data collection
-   * background_tasks: FastAPI background task manager
-   *
-   * Returns:
-   * dict: Update initiation confirmation containing:
-   * - message: Update start confirmation
-   * - symbols: Symbols being updated
-   * - started_at: UTC timestamp when update began
-   *
-   * Raises:
-   * HTTPException: 500 if update initiation fails
-   *
-   * Note:
-   * This is an asynchronous operation. Use /status endpoint to monitor progress.
-   */
-  public static pipelineStatusRunPipelineUpdate<
-    ThrowOnError extends boolean = false,
-  >(options: Options<PipelineStatusRunPipelineUpdateData, ThrowOnError>) {
-    return (options.client ?? client).post<
-      PipelineStatusRunPipelineUpdateResponses,
-      PipelineStatusRunPipelineUpdateErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/pipeline/status/update",
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
-    });
-  }
+	/**
+	 * Run Pipeline Update
+	 * Execute comprehensive data pipeline update for specified symbols.
+	 *
+	 * Initiates a full data collection and update process for the specified
+	 * symbols or the default watchlist. The update runs asynchronously in the
+	 * background to avoid blocking the API response. Includes company information
+	 * retrieval, historical price data collection, and data validation.
+	 *
+	 * Args:
+	 * request: Update configuration containing:
+	 * - symbols: Optional list of symbols to update (uses default if None)
+	 * - start_date: Optional start date for data collection
+	 * - end_date: Optional end date for data collection
+	 * background_tasks: FastAPI background task manager
+	 *
+	 * Returns:
+	 * dict: Update initiation confirmation containing:
+	 * - message: Update start confirmation
+	 * - symbols: Symbols being updated
+	 * - started_at: UTC timestamp when update began
+	 *
+	 * Raises:
+	 * HTTPException: 500 if update initiation fails
+	 *
+	 * Note:
+	 * This is an asynchronous operation. Use /status endpoint to monitor progress.
+	 */
+	public static pipelineStatusRunPipelineUpdate<
+		ThrowOnError extends boolean = false,
+	>(options: Options<PipelineStatusRunPipelineUpdateData, ThrowOnError>) {
+		return (options.client ?? client).post<
+			PipelineStatusRunPipelineUpdateResponses,
+			PipelineStatusRunPipelineUpdateErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/pipeline/status/update",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
 }
 
 export class CompanyData {
-  /**
-   * Collect Stock Info
-   * Collect and store basic company information for a specific symbol.
-   *
-   * Retrieves fundamental company data from external APIs (Alpha Vantage)
-   * including company name, sector, industry, market cap, and key financial
-   * ratios. This information is stored in the database for future reference
-   * and analysis.
-   *
-   * Args:
-   * symbol: Stock symbol (e.g., 'AAPL', 'MSFT') - automatically converted to uppercase
-   *
-   * Returns:
-   * dict: Collection result containing:
-   * - message: Success/failure message
-   * - symbol: Processed symbol (uppercase)
-   * - success: Boolean indicating operation success
-   *
-   * Raises:
-   * HTTPException: 500 if data collection fails
-   *
-   * Note:
-   * Respects Alpha Vantage API rate limits (5 calls/min, 500 calls/day).
-   * Duplicate requests for same symbol within 24 hours may return cached data.
-   */
-  public static companyDataCollectStockInfo<
-    ThrowOnError extends boolean = false,
-  >(options: Options<CompanyDataCollectStockInfoData, ThrowOnError>) {
-    return (options.client ?? client).post<
-      CompanyDataCollectStockInfoResponses,
-      CompanyDataCollectStockInfoErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/pipeline/companies/collect-info/{symbol}",
-      ...options,
-    });
-  }
+	/**
+	 * Collect Stock Info
+	 * Collect and store basic company information for a specific symbol.
+	 *
+	 * Retrieves fundamental company data from external APIs (Alpha Vantage)
+	 * including company name, sector, industry, market cap, and key financial
+	 * ratios. This information is stored in the database for future reference
+	 * and analysis.
+	 *
+	 * Args:
+	 * symbol: Stock symbol (e.g., 'AAPL', 'MSFT') - automatically converted to uppercase
+	 *
+	 * Returns:
+	 * dict: Collection result containing:
+	 * - message: Success/failure message
+	 * - symbol: Processed symbol (uppercase)
+	 * - success: Boolean indicating operation success
+	 *
+	 * Raises:
+	 * HTTPException: 500 if data collection fails
+	 *
+	 * Note:
+	 * Respects Alpha Vantage API rate limits (5 calls/min, 500 calls/day).
+	 * Duplicate requests for same symbol within 24 hours may return cached data.
+	 */
+	public static companyDataCollectStockInfo<
+		ThrowOnError extends boolean = false,
+	>(options: Options<CompanyDataCollectStockInfoData, ThrowOnError>) {
+		return (options.client ?? client).post<
+			CompanyDataCollectStockInfoResponses,
+			CompanyDataCollectStockInfoErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/pipeline/companies/collect-info/{symbol}",
+			...options,
+		});
+	}
 
-  /**
-   * Collect Daily Data
-   * Collect historical daily price data for a specific symbol.
-   *
-   * Retrieves OHLCV (Open, High, Low, Close, Volume) daily price data
-   * for the specified symbol and date range. If no dates are provided,
-   * collects maximum available historical data. Data is validated,
-   * adjusted for splits/dividends, and stored in DuckDB for fast access.
-   *
-   * Args:
-   * symbol: Stock symbol (e.g., 'AAPL') - automatically converted to uppercase
-   * start_date: Optional start date for data collection (defaults to earliest available)
-   * end_date: Optional end date for data collection (defaults to latest available)
-   *
-   * Returns:
-   * dict: Collection result containing:
-   * - message: Detailed success/failure message
-   * - symbol: Processed symbol (uppercase)
-   * - start_date: Actual start date used
-   * - end_date: Actual end date used
-   * - success: Boolean indicating operation success
-   *
-   * Raises:
-   * HTTPException: 500 if data collection fails
-   *
-   * Note:
-   * Large date ranges may take several minutes to complete.
-   * Data is automatically cached to minimize API calls.
-   */
-  public static companyDataCollectDailyData<
-    ThrowOnError extends boolean = false,
-  >(options: Options<CompanyDataCollectDailyDataData, ThrowOnError>) {
-    return (options.client ?? client).post<
-      CompanyDataCollectDailyDataResponses,
-      CompanyDataCollectDailyDataErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/pipeline/companies/collect-data/{symbol}",
-      ...options,
-    });
-  }
+	/**
+	 * Collect Daily Data
+	 * Collect historical daily price data for a specific symbol.
+	 *
+	 * Retrieves OHLCV (Open, High, Low, Close, Volume) daily price data
+	 * for the specified symbol and date range. If no dates are provided,
+	 * collects maximum available historical data. Data is validated,
+	 * adjusted for splits/dividends, and stored in DuckDB for fast access.
+	 *
+	 * Args:
+	 * symbol: Stock symbol (e.g., 'AAPL') - automatically converted to uppercase
+	 * start_date: Optional start date for data collection (defaults to earliest available)
+	 * end_date: Optional end date for data collection (defaults to latest available)
+	 *
+	 * Returns:
+	 * dict: Collection result containing:
+	 * - message: Detailed success/failure message
+	 * - symbol: Processed symbol (uppercase)
+	 * - start_date: Actual start date used
+	 * - end_date: Actual end date used
+	 * - success: Boolean indicating operation success
+	 *
+	 * Raises:
+	 * HTTPException: 500 if data collection fails
+	 *
+	 * Note:
+	 * Large date ranges may take several minutes to complete.
+	 * Data is automatically cached to minimize API calls.
+	 */
+	public static companyDataCollectDailyData<
+		ThrowOnError extends boolean = false,
+	>(options: Options<CompanyDataCollectDailyDataData, ThrowOnError>) {
+		return (options.client ?? client).post<
+			CompanyDataCollectDailyDataResponses,
+			CompanyDataCollectDailyDataErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/pipeline/companies/collect-data/{symbol}",
+			...options,
+		});
+	}
 
-  /**
-   * Get Symbol Coverage
-   * Get detailed data coverage information for a specific symbol.
-   *
-   * Returns comprehensive information about the availability and quality
-   * of data for the specified symbol, including date ranges, data gaps,
-   * last update timestamps, and data quality metrics.
-   *
-   * Args:
-   * symbol: Stock symbol to check coverage for (automatically converted to uppercase)
-   *
-   * Returns:
-   * dict: Coverage information containing:
-   * - symbol: Processed symbol
-   * - date_range: Start and end dates of available data
-   * - total_records: Number of data points available
-   * - gaps: List of date ranges with missing data
-   * - last_updated: Timestamp of most recent data update
-   * - data_quality: Quality metrics (completeness, accuracy scores)
-   *
-   * Raises:
-   * HTTPException: 500 if coverage check fails
-   * HTTPException: 404 if symbol not found in database
-   */
-  public static companyDataGetSymbolCoverage<
-    ThrowOnError extends boolean = false,
-  >(options: Options<CompanyDataGetSymbolCoverageData, ThrowOnError>) {
-    return (options.client ?? client).get<
-      CompanyDataGetSymbolCoverageResponses,
-      CompanyDataGetSymbolCoverageErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/pipeline/companies/coverage/{symbol}",
-      ...options,
-    });
-  }
+	/**
+	 * Get Symbol Coverage
+	 * Get detailed data coverage information for a specific symbol.
+	 *
+	 * Returns comprehensive information about the availability and quality
+	 * of data for the specified symbol, including date ranges, data gaps,
+	 * last update timestamps, and data quality metrics.
+	 *
+	 * Args:
+	 * symbol: Stock symbol to check coverage for (automatically converted to uppercase)
+	 *
+	 * Returns:
+	 * dict: Coverage information containing:
+	 * - symbol: Processed symbol
+	 * - date_range: Start and end dates of available data
+	 * - total_records: Number of data points available
+	 * - gaps: List of date ranges with missing data
+	 * - last_updated: Timestamp of most recent data update
+	 * - data_quality: Quality metrics (completeness, accuracy scores)
+	 *
+	 * Raises:
+	 * HTTPException: 500 if coverage check fails
+	 * HTTPException: 404 if symbol not found in database
+	 */
+	public static companyDataGetSymbolCoverage<
+		ThrowOnError extends boolean = false,
+	>(options: Options<CompanyDataGetSymbolCoverageData, ThrowOnError>) {
+		return (options.client ?? client).get<
+			CompanyDataGetSymbolCoverageResponses,
+			CompanyDataGetSymbolCoverageErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/pipeline/companies/coverage/{symbol}",
+			...options,
+		});
+	}
 
-  /**
-   * Get Company Info
-   * Retrieve stored company information for a specific symbol.
-   *
-   * Returns comprehensive company fundamentals and metadata previously
-   * collected and stored in the database. This includes financial ratios,
-   * company description, sector classification, and market data.
-   *
-   * Args:
-   * symbol: Stock symbol (automatically converted to uppercase)
-   *
-   * Returns:
-   * dict: Company information containing:
-   * - symbol: Stock symbol
-   * - name: Company name
-   * - description: Business description
-   * - sector: Industry sector classification
-   * - industry: Specific industry classification
-   * - country: Country of incorporation
-   * - currency: Reporting currency
-   * - market_cap: Market capitalization (if available)
-   * - pe_ratio: Price-to-earnings ratio (if available)
-   * - dividend_yield: Annual dividend yield (if available)
-   * - updated_at: Last information update timestamp
-   *
-   * Raises:
-   * HTTPException: 404 if company information not found
-   * HTTPException: 500 if retrieval fails
-   *
-   * Note:
-   * If company info not found, use POST /collect-info/{symbol} first.
-   */
-  public static companyDataGetCompanyInfo<ThrowOnError extends boolean = false>(
-    options: Options<CompanyDataGetCompanyInfoData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).get<
-      CompanyDataGetCompanyInfoResponses,
-      CompanyDataGetCompanyInfoErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/pipeline/companies/company/{symbol}",
-      ...options,
-    });
-  }
+	/**
+	 * Get Company Info
+	 * Retrieve stored company information for a specific symbol.
+	 *
+	 * Returns comprehensive company fundamentals and metadata previously
+	 * collected and stored in the database. This includes financial ratios,
+	 * company description, sector classification, and market data.
+	 *
+	 * Args:
+	 * symbol: Stock symbol (automatically converted to uppercase)
+	 *
+	 * Returns:
+	 * dict: Company information containing:
+	 * - symbol: Stock symbol
+	 * - name: Company name
+	 * - description: Business description
+	 * - sector: Industry sector classification
+	 * - industry: Specific industry classification
+	 * - country: Country of incorporation
+	 * - currency: Reporting currency
+	 * - market_cap: Market capitalization (if available)
+	 * - pe_ratio: Price-to-earnings ratio (if available)
+	 * - dividend_yield: Annual dividend yield (if available)
+	 * - updated_at: Last information update timestamp
+	 *
+	 * Raises:
+	 * HTTPException: 404 if company information not found
+	 * HTTPException: 500 if retrieval fails
+	 *
+	 * Note:
+	 * If company info not found, use POST /collect-info/{symbol} first.
+	 */
+	public static companyDataGetCompanyInfo<ThrowOnError extends boolean = false>(
+		options: Options<CompanyDataGetCompanyInfoData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			CompanyDataGetCompanyInfoResponses,
+			CompanyDataGetCompanyInfoErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/pipeline/companies/company/{symbol}",
+			...options,
+		});
+	}
 
-  /**
-   * Get All Companies
-   * Retrieve information for all companies in the database.
-   *
-   * Returns a comprehensive list of all companies for which information
-   * has been collected and stored. Useful for portfolio analysis,
-   * screening, and getting an overview of available data.
-   *
-   * Returns:
-   * dict: All companies data containing:
-   * - companies: List of company objects with key information:
-   * - symbol: Stock symbol
-   * - name: Company name
-   * - sector: Industry sector
-   * - industry: Specific industry
-   * - market_cap: Market capitalization
-   * - updated_at: Last update timestamp
-   * - total_count: Total number of companies in database
-   *
-   * Raises:
-   * HTTPException: 500 if retrieval fails
-   *
-   * Note:
-   * Large datasets may take time to load. Consider pagination for production use.
-   */
-  public static companyDataGetAllCompanies<
-    ThrowOnError extends boolean = false,
-  >(options?: Options<CompanyDataGetAllCompaniesData, ThrowOnError>) {
-    return (options?.client ?? client).get<
-      CompanyDataGetAllCompaniesResponses,
-      unknown,
-      ThrowOnError
-    >({
-      url: "/api/v1/pipeline/companies/companies",
-      ...options,
-    });
-  }
+	/**
+	 * Get All Companies
+	 * Retrieve information for all companies in the database.
+	 *
+	 * Returns a comprehensive list of all companies for which information
+	 * has been collected and stored. Useful for portfolio analysis,
+	 * screening, and getting an overview of available data.
+	 *
+	 * Returns:
+	 * dict: All companies data containing:
+	 * - companies: List of company objects with key information:
+	 * - symbol: Stock symbol
+	 * - name: Company name
+	 * - sector: Industry sector
+	 * - industry: Specific industry
+	 * - market_cap: Market capitalization
+	 * - updated_at: Last update timestamp
+	 * - total_count: Total number of companies in database
+	 *
+	 * Raises:
+	 * HTTPException: 500 if retrieval fails
+	 *
+	 * Note:
+	 * Large datasets may take time to load. Consider pagination for production use.
+	 */
+	public static companyDataGetAllCompanies<
+		ThrowOnError extends boolean = false,
+	>(options?: Options<CompanyDataGetAllCompaniesData, ThrowOnError>) {
+		return (options?.client ?? client).get<
+			CompanyDataGetAllCompaniesResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/pipeline/companies/companies",
+			...options,
+		});
+	}
 }
 
 export class Watchlists {
-  /**
-   * Update Watchlist
-   * Create or update a watchlist with flexible naming support.
-   *
-   * This endpoint provides a convenient way to create new watchlists or update
-   * existing ones. If no name is provided, it defaults to the 'default' watchlist
-   * which is used by the pipeline for automated updates. This endpoint combines
-   * creation and update functionality for ease of use.
-   *
-   * Args:
-   * request: Watchlist configuration containing:
-   * - symbols: List of stock symbols to include
-   * - name: Optional watchlist name (defaults to 'default')
-   * - description: Optional description of the watchlist
-   *
-   * Returns:
-   * dict: Operation result containing:
-   * - message: Success message indicating action taken
-   * - name: Watchlist name that was processed
-   * - symbols: List of symbols in the watchlist
-   * - count: Number of symbols in the watchlist
-   * - action: Either 'created' or 'updated'
-   *
-   * Raises:
-   * HTTPException: 400 if watchlist creation fails
-   * HTTPException: 500 if operation fails
-   *
-   * Note:
-   * Updates to the 'default' watchlist automatically update pipeline symbols.
-   * This affects which symbols are processed during automated updates.
-   */
-  public static watchlistsUpdateWatchlist<ThrowOnError extends boolean = false>(
-    options: Options<WatchlistsUpdateWatchlistData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).post<
-      WatchlistsUpdateWatchlistResponses,
-      WatchlistsUpdateWatchlistErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/pipeline/watchlists/watchlist",
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
-    });
-  }
+	/**
+	 * Update Watchlist
+	 * Create or update a watchlist with flexible naming support.
+	 *
+	 * This endpoint provides a convenient way to create new watchlists or update
+	 * existing ones. If no name is provided, it defaults to the 'default' watchlist
+	 * which is used by the pipeline for automated updates. This endpoint combines
+	 * creation and update functionality for ease of use.
+	 *
+	 * Args:
+	 * request: Watchlist configuration containing:
+	 * - symbols: List of stock symbols to include
+	 * - name: Optional watchlist name (defaults to 'default')
+	 * - description: Optional description of the watchlist
+	 *
+	 * Returns:
+	 * dict: Operation result containing:
+	 * - message: Success message indicating action taken
+	 * - name: Watchlist name that was processed
+	 * - symbols: List of symbols in the watchlist
+	 * - count: Number of symbols in the watchlist
+	 * - action: Either 'created' or 'updated'
+	 *
+	 * Raises:
+	 * HTTPException: 400 if watchlist creation fails
+	 * HTTPException: 500 if operation fails
+	 *
+	 * Note:
+	 * Updates to the 'default' watchlist automatically update pipeline symbols.
+	 * This affects which symbols are processed during automated updates.
+	 */
+	public static watchlistsUpdateWatchlist<ThrowOnError extends boolean = false>(
+		options: Options<WatchlistsUpdateWatchlistData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			WatchlistsUpdateWatchlistResponses,
+			WatchlistsUpdateWatchlistErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/pipeline/watchlists/watchlist",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
 
-  /**
-   * List Watchlists
-   * Retrieve a comprehensive list of all watchlists.
-   *
-   * Returns summary information for all watchlists in the system, including
-   * metadata like symbol counts, update settings, and timestamps. This is
-   * useful for dashboard displays and watchlist management interfaces.
-   *
-   * Returns:
-   * dict: All watchlists summary containing:
-   * - watchlists: List of watchlist summaries with:
-   * - name: Watchlist name
-   * - description: Watchlist description
-   * - symbol_count: Number of symbols in the watchlist
-   * - auto_update: Whether automatic updates are enabled
-   * - last_updated: Timestamp of last modification
-   * - created_at: Timestamp of creation
-   * - total_count: Total number of watchlists in the system
-   *
-   * Raises:
-   * HTTPException: 500 if retrieval fails
-   *
-   * Note:
-   * This endpoint returns summary data only. Use GET /watchlists/{name}
-   * for detailed information including full symbol lists.
-   */
-  public static watchlistsListWatchlists<ThrowOnError extends boolean = false>(
-    options?: Options<WatchlistsListWatchlistsData, ThrowOnError>,
-  ) {
-    return (options?.client ?? client).get<
-      WatchlistsListWatchlistsResponses,
-      unknown,
-      ThrowOnError
-    >({
-      url: "/api/v1/pipeline/watchlists/watchlists",
-      ...options,
-    });
-  }
+	/**
+	 * List Watchlists
+	 * Retrieve a comprehensive list of all watchlists.
+	 *
+	 * Returns summary information for all watchlists in the system, including
+	 * metadata like symbol counts, update settings, and timestamps. This is
+	 * useful for dashboard displays and watchlist management interfaces.
+	 *
+	 * Returns:
+	 * dict: All watchlists summary containing:
+	 * - watchlists: List of watchlist summaries with:
+	 * - name: Watchlist name
+	 * - description: Watchlist description
+	 * - symbol_count: Number of symbols in the watchlist
+	 * - auto_update: Whether automatic updates are enabled
+	 * - last_updated: Timestamp of last modification
+	 * - created_at: Timestamp of creation
+	 * - total_count: Total number of watchlists in the system
+	 *
+	 * Raises:
+	 * HTTPException: 500 if retrieval fails
+	 *
+	 * Note:
+	 * This endpoint returns summary data only. Use GET /watchlists/{name}
+	 * for detailed information including full symbol lists.
+	 */
+	public static watchlistsListWatchlists<ThrowOnError extends boolean = false>(
+		options?: Options<WatchlistsListWatchlistsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			WatchlistsListWatchlistsResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/pipeline/watchlists/watchlists",
+			...options,
+		});
+	}
 
-  /**
-   * Create Watchlist
-   * Create a new named watchlist with validation.
-   *
-   * This endpoint is specifically for creating new watchlists with explicit
-   * naming requirements. Unlike the /watchlist endpoint, this requires a name
-   * and will fail if a watchlist with the same name already exists.
-   *
-   * Args:
-   * request: Watchlist creation parameters containing:
-   * - name: Required unique name for the watchlist
-   * - symbols: List of stock symbols to include
-   * - description: Optional description of the watchlist purpose
-   *
-   * Returns:
-   * dict: Creation result containing:
-   * - message: Success confirmation message
-   * - name: Name of the created watchlist
-   * - symbols: List of symbols in the watchlist
-   * - description: Watchlist description
-   * - created_at: UTC timestamp of creation
-   *
-   * Raises:
-   * HTTPException: 400 if watchlist creation fails or name conflicts
-   * HTTPException: 500 if database operation fails
-   *
-   * Note:
-   * Watchlist names must be unique. Use PUT /watchlists/{name} to update existing ones.
-   */
-  public static watchlistsCreateWatchlist<ThrowOnError extends boolean = false>(
-    options: Options<WatchlistsCreateWatchlistData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).post<
-      WatchlistsCreateWatchlistResponses,
-      WatchlistsCreateWatchlistErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/pipeline/watchlists/watchlists",
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
-    });
-  }
+	/**
+	 * Create Watchlist
+	 * Create a new named watchlist with validation.
+	 *
+	 * This endpoint is specifically for creating new watchlists with explicit
+	 * naming requirements. Unlike the /watchlist endpoint, this requires a name
+	 * and will fail if a watchlist with the same name already exists.
+	 *
+	 * Args:
+	 * request: Watchlist creation parameters containing:
+	 * - name: Required unique name for the watchlist
+	 * - symbols: List of stock symbols to include
+	 * - description: Optional description of the watchlist purpose
+	 *
+	 * Returns:
+	 * dict: Creation result containing:
+	 * - message: Success confirmation message
+	 * - name: Name of the created watchlist
+	 * - symbols: List of symbols in the watchlist
+	 * - description: Watchlist description
+	 * - created_at: UTC timestamp of creation
+	 *
+	 * Raises:
+	 * HTTPException: 400 if watchlist creation fails or name conflicts
+	 * HTTPException: 500 if database operation fails
+	 *
+	 * Note:
+	 * Watchlist names must be unique. Use PUT /watchlists/{name} to update existing ones.
+	 */
+	public static watchlistsCreateWatchlist<ThrowOnError extends boolean = false>(
+		options: Options<WatchlistsCreateWatchlistData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			WatchlistsCreateWatchlistResponses,
+			WatchlistsCreateWatchlistErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/pipeline/watchlists/watchlists",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
 
-  /**
-   * Delete Watchlist
-   * Delete a named watchlist from the system.
-   *
-   * Permanently removes a watchlist and all associated metadata. This action
-   * cannot be undone. The 'default' watchlist cannot be deleted as it is
-   * required for pipeline operations.
-   *
-   * Args:
-   * name: Name of the watchlist to delete
-   *
-   * Returns:
-   * dict: Deletion confirmation containing:
-   * - message: Success confirmation message
-   * - name: Name of the deleted watchlist
-   *
-   * Raises:
-   * HTTPException: 400 if attempting to delete the 'default' watchlist
-   * HTTPException: 404 if watchlist with specified name not found
-   * HTTPException: 500 if deletion operation fails
-   *
-   * Note:
-   * Deletion is permanent and cannot be undone. Consider backing up
-   * important watchlists before deletion.
-   */
-  public static watchlistsDeleteWatchlist<ThrowOnError extends boolean = false>(
-    options: Options<WatchlistsDeleteWatchlistData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).delete<
-      WatchlistsDeleteWatchlistResponses,
-      WatchlistsDeleteWatchlistErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/pipeline/watchlists/watchlists/{name}",
-      ...options,
-    });
-  }
+	/**
+	 * Delete Watchlist
+	 * Delete a named watchlist from the system.
+	 *
+	 * Permanently removes a watchlist and all associated metadata. This action
+	 * cannot be undone. The 'default' watchlist cannot be deleted as it is
+	 * required for pipeline operations.
+	 *
+	 * Args:
+	 * name: Name of the watchlist to delete
+	 *
+	 * Returns:
+	 * dict: Deletion confirmation containing:
+	 * - message: Success confirmation message
+	 * - name: Name of the deleted watchlist
+	 *
+	 * Raises:
+	 * HTTPException: 400 if attempting to delete the 'default' watchlist
+	 * HTTPException: 404 if watchlist with specified name not found
+	 * HTTPException: 500 if deletion operation fails
+	 *
+	 * Note:
+	 * Deletion is permanent and cannot be undone. Consider backing up
+	 * important watchlists before deletion.
+	 */
+	public static watchlistsDeleteWatchlist<ThrowOnError extends boolean = false>(
+		options: Options<WatchlistsDeleteWatchlistData, ThrowOnError>,
+	) {
+		return (options.client ?? client).delete<
+			WatchlistsDeleteWatchlistResponses,
+			WatchlistsDeleteWatchlistErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/pipeline/watchlists/watchlists/{name}",
+			...options,
+		});
+	}
 
-  /**
-   * Get Watchlist
-   * Retrieve complete information for a specific watchlist.
-   *
-   * Returns detailed information about a named watchlist including the full
-   * list of symbols, configuration settings, and all metadata. This provides
-   * all information needed to display or modify a specific watchlist.
-   *
-   * Args:
-   * name: Name of the watchlist to retrieve (case-sensitive)
-   *
-   * Returns:
-   * dict: Complete watchlist information containing:
-   * - name: Watchlist name
-   * - description: Detailed description
-   * - symbols: Complete list of stock symbols
-   * - auto_update: Automatic update configuration
-   * - update_interval: Update frequency in seconds
-   * - last_updated: Timestamp of last symbol update
-   * - created_at: Timestamp of watchlist creation
-   *
-   * Raises:
-   * HTTPException: 404 if watchlist with specified name not found
-   * HTTPException: 500 if retrieval operation fails
-   *
-   * Note:
-   * Watchlist names are case-sensitive. Use GET /watchlists to see all available names.
-   */
-  public static watchlistsGetWatchlist<ThrowOnError extends boolean = false>(
-    options: Options<WatchlistsGetWatchlistData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).get<
-      WatchlistsGetWatchlistResponses,
-      WatchlistsGetWatchlistErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/pipeline/watchlists/watchlists/{name}",
-      ...options,
-    });
-  }
+	/**
+	 * Get Watchlist
+	 * Retrieve complete information for a specific watchlist.
+	 *
+	 * Returns detailed information about a named watchlist including the full
+	 * list of symbols, configuration settings, and all metadata. This provides
+	 * all information needed to display or modify a specific watchlist.
+	 *
+	 * Args:
+	 * name: Name of the watchlist to retrieve (case-sensitive)
+	 *
+	 * Returns:
+	 * dict: Complete watchlist information containing:
+	 * - name: Watchlist name
+	 * - description: Detailed description
+	 * - symbols: Complete list of stock symbols
+	 * - auto_update: Automatic update configuration
+	 * - update_interval: Update frequency in seconds
+	 * - last_updated: Timestamp of last symbol update
+	 * - created_at: Timestamp of watchlist creation
+	 *
+	 * Raises:
+	 * HTTPException: 404 if watchlist with specified name not found
+	 * HTTPException: 500 if retrieval operation fails
+	 *
+	 * Note:
+	 * Watchlist names are case-sensitive. Use GET /watchlists to see all available names.
+	 */
+	public static watchlistsGetWatchlist<ThrowOnError extends boolean = false>(
+		options: Options<WatchlistsGetWatchlistData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			WatchlistsGetWatchlistResponses,
+			WatchlistsGetWatchlistErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/pipeline/watchlists/watchlists/{name}",
+			...options,
+		});
+	}
 
-  /**
-   * Update Watchlist By Name
-   * Update an existing watchlist with new symbols and settings.
-   *
-   * Modifies the symbols and metadata of an existing watchlist. This endpoint
-   * requires the watchlist to exist and will fail if the specified name is
-   * not found. Use POST /watchlists to create new watchlists.
-   *
-   * Args:
-   * name: Name of the existing watchlist to update
-   * request: Update parameters containing:
-   * - symbols: New list of symbols (replaces current list)
-   * - description: Optional new description (if provided)
-   *
-   * Returns:
-   * dict: Update confirmation containing:
-   * - message: Success confirmation message
-   * - name: Name of the updated watchlist
-   * - symbols: New symbols list
-   * - description: Current description (updated if provided)
-   * - count: Number of symbols in updated watchlist
-   * - updated_at: Timestamp of the update
-   *
-   * Raises:
-   * HTTPException: 404 if watchlist with specified name not found
-   * HTTPException: 500 if update operation fails
-   *
-   * Note:
-   * Updates to the 'default' watchlist automatically update pipeline symbols.
-   * Symbol list is completely replaced, not merged with existing symbols.
-   */
-  public static watchlistsUpdateWatchlistByName<
-    ThrowOnError extends boolean = false,
-  >(options: Options<WatchlistsUpdateWatchlistByNameData, ThrowOnError>) {
-    return (options.client ?? client).put<
-      WatchlistsUpdateWatchlistByNameResponses,
-      WatchlistsUpdateWatchlistByNameErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/pipeline/watchlists/watchlists/{name}",
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
-    });
-  }
+	/**
+	 * Update Watchlist By Name
+	 * Update an existing watchlist with new symbols and settings.
+	 *
+	 * Modifies the symbols and metadata of an existing watchlist. This endpoint
+	 * requires the watchlist to exist and will fail if the specified name is
+	 * not found. Use POST /watchlists to create new watchlists.
+	 *
+	 * Args:
+	 * name: Name of the existing watchlist to update
+	 * request: Update parameters containing:
+	 * - symbols: New list of symbols (replaces current list)
+	 * - description: Optional new description (if provided)
+	 *
+	 * Returns:
+	 * dict: Update confirmation containing:
+	 * - message: Success confirmation message
+	 * - name: Name of the updated watchlist
+	 * - symbols: New symbols list
+	 * - description: Current description (updated if provided)
+	 * - count: Number of symbols in updated watchlist
+	 * - updated_at: Timestamp of the update
+	 *
+	 * Raises:
+	 * HTTPException: 404 if watchlist with specified name not found
+	 * HTTPException: 500 if update operation fails
+	 *
+	 * Note:
+	 * Updates to the 'default' watchlist automatically update pipeline symbols.
+	 * Symbol list is completely replaced, not merged with existing symbols.
+	 */
+	public static watchlistsUpdateWatchlistByName<
+		ThrowOnError extends boolean = false,
+	>(options: Options<WatchlistsUpdateWatchlistByNameData, ThrowOnError>) {
+		return (options.client ?? client).put<
+			WatchlistsUpdateWatchlistByNameResponses,
+			WatchlistsUpdateWatchlistByNameErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/pipeline/watchlists/watchlists/{name}",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
 }
 
 export class Backtests {
-  /**
-   * Get Backtests
-   * Get list of backtests
-   */
-  public static backtestsGetBacktests<ThrowOnError extends boolean = false>(
-    options?: Options<BacktestsGetBacktestsData, ThrowOnError>,
-  ) {
-    return (options?.client ?? client).get<
-      BacktestsGetBacktestsResponses,
-      BacktestsGetBacktestsErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/backtests/",
-      ...options,
-    });
-  }
+	/**
+	 * Get Backtests
+	 * Get list of backtests
+	 */
+	public static backtestsGetBacktests<ThrowOnError extends boolean = false>(
+		options?: Options<BacktestsGetBacktestsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			BacktestsGetBacktestsResponses,
+			BacktestsGetBacktestsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/",
+			...options,
+		});
+	}
 
-  /**
-   * Create Backtest
-   * Create a new backtest
-   */
-  public static backtestsCreateBacktest<ThrowOnError extends boolean = false>(
-    options: Options<BacktestsCreateBacktestData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).post<
-      BacktestsCreateBacktestResponses,
-      BacktestsCreateBacktestErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/backtests/",
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
-    });
-  }
+	/**
+	 * Create Backtest
+	 * Create a new backtest
+	 */
+	public static backtestsCreateBacktest<ThrowOnError extends boolean = false>(
+		options: Options<BacktestsCreateBacktestData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			BacktestsCreateBacktestResponses,
+			BacktestsCreateBacktestErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
 
-  /**
-   * Delete Backtest
-   * Delete backtest
-   */
-  public static backtestsDeleteBacktest<ThrowOnError extends boolean = false>(
-    options: Options<BacktestsDeleteBacktestData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).delete<
-      BacktestsDeleteBacktestResponses,
-      BacktestsDeleteBacktestErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/backtests/{backtest_id}",
-      ...options,
-    });
-  }
+	/**
+	 * Delete Backtest
+	 * Delete backtest
+	 */
+	public static backtestsDeleteBacktest<ThrowOnError extends boolean = false>(
+		options: Options<BacktestsDeleteBacktestData, ThrowOnError>,
+	) {
+		return (options.client ?? client).delete<
+			BacktestsDeleteBacktestResponses,
+			BacktestsDeleteBacktestErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/{backtest_id}",
+			...options,
+		});
+	}
 
-  /**
-   * Get Backtest
-   * Get backtest by ID
-   */
-  public static backtestsGetBacktest<ThrowOnError extends boolean = false>(
-    options: Options<BacktestsGetBacktestData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).get<
-      BacktestsGetBacktestResponses,
-      BacktestsGetBacktestErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/backtests/{backtest_id}",
-      ...options,
-    });
-  }
+	/**
+	 * Get Backtest
+	 * Get backtest by ID
+	 */
+	public static backtestsGetBacktest<ThrowOnError extends boolean = false>(
+		options: Options<BacktestsGetBacktestData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			BacktestsGetBacktestResponses,
+			BacktestsGetBacktestErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/{backtest_id}",
+			...options,
+		});
+	}
 
-  /**
-   * Update Backtest
-   * Update backtest
-   */
-  public static backtestsUpdateBacktest<ThrowOnError extends boolean = false>(
-    options: Options<BacktestsUpdateBacktestData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).put<
-      BacktestsUpdateBacktestResponses,
-      BacktestsUpdateBacktestErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/backtests/{backtest_id}",
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
-    });
-  }
+	/**
+	 * Update Backtest
+	 * Update backtest
+	 */
+	public static backtestsUpdateBacktest<ThrowOnError extends boolean = false>(
+		options: Options<BacktestsUpdateBacktestData, ThrowOnError>,
+	) {
+		return (options.client ?? client).put<
+			BacktestsUpdateBacktestResponses,
+			BacktestsUpdateBacktestErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/{backtest_id}",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
 
-  /**
-   * Execute Backtest
-   * Execute backtest with trading signals
-   */
-  public static backtestsExecuteBacktest<ThrowOnError extends boolean = false>(
-    options: Options<BacktestsExecuteBacktestData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).post<
-      BacktestsExecuteBacktestResponses,
-      BacktestsExecuteBacktestErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/backtests/{backtest_id}/execute",
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
-    });
-  }
+	/**
+	 * Execute Backtest
+	 * Execute backtest with trading signals
+	 */
+	public static backtestsExecuteBacktest<ThrowOnError extends boolean = false>(
+		options: Options<BacktestsExecuteBacktestData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			BacktestsExecuteBacktestResponses,
+			BacktestsExecuteBacktestErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/{backtest_id}/execute",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
 
-  /**
-   * Get Backtest Executions
-   * Get execution history for a backtest
-   */
-  public static backtestsGetBacktestExecutions<
-    ThrowOnError extends boolean = false,
-  >(options: Options<BacktestsGetBacktestExecutionsData, ThrowOnError>) {
-    return (options.client ?? client).get<
-      BacktestsGetBacktestExecutionsResponses,
-      BacktestsGetBacktestExecutionsErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/backtests/{backtest_id}/executions",
-      ...options,
-    });
-  }
+	/**
+	 * Get Backtest Executions
+	 * Get execution history for a backtest
+	 */
+	public static backtestsGetBacktestExecutions<
+		ThrowOnError extends boolean = false,
+	>(options: Options<BacktestsGetBacktestExecutionsData, ThrowOnError>) {
+		return (options.client ?? client).get<
+			BacktestsGetBacktestExecutionsResponses,
+			BacktestsGetBacktestExecutionsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/{backtest_id}/executions",
+			...options,
+		});
+	}
 
-  /**
-   * Get Backtest Results
-   * Get backtest results from DuckDB (고성능 분석용)
-   */
-  public static backtestsGetBacktestResults<
-    ThrowOnError extends boolean = false,
-  >(options?: Options<BacktestsGetBacktestResultsData, ThrowOnError>) {
-    return (options?.client ?? client).get<
-      BacktestsGetBacktestResultsResponses,
-      BacktestsGetBacktestResultsErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/backtests/results/",
-      ...options,
-    });
-  }
+	/**
+	 * Get Backtest Results
+	 * Get backtest results from DuckDB (고성능 분석용)
+	 */
+	public static backtestsGetBacktestResults<
+		ThrowOnError extends boolean = false,
+	>(options?: Options<BacktestsGetBacktestResultsData, ThrowOnError>) {
+		return (options?.client ?? client).get<
+			BacktestsGetBacktestResultsResponses,
+			BacktestsGetBacktestResultsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/results/",
+			...options,
+		});
+	}
 
-  /**
-   * Create And Run Integrated Backtest
-   * 통합 백테스트 생성 및 실행 - 모든 서비스 연동
-   */
-  public static backtestsCreateAndRunIntegratedBacktest<
-    ThrowOnError extends boolean = false,
-  >(
-    options: Options<BacktestsCreateAndRunIntegratedBacktestData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).post<
-      BacktestsCreateAndRunIntegratedBacktestResponses,
-      BacktestsCreateAndRunIntegratedBacktestErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/backtests/integrated",
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
-    });
-  }
+	/**
+	 * Create And Run Integrated Backtest
+	 * 통합 백테스트 생성 및 실행 - 모든 서비스 연동
+	 */
+	public static backtestsCreateAndRunIntegratedBacktest<
+		ThrowOnError extends boolean = false,
+	>(
+		options: Options<BacktestsCreateAndRunIntegratedBacktestData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			BacktestsCreateAndRunIntegratedBacktestResponses,
+			BacktestsCreateAndRunIntegratedBacktestErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/integrated",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
 
-  /**
-   * Health Check
-   * 백테스트 시스템 상태 확인 (DuckDB + MongoDB 통합 상태)
-   */
-  public static backtestsHealthCheck<ThrowOnError extends boolean = false>(
-    options?: Options<BacktestsHealthCheckData, ThrowOnError>,
-  ) {
-    return (options?.client ?? client).get<
-      BacktestsHealthCheckResponses,
-      unknown,
-      ThrowOnError
-    >({
-      url: "/api/v1/backtests/health",
-      ...options,
-    });
-  }
+	/**
+	 * Health Check
+	 * 백테스트 시스템 상태 확인 (DuckDB + MongoDB 통합 상태)
+	 */
+	public static backtestsHealthCheck<ThrowOnError extends boolean = false>(
+		options?: Options<BacktestsHealthCheckData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			BacktestsHealthCheckResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/health",
+			...options,
+		});
+	}
 
-  /**
-   * Get Performance Analytics
-   * 백테스트 성과 분석 (DuckDB 고성능 분석)
-   */
-  public static backtestsGetPerformanceAnalytics<
-    ThrowOnError extends boolean = false,
-  >(options?: Options<BacktestsGetPerformanceAnalyticsData, ThrowOnError>) {
-    return (options?.client ?? client).get<
-      BacktestsGetPerformanceAnalyticsResponses,
-      unknown,
-      ThrowOnError
-    >({
-      url: "/api/v1/backtests/analytics/performance-stats",
-      ...options,
-    });
-  }
+	/**
+	 * Get Performance Analytics
+	 * 백테스트 성과 분석 (DuckDB 고성능 분석)
+	 */
+	public static backtestsGetPerformanceAnalytics<
+		ThrowOnError extends boolean = false,
+	>(options?: Options<BacktestsGetPerformanceAnalyticsData, ThrowOnError>) {
+		return (options?.client ?? client).get<
+			BacktestsGetPerformanceAnalyticsResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/analytics/performance-stats",
+			...options,
+		});
+	}
 
-  /**
-   * Get Trades Analytics
-   * 거래 기록 분석 (DuckDB 고성능 쿼리)
-   */
-  public static backtestsGetTradesAnalytics<
-    ThrowOnError extends boolean = false,
-  >(options?: Options<BacktestsGetTradesAnalyticsData, ThrowOnError>) {
-    return (options?.client ?? client).get<
-      BacktestsGetTradesAnalyticsResponses,
-      BacktestsGetTradesAnalyticsErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/backtests/analytics/trades",
-      ...options,
-    });
-  }
+	/**
+	 * Get Trades Analytics
+	 * 거래 기록 분석 (DuckDB 고성능 쿼리)
+	 */
+	public static backtestsGetTradesAnalytics<
+		ThrowOnError extends boolean = false,
+	>(options?: Options<BacktestsGetTradesAnalyticsData, ThrowOnError>) {
+		return (options?.client ?? client).get<
+			BacktestsGetTradesAnalyticsResponses,
+			BacktestsGetTradesAnalyticsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/analytics/trades",
+			...options,
+		});
+	}
 
-  /**
-   * Get Backtest Summary Analytics
-   * 백테스트 결과 요약 분석 (DuckDB 기반)
-   */
-  public static backtestsGetBacktestSummaryAnalytics<
-    ThrowOnError extends boolean = false,
-  >(options?: Options<BacktestsGetBacktestSummaryAnalyticsData, ThrowOnError>) {
-    return (options?.client ?? client).get<
-      BacktestsGetBacktestSummaryAnalyticsResponses,
-      unknown,
-      ThrowOnError
-    >({
-      url: "/api/v1/backtests/analytics/summary",
-      ...options,
-    });
-  }
+	/**
+	 * Get Backtest Summary Analytics
+	 * 백테스트 결과 요약 분석 (DuckDB 기반)
+	 */
+	public static backtestsGetBacktestSummaryAnalytics<
+		ThrowOnError extends boolean = false,
+	>(options?: Options<BacktestsGetBacktestSummaryAnalyticsData, ThrowOnError>) {
+		return (options?.client ?? client).get<
+			BacktestsGetBacktestSummaryAnalyticsResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/analytics/summary",
+			...options,
+		});
+	}
 }
 
 export class IntegratedBacktest {
-  /**
-   * Get Backtests
-   * Get list of backtests
-   */
-  public static backtestsGetBacktests<ThrowOnError extends boolean = false>(
-    options?: Options<BacktestsGetBacktestsData, ThrowOnError>,
-  ) {
-    return (options?.client ?? client).get<
-      BacktestsGetBacktestsResponses,
-      BacktestsGetBacktestsErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/backtests/",
-      ...options,
-    });
-  }
+	/**
+	 * Get Backtests
+	 * Get list of backtests
+	 */
+	public static backtestsGetBacktests<ThrowOnError extends boolean = false>(
+		options?: Options<BacktestsGetBacktestsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			BacktestsGetBacktestsResponses,
+			BacktestsGetBacktestsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/",
+			...options,
+		});
+	}
 
-  /**
-   * Create Backtest
-   * Create a new backtest
-   */
-  public static backtestsCreateBacktest<ThrowOnError extends boolean = false>(
-    options: Options<BacktestsCreateBacktestData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).post<
-      BacktestsCreateBacktestResponses,
-      BacktestsCreateBacktestErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/backtests/",
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
-    });
-  }
+	/**
+	 * Create Backtest
+	 * Create a new backtest
+	 */
+	public static backtestsCreateBacktest<ThrowOnError extends boolean = false>(
+		options: Options<BacktestsCreateBacktestData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			BacktestsCreateBacktestResponses,
+			BacktestsCreateBacktestErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
 
-  /**
-   * Delete Backtest
-   * Delete backtest
-   */
-  public static backtestsDeleteBacktest<ThrowOnError extends boolean = false>(
-    options: Options<BacktestsDeleteBacktestData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).delete<
-      BacktestsDeleteBacktestResponses,
-      BacktestsDeleteBacktestErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/backtests/{backtest_id}",
-      ...options,
-    });
-  }
+	/**
+	 * Delete Backtest
+	 * Delete backtest
+	 */
+	public static backtestsDeleteBacktest<ThrowOnError extends boolean = false>(
+		options: Options<BacktestsDeleteBacktestData, ThrowOnError>,
+	) {
+		return (options.client ?? client).delete<
+			BacktestsDeleteBacktestResponses,
+			BacktestsDeleteBacktestErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/{backtest_id}",
+			...options,
+		});
+	}
 
-  /**
-   * Get Backtest
-   * Get backtest by ID
-   */
-  public static backtestsGetBacktest<ThrowOnError extends boolean = false>(
-    options: Options<BacktestsGetBacktestData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).get<
-      BacktestsGetBacktestResponses,
-      BacktestsGetBacktestErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/backtests/{backtest_id}",
-      ...options,
-    });
-  }
+	/**
+	 * Get Backtest
+	 * Get backtest by ID
+	 */
+	public static backtestsGetBacktest<ThrowOnError extends boolean = false>(
+		options: Options<BacktestsGetBacktestData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			BacktestsGetBacktestResponses,
+			BacktestsGetBacktestErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/{backtest_id}",
+			...options,
+		});
+	}
 
-  /**
-   * Update Backtest
-   * Update backtest
-   */
-  public static backtestsUpdateBacktest<ThrowOnError extends boolean = false>(
-    options: Options<BacktestsUpdateBacktestData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).put<
-      BacktestsUpdateBacktestResponses,
-      BacktestsUpdateBacktestErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/backtests/{backtest_id}",
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
-    });
-  }
+	/**
+	 * Update Backtest
+	 * Update backtest
+	 */
+	public static backtestsUpdateBacktest<ThrowOnError extends boolean = false>(
+		options: Options<BacktestsUpdateBacktestData, ThrowOnError>,
+	) {
+		return (options.client ?? client).put<
+			BacktestsUpdateBacktestResponses,
+			BacktestsUpdateBacktestErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/{backtest_id}",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
 
-  /**
-   * Execute Backtest
-   * Execute backtest with trading signals
-   */
-  public static backtestsExecuteBacktest<ThrowOnError extends boolean = false>(
-    options: Options<BacktestsExecuteBacktestData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).post<
-      BacktestsExecuteBacktestResponses,
-      BacktestsExecuteBacktestErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/backtests/{backtest_id}/execute",
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
-    });
-  }
+	/**
+	 * Execute Backtest
+	 * Execute backtest with trading signals
+	 */
+	public static backtestsExecuteBacktest<ThrowOnError extends boolean = false>(
+		options: Options<BacktestsExecuteBacktestData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			BacktestsExecuteBacktestResponses,
+			BacktestsExecuteBacktestErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/{backtest_id}/execute",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
 
-  /**
-   * Get Backtest Executions
-   * Get execution history for a backtest
-   */
-  public static backtestsGetBacktestExecutions<
-    ThrowOnError extends boolean = false,
-  >(options: Options<BacktestsGetBacktestExecutionsData, ThrowOnError>) {
-    return (options.client ?? client).get<
-      BacktestsGetBacktestExecutionsResponses,
-      BacktestsGetBacktestExecutionsErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/backtests/{backtest_id}/executions",
-      ...options,
-    });
-  }
+	/**
+	 * Get Backtest Executions
+	 * Get execution history for a backtest
+	 */
+	public static backtestsGetBacktestExecutions<
+		ThrowOnError extends boolean = false,
+	>(options: Options<BacktestsGetBacktestExecutionsData, ThrowOnError>) {
+		return (options.client ?? client).get<
+			BacktestsGetBacktestExecutionsResponses,
+			BacktestsGetBacktestExecutionsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/{backtest_id}/executions",
+			...options,
+		});
+	}
 
-  /**
-   * Get Backtest Results
-   * Get backtest results from DuckDB (고성능 분석용)
-   */
-  public static backtestsGetBacktestResults<
-    ThrowOnError extends boolean = false,
-  >(options?: Options<BacktestsGetBacktestResultsData, ThrowOnError>) {
-    return (options?.client ?? client).get<
-      BacktestsGetBacktestResultsResponses,
-      BacktestsGetBacktestResultsErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/backtests/results/",
-      ...options,
-    });
-  }
+	/**
+	 * Get Backtest Results
+	 * Get backtest results from DuckDB (고성능 분석용)
+	 */
+	public static backtestsGetBacktestResults<
+		ThrowOnError extends boolean = false,
+	>(options?: Options<BacktestsGetBacktestResultsData, ThrowOnError>) {
+		return (options?.client ?? client).get<
+			BacktestsGetBacktestResultsResponses,
+			BacktestsGetBacktestResultsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/results/",
+			...options,
+		});
+	}
 
-  /**
-   * Create And Run Integrated Backtest
-   * 통합 백테스트 생성 및 실행 - 모든 서비스 연동
-   */
-  public static backtestsCreateAndRunIntegratedBacktest<
-    ThrowOnError extends boolean = false,
-  >(
-    options: Options<BacktestsCreateAndRunIntegratedBacktestData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).post<
-      BacktestsCreateAndRunIntegratedBacktestResponses,
-      BacktestsCreateAndRunIntegratedBacktestErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/backtests/integrated",
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
-    });
-  }
+	/**
+	 * Create And Run Integrated Backtest
+	 * 통합 백테스트 생성 및 실행 - 모든 서비스 연동
+	 */
+	public static backtestsCreateAndRunIntegratedBacktest<
+		ThrowOnError extends boolean = false,
+	>(
+		options: Options<BacktestsCreateAndRunIntegratedBacktestData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			BacktestsCreateAndRunIntegratedBacktestResponses,
+			BacktestsCreateAndRunIntegratedBacktestErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/integrated",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
 
-  /**
-   * Health Check
-   * 백테스트 시스템 상태 확인 (DuckDB + MongoDB 통합 상태)
-   */
-  public static backtestsHealthCheck<ThrowOnError extends boolean = false>(
-    options?: Options<BacktestsHealthCheckData, ThrowOnError>,
-  ) {
-    return (options?.client ?? client).get<
-      BacktestsHealthCheckResponses,
-      unknown,
-      ThrowOnError
-    >({
-      url: "/api/v1/backtests/health",
-      ...options,
-    });
-  }
+	/**
+	 * Health Check
+	 * 백테스트 시스템 상태 확인 (DuckDB + MongoDB 통합 상태)
+	 */
+	public static backtestsHealthCheck<ThrowOnError extends boolean = false>(
+		options?: Options<BacktestsHealthCheckData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			BacktestsHealthCheckResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/health",
+			...options,
+		});
+	}
 
-  /**
-   * Get Performance Analytics
-   * 백테스트 성과 분석 (DuckDB 고성능 분석)
-   */
-  public static backtestsGetPerformanceAnalytics<
-    ThrowOnError extends boolean = false,
-  >(options?: Options<BacktestsGetPerformanceAnalyticsData, ThrowOnError>) {
-    return (options?.client ?? client).get<
-      BacktestsGetPerformanceAnalyticsResponses,
-      unknown,
-      ThrowOnError
-    >({
-      url: "/api/v1/backtests/analytics/performance-stats",
-      ...options,
-    });
-  }
+	/**
+	 * Get Performance Analytics
+	 * 백테스트 성과 분석 (DuckDB 고성능 분석)
+	 */
+	public static backtestsGetPerformanceAnalytics<
+		ThrowOnError extends boolean = false,
+	>(options?: Options<BacktestsGetPerformanceAnalyticsData, ThrowOnError>) {
+		return (options?.client ?? client).get<
+			BacktestsGetPerformanceAnalyticsResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/analytics/performance-stats",
+			...options,
+		});
+	}
 
-  /**
-   * Get Trades Analytics
-   * 거래 기록 분석 (DuckDB 고성능 쿼리)
-   */
-  public static backtestsGetTradesAnalytics<
-    ThrowOnError extends boolean = false,
-  >(options?: Options<BacktestsGetTradesAnalyticsData, ThrowOnError>) {
-    return (options?.client ?? client).get<
-      BacktestsGetTradesAnalyticsResponses,
-      BacktestsGetTradesAnalyticsErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/backtests/analytics/trades",
-      ...options,
-    });
-  }
+	/**
+	 * Get Trades Analytics
+	 * 거래 기록 분석 (DuckDB 고성능 쿼리)
+	 */
+	public static backtestsGetTradesAnalytics<
+		ThrowOnError extends boolean = false,
+	>(options?: Options<BacktestsGetTradesAnalyticsData, ThrowOnError>) {
+		return (options?.client ?? client).get<
+			BacktestsGetTradesAnalyticsResponses,
+			BacktestsGetTradesAnalyticsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/analytics/trades",
+			...options,
+		});
+	}
 
-  /**
-   * Get Backtest Summary Analytics
-   * 백테스트 결과 요약 분석 (DuckDB 기반)
-   */
-  public static backtestsGetBacktestSummaryAnalytics<
-    ThrowOnError extends boolean = false,
-  >(options?: Options<BacktestsGetBacktestSummaryAnalyticsData, ThrowOnError>) {
-    return (options?.client ?? client).get<
-      BacktestsGetBacktestSummaryAnalyticsResponses,
-      unknown,
-      ThrowOnError
-    >({
-      url: "/api/v1/backtests/analytics/summary",
-      ...options,
-    });
-  }
+	/**
+	 * Get Backtest Summary Analytics
+	 * 백테스트 결과 요약 분석 (DuckDB 기반)
+	 */
+	public static backtestsGetBacktestSummaryAnalytics<
+		ThrowOnError extends boolean = false,
+	>(options?: Options<BacktestsGetBacktestSummaryAnalyticsData, ThrowOnError>) {
+		return (options?.client ?? client).get<
+			BacktestsGetBacktestSummaryAnalyticsResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/analytics/summary",
+			...options,
+		});
+	}
 }
 
 export class Strategies {
-  /**
-   * Get Strategies
-   * Get list of strategies
-   */
-  public static strategiesGetStrategies<ThrowOnError extends boolean = false>(
-    options?: Options<StrategiesGetStrategiesData, ThrowOnError>,
-  ) {
-    return (options?.client ?? client).get<
-      StrategiesGetStrategiesResponses,
-      StrategiesGetStrategiesErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/strategies/",
-      ...options,
-    });
-  }
+	/**
+	 * Get Strategies
+	 * Get list of strategies
+	 */
+	public static strategiesGetStrategies<ThrowOnError extends boolean = false>(
+		options?: Options<StrategiesGetStrategiesData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			StrategiesGetStrategiesResponses,
+			StrategiesGetStrategiesErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/strategies/",
+			...options,
+		});
+	}
 
-  /**
-   * Create Strategy
-   * Create a new strategy
-   */
-  public static strategiesCreateStrategy<ThrowOnError extends boolean = false>(
-    options: Options<StrategiesCreateStrategyData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).post<
-      StrategiesCreateStrategyResponses,
-      StrategiesCreateStrategyErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/strategies/",
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
-    });
-  }
+	/**
+	 * Create Strategy
+	 * Create a new strategy
+	 */
+	public static strategiesCreateStrategy<ThrowOnError extends boolean = false>(
+		options: Options<StrategiesCreateStrategyData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			StrategiesCreateStrategyResponses,
+			StrategiesCreateStrategyErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/strategies/",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
 
-  /**
-   * Delete Strategy
-   * Delete strategy (soft delete)
-   */
-  public static strategiesDeleteStrategy<ThrowOnError extends boolean = false>(
-    options: Options<StrategiesDeleteStrategyData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).delete<
-      StrategiesDeleteStrategyResponses,
-      StrategiesDeleteStrategyErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/strategies/{strategy_id}",
-      ...options,
-    });
-  }
+	/**
+	 * Delete Strategy
+	 * Delete strategy (soft delete)
+	 */
+	public static strategiesDeleteStrategy<ThrowOnError extends boolean = false>(
+		options: Options<StrategiesDeleteStrategyData, ThrowOnError>,
+	) {
+		return (options.client ?? client).delete<
+			StrategiesDeleteStrategyResponses,
+			StrategiesDeleteStrategyErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/strategies/{strategy_id}",
+			...options,
+		});
+	}
 
-  /**
-   * Get Strategy
-   * Get strategy by ID
-   */
-  public static strategiesGetStrategy<ThrowOnError extends boolean = false>(
-    options: Options<StrategiesGetStrategyData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).get<
-      StrategiesGetStrategyResponses,
-      StrategiesGetStrategyErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/strategies/{strategy_id}",
-      ...options,
-    });
-  }
+	/**
+	 * Get Strategy
+	 * Get strategy by ID
+	 */
+	public static strategiesGetStrategy<ThrowOnError extends boolean = false>(
+		options: Options<StrategiesGetStrategyData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			StrategiesGetStrategyResponses,
+			StrategiesGetStrategyErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/strategies/{strategy_id}",
+			...options,
+		});
+	}
 
-  /**
-   * Update Strategy
-   * Update strategy
-   */
-  public static strategiesUpdateStrategy<ThrowOnError extends boolean = false>(
-    options: Options<StrategiesUpdateStrategyData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).put<
-      StrategiesUpdateStrategyResponses,
-      StrategiesUpdateStrategyErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/strategies/{strategy_id}",
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
-    });
-  }
+	/**
+	 * Update Strategy
+	 * Update strategy
+	 */
+	public static strategiesUpdateStrategy<ThrowOnError extends boolean = false>(
+		options: Options<StrategiesUpdateStrategyData, ThrowOnError>,
+	) {
+		return (options.client ?? client).put<
+			StrategiesUpdateStrategyResponses,
+			StrategiesUpdateStrategyErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/strategies/{strategy_id}",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
 
-  /**
-   * Execute Strategy
-   * Execute strategy and generate signal
-   */
-  public static strategiesExecuteStrategy<ThrowOnError extends boolean = false>(
-    options: Options<StrategiesExecuteStrategyData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).post<
-      StrategiesExecuteStrategyResponses,
-      StrategiesExecuteStrategyErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/strategies/{strategy_id}/execute",
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
-    });
-  }
+	/**
+	 * Execute Strategy
+	 * Execute strategy and generate signal
+	 */
+	public static strategiesExecuteStrategy<ThrowOnError extends boolean = false>(
+		options: Options<StrategiesExecuteStrategyData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			StrategiesExecuteStrategyResponses,
+			StrategiesExecuteStrategyErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/strategies/{strategy_id}/execute",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
 
-  /**
-   * Get Strategy Executions
-   * Get strategy execution history
-   */
-  public static strategiesGetStrategyExecutions<
-    ThrowOnError extends boolean = false,
-  >(options: Options<StrategiesGetStrategyExecutionsData, ThrowOnError>) {
-    return (options.client ?? client).get<
-      StrategiesGetStrategyExecutionsResponses,
-      StrategiesGetStrategyExecutionsErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/strategies/{strategy_id}/executions",
-      ...options,
-    });
-  }
+	/**
+	 * Get Strategy Executions
+	 * Get strategy execution history
+	 */
+	public static strategiesGetStrategyExecutions<
+		ThrowOnError extends boolean = false,
+	>(options: Options<StrategiesGetStrategyExecutionsData, ThrowOnError>) {
+		return (options.client ?? client).get<
+			StrategiesGetStrategyExecutionsResponses,
+			StrategiesGetStrategyExecutionsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/strategies/{strategy_id}/executions",
+			...options,
+		});
+	}
 
-  /**
-   * Get Strategy Performance
-   * Get strategy performance metrics
-   */
-  public static strategiesGetStrategyPerformance<
-    ThrowOnError extends boolean = false,
-  >(options: Options<StrategiesGetStrategyPerformanceData, ThrowOnError>) {
-    return (options.client ?? client).get<
-      StrategiesGetStrategyPerformanceResponses,
-      StrategiesGetStrategyPerformanceErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/strategies/{strategy_id}/performance",
-      ...options,
-    });
-  }
+	/**
+	 * Get Strategy Performance
+	 * Get strategy performance metrics
+	 */
+	public static strategiesGetStrategyPerformance<
+		ThrowOnError extends boolean = false,
+	>(options: Options<StrategiesGetStrategyPerformanceData, ThrowOnError>) {
+		return (options.client ?? client).get<
+			StrategiesGetStrategyPerformanceResponses,
+			StrategiesGetStrategyPerformanceErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/strategies/{strategy_id}/performance",
+			...options,
+		});
+	}
 }
 
 export class Templates {
-  /**
-   * Get Templates
-   * Get list of strategy templates
-   */
-  public static templatesGetTemplates<ThrowOnError extends boolean = false>(
-    options?: Options<TemplatesGetTemplatesData, ThrowOnError>,
-  ) {
-    return (options?.client ?? client).get<
-      TemplatesGetTemplatesResponses,
-      TemplatesGetTemplatesErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/templates/",
-      ...options,
-    });
-  }
+	/**
+	 * Get Templates
+	 * Get list of strategy templates
+	 */
+	public static templatesGetTemplates<ThrowOnError extends boolean = false>(
+		options?: Options<TemplatesGetTemplatesData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			TemplatesGetTemplatesResponses,
+			TemplatesGetTemplatesErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/templates/",
+			...options,
+		});
+	}
 
-  /**
-   * Create Template
-   * Create a new strategy template
-   */
-  public static templatesCreateTemplate<ThrowOnError extends boolean = false>(
-    options: Options<TemplatesCreateTemplateData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).post<
-      TemplatesCreateTemplateResponses,
-      TemplatesCreateTemplateErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/templates/",
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
-    });
-  }
+	/**
+	 * Create Template
+	 * Create a new strategy template
+	 */
+	public static templatesCreateTemplate<ThrowOnError extends boolean = false>(
+		options: Options<TemplatesCreateTemplateData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			TemplatesCreateTemplateResponses,
+			TemplatesCreateTemplateErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/templates/",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
 
-  /**
-   * Create Strategy From Template
-   * Create a strategy instance from template
-   */
-  public static templatesCreateStrategyFromTemplate<
-    ThrowOnError extends boolean = false,
-  >(options: Options<TemplatesCreateStrategyFromTemplateData, ThrowOnError>) {
-    return (options.client ?? client).post<
-      TemplatesCreateStrategyFromTemplateResponses,
-      TemplatesCreateStrategyFromTemplateErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/templates/{template_id}/create-strategy",
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
-    });
-  }
+	/**
+	 * Create Strategy From Template
+	 * Create a strategy instance from template
+	 */
+	public static templatesCreateStrategyFromTemplate<
+		ThrowOnError extends boolean = false,
+	>(options: Options<TemplatesCreateStrategyFromTemplateData, ThrowOnError>) {
+		return (options.client ?? client).post<
+			TemplatesCreateStrategyFromTemplateResponses,
+			TemplatesCreateStrategyFromTemplateErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/templates/{template_id}/create-strategy",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
 
-  /**
-   * Delete Template
-   * Delete template by ID
-   */
-  public static templatesDeleteTemplate<ThrowOnError extends boolean = false>(
-    options: Options<TemplatesDeleteTemplateData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).delete<
-      TemplatesDeleteTemplateResponses,
-      TemplatesDeleteTemplateErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/templates/{template_id}",
-      ...options,
-    });
-  }
+	/**
+	 * Delete Template
+	 * Delete template by ID
+	 */
+	public static templatesDeleteTemplate<ThrowOnError extends boolean = false>(
+		options: Options<TemplatesDeleteTemplateData, ThrowOnError>,
+	) {
+		return (options.client ?? client).delete<
+			TemplatesDeleteTemplateResponses,
+			TemplatesDeleteTemplateErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/templates/{template_id}",
+			...options,
+		});
+	}
 
-  /**
-   * Get Template
-   * Get template by ID
-   */
-  public static templatesGetTemplate<ThrowOnError extends boolean = false>(
-    options: Options<TemplatesGetTemplateData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).get<
-      TemplatesGetTemplateResponses,
-      TemplatesGetTemplateErrors,
-      ThrowOnError
-    >({
-      url: "/api/v1/templates/{template_id}",
-      ...options,
-    });
-  }
+	/**
+	 * Get Template
+	 * Get template by ID
+	 */
+	public static templatesGetTemplate<ThrowOnError extends boolean = false>(
+		options: Options<TemplatesGetTemplateData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			TemplatesGetTemplateResponses,
+			TemplatesGetTemplateErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/templates/{template_id}",
+			...options,
+		});
+	}
 
-  /**
-   * Get Template Usage Stats
-   * Get template usage statistics
-   */
-  public static templatesGetTemplateUsageStats<
-    ThrowOnError extends boolean = false,
-  >(options?: Options<TemplatesGetTemplateUsageStatsData, ThrowOnError>) {
-    return (options?.client ?? client).get<
-      TemplatesGetTemplateUsageStatsResponses,
-      unknown,
-      ThrowOnError
-    >({
-      url: "/api/v1/templates/analytics/usage-stats",
-      ...options,
-    });
-  }
+	/**
+	 * Get Template Usage Stats
+	 * Get template usage statistics
+	 */
+	public static templatesGetTemplateUsageStats<
+		ThrowOnError extends boolean = false,
+	>(options?: Options<TemplatesGetTemplateUsageStatsData, ThrowOnError>) {
+		return (options?.client ?? client).get<
+			TemplatesGetTemplateUsageStatsResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/templates/analytics/usage-stats",
+			...options,
+		});
+	}
 }
