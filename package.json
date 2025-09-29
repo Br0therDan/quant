@@ -19,6 +19,7 @@
   "private": true,
   "scripts": {
     "build": "pnpm --filter './frontend' build",
+    "gen:client": "./scripts/generate-client.sh",
     "lint": "biome check ./frontend/src",
     "run:dev": "pnpm --filter './frontend' dev && cd backend && uv run fastapi dev app/main.py --host 0.0.0.0 --port 8000",
     "run:dev:backend": "cd backend && uv run fastapi dev app/main.py --host 0.0.0.0 --port 8000",
