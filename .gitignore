@@ -1,5 +1,6 @@
 # 환경 변수
 .env
+.env.local
 
 # Python
 __pycache__/
@@ -87,3 +88,4 @@ reports/
 
 # 기타
 services/*
+node_modules/

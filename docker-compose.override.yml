@@ -1,0 +1,46 @@
+
+services:
+  q-mongodb:
+    restart: "no"
+    ports:
+      - "27019:27017"
+
+  q-backend:
+    restart: "no"
+    ports:
+      - "8500:8000"
+    build:
+      context: ./backend
+    env_file:
+      - .env.local
+    # command:
+    #   - fastapi
+    #   - run
+    #   - --reload
+    #   - "app/main.py"
+    develop:
+      watch:
+        - path: ./backend
+          action: sync
+          target: /app
+          ignore:
+            - ./backend/.venv
+            - .venv
+        - path: ./backend/pyproject.toml
+          action: rebuild
+    volumes:
+      - ./backend/htmlcov:/app/htmlcov
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.quant-backend.rule=Host(`api.quant.dev`)"
+      - "traefik.http.routers.quant-backend.entrypoints=web"
+      - "traefik.http.services.quant-backend.loadbalancer.server.port=8000"
+
+networks:
+  public:
+    external: true
+  internal:
+    driver: bridge
+
+volumes:
+  mongodb-data:

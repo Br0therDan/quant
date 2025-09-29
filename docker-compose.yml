@@ -1,16 +1,13 @@
-
 services:
   q-mongodb:
     image: mongo:7.0
-    container_name: q-mongodb
+    container_name: quant-mongodb
     restart: unless-stopped
     networks:
       - internal
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
-    ports:
-      - "27019:27017"
     volumes:
       - mongodb-data:/data/db
     command: ["mongod", "--auth"]
@@ -26,32 +23,34 @@ services:
       retries: 5
       start_period: 40s
 
-  data-service:
-    build: .
-    container_name: q-data-service
+  q-backend:
+    image: "${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}"
+    container_name: quant-backend
+    build:
+      context: ./backend
     restart: unless-stopped
     networks:
       - public
       - internal
-    env_file: .env.local
     environment:
       DUCKDB_PATH: /app/data/market_data.duckdb
-    ports:
-      - "8501:8000"
     volumes:
       - ./data:/app/data
     depends_on:
       - q-mongodb
-    command:
-      [
-        "uvicorn",
-        "app.main:app",
-        "--host",
-        "0.0.0.0",
-        "--port",
-        "8000",
-        "--reload",
-      ]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+
+  q-frontend:
+    image: "${DOCKER_IMAGE_FRONTEND?Variable not set}:${TAG-latest}"
+    container_name: quant-frontend
+    restart: unless-stopped
+    networks:
+      - public
 
 networks:
   public:

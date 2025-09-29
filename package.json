@@ -1,0 +1,38 @@
+{
+  "description": "Quant App full-stack monorepo workspace",
+  "devDependencies": {
+    "@hey-api/openapi-ts": "^0.84.3"
+  },
+  "name": "quant-workspace",
+  "packageManager": "pnpm@8.15.0",
+  "pnpm": {
+    "overrides": {
+      "@types/react": "18.3.1",
+      "@types/react-dom": "18.3.1",
+      "glob": "^11.0.0",
+      "lodash.isequal": "npm:lodash@^4.17.21",
+      "rimraf": "^6.0.0",
+      "source-map": "^0.7.4"
+    }
+  },
+  "private": true,
+  "scripts": {
+    "build": "pnpm --filter './frontend' build",
+    "lint": "pnpm --filter './frontend' lint",
+    "run:dev": "pnpm --filter './frontend' dev && cd backend && uv run fastapi dev app/main.py --host 0.0.0.0 --port 8000",
+    "run:dev:backend": "cd backend && uv run fastapi dev app/main.py --host 0.0.0.0 --port 8000",
+    "run:dev:frontend": "pnpm --filter './frontend' dev",
+    "run:docker": "docker compose up -d --build --force-recreate",
+    "run:docker:backend": "docker compose up -d --build --force-recreate q-backend",
+    "run:docker:frontend": "docker compose up -d --build --force-recreate q-frontend",
+    "stop:docker": "docker-compose down",
+    "stop:docker:backend": "docker-compose stop q-backend",
+    "stop:docker:frontend": "docker-compose stop q-frontend",
+    "test": "pnpm --filter './frontend' test"
+  },
+  "version": "0.1.0",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ]
+}

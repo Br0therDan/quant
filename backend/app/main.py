@@ -61,9 +61,3 @@ app = create_fastapi_app(
 app.include_router(api_router, prefix=settings.API_PREFIX)
 
 logger.info("🌱 DATABASE_URL: %s", get_mongodb_url(settings.SERVICE_NAME))
-
-
-if __name__ == "__main__":
-    import uvicorn
-
-    uvicorn.run("app.main:app", host="0.0.0.0", port=8501, reload=True)

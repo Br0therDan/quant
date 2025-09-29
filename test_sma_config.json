@@ -1,6 +1,0 @@
-{
-  "description": "Test SMA strategy",
-  "long_window": 30,
-  "name": "Test SMA",
-  "short_window": 10
-}
