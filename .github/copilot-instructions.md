@@ -22,7 +22,8 @@ market_service = service_factory.get_market_data_service()
 
 ### 2. Beanie ODM 모델 패턴
 
-MongoDB 문서는 `backend/app/models/`에 정의되며 `__init__.py`의 `collections` 리스트에 등록:
+MongoDB 문서는 `backend/app/models/`에 정의되며 `__init__.py`의 `collections`
+리스트에 등록:
 
 ```python
 # models/__init__.py에서 자동 등록
@@ -121,5 +122,6 @@ DUCKDB_PATH=./data/quant.db
 ## 특별한 파일들
 
 - `backend/app/main.py`: FastAPI 앱 + `mysingle_quant` 헬퍼 사용
-- `scripts/generate-client.sh`: OpenAPI → TypeScript 클라이언트 생성 (로그 출력 차단)
+- `scripts/generate-client.sh`: OpenAPI → TypeScript 클라이언트 생성 (로그 출력
+  차단)
 - `shared/`: 크로스 서비스 공통 코드 (CLI, config, utils)

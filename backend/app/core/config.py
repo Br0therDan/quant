@@ -20,7 +20,8 @@ class Settings(CommonSettings):
     API_PREFIX: str = "/api/v1"
     API_VERSION: str = "v1"
 
-    DUCKDB_PATH: str = "./data/quant.duckdb"
+    # DuckDB 파일 경로 - backend 애플리케이션 내부로 통합
+    DUCKDB_PATH: str = "./app/data/quant.duckdb"
 
 
 settings = Settings()

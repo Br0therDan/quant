@@ -41,6 +41,7 @@ cp .env.example .env
 ```
 
 Update the following environment variables:
+
 - `MONGODB_URL`: MongoDB connection string
 - `ALPHA_VANTAGE_API_KEY`: Your Alpha Vantage API key
 
@@ -65,12 +66,14 @@ docker-compose up
 ## API Documentation
 
 Once the service is running, visit:
+
 - Swagger UI: http://localhost:8001/docs
 - ReDoc: http://localhost:8001/redoc
 
 ## API Endpoints
 
 ### Market Data
+
 - `GET /api/v1/market-data/symbols` - Get available symbols
 - `GET /api/v1/market-data/data/{symbol}` - Get market data for symbol
 - `POST /api/v1/market-data/data/bulk` - Request bulk data
@@ -78,6 +81,7 @@ Once the service is running, visit:
 - `GET /api/v1/market-data/quality/{symbol}` - Analyze data quality
 
 ### Health Check
+
 - `GET /api/v1/health/` - Service health check
 
 ## Testing
@@ -135,6 +139,7 @@ app/
 ## Database Schema
 
 ### MarketData Collection
+
 - `symbol`: Stock symbol
 - `date`: Trading date
 - `open_price`, `high_price`, `low_price`, `close_price`: OHLC prices
@@ -144,12 +149,14 @@ app/
 - `split_coefficient`: Stock split coefficient
 
 ### DataRequest Collection
+
 - `symbol`: Requested symbol
 - `start_date`, `end_date`: Date range
 - `status`: Request status (pending, completed, failed)
 - `records_count`: Number of records fetched
 
 ### DataQuality Collection
+
 - `symbol`: Symbol analyzed
 - `date_range_start`, `date_range_end`: Analysis period
 - `total_records`: Number of records

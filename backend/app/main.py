@@ -23,24 +23,46 @@ async def lifespan(app: FastAPI):
     logger.info("🚀 Starting Quant Service...")
 
     try:
-        # Seed strategy templates
-        await seed_strategy_templates()
-    except Exception as e:
-        logger.error(f"Failed to seed templates: {e}")
+        # Initialize ServiceFactory and DuckDB early
+        from app.services.service_factory import service_factory
 
-    logger.info("✅ Quant Service startup completed")
+        logger.info("📊 Initializing DuckDB...")
+        database_manager = service_factory.get_database_manager()
+        logger.info(f"✅ DuckDB initialized at: {database_manager.db_path}")
+
+        # Pre-initialize services for better performance
+        logger.info("🔧 Pre-initializing services...")
+        service_factory.get_market_data_service()
+        service_factory.get_strategy_service()
+        service_factory.get_backtest_service()
+        logger.info("✅ All services pre-initialized")
+
+        # Seed strategy templates
+        logger.info("🌱 Seeding strategy templates...")
+        await seed_strategy_templates()
+        logger.info("✅ Strategy templates seeded")
+
+    except Exception as e:
+        logger.error(f"❌ Startup failed: {e}")
+        raise
+
+    logger.info("🎉 Quant Service startup completed successfully")
 
     yield
 
     # Shutdown
     logger.info("🛑 Shutting down Quant Service...")
 
-    # Cleanup services
-    from app.services.service_factory import service_factory
+    try:
+        # Cleanup services
+        from app.services.service_factory import service_factory
 
-    await service_factory.cleanup()
+        await service_factory.cleanup()
+        logger.info("✅ Services cleaned up")
+    except Exception as e:
+        logger.error(f"❌ Shutdown error: {e}")
 
-    logger.info("✅ Quant Service shutdown completed")
+    logger.info("👋 Quant Service shutdown completed")
 
 
 # Create FastAPI app

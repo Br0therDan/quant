@@ -1,0 +1,31 @@
+# 자동 생성 파일들
+node_modules/
+dist/
+build/
+.next/
+coverage/
+*.min.js
+*.min.css
+
+# 패키지 매니저 파일들
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# 환경 및 설정 파일들
+.env
+.env.local
+.env.production
+
+# 데이터 파일들
+*.db
+*.duckdb
+data/
+logs/
+
+# 특별한 포맷이 필요한 Markdown 파일들 (예외)
+# CHANGELOG.md
+# docs/api-spec.md
+
+# 코드 블록이 많은 기술 문서들 (선택적)
+# docs/technical/

@@ -85,6 +85,14 @@ dmypy.json
 backtest_results/
 reports/
 
+# 데이터베이스 파일들
+*.duckdb
+*.duckdb.wal
+backend/app/data/*.duckdb
+backend/app/data/*.db
+backend/data/
+data/
+logs/
 
 # 기타
 services/*

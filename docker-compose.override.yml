@@ -1,4 +1,3 @@
-
 services:
   q-mongodb:
     restart: "no"

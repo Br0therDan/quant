@@ -80,12 +80,7 @@
             "type": "array"
           }
         },
-        "required": [
-          "name",
-          "start_date",
-          "end_date",
-          "symbols"
-        ],
+        "required": ["name", "start_date", "end_date", "symbols"],
         "title": "BacktestConfig",
         "type": "object"
       },
@@ -108,10 +103,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "name",
-          "config"
-        ],
+        "required": ["name", "config"],
         "title": "BacktestCreateRequest",
         "type": "object"
       },
@@ -132,10 +124,7 @@
             "type": "integer"
           }
         },
-        "required": [
-          "executions",
-          "total"
-        ],
+        "required": ["executions", "total"],
         "title": "BacktestExecutionListResponse",
         "type": "object"
       },
@@ -168,9 +157,7 @@
             "type": "array"
           }
         },
-        "required": [
-          "signals"
-        ],
+        "required": ["signals"],
         "title": "BacktestExecutionRequest",
         "type": "object"
       },
@@ -289,10 +276,7 @@
             "type": "integer"
           }
         },
-        "required": [
-          "backtests",
-          "total"
-        ],
+        "required": ["backtests", "total"],
         "title": "BacktestListResponse",
         "type": "object"
       },
@@ -404,13 +388,7 @@
       },
       "BacktestStatus": {
         "description": "\ubc31\ud14c\uc2a4\ud2b8 \uc0c1\ud0dc",
-        "enum": [
-          "pending",
-          "running",
-          "completed",
-          "failed",
-          "cancelled"
-        ],
+        "enum": ["pending", "running", "completed", "failed", "cancelled"],
         "title": "BacktestStatus",
         "type": "string"
       },
@@ -486,11 +464,7 @@
             "type": "array"
           }
         },
-        "required": [
-          "symbols",
-          "start_date",
-          "end_date"
-        ],
+        "required": ["symbols", "start_date", "end_date"],
         "title": "BulkDataRequest",
         "type": "object"
       },
@@ -644,10 +618,7 @@
             "type": "integer"
           }
         },
-        "required": [
-          "executions",
-          "total"
-        ],
+        "required": ["executions", "total"],
         "title": "ExecutionListResponse",
         "type": "object"
       },
@@ -977,11 +948,7 @@
             "description": "\uc0c1\ud0dc"
           }
         },
-        "required": [
-          "backtest_id",
-          "status",
-          "message"
-        ],
+        "required": ["backtest_id", "status", "message"],
         "title": "IntegratedBacktestResponse",
         "type": "object"
       },
@@ -1065,12 +1032,7 @@
       },
       "OrderType": {
         "description": "\uc8fc\ubb38 \ud0c0\uc785",
-        "enum": [
-          "MARKET",
-          "LIMIT",
-          "STOP",
-          "STOP_LIMIT"
-        ],
+        "enum": ["MARKET", "LIMIT", "STOP", "STOP_LIMIT"],
         "title": "OrderType",
         "type": "string"
       },
@@ -1396,11 +1358,7 @@
       },
       "SignalType": {
         "description": "\uc2e0\ud638 \ud0c0\uc785",
-        "enum": [
-          "BUY",
-          "SELL",
-          "HOLD"
-        ],
+        "enum": ["BUY", "SELL", "HOLD"],
         "title": "SignalType",
         "type": "string"
       },
@@ -1443,10 +1401,7 @@
             "type": "array"
           }
         },
-        "required": [
-          "name",
-          "strategy_type"
-        ],
+        "required": ["name", "strategy_type"],
         "title": "StrategyCreateRequest",
         "type": "object"
       },
@@ -1465,10 +1420,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "symbol",
-          "market_data"
-        ],
+        "required": ["symbol", "market_data"],
         "title": "StrategyExecuteRequest",
         "type": "object"
       },
@@ -1494,9 +1446,7 @@
             "type": "object"
           }
         },
-        "required": [
-          "name"
-        ],
+        "required": ["name"],
         "title": "StrategyFromTemplateRequest",
         "type": "object"
       },
@@ -1517,10 +1467,7 @@
             "type": "integer"
           }
         },
-        "required": [
-          "strategies",
-          "total"
-        ],
+        "required": ["strategies", "total"],
         "title": "StrategyListResponse",
         "type": "object"
       },
@@ -1741,11 +1688,7 @@
             "type": "array"
           }
         },
-        "required": [
-          "name",
-          "strategy_type",
-          "description"
-        ],
+        "required": ["name", "strategy_type", "description"],
         "title": "TemplateCreateRequest",
         "type": "object"
       },
@@ -1766,10 +1709,7 @@
             "type": "integer"
           }
         },
-        "required": [
-          "templates",
-          "total"
-        ],
+        "required": ["templates", "total"],
         "title": "TemplateListResponse",
         "type": "object"
       },
@@ -1938,10 +1878,7 @@
       },
       "TradeType": {
         "description": "\uac70\ub798 \ud0c0\uc785",
-        "enum": [
-          "BUY",
-          "SELL"
-        ],
+        "enum": ["BUY", "SELL"],
         "title": "TradeType",
         "type": "string"
       },
@@ -2015,11 +1952,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "loc",
-          "msg",
-          "type"
-        ],
+        "required": ["loc", "msg", "type"],
         "title": "ValidationError",
         "type": "object"
       },
@@ -2043,10 +1976,7 @@
             "type": "array"
           }
         },
-        "required": [
-          "name",
-          "symbols"
-        ],
+        "required": ["name", "symbols"],
         "title": "WatchlistCreate",
         "type": "object"
       },
@@ -2085,9 +2015,7 @@
             "type": "array"
           }
         },
-        "required": [
-          "symbols"
-        ],
+        "required": ["symbols"],
         "title": "WatchlistUpdate",
         "type": "object"
       }
@@ -2174,10 +2102,7 @@
           }
         },
         "summary": "Get Backtests",
-        "tags": [
-          "Backtests",
-          "Integrated Backtest"
-        ]
+        "tags": ["Backtests", "Integrated Backtest"]
       },
       "post": {
         "description": "Create a new backtest",
@@ -2215,10 +2140,7 @@
           }
         },
         "summary": "Create Backtest",
-        "tags": [
-          "Backtests",
-          "Integrated Backtest"
-        ]
+        "tags": ["Backtests", "Integrated Backtest"]
       }
     },
     "/api/v1/backtests/analytics/performance-stats": {
@@ -2236,10 +2158,7 @@
           }
         },
         "summary": "Get Performance Analytics",
-        "tags": [
-          "Backtests",
-          "Integrated Backtest"
-        ]
+        "tags": ["Backtests", "Integrated Backtest"]
       }
     },
     "/api/v1/backtests/analytics/summary": {
@@ -2257,10 +2176,7 @@
           }
         },
         "summary": "Get Backtest Summary Analytics",
-        "tags": [
-          "Backtests",
-          "Integrated Backtest"
-        ]
+        "tags": ["Backtests", "Integrated Backtest"]
       }
     },
     "/api/v1/backtests/analytics/trades": {
@@ -2326,10 +2242,7 @@
           }
         },
         "summary": "Get Trades Analytics",
-        "tags": [
-          "Backtests",
-          "Integrated Backtest"
-        ]
+        "tags": ["Backtests", "Integrated Backtest"]
       }
     },
     "/api/v1/backtests/health": {
@@ -2347,10 +2260,7 @@
           }
         },
         "summary": "Health Check",
-        "tags": [
-          "Backtests",
-          "Integrated Backtest"
-        ]
+        "tags": ["Backtests", "Integrated Backtest"]
       }
     },
     "/api/v1/backtests/integrated": {
@@ -2390,10 +2300,7 @@
           }
         },
         "summary": "Create And Run Integrated Backtest",
-        "tags": [
-          "Backtests",
-          "Integrated Backtest"
-        ]
+        "tags": ["Backtests", "Integrated Backtest"]
       }
     },
     "/api/v1/backtests/results/": {
@@ -2490,10 +2397,7 @@
           }
         },
         "summary": "Get Backtest Results",
-        "tags": [
-          "Backtests",
-          "Integrated Backtest"
-        ]
+        "tags": ["Backtests", "Integrated Backtest"]
       }
     },
     "/api/v1/backtests/{backtest_id}": {
@@ -2532,10 +2436,7 @@
           }
         },
         "summary": "Delete Backtest",
-        "tags": [
-          "Backtests",
-          "Integrated Backtest"
-        ]
+        "tags": ["Backtests", "Integrated Backtest"]
       },
       "get": {
         "description": "Get backtest by ID",
@@ -2574,10 +2475,7 @@
           }
         },
         "summary": "Get Backtest",
-        "tags": [
-          "Backtests",
-          "Integrated Backtest"
-        ]
+        "tags": ["Backtests", "Integrated Backtest"]
       },
       "put": {
         "description": "Update backtest",
@@ -2626,10 +2524,7 @@
           }
         },
         "summary": "Update Backtest",
-        "tags": [
-          "Backtests",
-          "Integrated Backtest"
-        ]
+        "tags": ["Backtests", "Integrated Backtest"]
       }
     },
     "/api/v1/backtests/{backtest_id}/execute": {
@@ -2680,10 +2575,7 @@
           }
         },
         "summary": "Execute Backtest",
-        "tags": [
-          "Backtests",
-          "Integrated Backtest"
-        ]
+        "tags": ["Backtests", "Integrated Backtest"]
       }
     },
     "/api/v1/backtests/{backtest_id}/executions": {
@@ -2751,10 +2643,7 @@
           }
         },
         "summary": "Get Backtest Executions",
-        "tags": [
-          "Backtests",
-          "Integrated Backtest"
-        ]
+        "tags": ["Backtests", "Integrated Backtest"]
       }
     },
     "/api/v1/health/": {
@@ -2774,9 +2663,7 @@
           }
         },
         "summary": "Health Check",
-        "tags": [
-          "Health"
-        ]
+        "tags": ["Health"]
       }
     },
     "/api/v1/market-data/analytics/cache-performance": {
@@ -2794,9 +2681,7 @@
           }
         },
         "summary": "Get Cache Performance Stats",
-        "tags": [
-          "Market Data"
-        ]
+        "tags": ["Market Data"]
       }
     },
     "/api/v1/market-data/analytics/symbol-coverage": {
@@ -2814,9 +2699,7 @@
           }
         },
         "summary": "Get Symbols Coverage Analytics",
-        "tags": [
-          "Market Data"
-        ]
+        "tags": ["Market Data"]
       }
     },
     "/api/v1/market-data/coverage/{symbol}": {
@@ -2855,9 +2738,7 @@
           }
         },
         "summary": "Get Data Coverage",
-        "tags": [
-          "Market Data"
-        ]
+        "tags": ["Market Data"]
       }
     },
     "/api/v1/market-data/data/bulk": {
@@ -2901,9 +2782,7 @@
           }
         },
         "summary": "Request Bulk Data",
-        "tags": [
-          "Market Data"
-        ]
+        "tags": ["Market Data"]
       }
     },
     "/api/v1/market-data/data/{symbol}": {
@@ -2984,9 +2863,7 @@
           }
         },
         "summary": "Get Market Data",
-        "tags": [
-          "Market Data"
-        ]
+        "tags": ["Market Data"]
       }
     },
     "/api/v1/market-data/quality/{symbol}": {
@@ -3051,9 +2928,7 @@
           }
         },
         "summary": "Analyze Data Quality",
-        "tags": [
-          "Market Data"
-        ]
+        "tags": ["Market Data"]
       }
     },
     "/api/v1/market-data/symbols": {
@@ -3077,9 +2952,7 @@
           }
         },
         "summary": "Get Available Symbols",
-        "tags": [
-          "Market Data"
-        ]
+        "tags": ["Market Data"]
       }
     },
     "/api/v1/pipeline/companies/collect-data/{symbol}": {
@@ -3152,9 +3025,7 @@
           }
         },
         "summary": "Collect Daily Data",
-        "tags": [
-          "Company Data"
-        ]
+        "tags": ["Company Data"]
       }
     },
     "/api/v1/pipeline/companies/collect-info/{symbol}": {
@@ -3193,9 +3064,7 @@
           }
         },
         "summary": "Collect Stock Info",
-        "tags": [
-          "Company Data"
-        ]
+        "tags": ["Company Data"]
       }
     },
     "/api/v1/pipeline/companies/companies": {
@@ -3213,9 +3082,7 @@
           }
         },
         "summary": "Get All Companies",
-        "tags": [
-          "Company Data"
-        ]
+        "tags": ["Company Data"]
       }
     },
     "/api/v1/pipeline/companies/company/{symbol}": {
@@ -3254,9 +3121,7 @@
           }
         },
         "summary": "Get Company Info",
-        "tags": [
-          "Company Data"
-        ]
+        "tags": ["Company Data"]
       }
     },
     "/api/v1/pipeline/companies/coverage/{symbol}": {
@@ -3295,9 +3160,7 @@
           }
         },
         "summary": "Get Symbol Coverage",
-        "tags": [
-          "Company Data"
-        ]
+        "tags": ["Company Data"]
       }
     },
     "/api/v1/pipeline/status/setup-defaults": {
@@ -3315,9 +3178,7 @@
           }
         },
         "summary": "Setup Default Symbols",
-        "tags": [
-          "Pipeline Status"
-        ]
+        "tags": ["Pipeline Status"]
       }
     },
     "/api/v1/pipeline/status/status": {
@@ -3335,9 +3196,7 @@
           }
         },
         "summary": "Get Pipeline Status",
-        "tags": [
-          "Pipeline Status"
-        ]
+        "tags": ["Pipeline Status"]
       }
     },
     "/api/v1/pipeline/status/update": {
@@ -3375,9 +3234,7 @@
           }
         },
         "summary": "Run Pipeline Update",
-        "tags": [
-          "Pipeline Status"
-        ]
+        "tags": ["Pipeline Status"]
       }
     },
     "/api/v1/pipeline/watchlists/watchlist": {
@@ -3415,9 +3272,7 @@
           }
         },
         "summary": "Update Watchlist",
-        "tags": [
-          "Watchlists"
-        ]
+        "tags": ["Watchlists"]
       }
     },
     "/api/v1/pipeline/watchlists/watchlists": {
@@ -3435,9 +3290,7 @@
           }
         },
         "summary": "List Watchlists",
-        "tags": [
-          "Watchlists"
-        ]
+        "tags": ["Watchlists"]
       },
       "post": {
         "description": "Create a new named watchlist with validation.\n\nThis endpoint is specifically for creating new watchlists with explicit\nnaming requirements. Unlike the /watchlist endpoint, this requires a name\nand will fail if a watchlist with the same name already exists.\n\nArgs:\n    request: Watchlist creation parameters containing:\n        - name: Required unique name for the watchlist\n        - symbols: List of stock symbols to include\n        - description: Optional description of the watchlist purpose\n\nReturns:\n    dict: Creation result containing:\n        - message: Success confirmation message\n        - name: Name of the created watchlist\n        - symbols: List of symbols in the watchlist\n        - description: Watchlist description\n        - created_at: UTC timestamp of creation\n\nRaises:\n    HTTPException: 400 if watchlist creation fails or name conflicts\n    HTTPException: 500 if database operation fails\n\nNote:\n    Watchlist names must be unique. Use PUT /watchlists/{name} to update existing ones.",
@@ -3473,9 +3326,7 @@
           }
         },
         "summary": "Create Watchlist",
-        "tags": [
-          "Watchlists"
-        ]
+        "tags": ["Watchlists"]
       }
     },
     "/api/v1/pipeline/watchlists/watchlists/{name}": {
@@ -3514,9 +3365,7 @@
           }
         },
         "summary": "Delete Watchlist",
-        "tags": [
-          "Watchlists"
-        ]
+        "tags": ["Watchlists"]
       },
       "get": {
         "description": "Retrieve complete information for a specific watchlist.\n\nReturns detailed information about a named watchlist including the full\nlist of symbols, configuration settings, and all metadata. This provides\nall information needed to display or modify a specific watchlist.\n\nArgs:\n    name: Name of the watchlist to retrieve (case-sensitive)\n\nReturns:\n    dict: Complete watchlist information containing:\n        - name: Watchlist name\n        - description: Detailed description\n        - symbols: Complete list of stock symbols\n        - auto_update: Automatic update configuration\n        - update_interval: Update frequency in seconds\n        - last_updated: Timestamp of last symbol update\n        - created_at: Timestamp of watchlist creation\n\nRaises:\n    HTTPException: 404 if watchlist with specified name not found\n    HTTPException: 500 if retrieval operation fails\n\nNote:\n    Watchlist names are case-sensitive. Use GET /watchlists to see all available names.",
@@ -3553,9 +3402,7 @@
           }
         },
         "summary": "Get Watchlist",
-        "tags": [
-          "Watchlists"
-        ]
+        "tags": ["Watchlists"]
       },
       "put": {
         "description": "Update an existing watchlist with new symbols and settings.\n\nModifies the symbols and metadata of an existing watchlist. This endpoint\nrequires the watchlist to exist and will fail if the specified name is\nnot found. Use POST /watchlists to create new watchlists.\n\nArgs:\n    name: Name of the existing watchlist to update\n    request: Update parameters containing:\n        - symbols: New list of symbols (replaces current list)\n        - description: Optional new description (if provided)\n\nReturns:\n    dict: Update confirmation containing:\n        - message: Success confirmation message\n        - name: Name of the updated watchlist\n        - symbols: New symbols list\n        - description: Current description (updated if provided)\n        - count: Number of symbols in updated watchlist\n        - updated_at: Timestamp of the update\n\nRaises:\n    HTTPException: 404 if watchlist with specified name not found\n    HTTPException: 500 if update operation fails\n\nNote:\n    Updates to the 'default' watchlist automatically update pipeline symbols.\n    Symbol list is completely replaced, not merged with existing symbols.",
@@ -3602,9 +3449,7 @@
           }
         },
         "summary": "Update Watchlist By Name",
-        "tags": [
-          "Watchlists"
-        ]
+        "tags": ["Watchlists"]
       }
     },
     "/api/v1/strategies/": {
@@ -3704,9 +3549,7 @@
           }
         },
         "summary": "Get Strategies",
-        "tags": [
-          "Strategies"
-        ]
+        "tags": ["Strategies"]
       },
       "post": {
         "description": "Create a new strategy",
@@ -3744,9 +3587,7 @@
           }
         },
         "summary": "Create Strategy",
-        "tags": [
-          "Strategies"
-        ]
+        "tags": ["Strategies"]
       }
     },
     "/api/v1/strategies/{strategy_id}": {
@@ -3785,9 +3626,7 @@
           }
         },
         "summary": "Delete Strategy",
-        "tags": [
-          "Strategies"
-        ]
+        "tags": ["Strategies"]
       },
       "get": {
         "description": "Get strategy by ID",
@@ -3826,9 +3665,7 @@
           }
         },
         "summary": "Get Strategy",
-        "tags": [
-          "Strategies"
-        ]
+        "tags": ["Strategies"]
       },
       "put": {
         "description": "Update strategy",
@@ -3877,9 +3714,7 @@
           }
         },
         "summary": "Update Strategy",
-        "tags": [
-          "Strategies"
-        ]
+        "tags": ["Strategies"]
       }
     },
     "/api/v1/strategies/{strategy_id}/execute": {
@@ -3930,9 +3765,7 @@
           }
         },
         "summary": "Execute Strategy",
-        "tags": [
-          "Strategies"
-        ]
+        "tags": ["Strategies"]
       }
     },
     "/api/v1/strategies/{strategy_id}/executions": {
@@ -3987,9 +3820,7 @@
           }
         },
         "summary": "Get Strategy Executions",
-        "tags": [
-          "Strategies"
-        ]
+        "tags": ["Strategies"]
       }
     },
     "/api/v1/strategies/{strategy_id}/performance": {
@@ -4030,9 +3861,7 @@
           }
         },
         "summary": "Get Strategy Performance",
-        "tags": [
-          "Strategies"
-        ]
+        "tags": ["Strategies"]
       }
     },
     "/api/v1/templates/": {
@@ -4082,9 +3911,7 @@
           }
         },
         "summary": "Get Templates",
-        "tags": [
-          "Templates"
-        ]
+        "tags": ["Templates"]
       },
       "post": {
         "description": "Create a new strategy template",
@@ -4122,9 +3949,7 @@
           }
         },
         "summary": "Create Template",
-        "tags": [
-          "Templates"
-        ]
+        "tags": ["Templates"]
       }
     },
     "/api/v1/templates/analytics/usage-stats": {
@@ -4142,9 +3967,7 @@
           }
         },
         "summary": "Get Template Usage Stats",
-        "tags": [
-          "Templates"
-        ]
+        "tags": ["Templates"]
       }
     },
     "/api/v1/templates/{template_id}": {
@@ -4183,9 +4006,7 @@
           }
         },
         "summary": "Delete Template",
-        "tags": [
-          "Templates"
-        ]
+        "tags": ["Templates"]
       },
       "get": {
         "description": "Get template by ID",
@@ -4224,9 +4045,7 @@
           }
         },
         "summary": "Get Template",
-        "tags": [
-          "Templates"
-        ]
+        "tags": ["Templates"]
       }
     },
     "/api/v1/templates/{template_id}/create-strategy": {
@@ -4277,9 +4096,7 @@
           }
         },
         "summary": "Create Strategy From Template",
-        "tags": [
-          "Templates"
-        ]
+        "tags": ["Templates"]
       }
     },
     "/health/": {
@@ -4299,9 +4116,7 @@
           }
         },
         "summary": "Health Check",
-        "tags": [
-          "Health"
-        ]
+        "tags": ["Health"]
       }
     },
     "/health/live": {
@@ -4319,9 +4134,7 @@
           }
         },
         "summary": "Liveness Probe",
-        "tags": [
-          "Health"
-        ]
+        "tags": ["Health"]
       }
     },
     "/health/ready": {
@@ -4343,9 +4156,7 @@
           }
         },
         "summary": "Readiness Probe",
-        "tags": [
-          "Health"
-        ]
+        "tags": ["Health"]
       }
     }
   }

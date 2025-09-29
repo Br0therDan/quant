@@ -6,16 +6,8 @@
     "**/node_modules",
     "**/.venv"
   ],
-  "extraPaths": [
-    ".",
-    "backend"
-  ],
-  "include": [
-    "backend",
-    "services",
-    "shared",
-    "tests"
-  ],
+  "extraPaths": [".", "backend"],
+  "include": ["backend", "services", "shared", "tests"],
   "pythonPlatform": "Darwin",
   "pythonVersion": "3.12",
   "reportDuplicateImport": true,

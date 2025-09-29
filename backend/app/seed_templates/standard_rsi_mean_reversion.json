@@ -9,10 +9,6 @@
     "use_sma_filter": true
   },
   "strategy_type": "rsi_mean_reversion",
-  "tags": [
-    "mean_reversion",
-    "rsi",
-    "standard"
-  ],
+  "tags": ["mean_reversion", "rsi", "standard"],
   "updated_at": "2025-09-13 15:24:25.553525"
 }
