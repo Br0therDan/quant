@@ -31,8 +31,10 @@ class ServiceFactory:
         """DatabaseManager 인스턴스 반환 (DuckDB 캐시)"""
         if self._database_manager is None:
             self._database_manager = DatabaseManager()
-            self._database_manager.connect()
-            logger.info("Created DatabaseManager instance")
+            # 연결은 lazy loading으로 처리하여 동시성 문제 방지
+            logger.info(
+                "Created DatabaseManager instance (connection will be lazy-loaded)"
+            )
         return self._database_manager
 
     def get_market_data_service(self) -> MarketDataService:

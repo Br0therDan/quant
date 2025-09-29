@@ -36,6 +36,23 @@ class DatabaseManager:
     def connect(self) -> None:
         """데이터베이스 연결"""
         if self.connection is None:
+            logger.info(f"Connecting to DuckDB at: {self.db_path}")
+            try:
+                # 기존 연결이 있다면 종료
+                self.close()
+                # 새 연결 생성
+                self.connection = duckdb.connect(self.db_path)
+                self._create_tables()
+                logger.info(f"✅ DuckDB connected successfully at: {self.db_path}")
+            except Exception as e:
+                logger.error(f"❌ Failed to connect to DuckDB: {e}")
+                # 파일이 잠겨있다면 메모리 DB로 폴백
+                if "lock" in str(e).lower():
+                    logger.warning("🔄 Falling back to in-memory database")
+                    self.connection = duckdb.connect(":memory:")
+                    self._create_tables()
+                else:
+                    raise
             self.connection = duckdb.connect(self.db_path)
             self._create_tables()
             logger.info(f"데이터베이스 연결됨: {self.db_path}")
@@ -43,12 +60,17 @@ class DatabaseManager:
     def close(self) -> None:
         """데이터베이스 연결 종료"""
         if self.connection:
-            self.connection.close()
-            self.connection = None
-            logger.info("데이터베이스 연결 종료됨")
+            try:
+                self.connection.close()
+                logger.info("🔒 DuckDB connection closed")
+            except Exception as e:
+                logger.warning(f"⚠️ Error closing DuckDB connection: {e}")
+            finally:
+                self.connection = None
 
     def _create_tables(self) -> None:
         """테이블 생성"""
+        self._ensure_connected()
         if not self.connection:
             raise RuntimeError("데이터베이스에 연결되지 않음")
 
@@ -155,6 +177,7 @@ class DatabaseManager:
 
     def _create_indexes(self) -> None:
         """인덱스 생성"""
+        self._ensure_connected()
         if not self.connection:
             return
 
@@ -171,10 +194,17 @@ class DatabaseManager:
         for index_sql in indexes:
             self.connection.execute(index_sql)
 
+    def _ensure_connected(self) -> None:
+        """연결이 없으면 자동으로 연결"""
+        if self.connection is None:
+            self.connect()
+
     def insert_stock_info(self, symbol: str, info: dict) -> None:
         """주식 정보 삽입/업데이트"""
+        self._ensure_connected()
+
         if not self.connection:
-            raise RuntimeError("데이터베이스에 연결되지 않음")
+            raise RuntimeError("데이터베이스 연결 실패")
 
         self.connection.execute(
             """
@@ -201,6 +231,7 @@ class DatabaseManager:
 
     def insert_daily_prices(self, df: pd.DataFrame) -> int:
         """일일 주가 데이터 삽입"""
+        self._ensure_connected()
         if not self.connection:
             raise RuntimeError("데이터베이스에 연결되지 않음")
 
@@ -305,68 +336,81 @@ class DatabaseManager:
         end_date: str | None = None,
     ) -> pd.DataFrame:
         """일일 주가 데이터 조회"""
+        self._ensure_connected()
         if not self.connection:
-            raise RuntimeError("데이터베이스에 연결되지 않음")
+            logger.warning("데이터베이스 연결 실패 - 빈 DataFrame 반환")
+            return pd.DataFrame()
 
-        query = """
-            SELECT date, symbol, open, high, low, close, adjusted_close,
-                   volume, dividend_amount, split_coefficient
-            FROM daily_prices
-            WHERE symbol = ?
-        """
-        params = [symbol]
+        try:
+            base_query = "SELECT * FROM daily_prices WHERE symbol = ?"
+            params = [symbol]
 
-        if start_date:
-            query += " AND date >= ?"
-            params.append(start_date)
+            if start_date:
+                base_query += " AND date >= ?"
+                params.append(start_date)
 
-        if end_date:
-            query += " AND date <= ?"
-            params.append(end_date)
+            if end_date:
+                base_query += " AND date <= ?"
+                params.append(end_date)
 
-        query += " ORDER BY date"
+            base_query += " ORDER BY date"
 
-        df = self.connection.execute(query, params).df()
+            df = self.connection.execute(base_query, params).df()
 
-        if not df.empty:
-            df["date"] = pd.to_datetime(df["date"])
-            df.set_index("date", inplace=True)
+            if not df.empty:
+                # date 컬럼을 인덱스로 설정
+                df["date"] = pd.to_datetime(df["date"])
+                df.set_index("date", inplace=True)
 
-        return df
+            return df
+
+        except Exception as e:
+            logger.error(f"일일 주가 데이터 조회 중 오류: {e}")
+            return pd.DataFrame()
 
     def get_available_symbols(self) -> list[str]:
         """사용 가능한 심볼 목록 조회"""
+        self._ensure_connected()
         if not self.connection:
-            raise RuntimeError("데이터베이스에 연결되지 않음")
+            logger.warning("데이터베이스 연결 실패 - 빈 목록 반환")
+            return []
 
-        result = self.connection.execute(
-            """
-            SELECT DISTINCT symbol FROM daily_prices ORDER BY symbol
-        """
-        ).fetchall()
+        try:
+            result = self.connection.execute(
+                "SELECT DISTINCT symbol FROM daily_prices ORDER BY symbol"
+            ).fetchall()
 
-        return [row[0] for row in result]
+            return [row[0] for row in result] if result else []
+
+        except Exception as e:
+            logger.error(f"심볼 목록 조회 중 오류: {e}")
+            return []
 
     def get_data_range(self, symbol: str) -> tuple[str | None, str | None]:
-        """특정 심볼의 데이터 기간 조회"""
+        """심볼의 데이터 범위 조회"""
+        self._ensure_connected()
         if not self.connection:
-            raise RuntimeError("데이터베이스에 연결되지 않음")
+            logger.warning("데이터베이스 연결 실패 - None 반환")
+            return None, None
 
-        result = self.connection.execute(
-            """
-            SELECT MIN(date) as start_date, MAX(date) as end_date
-            FROM daily_prices
-            WHERE symbol = ?
-        """,
-            [symbol],
-        ).fetchone()
+        try:
+            result = self.connection.execute(
+                "SELECT MIN(date) as min_date, MAX(date) as max_date FROM daily_prices WHERE symbol = ?",
+                [symbol],
+            ).fetchone()
 
-        if result:
-            return result[0], result[1]
-        return None, None
+            if result and result[0] and result[1]:
+                return str(result[0]), str(result[1])
+            else:
+                return None, None
+
+        except Exception as e:
+            logger.error(f"데이터 범위 조회 중 오류 (symbol: {symbol}): {e}")
+            return None, None
 
     def save_backtest_result(self, result_data: dict) -> str:
         """백테스트 결과 저장"""
+        self._ensure_connected()
         if not self.connection:
             raise RuntimeError("데이터베이스에 연결되지 않음")
 

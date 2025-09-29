@@ -2,6 +2,7 @@
 Data Service Configuration
 """
 
+from os import getenv
 from mysingle_quant.core import CommonSettings
 from pydantic_settings import SettingsConfigDict
 
@@ -20,8 +21,8 @@ class Settings(CommonSettings):
     API_PREFIX: str = "/api/v1"
     API_VERSION: str = "v1"
 
-    # DuckDB 파일 경로 - backend 애플리케이션 내부로 통합
-    DUCKDB_PATH: str = "./app/data/quant.duckdb"
+    # DuckDB 파일 경로 - 환경변수에서 읽어옴, 기본값 설정
+    DUCKDB_PATH: str = getenv("DUCKDB_PATH", "./app/data/quant.duckdb")
 
 
 settings = Settings()

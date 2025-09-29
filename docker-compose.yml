@@ -33,7 +33,10 @@ services:
       - public
       - internal
     environment:
-      DUCKDB_PATH: /app/data/market_data.duckdb
+      DUCKDB_PATH: /app/data/quant.duckdb
+      MONGODB_SERVER: q-mongodb:27017
+      MONGODB_USERNAME: ${MONGODB_USERNAME}
+      MONGODB_PASSWORD: ${MONGODB_PASSWORD}
     volumes:
       - ./data:/app/data
     depends_on:

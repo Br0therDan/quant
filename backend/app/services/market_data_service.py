@@ -124,9 +124,7 @@ class MarketDataService:
         if not force_refresh:
             existing_data = (
                 await MarketData.find(
-                    MarketData.symbol == symbol,
-                    MarketData.date >= start_date,
-                    MarketData.date <= end_date,
+                    {"symbol": symbol, "date": {"$gte": start_date, "$lte": end_date}}
                 )
                 .sort("date")
                 .to_list()
@@ -229,7 +227,7 @@ class MarketDataService:
         """Get data coverage information for a symbol"""
 
         # Use simple queries instead of aggregation to avoid cursor issues
-        data = await MarketData.find(MarketData.symbol == symbol).to_list()
+        data = await MarketData.find({"symbol": symbol}).to_list()
 
         if not data:
             return {
@@ -278,9 +276,7 @@ class MarketDataService:
         # Get market data
         data = (
             await MarketData.find(
-                MarketData.symbol == symbol,
-                MarketData.date >= start_date,
-                MarketData.date <= end_date,
+                {"symbol": symbol, "date": {"$gte": start_date, "$lte": end_date}}
             )
             .sort("date")
             .to_list()

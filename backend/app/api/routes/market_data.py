@@ -49,46 +49,90 @@ async def get_market_data(
     service: MarketDataService = Depends(get_market_data_service),
 ):
     """Get market data for a specific symbol and date range"""
+
+    import logging
+
+    logger = logging.getLogger(__name__)
+
+    logger.info(f"🌐 API Request: GET /data/{symbol}")
+    logger.info(
+        f"📅 Parameters: start_date={start_date}, end_date={end_date}, force_refresh={force_refresh}"
+    )
+
     try:
         # Validate date range
         if start_date > end_date:
+            logger.error(
+                f"❌ Invalid date range: start_date={start_date} > end_date={end_date}"
+            )
             raise HTTPException(
                 status_code=400, detail="Start date must be before end date"
             )
 
-        if start_date > datetime.now():
+        # 🔧 Timezone 문제 해결: 모든 datetime을 timezone-naive로 변환
+        if start_date.tzinfo is not None:
+            start_date = start_date.replace(tzinfo=None)
+        if end_date.tzinfo is not None:
+            end_date = end_date.replace(tzinfo=None)
+
+        # Future date validation with timezone-naive comparison
+        now = datetime.now()
+        if start_date > now:
+            logger.error(f"❌ Future start date: start_date={start_date}")
             raise HTTPException(
                 status_code=400, detail="Start date cannot be in the future"
             )
 
+        logger.info(f"✅ Date validation passed for {symbol}")
+
         # Get data
+        logger.info(f"🔄 Calling service.get_market_data for {symbol.upper()}")
         data = await service.get_market_data(
             symbol.upper(), start_date, end_date, force_refresh
+        )
+
+        logger.info(
+            f"📊 Service returned {len(data) if data else 0} records for {symbol}"
         )
 
         # Convert to response model
         response = []
         for item in data:
-            response.append(
-                MarketDataResponse(
-                    symbol=item.symbol,
-                    date=item.date,
-                    open=item.open_price,
-                    high=item.high_price,
-                    low=item.low_price,
-                    close=item.close_price,
-                    volume=item.volume,
-                    adjusted_close=item.adjusted_close,
-                    dividend_amount=item.dividend_amount,
-                    split_coefficient=item.split_coefficient,
+            try:
+                response.append(
+                    MarketDataResponse(
+                        symbol=item.symbol,
+                        date=item.date,
+                        open=item.open_price,
+                        high=item.high_price,
+                        low=item.low_price,
+                        close=item.close_price,
+                        volume=item.volume,
+                        adjusted_close=item.adjusted_close,
+                        dividend_amount=item.dividend_amount,
+                        split_coefficient=item.split_coefficient,
+                    )
                 )
-            )
+            except Exception as e:
+                logger.error(f"❌ Failed to convert record for {symbol}: {e}")
+                logger.error(f"Record data: {item}")
+                raise e
 
+        logger.info(f"✅ Successfully converted {len(response)} records for {symbol}")
         return response
 
     except ValidationError as e:
+        logger.error(f"❌ Validation error for {symbol}: {e}")
         raise HTTPException(status_code=422, detail=str(e))
+    except HTTPException as e:
+        logger.error(f"❌ HTTP error for {symbol}: {e.detail}")
+        raise e
     except Exception as e:
+        logger.error(f"💥 Unexpected error for {symbol}: {e}")
+        logger.error(f"Error type: {type(e).__name__}")
+        import traceback
+
+        logger.error(f"Traceback: {traceback.format_exc()}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
