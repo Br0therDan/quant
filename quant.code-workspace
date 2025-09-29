@@ -8,6 +8,11 @@
 		}
 	],
 	"settings": {
-		"python.defaultInterpreterPath": "./.venv/bin/python"
+		"python.defaultInterpreterPath": "./.venv/bin/python",
+		"chat.mcp.assisted.nuget.enabled": true,
+		"chat.mcp.discovery.enabled": {
+			"claude-desktop": true
+		},
+		"dart.mcpServer": false
 	}
 }

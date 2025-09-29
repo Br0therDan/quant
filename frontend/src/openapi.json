@@ -1,0 +1,4293 @@
+{
+  "components": {
+    "schemas": {
+      "BacktestConfig": {
+        "description": "\ubc31\ud14c\uc2a4\ud2b8 \uc124\uc815 \ub0b4\uc7a5 \ubaa8\ub378",
+        "properties": {
+          "commission_rate": {
+            "default": 0.001,
+            "description": "\uc218\uc218\ub8cc\uc728",
+            "title": "Commission Rate",
+            "type": "number"
+          },
+          "description": {
+            "default": "",
+            "description": "\ubc31\ud14c\uc2a4\ud2b8 \uc124\uba85",
+            "title": "Description",
+            "type": "string"
+          },
+          "end_date": {
+            "description": "\uc885\ub8cc\uc77c",
+            "format": "date-time",
+            "title": "End Date",
+            "type": "string"
+          },
+          "initial_cash": {
+            "default": 100000.0,
+            "description": "\ucd08\uae30 \uc790\ubcf8\uae08",
+            "title": "Initial Cash",
+            "type": "number"
+          },
+          "max_position_size": {
+            "default": 0.2,
+            "description": "\ucd5c\ub300 \ud3ec\uc9c0\uc158 \ud06c\uae30 (\ube44\uc728)",
+            "title": "Max Position Size",
+            "type": "number"
+          },
+          "name": {
+            "description": "\ubc31\ud14c\uc2a4\ud2b8 \uc774\ub984",
+            "title": "Name",
+            "type": "string"
+          },
+          "rebalance_frequency": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\ub9ac\ubc38\ub7f0\uc2f1 \uc8fc\uae30 (daily, weekly, monthly)",
+            "title": "Rebalance Frequency"
+          },
+          "slippage_rate": {
+            "default": 0.0005,
+            "description": "\uc2ac\ub9ac\ud53c\uc9c0\uc728",
+            "title": "Slippage Rate",
+            "type": "number"
+          },
+          "start_date": {
+            "description": "\uc2dc\uc791\uc77c",
+            "format": "date-time",
+            "title": "Start Date",
+            "type": "string"
+          },
+          "symbols": {
+            "description": "\ub300\uc0c1 \uc2ec\ubcfc \ubaa9\ub85d",
+            "items": {
+              "type": "string"
+            },
+            "title": "Symbols",
+            "type": "array"
+          },
+          "tags": {
+            "description": "\ud0dc\uadf8",
+            "items": {
+              "type": "string"
+            },
+            "title": "Tags",
+            "type": "array"
+          }
+        },
+        "required": [
+          "name",
+          "start_date",
+          "end_date",
+          "symbols"
+        ],
+        "title": "BacktestConfig",
+        "type": "object"
+      },
+      "BacktestCreateRequest": {
+        "description": "\ubc31\ud14c\uc2a4\ud2b8 \uc0dd\uc131 \uc694\uccad",
+        "properties": {
+          "config": {
+            "$ref": "#/components/schemas/BacktestConfig",
+            "description": "\ubc31\ud14c\uc2a4\ud2b8 \uc124\uc815"
+          },
+          "description": {
+            "default": "",
+            "description": "\ubc31\ud14c\uc2a4\ud2b8 \uc124\uba85",
+            "title": "Description",
+            "type": "string"
+          },
+          "name": {
+            "description": "\ubc31\ud14c\uc2a4\ud2b8 \uc774\ub984",
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "config"
+        ],
+        "title": "BacktestCreateRequest",
+        "type": "object"
+      },
+      "BacktestExecutionListResponse": {
+        "description": "\ubc31\ud14c\uc2a4\ud2b8 \uc2e4\ud589 \ubaa9\ub85d \uc751\ub2f5",
+        "properties": {
+          "executions": {
+            "description": "\uc2e4\ud589 \ubaa9\ub85d",
+            "items": {
+              "$ref": "#/components/schemas/BacktestExecutionResponse"
+            },
+            "title": "Executions",
+            "type": "array"
+          },
+          "total": {
+            "description": "\ucd1d \uac1c\uc218",
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "executions",
+          "total"
+        ],
+        "title": "BacktestExecutionListResponse",
+        "type": "object"
+      },
+      "BacktestExecutionRequest": {
+        "description": "\ubc31\ud14c\uc2a4\ud2b8 \uc2e4\ud589 \uc694\uccad",
+        "example": {
+          "signals": [
+            {
+              "action": "BUY",
+              "quantity": 10,
+              "symbol": "AAPL",
+              "timestamp": "2023-01-01T00:00:00"
+            },
+            {
+              "action": "SELL",
+              "quantity": 5,
+              "symbol": "AAPL",
+              "timestamp": "2023-01-02T00:00:00"
+            }
+          ]
+        },
+        "properties": {
+          "signals": {
+            "description": "\ud2b8\ub808\uc774\ub529 \uc2dc\uadf8\ub110 \ubaa9\ub85d",
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Signals",
+            "type": "array"
+          }
+        },
+        "required": [
+          "signals"
+        ],
+        "title": "BacktestExecutionRequest",
+        "type": "object"
+      },
+      "BacktestExecutionResponse": {
+        "description": "\ubc31\ud14c\uc2a4\ud2b8 \uc2e4\ud589 \uc751\ub2f5",
+        "properties": {
+          "backtest_id": {
+            "description": "\ubc31\ud14c\uc2a4\ud2b8 ID",
+            "title": "Backtest Id",
+            "type": "string"
+          },
+          "created_at": {
+            "description": "\uc0dd\uc131 \uc2dc\uac04",
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "end_time": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uc2e4\ud589 \uc885\ub8cc \uc2dc\uac04",
+            "title": "End Time"
+          },
+          "error_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uc624\ub958 \uba54\uc2dc\uc9c0",
+            "title": "Error Message"
+          },
+          "execution_id": {
+            "description": "\uc2e4\ud589 ID",
+            "title": "Execution Id",
+            "type": "string"
+          },
+          "id": {
+            "description": "\uc2e4\ud589 ID",
+            "title": "Id",
+            "type": "string"
+          },
+          "portfolio_values": {
+            "description": "\ud3ec\ud2b8\ud3f4\ub9ac\uc624 \uac00\uce58 \ud788\uc2a4\ud1a0\ub9ac",
+            "items": {
+              "type": "number"
+            },
+            "title": "Portfolio Values",
+            "type": "array"
+          },
+          "positions": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/Position"
+            },
+            "description": "\ucd5c\uc885 \ud3ec\uc9c0\uc158",
+            "title": "Positions",
+            "type": "object"
+          },
+          "start_time": {
+            "description": "\uc2e4\ud589 \uc2dc\uc791 \uc2dc\uac04",
+            "format": "date-time",
+            "title": "Start Time",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/BacktestStatus",
+            "description": "\uc2e4\ud589 \uc0c1\ud0dc"
+          },
+          "trades": {
+            "description": "\uac70\ub798 \ub0b4\uc5ed",
+            "items": {
+              "$ref": "#/components/schemas/Trade"
+            },
+            "title": "Trades",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "backtest_id",
+          "execution_id",
+          "start_time",
+          "status",
+          "portfolio_values",
+          "trades",
+          "positions",
+          "created_at"
+        ],
+        "title": "BacktestExecutionResponse",
+        "type": "object"
+      },
+      "BacktestListResponse": {
+        "description": "\ubc31\ud14c\uc2a4\ud2b8 \ubaa9\ub85d \uc751\ub2f5",
+        "properties": {
+          "backtests": {
+            "description": "\ubc31\ud14c\uc2a4\ud2b8 \ubaa9\ub85d",
+            "items": {
+              "$ref": "#/components/schemas/BacktestResponse"
+            },
+            "title": "Backtests",
+            "type": "array"
+          },
+          "total": {
+            "description": "\ucd1d \uac1c\uc218",
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "backtests",
+          "total"
+        ],
+        "title": "BacktestListResponse",
+        "type": "object"
+      },
+      "BacktestResponse": {
+        "description": "\ubc31\ud14c\uc2a4\ud2b8 \uc751\ub2f5",
+        "properties": {
+          "config": {
+            "$ref": "#/components/schemas/BacktestConfig",
+            "description": "\ubc31\ud14c\uc2a4\ud2b8 \uc124\uc815"
+          },
+          "created_at": {
+            "description": "\uc0dd\uc131 \uc2dc\uac04",
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "description": {
+            "description": "\ubc31\ud14c\uc2a4\ud2b8 \uc124\uba85",
+            "title": "Description",
+            "type": "string"
+          },
+          "duration_seconds": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uc2e4\ud589 \uc2dc\uac04(\ucd08)",
+            "title": "Duration Seconds"
+          },
+          "end_time": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uc2e4\ud589 \uc885\ub8cc \uc2dc\uac04",
+            "title": "End Time"
+          },
+          "id": {
+            "description": "\ubc31\ud14c\uc2a4\ud2b8 ID",
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "description": "\ubc31\ud14c\uc2a4\ud2b8 \uc774\ub984",
+            "title": "Name",
+            "type": "string"
+          },
+          "performance": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PerformanceMetrics"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uc131\uacfc \uc9c0\ud45c"
+          },
+          "start_time": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uc2e4\ud589 \uc2dc\uc791 \uc2dc\uac04",
+            "title": "Start Time"
+          },
+          "status": {
+            "$ref": "#/components/schemas/BacktestStatus",
+            "description": "\uc2e4\ud589 \uc0c1\ud0dc"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uc218\uc815 \uc2dc\uac04",
+            "title": "Updated At"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "config",
+          "status",
+          "created_at"
+        ],
+        "title": "BacktestResponse",
+        "type": "object"
+      },
+      "BacktestResultListResponse": {
+        "description": "\ubc31\ud14c\uc2a4\ud2b8 \uacb0\uacfc \ubaa9\ub85d \uc751\ub2f5",
+        "properties": {
+          "results": {
+            "description": "\uacb0\uacfc \ubaa9\ub85d",
+            "items": {
+              "$ref": "#/components/schemas/BacktestResultResponse"
+            },
+            "title": "Results",
+            "type": "array"
+          },
+          "total": {
+            "description": "\ucd1d \uac1c\uc218",
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "results",
+          "total"
+        ],
+        "title": "BacktestResultListResponse",
+        "type": "object"
+      },
+      "BacktestResultResponse": {
+        "description": "\ubc31\ud14c\uc2a4\ud2b8 \uacb0\uacfc \uc751\ub2f5",
+        "properties": {
+          "alpha": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uc54c\ud30c",
+            "title": "Alpha"
+          },
+          "annualized_return": {
+            "description": "\uc5f0\ud658\uc0b0 \uc218\uc775\ub960",
+            "title": "Annualized Return",
+            "type": "number"
+          },
+          "backtest_id": {
+            "description": "\ubc31\ud14c\uc2a4\ud2b8 ID",
+            "title": "Backtest Id",
+            "type": "string"
+          },
+          "benchmark_return": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\ubca4\uce58\ub9c8\ud06c \uc218\uc775\ub960",
+            "title": "Benchmark Return"
+          },
+          "beta": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\ubca0\ud0c0",
+            "title": "Beta"
+          },
+          "calmar_ratio": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uce7c\ub9c8 \ube44\uc728",
+            "title": "Calmar Ratio"
+          },
+          "created_at": {
+            "description": "\uc0dd\uc131 \uc2dc\uac04",
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "execution_id": {
+            "description": "\uc2e4\ud589 ID",
+            "title": "Execution Id",
+            "type": "string"
+          },
+          "id": {
+            "description": "\uacb0\uacfc ID",
+            "title": "Id",
+            "type": "string"
+          },
+          "losing_trades": {
+            "description": "\ud328\ubc30 \uac70\ub798 \uc218",
+            "title": "Losing Trades",
+            "type": "integer"
+          },
+          "max_drawdown": {
+            "description": "\ucd5c\ub300 \ub099\ud3ed",
+            "title": "Max Drawdown",
+            "type": "number"
+          },
+          "portfolio_history_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\ud3ec\ud2b8\ud3f4\ub9ac\uc624 \ud788\uc2a4\ud1a0\ub9ac \ud30c\uc77c \uacbd\ub85c",
+            "title": "Portfolio History Path"
+          },
+          "sharpe_ratio": {
+            "description": "\uc0e4\ud504 \ube44\uc728",
+            "title": "Sharpe Ratio",
+            "type": "number"
+          },
+          "sortino_ratio": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uc18c\ub974\ud2f0\ub178 \ube44\uc728",
+            "title": "Sortino Ratio"
+          },
+          "total_return": {
+            "description": "\ucd1d \uc218\uc775\ub960",
+            "title": "Total Return",
+            "type": "number"
+          },
+          "total_trades": {
+            "description": "\ucd1d \uac70\ub798 \uc218",
+            "title": "Total Trades",
+            "type": "integer"
+          },
+          "trades_history_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uac70\ub798 \ud788\uc2a4\ud1a0\ub9ac \ud30c\uc77c \uacbd\ub85c",
+            "title": "Trades History Path"
+          },
+          "volatility": {
+            "description": "\ubcc0\ub3d9\uc131",
+            "title": "Volatility",
+            "type": "number"
+          },
+          "win_rate": {
+            "description": "\uc2b9\ub960",
+            "title": "Win Rate",
+            "type": "number"
+          },
+          "winning_trades": {
+            "description": "\uc2b9\ub9ac \uac70\ub798 \uc218",
+            "title": "Winning Trades",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "backtest_id",
+          "execution_id",
+          "total_return",
+          "annualized_return",
+          "volatility",
+          "sharpe_ratio",
+          "max_drawdown",
+          "total_trades",
+          "winning_trades",
+          "losing_trades",
+          "win_rate",
+          "created_at"
+        ],
+        "title": "BacktestResultResponse",
+        "type": "object"
+      },
+      "BacktestStatus": {
+        "description": "\ubc31\ud14c\uc2a4\ud2b8 \uc0c1\ud0dc",
+        "enum": [
+          "pending",
+          "running",
+          "completed",
+          "failed",
+          "cancelled"
+        ],
+        "title": "BacktestStatus",
+        "type": "string"
+      },
+      "BacktestUpdateRequest": {
+        "description": "\ubc31\ud14c\uc2a4\ud2b8 \uc218\uc815 \uc694\uccad",
+        "properties": {
+          "config": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BacktestConfig"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\ubc31\ud14c\uc2a4\ud2b8 \uc124\uc815"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\ubc31\ud14c\uc2a4\ud2b8 \uc124\uba85",
+            "title": "Description"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\ubc31\ud14c\uc2a4\ud2b8 \uc774\ub984",
+            "title": "Name"
+          }
+        },
+        "title": "BacktestUpdateRequest",
+        "type": "object"
+      },
+      "BulkDataRequest": {
+        "description": "Request model for bulk data operations",
+        "properties": {
+          "end_date": {
+            "description": "End date",
+            "format": "date-time",
+            "title": "End Date",
+            "type": "string"
+          },
+          "interval": {
+            "default": "daily",
+            "description": "Data interval",
+            "title": "Interval",
+            "type": "string"
+          },
+          "start_date": {
+            "description": "Start date",
+            "format": "date-time",
+            "title": "Start Date",
+            "type": "string"
+          },
+          "symbols": {
+            "description": "List of symbols",
+            "items": {
+              "type": "string"
+            },
+            "title": "Symbols",
+            "type": "array"
+          }
+        },
+        "required": [
+          "symbols",
+          "start_date",
+          "end_date"
+        ],
+        "title": "BulkDataRequest",
+        "type": "object"
+      },
+      "DataQualityResponse": {
+        "description": "Response model for data quality metrics",
+        "properties": {
+          "analyzed_at": {
+            "format": "date-time",
+            "title": "Analyzed At",
+            "type": "string"
+          },
+          "date_range_end": {
+            "format": "date-time",
+            "title": "Date Range End",
+            "type": "string"
+          },
+          "date_range_start": {
+            "format": "date-time",
+            "title": "Date Range Start",
+            "type": "string"
+          },
+          "duplicate_records": {
+            "title": "Duplicate Records",
+            "type": "integer"
+          },
+          "missing_days": {
+            "title": "Missing Days",
+            "type": "integer"
+          },
+          "price_anomalies": {
+            "title": "Price Anomalies",
+            "type": "integer"
+          },
+          "quality_score": {
+            "title": "Quality Score",
+            "type": "number"
+          },
+          "symbol": {
+            "title": "Symbol",
+            "type": "string"
+          },
+          "total_records": {
+            "title": "Total Records",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "symbol",
+          "date_range_start",
+          "date_range_end",
+          "total_records",
+          "missing_days",
+          "duplicate_records",
+          "price_anomalies",
+          "quality_score",
+          "analyzed_at"
+        ],
+        "title": "DataQualityResponse",
+        "type": "object"
+      },
+      "DataRequestStatus": {
+        "description": "Response model for data request status",
+        "properties": {
+          "completed_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completed At"
+          },
+          "end_date": {
+            "format": "date-time",
+            "title": "End Date",
+            "type": "string"
+          },
+          "error_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Message"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "records_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Records Count"
+          },
+          "requested_at": {
+            "format": "date-time",
+            "title": "Requested At",
+            "type": "string"
+          },
+          "start_date": {
+            "format": "date-time",
+            "title": "Start Date",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "symbol": {
+            "title": "Symbol",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "symbol",
+          "start_date",
+          "end_date",
+          "status",
+          "requested_at"
+        ],
+        "title": "DataRequestStatus",
+        "type": "object"
+      },
+      "ExecutionListResponse": {
+        "description": "Execution list response",
+        "properties": {
+          "executions": {
+            "description": "\uc2e4\ud589 \ubaa9\ub85d",
+            "items": {
+              "$ref": "#/components/schemas/ExecutionResponse"
+            },
+            "title": "Executions",
+            "type": "array"
+          },
+          "total": {
+            "description": "\ucd1d \uac1c\uc218",
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "executions",
+          "total"
+        ],
+        "title": "ExecutionListResponse",
+        "type": "object"
+      },
+      "ExecutionResponse": {
+        "description": "Execution response",
+        "properties": {
+          "backtest_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\ubc31\ud14c\uc2a4\ud2b8 ID",
+            "title": "Backtest Id"
+          },
+          "created_at": {
+            "description": "\uc0dd\uc131 \uc2dc\uac04",
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "id": {
+            "description": "\uc2e4\ud589 ID",
+            "title": "Id",
+            "type": "string"
+          },
+          "metadata": {
+            "additionalProperties": true,
+            "description": "\uba54\ud0c0\ub370\uc774\ud130",
+            "title": "Metadata",
+            "type": "object"
+          },
+          "price": {
+            "description": "\uac00\uaca9",
+            "title": "Price",
+            "type": "number"
+          },
+          "signal_strength": {
+            "description": "\uc2e0\ud638 \uac15\ub3c4",
+            "title": "Signal Strength",
+            "type": "number"
+          },
+          "signal_type": {
+            "$ref": "#/components/schemas/SignalType"
+          },
+          "strategy_id": {
+            "description": "\uc804\ub7b5 ID",
+            "title": "Strategy Id",
+            "type": "string"
+          },
+          "strategy_name": {
+            "description": "\uc804\ub7b5 \uc774\ub984",
+            "title": "Strategy Name",
+            "type": "string"
+          },
+          "symbol": {
+            "description": "\uc2ec\ubcfc",
+            "title": "Symbol",
+            "type": "string"
+          },
+          "timestamp": {
+            "description": "\uc2e4\ud589 \uc2dc\uac04",
+            "format": "date-time",
+            "title": "Timestamp",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "strategy_id",
+          "strategy_name",
+          "symbol",
+          "signal_type",
+          "signal_strength",
+          "price",
+          "timestamp",
+          "created_at"
+        ],
+        "title": "ExecutionResponse",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "HealthCheckResponse": {
+        "description": "Health check response model",
+        "properties": {
+          "alpha_vantage_available": {
+            "title": "Alpha Vantage Available",
+            "type": "boolean"
+          },
+          "database_connected": {
+            "title": "Database Connected",
+            "type": "boolean"
+          },
+          "last_update": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Update"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "timestamp": {
+            "format": "date-time",
+            "title": "Timestamp",
+            "type": "string"
+          },
+          "total_symbols": {
+            "title": "Total Symbols",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "status",
+          "timestamp",
+          "database_connected",
+          "alpha_vantage_available",
+          "total_symbols"
+        ],
+        "title": "HealthCheckResponse",
+        "type": "object"
+      },
+      "HealthResponse": {
+        "description": "Health check response model.",
+        "properties": {
+          "checks": {
+            "additionalProperties": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Checks",
+            "type": "object"
+          },
+          "service": {
+            "title": "Service",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "timestamp": {
+            "format": "date-time",
+            "title": "Timestamp",
+            "type": "string"
+          },
+          "uptime": {
+            "title": "Uptime",
+            "type": "number"
+          },
+          "version": {
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "timestamp",
+          "service",
+          "version",
+          "uptime",
+          "checks"
+        ],
+        "title": "HealthResponse",
+        "type": "object"
+      },
+      "IntegratedBacktestRequest": {
+        "description": "\ud1b5\ud569 \ubc31\ud14c\uc2a4\ud2b8 \uc694\uccad",
+        "properties": {
+          "description": {
+            "default": "",
+            "description": "\ubc31\ud14c\uc2a4\ud2b8 \uc124\uba85",
+            "title": "Description",
+            "type": "string"
+          },
+          "end_date": {
+            "description": "\uc885\ub8cc\uc77c",
+            "format": "date-time",
+            "title": "End Date",
+            "type": "string"
+          },
+          "initial_capital": {
+            "default": 100000.0,
+            "description": "\ucd08\uae30 \uc790\ubcf8",
+            "title": "Initial Capital",
+            "type": "number"
+          },
+          "name": {
+            "description": "\ubc31\ud14c\uc2a4\ud2b8 \uc774\ub984",
+            "title": "Name",
+            "type": "string"
+          },
+          "start_date": {
+            "description": "\uc2dc\uc791\uc77c",
+            "format": "date-time",
+            "title": "Start Date",
+            "type": "string"
+          },
+          "strategy_params": {
+            "additionalProperties": true,
+            "description": "\uc804\ub7b5 \ub9e4\uac1c\ubcc0\uc218",
+            "title": "Strategy Params",
+            "type": "object"
+          },
+          "strategy_type": {
+            "description": "\uc804\ub7b5 \ud0c0\uc785",
+            "title": "Strategy Type",
+            "type": "string"
+          },
+          "symbols": {
+            "description": "\uc2ec\ubcfc \ubaa9\ub85d",
+            "items": {
+              "type": "string"
+            },
+            "title": "Symbols",
+            "type": "array"
+          }
+        },
+        "required": [
+          "name",
+          "symbols",
+          "start_date",
+          "end_date",
+          "strategy_type"
+        ],
+        "title": "IntegratedBacktestRequest",
+        "type": "object"
+      },
+      "IntegratedBacktestResponse": {
+        "description": "\ud1b5\ud569 \ubc31\ud14c\uc2a4\ud2b8 \uc751\ub2f5",
+        "properties": {
+          "backtest_id": {
+            "description": "\ubc31\ud14c\uc2a4\ud2b8 ID",
+            "title": "Backtest Id",
+            "type": "string"
+          },
+          "end_time": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uc885\ub8cc \uc2dc\uac04",
+            "title": "End Time"
+          },
+          "execution_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uc2e4\ud589 ID",
+            "title": "Execution Id"
+          },
+          "message": {
+            "description": "\uba54\uc2dc\uc9c0",
+            "title": "Message",
+            "type": "string"
+          },
+          "performance": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PerformanceMetrics"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uc131\uacfc \uc9c0\ud45c"
+          },
+          "result_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uacb0\uacfc ID",
+            "title": "Result Id"
+          },
+          "start_time": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uc2dc\uc791 \uc2dc\uac04",
+            "title": "Start Time"
+          },
+          "status": {
+            "$ref": "#/components/schemas/BacktestStatus",
+            "description": "\uc0c1\ud0dc"
+          }
+        },
+        "required": [
+          "backtest_id",
+          "status",
+          "message"
+        ],
+        "title": "IntegratedBacktestResponse",
+        "type": "object"
+      },
+      "MarketDataResponse": {
+        "description": "Response model for market data",
+        "properties": {
+          "adjusted_close": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Adjusted Close"
+          },
+          "close": {
+            "title": "Close",
+            "type": "number"
+          },
+          "date": {
+            "format": "date-time",
+            "title": "Date",
+            "type": "string"
+          },
+          "dividend_amount": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dividend Amount"
+          },
+          "high": {
+            "title": "High",
+            "type": "number"
+          },
+          "low": {
+            "title": "Low",
+            "type": "number"
+          },
+          "open": {
+            "title": "Open",
+            "type": "number"
+          },
+          "split_coefficient": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Split Coefficient"
+          },
+          "symbol": {
+            "title": "Symbol",
+            "type": "string"
+          },
+          "volume": {
+            "title": "Volume",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "symbol",
+          "date",
+          "open",
+          "high",
+          "low",
+          "close",
+          "volume"
+        ],
+        "title": "MarketDataResponse",
+        "type": "object"
+      },
+      "OrderType": {
+        "description": "\uc8fc\ubb38 \ud0c0\uc785",
+        "enum": [
+          "MARKET",
+          "LIMIT",
+          "STOP",
+          "STOP_LIMIT"
+        ],
+        "title": "OrderType",
+        "type": "string"
+      },
+      "PerformanceMetrics": {
+        "description": "\uc131\uacfc \uc9c0\ud45c \ub0b4\uc7a5 \ubaa8\ub378",
+        "properties": {
+          "annualized_return": {
+            "description": "\uc5f0\ud658\uc0b0 \uc218\uc775\ub960",
+            "title": "Annualized Return",
+            "type": "number"
+          },
+          "losing_trades": {
+            "description": "\ud328\ubc30 \uac70\ub798 \uc218",
+            "title": "Losing Trades",
+            "type": "integer"
+          },
+          "max_drawdown": {
+            "description": "\ucd5c\ub300 \ub099\ud3ed",
+            "title": "Max Drawdown",
+            "type": "number"
+          },
+          "sharpe_ratio": {
+            "description": "\uc0e4\ud504 \ube44\uc728",
+            "title": "Sharpe Ratio",
+            "type": "number"
+          },
+          "total_return": {
+            "description": "\ucd1d \uc218\uc775\ub960",
+            "title": "Total Return",
+            "type": "number"
+          },
+          "total_trades": {
+            "description": "\ucd1d \uac70\ub798 \uc218",
+            "title": "Total Trades",
+            "type": "integer"
+          },
+          "volatility": {
+            "description": "\ubcc0\ub3d9\uc131",
+            "title": "Volatility",
+            "type": "number"
+          },
+          "win_rate": {
+            "description": "\uc2b9\ub960",
+            "title": "Win Rate",
+            "type": "number"
+          },
+          "winning_trades": {
+            "description": "\uc2b9\ub9ac \uac70\ub798 \uc218",
+            "title": "Winning Trades",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "total_return",
+          "annualized_return",
+          "volatility",
+          "sharpe_ratio",
+          "max_drawdown",
+          "total_trades",
+          "winning_trades",
+          "losing_trades",
+          "win_rate"
+        ],
+        "title": "PerformanceMetrics",
+        "type": "object"
+      },
+      "PerformanceResponse": {
+        "description": "Performance response",
+        "properties": {
+          "accuracy": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uc815\ud655\ub3c4",
+            "title": "Accuracy"
+          },
+          "avg_return_per_trade": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uac70\ub798\ub2f9 \ud3c9\uade0 \uc218\uc775\ub960",
+            "title": "Avg Return Per Trade"
+          },
+          "avg_signal_strength": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\ud3c9\uade0 \uc2e0\ud638 \uac15\ub3c4",
+            "title": "Avg Signal Strength"
+          },
+          "buy_signals": {
+            "description": "\ub9e4\uc218 \uc2e0\ud638 \uc218",
+            "title": "Buy Signals",
+            "type": "integer"
+          },
+          "calmar_ratio": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uce7c\ub9c8 \ube44\uc728",
+            "title": "Calmar Ratio"
+          },
+          "created_at": {
+            "description": "\uc0dd\uc131 \uc2dc\uac04",
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "end_date": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uc885\ub8cc\uc77c",
+            "title": "End Date"
+          },
+          "hold_signals": {
+            "description": "\ubcf4\uc720 \uc2e0\ud638 \uc218",
+            "title": "Hold Signals",
+            "type": "integer"
+          },
+          "id": {
+            "description": "\uc131\uacfc ID",
+            "title": "Id",
+            "type": "string"
+          },
+          "max_drawdown": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\ucd5c\ub300 \ub099\ud3ed",
+            "title": "Max Drawdown"
+          },
+          "sell_signals": {
+            "description": "\ub9e4\ub3c4 \uc2e0\ud638 \uc218",
+            "title": "Sell Signals",
+            "type": "integer"
+          },
+          "sharpe_ratio": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uc0e4\ud504 \ube44\uc728",
+            "title": "Sharpe Ratio"
+          },
+          "start_date": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uc2dc\uc791\uc77c",
+            "title": "Start Date"
+          },
+          "strategy_id": {
+            "description": "\uc804\ub7b5 ID",
+            "title": "Strategy Id",
+            "type": "string"
+          },
+          "strategy_name": {
+            "description": "\uc804\ub7b5 \uc774\ub984",
+            "title": "Strategy Name",
+            "type": "string"
+          },
+          "total_return": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\ucd1d \uc218\uc775\ub960",
+            "title": "Total Return"
+          },
+          "total_signals": {
+            "description": "\ucd1d \uc2e0\ud638 \uc218",
+            "title": "Total Signals",
+            "type": "integer"
+          },
+          "updated_at": {
+            "description": "\uc218\uc815 \uc2dc\uac04",
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "volatility": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\ubcc0\ub3d9\uc131",
+            "title": "Volatility"
+          },
+          "win_rate": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uc2b9\ub960",
+            "title": "Win Rate"
+          }
+        },
+        "required": [
+          "id",
+          "strategy_id",
+          "strategy_name",
+          "total_signals",
+          "buy_signals",
+          "sell_signals",
+          "hold_signals",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "PerformanceResponse",
+        "type": "object"
+      },
+      "Position": {
+        "description": "\ud3ec\uc9c0\uc158 \uc815\ubcf4 \ub0b4\uc7a5 \ubaa8\ub378",
+        "properties": {
+          "avg_price": {
+            "description": "\ud3c9\uade0 \ub2e8\uac00",
+            "title": "Avg Price",
+            "type": "number"
+          },
+          "current_price": {
+            "description": "\ud604\uc7ac \uac00\uaca9",
+            "title": "Current Price",
+            "type": "number"
+          },
+          "first_buy_date": {
+            "description": "\ucd5c\ucd08 \ub9e4\uc218\uc77c",
+            "format": "date-time",
+            "title": "First Buy Date",
+            "type": "string"
+          },
+          "last_update": {
+            "description": "\ub9c8\uc9c0\ub9c9 \uc5c5\ub370\uc774\ud2b8",
+            "format": "date-time",
+            "title": "Last Update",
+            "type": "string"
+          },
+          "quantity": {
+            "description": "\ubcf4\uc720 \uc218\ub7c9",
+            "title": "Quantity",
+            "type": "number"
+          },
+          "realized_pnl": {
+            "default": 0.0,
+            "description": "\uc2e4\ud604 \uc190\uc775",
+            "title": "Realized Pnl",
+            "type": "number"
+          },
+          "symbol": {
+            "description": "\uc2ec\ubcfc",
+            "title": "Symbol",
+            "type": "string"
+          },
+          "unrealized_pnl": {
+            "description": "\ubbf8\uc2e4\ud604 \uc190\uc775",
+            "title": "Unrealized Pnl",
+            "type": "number"
+          }
+        },
+        "required": [
+          "symbol",
+          "quantity",
+          "avg_price",
+          "current_price",
+          "unrealized_pnl",
+          "first_buy_date"
+        ],
+        "title": "Position",
+        "type": "object"
+      },
+      "SignalType": {
+        "description": "\uc2e0\ud638 \ud0c0\uc785",
+        "enum": [
+          "BUY",
+          "SELL",
+          "HOLD"
+        ],
+        "title": "SignalType",
+        "type": "string"
+      },
+      "StrategyCreateRequest": {
+        "description": "Strategy creation request",
+        "properties": {
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uc804\ub7b5 \uc124\uba85",
+            "title": "Description"
+          },
+          "name": {
+            "description": "\uc804\ub7b5 \uc774\ub984",
+            "title": "Name",
+            "type": "string"
+          },
+          "parameters": {
+            "additionalProperties": true,
+            "description": "\uc804\ub7b5 \ud30c\ub77c\ubbf8\ud130",
+            "title": "Parameters",
+            "type": "object"
+          },
+          "strategy_type": {
+            "$ref": "#/components/schemas/StrategyType",
+            "description": "\uc804\ub7b5 \ud0c0\uc785"
+          },
+          "tags": {
+            "description": "\ud0dc\uadf8",
+            "items": {
+              "type": "string"
+            },
+            "title": "Tags",
+            "type": "array"
+          }
+        },
+        "required": [
+          "name",
+          "strategy_type"
+        ],
+        "title": "StrategyCreateRequest",
+        "type": "object"
+      },
+      "StrategyExecuteRequest": {
+        "description": "Strategy execution request",
+        "properties": {
+          "market_data": {
+            "additionalProperties": true,
+            "description": "\uc2dc\uc7a5 \ub370\uc774\ud130",
+            "title": "Market Data",
+            "type": "object"
+          },
+          "symbol": {
+            "description": "\ub300\uc0c1 \uc2ec\ubcfc",
+            "title": "Symbol",
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol",
+          "market_data"
+        ],
+        "title": "StrategyExecuteRequest",
+        "type": "object"
+      },
+      "StrategyFromTemplateRequest": {
+        "description": "Create strategy from template request",
+        "properties": {
+          "name": {
+            "description": "\uc804\ub7b5 \uc774\ub984",
+            "title": "Name",
+            "type": "string"
+          },
+          "parameter_overrides": {
+            "additionalProperties": {
+              "anyOf": [
+                {},
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "description": "\ud30c\ub77c\ubbf8\ud130 \uc624\ubc84\ub77c\uc774\ub4dc",
+            "title": "Parameter Overrides",
+            "type": "object"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "StrategyFromTemplateRequest",
+        "type": "object"
+      },
+      "StrategyListResponse": {
+        "description": "Strategy list response",
+        "properties": {
+          "strategies": {
+            "description": "\uc804\ub7b5 \ubaa9\ub85d",
+            "items": {
+              "$ref": "#/components/schemas/StrategyResponse"
+            },
+            "title": "Strategies",
+            "type": "array"
+          },
+          "total": {
+            "description": "\ucd1d \uac1c\uc218",
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "strategies",
+          "total"
+        ],
+        "title": "StrategyListResponse",
+        "type": "object"
+      },
+      "StrategyResponse": {
+        "description": "Strategy response",
+        "properties": {
+          "created_at": {
+            "description": "\uc0dd\uc131 \uc2dc\uac04",
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "created_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uc0dd\uc131\uc790",
+            "title": "Created By"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uc804\ub7b5 \uc124\uba85",
+            "title": "Description"
+          },
+          "id": {
+            "description": "\uc804\ub7b5 ID",
+            "title": "Id",
+            "type": "string"
+          },
+          "is_active": {
+            "description": "\ud65c\uc131\ud654 \uc0c1\ud0dc",
+            "title": "Is Active",
+            "type": "boolean"
+          },
+          "is_template": {
+            "description": "\ud15c\ud50c\ub9bf \uc5ec\ubd80",
+            "title": "Is Template",
+            "type": "boolean"
+          },
+          "name": {
+            "description": "\uc804\ub7b5 \uc774\ub984",
+            "title": "Name",
+            "type": "string"
+          },
+          "parameters": {
+            "additionalProperties": true,
+            "description": "\uc804\ub7b5 \ud30c\ub77c\ubbf8\ud130",
+            "title": "Parameters",
+            "type": "object"
+          },
+          "strategy_type": {
+            "$ref": "#/components/schemas/StrategyType",
+            "description": "\uc804\ub7b5 \ud0c0\uc785"
+          },
+          "tags": {
+            "description": "\ud0dc\uadf8",
+            "items": {
+              "type": "string"
+            },
+            "title": "Tags",
+            "type": "array"
+          },
+          "updated_at": {
+            "description": "\uc218\uc815 \uc2dc\uac04",
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "strategy_type",
+          "is_active",
+          "is_template",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "StrategyResponse",
+        "type": "object"
+      },
+      "StrategyType": {
+        "description": "\uc9c0\uc6d0\ub418\ub294 \uc804\ub7b5 \ud0c0\uc785",
+        "enum": [
+          "sma_crossover",
+          "rsi_mean_reversion",
+          "momentum",
+          "buy_and_hold"
+        ],
+        "title": "StrategyType",
+        "type": "string"
+      },
+      "StrategyUpdateRequest": {
+        "description": "Strategy update request",
+        "properties": {
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uc804\ub7b5 \uc124\uba85",
+            "title": "Description"
+          },
+          "is_active": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\ud65c\uc131\ud654 \uc0c1\ud0dc",
+            "title": "Is Active"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uc804\ub7b5 \uc774\ub984",
+            "title": "Name"
+          },
+          "parameters": {
+            "additionalProperties": {
+              "anyOf": [
+                {},
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "description": "\uc804\ub7b5 \ud30c\ub77c\ubbf8\ud130",
+            "title": "Parameters",
+            "type": "object"
+          },
+          "tags": {
+            "description": "\ud0dc\uadf8",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "title": "Tags",
+            "type": "array"
+          }
+        },
+        "title": "StrategyUpdateRequest",
+        "type": "object"
+      },
+      "TemplateCreateRequest": {
+        "description": "Template creation request",
+        "properties": {
+          "default_parameters": {
+            "additionalProperties": true,
+            "description": "\uae30\ubcf8 \ud30c\ub77c\ubbf8\ud130",
+            "title": "Default Parameters",
+            "type": "object"
+          },
+          "description": {
+            "description": "\ud15c\ud50c\ub9bf \uc124\uba85",
+            "title": "Description",
+            "type": "string"
+          },
+          "name": {
+            "description": "\ud15c\ud50c\ub9bf \uc774\ub984",
+            "title": "Name",
+            "type": "string"
+          },
+          "parameter_schema": {
+            "additionalProperties": {
+              "anyOf": [
+                {},
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "description": "\ud30c\ub77c\ubbf8\ud130 \uc2a4\ud0a4\ub9c8",
+            "title": "Parameter Schema",
+            "type": "object"
+          },
+          "strategy_type": {
+            "$ref": "#/components/schemas/StrategyType",
+            "description": "\uc804\ub7b5 \ud0c0\uc785"
+          },
+          "tags": {
+            "description": "\ud0dc\uadf8",
+            "items": {
+              "type": "string"
+            },
+            "title": "Tags",
+            "type": "array"
+          }
+        },
+        "required": [
+          "name",
+          "strategy_type",
+          "description"
+        ],
+        "title": "TemplateCreateRequest",
+        "type": "object"
+      },
+      "TemplateListResponse": {
+        "description": "Template list response",
+        "properties": {
+          "templates": {
+            "description": "\ud15c\ud50c\ub9bf \ubaa9\ub85d",
+            "items": {
+              "$ref": "#/components/schemas/TemplateResponse"
+            },
+            "title": "Templates",
+            "type": "array"
+          },
+          "total": {
+            "description": "\ucd1d \uac1c\uc218",
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "templates",
+          "total"
+        ],
+        "title": "TemplateListResponse",
+        "type": "object"
+      },
+      "TemplateResponse": {
+        "description": "Template response",
+        "properties": {
+          "created_at": {
+            "description": "\uc0dd\uc131 \uc2dc\uac04",
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "default_parameters": {
+            "additionalProperties": true,
+            "description": "\uae30\ubcf8 \ud30c\ub77c\ubbf8\ud130",
+            "title": "Default Parameters",
+            "type": "object"
+          },
+          "description": {
+            "description": "\ud15c\ud50c\ub9bf \uc124\uba85",
+            "title": "Description",
+            "type": "string"
+          },
+          "id": {
+            "description": "\ud15c\ud50c\ub9bf ID",
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "description": "\ud15c\ud50c\ub9bf \uc774\ub984",
+            "title": "Name",
+            "type": "string"
+          },
+          "parameter_schema": {
+            "additionalProperties": {
+              "anyOf": [
+                {},
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "description": "\ud30c\ub77c\ubbf8\ud130 \uc2a4\ud0a4\ub9c8",
+            "title": "Parameter Schema",
+            "type": "object"
+          },
+          "strategy_type": {
+            "$ref": "#/components/schemas/StrategyType",
+            "description": "\uc804\ub7b5 \ud0c0\uc785"
+          },
+          "tags": {
+            "description": "\ud0dc\uadf8",
+            "items": {
+              "type": "string"
+            },
+            "title": "Tags",
+            "type": "array"
+          },
+          "updated_at": {
+            "description": "\uc218\uc815 \uc2dc\uac04",
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "usage_count": {
+            "description": "\uc0ac\uc6a9 \ud69f\uc218",
+            "title": "Usage Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "strategy_type",
+          "description",
+          "usage_count",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "TemplateResponse",
+        "type": "object"
+      },
+      "Trade": {
+        "description": "\uac70\ub798 \uae30\ub85d \ub0b4\uc7a5 \ubaa8\ub378",
+        "properties": {
+          "commission": {
+            "default": 0.0,
+            "description": "\uc218\uc218\ub8cc",
+            "title": "Commission",
+            "type": "number"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uba54\ubaa8",
+            "title": "Notes"
+          },
+          "order_type": {
+            "$ref": "#/components/schemas/OrderType",
+            "default": "MARKET"
+          },
+          "price": {
+            "description": "\uccb4\uacb0 \uac00\uaca9",
+            "title": "Price",
+            "type": "number"
+          },
+          "quantity": {
+            "description": "\uc218\ub7c9",
+            "title": "Quantity",
+            "type": "number"
+          },
+          "slippage": {
+            "default": 0.0,
+            "description": "\uc2ac\ub9ac\ud53c\uc9c0",
+            "title": "Slippage",
+            "type": "number"
+          },
+          "strategy_signal_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\uc804\ub7b5 \uc2e0\ud638 ID",
+            "title": "Strategy Signal Id"
+          },
+          "symbol": {
+            "description": "\uc2ec\ubcfc",
+            "title": "Symbol",
+            "type": "string"
+          },
+          "timestamp": {
+            "description": "\uac70\ub798 \uc2dc\uac04",
+            "format": "date-time",
+            "title": "Timestamp",
+            "type": "string"
+          },
+          "trade_id": {
+            "description": "\uac70\ub798 ID",
+            "title": "Trade Id",
+            "type": "string"
+          },
+          "trade_type": {
+            "$ref": "#/components/schemas/TradeType"
+          }
+        },
+        "required": [
+          "trade_id",
+          "symbol",
+          "trade_type",
+          "quantity",
+          "price",
+          "timestamp"
+        ],
+        "title": "Trade",
+        "type": "object"
+      },
+      "TradeType": {
+        "description": "\uac70\ub798 \ud0c0\uc785",
+        "enum": [
+          "BUY",
+          "SELL"
+        ],
+        "title": "TradeType",
+        "type": "string"
+      },
+      "UpdateRequest": {
+        "description": "Update request model",
+        "properties": {
+          "end_date": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End Date"
+          },
+          "start_date": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start Date"
+          },
+          "symbols": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Symbols"
+          }
+        },
+        "title": "UpdateRequest",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      },
+      "WatchlistCreate": {
+        "description": "Watchlist creation model",
+        "properties": {
+          "description": {
+            "default": "",
+            "title": "Description",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "symbols": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Symbols",
+            "type": "array"
+          }
+        },
+        "required": [
+          "name",
+          "symbols"
+        ],
+        "title": "WatchlistCreate",
+        "type": "object"
+      },
+      "WatchlistUpdate": {
+        "description": "Watchlist update model",
+        "properties": {
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": "",
+            "title": "Description"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": "default",
+            "title": "Name"
+          },
+          "symbols": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Symbols",
+            "type": "array"
+          }
+        },
+        "required": [
+          "symbols"
+        ],
+        "title": "WatchlistUpdate",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "description": "Data Service API",
+    "title": "Quant Platform - Quant-Service [Development]",
+    "version": "v1"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/v1/backtests/": {
+      "get": {
+        "description": "Get list of backtests",
+        "operationId": "Backtests-get_backtests",
+        "parameters": [
+          {
+            "description": "\uc2e4\ud589 \uc0c1\ud0dc \ud544\ud130",
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/BacktestStatus"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "\uc2e4\ud589 \uc0c1\ud0dc \ud544\ud130",
+              "title": "Status"
+            }
+          },
+          {
+            "description": "\uac74\ub108\ub6f8 \uac1c\uc218",
+            "in": "query",
+            "name": "skip",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "description": "\uac74\ub108\ub6f8 \uac1c\uc218",
+              "minimum": 0,
+              "title": "Skip",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "\uc870\ud68c\ud560 \uac1c\uc218",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "description": "\uc870\ud68c\ud560 \uac1c\uc218",
+              "maximum": 1000,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BacktestListResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Backtests",
+        "tags": [
+          "Backtests",
+          "Integrated Backtest"
+        ]
+      },
+      "post": {
+        "description": "Create a new backtest",
+        "operationId": "Backtests-create_backtest",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BacktestCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BacktestResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Backtest",
+        "tags": [
+          "Backtests",
+          "Integrated Backtest"
+        ]
+      }
+    },
+    "/api/v1/backtests/integrated": {
+      "post": {
+        "description": "\ud1b5\ud569 \ubc31\ud14c\uc2a4\ud2b8 \uc0dd\uc131 \ubc0f \uc2e4\ud589 - \ubaa8\ub4e0 \uc11c\ube44\uc2a4 \uc5f0\ub3d9",
+        "operationId": "Backtests-create_and_run_integrated_backtest",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IntegratedBacktestRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegratedBacktestResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create And Run Integrated Backtest",
+        "tags": [
+          "Backtests",
+          "Integrated Backtest"
+        ]
+      }
+    },
+    "/api/v1/backtests/results/": {
+      "get": {
+        "description": "Get backtest results",
+        "operationId": "Backtests-get_backtest_results",
+        "parameters": [
+          {
+            "description": "\ubc31\ud14c\uc2a4\ud2b8 ID \ud544\ud130",
+            "in": "query",
+            "name": "backtest_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "\ubc31\ud14c\uc2a4\ud2b8 ID \ud544\ud130",
+              "title": "Backtest Id"
+            }
+          },
+          {
+            "description": "\uc2e4\ud589 ID \ud544\ud130",
+            "in": "query",
+            "name": "execution_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "\uc2e4\ud589 ID \ud544\ud130",
+              "title": "Execution Id"
+            }
+          },
+          {
+            "description": "\uac74\ub108\ub6f8 \uac1c\uc218",
+            "in": "query",
+            "name": "skip",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "description": "\uac74\ub108\ub6f8 \uac1c\uc218",
+              "minimum": 0,
+              "title": "Skip",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "\uc870\ud68c\ud560 \uac1c\uc218",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "description": "\uc870\ud68c\ud560 \uac1c\uc218",
+              "maximum": 1000,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BacktestResultListResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Backtest Results",
+        "tags": [
+          "Backtests",
+          "Integrated Backtest"
+        ]
+      }
+    },
+    "/api/v1/backtests/test-services": {
+      "get": {
+        "description": "\uc11c\ube44\uc2a4 \uc5f0\ub3d9 \ud14c\uc2a4\ud2b8",
+        "operationId": "Backtests-test_service_integration",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Test Service Integration",
+        "tags": [
+          "Backtests",
+          "Integrated Backtest"
+        ]
+      }
+    },
+    "/api/v1/backtests/{backtest_id}": {
+      "delete": {
+        "description": "Delete backtest",
+        "operationId": "Backtests-delete_backtest",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "backtest_id",
+            "required": true,
+            "schema": {
+              "title": "Backtest Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Backtest",
+        "tags": [
+          "Backtests",
+          "Integrated Backtest"
+        ]
+      },
+      "get": {
+        "description": "Get backtest by ID",
+        "operationId": "Backtests-get_backtest",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "backtest_id",
+            "required": true,
+            "schema": {
+              "title": "Backtest Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BacktestResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Backtest",
+        "tags": [
+          "Backtests",
+          "Integrated Backtest"
+        ]
+      },
+      "put": {
+        "description": "Update backtest",
+        "operationId": "Backtests-update_backtest",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "backtest_id",
+            "required": true,
+            "schema": {
+              "title": "Backtest Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BacktestUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BacktestResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Backtest",
+        "tags": [
+          "Backtests",
+          "Integrated Backtest"
+        ]
+      }
+    },
+    "/api/v1/backtests/{backtest_id}/execute": {
+      "post": {
+        "description": "Execute backtest with trading signals",
+        "operationId": "Backtests-execute_backtest",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "backtest_id",
+            "required": true,
+            "schema": {
+              "title": "Backtest Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BacktestExecutionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BacktestExecutionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Execute Backtest",
+        "tags": [
+          "Backtests",
+          "Integrated Backtest"
+        ]
+      }
+    },
+    "/api/v1/backtests/{backtest_id}/executions": {
+      "get": {
+        "description": "Get execution history for a backtest",
+        "operationId": "Backtests-get_backtest_executions",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "backtest_id",
+            "required": true,
+            "schema": {
+              "title": "Backtest Id",
+              "type": "string"
+            }
+          },
+          {
+            "description": "\uac74\ub108\ub6f8 \uac1c\uc218",
+            "in": "query",
+            "name": "skip",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "description": "\uac74\ub108\ub6f8 \uac1c\uc218",
+              "minimum": 0,
+              "title": "Skip",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "\uc870\ud68c\ud560 \uac1c\uc218",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "description": "\uc870\ud68c\ud560 \uac1c\uc218",
+              "maximum": 1000,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BacktestExecutionListResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Backtest Executions",
+        "tags": [
+          "Backtests",
+          "Integrated Backtest"
+        ]
+      }
+    },
+    "/api/v1/health/": {
+      "get": {
+        "description": "Health check endpoint",
+        "operationId": "Health-health_check",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthCheckResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Health Check",
+        "tags": [
+          "Health"
+        ]
+      }
+    },
+    "/api/v1/market-data/coverage/{symbol}": {
+      "get": {
+        "description": "Get data coverage information for a symbol",
+        "operationId": "Market Data-get_data_coverage",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "required": true,
+            "schema": {
+              "title": "Symbol",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Data Coverage",
+        "tags": [
+          "Market Data"
+        ]
+      }
+    },
+    "/api/v1/market-data/data/bulk": {
+      "post": {
+        "description": "Request bulk market data for multiple symbols",
+        "operationId": "Market Data-request_bulk_data",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkDataRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/DataRequestStatus"
+                  },
+                  "title": "Response Market Data-Request Bulk Data",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Request Bulk Data",
+        "tags": [
+          "Market Data"
+        ]
+      }
+    },
+    "/api/v1/market-data/data/{symbol}": {
+      "get": {
+        "description": "Get market data for a specific symbol and date range",
+        "operationId": "Market Data-get_market_data",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "required": true,
+            "schema": {
+              "title": "Symbol",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Start date (YYYY-MM-DD)",
+            "in": "query",
+            "name": "start_date",
+            "required": true,
+            "schema": {
+              "description": "Start date (YYYY-MM-DD)",
+              "format": "date-time",
+              "title": "Start Date",
+              "type": "string"
+            }
+          },
+          {
+            "description": "End date (YYYY-MM-DD)",
+            "in": "query",
+            "name": "end_date",
+            "required": true,
+            "schema": {
+              "description": "End date (YYYY-MM-DD)",
+              "format": "date-time",
+              "title": "End Date",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Force refresh from external API",
+            "in": "query",
+            "name": "force_refresh",
+            "required": false,
+            "schema": {
+              "default": false,
+              "description": "Force refresh from external API",
+              "title": "Force Refresh",
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/MarketDataResponse"
+                  },
+                  "title": "Response Market Data-Get Market Data",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Market Data",
+        "tags": [
+          "Market Data"
+        ]
+      }
+    },
+    "/api/v1/market-data/quality/{symbol}": {
+      "get": {
+        "description": "Analyze data quality for a symbol and date range",
+        "operationId": "Market Data-analyze_data_quality",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "required": true,
+            "schema": {
+              "title": "Symbol",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Start date (YYYY-MM-DD)",
+            "in": "query",
+            "name": "start_date",
+            "required": true,
+            "schema": {
+              "description": "Start date (YYYY-MM-DD)",
+              "format": "date-time",
+              "title": "Start Date",
+              "type": "string"
+            }
+          },
+          {
+            "description": "End date (YYYY-MM-DD)",
+            "in": "query",
+            "name": "end_date",
+            "required": true,
+            "schema": {
+              "description": "End date (YYYY-MM-DD)",
+              "format": "date-time",
+              "title": "End Date",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataQualityResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Analyze Data Quality",
+        "tags": [
+          "Market Data"
+        ]
+      }
+    },
+    "/api/v1/market-data/symbols": {
+      "get": {
+        "description": "Get list of all available symbols",
+        "operationId": "Market Data-get_available_symbols",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "title": "Response Market Data-Get Available Symbols",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Available Symbols",
+        "tags": [
+          "Market Data"
+        ]
+      }
+    },
+    "/api/v1/pipeline/collect-data/{symbol}": {
+      "post": {
+        "description": "Collect historical daily price data for a specific symbol.\n\nRetrieves OHLCV (Open, High, Low, Close, Volume) daily price data\nfor the specified symbol and date range. If no dates are provided,\ncollects maximum available historical data. Data is validated,\nadjusted for splits/dividends, and stored in DuckDB for fast access.\n\nArgs:\n    symbol: Stock symbol (e.g., 'AAPL') - automatically converted to uppercase\n    start_date: Optional start date for data collection (defaults to earliest available)\n    end_date: Optional end date for data collection (defaults to latest available)\n\nReturns:\n    dict: Collection result containing:\n        - message: Detailed success/failure message\n        - symbol: Processed symbol (uppercase)\n        - start_date: Actual start date used\n        - end_date: Actual end date used\n        - success: Boolean indicating operation success\n\nRaises:\n    HTTPException: 500 if data collection fails\n\nNote:\n    Large date ranges may take several minutes to complete.\n    Data is automatically cached to minimize API calls.",
+        "operationId": "Company Data-collect_daily_data",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "required": true,
+            "schema": {
+              "title": "Symbol",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Start Date"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "End Date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Collect Daily Data",
+        "tags": [
+          "Company Data"
+        ]
+      }
+    },
+    "/api/v1/pipeline/collect-info/{symbol}": {
+      "post": {
+        "description": "Collect and store basic company information for a specific symbol.\n\nRetrieves fundamental company data from external APIs (Alpha Vantage)\nincluding company name, sector, industry, market cap, and key financial\nratios. This information is stored in the database for future reference\nand analysis.\n\nArgs:\n    symbol: Stock symbol (e.g., 'AAPL', 'MSFT') - automatically converted to uppercase\n\nReturns:\n    dict: Collection result containing:\n        - message: Success/failure message\n        - symbol: Processed symbol (uppercase)\n        - success: Boolean indicating operation success\n\nRaises:\n    HTTPException: 500 if data collection fails\n\nNote:\n    Respects Alpha Vantage API rate limits (5 calls/min, 500 calls/day).\n    Duplicate requests for same symbol within 24 hours may return cached data.",
+        "operationId": "Company Data-collect_stock_info",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "required": true,
+            "schema": {
+              "title": "Symbol",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Collect Stock Info",
+        "tags": [
+          "Company Data"
+        ]
+      }
+    },
+    "/api/v1/pipeline/companies": {
+      "get": {
+        "description": "Retrieve information for all companies in the database.\n\nReturns a comprehensive list of all companies for which information\nhas been collected and stored. Useful for portfolio analysis,\nscreening, and getting an overview of available data.\n\nReturns:\n    dict: All companies data containing:\n        - companies: List of company objects with key information:\n            - symbol: Stock symbol\n            - name: Company name\n            - sector: Industry sector\n            - industry: Specific industry\n            - market_cap: Market capitalization\n            - updated_at: Last update timestamp\n        - total_count: Total number of companies in database\n\nRaises:\n    HTTPException: 500 if retrieval fails\n\nNote:\n    Large datasets may take time to load. Consider pagination for production use.",
+        "operationId": "Company Data-get_all_companies",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get All Companies",
+        "tags": [
+          "Company Data"
+        ]
+      }
+    },
+    "/api/v1/pipeline/company/{symbol}": {
+      "get": {
+        "description": "Retrieve stored company information for a specific symbol.\n\nReturns comprehensive company fundamentals and metadata previously\ncollected and stored in the database. This includes financial ratios,\ncompany description, sector classification, and market data.\n\nArgs:\n    symbol: Stock symbol (automatically converted to uppercase)\n\nReturns:\n    dict: Company information containing:\n        - symbol: Stock symbol\n        - name: Company name\n        - description: Business description\n        - sector: Industry sector classification\n        - industry: Specific industry classification\n        - country: Country of incorporation\n        - currency: Reporting currency\n        - market_cap: Market capitalization (if available)\n        - pe_ratio: Price-to-earnings ratio (if available)\n        - dividend_yield: Annual dividend yield (if available)\n        - updated_at: Last information update timestamp\n\nRaises:\n    HTTPException: 404 if company information not found\n    HTTPException: 500 if retrieval fails\n\nNote:\n    If company info not found, use POST /collect-info/{symbol} first.",
+        "operationId": "Company Data-get_company_info",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "required": true,
+            "schema": {
+              "title": "Symbol",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Company Info",
+        "tags": [
+          "Company Data"
+        ]
+      }
+    },
+    "/api/v1/pipeline/coverage/{symbol}": {
+      "get": {
+        "description": "Get detailed data coverage information for a specific symbol.\n\nReturns comprehensive information about the availability and quality\nof data for the specified symbol, including date ranges, data gaps,\nlast update timestamps, and data quality metrics.\n\nArgs:\n    symbol: Stock symbol to check coverage for (automatically converted to uppercase)\n\nReturns:\n    dict: Coverage information containing:\n        - symbol: Processed symbol\n        - date_range: Start and end dates of available data\n        - total_records: Number of data points available\n        - gaps: List of date ranges with missing data\n        - last_updated: Timestamp of most recent data update\n        - data_quality: Quality metrics (completeness, accuracy scores)\n\nRaises:\n    HTTPException: 500 if coverage check fails\n    HTTPException: 404 if symbol not found in database",
+        "operationId": "Company Data-get_symbol_coverage",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "required": true,
+            "schema": {
+              "title": "Symbol",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Symbol Coverage",
+        "tags": [
+          "Company Data"
+        ]
+      }
+    },
+    "/api/v1/pipeline/setup-defaults": {
+      "post": {
+        "description": "Initialize default watchlist with standard symbols.\n\nSets up the pipeline with a predefined set of popular stock symbols\nfor immediate use. This is typically called during initial system setup\nor when resetting the pipeline to defaults. Creates the 'default' watchlist\nif it doesn't exist.\n\nDefault symbols include major tech stocks: AAPL, MSFT, GOOGL, AMZN, etc.\n\nReturns:\n    dict: Setup confirmation containing:\n        - message: Success confirmation message\n        - symbols: List of symbols that were set up\n\nRaises:\n    HTTPException: 500 if default setup fails",
+        "operationId": "Pipeline Status-setup_default_symbols",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Setup Default Symbols",
+        "tags": [
+          "Pipeline Status"
+        ]
+      }
+    },
+    "/api/v1/pipeline/status": {
+      "get": {
+        "description": "Get comprehensive pipeline status and health information.\n\nReturns detailed information about the current state of the data pipeline,\nincluding data coverage statistics, update timestamps, and system health metrics.\nThis endpoint is essential for monitoring the overall health of the data\ncollection and processing system.\n\nReturns:\n    dict: Pipeline status containing:\n        - overall_status: Current pipeline health status\n        - last_update: Timestamp of last successful update\n        - coverage_stats: Data coverage statistics per symbol\n        - active_symbols: Currently monitored symbols count\n        - error_count: Number of recent errors\n\nRaises:\n    HTTPException: 500 if status retrieval fails",
+        "operationId": "Pipeline Status-get_pipeline_status",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Pipeline Status",
+        "tags": [
+          "Pipeline Status"
+        ]
+      }
+    },
+    "/api/v1/pipeline/update": {
+      "post": {
+        "description": "Execute comprehensive data pipeline update for specified symbols.\n\nInitiates a full data collection and update process for the specified\nsymbols or the default watchlist. The update runs asynchronously in the\nbackground to avoid blocking the API response. Includes company information\nretrieval, historical price data collection, and data validation.\n\nArgs:\n    request: Update configuration containing:\n        - symbols: Optional list of symbols to update (uses default if None)\n        - start_date: Optional start date for data collection\n        - end_date: Optional end date for data collection\n    background_tasks: FastAPI background task manager\n\nReturns:\n    dict: Update initiation confirmation containing:\n        - message: Update start confirmation\n        - symbols: Symbols being updated\n        - started_at: UTC timestamp when update began\n\nRaises:\n    HTTPException: 500 if update initiation fails\n\nNote:\n    This is an asynchronous operation. Use /status endpoint to monitor progress.",
+        "operationId": "Pipeline Status-run_pipeline_update",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Run Pipeline Update",
+        "tags": [
+          "Pipeline Status"
+        ]
+      }
+    },
+    "/api/v1/pipeline/watchlist": {
+      "post": {
+        "description": "Create or update a watchlist with flexible naming support.\n\nThis endpoint provides a convenient way to create new watchlists or update\nexisting ones. If no name is provided, it defaults to the 'default' watchlist\nwhich is used by the pipeline for automated updates. This endpoint combines\ncreation and update functionality for ease of use.\n\nArgs:\n    request: Watchlist configuration containing:\n        - symbols: List of stock symbols to include\n        - name: Optional watchlist name (defaults to 'default')\n        - description: Optional description of the watchlist\n\nReturns:\n    dict: Operation result containing:\n        - message: Success message indicating action taken\n        - name: Watchlist name that was processed\n        - symbols: List of symbols in the watchlist\n        - count: Number of symbols in the watchlist\n        - action: Either 'created' or 'updated'\n\nRaises:\n    HTTPException: 400 if watchlist creation fails\n    HTTPException: 500 if operation fails\n\nNote:\n    Updates to the 'default' watchlist automatically update pipeline symbols.\n    This affects which symbols are processed during automated updates.",
+        "operationId": "Watchlist Management-update_watchlist",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WatchlistUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Watchlist",
+        "tags": [
+          "Watchlist Management"
+        ]
+      }
+    },
+    "/api/v1/pipeline/watchlists": {
+      "get": {
+        "description": "Retrieve a comprehensive list of all watchlists.\n\nReturns summary information for all watchlists in the system, including\nmetadata like symbol counts, update settings, and timestamps. This is\nuseful for dashboard displays and watchlist management interfaces.\n\nReturns:\n    dict: All watchlists summary containing:\n        - watchlists: List of watchlist summaries with:\n            - name: Watchlist name\n            - description: Watchlist description\n            - symbol_count: Number of symbols in the watchlist\n            - auto_update: Whether automatic updates are enabled\n            - last_updated: Timestamp of last modification\n            - created_at: Timestamp of creation\n        - total_count: Total number of watchlists in the system\n\nRaises:\n    HTTPException: 500 if retrieval fails\n\nNote:\n    This endpoint returns summary data only. Use GET /watchlists/{name}\n    for detailed information including full symbol lists.",
+        "operationId": "Watchlist Management-list_watchlists",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Watchlists",
+        "tags": [
+          "Watchlist Management"
+        ]
+      },
+      "post": {
+        "description": "Create a new named watchlist with validation.\n\nThis endpoint is specifically for creating new watchlists with explicit\nnaming requirements. Unlike the /watchlist endpoint, this requires a name\nand will fail if a watchlist with the same name already exists.\n\nArgs:\n    request: Watchlist creation parameters containing:\n        - name: Required unique name for the watchlist\n        - symbols: List of stock symbols to include\n        - description: Optional description of the watchlist purpose\n\nReturns:\n    dict: Creation result containing:\n        - message: Success confirmation message\n        - name: Name of the created watchlist\n        - symbols: List of symbols in the watchlist\n        - description: Watchlist description\n        - created_at: UTC timestamp of creation\n\nRaises:\n    HTTPException: 400 if watchlist creation fails or name conflicts\n    HTTPException: 500 if database operation fails\n\nNote:\n    Watchlist names must be unique. Use PUT /watchlists/{name} to update existing ones.",
+        "operationId": "Watchlist Management-create_watchlist",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WatchlistCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Watchlist",
+        "tags": [
+          "Watchlist Management"
+        ]
+      }
+    },
+    "/api/v1/pipeline/watchlists/{name}": {
+      "delete": {
+        "description": "Delete a named watchlist from the system.\n\nPermanently removes a watchlist and all associated metadata. This action\ncannot be undone. The 'default' watchlist cannot be deleted as it is\nrequired for pipeline operations.\n\nArgs:\n    name: Name of the watchlist to delete\n\nReturns:\n    dict: Deletion confirmation containing:\n        - message: Success confirmation message\n        - name: Name of the deleted watchlist\n\nRaises:\n    HTTPException: 400 if attempting to delete the 'default' watchlist\n    HTTPException: 404 if watchlist with specified name not found\n    HTTPException: 500 if deletion operation fails\n\nNote:\n    Deletion is permanent and cannot be undone. Consider backing up\n    important watchlists before deletion.",
+        "operationId": "Watchlist Management-delete_watchlist",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Watchlist",
+        "tags": [
+          "Watchlist Management"
+        ]
+      },
+      "get": {
+        "description": "Retrieve complete information for a specific watchlist.\n\nReturns detailed information about a named watchlist including the full\nlist of symbols, configuration settings, and all metadata. This provides\nall information needed to display or modify a specific watchlist.\n\nArgs:\n    name: Name of the watchlist to retrieve (case-sensitive)\n\nReturns:\n    dict: Complete watchlist information containing:\n        - name: Watchlist name\n        - description: Detailed description\n        - symbols: Complete list of stock symbols\n        - auto_update: Automatic update configuration\n        - update_interval: Update frequency in seconds\n        - last_updated: Timestamp of last symbol update\n        - created_at: Timestamp of watchlist creation\n\nRaises:\n    HTTPException: 404 if watchlist with specified name not found\n    HTTPException: 500 if retrieval operation fails\n\nNote:\n    Watchlist names are case-sensitive. Use GET /watchlists to see all available names.",
+        "operationId": "Watchlist Management-get_watchlist",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Watchlist",
+        "tags": [
+          "Watchlist Management"
+        ]
+      },
+      "put": {
+        "description": "Update an existing watchlist with new symbols and settings.\n\nModifies the symbols and metadata of an existing watchlist. This endpoint\nrequires the watchlist to exist and will fail if the specified name is\nnot found. Use POST /watchlists to create new watchlists.\n\nArgs:\n    name: Name of the existing watchlist to update\n    request: Update parameters containing:\n        - symbols: New list of symbols (replaces current list)\n        - description: Optional new description (if provided)\n\nReturns:\n    dict: Update confirmation containing:\n        - message: Success confirmation message\n        - name: Name of the updated watchlist\n        - symbols: New symbols list\n        - description: Current description (updated if provided)\n        - count: Number of symbols in updated watchlist\n        - updated_at: Timestamp of the update\n\nRaises:\n    HTTPException: 404 if watchlist with specified name not found\n    HTTPException: 500 if update operation fails\n\nNote:\n    Updates to the 'default' watchlist automatically update pipeline symbols.\n    Symbol list is completely replaced, not merged with existing symbols.",
+        "operationId": "Watchlist Management-update_watchlist_by_name",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "title": "Name",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WatchlistUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Watchlist By Name",
+        "tags": [
+          "Watchlist Management"
+        ]
+      }
+    },
+    "/api/v1/strategies/": {
+      "get": {
+        "description": "Get list of strategies",
+        "operationId": "Strategies-get_strategies",
+        "parameters": [
+          {
+            "description": "\uc804\ub7b5 \ud0c0\uc785 \ud544\ud130",
+            "in": "query",
+            "name": "strategy_type",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/StrategyType"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "\uc804\ub7b5 \ud0c0\uc785 \ud544\ud130",
+              "title": "Strategy Type"
+            }
+          },
+          {
+            "description": "\ud65c\uc131\ud654 \uc0c1\ud0dc \ud544\ud130",
+            "in": "query",
+            "name": "is_active",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "\ud65c\uc131\ud654 \uc0c1\ud0dc \ud544\ud130",
+              "title": "Is Active"
+            }
+          },
+          {
+            "description": "\ud15c\ud50c\ub9bf \uc5ec\ubd80 \ud544\ud130",
+            "in": "query",
+            "name": "is_template",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "\ud15c\ud50c\ub9bf \uc5ec\ubd80 \ud544\ud130",
+              "title": "Is Template"
+            }
+          },
+          {
+            "description": "\uacb0\uacfc \uc218 \uc81c\ud55c",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "description": "\uacb0\uacfc \uc218 \uc81c\ud55c",
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StrategyListResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Strategies",
+        "tags": [
+          "Strategies"
+        ]
+      },
+      "post": {
+        "description": "Create a new strategy",
+        "operationId": "Strategies-create_strategy",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StrategyCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StrategyResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Strategy",
+        "tags": [
+          "Strategies"
+        ]
+      }
+    },
+    "/api/v1/strategies/{strategy_id}": {
+      "delete": {
+        "description": "Delete strategy (soft delete)",
+        "operationId": "Strategies-delete_strategy",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "strategy_id",
+            "required": true,
+            "schema": {
+              "title": "Strategy Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Strategy",
+        "tags": [
+          "Strategies"
+        ]
+      },
+      "get": {
+        "description": "Get strategy by ID",
+        "operationId": "Strategies-get_strategy",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "strategy_id",
+            "required": true,
+            "schema": {
+              "title": "Strategy Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StrategyResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Strategy",
+        "tags": [
+          "Strategies"
+        ]
+      },
+      "put": {
+        "description": "Update strategy",
+        "operationId": "Strategies-update_strategy",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "strategy_id",
+            "required": true,
+            "schema": {
+              "title": "Strategy Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StrategyUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StrategyResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Strategy",
+        "tags": [
+          "Strategies"
+        ]
+      }
+    },
+    "/api/v1/strategies/{strategy_id}/execute": {
+      "post": {
+        "description": "Execute strategy and generate signal",
+        "operationId": "Strategies-execute_strategy",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "strategy_id",
+            "required": true,
+            "schema": {
+              "title": "Strategy Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StrategyExecuteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExecutionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Execute Strategy",
+        "tags": [
+          "Strategies"
+        ]
+      }
+    },
+    "/api/v1/strategies/{strategy_id}/executions": {
+      "get": {
+        "description": "Get strategy execution history",
+        "operationId": "Strategies-get_strategy_executions",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "strategy_id",
+            "required": true,
+            "schema": {
+              "title": "Strategy Id",
+              "type": "string"
+            }
+          },
+          {
+            "description": "\uacb0\uacfc \uc218 \uc81c\ud55c",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "description": "\uacb0\uacfc \uc218 \uc81c\ud55c",
+              "maximum": 500,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExecutionListResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Strategy Executions",
+        "tags": [
+          "Strategies"
+        ]
+      }
+    },
+    "/api/v1/strategies/{strategy_id}/performance": {
+      "get": {
+        "description": "Get strategy performance metrics",
+        "operationId": "Strategies-get_strategy_performance",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "strategy_id",
+            "required": true,
+            "schema": {
+              "title": "Strategy Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PerformanceResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Strategy Performance",
+        "tags": [
+          "Strategies"
+        ]
+      }
+    },
+    "/api/v1/templates/": {
+      "get": {
+        "description": "Get list of strategy templates",
+        "operationId": "Templates-get_templates",
+        "parameters": [
+          {
+            "description": "\uc804\ub7b5 \ud0c0\uc785 \ud544\ud130",
+            "in": "query",
+            "name": "strategy_type",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/StrategyType"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "\uc804\ub7b5 \ud0c0\uc785 \ud544\ud130",
+              "title": "Strategy Type"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateListResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Templates",
+        "tags": [
+          "Templates"
+        ]
+      },
+      "post": {
+        "description": "Create a new strategy template",
+        "operationId": "Templates-create_template",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TemplateCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Template",
+        "tags": [
+          "Templates"
+        ]
+      }
+    },
+    "/api/v1/templates/{template_id}/create-strategy": {
+      "post": {
+        "description": "Create a strategy instance from template",
+        "operationId": "Templates-create_strategy_from_template",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "template_id",
+            "required": true,
+            "schema": {
+              "title": "Template Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StrategyFromTemplateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StrategyResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Strategy From Template",
+        "tags": [
+          "Templates"
+        ]
+      }
+    },
+    "/health/": {
+      "get": {
+        "description": "Get comprehensive health status.",
+        "operationId": "Health-health_check",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Health Check",
+        "tags": [
+          "Health"
+        ]
+      }
+    },
+    "/health/live": {
+      "get": {
+        "description": "Kubernetes liveness probe endpoint.",
+        "operationId": "Health-liveness_probe",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Liveness Probe",
+        "tags": [
+          "Health"
+        ]
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "description": "Kubernetes readiness probe endpoint.",
+        "operationId": "Health-readiness_probe",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Health-Readiness Probe",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Readiness Probe",
+        "tags": [
+          "Health"
+        ]
+      }
+    }
+  }
+}

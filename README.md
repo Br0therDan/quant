@@ -46,42 +46,53 @@ graph TB
 
 ```
 quant/
-├── backend/                    # 통합 백엔드 서비스
+├── backend/                    # 통합 백엔드 서비스 (FastAPI)
 │   ├── app/
 │   │   ├── api/               # FastAPI API Layer
 │   │   │   └── routes/        # REST API 엔드포인트
-│   │   │       ├── backtests.py      # 백테스트 & 통합 실행
-│   │   │       ├── strategies.py     # 전략 관리
-│   │   │       ├── market_data.py    # 시장 데이터
-│   │   │       ├── pipeline.py       # 데이터 파이프라인
-│   │   │       └── health.py         # 헬스 체크
+│   │   │       ├── backtests.py      # 백테스트 API
+│   │   │       ├── strategies.py     # 전략 관리 API
+│   │   │       ├── market_data.py    # 시장 데이터 API
+│   │   │       ├── pipeline.py       # 데이터 파이프라인 API
+│   │   │       ├── companies.py      # 회사 정보 API
+│   │   │       ├── watchlists.py     # 워치리스트 API
+│   │   │       ├── templates.py      # 전략 템플릿 API
+│   │   │       ├── status.py         # 상태 API
+│   │   │       └── health.py         # 헬스 체크 API
 │   │   ├── models/            # 데이터 모델 (Beanie ODM)
-│   │   │   ├── backtest.py           # 백테스트 모델
-│   │   │   ├── strategy.py           # 전략 모델
-│   │   │   ├── market_data.py        # 시장 데이터 모델
-│   │   │   └── company.py            # 회사 정보 모델
-│   │   ├── services/          # 비즈니스 로직 Layer
-│   │   │   ├── backtest_service.py   # 백테스트 서비스
-│   │   │   ├── strategy_service.py   # 전략 서비스
-│   │   │   ├── market_data_service.py # 시장 데이터 서비스
-│   │   │   ├── data_pipeline.py      # 데이터 파이프라인
-│   │   │   ├── integrated_backtest_executor.py # 통합 실행기
-│   │   │   └── service_factory.py    # 서비스 팩토리
 │   │   ├── schemas/           # API 스키마 (Pydantic)
-│   │   │   └── backtest.py           # 백테스트 스키마
+│   │   ├── services/          # 비즈니스 로직 Layer
 │   │   ├── strategies/        # 전략 구현체
 │   │   ├── core/              # 핵심 설정
-│   │   └── utils/             # 유틸리티
-│   ├── tests/                 # 통합 테스트
+│   │   ├── utils/             # 유틸리티
+│   │   └── main.py            # FastAPI 앱 진입점
+│   ├── tests/                 # 백엔드 통합 테스트
 │   └── pyproject.toml         # 백엔드 의존성
-├── shared/                    # 공통 모듈
-│   ├── models/                # 공유 데이터 모델
+├── frontend/                   # Next.js 프론트엔드
+│   ├── src/
+│   │   ├── app/               # Next.js App Router
+│   │   └── client/            # API 클라이언트
+│   ├── public/                # 정적 파일
+│   ├── package.json           # Frontend 의존성
+│   └── tsconfig.json          # TypeScript 설정
+├── services/                   # 마이크로서비스 모듈
+│   ├── data_service/          # Alpha Vantage API, DuckDB
+│   ├── strategy_service/      # 전략 로직 및 파라미터 관리
+│   ├── backtest_service/      # vectorbt 백테스트 실행
+│   └── analytics_service/     # 성과 분석 및 리포트
+├── shared/                     # 공통 모듈
+│   ├── cli/                   # CLI 도구
 │   ├── config/                # 설정 관리
+│   ├── models/                # 공유 데이터 모델
 │   └── utils/                 # 공통 유틸리티
-├── docs/                      # 문서 & 전략 템플릿
-├── scripts/                   # 개발/배포 스크립트
-├── run_server.py             # 서버 실행 스크립트
-└── pyproject.toml            # 프로젝트 설정
+├── tests/                      # 전체 통합 테스트
+├── docs/                       # 문서 & 전략 템플릿
+├── scripts/                    # 개발/배포 스크립트
+├── data/                       # DuckDB 데이터 파일
+├── docker-compose.yml          # Docker 컨테이너 설정
+├── run_server.py              # 서버 실행 스크립트
+├── package.json               # 워크스페이스 설정 (pnpm)
+└── pyproject.toml             # 프로젝트 설정 (UV)
 ```
 
 ## 📊 **핵심 기능**
@@ -129,18 +140,22 @@ cp .env.example .env
 
 ### 2. 서버 실행
 ```bash
-# 간단한 실행
+# 간단한 실행 (권장)
 python run_server.py
 
 # 또는 직접 실행
 cd backend
-uvicorn app.main:app --reload --port 8501
+uvicorn app.main:app --reload --port 8000
+
+# Docker를 사용한 전체 스택 실행
+pnpm run:docker
 ```
 
 ### 3. API 접속
-- **서버 주소**: http://localhost:8501
-- **API 문서**: http://localhost:8501/docs
-- **서비스 테스트**: http://localhost:8501/api/v1/backtests/test-services
+- **백엔드 서버**: http://localhost:8000
+- **프론트엔드**: http://localhost:3000 (개발 시)
+- **API 문서**: http://localhost:8000/docs
+- **서비스 테스트**: http://localhost:8000/api/v1/integrated/test-services
 
 ## 🔄 **서비스 연동 관계**
 
@@ -274,7 +289,7 @@ POST /api/v1/strategies/{strategy_id}/backtest
 
 ```bash
 # 원스톱 통합 백테스트
-POST /api/v1/backtests/integrated
+POST /api/v1/backtests/
 Content-Type: application/json
 
 {
@@ -352,38 +367,53 @@ GET /api/v1/pipeline/status
 
 | 레이어 | 기술 | 용도 |
 |--------|------|------|
+| **Frontend** | Next.js 15+ (React 19) | 웹 애플리케이션 프론트엔드 |
+| **UI** | Material-UI (MUI) | React 컴포넌트 라이브러리 |
 | **API** | FastAPI 0.104+ | REST API, 자동 문서화, 비동기 처리 |
-| **ORM/ODM** | Beanie 1.23+ | MongoDB ODM, Pydantic 기반 |
+| **ORM/ODM** | Beanie 1.21+ | MongoDB ODM, Pydantic 기반 |
 | **Database** | MongoDB 7.0+ | 메타데이터, 전략, 결과 저장 |
-| **Cache** | DuckDB 0.9+ | 시계열 데이터 고속 캐시 |
+| **Cache** | DuckDB 0.6+ | 시계열 데이터 고속 캐시 |
 | **Data** | Alpha Vantage API | 실시간 시장 데이터 |
 | **Analysis** | pandas, numpy, vectorbt | 데이터 분석 및 백테스트 |
-| **Package** | UV | 고속 패키지 관리 |
-| **Runtime** | Python 3.12+ | 최신 타입 힌트, 성능 개선 |
+| **Package** | UV (Python), pnpm (Node.js) | 고속 패키지 관리 |
+| **Container** | Docker Compose | 개발/배포 환경 통합 |
+| **Runtime** | Python 3.12+, Node.js 20+ | 최신 타입 힌트, 성능 개선 |
 
 ### **개발 워크플로우**
 
 ```bash
-# 개발 환경 설정
-uv sync --dev
-source .venv/bin/activate
+# 전체 워크스페이스 설정
+uv sync --dev                          # Python 의존성
+pnpm install                          # Node.js 의존성
 
 # 코드 품질 도구
-uv run ruff format backend/    # 코드 포맷팅
-uv run ruff check backend/     # 린팅
-uv run mypy backend/app/       # 타입 체크
+## Backend (Python)
+uv run ruff format backend/           # 코드 포맷팅
+uv run ruff check backend/            # 린팅
+uv run mypy backend/app/              # 타입 체크
+
+## Frontend (TypeScript)
+pnpm lint                             # Biome 린팅
+pnpm format                          # 코드 포맷팅
 
 # 테스트 실행
-uv run pytest backend/tests/           # 단위 테스트
-uv run pytest --cov=backend/app/       # 커버리지 포함
+uv run pytest backend/tests/          # 백엔드 테스트
+uv run pytest --cov=backend/app/      # 커버리지 포함
+pnpm test                             # 프론트엔드 테스트
 
-# 서버 실행
-python run_server.py                   # 개발 서버
-uv run uvicorn backend.app.main:app --reload --port 8501  # 직접 실행
+# 개발 서버 실행
+python run_server.py                  # 백엔드만
+pnpm run:dev:backend                  # 백엔드만
+pnpm run:dev:frontend                 # 프론트엔드만
+pnpm run:dev                          # 풀스택 개발
+
+# 프로덕션 빌드
+pnpm build                            # 프론트엔드 빌드
+docker-compose up --build             # Docker 빌드
 
 # 데이터베이스 관리
 mongosh                               # MongoDB 콘솔
-python -c "from app.models import *"  # 모델 검증
+docker-compose logs q-mongodb         # MongoDB 로그
 ```
 
 ### **CI/CD 파이프라인**
@@ -502,10 +532,14 @@ MIT License - 자세한 내용은 [LICENSE](LICENSE) 파일을 참조하세요.
 | 라우터 | 엔드포인트 수 | 주요 기능 | 연동 서비스 |
 |--------|---------------|-----------|-------------|
 | `/health` | 1 | 시스템 상태 체크 | - |
+| `/status` | 3 | 서비스 상태 확인 | All Services |
 | `/market-data` | 6 | 시장 데이터 관리 | MarketDataService |
 | `/strategies` | 8 | 전략 관리 | StrategyService |
-| `/backtests` | 10 | 백테스트 + 통합 실행 | All Services |
-| `/pipeline` | 12 | 데이터 파이프라인 | DataPipeline |
+| `/backtests` | 10 | 백테스트 실행 | BacktestService |
+| `/pipeline` | 8 | 데이터 파이프라인 | DataPipeline |
+| `/companies` | 4 | 회사 정보 관리 | MarketDataService |
+| `/watchlists` | 6 | 워치리스트 관리 | DataPipeline |
+| `/templates` | 3 | 전략 템플릿 | StrategyService |
 
 ### **데이터 모델 관계**
 

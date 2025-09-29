@@ -1,6 +1,7 @@
 {
   "description": "Quant App full-stack monorepo workspace",
   "devDependencies": {
+    "@biomejs/biome": "2.2.0",
     "@hey-api/openapi-ts": "^0.84.3"
   },
   "name": "quant-workspace",
@@ -18,7 +19,7 @@
   "private": true,
   "scripts": {
     "build": "pnpm --filter './frontend' build",
-    "lint": "pnpm --filter './frontend' lint",
+    "lint": "biome check ./frontend/src",
     "run:dev": "pnpm --filter './frontend' dev && cd backend && uv run fastapi dev app/main.py --host 0.0.0.0 --port 8000",
     "run:dev:backend": "cd backend && uv run fastapi dev app/main.py --host 0.0.0.0 --port 8000",
     "run:dev:frontend": "pnpm --filter './frontend' dev",
@@ -30,9 +31,5 @@
     "stop:docker:frontend": "docker-compose stop q-frontend",
     "test": "pnpm --filter './frontend' test"
   },
-  "version": "0.1.0",
-  "workspaces": [
-    "backend",
-    "frontend"
-  ]
+  "version": "0.1.0"
 }

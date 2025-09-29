@@ -1,9 +1,43 @@
 # AGENTS.md
 ## Purpose
 이 문서는 단일 사용자용 퀀트 백테스트 앱의 **코딩 가이드라인**을 정의한다.
-목표는 유지보수·확장성·재현성 높은 백엔드 및 분석 환경을 구현하는 것이다.
+목표는 유지보수·확장성·재현성 높은 백엔드 및 분석 환경을 구현하는 것이다## 8. ## 7. Security & Secrets
+### **환경 변수 관리**
+- API 키 및 민감정보는 `.env` → `.env.example`를 제공
+- Docker 환경에서는 `.env` 파일 또는 환경 변수로 주입
+- GitHub Actions에서는 Repository Secrets 사용
 
----
+### **데이터베이스 보안**
+- MongoDB 인증 활성화 (`--auth` 플래그)
+- DuckDB 파일 권한 관리 (600)
+- Docker 네트워크 격리 (internal/public 분리)
+
+### **API 보안**
+- FastAPI CORS 설정으로 허용 도메인 제한
+- Rate limiting으로 API 남용 방지
+- 백테스트 결과 민감정보 마스킹
+
+### **컨테이너 보안**
+- 비루트 사용자로 컨테이너 실행
+- 최소 권한 원칙 적용
+- 정기적인 베이스 이미지 업데이트g Strategy
+### **Backend Testing (Python)**
+- **단위 테스트**: pytest 기반 각 서비스별 핵심 로직
+- **통합 테스트**: FastAPI TestClient로 API 엔드포인트 테스트
+- **성능 테스트**: 대용량 백테스트 실행 시간 검증
+- **데이터 테스트**: 알려진 결과와 백테스트 결과 비교
+- **Mock 사용**: httpx-mock으로 Alpha Vantage API 외부 의존성 제거
+
+### **Frontend Testing (TypeScript)**
+- **컴포넌트 테스트**: React Testing Library 기반
+- **E2E 테스트**: Playwright로 브라우저 자동화 테스트
+- **타입 안전성**: TypeScript 컴파일 시 정적 분석
+- **API 통합**: MSW(Mock Service Worker)로 API 모킹
+
+### **통합 테스트**
+- **Docker Compose**: 전체 스택 통합 테스트 환경
+- **데이터베이스**: 테스트용 MongoDB 인스턴스 격리
+- **CI/CD**: GitHub Actions에서 자동화된 테스트 파이프라인
 
 ## 1. Code Structure
 - **마이크로서비스 기반 모노레포**
