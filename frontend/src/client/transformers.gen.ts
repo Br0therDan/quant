@@ -6,7 +6,6 @@ import type {
   BacktestsExecuteBacktestResponse,
   BacktestsGetBacktestExecutionsResponse,
   BacktestsGetBacktestResponse,
-  BacktestsGetBacktestResultsResponse,
   BacktestsGetBacktestsResponse,
   BacktestsUpdateBacktestResponse,
   HealthHealthCheck2Response,
@@ -23,6 +22,7 @@ import type {
   StrategiesUpdateStrategyResponse,
   TemplatesCreateStrategyFromTemplateResponse,
   TemplatesCreateTemplateResponse,
+  TemplatesGetTemplateResponse,
   TemplatesGetTemplatesResponse,
 } from "./types.gen";
 
@@ -194,25 +194,6 @@ const backtestExecutionListResponseSchemaResponseTransformer = (data: any) => {
   return data;
 };
 
-export const backtestsGetBacktestResultsResponseTransformer = async (
-  data: any,
-): Promise<BacktestsGetBacktestResultsResponse> => {
-  data = backtestResultListResponseSchemaResponseTransformer(data);
-  return data;
-};
-
-const backtestResultListResponseSchemaResponseTransformer = (data: any) => {
-  data.results = data.results.map((item: any) => {
-    return backtestResultResponseSchemaResponseTransformer(item);
-  });
-  return data;
-};
-
-const backtestResultResponseSchemaResponseTransformer = (data: any) => {
-  data.created_at = new Date(data.created_at);
-  return data;
-};
-
 export const backtestsCreateAndRunIntegratedBacktestResponseTransformer =
   async (
     data: any,
@@ -349,5 +330,12 @@ export const templatesCreateStrategyFromTemplateResponseTransformer = async (
   data: any,
 ): Promise<TemplatesCreateStrategyFromTemplateResponse> => {
   data = strategyResponseSchemaResponseTransformer(data);
+  return data;
+};
+
+export const templatesGetTemplateResponseTransformer = async (
+  data: any,
+): Promise<TemplatesGetTemplateResponse> => {
+  data = templateResponseSchemaResponseTransformer(data);
   return data;
 };

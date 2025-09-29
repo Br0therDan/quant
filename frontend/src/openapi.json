@@ -402,202 +402,6 @@
         "title": "BacktestResponse",
         "type": "object"
       },
-      "BacktestResultListResponse": {
-        "description": "\ubc31\ud14c\uc2a4\ud2b8 \uacb0\uacfc \ubaa9\ub85d \uc751\ub2f5",
-        "properties": {
-          "results": {
-            "description": "\uacb0\uacfc \ubaa9\ub85d",
-            "items": {
-              "$ref": "#/components/schemas/BacktestResultResponse"
-            },
-            "title": "Results",
-            "type": "array"
-          },
-          "total": {
-            "description": "\ucd1d \uac1c\uc218",
-            "title": "Total",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "results",
-          "total"
-        ],
-        "title": "BacktestResultListResponse",
-        "type": "object"
-      },
-      "BacktestResultResponse": {
-        "description": "\ubc31\ud14c\uc2a4\ud2b8 \uacb0\uacfc \uc751\ub2f5",
-        "properties": {
-          "alpha": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "\uc54c\ud30c",
-            "title": "Alpha"
-          },
-          "annualized_return": {
-            "description": "\uc5f0\ud658\uc0b0 \uc218\uc775\ub960",
-            "title": "Annualized Return",
-            "type": "number"
-          },
-          "backtest_id": {
-            "description": "\ubc31\ud14c\uc2a4\ud2b8 ID",
-            "title": "Backtest Id",
-            "type": "string"
-          },
-          "benchmark_return": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "\ubca4\uce58\ub9c8\ud06c \uc218\uc775\ub960",
-            "title": "Benchmark Return"
-          },
-          "beta": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "\ubca0\ud0c0",
-            "title": "Beta"
-          },
-          "calmar_ratio": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "\uce7c\ub9c8 \ube44\uc728",
-            "title": "Calmar Ratio"
-          },
-          "created_at": {
-            "description": "\uc0dd\uc131 \uc2dc\uac04",
-            "format": "date-time",
-            "title": "Created At",
-            "type": "string"
-          },
-          "execution_id": {
-            "description": "\uc2e4\ud589 ID",
-            "title": "Execution Id",
-            "type": "string"
-          },
-          "id": {
-            "description": "\uacb0\uacfc ID",
-            "title": "Id",
-            "type": "string"
-          },
-          "losing_trades": {
-            "description": "\ud328\ubc30 \uac70\ub798 \uc218",
-            "title": "Losing Trades",
-            "type": "integer"
-          },
-          "max_drawdown": {
-            "description": "\ucd5c\ub300 \ub099\ud3ed",
-            "title": "Max Drawdown",
-            "type": "number"
-          },
-          "portfolio_history_path": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "\ud3ec\ud2b8\ud3f4\ub9ac\uc624 \ud788\uc2a4\ud1a0\ub9ac \ud30c\uc77c \uacbd\ub85c",
-            "title": "Portfolio History Path"
-          },
-          "sharpe_ratio": {
-            "description": "\uc0e4\ud504 \ube44\uc728",
-            "title": "Sharpe Ratio",
-            "type": "number"
-          },
-          "sortino_ratio": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "\uc18c\ub974\ud2f0\ub178 \ube44\uc728",
-            "title": "Sortino Ratio"
-          },
-          "total_return": {
-            "description": "\ucd1d \uc218\uc775\ub960",
-            "title": "Total Return",
-            "type": "number"
-          },
-          "total_trades": {
-            "description": "\ucd1d \uac70\ub798 \uc218",
-            "title": "Total Trades",
-            "type": "integer"
-          },
-          "trades_history_path": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "\uac70\ub798 \ud788\uc2a4\ud1a0\ub9ac \ud30c\uc77c \uacbd\ub85c",
-            "title": "Trades History Path"
-          },
-          "volatility": {
-            "description": "\ubcc0\ub3d9\uc131",
-            "title": "Volatility",
-            "type": "number"
-          },
-          "win_rate": {
-            "description": "\uc2b9\ub960",
-            "title": "Win Rate",
-            "type": "number"
-          },
-          "winning_trades": {
-            "description": "\uc2b9\ub9ac \uac70\ub798 \uc218",
-            "title": "Winning Trades",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "id",
-          "backtest_id",
-          "execution_id",
-          "total_return",
-          "annualized_return",
-          "volatility",
-          "sharpe_ratio",
-          "max_drawdown",
-          "total_trades",
-          "winning_trades",
-          "losing_trades",
-          "win_rate",
-          "created_at"
-        ],
-        "title": "BacktestResultResponse",
-        "type": "object"
-      },
       "BacktestStatus": {
         "description": "\ubc31\ud14c\uc2a4\ud2b8 \uc0c1\ud0dc",
         "enum": [
@@ -2417,6 +2221,138 @@
         ]
       }
     },
+    "/api/v1/backtests/analytics/performance-stats": {
+      "get": {
+        "description": "\ubc31\ud14c\uc2a4\ud2b8 \uc131\uacfc \ubd84\uc11d (DuckDB \uace0\uc131\ub2a5 \ubd84\uc11d)",
+        "operationId": "Backtests-get_performance_analytics",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Performance Analytics",
+        "tags": [
+          "Backtests",
+          "Integrated Backtest"
+        ]
+      }
+    },
+    "/api/v1/backtests/analytics/summary": {
+      "get": {
+        "description": "\ubc31\ud14c\uc2a4\ud2b8 \uacb0\uacfc \uc694\uc57d \ubd84\uc11d (DuckDB \uae30\ubc18)",
+        "operationId": "Backtests-get_backtest_summary_analytics",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Backtest Summary Analytics",
+        "tags": [
+          "Backtests",
+          "Integrated Backtest"
+        ]
+      }
+    },
+    "/api/v1/backtests/analytics/trades": {
+      "get": {
+        "description": "\uac70\ub798 \uae30\ub85d \ubd84\uc11d (DuckDB \uace0\uc131\ub2a5 \ucffc\ub9ac)",
+        "operationId": "Backtests-get_trades_analytics",
+        "parameters": [
+          {
+            "description": "\ud2b9\uc815 \uc2e4\ud589 ID \ud544\ud130",
+            "in": "query",
+            "name": "execution_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "\ud2b9\uc815 \uc2e4\ud589 ID \ud544\ud130",
+              "title": "Execution Id"
+            }
+          },
+          {
+            "description": "\uc2ec\ubcfc \ud544\ud130",
+            "in": "query",
+            "name": "symbol",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "\uc2ec\ubcfc \ud544\ud130",
+              "title": "Symbol"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Trades Analytics",
+        "tags": [
+          "Backtests",
+          "Integrated Backtest"
+        ]
+      }
+    },
+    "/api/v1/backtests/health": {
+      "get": {
+        "description": "\ubc31\ud14c\uc2a4\ud2b8 \uc2dc\uc2a4\ud15c \uc0c1\ud0dc \ud655\uc778 (DuckDB + MongoDB \ud1b5\ud569 \uc0c1\ud0dc)",
+        "operationId": "Backtests-health_check",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Health Check",
+        "tags": [
+          "Backtests",
+          "Integrated Backtest"
+        ]
+      }
+    },
     "/api/v1/backtests/integrated": {
       "post": {
         "description": "\ud1b5\ud569 \ubc31\ud14c\uc2a4\ud2b8 \uc0dd\uc131 \ubc0f \uc2e4\ud589 - \ubaa8\ub4e0 \uc11c\ube44\uc2a4 \uc5f0\ub3d9",
@@ -2462,7 +2398,7 @@
     },
     "/api/v1/backtests/results/": {
       "get": {
-        "description": "Get backtest results",
+        "description": "Get backtest results from DuckDB (\uace0\uc131\ub2a5 \ubd84\uc11d\uc6a9)",
         "operationId": "Backtests-get_backtest_results",
         "parameters": [
           {
@@ -2534,7 +2470,9 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BacktestResultListResponse"
+                  "additionalProperties": true,
+                  "title": "Response Backtests-Get Backtest Results",
+                  "type": "object"
                 }
               }
             },
@@ -2552,27 +2490,6 @@
           }
         },
         "summary": "Get Backtest Results",
-        "tags": [
-          "Backtests",
-          "Integrated Backtest"
-        ]
-      }
-    },
-    "/api/v1/backtests/test-services": {
-      "get": {
-        "description": "\uc11c\ube44\uc2a4 \uc5f0\ub3d9 \ud14c\uc2a4\ud2b8",
-        "operationId": "Backtests-test_service_integration",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            },
-            "description": "Successful Response"
-          }
-        },
-        "summary": "Test Service Integration",
         "tags": [
           "Backtests",
           "Integrated Backtest"
@@ -2862,6 +2779,46 @@
         ]
       }
     },
+    "/api/v1/market-data/analytics/cache-performance": {
+      "get": {
+        "description": "DuckDB \uce90\uc2dc \uc131\ub2a5 \ud1b5\uacc4 \uc870\ud68c",
+        "operationId": "Market Data-get_cache_performance_stats",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Cache Performance Stats",
+        "tags": [
+          "Market Data"
+        ]
+      }
+    },
+    "/api/v1/market-data/analytics/symbol-coverage": {
+      "get": {
+        "description": "\uc2ec\ubcfc\ubcc4 \ub370\uc774\ud130 \ucee4\ubc84\ub9ac\uc9c0 \ubd84\uc11d",
+        "operationId": "Market Data-get_symbols_coverage_analytics",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Symbols Coverage Analytics",
+        "tags": [
+          "Market Data"
+        ]
+      }
+    },
     "/api/v1/market-data/coverage/{symbol}": {
       "get": {
         "description": "Get data coverage information for a symbol",
@@ -3125,7 +3082,7 @@
         ]
       }
     },
-    "/api/v1/pipeline/collect-data/{symbol}": {
+    "/api/v1/pipeline/companies/collect-data/{symbol}": {
       "post": {
         "description": "Collect historical daily price data for a specific symbol.\n\nRetrieves OHLCV (Open, High, Low, Close, Volume) daily price data\nfor the specified symbol and date range. If no dates are provided,\ncollects maximum available historical data. Data is validated,\nadjusted for splits/dividends, and stored in DuckDB for fast access.\n\nArgs:\n    symbol: Stock symbol (e.g., 'AAPL') - automatically converted to uppercase\n    start_date: Optional start date for data collection (defaults to earliest available)\n    end_date: Optional end date for data collection (defaults to latest available)\n\nReturns:\n    dict: Collection result containing:\n        - message: Detailed success/failure message\n        - symbol: Processed symbol (uppercase)\n        - start_date: Actual start date used\n        - end_date: Actual end date used\n        - success: Boolean indicating operation success\n\nRaises:\n    HTTPException: 500 if data collection fails\n\nNote:\n    Large date ranges may take several minutes to complete.\n    Data is automatically cached to minimize API calls.",
         "operationId": "Company Data-collect_daily_data",
@@ -3200,7 +3157,7 @@
         ]
       }
     },
-    "/api/v1/pipeline/collect-info/{symbol}": {
+    "/api/v1/pipeline/companies/collect-info/{symbol}": {
       "post": {
         "description": "Collect and store basic company information for a specific symbol.\n\nRetrieves fundamental company data from external APIs (Alpha Vantage)\nincluding company name, sector, industry, market cap, and key financial\nratios. This information is stored in the database for future reference\nand analysis.\n\nArgs:\n    symbol: Stock symbol (e.g., 'AAPL', 'MSFT') - automatically converted to uppercase\n\nReturns:\n    dict: Collection result containing:\n        - message: Success/failure message\n        - symbol: Processed symbol (uppercase)\n        - success: Boolean indicating operation success\n\nRaises:\n    HTTPException: 500 if data collection fails\n\nNote:\n    Respects Alpha Vantage API rate limits (5 calls/min, 500 calls/day).\n    Duplicate requests for same symbol within 24 hours may return cached data.",
         "operationId": "Company Data-collect_stock_info",
@@ -3241,7 +3198,7 @@
         ]
       }
     },
-    "/api/v1/pipeline/companies": {
+    "/api/v1/pipeline/companies/companies": {
       "get": {
         "description": "Retrieve information for all companies in the database.\n\nReturns a comprehensive list of all companies for which information\nhas been collected and stored. Useful for portfolio analysis,\nscreening, and getting an overview of available data.\n\nReturns:\n    dict: All companies data containing:\n        - companies: List of company objects with key information:\n            - symbol: Stock symbol\n            - name: Company name\n            - sector: Industry sector\n            - industry: Specific industry\n            - market_cap: Market capitalization\n            - updated_at: Last update timestamp\n        - total_count: Total number of companies in database\n\nRaises:\n    HTTPException: 500 if retrieval fails\n\nNote:\n    Large datasets may take time to load. Consider pagination for production use.",
         "operationId": "Company Data-get_all_companies",
@@ -3261,7 +3218,7 @@
         ]
       }
     },
-    "/api/v1/pipeline/company/{symbol}": {
+    "/api/v1/pipeline/companies/company/{symbol}": {
       "get": {
         "description": "Retrieve stored company information for a specific symbol.\n\nReturns comprehensive company fundamentals and metadata previously\ncollected and stored in the database. This includes financial ratios,\ncompany description, sector classification, and market data.\n\nArgs:\n    symbol: Stock symbol (automatically converted to uppercase)\n\nReturns:\n    dict: Company information containing:\n        - symbol: Stock symbol\n        - name: Company name\n        - description: Business description\n        - sector: Industry sector classification\n        - industry: Specific industry classification\n        - country: Country of incorporation\n        - currency: Reporting currency\n        - market_cap: Market capitalization (if available)\n        - pe_ratio: Price-to-earnings ratio (if available)\n        - dividend_yield: Annual dividend yield (if available)\n        - updated_at: Last information update timestamp\n\nRaises:\n    HTTPException: 404 if company information not found\n    HTTPException: 500 if retrieval fails\n\nNote:\n    If company info not found, use POST /collect-info/{symbol} first.",
         "operationId": "Company Data-get_company_info",
@@ -3302,7 +3259,7 @@
         ]
       }
     },
-    "/api/v1/pipeline/coverage/{symbol}": {
+    "/api/v1/pipeline/companies/coverage/{symbol}": {
       "get": {
         "description": "Get detailed data coverage information for a specific symbol.\n\nReturns comprehensive information about the availability and quality\nof data for the specified symbol, including date ranges, data gaps,\nlast update timestamps, and data quality metrics.\n\nArgs:\n    symbol: Stock symbol to check coverage for (automatically converted to uppercase)\n\nReturns:\n    dict: Coverage information containing:\n        - symbol: Processed symbol\n        - date_range: Start and end dates of available data\n        - total_records: Number of data points available\n        - gaps: List of date ranges with missing data\n        - last_updated: Timestamp of most recent data update\n        - data_quality: Quality metrics (completeness, accuracy scores)\n\nRaises:\n    HTTPException: 500 if coverage check fails\n    HTTPException: 404 if symbol not found in database",
         "operationId": "Company Data-get_symbol_coverage",
@@ -3343,7 +3300,7 @@
         ]
       }
     },
-    "/api/v1/pipeline/setup-defaults": {
+    "/api/v1/pipeline/status/setup-defaults": {
       "post": {
         "description": "Initialize default watchlist with standard symbols.\n\nSets up the pipeline with a predefined set of popular stock symbols\nfor immediate use. This is typically called during initial system setup\nor when resetting the pipeline to defaults. Creates the 'default' watchlist\nif it doesn't exist.\n\nDefault symbols include major tech stocks: AAPL, MSFT, GOOGL, AMZN, etc.\n\nReturns:\n    dict: Setup confirmation containing:\n        - message: Success confirmation message\n        - symbols: List of symbols that were set up\n\nRaises:\n    HTTPException: 500 if default setup fails",
         "operationId": "Pipeline Status-setup_default_symbols",
@@ -3363,7 +3320,7 @@
         ]
       }
     },
-    "/api/v1/pipeline/status": {
+    "/api/v1/pipeline/status/status": {
       "get": {
         "description": "Get comprehensive pipeline status and health information.\n\nReturns detailed information about the current state of the data pipeline,\nincluding data coverage statistics, update timestamps, and system health metrics.\nThis endpoint is essential for monitoring the overall health of the data\ncollection and processing system.\n\nReturns:\n    dict: Pipeline status containing:\n        - overall_status: Current pipeline health status\n        - last_update: Timestamp of last successful update\n        - coverage_stats: Data coverage statistics per symbol\n        - active_symbols: Currently monitored symbols count\n        - error_count: Number of recent errors\n\nRaises:\n    HTTPException: 500 if status retrieval fails",
         "operationId": "Pipeline Status-get_pipeline_status",
@@ -3383,7 +3340,7 @@
         ]
       }
     },
-    "/api/v1/pipeline/update": {
+    "/api/v1/pipeline/status/update": {
       "post": {
         "description": "Execute comprehensive data pipeline update for specified symbols.\n\nInitiates a full data collection and update process for the specified\nsymbols or the default watchlist. The update runs asynchronously in the\nbackground to avoid blocking the API response. Includes company information\nretrieval, historical price data collection, and data validation.\n\nArgs:\n    request: Update configuration containing:\n        - symbols: Optional list of symbols to update (uses default if None)\n        - start_date: Optional start date for data collection\n        - end_date: Optional end date for data collection\n    background_tasks: FastAPI background task manager\n\nReturns:\n    dict: Update initiation confirmation containing:\n        - message: Update start confirmation\n        - symbols: Symbols being updated\n        - started_at: UTC timestamp when update began\n\nRaises:\n    HTTPException: 500 if update initiation fails\n\nNote:\n    This is an asynchronous operation. Use /status endpoint to monitor progress.",
         "operationId": "Pipeline Status-run_pipeline_update",
@@ -3423,10 +3380,10 @@
         ]
       }
     },
-    "/api/v1/pipeline/watchlist": {
+    "/api/v1/pipeline/watchlists/watchlist": {
       "post": {
         "description": "Create or update a watchlist with flexible naming support.\n\nThis endpoint provides a convenient way to create new watchlists or update\nexisting ones. If no name is provided, it defaults to the 'default' watchlist\nwhich is used by the pipeline for automated updates. This endpoint combines\ncreation and update functionality for ease of use.\n\nArgs:\n    request: Watchlist configuration containing:\n        - symbols: List of stock symbols to include\n        - name: Optional watchlist name (defaults to 'default')\n        - description: Optional description of the watchlist\n\nReturns:\n    dict: Operation result containing:\n        - message: Success message indicating action taken\n        - name: Watchlist name that was processed\n        - symbols: List of symbols in the watchlist\n        - count: Number of symbols in the watchlist\n        - action: Either 'created' or 'updated'\n\nRaises:\n    HTTPException: 400 if watchlist creation fails\n    HTTPException: 500 if operation fails\n\nNote:\n    Updates to the 'default' watchlist automatically update pipeline symbols.\n    This affects which symbols are processed during automated updates.",
-        "operationId": "Watchlist Management-update_watchlist",
+        "operationId": "Watchlists-update_watchlist",
         "requestBody": {
           "content": {
             "application/json": {
@@ -3459,14 +3416,14 @@
         },
         "summary": "Update Watchlist",
         "tags": [
-          "Watchlist Management"
+          "Watchlists"
         ]
       }
     },
-    "/api/v1/pipeline/watchlists": {
+    "/api/v1/pipeline/watchlists/watchlists": {
       "get": {
         "description": "Retrieve a comprehensive list of all watchlists.\n\nReturns summary information for all watchlists in the system, including\nmetadata like symbol counts, update settings, and timestamps. This is\nuseful for dashboard displays and watchlist management interfaces.\n\nReturns:\n    dict: All watchlists summary containing:\n        - watchlists: List of watchlist summaries with:\n            - name: Watchlist name\n            - description: Watchlist description\n            - symbol_count: Number of symbols in the watchlist\n            - auto_update: Whether automatic updates are enabled\n            - last_updated: Timestamp of last modification\n            - created_at: Timestamp of creation\n        - total_count: Total number of watchlists in the system\n\nRaises:\n    HTTPException: 500 if retrieval fails\n\nNote:\n    This endpoint returns summary data only. Use GET /watchlists/{name}\n    for detailed information including full symbol lists.",
-        "operationId": "Watchlist Management-list_watchlists",
+        "operationId": "Watchlists-list_watchlists",
         "responses": {
           "200": {
             "content": {
@@ -3479,12 +3436,12 @@
         },
         "summary": "List Watchlists",
         "tags": [
-          "Watchlist Management"
+          "Watchlists"
         ]
       },
       "post": {
         "description": "Create a new named watchlist with validation.\n\nThis endpoint is specifically for creating new watchlists with explicit\nnaming requirements. Unlike the /watchlist endpoint, this requires a name\nand will fail if a watchlist with the same name already exists.\n\nArgs:\n    request: Watchlist creation parameters containing:\n        - name: Required unique name for the watchlist\n        - symbols: List of stock symbols to include\n        - description: Optional description of the watchlist purpose\n\nReturns:\n    dict: Creation result containing:\n        - message: Success confirmation message\n        - name: Name of the created watchlist\n        - symbols: List of symbols in the watchlist\n        - description: Watchlist description\n        - created_at: UTC timestamp of creation\n\nRaises:\n    HTTPException: 400 if watchlist creation fails or name conflicts\n    HTTPException: 500 if database operation fails\n\nNote:\n    Watchlist names must be unique. Use PUT /watchlists/{name} to update existing ones.",
-        "operationId": "Watchlist Management-create_watchlist",
+        "operationId": "Watchlists-create_watchlist",
         "requestBody": {
           "content": {
             "application/json": {
@@ -3517,14 +3474,14 @@
         },
         "summary": "Create Watchlist",
         "tags": [
-          "Watchlist Management"
+          "Watchlists"
         ]
       }
     },
-    "/api/v1/pipeline/watchlists/{name}": {
+    "/api/v1/pipeline/watchlists/watchlists/{name}": {
       "delete": {
         "description": "Delete a named watchlist from the system.\n\nPermanently removes a watchlist and all associated metadata. This action\ncannot be undone. The 'default' watchlist cannot be deleted as it is\nrequired for pipeline operations.\n\nArgs:\n    name: Name of the watchlist to delete\n\nReturns:\n    dict: Deletion confirmation containing:\n        - message: Success confirmation message\n        - name: Name of the deleted watchlist\n\nRaises:\n    HTTPException: 400 if attempting to delete the 'default' watchlist\n    HTTPException: 404 if watchlist with specified name not found\n    HTTPException: 500 if deletion operation fails\n\nNote:\n    Deletion is permanent and cannot be undone. Consider backing up\n    important watchlists before deletion.",
-        "operationId": "Watchlist Management-delete_watchlist",
+        "operationId": "Watchlists-delete_watchlist",
         "parameters": [
           {
             "in": "path",
@@ -3558,12 +3515,12 @@
         },
         "summary": "Delete Watchlist",
         "tags": [
-          "Watchlist Management"
+          "Watchlists"
         ]
       },
       "get": {
         "description": "Retrieve complete information for a specific watchlist.\n\nReturns detailed information about a named watchlist including the full\nlist of symbols, configuration settings, and all metadata. This provides\nall information needed to display or modify a specific watchlist.\n\nArgs:\n    name: Name of the watchlist to retrieve (case-sensitive)\n\nReturns:\n    dict: Complete watchlist information containing:\n        - name: Watchlist name\n        - description: Detailed description\n        - symbols: Complete list of stock symbols\n        - auto_update: Automatic update configuration\n        - update_interval: Update frequency in seconds\n        - last_updated: Timestamp of last symbol update\n        - created_at: Timestamp of watchlist creation\n\nRaises:\n    HTTPException: 404 if watchlist with specified name not found\n    HTTPException: 500 if retrieval operation fails\n\nNote:\n    Watchlist names are case-sensitive. Use GET /watchlists to see all available names.",
-        "operationId": "Watchlist Management-get_watchlist",
+        "operationId": "Watchlists-get_watchlist",
         "parameters": [
           {
             "in": "path",
@@ -3597,12 +3554,12 @@
         },
         "summary": "Get Watchlist",
         "tags": [
-          "Watchlist Management"
+          "Watchlists"
         ]
       },
       "put": {
         "description": "Update an existing watchlist with new symbols and settings.\n\nModifies the symbols and metadata of an existing watchlist. This endpoint\nrequires the watchlist to exist and will fail if the specified name is\nnot found. Use POST /watchlists to create new watchlists.\n\nArgs:\n    name: Name of the existing watchlist to update\n    request: Update parameters containing:\n        - symbols: New list of symbols (replaces current list)\n        - description: Optional new description (if provided)\n\nReturns:\n    dict: Update confirmation containing:\n        - message: Success confirmation message\n        - name: Name of the updated watchlist\n        - symbols: New symbols list\n        - description: Current description (updated if provided)\n        - count: Number of symbols in updated watchlist\n        - updated_at: Timestamp of the update\n\nRaises:\n    HTTPException: 404 if watchlist with specified name not found\n    HTTPException: 500 if update operation fails\n\nNote:\n    Updates to the 'default' watchlist automatically update pipeline symbols.\n    Symbol list is completely replaced, not merged with existing symbols.",
-        "operationId": "Watchlist Management-update_watchlist_by_name",
+        "operationId": "Watchlists-update_watchlist_by_name",
         "parameters": [
           {
             "in": "path",
@@ -3646,7 +3603,7 @@
         },
         "summary": "Update Watchlist By Name",
         "tags": [
-          "Watchlist Management"
+          "Watchlists"
         ]
       }
     },
@@ -4165,6 +4122,108 @@
           }
         },
         "summary": "Create Template",
+        "tags": [
+          "Templates"
+        ]
+      }
+    },
+    "/api/v1/templates/analytics/usage-stats": {
+      "get": {
+        "description": "Get template usage statistics",
+        "operationId": "Templates-get_template_usage_stats",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Template Usage Stats",
+        "tags": [
+          "Templates"
+        ]
+      }
+    },
+    "/api/v1/templates/{template_id}": {
+      "delete": {
+        "description": "Delete template by ID",
+        "operationId": "Templates-delete_template",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "template_id",
+            "required": true,
+            "schema": {
+              "title": "Template Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Template",
+        "tags": [
+          "Templates"
+        ]
+      },
+      "get": {
+        "description": "Get template by ID",
+        "operationId": "Templates-get_template",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "template_id",
+            "required": true,
+            "schema": {
+              "title": "Template Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Template",
         "tags": [
           "Templates"
         ]

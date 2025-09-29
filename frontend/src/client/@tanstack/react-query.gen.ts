@@ -16,7 +16,7 @@ import {
   PipelineStatus,
   Strategies,
   Templates,
-  WatchlistManagement,
+  Watchlists,
 } from "../sdk.gen";
 import type {
   BacktestsCreateAndRunIntegratedBacktestData,
@@ -34,7 +34,10 @@ import type {
   BacktestsGetBacktestExecutionsData,
   BacktestsGetBacktestResultsData,
   BacktestsGetBacktestsData,
-  BacktestsTestServiceIntegrationData,
+  BacktestsGetBacktestSummaryAnalyticsData,
+  BacktestsGetPerformanceAnalyticsData,
+  BacktestsGetTradesAnalyticsData,
+  BacktestsHealthCheckData,
   BacktestsUpdateBacktestData,
   BacktestsUpdateBacktestError,
   BacktestsUpdateBacktestResponse,
@@ -51,8 +54,10 @@ import type {
   HealthReadinessProbeData,
   MarketDataAnalyzeDataQualityData,
   MarketDataGetAvailableSymbolsData,
+  MarketDataGetCachePerformanceStatsData,
   MarketDataGetDataCoverageData,
   MarketDataGetMarketDataData,
+  MarketDataGetSymbolsCoverageAnalyticsData,
   MarketDataRequestBulkDataData,
   MarketDataRequestBulkDataError,
   MarketDataRequestBulkDataResponse,
@@ -81,17 +86,21 @@ import type {
   TemplatesCreateTemplateData,
   TemplatesCreateTemplateError,
   TemplatesCreateTemplateResponse,
+  TemplatesDeleteTemplateData,
+  TemplatesDeleteTemplateError,
+  TemplatesGetTemplateData,
   TemplatesGetTemplatesData,
-  WatchlistManagementCreateWatchlistData,
-  WatchlistManagementCreateWatchlistError,
-  WatchlistManagementDeleteWatchlistData,
-  WatchlistManagementDeleteWatchlistError,
-  WatchlistManagementGetWatchlistData,
-  WatchlistManagementListWatchlistsData,
-  WatchlistManagementUpdateWatchlistByNameData,
-  WatchlistManagementUpdateWatchlistByNameError,
-  WatchlistManagementUpdateWatchlistData,
-  WatchlistManagementUpdateWatchlistError,
+  TemplatesGetTemplateUsageStatsData,
+  WatchlistsCreateWatchlistData,
+  WatchlistsCreateWatchlistError,
+  WatchlistsDeleteWatchlistData,
+  WatchlistsDeleteWatchlistError,
+  WatchlistsGetWatchlistData,
+  WatchlistsListWatchlistsData,
+  WatchlistsUpdateWatchlistByNameData,
+  WatchlistsUpdateWatchlistByNameError,
+  WatchlistsUpdateWatchlistData,
+  WatchlistsUpdateWatchlistError,
 } from "../types.gen";
 
 export type QueryKey<TOptions extends Options> = [
@@ -337,6 +346,56 @@ export const marketDataAnalyzeDataQualityOptions = (
       return data;
     },
     queryKey: marketDataAnalyzeDataQualityQueryKey(options),
+  });
+};
+
+export const marketDataGetCachePerformanceStatsQueryKey = (
+  options?: Options<MarketDataGetCachePerformanceStatsData>,
+) => createQueryKey("marketDataGetCachePerformanceStats", options);
+
+/**
+ * Get Cache Performance Stats
+ * DuckDB 캐시 성능 통계 조회
+ */
+export const marketDataGetCachePerformanceStatsOptions = (
+  options?: Options<MarketDataGetCachePerformanceStatsData>,
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await MarketData.marketDataGetCachePerformanceStats({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: marketDataGetCachePerformanceStatsQueryKey(options),
+  });
+};
+
+export const marketDataGetSymbolsCoverageAnalyticsQueryKey = (
+  options?: Options<MarketDataGetSymbolsCoverageAnalyticsData>,
+) => createQueryKey("marketDataGetSymbolsCoverageAnalytics", options);
+
+/**
+ * Get Symbols Coverage Analytics
+ * 심볼별 데이터 커버리지 분석
+ */
+export const marketDataGetSymbolsCoverageAnalyticsOptions = (
+  options?: Options<MarketDataGetSymbolsCoverageAnalyticsData>,
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await MarketData.marketDataGetSymbolsCoverageAnalytics({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: marketDataGetSymbolsCoverageAnalyticsQueryKey(options),
   });
 };
 
@@ -765,37 +824,36 @@ export const companyDataGetAllCompaniesOptions = (
  * Updates to the 'default' watchlist automatically update pipeline symbols.
  * This affects which symbols are processed during automated updates.
  */
-export const watchlistManagementUpdateWatchlistMutation = (
-  options?: Partial<Options<WatchlistManagementUpdateWatchlistData>>,
+export const watchlistsUpdateWatchlistMutation = (
+  options?: Partial<Options<WatchlistsUpdateWatchlistData>>,
 ): UseMutationOptions<
   unknown,
-  WatchlistManagementUpdateWatchlistError,
-  Options<WatchlistManagementUpdateWatchlistData>
+  WatchlistsUpdateWatchlistError,
+  Options<WatchlistsUpdateWatchlistData>
 > => {
   const mutationOptions: UseMutationOptions<
     unknown,
-    WatchlistManagementUpdateWatchlistError,
-    Options<WatchlistManagementUpdateWatchlistData>
+    WatchlistsUpdateWatchlistError,
+    Options<WatchlistsUpdateWatchlistData>
   > = {
     mutationFn: async (fnOptions) => {
-      const { data } =
-        await WatchlistManagement.watchlistManagementUpdateWatchlist({
-          ...options,
-          ...fnOptions,
-          throwOnError: true,
-        });
+      const { data } = await Watchlists.watchlistsUpdateWatchlist({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      });
       return data;
     },
     meta: {
-      id: "watchlistManagementUpdateWatchlist",
+      id: "watchlistsUpdateWatchlist",
     },
   };
   return mutationOptions;
 };
 
-export const watchlistManagementListWatchlistsQueryKey = (
-  options?: Options<WatchlistManagementListWatchlistsData>,
-) => createQueryKey("watchlistManagementListWatchlists", options);
+export const watchlistsListWatchlistsQueryKey = (
+  options?: Options<WatchlistsListWatchlistsData>,
+) => createQueryKey("watchlistsListWatchlists", options);
 
 /**
  * List Watchlists
@@ -823,21 +881,20 @@ export const watchlistManagementListWatchlistsQueryKey = (
  * This endpoint returns summary data only. Use GET /watchlists/{name}
  * for detailed information including full symbol lists.
  */
-export const watchlistManagementListWatchlistsOptions = (
-  options?: Options<WatchlistManagementListWatchlistsData>,
+export const watchlistsListWatchlistsOptions = (
+  options?: Options<WatchlistsListWatchlistsData>,
 ) => {
   return queryOptions({
     queryFn: async ({ queryKey, signal }) => {
-      const { data } =
-        await WatchlistManagement.watchlistManagementListWatchlists({
-          ...options,
-          ...queryKey[0],
-          signal,
-          throwOnError: true,
-        });
+      const { data } = await Watchlists.watchlistsListWatchlists({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
       return data;
     },
-    queryKey: watchlistManagementListWatchlistsQueryKey(options),
+    queryKey: watchlistsListWatchlistsQueryKey(options),
   });
 };
 
@@ -870,29 +927,28 @@ export const watchlistManagementListWatchlistsOptions = (
  * Note:
  * Watchlist names must be unique. Use PUT /watchlists/{name} to update existing ones.
  */
-export const watchlistManagementCreateWatchlistMutation = (
-  options?: Partial<Options<WatchlistManagementCreateWatchlistData>>,
+export const watchlistsCreateWatchlistMutation = (
+  options?: Partial<Options<WatchlistsCreateWatchlistData>>,
 ): UseMutationOptions<
   unknown,
-  WatchlistManagementCreateWatchlistError,
-  Options<WatchlistManagementCreateWatchlistData>
+  WatchlistsCreateWatchlistError,
+  Options<WatchlistsCreateWatchlistData>
 > => {
   const mutationOptions: UseMutationOptions<
     unknown,
-    WatchlistManagementCreateWatchlistError,
-    Options<WatchlistManagementCreateWatchlistData>
+    WatchlistsCreateWatchlistError,
+    Options<WatchlistsCreateWatchlistData>
   > = {
     mutationFn: async (fnOptions) => {
-      const { data } =
-        await WatchlistManagement.watchlistManagementCreateWatchlist({
-          ...options,
-          ...fnOptions,
-          throwOnError: true,
-        });
+      const { data } = await Watchlists.watchlistsCreateWatchlist({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      });
       return data;
     },
     meta: {
-      id: "watchlistManagementCreateWatchlist",
+      id: "watchlistsCreateWatchlist",
     },
   };
   return mutationOptions;
@@ -923,37 +979,36 @@ export const watchlistManagementCreateWatchlistMutation = (
  * Deletion is permanent and cannot be undone. Consider backing up
  * important watchlists before deletion.
  */
-export const watchlistManagementDeleteWatchlistMutation = (
-  options?: Partial<Options<WatchlistManagementDeleteWatchlistData>>,
+export const watchlistsDeleteWatchlistMutation = (
+  options?: Partial<Options<WatchlistsDeleteWatchlistData>>,
 ): UseMutationOptions<
   unknown,
-  WatchlistManagementDeleteWatchlistError,
-  Options<WatchlistManagementDeleteWatchlistData>
+  WatchlistsDeleteWatchlistError,
+  Options<WatchlistsDeleteWatchlistData>
 > => {
   const mutationOptions: UseMutationOptions<
     unknown,
-    WatchlistManagementDeleteWatchlistError,
-    Options<WatchlistManagementDeleteWatchlistData>
+    WatchlistsDeleteWatchlistError,
+    Options<WatchlistsDeleteWatchlistData>
   > = {
     mutationFn: async (fnOptions) => {
-      const { data } =
-        await WatchlistManagement.watchlistManagementDeleteWatchlist({
-          ...options,
-          ...fnOptions,
-          throwOnError: true,
-        });
+      const { data } = await Watchlists.watchlistsDeleteWatchlist({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      });
       return data;
     },
     meta: {
-      id: "watchlistManagementDeleteWatchlist",
+      id: "watchlistsDeleteWatchlist",
     },
   };
   return mutationOptions;
 };
 
-export const watchlistManagementGetWatchlistQueryKey = (
-  options: Options<WatchlistManagementGetWatchlistData>,
-) => createQueryKey("watchlistManagementGetWatchlist", options);
+export const watchlistsGetWatchlistQueryKey = (
+  options: Options<WatchlistsGetWatchlistData>,
+) => createQueryKey("watchlistsGetWatchlist", options);
 
 /**
  * Get Watchlist
@@ -983,21 +1038,20 @@ export const watchlistManagementGetWatchlistQueryKey = (
  * Note:
  * Watchlist names are case-sensitive. Use GET /watchlists to see all available names.
  */
-export const watchlistManagementGetWatchlistOptions = (
-  options: Options<WatchlistManagementGetWatchlistData>,
+export const watchlistsGetWatchlistOptions = (
+  options: Options<WatchlistsGetWatchlistData>,
 ) => {
   return queryOptions({
     queryFn: async ({ queryKey, signal }) => {
-      const { data } =
-        await WatchlistManagement.watchlistManagementGetWatchlist({
-          ...options,
-          ...queryKey[0],
-          signal,
-          throwOnError: true,
-        });
+      const { data } = await Watchlists.watchlistsGetWatchlist({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
       return data;
     },
-    queryKey: watchlistManagementGetWatchlistQueryKey(options),
+    queryKey: watchlistsGetWatchlistQueryKey(options),
   });
 };
 
@@ -1032,29 +1086,28 @@ export const watchlistManagementGetWatchlistOptions = (
  * Updates to the 'default' watchlist automatically update pipeline symbols.
  * Symbol list is completely replaced, not merged with existing symbols.
  */
-export const watchlistManagementUpdateWatchlistByNameMutation = (
-  options?: Partial<Options<WatchlistManagementUpdateWatchlistByNameData>>,
+export const watchlistsUpdateWatchlistByNameMutation = (
+  options?: Partial<Options<WatchlistsUpdateWatchlistByNameData>>,
 ): UseMutationOptions<
   unknown,
-  WatchlistManagementUpdateWatchlistByNameError,
-  Options<WatchlistManagementUpdateWatchlistByNameData>
+  WatchlistsUpdateWatchlistByNameError,
+  Options<WatchlistsUpdateWatchlistByNameData>
 > => {
   const mutationOptions: UseMutationOptions<
     unknown,
-    WatchlistManagementUpdateWatchlistByNameError,
-    Options<WatchlistManagementUpdateWatchlistByNameData>
+    WatchlistsUpdateWatchlistByNameError,
+    Options<WatchlistsUpdateWatchlistByNameData>
   > = {
     mutationFn: async (fnOptions) => {
-      const { data } =
-        await WatchlistManagement.watchlistManagementUpdateWatchlistByName({
-          ...options,
-          ...fnOptions,
-          throwOnError: true,
-        });
+      const { data } = await Watchlists.watchlistsUpdateWatchlistByName({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      });
       return data;
     },
     meta: {
-      id: "watchlistManagementUpdateWatchlistByName",
+      id: "watchlistsUpdateWatchlistByName",
     },
   };
   return mutationOptions;
@@ -1290,7 +1343,7 @@ export const backtestsGetBacktestResultsQueryKey = (
 
 /**
  * Get Backtest Results
- * Get backtest results
+ * Get backtest results from DuckDB (고성능 분석용)
  */
 export const backtestsGetBacktestResultsOptions = (
   options?: Options<BacktestsGetBacktestResultsData>,
@@ -1340,20 +1393,20 @@ export const backtestsCreateAndRunIntegratedBacktestMutation = (
   return mutationOptions;
 };
 
-export const backtestsTestServiceIntegrationQueryKey = (
-  options?: Options<BacktestsTestServiceIntegrationData>,
-) => createQueryKey("backtestsTestServiceIntegration", options);
+export const backtestsHealthCheckQueryKey = (
+  options?: Options<BacktestsHealthCheckData>,
+) => createQueryKey("backtestsHealthCheck", options);
 
 /**
- * Test Service Integration
- * 서비스 연동 테스트
+ * Health Check
+ * 백테스트 시스템 상태 확인 (DuckDB + MongoDB 통합 상태)
  */
-export const backtestsTestServiceIntegrationOptions = (
-  options?: Options<BacktestsTestServiceIntegrationData>,
+export const backtestsHealthCheckOptions = (
+  options?: Options<BacktestsHealthCheckData>,
 ) => {
   return queryOptions({
     queryFn: async ({ queryKey, signal }) => {
-      const { data } = await Backtests.backtestsTestServiceIntegration({
+      const { data } = await Backtests.backtestsHealthCheck({
         ...options,
         ...queryKey[0],
         signal,
@@ -1361,7 +1414,82 @@ export const backtestsTestServiceIntegrationOptions = (
       });
       return data;
     },
-    queryKey: backtestsTestServiceIntegrationQueryKey(options),
+    queryKey: backtestsHealthCheckQueryKey(options),
+  });
+};
+
+export const backtestsGetPerformanceAnalyticsQueryKey = (
+  options?: Options<BacktestsGetPerformanceAnalyticsData>,
+) => createQueryKey("backtestsGetPerformanceAnalytics", options);
+
+/**
+ * Get Performance Analytics
+ * 백테스트 성과 분석 (DuckDB 고성능 분석)
+ */
+export const backtestsGetPerformanceAnalyticsOptions = (
+  options?: Options<BacktestsGetPerformanceAnalyticsData>,
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await Backtests.backtestsGetPerformanceAnalytics({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: backtestsGetPerformanceAnalyticsQueryKey(options),
+  });
+};
+
+export const backtestsGetTradesAnalyticsQueryKey = (
+  options?: Options<BacktestsGetTradesAnalyticsData>,
+) => createQueryKey("backtestsGetTradesAnalytics", options);
+
+/**
+ * Get Trades Analytics
+ * 거래 기록 분석 (DuckDB 고성능 쿼리)
+ */
+export const backtestsGetTradesAnalyticsOptions = (
+  options?: Options<BacktestsGetTradesAnalyticsData>,
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await Backtests.backtestsGetTradesAnalytics({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: backtestsGetTradesAnalyticsQueryKey(options),
+  });
+};
+
+export const backtestsGetBacktestSummaryAnalyticsQueryKey = (
+  options?: Options<BacktestsGetBacktestSummaryAnalyticsData>,
+) => createQueryKey("backtestsGetBacktestSummaryAnalytics", options);
+
+/**
+ * Get Backtest Summary Analytics
+ * 백테스트 결과 요약 분석 (DuckDB 기반)
+ */
+export const backtestsGetBacktestSummaryAnalyticsOptions = (
+  options?: Options<BacktestsGetBacktestSummaryAnalyticsData>,
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await Backtests.backtestsGetBacktestSummaryAnalytics({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: backtestsGetBacktestSummaryAnalyticsQueryKey(options),
   });
 };
 
@@ -1674,4 +1802,85 @@ export const templatesCreateStrategyFromTemplateMutation = (
     },
   };
   return mutationOptions;
+};
+
+/**
+ * Delete Template
+ * Delete template by ID
+ */
+export const templatesDeleteTemplateMutation = (
+  options?: Partial<Options<TemplatesDeleteTemplateData>>,
+): UseMutationOptions<
+  unknown,
+  TemplatesDeleteTemplateError,
+  Options<TemplatesDeleteTemplateData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    unknown,
+    TemplatesDeleteTemplateError,
+    Options<TemplatesDeleteTemplateData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await Templates.templatesDeleteTemplate({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+    meta: {
+      id: "templatesDeleteTemplate",
+    },
+  };
+  return mutationOptions;
+};
+
+export const templatesGetTemplateQueryKey = (
+  options: Options<TemplatesGetTemplateData>,
+) => createQueryKey("templatesGetTemplate", options);
+
+/**
+ * Get Template
+ * Get template by ID
+ */
+export const templatesGetTemplateOptions = (
+  options: Options<TemplatesGetTemplateData>,
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await Templates.templatesGetTemplate({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: templatesGetTemplateQueryKey(options),
+  });
+};
+
+export const templatesGetTemplateUsageStatsQueryKey = (
+  options?: Options<TemplatesGetTemplateUsageStatsData>,
+) => createQueryKey("templatesGetTemplateUsageStats", options);
+
+/**
+ * Get Template Usage Stats
+ * Get template usage statistics
+ */
+export const templatesGetTemplateUsageStatsOptions = (
+  options?: Options<TemplatesGetTemplateUsageStatsData>,
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await Templates.templatesGetTemplateUsageStats({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: templatesGetTemplateUsageStatsQueryKey(options),
+  });
 };

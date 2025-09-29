@@ -258,130 +258,6 @@ export type BacktestResponse = {
 };
 
 /**
- * BacktestResultListResponse
- * 백테스트 결과 목록 응답
- */
-export type BacktestResultListResponse = {
-  /**
-   * Results
-   * 결과 목록
-   */
-  results: Array<BacktestResultResponse>;
-  /**
-   * Total
-   * 총 개수
-   */
-  total: number;
-};
-
-/**
- * BacktestResultResponse
- * 백테스트 결과 응답
- */
-export type BacktestResultResponse = {
-  /**
-   * Id
-   * 결과 ID
-   */
-  id: string;
-  /**
-   * Backtest Id
-   * 백테스트 ID
-   */
-  backtest_id: string;
-  /**
-   * Execution Id
-   * 실행 ID
-   */
-  execution_id: string;
-  /**
-   * Total Return
-   * 총 수익률
-   */
-  total_return: number;
-  /**
-   * Annualized Return
-   * 연환산 수익률
-   */
-  annualized_return: number;
-  /**
-   * Volatility
-   * 변동성
-   */
-  volatility: number;
-  /**
-   * Sharpe Ratio
-   * 샤프 비율
-   */
-  sharpe_ratio: number;
-  /**
-   * Max Drawdown
-   * 최대 낙폭
-   */
-  max_drawdown: number;
-  /**
-   * Calmar Ratio
-   * 칼마 비율
-   */
-  calmar_ratio?: number | null;
-  /**
-   * Sortino Ratio
-   * 소르티노 비율
-   */
-  sortino_ratio?: number | null;
-  /**
-   * Benchmark Return
-   * 벤치마크 수익률
-   */
-  benchmark_return?: number | null;
-  /**
-   * Alpha
-   * 알파
-   */
-  alpha?: number | null;
-  /**
-   * Beta
-   * 베타
-   */
-  beta?: number | null;
-  /**
-   * Total Trades
-   * 총 거래 수
-   */
-  total_trades: number;
-  /**
-   * Winning Trades
-   * 승리 거래 수
-   */
-  winning_trades: number;
-  /**
-   * Losing Trades
-   * 패배 거래 수
-   */
-  losing_trades: number;
-  /**
-   * Win Rate
-   * 승률
-   */
-  win_rate: number;
-  /**
-   * Portfolio History Path
-   * 포트폴리오 히스토리 파일 경로
-   */
-  portfolio_history_path?: string | null;
-  /**
-   * Trades History Path
-   * 거래 히스토리 파일 경로
-   */
-  trades_history_path?: string | null;
-  /**
-   * Created At
-   * 생성 시간
-   */
-  created_at: Date;
-};
-
-/**
  * BacktestStatus
  * 백테스트 상태
  */
@@ -1703,11 +1579,39 @@ export type MarketDataAnalyzeDataQualityResponses = {
 export type MarketDataAnalyzeDataQualityResponse =
   MarketDataAnalyzeDataQualityResponses[keyof MarketDataAnalyzeDataQualityResponses];
 
+export type MarketDataGetCachePerformanceStatsData = {
+  body?: never;
+  path?: never;
+  query?: never;
+  url: "/api/v1/market-data/analytics/cache-performance";
+};
+
+export type MarketDataGetCachePerformanceStatsResponses = {
+  /**
+   * Successful Response
+   */
+  200: unknown;
+};
+
+export type MarketDataGetSymbolsCoverageAnalyticsData = {
+  body?: never;
+  path?: never;
+  query?: never;
+  url: "/api/v1/market-data/analytics/symbol-coverage";
+};
+
+export type MarketDataGetSymbolsCoverageAnalyticsResponses = {
+  /**
+   * Successful Response
+   */
+  200: unknown;
+};
+
 export type PipelineStatusGetPipelineStatusData = {
   body?: never;
   path?: never;
   query?: never;
-  url: "/api/v1/pipeline/status";
+  url: "/api/v1/pipeline/status/status";
 };
 
 export type PipelineStatusGetPipelineStatusResponses = {
@@ -1721,7 +1625,7 @@ export type PipelineStatusSetupDefaultSymbolsData = {
   body?: never;
   path?: never;
   query?: never;
-  url: "/api/v1/pipeline/setup-defaults";
+  url: "/api/v1/pipeline/status/setup-defaults";
 };
 
 export type PipelineStatusSetupDefaultSymbolsResponses = {
@@ -1735,7 +1639,7 @@ export type PipelineStatusRunPipelineUpdateData = {
   body: UpdateRequest;
   path?: never;
   query?: never;
-  url: "/api/v1/pipeline/update";
+  url: "/api/v1/pipeline/status/update";
 };
 
 export type PipelineStatusRunPipelineUpdateErrors = {
@@ -1764,7 +1668,7 @@ export type CompanyDataCollectStockInfoData = {
     symbol: string;
   };
   query?: never;
-  url: "/api/v1/pipeline/collect-info/{symbol}";
+  url: "/api/v1/pipeline/companies/collect-info/{symbol}";
 };
 
 export type CompanyDataCollectStockInfoErrors = {
@@ -1802,7 +1706,7 @@ export type CompanyDataCollectDailyDataData = {
      */
     end_date?: Date | null;
   };
-  url: "/api/v1/pipeline/collect-data/{symbol}";
+  url: "/api/v1/pipeline/companies/collect-data/{symbol}";
 };
 
 export type CompanyDataCollectDailyDataErrors = {
@@ -1831,7 +1735,7 @@ export type CompanyDataGetSymbolCoverageData = {
     symbol: string;
   };
   query?: never;
-  url: "/api/v1/pipeline/coverage/{symbol}";
+  url: "/api/v1/pipeline/companies/coverage/{symbol}";
 };
 
 export type CompanyDataGetSymbolCoverageErrors = {
@@ -1860,7 +1764,7 @@ export type CompanyDataGetCompanyInfoData = {
     symbol: string;
   };
   query?: never;
-  url: "/api/v1/pipeline/company/{symbol}";
+  url: "/api/v1/pipeline/companies/company/{symbol}";
 };
 
 export type CompanyDataGetCompanyInfoErrors = {
@@ -1884,7 +1788,7 @@ export type CompanyDataGetAllCompaniesData = {
   body?: never;
   path?: never;
   query?: never;
-  url: "/api/v1/pipeline/companies";
+  url: "/api/v1/pipeline/companies/companies";
 };
 
 export type CompanyDataGetAllCompaniesResponses = {
@@ -1894,69 +1798,69 @@ export type CompanyDataGetAllCompaniesResponses = {
   200: unknown;
 };
 
-export type WatchlistManagementUpdateWatchlistData = {
+export type WatchlistsUpdateWatchlistData = {
   body: WatchlistUpdate;
   path?: never;
   query?: never;
-  url: "/api/v1/pipeline/watchlist";
+  url: "/api/v1/pipeline/watchlists/watchlist";
 };
 
-export type WatchlistManagementUpdateWatchlistErrors = {
+export type WatchlistsUpdateWatchlistErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type WatchlistManagementUpdateWatchlistError =
-  WatchlistManagementUpdateWatchlistErrors[keyof WatchlistManagementUpdateWatchlistErrors];
+export type WatchlistsUpdateWatchlistError =
+  WatchlistsUpdateWatchlistErrors[keyof WatchlistsUpdateWatchlistErrors];
 
-export type WatchlistManagementUpdateWatchlistResponses = {
+export type WatchlistsUpdateWatchlistResponses = {
   /**
    * Successful Response
    */
   200: unknown;
 };
 
-export type WatchlistManagementListWatchlistsData = {
+export type WatchlistsListWatchlistsData = {
   body?: never;
   path?: never;
   query?: never;
-  url: "/api/v1/pipeline/watchlists";
+  url: "/api/v1/pipeline/watchlists/watchlists";
 };
 
-export type WatchlistManagementListWatchlistsResponses = {
+export type WatchlistsListWatchlistsResponses = {
   /**
    * Successful Response
    */
   200: unknown;
 };
 
-export type WatchlistManagementCreateWatchlistData = {
+export type WatchlistsCreateWatchlistData = {
   body: WatchlistCreate;
   path?: never;
   query?: never;
-  url: "/api/v1/pipeline/watchlists";
+  url: "/api/v1/pipeline/watchlists/watchlists";
 };
 
-export type WatchlistManagementCreateWatchlistErrors = {
+export type WatchlistsCreateWatchlistErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type WatchlistManagementCreateWatchlistError =
-  WatchlistManagementCreateWatchlistErrors[keyof WatchlistManagementCreateWatchlistErrors];
+export type WatchlistsCreateWatchlistError =
+  WatchlistsCreateWatchlistErrors[keyof WatchlistsCreateWatchlistErrors];
 
-export type WatchlistManagementCreateWatchlistResponses = {
+export type WatchlistsCreateWatchlistResponses = {
   /**
    * Successful Response
    */
   200: unknown;
 };
 
-export type WatchlistManagementDeleteWatchlistData = {
+export type WatchlistsDeleteWatchlistData = {
   body?: never;
   path: {
     /**
@@ -1965,27 +1869,27 @@ export type WatchlistManagementDeleteWatchlistData = {
     name: string;
   };
   query?: never;
-  url: "/api/v1/pipeline/watchlists/{name}";
+  url: "/api/v1/pipeline/watchlists/watchlists/{name}";
 };
 
-export type WatchlistManagementDeleteWatchlistErrors = {
+export type WatchlistsDeleteWatchlistErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type WatchlistManagementDeleteWatchlistError =
-  WatchlistManagementDeleteWatchlistErrors[keyof WatchlistManagementDeleteWatchlistErrors];
+export type WatchlistsDeleteWatchlistError =
+  WatchlistsDeleteWatchlistErrors[keyof WatchlistsDeleteWatchlistErrors];
 
-export type WatchlistManagementDeleteWatchlistResponses = {
+export type WatchlistsDeleteWatchlistResponses = {
   /**
    * Successful Response
    */
   200: unknown;
 };
 
-export type WatchlistManagementGetWatchlistData = {
+export type WatchlistsGetWatchlistData = {
   body?: never;
   path: {
     /**
@@ -1994,27 +1898,27 @@ export type WatchlistManagementGetWatchlistData = {
     name: string;
   };
   query?: never;
-  url: "/api/v1/pipeline/watchlists/{name}";
+  url: "/api/v1/pipeline/watchlists/watchlists/{name}";
 };
 
-export type WatchlistManagementGetWatchlistErrors = {
+export type WatchlistsGetWatchlistErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type WatchlistManagementGetWatchlistError =
-  WatchlistManagementGetWatchlistErrors[keyof WatchlistManagementGetWatchlistErrors];
+export type WatchlistsGetWatchlistError =
+  WatchlistsGetWatchlistErrors[keyof WatchlistsGetWatchlistErrors];
 
-export type WatchlistManagementGetWatchlistResponses = {
+export type WatchlistsGetWatchlistResponses = {
   /**
    * Successful Response
    */
   200: unknown;
 };
 
-export type WatchlistManagementUpdateWatchlistByNameData = {
+export type WatchlistsUpdateWatchlistByNameData = {
   body: WatchlistUpdate;
   path: {
     /**
@@ -2023,20 +1927,20 @@ export type WatchlistManagementUpdateWatchlistByNameData = {
     name: string;
   };
   query?: never;
-  url: "/api/v1/pipeline/watchlists/{name}";
+  url: "/api/v1/pipeline/watchlists/watchlists/{name}";
 };
 
-export type WatchlistManagementUpdateWatchlistByNameErrors = {
+export type WatchlistsUpdateWatchlistByNameErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type WatchlistManagementUpdateWatchlistByNameError =
-  WatchlistManagementUpdateWatchlistByNameErrors[keyof WatchlistManagementUpdateWatchlistByNameErrors];
+export type WatchlistsUpdateWatchlistByNameError =
+  WatchlistsUpdateWatchlistByNameErrors[keyof WatchlistsUpdateWatchlistByNameErrors];
 
-export type WatchlistManagementUpdateWatchlistByNameResponses = {
+export type WatchlistsUpdateWatchlistByNameResponses = {
   /**
    * Successful Response
    */
@@ -2338,9 +2242,12 @@ export type BacktestsGetBacktestResultsError =
 
 export type BacktestsGetBacktestResultsResponses = {
   /**
+   * Response Backtests-Get Backtest Results
    * Successful Response
    */
-  200: BacktestResultListResponse;
+  200: {
+    [key: string]: unknown;
+  };
 };
 
 export type BacktestsGetBacktestResultsResponse =
@@ -2373,14 +2280,77 @@ export type BacktestsCreateAndRunIntegratedBacktestResponses = {
 export type BacktestsCreateAndRunIntegratedBacktestResponse =
   BacktestsCreateAndRunIntegratedBacktestResponses[keyof BacktestsCreateAndRunIntegratedBacktestResponses];
 
-export type BacktestsTestServiceIntegrationData = {
+export type BacktestsHealthCheckData = {
   body?: never;
   path?: never;
   query?: never;
-  url: "/api/v1/backtests/test-services";
+  url: "/api/v1/backtests/health";
 };
 
-export type BacktestsTestServiceIntegrationResponses = {
+export type BacktestsHealthCheckResponses = {
+  /**
+   * Successful Response
+   */
+  200: unknown;
+};
+
+export type BacktestsGetPerformanceAnalyticsData = {
+  body?: never;
+  path?: never;
+  query?: never;
+  url: "/api/v1/backtests/analytics/performance-stats";
+};
+
+export type BacktestsGetPerformanceAnalyticsResponses = {
+  /**
+   * Successful Response
+   */
+  200: unknown;
+};
+
+export type BacktestsGetTradesAnalyticsData = {
+  body?: never;
+  path?: never;
+  query?: {
+    /**
+     * Execution Id
+     * 특정 실행 ID 필터
+     */
+    execution_id?: string | null;
+    /**
+     * Symbol
+     * 심볼 필터
+     */
+    symbol?: string | null;
+  };
+  url: "/api/v1/backtests/analytics/trades";
+};
+
+export type BacktestsGetTradesAnalyticsErrors = {
+  /**
+   * Validation Error
+   */
+  422: HttpValidationError;
+};
+
+export type BacktestsGetTradesAnalyticsError =
+  BacktestsGetTradesAnalyticsErrors[keyof BacktestsGetTradesAnalyticsErrors];
+
+export type BacktestsGetTradesAnalyticsResponses = {
+  /**
+   * Successful Response
+   */
+  200: unknown;
+};
+
+export type BacktestsGetBacktestSummaryAnalyticsData = {
+  body?: never;
+  path?: never;
+  query?: never;
+  url: "/api/v1/backtests/analytics/summary";
+};
+
+export type BacktestsGetBacktestSummaryAnalyticsResponses = {
   /**
    * Successful Response
    */
@@ -2748,3 +2718,78 @@ export type TemplatesCreateStrategyFromTemplateResponses = {
 
 export type TemplatesCreateStrategyFromTemplateResponse =
   TemplatesCreateStrategyFromTemplateResponses[keyof TemplatesCreateStrategyFromTemplateResponses];
+
+export type TemplatesDeleteTemplateData = {
+  body?: never;
+  path: {
+    /**
+     * Template Id
+     */
+    template_id: string;
+  };
+  query?: never;
+  url: "/api/v1/templates/{template_id}";
+};
+
+export type TemplatesDeleteTemplateErrors = {
+  /**
+   * Validation Error
+   */
+  422: HttpValidationError;
+};
+
+export type TemplatesDeleteTemplateError =
+  TemplatesDeleteTemplateErrors[keyof TemplatesDeleteTemplateErrors];
+
+export type TemplatesDeleteTemplateResponses = {
+  /**
+   * Successful Response
+   */
+  200: unknown;
+};
+
+export type TemplatesGetTemplateData = {
+  body?: never;
+  path: {
+    /**
+     * Template Id
+     */
+    template_id: string;
+  };
+  query?: never;
+  url: "/api/v1/templates/{template_id}";
+};
+
+export type TemplatesGetTemplateErrors = {
+  /**
+   * Validation Error
+   */
+  422: HttpValidationError;
+};
+
+export type TemplatesGetTemplateError =
+  TemplatesGetTemplateErrors[keyof TemplatesGetTemplateErrors];
+
+export type TemplatesGetTemplateResponses = {
+  /**
+   * Successful Response
+   */
+  200: TemplateResponse;
+};
+
+export type TemplatesGetTemplateResponse =
+  TemplatesGetTemplateResponses[keyof TemplatesGetTemplateResponses];
+
+export type TemplatesGetTemplateUsageStatsData = {
+  body?: never;
+  path?: never;
+  query?: never;
+  url: "/api/v1/templates/analytics/usage-stats";
+};
+
+export type TemplatesGetTemplateUsageStatsResponses = {
+  /**
+   * Successful Response
+   */
+  200: unknown;
+};

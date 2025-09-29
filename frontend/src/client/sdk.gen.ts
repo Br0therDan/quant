@@ -27,8 +27,15 @@ import type {
   BacktestsGetBacktestsData,
   BacktestsGetBacktestsErrors,
   BacktestsGetBacktestsResponses,
-  BacktestsTestServiceIntegrationData,
-  BacktestsTestServiceIntegrationResponses,
+  BacktestsGetBacktestSummaryAnalyticsData,
+  BacktestsGetBacktestSummaryAnalyticsResponses,
+  BacktestsGetPerformanceAnalyticsData,
+  BacktestsGetPerformanceAnalyticsResponses,
+  BacktestsGetTradesAnalyticsData,
+  BacktestsGetTradesAnalyticsErrors,
+  BacktestsGetTradesAnalyticsResponses,
+  BacktestsHealthCheckData,
+  BacktestsHealthCheckResponses,
   BacktestsUpdateBacktestData,
   BacktestsUpdateBacktestErrors,
   BacktestsUpdateBacktestResponses,
@@ -59,12 +66,16 @@ import type {
   MarketDataAnalyzeDataQualityResponses,
   MarketDataGetAvailableSymbolsData,
   MarketDataGetAvailableSymbolsResponses,
+  MarketDataGetCachePerformanceStatsData,
+  MarketDataGetCachePerformanceStatsResponses,
   MarketDataGetDataCoverageData,
   MarketDataGetDataCoverageErrors,
   MarketDataGetDataCoverageResponses,
   MarketDataGetMarketDataData,
   MarketDataGetMarketDataErrors,
   MarketDataGetMarketDataResponses,
+  MarketDataGetSymbolsCoverageAnalyticsData,
+  MarketDataGetSymbolsCoverageAnalyticsResponses,
   MarketDataRequestBulkDataData,
   MarketDataRequestBulkDataErrors,
   MarketDataRequestBulkDataResponses,
@@ -105,26 +116,34 @@ import type {
   TemplatesCreateTemplateData,
   TemplatesCreateTemplateErrors,
   TemplatesCreateTemplateResponses,
+  TemplatesDeleteTemplateData,
+  TemplatesDeleteTemplateErrors,
+  TemplatesDeleteTemplateResponses,
+  TemplatesGetTemplateData,
+  TemplatesGetTemplateErrors,
+  TemplatesGetTemplateResponses,
   TemplatesGetTemplatesData,
   TemplatesGetTemplatesErrors,
   TemplatesGetTemplatesResponses,
-  WatchlistManagementCreateWatchlistData,
-  WatchlistManagementCreateWatchlistErrors,
-  WatchlistManagementCreateWatchlistResponses,
-  WatchlistManagementDeleteWatchlistData,
-  WatchlistManagementDeleteWatchlistErrors,
-  WatchlistManagementDeleteWatchlistResponses,
-  WatchlistManagementGetWatchlistData,
-  WatchlistManagementGetWatchlistErrors,
-  WatchlistManagementGetWatchlistResponses,
-  WatchlistManagementListWatchlistsData,
-  WatchlistManagementListWatchlistsResponses,
-  WatchlistManagementUpdateWatchlistByNameData,
-  WatchlistManagementUpdateWatchlistByNameErrors,
-  WatchlistManagementUpdateWatchlistByNameResponses,
-  WatchlistManagementUpdateWatchlistData,
-  WatchlistManagementUpdateWatchlistErrors,
-  WatchlistManagementUpdateWatchlistResponses,
+  TemplatesGetTemplateUsageStatsData,
+  TemplatesGetTemplateUsageStatsResponses,
+  WatchlistsCreateWatchlistData,
+  WatchlistsCreateWatchlistErrors,
+  WatchlistsCreateWatchlistResponses,
+  WatchlistsDeleteWatchlistData,
+  WatchlistsDeleteWatchlistErrors,
+  WatchlistsDeleteWatchlistResponses,
+  WatchlistsGetWatchlistData,
+  WatchlistsGetWatchlistErrors,
+  WatchlistsGetWatchlistResponses,
+  WatchlistsListWatchlistsData,
+  WatchlistsListWatchlistsResponses,
+  WatchlistsUpdateWatchlistByNameData,
+  WatchlistsUpdateWatchlistByNameErrors,
+  WatchlistsUpdateWatchlistByNameResponses,
+  WatchlistsUpdateWatchlistData,
+  WatchlistsUpdateWatchlistErrors,
+  WatchlistsUpdateWatchlistResponses,
 } from "./types.gen";
 
 export type Options<
@@ -303,6 +322,42 @@ export class MarketData {
       ...options,
     });
   }
+
+  /**
+   * Get Cache Performance Stats
+   * DuckDB 캐시 성능 통계 조회
+   */
+  public static marketDataGetCachePerformanceStats<
+    ThrowOnError extends boolean = false,
+  >(options?: Options<MarketDataGetCachePerformanceStatsData, ThrowOnError>) {
+    return (options?.client ?? client).get<
+      MarketDataGetCachePerformanceStatsResponses,
+      unknown,
+      ThrowOnError
+    >({
+      url: "/api/v1/market-data/analytics/cache-performance",
+      ...options,
+    });
+  }
+
+  /**
+   * Get Symbols Coverage Analytics
+   * 심볼별 데이터 커버리지 분석
+   */
+  public static marketDataGetSymbolsCoverageAnalytics<
+    ThrowOnError extends boolean = false,
+  >(
+    options?: Options<MarketDataGetSymbolsCoverageAnalyticsData, ThrowOnError>,
+  ) {
+    return (options?.client ?? client).get<
+      MarketDataGetSymbolsCoverageAnalyticsResponses,
+      unknown,
+      ThrowOnError
+    >({
+      url: "/api/v1/market-data/analytics/symbol-coverage",
+      ...options,
+    });
+  }
 }
 
 export class PipelineStatus {
@@ -334,7 +389,7 @@ export class PipelineStatus {
       unknown,
       ThrowOnError
     >({
-      url: "/api/v1/pipeline/status",
+      url: "/api/v1/pipeline/status/status",
       ...options,
     });
   }
@@ -366,7 +421,7 @@ export class PipelineStatus {
       unknown,
       ThrowOnError
     >({
-      url: "/api/v1/pipeline/setup-defaults",
+      url: "/api/v1/pipeline/status/setup-defaults",
       ...options,
     });
   }
@@ -407,7 +462,7 @@ export class PipelineStatus {
       PipelineStatusRunPipelineUpdateErrors,
       ThrowOnError
     >({
-      url: "/api/v1/pipeline/update",
+      url: "/api/v1/pipeline/status/update",
       ...options,
       headers: {
         "Content-Type": "application/json",
@@ -451,7 +506,7 @@ export class CompanyData {
       CompanyDataCollectStockInfoErrors,
       ThrowOnError
     >({
-      url: "/api/v1/pipeline/collect-info/{symbol}",
+      url: "/api/v1/pipeline/companies/collect-info/{symbol}",
       ...options,
     });
   }
@@ -493,7 +548,7 @@ export class CompanyData {
       CompanyDataCollectDailyDataErrors,
       ThrowOnError
     >({
-      url: "/api/v1/pipeline/collect-data/{symbol}",
+      url: "/api/v1/pipeline/companies/collect-data/{symbol}",
       ...options,
     });
   }
@@ -530,7 +585,7 @@ export class CompanyData {
       CompanyDataGetSymbolCoverageErrors,
       ThrowOnError
     >({
-      url: "/api/v1/pipeline/coverage/{symbol}",
+      url: "/api/v1/pipeline/companies/coverage/{symbol}",
       ...options,
     });
   }
@@ -575,7 +630,7 @@ export class CompanyData {
       CompanyDataGetCompanyInfoErrors,
       ThrowOnError
     >({
-      url: "/api/v1/pipeline/company/{symbol}",
+      url: "/api/v1/pipeline/companies/company/{symbol}",
       ...options,
     });
   }
@@ -613,13 +668,13 @@ export class CompanyData {
       unknown,
       ThrowOnError
     >({
-      url: "/api/v1/pipeline/companies",
+      url: "/api/v1/pipeline/companies/companies",
       ...options,
     });
   }
 }
 
-export class WatchlistManagement {
+export class Watchlists {
   /**
    * Update Watchlist
    * Create or update a watchlist with flexible naming support.
@@ -651,15 +706,15 @@ export class WatchlistManagement {
    * Updates to the 'default' watchlist automatically update pipeline symbols.
    * This affects which symbols are processed during automated updates.
    */
-  public static watchlistManagementUpdateWatchlist<
-    ThrowOnError extends boolean = false,
-  >(options: Options<WatchlistManagementUpdateWatchlistData, ThrowOnError>) {
+  public static watchlistsUpdateWatchlist<ThrowOnError extends boolean = false>(
+    options: Options<WatchlistsUpdateWatchlistData, ThrowOnError>,
+  ) {
     return (options.client ?? client).post<
-      WatchlistManagementUpdateWatchlistResponses,
-      WatchlistManagementUpdateWatchlistErrors,
+      WatchlistsUpdateWatchlistResponses,
+      WatchlistsUpdateWatchlistErrors,
       ThrowOnError
     >({
-      url: "/api/v1/pipeline/watchlist",
+      url: "/api/v1/pipeline/watchlists/watchlist",
       ...options,
       headers: {
         "Content-Type": "application/json",
@@ -694,15 +749,15 @@ export class WatchlistManagement {
    * This endpoint returns summary data only. Use GET /watchlists/{name}
    * for detailed information including full symbol lists.
    */
-  public static watchlistManagementListWatchlists<
-    ThrowOnError extends boolean = false,
-  >(options?: Options<WatchlistManagementListWatchlistsData, ThrowOnError>) {
+  public static watchlistsListWatchlists<ThrowOnError extends boolean = false>(
+    options?: Options<WatchlistsListWatchlistsData, ThrowOnError>,
+  ) {
     return (options?.client ?? client).get<
-      WatchlistManagementListWatchlistsResponses,
+      WatchlistsListWatchlistsResponses,
       unknown,
       ThrowOnError
     >({
-      url: "/api/v1/pipeline/watchlists",
+      url: "/api/v1/pipeline/watchlists/watchlists",
       ...options,
     });
   }
@@ -736,15 +791,15 @@ export class WatchlistManagement {
    * Note:
    * Watchlist names must be unique. Use PUT /watchlists/{name} to update existing ones.
    */
-  public static watchlistManagementCreateWatchlist<
-    ThrowOnError extends boolean = false,
-  >(options: Options<WatchlistManagementCreateWatchlistData, ThrowOnError>) {
+  public static watchlistsCreateWatchlist<ThrowOnError extends boolean = false>(
+    options: Options<WatchlistsCreateWatchlistData, ThrowOnError>,
+  ) {
     return (options.client ?? client).post<
-      WatchlistManagementCreateWatchlistResponses,
-      WatchlistManagementCreateWatchlistErrors,
+      WatchlistsCreateWatchlistResponses,
+      WatchlistsCreateWatchlistErrors,
       ThrowOnError
     >({
-      url: "/api/v1/pipeline/watchlists",
+      url: "/api/v1/pipeline/watchlists/watchlists",
       ...options,
       headers: {
         "Content-Type": "application/json",
@@ -778,15 +833,15 @@ export class WatchlistManagement {
    * Deletion is permanent and cannot be undone. Consider backing up
    * important watchlists before deletion.
    */
-  public static watchlistManagementDeleteWatchlist<
-    ThrowOnError extends boolean = false,
-  >(options: Options<WatchlistManagementDeleteWatchlistData, ThrowOnError>) {
+  public static watchlistsDeleteWatchlist<ThrowOnError extends boolean = false>(
+    options: Options<WatchlistsDeleteWatchlistData, ThrowOnError>,
+  ) {
     return (options.client ?? client).delete<
-      WatchlistManagementDeleteWatchlistResponses,
-      WatchlistManagementDeleteWatchlistErrors,
+      WatchlistsDeleteWatchlistResponses,
+      WatchlistsDeleteWatchlistErrors,
       ThrowOnError
     >({
-      url: "/api/v1/pipeline/watchlists/{name}",
+      url: "/api/v1/pipeline/watchlists/watchlists/{name}",
       ...options,
     });
   }
@@ -819,15 +874,15 @@ export class WatchlistManagement {
    * Note:
    * Watchlist names are case-sensitive. Use GET /watchlists to see all available names.
    */
-  public static watchlistManagementGetWatchlist<
-    ThrowOnError extends boolean = false,
-  >(options: Options<WatchlistManagementGetWatchlistData, ThrowOnError>) {
+  public static watchlistsGetWatchlist<ThrowOnError extends boolean = false>(
+    options: Options<WatchlistsGetWatchlistData, ThrowOnError>,
+  ) {
     return (options.client ?? client).get<
-      WatchlistManagementGetWatchlistResponses,
-      WatchlistManagementGetWatchlistErrors,
+      WatchlistsGetWatchlistResponses,
+      WatchlistsGetWatchlistErrors,
       ThrowOnError
     >({
-      url: "/api/v1/pipeline/watchlists/{name}",
+      url: "/api/v1/pipeline/watchlists/watchlists/{name}",
       ...options,
     });
   }
@@ -863,20 +918,15 @@ export class WatchlistManagement {
    * Updates to the 'default' watchlist automatically update pipeline symbols.
    * Symbol list is completely replaced, not merged with existing symbols.
    */
-  public static watchlistManagementUpdateWatchlistByName<
+  public static watchlistsUpdateWatchlistByName<
     ThrowOnError extends boolean = false,
-  >(
-    options: Options<
-      WatchlistManagementUpdateWatchlistByNameData,
-      ThrowOnError
-    >,
-  ) {
+  >(options: Options<WatchlistsUpdateWatchlistByNameData, ThrowOnError>) {
     return (options.client ?? client).put<
-      WatchlistManagementUpdateWatchlistByNameResponses,
-      WatchlistManagementUpdateWatchlistByNameErrors,
+      WatchlistsUpdateWatchlistByNameResponses,
+      WatchlistsUpdateWatchlistByNameErrors,
       ThrowOnError
     >({
-      url: "/api/v1/pipeline/watchlists/{name}",
+      url: "/api/v1/pipeline/watchlists/watchlists/{name}",
       ...options,
       headers: {
         "Content-Type": "application/json",
@@ -1020,7 +1070,7 @@ export class Backtests {
 
   /**
    * Get Backtest Results
-   * Get backtest results
+   * Get backtest results from DuckDB (고성능 분석용)
    */
   public static backtestsGetBacktestResults<
     ThrowOnError extends boolean = false,
@@ -1059,18 +1109,69 @@ export class Backtests {
   }
 
   /**
-   * Test Service Integration
-   * 서비스 연동 테스트
+   * Health Check
+   * 백테스트 시스템 상태 확인 (DuckDB + MongoDB 통합 상태)
    */
-  public static backtestsTestServiceIntegration<
-    ThrowOnError extends boolean = false,
-  >(options?: Options<BacktestsTestServiceIntegrationData, ThrowOnError>) {
+  public static backtestsHealthCheck<ThrowOnError extends boolean = false>(
+    options?: Options<BacktestsHealthCheckData, ThrowOnError>,
+  ) {
     return (options?.client ?? client).get<
-      BacktestsTestServiceIntegrationResponses,
+      BacktestsHealthCheckResponses,
       unknown,
       ThrowOnError
     >({
-      url: "/api/v1/backtests/test-services",
+      url: "/api/v1/backtests/health",
+      ...options,
+    });
+  }
+
+  /**
+   * Get Performance Analytics
+   * 백테스트 성과 분석 (DuckDB 고성능 분석)
+   */
+  public static backtestsGetPerformanceAnalytics<
+    ThrowOnError extends boolean = false,
+  >(options?: Options<BacktestsGetPerformanceAnalyticsData, ThrowOnError>) {
+    return (options?.client ?? client).get<
+      BacktestsGetPerformanceAnalyticsResponses,
+      unknown,
+      ThrowOnError
+    >({
+      url: "/api/v1/backtests/analytics/performance-stats",
+      ...options,
+    });
+  }
+
+  /**
+   * Get Trades Analytics
+   * 거래 기록 분석 (DuckDB 고성능 쿼리)
+   */
+  public static backtestsGetTradesAnalytics<
+    ThrowOnError extends boolean = false,
+  >(options?: Options<BacktestsGetTradesAnalyticsData, ThrowOnError>) {
+    return (options?.client ?? client).get<
+      BacktestsGetTradesAnalyticsResponses,
+      BacktestsGetTradesAnalyticsErrors,
+      ThrowOnError
+    >({
+      url: "/api/v1/backtests/analytics/trades",
+      ...options,
+    });
+  }
+
+  /**
+   * Get Backtest Summary Analytics
+   * 백테스트 결과 요약 분석 (DuckDB 기반)
+   */
+  public static backtestsGetBacktestSummaryAnalytics<
+    ThrowOnError extends boolean = false,
+  >(options?: Options<BacktestsGetBacktestSummaryAnalyticsData, ThrowOnError>) {
+    return (options?.client ?? client).get<
+      BacktestsGetBacktestSummaryAnalyticsResponses,
+      unknown,
+      ThrowOnError
+    >({
+      url: "/api/v1/backtests/analytics/summary",
       ...options,
     });
   }
@@ -1210,7 +1311,7 @@ export class IntegratedBacktest {
 
   /**
    * Get Backtest Results
-   * Get backtest results
+   * Get backtest results from DuckDB (고성능 분석용)
    */
   public static backtestsGetBacktestResults<
     ThrowOnError extends boolean = false,
@@ -1249,18 +1350,69 @@ export class IntegratedBacktest {
   }
 
   /**
-   * Test Service Integration
-   * 서비스 연동 테스트
+   * Health Check
+   * 백테스트 시스템 상태 확인 (DuckDB + MongoDB 통합 상태)
    */
-  public static backtestsTestServiceIntegration<
-    ThrowOnError extends boolean = false,
-  >(options?: Options<BacktestsTestServiceIntegrationData, ThrowOnError>) {
+  public static backtestsHealthCheck<ThrowOnError extends boolean = false>(
+    options?: Options<BacktestsHealthCheckData, ThrowOnError>,
+  ) {
     return (options?.client ?? client).get<
-      BacktestsTestServiceIntegrationResponses,
+      BacktestsHealthCheckResponses,
       unknown,
       ThrowOnError
     >({
-      url: "/api/v1/backtests/test-services",
+      url: "/api/v1/backtests/health",
+      ...options,
+    });
+  }
+
+  /**
+   * Get Performance Analytics
+   * 백테스트 성과 분석 (DuckDB 고성능 분석)
+   */
+  public static backtestsGetPerformanceAnalytics<
+    ThrowOnError extends boolean = false,
+  >(options?: Options<BacktestsGetPerformanceAnalyticsData, ThrowOnError>) {
+    return (options?.client ?? client).get<
+      BacktestsGetPerformanceAnalyticsResponses,
+      unknown,
+      ThrowOnError
+    >({
+      url: "/api/v1/backtests/analytics/performance-stats",
+      ...options,
+    });
+  }
+
+  /**
+   * Get Trades Analytics
+   * 거래 기록 분석 (DuckDB 고성능 쿼리)
+   */
+  public static backtestsGetTradesAnalytics<
+    ThrowOnError extends boolean = false,
+  >(options?: Options<BacktestsGetTradesAnalyticsData, ThrowOnError>) {
+    return (options?.client ?? client).get<
+      BacktestsGetTradesAnalyticsResponses,
+      BacktestsGetTradesAnalyticsErrors,
+      ThrowOnError
+    >({
+      url: "/api/v1/backtests/analytics/trades",
+      ...options,
+    });
+  }
+
+  /**
+   * Get Backtest Summary Analytics
+   * 백테스트 결과 요약 분석 (DuckDB 기반)
+   */
+  public static backtestsGetBacktestSummaryAnalytics<
+    ThrowOnError extends boolean = false,
+  >(options?: Options<BacktestsGetBacktestSummaryAnalyticsData, ThrowOnError>) {
+    return (options?.client ?? client).get<
+      BacktestsGetBacktestSummaryAnalyticsResponses,
+      unknown,
+      ThrowOnError
+    >({
+      url: "/api/v1/backtests/analytics/summary",
       ...options,
     });
   }
@@ -1473,6 +1625,57 @@ export class Templates {
         "Content-Type": "application/json",
         ...options.headers,
       },
+    });
+  }
+
+  /**
+   * Delete Template
+   * Delete template by ID
+   */
+  public static templatesDeleteTemplate<ThrowOnError extends boolean = false>(
+    options: Options<TemplatesDeleteTemplateData, ThrowOnError>,
+  ) {
+    return (options.client ?? client).delete<
+      TemplatesDeleteTemplateResponses,
+      TemplatesDeleteTemplateErrors,
+      ThrowOnError
+    >({
+      url: "/api/v1/templates/{template_id}",
+      ...options,
+    });
+  }
+
+  /**
+   * Get Template
+   * Get template by ID
+   */
+  public static templatesGetTemplate<ThrowOnError extends boolean = false>(
+    options: Options<TemplatesGetTemplateData, ThrowOnError>,
+  ) {
+    return (options.client ?? client).get<
+      TemplatesGetTemplateResponses,
+      TemplatesGetTemplateErrors,
+      ThrowOnError
+    >({
+      url: "/api/v1/templates/{template_id}",
+      ...options,
+    });
+  }
+
+  /**
+   * Get Template Usage Stats
+   * Get template usage statistics
+   */
+  public static templatesGetTemplateUsageStats<
+    ThrowOnError extends boolean = false,
+  >(options?: Options<TemplatesGetTemplateUsageStatsData, ThrowOnError>) {
+    return (options?.client ?? client).get<
+      TemplatesGetTemplateUsageStatsResponses,
+      unknown,
+      ThrowOnError
+    >({
+      url: "/api/v1/templates/analytics/usage-stats",
+      ...options,
     });
   }
 }
