@@ -113,6 +113,9 @@ import type {
 	TemplatesGetTemplateData,
 	TemplatesGetTemplatesData,
 	TemplatesGetTemplateUsageStatsData,
+	TemplatesUpdateTemplateData,
+	TemplatesUpdateTemplateError,
+	TemplatesUpdateTemplateResponse,
 	UsersUsersCurrentUserData,
 	UsersUsersDeleteUserData,
 	UsersUsersDeleteUserError,
@@ -1777,7 +1780,7 @@ export const templatesGetTemplatesOptions = (
 
 /**
  * Create Template
- * Create a new strategy template
+ * Create a new strategy template (Superuser only)
  */
 export const templatesCreateTemplateMutation = (
 	options?: Partial<Options<TemplatesCreateTemplateData>>,
@@ -1807,39 +1810,8 @@ export const templatesCreateTemplateMutation = (
 };
 
 /**
- * Create Strategy From Template
- * Create a strategy instance from template
- */
-export const templatesCreateStrategyFromTemplateMutation = (
-	options?: Partial<Options<TemplatesCreateStrategyFromTemplateData>>,
-): UseMutationOptions<
-	TemplatesCreateStrategyFromTemplateResponse,
-	TemplatesCreateStrategyFromTemplateError,
-	Options<TemplatesCreateStrategyFromTemplateData>
-> => {
-	const mutationOptions: UseMutationOptions<
-		TemplatesCreateStrategyFromTemplateResponse,
-		TemplatesCreateStrategyFromTemplateError,
-		Options<TemplatesCreateStrategyFromTemplateData>
-	> = {
-		mutationFn: async (fnOptions) => {
-			const { data } = await Templates.templatesCreateStrategyFromTemplate({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
-			return data;
-		},
-		meta: {
-			id: "templatesCreateStrategyFromTemplate",
-		},
-	};
-	return mutationOptions;
-};
-
-/**
  * Delete Template
- * Delete template by ID
+ * Delete template by ID (Superuser only)
  */
 export const templatesDeleteTemplateMutation = (
 	options?: Partial<Options<TemplatesDeleteTemplateData>>,
@@ -1891,6 +1863,68 @@ export const templatesGetTemplateOptions = (
 		},
 		queryKey: templatesGetTemplateQueryKey(options),
 	});
+};
+
+/**
+ * Update Template
+ * Update template by ID (Superuser only)
+ */
+export const templatesUpdateTemplateMutation = (
+	options?: Partial<Options<TemplatesUpdateTemplateData>>,
+): UseMutationOptions<
+	TemplatesUpdateTemplateResponse,
+	TemplatesUpdateTemplateError,
+	Options<TemplatesUpdateTemplateData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		TemplatesUpdateTemplateResponse,
+		TemplatesUpdateTemplateError,
+		Options<TemplatesUpdateTemplateData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await Templates.templatesUpdateTemplate({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+		meta: {
+			id: "templatesUpdateTemplate",
+		},
+	};
+	return mutationOptions;
+};
+
+/**
+ * Create Strategy From Template
+ * Create a strategy instance from template
+ */
+export const templatesCreateStrategyFromTemplateMutation = (
+	options?: Partial<Options<TemplatesCreateStrategyFromTemplateData>>,
+): UseMutationOptions<
+	TemplatesCreateStrategyFromTemplateResponse,
+	TemplatesCreateStrategyFromTemplateError,
+	Options<TemplatesCreateStrategyFromTemplateData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		TemplatesCreateStrategyFromTemplateResponse,
+		TemplatesCreateStrategyFromTemplateError,
+		Options<TemplatesCreateStrategyFromTemplateData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await Templates.templatesCreateStrategyFromTemplate({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+		meta: {
+			id: "templatesCreateStrategyFromTemplate",
+		},
+	};
+	return mutationOptions;
 };
 
 export const templatesGetTemplateUsageStatsQueryKey = (

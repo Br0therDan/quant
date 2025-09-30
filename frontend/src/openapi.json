@@ -2223,7 +2223,7 @@
           "Templates"
         ],
         "summary": "Create Template",
-        "description": "Create a new strategy template",
+        "description": "Create a new strategy template (Superuser only)",
         "operationId": "Templates-create_template",
         "security": [
           {
@@ -2319,64 +2319,6 @@
         }
       }
     },
-    "/api/v1/templates/{template_id}/create-strategy": {
-      "post": {
-        "tags": [
-          "Templates"
-        ],
-        "summary": "Create Strategy From Template",
-        "description": "Create a strategy instance from template",
-        "operationId": "Templates-create_strategy_from_template",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "template_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Template Id"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/StrategyFromTemplateRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StrategyResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/templates/{template_id}": {
       "get": {
         "tags": [
@@ -2424,12 +2366,68 @@
           }
         }
       },
+      "patch": {
+        "tags": [
+          "Templates"
+        ],
+        "summary": "Update Template",
+        "description": "Update template by ID (Superuser only)",
+        "operationId": "Templates-update_template",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "template_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Template Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TemplateUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
       "delete": {
         "tags": [
           "Templates"
         ],
         "summary": "Delete Template",
-        "description": "Delete template by ID",
+        "description": "Delete template by ID (Superuser only)",
         "operationId": "Templates-delete_template",
         "security": [
           {
@@ -2453,6 +2451,64 @@
             "content": {
               "application/json": {
                 "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/templates/{template_id}/create-strategy": {
+      "post": {
+        "tags": [
+          "Templates"
+        ],
+        "summary": "Create Strategy From Template",
+        "description": "Create a strategy instance from template",
+        "operationId": "Templates-create_strategy_from_template",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "template_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Template Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StrategyFromTemplateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StrategyResponse"
+                }
               }
             }
           },
@@ -5781,6 +5837,96 @@
         ],
         "title": "TemplateResponse",
         "description": "Template response"
+      },
+      "TemplateUpdateRequest": {
+        "properties": {
+          "user_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Id"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name",
+            "description": "템플릿 이름"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "템플릿 설명"
+          },
+          "default_parameters": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Default Parameters",
+            "description": "기본 파라미터"
+          },
+          "parameter_schema": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {},
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parameter Schema",
+            "description": "파라미터 스키마"
+          },
+          "tags": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tags",
+            "description": "태그"
+          }
+        },
+        "type": "object",
+        "title": "TemplateUpdateRequest",
+        "description": "Template update request"
       },
       "Trade": {
         "properties": {

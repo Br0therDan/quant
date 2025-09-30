@@ -165,6 +165,9 @@ import type {
 	TemplatesGetTemplatesResponses,
 	TemplatesGetTemplateUsageStatsData,
 	TemplatesGetTemplateUsageStatsResponses,
+	TemplatesUpdateTemplateData,
+	TemplatesUpdateTemplateErrors,
+	TemplatesUpdateTemplateResponses,
 	UsersUsersCurrentUserData,
 	UsersUsersCurrentUserErrors,
 	UsersUsersCurrentUserResponses,
@@ -1977,7 +1980,7 @@ export class Templates {
 
 	/**
 	 * Create Template
-	 * Create a new strategy template
+	 * Create a new strategy template (Superuser only)
 	 */
 	public static templatesCreateTemplate<ThrowOnError extends boolean = false>(
 		options: Options<TemplatesCreateTemplateData, ThrowOnError>,
@@ -2003,35 +2006,8 @@ export class Templates {
 	}
 
 	/**
-	 * Create Strategy From Template
-	 * Create a strategy instance from template
-	 */
-	public static templatesCreateStrategyFromTemplate<
-		ThrowOnError extends boolean = false,
-	>(options: Options<TemplatesCreateStrategyFromTemplateData, ThrowOnError>) {
-		return (options.client ?? client).post<
-			TemplatesCreateStrategyFromTemplateResponses,
-			TemplatesCreateStrategyFromTemplateErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/templates/{template_id}/create-strategy",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
 	 * Delete Template
-	 * Delete template by ID
+	 * Delete template by ID (Superuser only)
 	 */
 	public static templatesDeleteTemplate<ThrowOnError extends boolean = false>(
 		options: Options<TemplatesDeleteTemplateData, ThrowOnError>,
@@ -2072,6 +2048,60 @@ export class Templates {
 			],
 			url: "/api/v1/templates/{template_id}",
 			...options,
+		});
+	}
+
+	/**
+	 * Update Template
+	 * Update template by ID (Superuser only)
+	 */
+	public static templatesUpdateTemplate<ThrowOnError extends boolean = false>(
+		options: Options<TemplatesUpdateTemplateData, ThrowOnError>,
+	) {
+		return (options.client ?? client).patch<
+			TemplatesUpdateTemplateResponses,
+			TemplatesUpdateTemplateErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/templates/{template_id}",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Create Strategy From Template
+	 * Create a strategy instance from template
+	 */
+	public static templatesCreateStrategyFromTemplate<
+		ThrowOnError extends boolean = false,
+	>(options: Options<TemplatesCreateStrategyFromTemplateData, ThrowOnError>) {
+		return (options.client ?? client).post<
+			TemplatesCreateStrategyFromTemplateResponses,
+			TemplatesCreateStrategyFromTemplateErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/templates/{template_id}/create-strategy",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
 		});
 	}
 

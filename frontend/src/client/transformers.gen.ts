@@ -24,6 +24,7 @@ import type {
 	TemplatesCreateTemplateResponse,
 	TemplatesGetTemplateResponse,
 	TemplatesGetTemplatesResponse,
+	TemplatesUpdateTemplateResponse,
 } from "./types.gen";
 
 export const healthHealthCheckResponseTransformer = async (
@@ -326,16 +327,23 @@ export const templatesCreateTemplateResponseTransformer = async (
 	return data;
 };
 
-export const templatesCreateStrategyFromTemplateResponseTransformer = async (
-	data: any,
-): Promise<TemplatesCreateStrategyFromTemplateResponse> => {
-	data = strategyResponseSchemaResponseTransformer(data);
-	return data;
-};
-
 export const templatesGetTemplateResponseTransformer = async (
 	data: any,
 ): Promise<TemplatesGetTemplateResponse> => {
 	data = templateResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const templatesUpdateTemplateResponseTransformer = async (
+	data: any,
+): Promise<TemplatesUpdateTemplateResponse> => {
+	data = templateResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const templatesCreateStrategyFromTemplateResponseTransformer = async (
+	data: any,
+): Promise<TemplatesCreateStrategyFromTemplateResponse> => {
+	data = strategyResponseSchemaResponseTransformer(data);
 	return data;
 };

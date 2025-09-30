@@ -1413,6 +1413,46 @@ export type TemplateResponse = {
 };
 
 /**
+ * TemplateUpdateRequest
+ * Template update request
+ */
+export type TemplateUpdateRequest = {
+	/**
+	 * User Id
+	 */
+	user_id?: string | null;
+	/**
+	 * Name
+	 * 템플릿 이름
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * 템플릿 설명
+	 */
+	description?: string | null;
+	/**
+	 * Default Parameters
+	 * 기본 파라미터
+	 */
+	default_parameters?: {
+		[key: string]: unknown;
+	} | null;
+	/**
+	 * Parameter Schema
+	 * 파라미터 스키마
+	 */
+	parameter_schema?: {
+		[key: string]: unknown | null;
+	} | null;
+	/**
+	 * Tags
+	 * 태그
+	 */
+	tags?: Array<string> | null;
+};
+
+/**
  * Trade
  * 거래 기록 내장 모델
  */
@@ -3005,38 +3045,6 @@ export type TemplatesCreateTemplateResponses = {
 export type TemplatesCreateTemplateResponse =
 	TemplatesCreateTemplateResponses[keyof TemplatesCreateTemplateResponses];
 
-export type TemplatesCreateStrategyFromTemplateData = {
-	body: StrategyFromTemplateRequest;
-	path: {
-		/**
-		 * Template Id
-		 */
-		template_id: string;
-	};
-	query?: never;
-	url: "/api/v1/templates/{template_id}/create-strategy";
-};
-
-export type TemplatesCreateStrategyFromTemplateErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type TemplatesCreateStrategyFromTemplateError =
-	TemplatesCreateStrategyFromTemplateErrors[keyof TemplatesCreateStrategyFromTemplateErrors];
-
-export type TemplatesCreateStrategyFromTemplateResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: StrategyResponse;
-};
-
-export type TemplatesCreateStrategyFromTemplateResponse =
-	TemplatesCreateStrategyFromTemplateResponses[keyof TemplatesCreateStrategyFromTemplateResponses];
-
 export type TemplatesDeleteTemplateData = {
 	body?: never;
 	path: {
@@ -3097,6 +3105,70 @@ export type TemplatesGetTemplateResponses = {
 
 export type TemplatesGetTemplateResponse =
 	TemplatesGetTemplateResponses[keyof TemplatesGetTemplateResponses];
+
+export type TemplatesUpdateTemplateData = {
+	body: TemplateUpdateRequest;
+	path: {
+		/**
+		 * Template Id
+		 */
+		template_id: string;
+	};
+	query?: never;
+	url: "/api/v1/templates/{template_id}";
+};
+
+export type TemplatesUpdateTemplateErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type TemplatesUpdateTemplateError =
+	TemplatesUpdateTemplateErrors[keyof TemplatesUpdateTemplateErrors];
+
+export type TemplatesUpdateTemplateResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: TemplateResponse;
+};
+
+export type TemplatesUpdateTemplateResponse =
+	TemplatesUpdateTemplateResponses[keyof TemplatesUpdateTemplateResponses];
+
+export type TemplatesCreateStrategyFromTemplateData = {
+	body: StrategyFromTemplateRequest;
+	path: {
+		/**
+		 * Template Id
+		 */
+		template_id: string;
+	};
+	query?: never;
+	url: "/api/v1/templates/{template_id}/create-strategy";
+};
+
+export type TemplatesCreateStrategyFromTemplateErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type TemplatesCreateStrategyFromTemplateError =
+	TemplatesCreateStrategyFromTemplateErrors[keyof TemplatesCreateStrategyFromTemplateErrors];
+
+export type TemplatesCreateStrategyFromTemplateResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: StrategyResponse;
+};
+
+export type TemplatesCreateStrategyFromTemplateResponse =
+	TemplatesCreateStrategyFromTemplateResponses[keyof TemplatesCreateStrategyFromTemplateResponses];
 
 export type TemplatesGetTemplateUsageStatsData = {
 	body?: never;
