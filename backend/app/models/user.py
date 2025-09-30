@@ -1,10 +1,9 @@
 from beanie import Document
-
-# from fastapi_users_db_beanie import BeanieBaseUserDocument
-from fastapi_users.db import BeanieBaseUser
 from typing import Optional
+from pymongo import ASCENDING
+from pymongo.collation import Collation
 
-from fastapi_users_db_beanie import BaseOAuthAccount
+from fastapi_users.db import BaseOAuthAccount, BeanieBaseUser
 from pydantic import Field
 
 
@@ -23,4 +22,11 @@ class User(BeanieBaseUser, Document):
 
     class Settings:
         name = "users"  # MongoDB 컬렉션 이름
+        # fastapi-users-db-beanie에서 요구하는 email_collation 설정
+        email_collation = Collation("en", strength=2)  # 대소문자 구분 없는 이메일 검색
         # BeanieBaseUserDocument의 기본 인덱스 상속
+        indexes = [
+            [
+                ("email", ASCENDING),
+            ],
+        ]

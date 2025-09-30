@@ -20,7 +20,7 @@ importers:
         specifier: 2.2.0
         version: 2.2.0
       '@hey-api/openapi-ts':
-        specifier: ^0.84.3
+        specifier: 0.84.3
         version: 0.84.3(typescript@5.9.2)
 
   frontend:

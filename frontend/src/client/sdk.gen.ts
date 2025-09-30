@@ -219,7 +219,7 @@ export type Options<
 	meta?: Record<string, unknown>;
 };
 
-export class Health {
+export class HealthService {
 	/**
 	 * Health Check
 	 * Get comprehensive health status.
@@ -289,7 +289,7 @@ export class Health {
 	}
 }
 
-export class MarketData {
+export class MarketDataService {
 	/**
 	 * Get Available Symbols
 	 * Get list of all available symbols
@@ -458,7 +458,7 @@ export class MarketData {
 	}
 }
 
-export class PipelineStatus {
+export class PipelineStatusService {
 	/**
 	 * Get Pipeline Status
 	 * Get comprehensive pipeline status and health information.
@@ -588,7 +588,7 @@ export class PipelineStatus {
 	}
 }
 
-export class CompanyData {
+export class CompanyDataService {
 	/**
 	 * Collect Stock Info
 	 * Collect and store basic company information for a specific symbol.
@@ -820,7 +820,7 @@ export class CompanyData {
 	}
 }
 
-export class Watchlists {
+export class WatchlistsService {
 	/**
 	 * Update Watchlist
 	 * Create or update a watchlist with flexible naming support.
@@ -1118,7 +1118,7 @@ export class Watchlists {
 	}
 }
 
-export class Backtests {
+export class BacktestsService {
 	/**
 	 * Get Backtests
 	 * Get list of backtests
@@ -1437,7 +1437,7 @@ export class Backtests {
 	}
 }
 
-export class IntegratedBacktest {
+export class IntegratedBacktestService {
 	/**
 	 * Get Backtests
 	 * Get list of backtests
@@ -1756,7 +1756,7 @@ export class IntegratedBacktest {
 	}
 }
 
-export class Strategies {
+export class StrategiesService {
 	/**
 	 * Get Strategies
 	 * Get list of strategies
@@ -1954,7 +1954,7 @@ export class Strategies {
 	}
 }
 
-export class Templates {
+export class TemplatesService {
 	/**
 	 * Get Templates
 	 * Get list of strategy templates
@@ -2129,7 +2129,7 @@ export class Templates {
 	}
 }
 
-export class AuthAuthJwt {
+export class AuthAuthJwtService {
 	/**
 	 * Auth:Jwt.Login
 	 */
@@ -2174,7 +2174,7 @@ export class AuthAuthJwt {
 	}
 }
 
-export class Jwt {
+export class JwtService {
 	/**
 	 * Oauth:Google.Jwt.Authorize
 	 */
@@ -2209,11 +2209,11 @@ export class Jwt {
 	}
 }
 
-export class AuthOauthGoogle {
-	static jwt = Jwt;
+export class AuthOauthGoogleService {
+	static jwtService = JwtService;
 }
 
-export class AuthOauthAssociateGoogle {
+export class AuthOauthAssociateGoogleService {
 	/**
 	 * Oauth-Associate:Google.Authorize
 	 */
@@ -2260,7 +2260,7 @@ export class AuthOauthAssociateGoogle {
 	}
 }
 
-export class Auth {
+export class AuthService {
 	/**
 	 * Register:Register
 	 */
@@ -2360,12 +2360,12 @@ export class Auth {
 			},
 		});
 	}
-	static authAuthJwt = AuthAuthJwt;
-	static authOauthGoogle = AuthOauthGoogle;
-	static authOauthAssociateGoogle = AuthOauthAssociateGoogle;
+	static authAuthJwtService = AuthAuthJwtService;
+	static authOauthGoogleService = AuthOauthGoogleService;
+	static authOauthAssociateGoogleService = AuthOauthAssociateGoogleService;
 }
 
-export class Users {
+export class UsersService {
 	/**
 	 * Users:Current User
 	 */

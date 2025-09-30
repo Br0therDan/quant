@@ -1,4 +1,5 @@
 import { defineConfig } from "@hey-api/openapi-ts";
+import { mutationOptions } from '@tanstack/react-query';
 
 export default defineConfig({
 	input: "./src/openapi.json",
@@ -8,12 +9,23 @@ export default defineConfig({
 	},
 	plugins: [
 		{
-			dates: true,
-			name: "@hey-api/transformers",
+			name: "@hey-api/sdk",
+			// NOTE: this doesn't allow tree-shaking
+			asClass: true,
+			operationId: true,
+			classNameBuilder: "{{name}}Service",
+			methodNameBuilder: (operation: { id: string; }) => {
+
+				const id: string = operation.id
+				return id.charAt(0).toLowerCase() + id.slice(1)
+			},
 		},
 		{
-			asClass: true,
-			name: "@hey-api/sdk",
+			name: "@hey-api/schemas",
+			type: "json",
+			namespace: "Schemas",
+			exportFromIndex: true,
+			// groupByTag: true,
 		},
 		{
 			name: "@hey-api/client-next",
@@ -24,15 +36,16 @@ export default defineConfig({
 			name: "@tanstack/react-query",
 			exportFromIndex: true,
 			queryKeys: true,
-			infiniteQueryKeys: {
-				tags: true,
-			},
-			infiniteQueryOptions: {
-				meta: (operation) => ({ id: operation.id }),
-			},
-			mutationOptions: {
-				meta: (operation) => ({ id: operation.id }),
-			},
+			mutationKeys: true,
+			// queryOptions: {
+			// 	meta: (operation) => ({ id: operation.id }),
+			// },
+			// infiniteQueryOptions: {
+			// 	meta: (operation) => ({ id: operation.id }),
+			// },
+			// mutationOptions: {
+			// 	meta: (operation) => ({ id: operation.id }),
+			// },
 		},
 	],
 });

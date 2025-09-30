@@ -1,5 +1,5 @@
 from beanie import PydanticObjectId
-from fastapi_users import FastAPIUsers
+from fastapi_users import FastAPIUsers, models
 from fastapi_users.authentication import (
     AuthenticationBackend,
     BearerTransport,
@@ -15,8 +15,7 @@ SECRET = settings.SECRET_KEY
 bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")
 
 
-# def get_jwt_strategy() -> JWTStrategy[models.UP, models.ID]:
-def get_jwt_strategy() -> JWTStrategy:
+def get_jwt_strategy() -> JWTStrategy[models.UP, models.ID]:  # type: ignore
     return JWTStrategy(secret=SECRET, lifetime_seconds=3600)
 
 
@@ -26,4 +25,4 @@ auth_backend = AuthenticationBackend(
     get_strategy=get_jwt_strategy,
 )
 
-fastapi_users = FastAPIUsers[User, PydanticObjectId](get_user_manager, [auth_backend])
+fastapi_users = FastAPIUsers[User, PydanticObjectId](get_user_manager, [auth_backend])  # type: ignore

@@ -37,7 +37,7 @@ api_router.include_router(templates_router, prefix="/templates", tags=["Template
 
 # Auth and User Routes using FastAPI Users
 api_router.include_router(
-    fastapi_users.get_auth_router(auth_backend), prefix="/auth/jwt", tags=["Auth"]
+    fastapi_users.get_auth_router(auth_backend), prefix="/auth/jwt", tags=["Auth"]  # type: ignore
 )
 
 api_router.include_router(
@@ -57,7 +57,7 @@ api_router.include_router(
 api_router.include_router(
     fastapi_users.get_oauth_router(
         google_oauth_client,
-        auth_backend,
+        auth_backend,  # type: ignore
         settings.SECRET_KEY,
         associate_by_email=True,
         is_verified_by_default=True,

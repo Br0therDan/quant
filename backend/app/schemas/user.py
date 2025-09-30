@@ -1,9 +1,8 @@
-import uuid
-
+from beanie import PydanticObjectId
 from fastapi_users import schemas
 
 
-class UserRead(schemas.BaseUser[uuid.UUID]):
+class UserRead(schemas.BaseUser[PydanticObjectId]):
     fullname: str | None = None
 
 

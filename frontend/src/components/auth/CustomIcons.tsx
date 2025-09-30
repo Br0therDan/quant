@@ -1,5 +1,6 @@
+/** biome-ignore-all lint/a11y/noSvgWithoutTitle: <explanation> */
+/** biome-ignore-all lint/correctness/useUniqueElementIds: <explanation> */
 import SvgIcon from "@mui/material/SvgIcon";
-import * as React from "react";
 
 export function SitemarkIcon() {
 	return (

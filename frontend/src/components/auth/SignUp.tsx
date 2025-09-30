@@ -1,12 +1,11 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import Stack from "@mui/material/Stack";
-import * as React from "react";
-import AppTheme from "../shared-theme/AppTheme";
-import ColorModeSelect from "../shared-theme/ColorModeSelect";
-import Content from "./components/Content";
-import SignInCard from "./components/SignInCard";
+import AppTheme from "@/components/shared-theme/AppTheme";
+import ColorModeSelect from "@/components/shared-theme/ColorModeSelect";
+import Content from "@/components/auth/Content";
+import SignUpCard from "@/components/auth/SignUpCard";
 
-export default function SignInSide(props: { disableCustomTheme?: boolean }) {
+export default function SignUp(props: { disableCustomTheme?: boolean }) {
 	return (
 		<AppTheme {...props}>
 			<CssBaseline enableColorScheme />
@@ -58,7 +57,7 @@ export default function SignInSide(props: { disableCustomTheme?: boolean }) {
 						}}
 					>
 						<Content />
-						<SignInCard />
+						<SignUpCard />
 					</Stack>
 				</Stack>
 			</Stack>

@@ -7,7 +7,6 @@ import {
 	createConfig,
 } from "./client";
 import type { ClientOptions as ClientOptions2 } from "./types.gen";
-import { createClientConfig } from "../runtimeConfig";
 
 /**
  * The `createClientConfig()` function will be called on client initialization
@@ -21,6 +20,4 @@ export type CreateClientConfig<T extends ClientOptions = ClientOptions2> = (
 	override?: Config<ClientOptions & T>,
 ) => Config<Required<ClientOptions> & T>;
 
-export const client = createClient(
-	createClientConfig(createConfig<ClientOptions2>()),
-);
+export const client = createClient(createConfig<ClientOptions2>());

@@ -5246,6 +5246,13 @@
         "title": "Position",
         "description": "포지션 정보 내장 모델"
       },
+      "PydanticObjectId": {
+        "type": "string",
+        "maxLength": 24,
+        "minLength": 24,
+        "pattern": "^[0-9a-f]{24}$",
+        "example": "5eb7cf5a86d9755df3a6c593"
+      },
       "SignalType": {
         "type": "string",
         "enum": [
@@ -6146,9 +6153,7 @@
       "UserRead": {
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Id"
+            "$ref": "#/components/schemas/PydanticObjectId"
           },
           "email": {
             "type": "string",

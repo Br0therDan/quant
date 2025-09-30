@@ -8,17 +8,17 @@ import {
 
 import { client } from "../client.gen";
 import {
-	Auth,
-	Backtests,
-	CompanyData,
-	Health,
-	MarketData,
+	AuthService,
+	BacktestsService,
+	CompanyDataService,
+	HealthService,
+	MarketDataService,
 	type Options,
-	PipelineStatus,
-	Strategies,
-	Templates,
-	Users,
-	Watchlists,
+	PipelineStatusService,
+	StrategiesService,
+	TemplatesService,
+	UsersService,
+	WatchlistsService,
 } from "../sdk.gen";
 import type {
 	AuthAuthJwtLoginData,
@@ -192,7 +192,7 @@ export const healthHealthCheckOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await Health.healthHealthCheck({
+			const { data } = await HealthService.healthHealthCheck({
 				...options,
 				...queryKey[0],
 				signal,
@@ -217,7 +217,7 @@ export const healthLivenessProbeOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await Health.healthLivenessProbe({
+			const { data } = await HealthService.healthLivenessProbe({
 				...options,
 				...queryKey[0],
 				signal,
@@ -242,7 +242,7 @@ export const healthReadinessProbeOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await Health.healthReadinessProbe({
+			const { data } = await HealthService.healthReadinessProbe({
 				...options,
 				...queryKey[0],
 				signal,
@@ -267,7 +267,7 @@ export const marketDataGetAvailableSymbolsOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketData.marketDataGetAvailableSymbols({
+			const { data } = await MarketDataService.marketDataGetAvailableSymbols({
 				...options,
 				...queryKey[0],
 				signal,
@@ -292,7 +292,7 @@ export const marketDataGetMarketDataOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketData.marketDataGetMarketData({
+			const { data } = await MarketDataService.marketDataGetMarketData({
 				...options,
 				...queryKey[0],
 				signal,
@@ -321,15 +321,12 @@ export const marketDataRequestBulkDataMutation = (
 		Options<MarketDataRequestBulkDataData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await MarketData.marketDataRequestBulkData({
+			const { data } = await MarketDataService.marketDataRequestBulkData({
 				...options,
 				...fnOptions,
 				throwOnError: true,
 			});
 			return data;
-		},
-		meta: {
-			id: "marketDataRequestBulkData",
 		},
 	};
 	return mutationOptions;
@@ -348,7 +345,7 @@ export const marketDataGetDataCoverageOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketData.marketDataGetDataCoverage({
+			const { data } = await MarketDataService.marketDataGetDataCoverage({
 				...options,
 				...queryKey[0],
 				signal,
@@ -373,7 +370,7 @@ export const marketDataAnalyzeDataQualityOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketData.marketDataAnalyzeDataQuality({
+			const { data } = await MarketDataService.marketDataAnalyzeDataQuality({
 				...options,
 				...queryKey[0],
 				signal,
@@ -398,12 +395,13 @@ export const marketDataGetCachePerformanceStatsOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketData.marketDataGetCachePerformanceStats({
-				...options,
-				...queryKey[0],
-				signal,
-				throwOnError: true,
-			});
+			const { data } =
+				await MarketDataService.marketDataGetCachePerformanceStats({
+					...options,
+					...queryKey[0],
+					signal,
+					throwOnError: true,
+				});
 			return data;
 		},
 		queryKey: marketDataGetCachePerformanceStatsQueryKey(options),
@@ -423,12 +421,13 @@ export const marketDataGetSymbolsCoverageAnalyticsOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketData.marketDataGetSymbolsCoverageAnalytics({
-				...options,
-				...queryKey[0],
-				signal,
-				throwOnError: true,
-			});
+			const { data } =
+				await MarketDataService.marketDataGetSymbolsCoverageAnalytics({
+					...options,
+					...queryKey[0],
+					signal,
+					throwOnError: true,
+				});
 			return data;
 		},
 		queryKey: marketDataGetSymbolsCoverageAnalyticsQueryKey(options),
@@ -464,12 +463,13 @@ export const pipelineStatusGetPipelineStatusOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await PipelineStatus.pipelineStatusGetPipelineStatus({
-				...options,
-				...queryKey[0],
-				signal,
-				throwOnError: true,
-			});
+			const { data } =
+				await PipelineStatusService.pipelineStatusGetPipelineStatus({
+					...options,
+					...queryKey[0],
+					signal,
+					throwOnError: true,
+				});
 			return data;
 		},
 		queryKey: pipelineStatusGetPipelineStatusQueryKey(options),
@@ -508,15 +508,13 @@ export const pipelineStatusSetupDefaultSymbolsMutation = (
 		Options<PipelineStatusSetupDefaultSymbolsData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await PipelineStatus.pipelineStatusSetupDefaultSymbols({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
+			const { data } =
+				await PipelineStatusService.pipelineStatusSetupDefaultSymbols({
+					...options,
+					...fnOptions,
+					throwOnError: true,
+				});
 			return data;
-		},
-		meta: {
-			id: "pipelineStatusSetupDefaultSymbols",
 		},
 	};
 	return mutationOptions;
@@ -563,15 +561,13 @@ export const pipelineStatusRunPipelineUpdateMutation = (
 		Options<PipelineStatusRunPipelineUpdateData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await PipelineStatus.pipelineStatusRunPipelineUpdate({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
+			const { data } =
+				await PipelineStatusService.pipelineStatusRunPipelineUpdate({
+					...options,
+					...fnOptions,
+					throwOnError: true,
+				});
 			return data;
-		},
-		meta: {
-			id: "pipelineStatusRunPipelineUpdate",
 		},
 	};
 	return mutationOptions;
@@ -615,15 +611,12 @@ export const companyDataCollectStockInfoMutation = (
 		Options<CompanyDataCollectStockInfoData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await CompanyData.companyDataCollectStockInfo({
+			const { data } = await CompanyDataService.companyDataCollectStockInfo({
 				...options,
 				...fnOptions,
 				throwOnError: true,
 			});
 			return data;
-		},
-		meta: {
-			id: "companyDataCollectStockInfo",
 		},
 	};
 	return mutationOptions;
@@ -671,15 +664,12 @@ export const companyDataCollectDailyDataMutation = (
 		Options<CompanyDataCollectDailyDataData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await CompanyData.companyDataCollectDailyData({
+			const { data } = await CompanyDataService.companyDataCollectDailyData({
 				...options,
 				...fnOptions,
 				throwOnError: true,
 			});
 			return data;
-		},
-		meta: {
-			id: "companyDataCollectDailyData",
 		},
 	};
 	return mutationOptions;
@@ -718,7 +708,7 @@ export const companyDataGetSymbolCoverageOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await CompanyData.companyDataGetSymbolCoverage({
+			const { data } = await CompanyDataService.companyDataGetSymbolCoverage({
 				...options,
 				...queryKey[0],
 				signal,
@@ -771,7 +761,7 @@ export const companyDataGetCompanyInfoOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await CompanyData.companyDataGetCompanyInfo({
+			const { data } = await CompanyDataService.companyDataGetCompanyInfo({
 				...options,
 				...queryKey[0],
 				signal,
@@ -817,7 +807,7 @@ export const companyDataGetAllCompaniesOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await CompanyData.companyDataGetAllCompanies({
+			const { data } = await CompanyDataService.companyDataGetAllCompanies({
 				...options,
 				...queryKey[0],
 				signal,
@@ -873,15 +863,12 @@ export const watchlistsUpdateWatchlistMutation = (
 		Options<WatchlistsUpdateWatchlistData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await Watchlists.watchlistsUpdateWatchlist({
+			const { data } = await WatchlistsService.watchlistsUpdateWatchlist({
 				...options,
 				...fnOptions,
 				throwOnError: true,
 			});
 			return data;
-		},
-		meta: {
-			id: "watchlistsUpdateWatchlist",
 		},
 	};
 	return mutationOptions;
@@ -922,7 +909,7 @@ export const watchlistsListWatchlistsOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await Watchlists.watchlistsListWatchlists({
+			const { data } = await WatchlistsService.watchlistsListWatchlists({
 				...options,
 				...queryKey[0],
 				signal,
@@ -976,15 +963,12 @@ export const watchlistsCreateWatchlistMutation = (
 		Options<WatchlistsCreateWatchlistData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await Watchlists.watchlistsCreateWatchlist({
+			const { data } = await WatchlistsService.watchlistsCreateWatchlist({
 				...options,
 				...fnOptions,
 				throwOnError: true,
 			});
 			return data;
-		},
-		meta: {
-			id: "watchlistsCreateWatchlist",
 		},
 	};
 	return mutationOptions;
@@ -1028,15 +1012,12 @@ export const watchlistsDeleteWatchlistMutation = (
 		Options<WatchlistsDeleteWatchlistData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await Watchlists.watchlistsDeleteWatchlist({
+			const { data } = await WatchlistsService.watchlistsDeleteWatchlist({
 				...options,
 				...fnOptions,
 				throwOnError: true,
 			});
 			return data;
-		},
-		meta: {
-			id: "watchlistsDeleteWatchlist",
 		},
 	};
 	return mutationOptions;
@@ -1079,7 +1060,7 @@ export const watchlistsGetWatchlistOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await Watchlists.watchlistsGetWatchlist({
+			const { data } = await WatchlistsService.watchlistsGetWatchlist({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1135,15 +1116,12 @@ export const watchlistsUpdateWatchlistByNameMutation = (
 		Options<WatchlistsUpdateWatchlistByNameData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await Watchlists.watchlistsUpdateWatchlistByName({
+			const { data } = await WatchlistsService.watchlistsUpdateWatchlistByName({
 				...options,
 				...fnOptions,
 				throwOnError: true,
 			});
 			return data;
-		},
-		meta: {
-			id: "watchlistsUpdateWatchlistByName",
 		},
 	};
 	return mutationOptions;
@@ -1162,7 +1140,7 @@ export const healthHealthCheck2Options = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await Health.healthHealthCheck2({
+			const { data } = await HealthService.healthHealthCheck2({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1187,7 +1165,7 @@ export const backtestsGetBacktestsOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await Backtests.backtestsGetBacktests({
+			const { data } = await BacktestsService.backtestsGetBacktests({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1216,15 +1194,12 @@ export const backtestsCreateBacktestMutation = (
 		Options<BacktestsCreateBacktestData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await Backtests.backtestsCreateBacktest({
+			const { data } = await BacktestsService.backtestsCreateBacktest({
 				...options,
 				...fnOptions,
 				throwOnError: true,
 			});
 			return data;
-		},
-		meta: {
-			id: "backtestsCreateBacktest",
 		},
 	};
 	return mutationOptions;
@@ -1247,15 +1222,12 @@ export const backtestsDeleteBacktestMutation = (
 		Options<BacktestsDeleteBacktestData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await Backtests.backtestsDeleteBacktest({
+			const { data } = await BacktestsService.backtestsDeleteBacktest({
 				...options,
 				...fnOptions,
 				throwOnError: true,
 			});
 			return data;
-		},
-		meta: {
-			id: "backtestsDeleteBacktest",
 		},
 	};
 	return mutationOptions;
@@ -1274,7 +1246,7 @@ export const backtestsGetBacktestOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await Backtests.backtestsGetBacktest({
+			const { data } = await BacktestsService.backtestsGetBacktest({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1303,15 +1275,12 @@ export const backtestsUpdateBacktestMutation = (
 		Options<BacktestsUpdateBacktestData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await Backtests.backtestsUpdateBacktest({
+			const { data } = await BacktestsService.backtestsUpdateBacktest({
 				...options,
 				...fnOptions,
 				throwOnError: true,
 			});
 			return data;
-		},
-		meta: {
-			id: "backtestsUpdateBacktest",
 		},
 	};
 	return mutationOptions;
@@ -1334,15 +1303,12 @@ export const backtestsExecuteBacktestMutation = (
 		Options<BacktestsExecuteBacktestData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await Backtests.backtestsExecuteBacktest({
+			const { data } = await BacktestsService.backtestsExecuteBacktest({
 				...options,
 				...fnOptions,
 				throwOnError: true,
 			});
 			return data;
-		},
-		meta: {
-			id: "backtestsExecuteBacktest",
 		},
 	};
 	return mutationOptions;
@@ -1361,7 +1327,7 @@ export const backtestsGetBacktestExecutionsOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await Backtests.backtestsGetBacktestExecutions({
+			const { data } = await BacktestsService.backtestsGetBacktestExecutions({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1386,7 +1352,7 @@ export const backtestsGetBacktestResultsOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await Backtests.backtestsGetBacktestResults({
+			const { data } = await BacktestsService.backtestsGetBacktestResults({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1415,15 +1381,13 @@ export const backtestsCreateAndRunIntegratedBacktestMutation = (
 		Options<BacktestsCreateAndRunIntegratedBacktestData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await Backtests.backtestsCreateAndRunIntegratedBacktest({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
+			const { data } =
+				await BacktestsService.backtestsCreateAndRunIntegratedBacktest({
+					...options,
+					...fnOptions,
+					throwOnError: true,
+				});
 			return data;
-		},
-		meta: {
-			id: "backtestsCreateAndRunIntegratedBacktest",
 		},
 	};
 	return mutationOptions;
@@ -1442,7 +1406,7 @@ export const backtestsHealthCheckOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await Backtests.backtestsHealthCheck({
+			const { data } = await BacktestsService.backtestsHealthCheck({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1467,7 +1431,7 @@ export const backtestsGetPerformanceAnalyticsOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await Backtests.backtestsGetPerformanceAnalytics({
+			const { data } = await BacktestsService.backtestsGetPerformanceAnalytics({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1492,7 +1456,7 @@ export const backtestsGetTradesAnalyticsOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await Backtests.backtestsGetTradesAnalytics({
+			const { data } = await BacktestsService.backtestsGetTradesAnalytics({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1517,12 +1481,13 @@ export const backtestsGetBacktestSummaryAnalyticsOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await Backtests.backtestsGetBacktestSummaryAnalytics({
-				...options,
-				...queryKey[0],
-				signal,
-				throwOnError: true,
-			});
+			const { data } =
+				await BacktestsService.backtestsGetBacktestSummaryAnalytics({
+					...options,
+					...queryKey[0],
+					signal,
+					throwOnError: true,
+				});
 			return data;
 		},
 		queryKey: backtestsGetBacktestSummaryAnalyticsQueryKey(options),
@@ -1542,7 +1507,7 @@ export const strategiesGetStrategiesOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await Strategies.strategiesGetStrategies({
+			const { data } = await StrategiesService.strategiesGetStrategies({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1571,15 +1536,12 @@ export const strategiesCreateStrategyMutation = (
 		Options<StrategiesCreateStrategyData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await Strategies.strategiesCreateStrategy({
+			const { data } = await StrategiesService.strategiesCreateStrategy({
 				...options,
 				...fnOptions,
 				throwOnError: true,
 			});
 			return data;
-		},
-		meta: {
-			id: "strategiesCreateStrategy",
 		},
 	};
 	return mutationOptions;
@@ -1602,15 +1564,12 @@ export const strategiesDeleteStrategyMutation = (
 		Options<StrategiesDeleteStrategyData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await Strategies.strategiesDeleteStrategy({
+			const { data } = await StrategiesService.strategiesDeleteStrategy({
 				...options,
 				...fnOptions,
 				throwOnError: true,
 			});
 			return data;
-		},
-		meta: {
-			id: "strategiesDeleteStrategy",
 		},
 	};
 	return mutationOptions;
@@ -1629,7 +1588,7 @@ export const strategiesGetStrategyOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await Strategies.strategiesGetStrategy({
+			const { data } = await StrategiesService.strategiesGetStrategy({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1658,15 +1617,12 @@ export const strategiesUpdateStrategyMutation = (
 		Options<StrategiesUpdateStrategyData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await Strategies.strategiesUpdateStrategy({
+			const { data } = await StrategiesService.strategiesUpdateStrategy({
 				...options,
 				...fnOptions,
 				throwOnError: true,
 			});
 			return data;
-		},
-		meta: {
-			id: "strategiesUpdateStrategy",
 		},
 	};
 	return mutationOptions;
@@ -1689,15 +1645,12 @@ export const strategiesExecuteStrategyMutation = (
 		Options<StrategiesExecuteStrategyData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await Strategies.strategiesExecuteStrategy({
+			const { data } = await StrategiesService.strategiesExecuteStrategy({
 				...options,
 				...fnOptions,
 				throwOnError: true,
 			});
 			return data;
-		},
-		meta: {
-			id: "strategiesExecuteStrategy",
 		},
 	};
 	return mutationOptions;
@@ -1716,7 +1669,7 @@ export const strategiesGetStrategyExecutionsOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await Strategies.strategiesGetStrategyExecutions({
+			const { data } = await StrategiesService.strategiesGetStrategyExecutions({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1741,12 +1694,14 @@ export const strategiesGetStrategyPerformanceOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await Strategies.strategiesGetStrategyPerformance({
-				...options,
-				...queryKey[0],
-				signal,
-				throwOnError: true,
-			});
+			const { data } = await StrategiesService.strategiesGetStrategyPerformance(
+				{
+					...options,
+					...queryKey[0],
+					signal,
+					throwOnError: true,
+				},
+			);
 			return data;
 		},
 		queryKey: strategiesGetStrategyPerformanceQueryKey(options),
@@ -1766,7 +1721,7 @@ export const templatesGetTemplatesOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await Templates.templatesGetTemplates({
+			const { data } = await TemplatesService.templatesGetTemplates({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1795,15 +1750,12 @@ export const templatesCreateTemplateMutation = (
 		Options<TemplatesCreateTemplateData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await Templates.templatesCreateTemplate({
+			const { data } = await TemplatesService.templatesCreateTemplate({
 				...options,
 				...fnOptions,
 				throwOnError: true,
 			});
 			return data;
-		},
-		meta: {
-			id: "templatesCreateTemplate",
 		},
 	};
 	return mutationOptions;
@@ -1826,15 +1778,12 @@ export const templatesDeleteTemplateMutation = (
 		Options<TemplatesDeleteTemplateData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await Templates.templatesDeleteTemplate({
+			const { data } = await TemplatesService.templatesDeleteTemplate({
 				...options,
 				...fnOptions,
 				throwOnError: true,
 			});
 			return data;
-		},
-		meta: {
-			id: "templatesDeleteTemplate",
 		},
 	};
 	return mutationOptions;
@@ -1853,7 +1802,7 @@ export const templatesGetTemplateOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await Templates.templatesGetTemplate({
+			const { data } = await TemplatesService.templatesGetTemplate({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1882,15 +1831,12 @@ export const templatesUpdateTemplateMutation = (
 		Options<TemplatesUpdateTemplateData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await Templates.templatesUpdateTemplate({
+			const { data } = await TemplatesService.templatesUpdateTemplate({
 				...options,
 				...fnOptions,
 				throwOnError: true,
 			});
 			return data;
-		},
-		meta: {
-			id: "templatesUpdateTemplate",
 		},
 	};
 	return mutationOptions;
@@ -1913,15 +1859,13 @@ export const templatesCreateStrategyFromTemplateMutation = (
 		Options<TemplatesCreateStrategyFromTemplateData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await Templates.templatesCreateStrategyFromTemplate({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
+			const { data } =
+				await TemplatesService.templatesCreateStrategyFromTemplate({
+					...options,
+					...fnOptions,
+					throwOnError: true,
+				});
 			return data;
-		},
-		meta: {
-			id: "templatesCreateStrategyFromTemplate",
 		},
 	};
 	return mutationOptions;
@@ -1940,7 +1884,7 @@ export const templatesGetTemplateUsageStatsOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await Templates.templatesGetTemplateUsageStats({
+			const { data } = await TemplatesService.templatesGetTemplateUsageStats({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1968,15 +1912,12 @@ export const authAuthJwtLoginMutation = (
 		Options<AuthAuthJwtLoginData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await Auth.authAuthJwt.login({
+			const { data } = await AuthService.authAuthJwtService.login({
 				...options,
 				...fnOptions,
 				throwOnError: true,
 			});
 			return data;
-		},
-		meta: {
-			id: "authAuthJwtLogin",
 		},
 	};
 	return mutationOptions;
@@ -1998,15 +1939,12 @@ export const authAuthJwtLogoutMutation = (
 		Options<AuthAuthJwtLogoutData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await Auth.authAuthJwt.logout({
+			const { data } = await AuthService.authAuthJwtService.logout({
 				...options,
 				...fnOptions,
 				throwOnError: true,
 			});
 			return data;
-		},
-		meta: {
-			id: "authAuthJwtLogout",
 		},
 	};
 	return mutationOptions;
@@ -2028,15 +1966,12 @@ export const authRegisterRegisterMutation = (
 		Options<AuthRegisterRegisterData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await Auth.authRegisterRegister({
+			const { data } = await AuthService.authRegisterRegister({
 				...options,
 				...fnOptions,
 				throwOnError: true,
 			});
 			return data;
-		},
-		meta: {
-			id: "authRegisterRegister",
 		},
 	};
 	return mutationOptions;
@@ -2058,15 +1993,12 @@ export const authResetForgotPasswordMutation = (
 		Options<AuthResetForgotPasswordData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await Auth.authResetForgotPassword({
+			const { data } = await AuthService.authResetForgotPassword({
 				...options,
 				...fnOptions,
 				throwOnError: true,
 			});
 			return data;
-		},
-		meta: {
-			id: "authResetForgotPassword",
 		},
 	};
 	return mutationOptions;
@@ -2088,15 +2020,12 @@ export const authResetResetPasswordMutation = (
 		Options<AuthResetResetPasswordData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await Auth.authResetResetPassword({
+			const { data } = await AuthService.authResetResetPassword({
 				...options,
 				...fnOptions,
 				throwOnError: true,
 			});
 			return data;
-		},
-		meta: {
-			id: "authResetResetPassword",
 		},
 	};
 	return mutationOptions;
@@ -2118,15 +2047,12 @@ export const authVerifyRequestTokenMutation = (
 		Options<AuthVerifyRequestTokenData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await Auth.authVerifyRequestToken({
+			const { data } = await AuthService.authVerifyRequestToken({
 				...options,
 				...fnOptions,
 				throwOnError: true,
 			});
 			return data;
-		},
-		meta: {
-			id: "authVerifyRequestToken",
 		},
 	};
 	return mutationOptions;
@@ -2148,15 +2074,12 @@ export const authVerifyVerifyMutation = (
 		Options<AuthVerifyVerifyData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await Auth.authVerifyVerify({
+			const { data } = await AuthService.authVerifyVerify({
 				...options,
 				...fnOptions,
 				throwOnError: true,
 			});
 			return data;
-		},
-		meta: {
-			id: "authVerifyVerify",
 		},
 	};
 	return mutationOptions;
@@ -2174,12 +2097,13 @@ export const authOauthGoogleJwtAuthorizeOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await Auth.authOauthGoogle.jwt.authorize({
-				...options,
-				...queryKey[0],
-				signal,
-				throwOnError: true,
-			});
+			const { data } =
+				await AuthService.authOauthGoogleService.jwtService.authorize({
+					...options,
+					...queryKey[0],
+					signal,
+					throwOnError: true,
+				});
 			return data;
 		},
 		queryKey: authOauthGoogleJwtAuthorizeQueryKey(options),
@@ -2199,12 +2123,13 @@ export const authOauthGoogleJwtCallbackOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await Auth.authOauthGoogle.jwt.callback({
-				...options,
-				...queryKey[0],
-				signal,
-				throwOnError: true,
-			});
+			const { data } =
+				await AuthService.authOauthGoogleService.jwtService.callback({
+					...options,
+					...queryKey[0],
+					signal,
+					throwOnError: true,
+				});
 			return data;
 		},
 		queryKey: authOauthGoogleJwtCallbackQueryKey(options),
@@ -2223,12 +2148,13 @@ export const authOauthAssociateGoogleAuthorizeOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await Auth.authOauthAssociateGoogle.authorize({
-				...options,
-				...queryKey[0],
-				signal,
-				throwOnError: true,
-			});
+			const { data } =
+				await AuthService.authOauthAssociateGoogleService.authorize({
+					...options,
+					...queryKey[0],
+					signal,
+					throwOnError: true,
+				});
 			return data;
 		},
 		queryKey: authOauthAssociateGoogleAuthorizeQueryKey(options),
@@ -2248,12 +2174,13 @@ export const authOauthAssociateGoogleCallbackOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await Auth.authOauthAssociateGoogle.callback({
-				...options,
-				...queryKey[0],
-				signal,
-				throwOnError: true,
-			});
+			const { data } =
+				await AuthService.authOauthAssociateGoogleService.callback({
+					...options,
+					...queryKey[0],
+					signal,
+					throwOnError: true,
+				});
 			return data;
 		},
 		queryKey: authOauthAssociateGoogleCallbackQueryKey(options),
@@ -2272,7 +2199,7 @@ export const usersUsersCurrentUserOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await Users.usersUsersCurrentUser({
+			const { data } = await UsersService.usersUsersCurrentUser({
 				...options,
 				...queryKey[0],
 				signal,
@@ -2300,15 +2227,12 @@ export const usersUsersPatchCurrentUserMutation = (
 		Options<UsersUsersPatchCurrentUserData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await Users.usersUsersPatchCurrentUser({
+			const { data } = await UsersService.usersUsersPatchCurrentUser({
 				...options,
 				...fnOptions,
 				throwOnError: true,
 			});
 			return data;
-		},
-		meta: {
-			id: "usersUsersPatchCurrentUser",
 		},
 	};
 	return mutationOptions;
@@ -2330,15 +2254,12 @@ export const usersUsersDeleteUserMutation = (
 		Options<UsersUsersDeleteUserData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await Users.usersUsersDeleteUser({
+			const { data } = await UsersService.usersUsersDeleteUser({
 				...options,
 				...fnOptions,
 				throwOnError: true,
 			});
 			return data;
-		},
-		meta: {
-			id: "usersUsersDeleteUser",
 		},
 	};
 	return mutationOptions;
@@ -2353,7 +2274,7 @@ export const usersUsersUserQueryKey = (options: Options<UsersUsersUserData>) =>
 export const usersUsersUserOptions = (options: Options<UsersUsersUserData>) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await Users.usersUsersUser({
+			const { data } = await UsersService.usersUsersUser({
 				...options,
 				...queryKey[0],
 				signal,
@@ -2381,15 +2302,12 @@ export const usersUsersPatchUserMutation = (
 		Options<UsersUsersPatchUserData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await Users.usersUsersPatchUser({
+			const { data } = await UsersService.usersUsersPatchUser({
 				...options,
 				...fnOptions,
 				throwOnError: true,
 			});
 			return data;
-		},
-		meta: {
-			id: "usersUsersPatchUser",
 		},
 	};
 	return mutationOptions;

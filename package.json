@@ -2,7 +2,7 @@
   "description": "Quant App full-stack monorepo workspace",
   "devDependencies": {
     "@biomejs/biome": "2.2.0",
-    "@hey-api/openapi-ts": "^0.84.3"
+    "@hey-api/openapi-ts": "0.84.3"
   },
   "name": "quant-workspace",
   "packageManager": "pnpm@8.15.0",

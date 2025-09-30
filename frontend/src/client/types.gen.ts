@@ -23,12 +23,12 @@ export type BacktestConfig = {
 	 * Start Date
 	 * 시작일
 	 */
-	start_date: Date;
+	start_date: string;
 	/**
 	 * End Date
 	 * 종료일
 	 */
-	end_date: Date;
+	end_date: string;
 	/**
 	 * Symbols
 	 * 대상 심볼 목록
@@ -158,12 +158,12 @@ export type BacktestExecutionResponse = {
 	 * Start Time
 	 * 실행 시작 시간
 	 */
-	start_time: Date;
+	start_time: string;
 	/**
 	 * End Time
 	 * 실행 종료 시간
 	 */
-	end_time?: Date | null;
+	end_time?: string | null;
 	/**
 	 * 실행 상태
 	 */
@@ -194,7 +194,7 @@ export type BacktestExecutionResponse = {
 	 * Created At
 	 * 생성 시간
 	 */
-	created_at: Date;
+	created_at: string;
 };
 
 /**
@@ -254,12 +254,12 @@ export type BacktestResponse = {
 	 * Start Time
 	 * 실행 시작 시간
 	 */
-	start_time?: Date | null;
+	start_time?: string | null;
 	/**
 	 * End Time
 	 * 실행 종료 시간
 	 */
-	end_time?: Date | null;
+	end_time?: string | null;
 	/**
 	 * Duration Seconds
 	 * 실행 시간(초)
@@ -273,12 +273,12 @@ export type BacktestResponse = {
 	 * Created At
 	 * 생성 시간
 	 */
-	created_at: Date;
+	created_at: string;
 	/**
 	 * Updated At
 	 * 수정 시간
 	 */
-	updated_at?: Date | null;
+	updated_at?: string | null;
 };
 
 /**
@@ -393,12 +393,12 @@ export type BulkDataRequest = {
 	 * Start Date
 	 * Start date
 	 */
-	start_date: Date;
+	start_date: string;
 	/**
 	 * End Date
 	 * End date
 	 */
-	end_date: Date;
+	end_date: string;
 	/**
 	 * Interval
 	 * Data interval
@@ -422,11 +422,11 @@ export type DataQualityResponse = {
 	/**
 	 * Date Range Start
 	 */
-	date_range_start: Date;
+	date_range_start: string;
 	/**
 	 * Date Range End
 	 */
-	date_range_end: Date;
+	date_range_end: string;
 	/**
 	 * Total Records
 	 */
@@ -450,7 +450,7 @@ export type DataQualityResponse = {
 	/**
 	 * Analyzed At
 	 */
-	analyzed_at: Date;
+	analyzed_at: string;
 };
 
 /**
@@ -473,11 +473,11 @@ export type DataRequestStatus = {
 	/**
 	 * Start Date
 	 */
-	start_date: Date;
+	start_date: string;
 	/**
 	 * End Date
 	 */
-	end_date: Date;
+	end_date: string;
 	/**
 	 * Status
 	 */
@@ -493,11 +493,11 @@ export type DataRequestStatus = {
 	/**
 	 * Requested At
 	 */
-	requested_at: Date;
+	requested_at: string;
 	/**
 	 * Completed At
 	 */
-	completed_at?: Date | null;
+	completed_at?: string | null;
 };
 
 /**
@@ -579,7 +579,7 @@ export type ExecutionResponse = {
 	 * Timestamp
 	 * 실행 시간
 	 */
-	timestamp: Date;
+	timestamp: string;
 	/**
 	 * Metadata
 	 * 메타데이터
@@ -596,7 +596,7 @@ export type ExecutionResponse = {
 	 * Created At
 	 * 생성 시간
 	 */
-	created_at: Date;
+	created_at: string;
 };
 
 /**
@@ -625,7 +625,7 @@ export type HealthCheckResponse = {
 	/**
 	 * Timestamp
 	 */
-	timestamp: Date;
+	timestamp: string;
 	/**
 	 * Database Connected
 	 */
@@ -641,7 +641,7 @@ export type HealthCheckResponse = {
 	/**
 	 * Last Update
 	 */
-	last_update?: Date | null;
+	last_update?: string | null;
 };
 
 /**
@@ -656,7 +656,7 @@ export type HealthResponse = {
 	/**
 	 * Timestamp
 	 */
-	timestamp: Date;
+	timestamp: string;
 	/**
 	 * Service
 	 */
@@ -707,12 +707,12 @@ export type IntegratedBacktestRequest = {
 	 * Start Date
 	 * 시작일
 	 */
-	start_date: Date;
+	start_date: string;
 	/**
 	 * End Date
 	 * 종료일
 	 */
-	end_date: Date;
+	end_date: string;
 	/**
 	 * Strategy Type
 	 * 전략 타입
@@ -773,12 +773,12 @@ export type IntegratedBacktestResponse = {
 	 * Start Time
 	 * 시작 시간
 	 */
-	start_time?: Date | null;
+	start_time?: string | null;
 	/**
 	 * End Time
 	 * 종료 시간
 	 */
-	end_time?: Date | null;
+	end_time?: string | null;
 };
 
 /**
@@ -797,7 +797,7 @@ export type MarketDataResponse = {
 	/**
 	 * Date
 	 */
-	date: Date;
+	date: string;
 	/**
 	 * Open
 	 */
@@ -983,12 +983,12 @@ export type PerformanceResponse = {
 	 * Start Date
 	 * 시작일
 	 */
-	start_date?: Date | null;
+	start_date?: string | null;
 	/**
 	 * End Date
 	 * 종료일
 	 */
-	end_date?: Date | null;
+	end_date?: string | null;
 	/**
 	 * Accuracy
 	 * 정확도
@@ -1003,12 +1003,12 @@ export type PerformanceResponse = {
 	 * Created At
 	 * 생성 시간
 	 */
-	created_at: Date;
+	created_at: string;
 	/**
 	 * Updated At
 	 * 수정 시간
 	 */
-	updated_at: Date;
+	updated_at: string;
 };
 
 /**
@@ -1050,13 +1050,15 @@ export type Position = {
 	 * First Buy Date
 	 * 최초 매수일
 	 */
-	first_buy_date: Date;
+	first_buy_date: string;
 	/**
 	 * Last Update
 	 * 마지막 업데이트
 	 */
-	last_update?: Date;
+	last_update?: string;
 };
+
+export type PydanticObjectId = string;
 
 /**
  * SignalType
@@ -1222,12 +1224,12 @@ export type StrategyResponse = {
 	 * Created At
 	 * 생성 시간
 	 */
-	created_at: Date;
+	created_at: string;
 	/**
 	 * Updated At
 	 * 수정 시간
 	 */
-	updated_at: Date;
+	updated_at: string;
 	/**
 	 * Tags
 	 * 태그
@@ -1399,12 +1401,12 @@ export type TemplateResponse = {
 	 * Created At
 	 * 생성 시간
 	 */
-	created_at: Date;
+	created_at: string;
 	/**
 	 * Updated At
 	 * 수정 시간
 	 */
-	updated_at: Date;
+	updated_at: string;
 	/**
 	 * Tags
 	 * 태그
@@ -1483,7 +1485,7 @@ export type Trade = {
 	 * Timestamp
 	 * 거래 시간
 	 */
-	timestamp: Date;
+	timestamp: string;
 	/**
 	 * Commission
 	 * 수수료
@@ -1528,11 +1530,11 @@ export type UpdateRequest = {
 	/**
 	 * Start Date
 	 */
-	start_date?: Date | null;
+	start_date?: string | null;
 	/**
 	 * End Date
 	 */
-	end_date?: Date | null;
+	end_date?: string | null;
 };
 
 /**
@@ -1569,10 +1571,7 @@ export type UserCreate = {
  * UserRead
  */
 export type UserRead = {
-	/**
-	 * Id
-	 */
-	id: string;
+	id: PydanticObjectId;
 	/**
 	 * Email
 	 */
@@ -1801,12 +1800,12 @@ export type MarketDataGetMarketDataData = {
 		 * Start Date
 		 * Start date (YYYY-MM-DD)
 		 */
-		start_date: Date;
+		start_date: string;
 		/**
 		 * End Date
 		 * End date (YYYY-MM-DD)
 		 */
-		end_date: Date;
+		end_date: string;
 		/**
 		 * Force Refresh
 		 * Force refresh from external API
@@ -1907,12 +1906,12 @@ export type MarketDataAnalyzeDataQualityData = {
 		 * Start Date
 		 * Start date (YYYY-MM-DD)
 		 */
-		start_date: Date;
+		start_date: string;
 		/**
 		 * End Date
 		 * End date (YYYY-MM-DD)
 		 */
-		end_date: Date;
+		end_date: string;
 	};
 	url: "/api/v1/market-data/quality/{symbol}";
 };
@@ -2058,11 +2057,11 @@ export type CompanyDataCollectDailyDataData = {
 		/**
 		 * Start Date
 		 */
-		start_date?: Date | null;
+		start_date?: string | null;
 		/**
 		 * End Date
 		 */
-		end_date?: Date | null;
+		end_date?: string | null;
 	};
 	url: "/api/v1/pipeline/companies/collect-data/{symbol}";
 };
