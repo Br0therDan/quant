@@ -1,5 +1,4 @@
 import { defineConfig } from "@hey-api/openapi-ts";
-import { mutationOptions } from '@tanstack/react-query';
 
 export default defineConfig({
 	input: "./src/openapi.json",
@@ -37,15 +36,7 @@ export default defineConfig({
 			exportFromIndex: true,
 			queryKeys: true,
 			mutationKeys: true,
-			// queryOptions: {
-			// 	meta: (operation) => ({ id: operation.id }),
-			// },
-			// infiniteQueryOptions: {
-			// 	meta: (operation) => ({ id: operation.id }),
-			// },
-			// mutationOptions: {
-			// 	meta: (operation) => ({ id: operation.id }),
-			// },
+
 		},
 	],
 });
