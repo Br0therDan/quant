@@ -1,6 +1,6 @@
 
 import { type NextRequest, NextResponse } from 'next/server';
-import { AuthAuthJwt, type Login } from '@/client';
+import { AuthService, client } from '@/client';
 import { LoginCredentials } from '@/types/auth';
 
 /**
@@ -13,8 +13,9 @@ export async function POST(request: NextRequest) {
         const { username, password } = body;
 
         // 백엔드 API 호출
-        const response = await AuthAuthJwt.login<LoginCredentials>({
-            username,
+        const response = await AuthService.authAuthJwtService.login({
+            client: client,
+
             password
         });
 

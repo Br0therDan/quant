@@ -31,7 +31,7 @@ async def get_data_pipeline() -> AsyncGenerator[DataPipeline, None]:
         await pipeline.cleanup()
 
 
-@router.get("/status")
+@router.get("/")
 async def get_pipeline_status(
     pipeline: DataPipeline = Depends(get_data_pipeline),
 ):

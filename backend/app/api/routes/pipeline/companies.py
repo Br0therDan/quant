@@ -233,8 +233,8 @@ async def get_company_info(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/companies")
-async def get_all_companies(
+@router.get("/")
+async def list_companies(
     pipeline: DataPipeline = Depends(get_data_pipeline),
 ):
     """

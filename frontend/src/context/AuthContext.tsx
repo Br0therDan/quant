@@ -26,7 +26,7 @@ function getTokenFromCookie(): string | null {
   const cookies = document.cookie
     .split(";")
     .map((cookie) => cookie.trim())
-    .find((cookie) => cookie.startsWith("auth_token="));
+    .find((cookie) => cookie.startsWith("access_token"));
 
   return cookies ? cookies.split("=")[1] : null;
 }

@@ -237,7 +237,7 @@ async def list_watchlists(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/watchlists/{name}")
+@router.get("/{name}")
 async def get_watchlist(
     name: str,
     current_user: User = Depends(get_current_active_verified_user),
@@ -295,7 +295,7 @@ async def get_watchlist(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.put("/watchlists/{name}")
+@router.put("/{name}")
 async def update_watchlist_by_name(
     name: str,
     request: WatchlistUpdate,
@@ -369,7 +369,7 @@ async def update_watchlist_by_name(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.delete("/watchlists/{name}")
+@router.delete("/{name}")
 async def delete_watchlist(
     name: str,
     current_user: User = Depends(get_current_active_verified_user),

@@ -13,7 +13,7 @@ router = APIRouter()
 
 
 @router.get("/", response_model=HealthCheckResponse)
-async def health_check():
+async def alpha_vantage_health_check():
     """Health check endpoint"""
 
     settings = get_settings()

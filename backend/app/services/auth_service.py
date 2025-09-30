@@ -12,7 +12,7 @@ from app.services.user_manager import get_user_manager
 SECRET = settings.SECRET_KEY
 
 
-bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")
+bearer_transport = BearerTransport(tokenUrl=f"{settings.API_PREFIX}/auth/login")
 
 
 def get_jwt_strategy() -> JWTStrategy[models.UP, models.ID]:  # type: ignore
