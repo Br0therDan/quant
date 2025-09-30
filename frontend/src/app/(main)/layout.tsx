@@ -41,11 +41,7 @@ export default function MainLayout({
 				setIsMobileNavigationExpanded(newExpanded);
 			}
 		},
-		[
-			isOverMdViewport,
-			setIsDesktopNavigationExpanded,
-			setIsMobileNavigationExpanded,
-		],
+		[isOverMdViewport],
 	);
 
 	const handleToggleHeaderMenu = React.useCallback(

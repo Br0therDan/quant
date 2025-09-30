@@ -172,7 +172,7 @@ export default function StrategyParameters({
 
 		if (paramSchema.type === "number") {
 			const numValue = Number(value);
-			if (isNaN(numValue)) return "숫자를 입력해주세요.";
+			if (Number.isNaN(numValue)) return "숫자를 입력해주세요.";
 			if (paramSchema.min !== undefined && numValue < paramSchema.min) {
 				return `최소값은 ${paramSchema.min}입니다.`;
 			}

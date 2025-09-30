@@ -1,5 +1,4 @@
-/** biome-ignore-all lint/suspicious/noArrayIndexKey: <explanation> */
-/** biome-ignore-all lint/suspicious/noExplicitAny: <explanation> */
+
 "use client";
 
 import {
@@ -45,6 +44,7 @@ import { useEffect, useState } from "react";
 import PageContainer from "@/components/layout/PageContainer";
 import {
 	backtestsGetBacktestOptions,
+	BacktestStatus,
 	backtestUtils,
 	useBacktestActions,
 } from "@/services/backtestsQuery";
@@ -289,7 +289,7 @@ export default function BacktestMonitoringPage() {
 								</IconButton>
 							</Tooltip>
 							{backtest?.status &&
-								backtestUtils.isRunning(backtest.status as any) && (
+								backtestUtils.isRunning(backtest.status as BacktestStatus) && (
 									<Button
 										variant="outlined"
 										color="error"
@@ -305,7 +305,7 @@ export default function BacktestMonitoringPage() {
 					<Alert
 						severity={
 							backtest?.status &&
-							backtestUtils.isRunning(backtest.status as any)
+							backtestUtils.isRunning(backtest.status as BacktestStatus)
 								? "info"
 								: "success"
 						}
@@ -317,11 +317,11 @@ export default function BacktestMonitoringPage() {
 						<Typography variant="body2">
 							상태:{" "}
 							{backtest?.status
-								? backtestUtils.formatStatus(backtest.status as any)
+								? backtestUtils.formatStatus(backtest.status as BacktestStatus)
 								: "알 수 없음"}
 							{autoRefresh &&
 								backtest?.status &&
-								backtestUtils.isRunning(backtest.status as any) &&
+								backtestUtils.isRunning(backtest.status as BacktestStatus) &&
 								` | 다음 새로고침: ${refreshInterval / 1000}초 후`}
 						</Typography>
 					</Alert>
@@ -335,7 +335,7 @@ export default function BacktestMonitoringPage() {
 								<Monitor sx={{ mb: 1, fontSize: 40, color: "primary.main" }} />
 								<Typography variant="h4" color="primary">
 									{backtest?.status &&
-									backtestUtils.isRunning(backtest.status as any)
+									backtestUtils.isRunning(backtest.status as BacktestStatus)
 										? "실행 중"
 										: "중단됨"}
 								</Typography>
@@ -405,7 +405,7 @@ export default function BacktestMonitoringPage() {
 
 				{/* Progress Indicator */}
 				{backtest?.status &&
-					backtestUtils.isRunning(backtest.status as any) && (
+					backtestUtils.isRunning(backtest.status as BacktestStatus) && (
 						<Paper sx={{ p: 3, mb: 3 }}>
 							<Typography variant="h6" gutterBottom>
 								진행 상황
@@ -446,8 +446,8 @@ export default function BacktestMonitoringPage() {
 								</TableRow>
 							</TableHead>
 							<TableBody>
-								{mockLogs.map((log, index) => (
-									<TableRow key={index}>
+								{mockLogs.map((log) => (
+									<TableRow key={log.timestamp}>
 										<TableCell>
 											{new Date(log.timestamp).toLocaleTimeString("ko-KR")}
 										</TableCell>
@@ -456,7 +456,7 @@ export default function BacktestMonitoringPage() {
 												icon={getLogLevelIcon(log.level)}
 												label={log.level.toUpperCase()}
 												size="small"
-												color={getLogLevelColor(log.level) as any}
+												color={getLogLevelColor(log.level)}
 												variant="outlined"
 											/>
 										</TableCell>
@@ -491,8 +491,8 @@ export default function BacktestMonitoringPage() {
 								</TableRow>
 							</TableHead>
 							<TableBody>
-								{mockMetrics.map((metric, index) => (
-									<TableRow key={index}>
+								{mockMetrics.map((metric) => (
+									<TableRow key={metric.timestamp}>
 										<TableCell>
 											{new Date(metric.timestamp).toLocaleTimeString("ko-KR")}
 										</TableCell>
