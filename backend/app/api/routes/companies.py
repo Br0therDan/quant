@@ -6,9 +6,10 @@ from datetime import datetime
 from typing import Optional, AsyncGenerator
 from fastapi import APIRouter, HTTPException, Depends
 
+from app.api.deps import get_current_active_verified_user
 from app.services.data_pipeline import DataPipeline
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(get_current_active_verified_user)])
 
 
 async def get_data_pipeline() -> AsyncGenerator[DataPipeline, None]:

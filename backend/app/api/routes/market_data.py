@@ -7,6 +7,7 @@ from typing import List, AsyncGenerator
 from fastapi import APIRouter, HTTPException, Depends, Query
 from pydantic import ValidationError
 
+from app.api.deps import get_current_active_verified_user
 from app.schemas.market_data import (
     MarketDataResponse,
     DataQualityResponse,
@@ -16,7 +17,7 @@ from app.schemas.market_data import (
 from app.services.service_factory import service_factory
 from app.services.market_data_service import MarketDataService
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(get_current_active_verified_user)])
 
 
 async def get_market_data_service() -> AsyncGenerator[MarketDataService, None]:

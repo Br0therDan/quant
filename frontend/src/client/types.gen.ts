@@ -72,6 +72,10 @@ export type BacktestConfig = {
  */
 export type BacktestCreateRequest = {
 	/**
+	 * User Id
+	 */
+	user_id?: string | null;
+	/**
 	 * Name
 	 * 백테스트 이름
 	 */
@@ -93,6 +97,10 @@ export type BacktestCreateRequest = {
  */
 export type BacktestExecutionListResponse = {
 	/**
+	 * User Id
+	 */
+	user_id?: string | null;
+	/**
 	 * Executions
 	 * 실행 목록
 	 */
@@ -110,6 +118,10 @@ export type BacktestExecutionListResponse = {
  */
 export type BacktestExecutionRequest = {
 	/**
+	 * User Id
+	 */
+	user_id?: string | null;
+	/**
 	 * Signals
 	 * 트레이딩 시그널 목록
 	 */
@@ -123,6 +135,10 @@ export type BacktestExecutionRequest = {
  * 백테스트 실행 응답
  */
 export type BacktestExecutionResponse = {
+	/**
+	 * User Id
+	 */
+	user_id?: string | null;
 	/**
 	 * Id
 	 * 실행 ID
@@ -187,6 +203,10 @@ export type BacktestExecutionResponse = {
  */
 export type BacktestListResponse = {
 	/**
+	 * User Id
+	 */
+	user_id?: string | null;
+	/**
 	 * Backtests
 	 * 백테스트 목록
 	 */
@@ -203,6 +223,10 @@ export type BacktestListResponse = {
  * 백테스트 응답
  */
 export type BacktestResponse = {
+	/**
+	 * User Id
+	 */
+	user_id?: string | null;
 	/**
 	 * Id
 	 * 백테스트 ID
@@ -274,6 +298,10 @@ export type BacktestStatus =
  */
 export type BacktestUpdateRequest = {
 	/**
+	 * User Id
+	 */
+	user_id?: string | null;
+	/**
 	 * Name
 	 * 백테스트 이름
 	 */
@@ -290,10 +318,72 @@ export type BacktestUpdateRequest = {
 };
 
 /**
+ * BearerResponse
+ */
+export type BearerResponse = {
+	/**
+	 * Access Token
+	 */
+	access_token: string;
+	/**
+	 * Token Type
+	 */
+	token_type: string;
+};
+
+/**
+ * Body_Auth-reset:forgot_password
+ */
+export type BodyAuthResetForgotPassword = {
+	/**
+	 * Email
+	 */
+	email: string;
+};
+
+/**
+ * Body_Auth-reset:reset_password
+ */
+export type BodyAuthResetResetPassword = {
+	/**
+	 * Token
+	 */
+	token: string;
+	/**
+	 * Password
+	 */
+	password: string;
+};
+
+/**
+ * Body_Auth-verify:request-token
+ */
+export type BodyAuthVerifyRequestToken = {
+	/**
+	 * Email
+	 */
+	email: string;
+};
+
+/**
+ * Body_Auth-verify:verify
+ */
+export type BodyAuthVerifyVerify = {
+	/**
+	 * Token
+	 */
+	token: string;
+};
+
+/**
  * BulkDataRequest
  * Request model for bulk data operations
  */
 export type BulkDataRequest = {
+	/**
+	 * User Id
+	 */
+	user_id?: string | null;
 	/**
 	 * Symbols
 	 * List of symbols
@@ -321,6 +411,10 @@ export type BulkDataRequest = {
  * Response model for data quality metrics
  */
 export type DataQualityResponse = {
+	/**
+	 * User Id
+	 */
+	user_id?: string | null;
 	/**
 	 * Symbol
 	 */
@@ -365,6 +459,10 @@ export type DataQualityResponse = {
  */
 export type DataRequestStatus = {
 	/**
+	 * User Id
+	 */
+	user_id?: string | null;
+	/**
 	 * Id
 	 */
 	id: string;
@@ -403,10 +501,28 @@ export type DataRequestStatus = {
 };
 
 /**
+ * ErrorModel
+ */
+export type ErrorModel = {
+	/**
+	 * Detail
+	 */
+	detail:
+		| string
+		| {
+				[key: string]: string;
+		  };
+};
+
+/**
  * ExecutionListResponse
  * Execution list response
  */
 export type ExecutionListResponse = {
+	/**
+	 * User Id
+	 */
+	user_id?: string | null;
 	/**
 	 * Executions
 	 * 실행 목록
@@ -424,6 +540,10 @@ export type ExecutionListResponse = {
  * Execution response
  */
 export type ExecutionResponse = {
+	/**
+	 * User Id
+	 */
+	user_id?: string | null;
 	/**
 	 * Id
 	 * 실행 ID
@@ -495,6 +615,10 @@ export type HttpValidationError = {
  */
 export type HealthCheckResponse = {
 	/**
+	 * User Id
+	 */
+	user_id?: string | null;
+	/**
 	 * Status
 	 */
 	status: string;
@@ -561,6 +685,10 @@ export type HealthResponse = {
  */
 export type IntegratedBacktestRequest = {
 	/**
+	 * User Id
+	 */
+	user_id?: string | null;
+	/**
 	 * Name
 	 * 백테스트 이름
 	 */
@@ -610,6 +738,10 @@ export type IntegratedBacktestRequest = {
  */
 export type IntegratedBacktestResponse = {
 	/**
+	 * User Id
+	 */
+	user_id?: string | null;
+	/**
 	 * Backtest Id
 	 * 백테스트 ID
 	 */
@@ -655,6 +787,10 @@ export type IntegratedBacktestResponse = {
  */
 export type MarketDataResponse = {
 	/**
+	 * User Id
+	 */
+	user_id?: string | null;
+	/**
 	 * Symbol
 	 */
 	symbol: string;
@@ -694,6 +830,16 @@ export type MarketDataResponse = {
 	 * Split Coefficient
 	 */
 	split_coefficient?: number | null;
+};
+
+/**
+ * OAuth2AuthorizeResponse
+ */
+export type OAuth2AuthorizeResponse = {
+	/**
+	 * Authorization Url
+	 */
+	authorization_url: string;
 };
 
 /**
@@ -759,6 +905,10 @@ export type PerformanceMetrics = {
  * Performance response
  */
 export type PerformanceResponse = {
+	/**
+	 * User Id
+	 */
+	user_id?: string | null;
 	/**
 	 * Id
 	 * 성과 ID
@@ -920,6 +1070,10 @@ export type SignalType = "BUY" | "SELL" | "HOLD";
  */
 export type StrategyCreateRequest = {
 	/**
+	 * User Id
+	 */
+	user_id?: string | null;
+	/**
 	 * Name
 	 * 전략 이름
 	 */
@@ -953,6 +1107,10 @@ export type StrategyCreateRequest = {
  */
 export type StrategyExecuteRequest = {
 	/**
+	 * User Id
+	 */
+	user_id?: string | null;
+	/**
 	 * Symbol
 	 * 대상 심볼
 	 */
@@ -972,6 +1130,10 @@ export type StrategyExecuteRequest = {
  */
 export type StrategyFromTemplateRequest = {
 	/**
+	 * User Id
+	 */
+	user_id?: string | null;
+	/**
 	 * Name
 	 * 전략 이름
 	 */
@@ -982,7 +1144,7 @@ export type StrategyFromTemplateRequest = {
 	 */
 	parameter_overrides?: {
 		[key: string]: unknown | null;
-	};
+	} | null;
 };
 
 /**
@@ -990,6 +1152,10 @@ export type StrategyFromTemplateRequest = {
  * Strategy list response
  */
 export type StrategyListResponse = {
+	/**
+	 * User Id
+	 */
+	user_id?: string | null;
 	/**
 	 * Strategies
 	 * 전략 목록
@@ -1007,6 +1173,10 @@ export type StrategyListResponse = {
  * Strategy response
  */
 export type StrategyResponse = {
+	/**
+	 * User Id
+	 */
+	user_id?: string | null;
 	/**
 	 * Id
 	 * 전략 ID
@@ -1081,6 +1251,10 @@ export type StrategyType =
  */
 export type StrategyUpdateRequest = {
 	/**
+	 * User Id
+	 */
+	user_id?: string | null;
+	/**
 	 * Name
 	 * 전략 이름
 	 */
@@ -1096,7 +1270,7 @@ export type StrategyUpdateRequest = {
 	 */
 	parameters?: {
 		[key: string]: unknown | null;
-	};
+	} | null;
 	/**
 	 * Is Active
 	 * 활성화 상태
@@ -1106,7 +1280,7 @@ export type StrategyUpdateRequest = {
 	 * Tags
 	 * 태그
 	 */
-	tags?: Array<string | null>;
+	tags?: Array<string | null> | null;
 };
 
 /**
@@ -1114,6 +1288,10 @@ export type StrategyUpdateRequest = {
  * Template creation request
  */
 export type TemplateCreateRequest = {
+	/**
+	 * User Id
+	 */
+	user_id?: string | null;
 	/**
 	 * Name
 	 * 템플릿 이름
@@ -1141,7 +1319,7 @@ export type TemplateCreateRequest = {
 	 */
 	parameter_schema?: {
 		[key: string]: unknown | null;
-	};
+	} | null;
 	/**
 	 * Tags
 	 * 태그
@@ -1154,6 +1332,10 @@ export type TemplateCreateRequest = {
  * Template list response
  */
 export type TemplateListResponse = {
+	/**
+	 * User Id
+	 */
+	user_id?: string | null;
 	/**
 	 * Templates
 	 * 템플릿 목록
@@ -1171,6 +1353,10 @@ export type TemplateListResponse = {
  * Template response
  */
 export type TemplateResponse = {
+	/**
+	 * User Id
+	 */
+	user_id?: string | null;
 	/**
 	 * Id
 	 * 템플릿 ID
@@ -1203,7 +1389,7 @@ export type TemplateResponse = {
 	 */
 	parameter_schema?: {
 		[key: string]: unknown | null;
-	};
+	} | null;
 	/**
 	 * Usage Count
 	 * 사용 횟수
@@ -1292,6 +1478,10 @@ export type TradeType = "BUY" | "SELL";
  */
 export type UpdateRequest = {
 	/**
+	 * User Id
+	 */
+	user_id?: string | null;
+	/**
 	 * Symbols
 	 */
 	symbols?: Array<string> | null;
@@ -1303,6 +1493,96 @@ export type UpdateRequest = {
 	 * End Date
 	 */
 	end_date?: Date | null;
+};
+
+/**
+ * UserCreate
+ */
+export type UserCreate = {
+	/**
+	 * Email
+	 */
+	email: string;
+	/**
+	 * Password
+	 */
+	password: string;
+	/**
+	 * Is Active
+	 */
+	is_active?: boolean | null;
+	/**
+	 * Is Superuser
+	 */
+	is_superuser?: boolean | null;
+	/**
+	 * Is Verified
+	 */
+	is_verified?: boolean | null;
+	/**
+	 * Fullname
+	 */
+	fullname?: string | null;
+};
+
+/**
+ * UserRead
+ */
+export type UserRead = {
+	/**
+	 * Id
+	 */
+	id: string;
+	/**
+	 * Email
+	 */
+	email: string;
+	/**
+	 * Is Active
+	 */
+	is_active?: boolean;
+	/**
+	 * Is Superuser
+	 */
+	is_superuser?: boolean;
+	/**
+	 * Is Verified
+	 */
+	is_verified?: boolean;
+	/**
+	 * Fullname
+	 */
+	fullname?: string | null;
+};
+
+/**
+ * UserUpdate
+ */
+export type UserUpdate = {
+	/**
+	 * Password
+	 */
+	password?: string | null;
+	/**
+	 * Email
+	 */
+	email?: string | null;
+	/**
+	 * Is Active
+	 */
+	is_active?: boolean | null;
+	/**
+	 * Is Superuser
+	 */
+	is_superuser?: boolean | null;
+	/**
+	 * Is Verified
+	 */
+	is_verified?: boolean | null;
+	/**
+	 * Fullname
+	 */
+	fullname?: string | null;
 };
 
 /**
@@ -1329,6 +1609,10 @@ export type ValidationError = {
  */
 export type WatchlistCreate = {
 	/**
+	 * User Id
+	 */
+	user_id?: string | null;
+	/**
 	 * Name
 	 */
 	name: string;
@@ -1348,6 +1632,10 @@ export type WatchlistCreate = {
  */
 export type WatchlistUpdate = {
 	/**
+	 * User Id
+	 */
+	user_id?: string | null;
+	/**
 	 * Symbols
 	 */
 	symbols: Array<string>;
@@ -1359,6 +1647,36 @@ export type WatchlistUpdate = {
 	 * Description
 	 */
 	description?: string | null;
+};
+
+/**
+ * Body_Auth-auth:jwt.login
+ */
+export type Login = {
+	/**
+	 * Grant Type
+	 */
+	grant_type?: string | null;
+	/**
+	 * Username
+	 */
+	username: string;
+	/**
+	 * Password
+	 */
+	password: string;
+	/**
+	 * Scope
+	 */
+	scope?: string;
+	/**
+	 * Client Id
+	 */
+	client_id?: string | null;
+	/**
+	 * Client Secret
+	 */
+	client_secret?: string | null;
 };
 
 export type HealthHealthCheckData = {
@@ -2793,3 +3111,545 @@ export type TemplatesGetTemplateUsageStatsResponses = {
 	 */
 	200: unknown;
 };
+
+export type AuthAuthJwtLoginData = {
+	body: Login;
+	path?: never;
+	query?: never;
+	url: "/api/v1/auth/jwt/login";
+};
+
+export type AuthAuthJwtLoginErrors = {
+	/**
+	 * Bad Request
+	 */
+	400: ErrorModel;
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type AuthAuthJwtLoginError =
+	AuthAuthJwtLoginErrors[keyof AuthAuthJwtLoginErrors];
+
+export type AuthAuthJwtLoginResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: BearerResponse;
+};
+
+export type AuthAuthJwtLoginResponse =
+	AuthAuthJwtLoginResponses[keyof AuthAuthJwtLoginResponses];
+
+export type AuthAuthJwtLogoutData = {
+	body?: never;
+	path?: never;
+	query?: never;
+	url: "/api/v1/auth/jwt/logout";
+};
+
+export type AuthAuthJwtLogoutErrors = {
+	/**
+	 * Missing token or inactive user.
+	 */
+	401: unknown;
+};
+
+export type AuthAuthJwtLogoutResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: unknown;
+};
+
+export type AuthRegisterRegisterData = {
+	body: UserCreate;
+	path?: never;
+	query?: never;
+	url: "/api/v1/auth/register";
+};
+
+export type AuthRegisterRegisterErrors = {
+	/**
+	 * Bad Request
+	 */
+	400: ErrorModel;
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type AuthRegisterRegisterError =
+	AuthRegisterRegisterErrors[keyof AuthRegisterRegisterErrors];
+
+export type AuthRegisterRegisterResponses = {
+	/**
+	 * Successful Response
+	 */
+	201: UserRead;
+};
+
+export type AuthRegisterRegisterResponse =
+	AuthRegisterRegisterResponses[keyof AuthRegisterRegisterResponses];
+
+export type AuthResetForgotPasswordData = {
+	body: BodyAuthResetForgotPassword;
+	path?: never;
+	query?: never;
+	url: "/api/v1/auth/forgot-password";
+};
+
+export type AuthResetForgotPasswordErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type AuthResetForgotPasswordError =
+	AuthResetForgotPasswordErrors[keyof AuthResetForgotPasswordErrors];
+
+export type AuthResetForgotPasswordResponses = {
+	/**
+	 * Successful Response
+	 */
+	202: unknown;
+};
+
+export type AuthResetResetPasswordData = {
+	body: BodyAuthResetResetPassword;
+	path?: never;
+	query?: never;
+	url: "/api/v1/auth/reset-password";
+};
+
+export type AuthResetResetPasswordErrors = {
+	/**
+	 * Bad Request
+	 */
+	400: ErrorModel;
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type AuthResetResetPasswordError =
+	AuthResetResetPasswordErrors[keyof AuthResetResetPasswordErrors];
+
+export type AuthResetResetPasswordResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: unknown;
+};
+
+export type AuthVerifyRequestTokenData = {
+	body: BodyAuthVerifyRequestToken;
+	path?: never;
+	query?: never;
+	url: "/api/v1/auth/request-verify-token";
+};
+
+export type AuthVerifyRequestTokenErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type AuthVerifyRequestTokenError =
+	AuthVerifyRequestTokenErrors[keyof AuthVerifyRequestTokenErrors];
+
+export type AuthVerifyRequestTokenResponses = {
+	/**
+	 * Successful Response
+	 */
+	202: unknown;
+};
+
+export type AuthVerifyVerifyData = {
+	body: BodyAuthVerifyVerify;
+	path?: never;
+	query?: never;
+	url: "/api/v1/auth/verify";
+};
+
+export type AuthVerifyVerifyErrors = {
+	/**
+	 * Bad Request
+	 */
+	400: ErrorModel;
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type AuthVerifyVerifyError =
+	AuthVerifyVerifyErrors[keyof AuthVerifyVerifyErrors];
+
+export type AuthVerifyVerifyResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: UserRead;
+};
+
+export type AuthVerifyVerifyResponse =
+	AuthVerifyVerifyResponses[keyof AuthVerifyVerifyResponses];
+
+export type AuthOauthGoogleJwtAuthorizeData = {
+	body?: never;
+	path?: never;
+	query?: {
+		/**
+		 * Scopes
+		 */
+		scopes?: Array<string>;
+	};
+	url: "/api/v1/auth/google/authorize";
+};
+
+export type AuthOauthGoogleJwtAuthorizeErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type AuthOauthGoogleJwtAuthorizeError =
+	AuthOauthGoogleJwtAuthorizeErrors[keyof AuthOauthGoogleJwtAuthorizeErrors];
+
+export type AuthOauthGoogleJwtAuthorizeResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: OAuth2AuthorizeResponse;
+};
+
+export type AuthOauthGoogleJwtAuthorizeResponse =
+	AuthOauthGoogleJwtAuthorizeResponses[keyof AuthOauthGoogleJwtAuthorizeResponses];
+
+export type AuthOauthGoogleJwtCallbackData = {
+	body?: never;
+	path?: never;
+	query?: {
+		/**
+		 * Code
+		 */
+		code?: string | null;
+		/**
+		 * Code Verifier
+		 */
+		code_verifier?: string | null;
+		/**
+		 * State
+		 */
+		state?: string | null;
+		/**
+		 * Error
+		 */
+		error?: string | null;
+	};
+	url: "/api/v1/auth/google/callback";
+};
+
+export type AuthOauthGoogleJwtCallbackErrors = {
+	/**
+	 * Bad Request
+	 */
+	400: ErrorModel;
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type AuthOauthGoogleJwtCallbackError =
+	AuthOauthGoogleJwtCallbackErrors[keyof AuthOauthGoogleJwtCallbackErrors];
+
+export type AuthOauthGoogleJwtCallbackResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: unknown;
+};
+
+export type AuthOauthAssociateGoogleAuthorizeData = {
+	body?: never;
+	path?: never;
+	query?: {
+		/**
+		 * Scopes
+		 */
+		scopes?: Array<string>;
+	};
+	url: "/api/v1/auth/associate/google/authorize";
+};
+
+export type AuthOauthAssociateGoogleAuthorizeErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type AuthOauthAssociateGoogleAuthorizeError =
+	AuthOauthAssociateGoogleAuthorizeErrors[keyof AuthOauthAssociateGoogleAuthorizeErrors];
+
+export type AuthOauthAssociateGoogleAuthorizeResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: OAuth2AuthorizeResponse;
+};
+
+export type AuthOauthAssociateGoogleAuthorizeResponse =
+	AuthOauthAssociateGoogleAuthorizeResponses[keyof AuthOauthAssociateGoogleAuthorizeResponses];
+
+export type AuthOauthAssociateGoogleCallbackData = {
+	body?: never;
+	path?: never;
+	query?: {
+		/**
+		 * Code
+		 */
+		code?: string | null;
+		/**
+		 * Code Verifier
+		 */
+		code_verifier?: string | null;
+		/**
+		 * State
+		 */
+		state?: string | null;
+		/**
+		 * Error
+		 */
+		error?: string | null;
+	};
+	url: "/api/v1/auth/associate/google/callback";
+};
+
+export type AuthOauthAssociateGoogleCallbackErrors = {
+	/**
+	 * Bad Request
+	 */
+	400: ErrorModel;
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type AuthOauthAssociateGoogleCallbackError =
+	AuthOauthAssociateGoogleCallbackErrors[keyof AuthOauthAssociateGoogleCallbackErrors];
+
+export type AuthOauthAssociateGoogleCallbackResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: UserRead;
+};
+
+export type AuthOauthAssociateGoogleCallbackResponse =
+	AuthOauthAssociateGoogleCallbackResponses[keyof AuthOauthAssociateGoogleCallbackResponses];
+
+export type UsersUsersCurrentUserData = {
+	body?: never;
+	path?: never;
+	query?: never;
+	url: "/api/v1/users/me";
+};
+
+export type UsersUsersCurrentUserErrors = {
+	/**
+	 * Missing token or inactive user.
+	 */
+	401: unknown;
+};
+
+export type UsersUsersCurrentUserResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: UserRead;
+};
+
+export type UsersUsersCurrentUserResponse =
+	UsersUsersCurrentUserResponses[keyof UsersUsersCurrentUserResponses];
+
+export type UsersUsersPatchCurrentUserData = {
+	body: UserUpdate;
+	path?: never;
+	query?: never;
+	url: "/api/v1/users/me";
+};
+
+export type UsersUsersPatchCurrentUserErrors = {
+	/**
+	 * Bad Request
+	 */
+	400: ErrorModel;
+	/**
+	 * Missing token or inactive user.
+	 */
+	401: unknown;
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type UsersUsersPatchCurrentUserError =
+	UsersUsersPatchCurrentUserErrors[keyof UsersUsersPatchCurrentUserErrors];
+
+export type UsersUsersPatchCurrentUserResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: UserRead;
+};
+
+export type UsersUsersPatchCurrentUserResponse =
+	UsersUsersPatchCurrentUserResponses[keyof UsersUsersPatchCurrentUserResponses];
+
+export type UsersUsersDeleteUserData = {
+	body?: never;
+	path: {
+		/**
+		 * Id
+		 */
+		id: string;
+	};
+	query?: never;
+	url: "/api/v1/users/{id}";
+};
+
+export type UsersUsersDeleteUserErrors = {
+	/**
+	 * Missing token or inactive user.
+	 */
+	401: unknown;
+	/**
+	 * Not a superuser.
+	 */
+	403: unknown;
+	/**
+	 * The user does not exist.
+	 */
+	404: unknown;
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type UsersUsersDeleteUserError =
+	UsersUsersDeleteUserErrors[keyof UsersUsersDeleteUserErrors];
+
+export type UsersUsersDeleteUserResponses = {
+	/**
+	 * Successful Response
+	 */
+	204: void;
+};
+
+export type UsersUsersDeleteUserResponse =
+	UsersUsersDeleteUserResponses[keyof UsersUsersDeleteUserResponses];
+
+export type UsersUsersUserData = {
+	body?: never;
+	path: {
+		/**
+		 * Id
+		 */
+		id: string;
+	};
+	query?: never;
+	url: "/api/v1/users/{id}";
+};
+
+export type UsersUsersUserErrors = {
+	/**
+	 * Missing token or inactive user.
+	 */
+	401: unknown;
+	/**
+	 * Not a superuser.
+	 */
+	403: unknown;
+	/**
+	 * The user does not exist.
+	 */
+	404: unknown;
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type UsersUsersUserError =
+	UsersUsersUserErrors[keyof UsersUsersUserErrors];
+
+export type UsersUsersUserResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: UserRead;
+};
+
+export type UsersUsersUserResponse =
+	UsersUsersUserResponses[keyof UsersUsersUserResponses];
+
+export type UsersUsersPatchUserData = {
+	body: UserUpdate;
+	path: {
+		/**
+		 * Id
+		 */
+		id: string;
+	};
+	query?: never;
+	url: "/api/v1/users/{id}";
+};
+
+export type UsersUsersPatchUserErrors = {
+	/**
+	 * Bad Request
+	 */
+	400: ErrorModel;
+	/**
+	 * Missing token or inactive user.
+	 */
+	401: unknown;
+	/**
+	 * Not a superuser.
+	 */
+	403: unknown;
+	/**
+	 * The user does not exist.
+	 */
+	404: unknown;
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type UsersUsersPatchUserError =
+	UsersUsersPatchUserErrors[keyof UsersUsersPatchUserErrors];
+
+export type UsersUsersPatchUserResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: UserRead;
+};
+
+export type UsersUsersPatchUserResponse =
+	UsersUsersPatchUserResponses[keyof UsersUsersPatchUserResponses];

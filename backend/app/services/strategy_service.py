@@ -53,6 +53,7 @@ class StrategyService:
         description: str | None = None,
         parameters: dict[str, Any] | None = None,
         tags: list[str] | None = None,
+        user_id: str | None = None,
     ) -> Strategy:
         """Create a new strategy"""
 
@@ -62,6 +63,7 @@ class StrategyService:
             description=description or "",
             parameters=parameters or {},
             tags=tags or [],
+            user_id=user_id,
             created_by="system",  # 시스템 기본값
         )
 
@@ -84,6 +86,7 @@ class StrategyService:
         is_active: bool | None = None,
         is_template: bool | None = None,
         limit: int = 50,
+        user_id: str | None = None,
     ) -> list[Strategy]:
         """Get list of strategies with filters"""
 
@@ -94,6 +97,8 @@ class StrategyService:
             query["is_active"] = is_active
         if is_template is not None:
             query["is_template"] = is_template
+        if user_id:
+            query["user_id"] = user_id
 
         strategies = await Strategy.find(query).limit(limit).to_list()
         return strategies
@@ -290,6 +295,7 @@ class StrategyService:
         template_id: str,
         name: str,
         parameter_overrides: dict[str, Any] | None = None,
+        user_id: str | None = None,
     ) -> Strategy | None:
         """Create strategy instance from template"""
 
@@ -314,6 +320,7 @@ class StrategyService:
                 description=f"Created from template: {template.name}",
                 parameters=parameters,
                 tags=template.tags,
+                user_id=user_id,
             )
 
             return strategy

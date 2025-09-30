@@ -7,6 +7,8 @@ from collections.abc import AsyncGenerator
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import ValidationError
 
+from app.api.deps import get_current_active_verified_user
+from app.models.user import User
 from app.models.strategy import StrategyType
 from app.schemas.strategy import (
     StrategyFromTemplateRequest,
@@ -18,7 +20,7 @@ from app.schemas.strategy import (
 from app.services.service_factory import service_factory
 from app.services.strategy_service import StrategyService
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(get_current_active_verified_user)])
 
 
 async def get_strategy_service() -> AsyncGenerator[StrategyService, None]:
@@ -103,6 +105,7 @@ async def get_templates(
 async def create_strategy_from_template(
     template_id: str,
     request: StrategyFromTemplateRequest,
+    current_user: User = Depends(get_current_active_verified_user),
     service: StrategyService = Depends(get_strategy_service),
 ):
     """Create a strategy instance from template"""
@@ -111,6 +114,7 @@ async def create_strategy_from_template(
             template_id=template_id,
             name=request.name,
             parameter_overrides=request.parameter_overrides,
+            user_id=str(current_user.id),
         )
 
         if not strategy:

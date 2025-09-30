@@ -6,8 +6,10 @@ from datetime import datetime, timezone
 from typing import AsyncGenerator
 from fastapi import APIRouter, HTTPException, Depends
 
+from app.models.user import User
 from app.schemas.watchlist import WatchlistCreate, WatchlistUpdate
 from app.services.data_pipeline import DataPipeline
+from app.api.deps import get_current_active_verified_user
 
 router = APIRouter()
 
@@ -28,6 +30,7 @@ async def get_data_pipeline() -> AsyncGenerator[DataPipeline, None]:
 @router.post("/watchlist")
 async def update_watchlist(
     request: WatchlistUpdate,
+    current_user: User = Depends(get_current_active_verified_user),
     pipeline: DataPipeline = Depends(get_data_pipeline),
 ):
     """
@@ -66,7 +69,9 @@ async def update_watchlist(
         watchlist_description = request.description or ""
 
         # Check if watchlist exists
-        existing_watchlist = await pipeline.get_watchlist(watchlist_name)
+        existing_watchlist = await pipeline.get_watchlist(
+            watchlist_name, str(current_user.id)
+        )
 
         if existing_watchlist:
             # Update existing watchlist
@@ -94,6 +99,7 @@ async def update_watchlist(
                 name=watchlist_name,
                 symbols=request.symbols,
                 description=watchlist_description,
+                user_id=str(current_user.id),
             )
 
             if watchlist:
@@ -123,6 +129,7 @@ async def update_watchlist(
 @router.post("/watchlists")
 async def create_watchlist(
     request: WatchlistCreate,
+    current_user: User = Depends(get_current_active_verified_user),
     pipeline: DataPipeline = Depends(get_data_pipeline),
 ):
     """
@@ -158,6 +165,7 @@ async def create_watchlist(
             name=request.name,
             symbols=request.symbols,
             description=request.description,
+            user_id=str(current_user.id),
         )
 
         if watchlist:
@@ -179,6 +187,7 @@ async def create_watchlist(
 
 @router.get("/watchlists")
 async def list_watchlists(
+    current_user: User = Depends(get_current_active_verified_user),
     pipeline: DataPipeline = Depends(get_data_pipeline),
 ):
     """
@@ -207,7 +216,7 @@ async def list_watchlists(
         for detailed information including full symbol lists.
     """
     try:
-        watchlists = await pipeline.list_watchlists()
+        watchlists = await pipeline.list_watchlists(str(current_user.id))
 
         return {
             "watchlists": [
@@ -231,6 +240,7 @@ async def list_watchlists(
 @router.get("/watchlists/{name}")
 async def get_watchlist(
     name: str,
+    current_user: User = Depends(get_current_active_verified_user),
     pipeline: DataPipeline = Depends(get_data_pipeline),
 ):
     """
@@ -261,9 +271,12 @@ async def get_watchlist(
         Watchlist names are case-sensitive. Use GET /watchlists to see all available names.
     """
     try:
-        watchlist = await pipeline.get_watchlist(name)
+        watchlist = await pipeline.get_watchlist(name, str(current_user.id))
 
         if watchlist:
+            # 소유권 체크
+            if watchlist.user_id != str(current_user.id):
+                raise HTTPException(status_code=403, detail="Access denied")
             return {
                 "name": watchlist.name,
                 "description": watchlist.description,
@@ -286,6 +299,7 @@ async def get_watchlist(
 async def update_watchlist_by_name(
     name: str,
     request: WatchlistUpdate,
+    current_user: User = Depends(get_current_active_verified_user),
     pipeline: DataPipeline = Depends(get_data_pipeline),
 ):
     """
@@ -319,10 +333,14 @@ async def update_watchlist_by_name(
         Symbol list is completely replaced, not merged with existing symbols.
     """
     try:
-        existing_watchlist = await pipeline.get_watchlist(name)
+        existing_watchlist = await pipeline.get_watchlist(name, str(current_user.id))
 
         if not existing_watchlist:
             raise HTTPException(status_code=404, detail=f"Watchlist '{name}' not found")
+
+        # 소유권 체크
+        if existing_watchlist.user_id != str(current_user.id):
+            raise HTTPException(status_code=403, detail="Access denied")
 
         # Update watchlist
         existing_watchlist.symbols = request.symbols
@@ -354,6 +372,7 @@ async def update_watchlist_by_name(
 @router.delete("/watchlists/{name}")
 async def delete_watchlist(
     name: str,
+    current_user: User = Depends(get_current_active_verified_user),
     pipeline: DataPipeline = Depends(get_data_pipeline),
 ):
     """
@@ -386,10 +405,14 @@ async def delete_watchlist(
                 status_code=400, detail="Cannot delete the default watchlist"
             )
 
-        existing_watchlist = await pipeline.get_watchlist(name)
+        existing_watchlist = await pipeline.get_watchlist(name, str(current_user.id))
 
         if not existing_watchlist:
             raise HTTPException(status_code=404, detail=f"Watchlist '{name}' not found")
+
+        # 소유권 체크
+        if existing_watchlist.user_id != str(current_user.id):
+            raise HTTPException(status_code=403, detail="Access denied")
 
         await existing_watchlist.delete()
 

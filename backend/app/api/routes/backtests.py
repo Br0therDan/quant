@@ -8,6 +8,7 @@ from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, Query
 
 from app.models.backtest import BacktestStatus
+from app.models.user import User
 from app.schemas.backtest import (
     BacktestCreateRequest,
     BacktestExecutionListResponse,
@@ -24,8 +25,9 @@ from app.services.backtest_service import BacktestService
 from app.services.integrated_backtest_executor import IntegratedBacktestExecutor
 from app.models.strategy import StrategyType
 from app.models.backtest import BacktestConfig
+from app.api.deps import get_current_active_verified_user
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(get_current_active_verified_user)])
 
 
 async def get_backtest_service() -> AsyncGenerator[BacktestService, None]:
@@ -50,6 +52,7 @@ async def get_integrated_executor() -> IntegratedBacktestExecutor:
 @router.post("/", response_model=BacktestResponse)
 async def create_backtest(
     request: BacktestCreateRequest,
+    current_user: User = Depends(get_current_active_verified_user),
     service: BacktestService = Depends(get_backtest_service),
 ):
     """Create a new backtest"""
@@ -58,6 +61,7 @@ async def create_backtest(
             name=request.name,
             description=request.description,
             config=request.config,
+            user_id=str(current_user.id),
         )
 
         return BacktestResponse(
@@ -83,11 +87,14 @@ async def get_backtests(
     status: BacktestStatus | None = Query(None, description="실행 상태 필터"),
     skip: int = Query(0, ge=0, description="건너뛸 개수"),
     limit: int = Query(100, ge=1, le=1000, description="조회할 개수"),
+    current_user: User = Depends(get_current_active_verified_user),
     service: BacktestService = Depends(get_backtest_service),
 ):
     """Get list of backtests"""
     try:
-        backtests = await service.get_backtests(status=status, skip=skip, limit=limit)
+        backtests = await service.get_backtests(
+            status=status, skip=skip, limit=limit, user_id=str(current_user.id)
+        )
 
         backtest_responses = [
             BacktestResponse(
@@ -118,12 +125,17 @@ async def get_backtests(
 @router.get("/{backtest_id}", response_model=BacktestResponse)
 async def get_backtest(
     backtest_id: str,
+    current_user: User = Depends(get_current_active_verified_user),
     service: BacktestService = Depends(get_backtest_service),
 ):
     """Get backtest by ID"""
     backtest = await service.get_backtest(backtest_id)
     if not backtest:
         raise HTTPException(status_code=404, detail="Backtest not found")
+
+    # 소유권 확인
+    if backtest.user_id != str(current_user.id):
+        raise HTTPException(status_code=403, detail="Access denied")
 
     return BacktestResponse(
         id=str(backtest.id),
@@ -144,10 +156,19 @@ async def get_backtest(
 async def update_backtest(
     backtest_id: str,
     request: BacktestUpdateRequest,
+    current_user: User = Depends(get_current_active_verified_user),
     service: BacktestService = Depends(get_backtest_service),
 ):
     """Update backtest"""
     try:
+        # 먼저 소유권 확인
+        existing_backtest = await service.get_backtest(backtest_id)
+        if not existing_backtest:
+            raise HTTPException(status_code=404, detail="Backtest not found")
+
+        if existing_backtest.user_id != str(current_user.id):
+            raise HTTPException(status_code=403, detail="Access denied")
+
         backtest = await service.update_backtest(
             backtest_id=backtest_id,
             name=request.name,
@@ -181,9 +202,18 @@ async def update_backtest(
 @router.delete("/{backtest_id}")
 async def delete_backtest(
     backtest_id: str,
+    current_user: User = Depends(get_current_active_verified_user),
     service: BacktestService = Depends(get_backtest_service),
 ):
     """Delete backtest"""
+    # 먼저 소유권 확인
+    existing_backtest = await service.get_backtest(backtest_id)
+    if not existing_backtest:
+        raise HTTPException(status_code=404, detail="Backtest not found")
+
+    if existing_backtest.user_id != str(current_user.id):
+        raise HTTPException(status_code=403, detail="Access denied")
+
     success = await service.delete_backtest(backtest_id)
     if not success:
         raise HTTPException(status_code=404, detail="Backtest not found")
@@ -195,10 +225,19 @@ async def delete_backtest(
 async def execute_backtest(
     backtest_id: str,
     request: BacktestExecutionRequest,
+    current_user: User = Depends(get_current_active_verified_user),
     service: BacktestService = Depends(get_backtest_service),
 ):
     """Execute backtest with trading signals"""
     try:
+        # 먼저 소유권 확인
+        existing_backtest = await service.get_backtest(backtest_id)
+        if not existing_backtest:
+            raise HTTPException(status_code=404, detail="Backtest not found")
+
+        if existing_backtest.user_id != str(current_user.id):
+            raise HTTPException(status_code=403, detail="Access denied")
+
         execution = await service.execute_backtest(
             backtest_id=backtest_id,
             signals=request.signals,
@@ -232,10 +271,19 @@ async def get_backtest_executions(
     backtest_id: str,
     skip: int = Query(0, ge=0, description="건너뛸 개수"),
     limit: int = Query(100, ge=1, le=1000, description="조회할 개수"),
+    current_user: User = Depends(get_current_active_verified_user),
     service: BacktestService = Depends(get_backtest_service),
 ):
     """Get execution history for a backtest"""
     try:
+        # 먼저 소유권 확인
+        existing_backtest = await service.get_backtest(backtest_id)
+        if not existing_backtest:
+            raise HTTPException(status_code=404, detail="Backtest not found")
+
+        if existing_backtest.user_id != str(current_user.id):
+            raise HTTPException(status_code=403, detail="Access denied")
+
         executions = await service.get_backtest_executions(
             backtest_id=backtest_id,
             skip=skip,
@@ -274,10 +322,17 @@ async def get_backtest_results(
     execution_id: str | None = Query(None, description="실행 ID 필터"),
     skip: int = Query(0, ge=0, description="건너뛸 개수"),
     limit: int = Query(100, ge=1, le=1000, description="조회할 개수"),
+    current_user: User = Depends(get_current_active_verified_user),
     service: BacktestService = Depends(get_backtest_service),
 ):
     """Get backtest results from DuckDB (고성능 분석용)"""
     try:
+        # backtest_id가 제공된 경우 소유권 확인
+        if backtest_id:
+            existing_backtest = await service.get_backtest(backtest_id)
+            if existing_backtest and existing_backtest.user_id != str(current_user.id):
+                raise HTTPException(status_code=403, detail="Access denied")
+
         # DuckDB에서 백테스트 결과 요약 조회
         results_summary = service.get_duckdb_results_summary()
 
@@ -313,6 +368,7 @@ async def get_backtest_results(
 @router.post("/integrated", response_model=IntegratedBacktestResponse)
 async def create_and_run_integrated_backtest(
     request: IntegratedBacktestRequest,
+    current_user: User = Depends(get_current_active_verified_user),
     executor: IntegratedBacktestExecutor = Depends(get_integrated_executor),
     service: BacktestService = Depends(get_backtest_service),
 ):
@@ -331,7 +387,10 @@ async def create_and_run_integrated_backtest(
 
         # 2. 백테스트 생성
         backtest = await service.create_backtest(
-            name=request.name, description=request.description, config=config
+            name=request.name,
+            description=request.description,
+            config=config,
+            user_id=str(current_user.id),
         )
 
         # 3. 전략 타입 변환

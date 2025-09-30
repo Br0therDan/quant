@@ -7,6 +7,8 @@ from collections.abc import AsyncGenerator
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import ValidationError
 
+from app.api.deps import get_current_active_verified_user
+from app.models.user import User
 from app.models.strategy import StrategyType
 from app.schemas.strategy import (
     ExecutionListResponse,
@@ -21,7 +23,7 @@ from app.schemas.strategy import (
 from app.services.service_factory import service_factory
 from app.services.strategy_service import StrategyService
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(get_current_active_verified_user)])
 
 
 async def get_strategy_service() -> AsyncGenerator[StrategyService, None]:
@@ -36,6 +38,7 @@ async def get_strategy_service() -> AsyncGenerator[StrategyService, None]:
 @router.post("/", response_model=StrategyResponse)
 async def create_strategy(
     request: StrategyCreateRequest,
+    current_user: User = Depends(get_current_active_verified_user),
     service: StrategyService = Depends(get_strategy_service),
 ):
     """Create a new strategy"""
@@ -45,9 +48,12 @@ async def create_strategy(
             strategy_type=request.strategy_type,
             description=request.description,
             parameters=request.parameters,
-            tags=[tag for tag in request.tags if tag is not None]
-            if request.tags
-            else None,
+            tags=(
+                [tag for tag in request.tags if tag is not None]
+                if request.tags
+                else None
+            ),
+            user_id=str(current_user.id),
         )
 
         return StrategyResponse(
@@ -76,6 +82,7 @@ async def get_strategies(
     is_active: bool | None = Query(None, description="활성화 상태 필터"),
     is_template: bool | None = Query(None, description="템플릿 여부 필터"),
     limit: int = Query(50, ge=1, le=200, description="결과 수 제한"),
+    current_user: User = Depends(get_current_active_verified_user),
     service: StrategyService = Depends(get_strategy_service),
 ):
     """Get list of strategies"""
@@ -85,6 +92,7 @@ async def get_strategies(
             is_active=is_active,
             is_template=is_template,
             limit=limit,
+            user_id=str(current_user.id),
         )
 
         strategy_responses = [
@@ -116,6 +124,7 @@ async def get_strategies(
 @router.get("/{strategy_id}", response_model=StrategyResponse)
 async def get_strategy(
     strategy_id: str,
+    current_user: User = Depends(get_current_active_verified_user),
     service: StrategyService = Depends(get_strategy_service),
 ):
     """Get strategy by ID"""
@@ -124,6 +133,10 @@ async def get_strategy(
 
         if not strategy:
             raise HTTPException(status_code=404, detail="Strategy not found")
+
+        # 소유권 체크 (템플릿이 아닌 경우)
+        if not strategy.is_template and strategy.user_id != str(current_user.id):
+            raise HTTPException(status_code=403, detail="Access denied")
 
         return StrategyResponse(
             id=str(strategy.id),
@@ -149,19 +162,32 @@ async def get_strategy(
 async def update_strategy(
     strategy_id: str,
     request: StrategyUpdateRequest,
+    current_user: User = Depends(get_current_active_verified_user),
     service: StrategyService = Depends(get_strategy_service),
 ):
     """Update strategy"""
     try:
+        # 먼저 소유권 확인
+        existing_strategy = await service.get_strategy(strategy_id)
+        if not existing_strategy:
+            raise HTTPException(status_code=404, detail="Strategy not found")
+
+        if not existing_strategy.is_template and existing_strategy.user_id != str(
+            current_user.id
+        ):
+            raise HTTPException(status_code=403, detail="Access denied")
+
         strategy = await service.update_strategy(
             strategy_id=strategy_id,
             name=request.name,
             description=request.description,
             parameters=request.parameters,
             is_active=request.is_active,
-            tags=[tag for tag in request.tags if tag is not None]
-            if request.tags
-            else None,
+            tags=(
+                [tag for tag in request.tags if tag is not None]
+                if request.tags
+                else None
+            ),
         )
 
         if not strategy:
@@ -192,10 +218,21 @@ async def update_strategy(
 @router.delete("/{strategy_id}")
 async def delete_strategy(
     strategy_id: str,
+    current_user: User = Depends(get_current_active_verified_user),
     service: StrategyService = Depends(get_strategy_service),
 ):
     """Delete strategy (soft delete)"""
     try:
+        # 먼저 소유권 확인
+        existing_strategy = await service.get_strategy(strategy_id)
+        if not existing_strategy:
+            raise HTTPException(status_code=404, detail="Strategy not found")
+
+        if not existing_strategy.is_template and existing_strategy.user_id != str(
+            current_user.id
+        ):
+            raise HTTPException(status_code=403, detail="Access denied")
+
         success = await service.delete_strategy(strategy_id)
 
         if not success:
@@ -213,10 +250,21 @@ async def delete_strategy(
 async def execute_strategy(
     strategy_id: str,
     request: StrategyExecuteRequest,
+    current_user: User = Depends(get_current_active_verified_user),
     service: StrategyService = Depends(get_strategy_service),
 ):
     """Execute strategy and generate signal"""
     try:
+        # 먼저 소유권 확인
+        existing_strategy = await service.get_strategy(strategy_id)
+        if not existing_strategy:
+            raise HTTPException(status_code=404, detail="Strategy not found")
+
+        if not existing_strategy.is_template and existing_strategy.user_id != str(
+            current_user.id
+        ):
+            raise HTTPException(status_code=403, detail="Access denied")
+
         execution = await service.execute_strategy(
             strategy_id=strategy_id,
             symbol=request.symbol,

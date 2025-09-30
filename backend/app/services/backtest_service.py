@@ -225,6 +225,7 @@ class BacktestService:
         name: str,
         description: str = "",
         config: BacktestConfig | None = None,
+        user_id: str | None = None,
     ) -> Backtest:
         """백테스트 생성"""
         from app.models.backtest import BacktestConfig  # 순환 import 방지
@@ -244,6 +245,7 @@ class BacktestService:
             name=name,
             description=description,
             config=config,
+            user_id=user_id,
             start_time=None,
             end_time=None,
             duration_seconds=None,
@@ -263,11 +265,14 @@ class BacktestService:
         status: BacktestStatus | None = None,
         skip: int = 0,
         limit: int = 100,
+        user_id: str | None = None,
     ) -> list[Backtest]:
         """백테스트 목록 조회"""
         query = {}
         if status:
             query["status"] = status
+        if user_id:
+            query["user_id"] = user_id
 
         return await Backtest.find(query).skip(skip).limit(limit).to_list()
 

@@ -335,7 +335,11 @@ class DataPipeline:
             return []
 
     async def create_watchlist(
-        self, name: str, symbols: List[str], description: str = ""
+        self,
+        name: str,
+        symbols: List[str],
+        description: str = "",
+        user_id: str | None = None,
     ) -> Optional[Watchlist]:
         """Create a new watchlist"""
         try:
@@ -343,6 +347,7 @@ class DataPipeline:
                 name=name,
                 description=description,
                 symbols=symbols,
+                user_id=user_id,
                 auto_update=True,
                 update_interval=3600,
                 last_updated=datetime.now(timezone.utc),
@@ -354,18 +359,26 @@ class DataPipeline:
             logger.error(f"Failed to create watchlist '{name}': {e}")
             return None
 
-    async def get_watchlist(self, name: str) -> Optional[Watchlist]:
+    async def get_watchlist(
+        self, name: str, user_id: str | None = None
+    ) -> Optional[Watchlist]:
         """Get a watchlist by name"""
         try:
-            return await Watchlist.find_one(Watchlist.name == name)
+            query = {"name": name}
+            if user_id:
+                query["user_id"] = user_id
+            return await Watchlist.find_one(query)
         except Exception as e:
             logger.error(f"Failed to get watchlist '{name}': {e}")
             return None
 
-    async def list_watchlists(self) -> List[Watchlist]:
+    async def list_watchlists(self, user_id: str | None = None) -> List[Watchlist]:
         """List all watchlists"""
         try:
-            return await Watchlist.find_all().to_list()
+            if user_id:
+                return await Watchlist.find({"user_id": user_id}).to_list()
+            else:
+                return await Watchlist.find_all().to_list()
         except Exception as e:
             logger.error(f"Failed to list watchlists: {e}")
             return []

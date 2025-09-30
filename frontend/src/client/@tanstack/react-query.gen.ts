@@ -8,6 +8,7 @@ import {
 
 import { client } from "../client.gen";
 import {
+	Auth,
 	Backtests,
 	CompanyData,
 	Health,
@@ -16,9 +17,30 @@ import {
 	PipelineStatus,
 	Strategies,
 	Templates,
+	Users,
 	Watchlists,
 } from "../sdk.gen";
 import type {
+	AuthAuthJwtLoginData,
+	AuthAuthJwtLoginError,
+	AuthAuthJwtLoginResponse,
+	AuthAuthJwtLogoutData,
+	AuthOauthAssociateGoogleAuthorizeData,
+	AuthOauthAssociateGoogleCallbackData,
+	AuthOauthGoogleJwtAuthorizeData,
+	AuthOauthGoogleJwtCallbackData,
+	AuthRegisterRegisterData,
+	AuthRegisterRegisterError,
+	AuthRegisterRegisterResponse,
+	AuthResetForgotPasswordData,
+	AuthResetForgotPasswordError,
+	AuthResetResetPasswordData,
+	AuthResetResetPasswordError,
+	AuthVerifyRequestTokenData,
+	AuthVerifyRequestTokenError,
+	AuthVerifyVerifyData,
+	AuthVerifyVerifyError,
+	AuthVerifyVerifyResponse,
 	BacktestsCreateAndRunIntegratedBacktestData,
 	BacktestsCreateAndRunIntegratedBacktestError,
 	BacktestsCreateAndRunIntegratedBacktestResponse,
@@ -33,8 +55,8 @@ import type {
 	BacktestsGetBacktestData,
 	BacktestsGetBacktestExecutionsData,
 	BacktestsGetBacktestResultsData,
-	BacktestsGetBacktestSummaryAnalyticsData,
 	BacktestsGetBacktestsData,
+	BacktestsGetBacktestSummaryAnalyticsData,
 	BacktestsGetPerformanceAnalyticsData,
 	BacktestsGetTradesAnalyticsData,
 	BacktestsHealthCheckData,
@@ -91,6 +113,17 @@ import type {
 	TemplatesGetTemplateData,
 	TemplatesGetTemplatesData,
 	TemplatesGetTemplateUsageStatsData,
+	UsersUsersCurrentUserData,
+	UsersUsersDeleteUserData,
+	UsersUsersDeleteUserError,
+	UsersUsersDeleteUserResponse,
+	UsersUsersPatchCurrentUserData,
+	UsersUsersPatchCurrentUserError,
+	UsersUsersPatchCurrentUserResponse,
+	UsersUsersPatchUserData,
+	UsersUsersPatchUserError,
+	UsersUsersPatchUserResponse,
+	UsersUsersUserData,
 	WatchlistsCreateWatchlistData,
 	WatchlistsCreateWatchlistError,
 	WatchlistsDeleteWatchlistData,
@@ -1883,4 +1916,447 @@ export const templatesGetTemplateUsageStatsOptions = (
 		},
 		queryKey: templatesGetTemplateUsageStatsQueryKey(options),
 	});
+};
+
+/**
+ * Auth:Jwt.Login
+ */
+export const authAuthJwtLoginMutation = (
+	options?: Partial<Options<AuthAuthJwtLoginData>>,
+): UseMutationOptions<
+	AuthAuthJwtLoginResponse,
+	AuthAuthJwtLoginError,
+	Options<AuthAuthJwtLoginData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		AuthAuthJwtLoginResponse,
+		AuthAuthJwtLoginError,
+		Options<AuthAuthJwtLoginData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await Auth.authAuthJwt.login({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+		meta: {
+			id: "authAuthJwtLogin",
+		},
+	};
+	return mutationOptions;
+};
+
+/**
+ * Auth:Jwt.Logout
+ */
+export const authAuthJwtLogoutMutation = (
+	options?: Partial<Options<AuthAuthJwtLogoutData>>,
+): UseMutationOptions<
+	unknown,
+	DefaultError,
+	Options<AuthAuthJwtLogoutData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		unknown,
+		DefaultError,
+		Options<AuthAuthJwtLogoutData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await Auth.authAuthJwt.logout({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+		meta: {
+			id: "authAuthJwtLogout",
+		},
+	};
+	return mutationOptions;
+};
+
+/**
+ * Register:Register
+ */
+export const authRegisterRegisterMutation = (
+	options?: Partial<Options<AuthRegisterRegisterData>>,
+): UseMutationOptions<
+	AuthRegisterRegisterResponse,
+	AuthRegisterRegisterError,
+	Options<AuthRegisterRegisterData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		AuthRegisterRegisterResponse,
+		AuthRegisterRegisterError,
+		Options<AuthRegisterRegisterData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await Auth.authRegisterRegister({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+		meta: {
+			id: "authRegisterRegister",
+		},
+	};
+	return mutationOptions;
+};
+
+/**
+ * Reset:Forgot Password
+ */
+export const authResetForgotPasswordMutation = (
+	options?: Partial<Options<AuthResetForgotPasswordData>>,
+): UseMutationOptions<
+	unknown,
+	AuthResetForgotPasswordError,
+	Options<AuthResetForgotPasswordData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		unknown,
+		AuthResetForgotPasswordError,
+		Options<AuthResetForgotPasswordData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await Auth.authResetForgotPassword({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+		meta: {
+			id: "authResetForgotPassword",
+		},
+	};
+	return mutationOptions;
+};
+
+/**
+ * Reset:Reset Password
+ */
+export const authResetResetPasswordMutation = (
+	options?: Partial<Options<AuthResetResetPasswordData>>,
+): UseMutationOptions<
+	unknown,
+	AuthResetResetPasswordError,
+	Options<AuthResetResetPasswordData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		unknown,
+		AuthResetResetPasswordError,
+		Options<AuthResetResetPasswordData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await Auth.authResetResetPassword({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+		meta: {
+			id: "authResetResetPassword",
+		},
+	};
+	return mutationOptions;
+};
+
+/**
+ * Verify:Request-Token
+ */
+export const authVerifyRequestTokenMutation = (
+	options?: Partial<Options<AuthVerifyRequestTokenData>>,
+): UseMutationOptions<
+	unknown,
+	AuthVerifyRequestTokenError,
+	Options<AuthVerifyRequestTokenData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		unknown,
+		AuthVerifyRequestTokenError,
+		Options<AuthVerifyRequestTokenData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await Auth.authVerifyRequestToken({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+		meta: {
+			id: "authVerifyRequestToken",
+		},
+	};
+	return mutationOptions;
+};
+
+/**
+ * Verify:Verify
+ */
+export const authVerifyVerifyMutation = (
+	options?: Partial<Options<AuthVerifyVerifyData>>,
+): UseMutationOptions<
+	AuthVerifyVerifyResponse,
+	AuthVerifyVerifyError,
+	Options<AuthVerifyVerifyData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		AuthVerifyVerifyResponse,
+		AuthVerifyVerifyError,
+		Options<AuthVerifyVerifyData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await Auth.authVerifyVerify({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+		meta: {
+			id: "authVerifyVerify",
+		},
+	};
+	return mutationOptions;
+};
+
+export const authOauthGoogleJwtAuthorizeQueryKey = (
+	options?: Options<AuthOauthGoogleJwtAuthorizeData>,
+) => createQueryKey("authOauthGoogleJwtAuthorize", options);
+
+/**
+ * Oauth:Google.Jwt.Authorize
+ */
+export const authOauthGoogleJwtAuthorizeOptions = (
+	options?: Options<AuthOauthGoogleJwtAuthorizeData>,
+) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await Auth.authOauthGoogle.jwt.authorize({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			});
+			return data;
+		},
+		queryKey: authOauthGoogleJwtAuthorizeQueryKey(options),
+	});
+};
+
+export const authOauthGoogleJwtCallbackQueryKey = (
+	options?: Options<AuthOauthGoogleJwtCallbackData>,
+) => createQueryKey("authOauthGoogleJwtCallback", options);
+
+/**
+ * Oauth:Google.Jwt.Callback
+ * The response varies based on the authentication backend used.
+ */
+export const authOauthGoogleJwtCallbackOptions = (
+	options?: Options<AuthOauthGoogleJwtCallbackData>,
+) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await Auth.authOauthGoogle.jwt.callback({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			});
+			return data;
+		},
+		queryKey: authOauthGoogleJwtCallbackQueryKey(options),
+	});
+};
+
+export const authOauthAssociateGoogleAuthorizeQueryKey = (
+	options?: Options<AuthOauthAssociateGoogleAuthorizeData>,
+) => createQueryKey("authOauthAssociateGoogleAuthorize", options);
+
+/**
+ * Oauth-Associate:Google.Authorize
+ */
+export const authOauthAssociateGoogleAuthorizeOptions = (
+	options?: Options<AuthOauthAssociateGoogleAuthorizeData>,
+) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await Auth.authOauthAssociateGoogle.authorize({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			});
+			return data;
+		},
+		queryKey: authOauthAssociateGoogleAuthorizeQueryKey(options),
+	});
+};
+
+export const authOauthAssociateGoogleCallbackQueryKey = (
+	options?: Options<AuthOauthAssociateGoogleCallbackData>,
+) => createQueryKey("authOauthAssociateGoogleCallback", options);
+
+/**
+ * Oauth-Associate:Google.Callback
+ * The response varies based on the authentication backend used.
+ */
+export const authOauthAssociateGoogleCallbackOptions = (
+	options?: Options<AuthOauthAssociateGoogleCallbackData>,
+) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await Auth.authOauthAssociateGoogle.callback({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			});
+			return data;
+		},
+		queryKey: authOauthAssociateGoogleCallbackQueryKey(options),
+	});
+};
+
+export const usersUsersCurrentUserQueryKey = (
+	options?: Options<UsersUsersCurrentUserData>,
+) => createQueryKey("usersUsersCurrentUser", options);
+
+/**
+ * Users:Current User
+ */
+export const usersUsersCurrentUserOptions = (
+	options?: Options<UsersUsersCurrentUserData>,
+) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await Users.usersUsersCurrentUser({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			});
+			return data;
+		},
+		queryKey: usersUsersCurrentUserQueryKey(options),
+	});
+};
+
+/**
+ * Users:Patch Current User
+ */
+export const usersUsersPatchCurrentUserMutation = (
+	options?: Partial<Options<UsersUsersPatchCurrentUserData>>,
+): UseMutationOptions<
+	UsersUsersPatchCurrentUserResponse,
+	UsersUsersPatchCurrentUserError,
+	Options<UsersUsersPatchCurrentUserData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		UsersUsersPatchCurrentUserResponse,
+		UsersUsersPatchCurrentUserError,
+		Options<UsersUsersPatchCurrentUserData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await Users.usersUsersPatchCurrentUser({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+		meta: {
+			id: "usersUsersPatchCurrentUser",
+		},
+	};
+	return mutationOptions;
+};
+
+/**
+ * Users:Delete User
+ */
+export const usersUsersDeleteUserMutation = (
+	options?: Partial<Options<UsersUsersDeleteUserData>>,
+): UseMutationOptions<
+	UsersUsersDeleteUserResponse,
+	UsersUsersDeleteUserError,
+	Options<UsersUsersDeleteUserData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		UsersUsersDeleteUserResponse,
+		UsersUsersDeleteUserError,
+		Options<UsersUsersDeleteUserData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await Users.usersUsersDeleteUser({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+		meta: {
+			id: "usersUsersDeleteUser",
+		},
+	};
+	return mutationOptions;
+};
+
+export const usersUsersUserQueryKey = (options: Options<UsersUsersUserData>) =>
+	createQueryKey("usersUsersUser", options);
+
+/**
+ * Users:User
+ */
+export const usersUsersUserOptions = (options: Options<UsersUsersUserData>) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await Users.usersUsersUser({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			});
+			return data;
+		},
+		queryKey: usersUsersUserQueryKey(options),
+	});
+};
+
+/**
+ * Users:Patch User
+ */
+export const usersUsersPatchUserMutation = (
+	options?: Partial<Options<UsersUsersPatchUserData>>,
+): UseMutationOptions<
+	UsersUsersPatchUserResponse,
+	UsersUsersPatchUserError,
+	Options<UsersUsersPatchUserData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		UsersUsersPatchUserResponse,
+		UsersUsersPatchUserError,
+		Options<UsersUsersPatchUserData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await Users.usersUsersPatchUser({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+		meta: {
+			id: "usersUsersPatchUser",
+		},
+	};
+	return mutationOptions;
 };
