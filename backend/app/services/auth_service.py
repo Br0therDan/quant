@@ -26,6 +26,4 @@ auth_backend = AuthenticationBackend(
     get_strategy=get_jwt_strategy,
 )
 
-fastapi_users = FastAPIUsers[User, PydanticObjectId](get_user_manager, [auth_backend])  # type: ignore
-
-current_active_user = fastapi_users.current_user(active=True)
+fastapi_users = FastAPIUsers[User, PydanticObjectId](get_user_manager, [auth_backend])

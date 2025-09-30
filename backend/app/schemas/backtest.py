@@ -5,8 +5,8 @@ Backtest API Schemas
 from datetime import datetime
 from typing import Any
 
-from pydantic import BaseModel, Field
-
+from pydantic import Field
+from .base_schema import BaseSchema
 from app.models.backtest import (
     BacktestConfig,
     BacktestStatus,
@@ -17,7 +17,7 @@ from app.models.backtest import (
 
 
 # Request Schemas
-class BacktestCreateRequest(BaseModel):
+class BacktestCreateRequest(BaseSchema):
     """백테스트 생성 요청"""
 
     name: str = Field(..., description="백테스트 이름")
@@ -25,7 +25,7 @@ class BacktestCreateRequest(BaseModel):
     config: BacktestConfig = Field(..., description="백테스트 설정")
 
 
-class BacktestUpdateRequest(BaseModel):
+class BacktestUpdateRequest(BaseSchema):
     """백테스트 수정 요청"""
 
     name: str | None = Field(None, description="백테스트 이름")
@@ -33,7 +33,7 @@ class BacktestUpdateRequest(BaseModel):
     config: BacktestConfig | None = Field(None, description="백테스트 설정")
 
 
-class BacktestExecutionRequest(BaseModel):
+class BacktestExecutionRequest(BaseSchema):
     """백테스트 실행 요청"""
 
     signals: list[dict[str, Any]] = Field(..., description="트레이딩 시그널 목록")
@@ -60,7 +60,7 @@ class BacktestExecutionRequest(BaseModel):
 
 
 # Response Schemas
-class BacktestResponse(BaseModel):
+class BacktestResponse(BaseSchema):
     """백테스트 응답"""
 
     id: str = Field(..., description="백테스트 ID")
@@ -76,14 +76,14 @@ class BacktestResponse(BaseModel):
     updated_at: datetime | None = Field(None, description="수정 시간")
 
 
-class BacktestListResponse(BaseModel):
+class BacktestListResponse(BaseSchema):
     """백테스트 목록 응답"""
 
     backtests: list[BacktestResponse] = Field(..., description="백테스트 목록")
     total: int = Field(..., description="총 개수")
 
 
-class BacktestExecutionResponse(BaseModel):
+class BacktestExecutionResponse(BaseSchema):
     """백테스트 실행 응답"""
 
     id: str = Field(..., description="실행 ID")
@@ -99,14 +99,14 @@ class BacktestExecutionResponse(BaseModel):
     created_at: datetime = Field(..., description="생성 시간")
 
 
-class BacktestExecutionListResponse(BaseModel):
+class BacktestExecutionListResponse(BaseSchema):
     """백테스트 실행 목록 응답"""
 
     executions: list[BacktestExecutionResponse] = Field(..., description="실행 목록")
     total: int = Field(..., description="총 개수")
 
 
-class BacktestResultResponse(BaseModel):
+class BacktestResultResponse(BaseSchema):
     """백테스트 결과 응답"""
 
     id: str = Field(..., description="결과 ID")
@@ -142,7 +142,7 @@ class BacktestResultResponse(BaseModel):
     created_at: datetime = Field(..., description="생성 시간")
 
 
-class BacktestResultListResponse(BaseModel):
+class BacktestResultListResponse(BaseSchema):
     """백테스트 결과 목록 응답"""
 
     results: list[BacktestResultResponse] = Field(..., description="결과 목록")
@@ -150,7 +150,7 @@ class BacktestResultListResponse(BaseModel):
 
 
 # Integrated Backtest Schemas
-class IntegratedBacktestRequest(BaseModel):
+class IntegratedBacktestRequest(BaseSchema):
     """통합 백테스트 요청"""
 
     name: str = Field(..., description="백테스트 이름")
@@ -163,7 +163,7 @@ class IntegratedBacktestRequest(BaseModel):
     initial_capital: float = Field(default=100000.0, description="초기 자본")
 
 
-class IntegratedBacktestResponse(BaseModel):
+class IntegratedBacktestResponse(BaseSchema):
     """통합 백테스트 응답"""
 
     backtest_id: str = Field(..., description="백테스트 ID")

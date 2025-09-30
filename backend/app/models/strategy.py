@@ -6,7 +6,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Any
 
-from beanie import Document
+from .base_model import BaseDocument
 from pydantic import Field
 
 
@@ -27,7 +27,7 @@ class SignalType(str, Enum):
     HOLD = "HOLD"
 
 
-class Strategy(Document):
+class Strategy(BaseDocument):
     """전략 정의 문서 모델"""
 
     name: str = Field(..., description="전략 이름")
@@ -58,7 +58,7 @@ class Strategy(Document):
         ]
 
 
-class StrategyTemplate(Document):
+class StrategyTemplate(BaseDocument):
     """전략 템플릿 문서 모델"""
 
     name: str = Field(..., description="템플릿 이름")
@@ -88,7 +88,7 @@ class StrategyTemplate(Document):
         ]
 
 
-class StrategyExecution(Document):
+class StrategyExecution(BaseDocument):
     """전략 실행 기록 문서 모델"""
 
     strategy_id: str = Field(..., description="전략 ID")

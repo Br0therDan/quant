@@ -4,11 +4,11 @@ Market Data Models using Beanie (MongoDB ODM)
 
 from datetime import datetime
 from typing import Optional
-from beanie import Document
+from .base_model import BaseDocument
 from pydantic import Field
 
 
-class MarketData(Document):
+class MarketData(BaseDocument):
     """Market data document model"""
 
     symbol: str = Field(..., description="Stock symbol")
@@ -39,7 +39,7 @@ class MarketData(Document):
         ]
 
 
-class DataRequest(Document):
+class DataRequest(BaseDocument):
     """Data request tracking document"""
 
     symbol: str = Field(..., description="Requested symbol")
@@ -67,7 +67,7 @@ class DataRequest(Document):
         indexes = ["symbol", "status", "requested_at"]
 
 
-class DataQuality(Document):
+class DataQuality(BaseDocument):
     """Data quality metrics document"""
 
     symbol: str = Field(..., description="Symbol")

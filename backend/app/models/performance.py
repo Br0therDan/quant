@@ -4,11 +4,11 @@ Performance Models using Beanie (MongoDB ODM)
 
 from datetime import datetime
 
-from beanie import Document
+from .base_model import BaseDocument
 from pydantic import Field
 
 
-class StrategyPerformance(Document):
+class StrategyPerformance(BaseDocument):
     """전략 성과 정보 문서 모델"""
 
     strategy_id: str = Field(..., description="전략 ID")

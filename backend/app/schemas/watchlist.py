@@ -1,9 +1,9 @@
 from datetime import datetime
 from typing import List, Optional
-from pydantic import BaseModel
+from .base_schema import BaseSchema
 
 
-class UpdateRequest(BaseModel):
+class UpdateRequest(BaseSchema):
     """Update request model"""
 
     symbols: Optional[List[str]] = None
@@ -11,7 +11,7 @@ class UpdateRequest(BaseModel):
     end_date: Optional[datetime] = None
 
 
-class WatchlistUpdate(BaseModel):
+class WatchlistUpdate(BaseSchema):
     """Watchlist update model"""
 
     symbols: List[str]
@@ -19,7 +19,7 @@ class WatchlistUpdate(BaseModel):
     description: Optional[str] = ""
 
 
-class WatchlistCreate(BaseModel):
+class WatchlistCreate(BaseSchema):
     """Watchlist creation model"""
 
     name: str

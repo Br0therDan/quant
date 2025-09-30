@@ -4,11 +4,11 @@ Company Information Models
 
 from datetime import datetime
 from typing import Optional
-from beanie import Document
+from .base_model import BaseDocument
 from pydantic import Field
 
 
-class Company(Document):
+class Company(BaseDocument):
     """Company information document model"""
 
     symbol: str = Field(..., description="Stock symbol")
@@ -49,7 +49,7 @@ class Company(Document):
         ]
 
 
-class Watchlist(Document):
+class Watchlist(BaseDocument):
     """Watchlist for tracking symbols to monitor"""
 
     name: str = Field(..., description="Watchlist name")

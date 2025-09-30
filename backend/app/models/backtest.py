@@ -5,7 +5,7 @@ Backtest Service Models
 from datetime import datetime
 from enum import Enum
 
-from beanie import Document
+from .base_model import BaseDocument
 from pydantic import BaseModel, Field
 
 
@@ -118,7 +118,7 @@ class PerformanceMetrics(BaseModel):
     win_rate: float = Field(..., description="승률")
 
 
-class Backtest(Document):
+class Backtest(BaseDocument):
     """백테스트 문서 모델"""
 
     # 기본 정보
@@ -158,7 +158,7 @@ class Backtest(Document):
         ]
 
 
-class BacktestExecution(Document):
+class BacktestExecution(BaseDocument):
     """백테스트 실행 내역"""
 
     backtest_id: str = Field(..., description="백테스트 ID")
@@ -189,7 +189,7 @@ class BacktestExecution(Document):
         ]
 
 
-class BacktestResult(Document):
+class BacktestResult(BaseDocument):
     """백테스트 결과"""
 
     backtest_id: str = Field(..., description="백테스트 ID")

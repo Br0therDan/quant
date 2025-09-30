@@ -5,13 +5,13 @@ Strategy API Schemas
 from datetime import datetime
 from typing import Any
 
-from pydantic import BaseModel, Field
-
+from pydantic import Field
+from .base_schema import BaseSchema
 from app.models.strategy import SignalType, StrategyType
 
 
 # Request Schemas
-class StrategyCreateRequest(BaseModel):
+class StrategyCreateRequest(BaseSchema):
     """Strategy creation request"""
 
     name: str = Field(..., description="전략 이름")
@@ -21,24 +21,24 @@ class StrategyCreateRequest(BaseModel):
     tags: list[str] = Field(default_factory=list, description="태그")
 
 
-class StrategyUpdateRequest(BaseModel):
+class StrategyUpdateRequest(BaseSchema):
     """Strategy update request"""
 
     name: str | None = Field(None, description="전략 이름")
     description: str | None = Field(None, description="전략 설명")
-    parameters: dict[str, Any | None] = Field(None, description="전략 파라미터")
+    parameters: dict[str, Any | None] | None = Field(None, description="전략 파라미터")
     is_active: bool | None = Field(None, description="활성화 상태")
-    tags: list[str | None] = Field(None, description="태그")
+    tags: list[str | None] | None = Field(None, description="태그")
 
 
-class StrategyExecuteRequest(BaseModel):
+class StrategyExecuteRequest(BaseSchema):
     """Strategy execution request"""
 
     symbol: str = Field(..., description="대상 심볼")
     market_data: dict[str, Any] = Field(..., description="시장 데이터")
 
 
-class TemplateCreateRequest(BaseModel):
+class TemplateCreateRequest(BaseSchema):
     """Template creation request"""
 
     name: str = Field(..., description="템플릿 이름")
@@ -47,19 +47,21 @@ class TemplateCreateRequest(BaseModel):
     default_parameters: dict[str, Any] = Field(
         default_factory=dict, description="기본 파라미터"
     )
-    parameter_schema: dict[str, Any | None] = Field(None, description="파라미터 스키마")
+    parameter_schema: dict[str, Any | None] | None = Field(None, description="파라미터 스키마")
     tags: list[str] = Field(default_factory=list, description="태그")
 
 
-class StrategyFromTemplateRequest(BaseModel):
+class StrategyFromTemplateRequest(BaseSchema):
     """Create strategy from template request"""
 
     name: str = Field(..., description="전략 이름")
-    parameter_overrides: dict[str, Any | None] = Field(None, description="파라미터 오버라이드")
+    parameter_overrides: dict[str, Any | None] | None = Field(
+        None, description="파라미터 오버라이드"
+    )
 
 
 # Response Schemas
-class StrategyResponse(BaseModel):
+class StrategyResponse(BaseSchema):
     """Strategy response"""
 
     id: str = Field(..., description="전략 ID")
@@ -78,7 +80,7 @@ class StrategyResponse(BaseModel):
         from_attributes = True
 
 
-class TemplateResponse(BaseModel):
+class TemplateResponse(BaseSchema):
     """Template response"""
 
     id: str = Field(..., description="템플릿 ID")
@@ -88,7 +90,7 @@ class TemplateResponse(BaseModel):
     default_parameters: dict[str, Any] = Field(
         default_factory=dict, description="기본 파라미터"
     )
-    parameter_schema: dict[str, Any | None] = Field(None, description="파라미터 스키마")
+    parameter_schema: dict[str, Any | None] | None = Field(None, description="파라미터 스키마")
     usage_count: int = Field(..., description="사용 횟수")
     created_at: datetime = Field(..., description="생성 시간")
     updated_at: datetime = Field(..., description="수정 시간")
@@ -98,7 +100,7 @@ class TemplateResponse(BaseModel):
         from_attributes = True
 
 
-class ExecutionResponse(BaseModel):
+class ExecutionResponse(BaseSchema):
     """Execution response"""
 
     id: str = Field(..., description="실행 ID")
@@ -117,7 +119,7 @@ class ExecutionResponse(BaseModel):
         from_attributes = True
 
 
-class PerformanceResponse(BaseModel):
+class PerformanceResponse(BaseSchema):
     """Performance response"""
 
     id: str = Field(..., description="성과 ID")
@@ -146,21 +148,21 @@ class PerformanceResponse(BaseModel):
 
 
 # List Response Schemas
-class StrategyListResponse(BaseModel):
+class StrategyListResponse(BaseSchema):
     """Strategy list response"""
 
     strategies: list[StrategyResponse] = Field(..., description="전략 목록")
     total: int = Field(..., description="총 개수")
 
 
-class TemplateListResponse(BaseModel):
+class TemplateListResponse(BaseSchema):
     """Template list response"""
 
     templates: list[TemplateResponse] = Field(..., description="템플릿 목록")
     total: int = Field(..., description="총 개수")
 
 
-class ExecutionListResponse(BaseModel):
+class ExecutionListResponse(BaseSchema):
     """Execution list response"""
 
     executions: list[ExecutionResponse] = Field(..., description="실행 목록")

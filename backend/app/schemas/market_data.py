@@ -4,10 +4,11 @@ Data schemas for request/response models
 
 from datetime import datetime
 from typing import Optional, List
-from pydantic import BaseModel, Field
+from pydantic import Field
+from .base_schema import BaseSchema
 
 
-class MarketDataResponse(BaseModel):
+class MarketDataResponse(BaseSchema):
     """Response model for market data"""
 
     symbol: str
@@ -22,7 +23,7 @@ class MarketDataResponse(BaseModel):
     split_coefficient: Optional[float] = None
 
 
-class MarketDataRequest(BaseModel):
+class MarketDataRequest(BaseSchema):
     """Request model for market data"""
 
     symbol: str = Field(..., description="Stock symbol")
@@ -33,7 +34,7 @@ class MarketDataRequest(BaseModel):
     )
 
 
-class DataQualityResponse(BaseModel):
+class DataQualityResponse(BaseSchema):
     """Response model for data quality metrics"""
 
     symbol: str
@@ -47,7 +48,7 @@ class DataQualityResponse(BaseModel):
     analyzed_at: datetime
 
 
-class DataRequestStatus(BaseModel):
+class DataRequestStatus(BaseSchema):
     """Response model for data request status"""
 
     id: str
@@ -61,7 +62,7 @@ class DataRequestStatus(BaseModel):
     completed_at: Optional[datetime] = None
 
 
-class BulkDataRequest(BaseModel):
+class BulkDataRequest(BaseSchema):
     """Request model for bulk data operations"""
 
     symbols: List[str] = Field(..., description="List of symbols")
@@ -70,7 +71,7 @@ class BulkDataRequest(BaseModel):
     interval: str = Field(default="daily", description="Data interval")
 
 
-class HealthCheckResponse(BaseModel):
+class HealthCheckResponse(BaseSchema):
     """Health check response model"""
 
     status: str
