@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: <explanation> */
 "use client";
 
 import { Box, useTheme } from "@mui/material";
@@ -145,7 +144,7 @@ export default function CandlestickChart({
 				.filter((item) => item.volume !== undefined)
 				.map((item) => ({
 					time: item.time,
-					value: item.volume!,
+					value: item.volume !== undefined ? item.volume : 0,
 					color:
 						item.close >= item.open
 							? theme.palette.success.main + "80" // 80은 알파값 (투명도)

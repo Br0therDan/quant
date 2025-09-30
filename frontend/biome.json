@@ -19,7 +19,15 @@
 			"suspicious": {
 				"noExplicitAny": "off",
 				"noArrayIndexKey": "off"
-
+			},
+			"correctness": {
+				"useUniqueElementIds": "off"
+			},
+			"style": {
+				"useTemplate": "off"
+			},
+			"complexity": {
+				"useLiteralKeys": "off"
 			}
 		}
 	},
@@ -33,7 +41,8 @@
 		"enabled": true,
 		"actions": {
 			"source": {
-				"organizeImports": "off"
+				"organizeImports": "off",
+				"useSortedAttributes": "off"
 			}
 		}
 	}

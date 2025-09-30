@@ -89,7 +89,7 @@ export const strategyUtils = {
 
 			if (paramSchema.type === "number" && value !== undefined) {
 				const numValue = Number(value);
-				if (isNaN(numValue)) {
+				if (Number.isNaN(numValue)) {
 					errors[key] = "숫자를 입력해주세요.";
 					return;
 				}

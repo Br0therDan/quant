@@ -44,7 +44,7 @@ import { useEffect, useState } from "react";
 import PageContainer from "@/components/layout/PageContainer";
 import {
 	backtestsGetBacktestOptions,
-	BacktestStatus,
+	type BacktestStatus,
 	backtestUtils,
 	useBacktestActions,
 } from "@/services/backtestsQuery";
@@ -157,8 +157,8 @@ export default function BacktestMonitoringPage() {
 	useEffect(() => {
 		if (!autoRefresh || !backtest?.status) return;
 
-		const status = backtest.status as string;
-		if (!backtestUtils.isRunning(status as any)) return;
+		const status = backtest.status as BacktestStatus;
+		if (!backtestUtils.isRunning(status)) return;
 
 		const interval = setInterval(() => {
 			refetchBacktest();
@@ -194,7 +194,6 @@ export default function BacktestMonitoringPage() {
 				return "error";
 			case "warning":
 				return "warning";
-			case "info":
 			default:
 				return "info";
 		}
@@ -206,7 +205,6 @@ export default function BacktestMonitoringPage() {
 				return <ErrorIcon />;
 			case "warning":
 				return <Schedule />;
-			case "info":
 			default:
 				return <CheckCircle />;
 		}

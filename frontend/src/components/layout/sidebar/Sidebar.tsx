@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/correctness/useUniqueElementIds: <explanation> */
+
 "use client";
 // Icons for quant platform
 import AnalyticsIcon from "@mui/icons-material/Analytics";

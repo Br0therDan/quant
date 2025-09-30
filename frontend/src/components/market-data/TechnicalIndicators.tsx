@@ -4,8 +4,8 @@ import { Box, Paper, Tab, Tabs, Typography, useTheme } from "@mui/material";
 import {
 	CandlestickSeries,
 	ColorType,
-	CrosshairMode,
 	createChart,
+	CrosshairMode,
 	HistogramSeries,
 	type IChartApi,
 	LineSeries,
@@ -200,7 +200,7 @@ export default function TechnicalIndicators({
 	const bbChartApiRef = useRef<IChartApi | null>(null);
 	const theme = useTheme();
 
-	const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+	const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
 		setTabValue(newValue);
 	};
 
