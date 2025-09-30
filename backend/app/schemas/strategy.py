@@ -51,6 +51,16 @@ class TemplateCreateRequest(BaseSchema):
     tags: list[str] = Field(default_factory=list, description="태그")
 
 
+class TemplateUpdateRequest(BaseSchema):
+    """Template update request"""
+
+    name: str | None = Field(None, description="템플릿 이름")
+    description: str | None = Field(None, description="템플릿 설명")
+    default_parameters: dict[str, Any] | None = Field(None, description="기본 파라미터")
+    parameter_schema: dict[str, Any | None] | None = Field(None, description="파라미터 스키마")
+    tags: list[str] | None = Field(None, description="태그")
+
+
 class StrategyFromTemplateRequest(BaseSchema):
     """Create strategy from template request"""
 

@@ -290,6 +290,43 @@ class StrategyService:
             logger.error(f"Failed to delete template {template_id}: {e}")
             return False
 
+    async def update_template(
+        self,
+        template_id: str,
+        name: str | None = None,
+        description: str | None = None,
+        default_parameters: dict[str, Any] | None = None,
+        parameter_schema: dict[str, Any] | None = None,
+        tags: list[str] | None = None,
+    ) -> StrategyTemplate | None:
+        """Update template by ID"""
+        try:
+            template = await StrategyTemplate.get(template_id)
+            if not template:
+                return None
+
+            # Update fields if provided
+            if name is not None:
+                template.name = name
+            if description is not None:
+                template.description = description
+            if default_parameters is not None:
+                template.default_parameters = default_parameters
+            if parameter_schema is not None:
+                template.parameter_schema = parameter_schema
+            if tags is not None:
+                template.tags = tags
+
+            # Update timestamp
+            template.updated_at = datetime.now()
+            await template.save()
+
+            logger.info(f"Template {template_id} updated successfully")
+            return template
+        except Exception as e:
+            logger.error(f"Failed to update template {template_id}: {e}")
+            return None
+
     async def create_strategy_from_template(
         self,
         template_id: str,

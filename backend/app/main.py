@@ -8,12 +8,14 @@ from contextlib import asynccontextmanager
 from app import models
 from app.api import api_router
 from app.core.config import settings
+from app.core.logging_config import setup_logging
 from mysingle_quant import create_fastapi_app
 from mysingle_quant.core import get_mongodb_url
 from app.core.init_data import create_first_super_admin
 from app.utils import seed_strategy_templates
 
-logging.basicConfig(level=logging.INFO)
+# 로깅 설정 초기화
+setup_logging()
 logger = logging.getLogger(__name__)
 
 
