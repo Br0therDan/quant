@@ -2,25 +2,33 @@
 Initialize models package
 """
 
-from .market_data import MarketData, DataRequest, DataQuality
-from .company import Company, Watchlist
 from .backtest import Backtest, BacktestExecution, BacktestResult
+from .company import Company, Watchlist
+from .market_data import MarketData, DataRequest, DataQuality
+from .performance import StrategyPerformance
 from .strategy import Strategy, StrategyTemplate, StrategyExecution
+from .user import User
 
 collections = [
-    MarketData,
-    DataRequest,
-    DataQuality,
-    Company,
-    Watchlist,
-    # 전략
-    Strategy,
-    StrategyTemplate,
-    StrategyExecution,
     # 백테스트
     Backtest,
     BacktestExecution,
     BacktestResult,
+    # Company 및 Watchlist
+    Company,
+    Watchlist,
+    # 시장 데이터
+    MarketData,
+    DataRequest,
+    DataQuality,
+    # 성과
+    StrategyPerformance,
+    # 전략
+    Strategy,
+    StrategyTemplate,
+    StrategyExecution,
+    # 사용자
+    User,
 ]
 
 __all__ = [
@@ -35,4 +43,6 @@ __all__ = [
     "Strategy",
     "StrategyTemplate",
     "StrategyExecution",
+    "StrategyPerformance",
+    "User",
 ]

@@ -21,6 +21,10 @@ class Settings(CommonSettings):
     API_PREFIX: str = "/api/v1"
     API_VERSION: str = "v1"
 
+    SUPERUSER_EMAIL: str = "your_email@example.com"
+    SUPERUSER_PASSWORD: str = "change-this-admin-password"
+    SUPERUSER_FULLNAME: str = "Admin User"
+
     # DuckDB 파일 경로 - 환경변수에서 읽어옴, 기본값 설정
     DUCKDB_PATH: str = getenv("DUCKDB_PATH", "./app/data/quant.duckdb")
 
