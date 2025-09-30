@@ -4,194 +4,192 @@ import { Alert, Box, CircularProgress, Grid, Typography } from "@mui/material";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
+import type { StrategyType } from "@/client/types.gen";
 import PageContainer from "@/components/layout/PageContainer";
 import StrategyCard from "@/components/strategies/StrategyCard";
 import StrategyFilters from "@/components/strategies/StrategyFilters";
-
-import type { StrategyType } from "@/client/types.gen";
 import {
-  templatesCreateStrategyFromTemplateMutation,
-  useTemplatesQuery,
+	templatesCreateStrategyFromTemplateMutation,
+	useTemplatesQuery,
 } from "@/services/strategiesQuery";
 
 export default function StrategyTemplatesPage() {
-  const router = useRouter();
-  const queryClient = useQueryClient();
+	const router = useRouter();
+	const queryClient = useQueryClient();
 
-  // 필터 상태
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedType, setSelectedType] = useState<StrategyType | "all">("all");
-  const [selectedDifficulty, setSelectedDifficulty] = useState("all");
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+	// 필터 상태
+	const [searchQuery, setSearchQuery] = useState("");
+	const [selectedType, setSelectedType] = useState<StrategyType | "all">("all");
+	const [selectedDifficulty, setSelectedDifficulty] = useState("all");
+	const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-  // 템플릿 데이터 조회
-  const {
-    data: templatesData,
-    isLoading,
-    error,
-  } = useQuery(useTemplatesQuery({}));
+	// 템플릿 데이터 조회
+	const {
+		data: templatesData,
+		isLoading,
+		error,
+	} = useQuery(useTemplatesQuery({}));
 
-  // 템플릿에서 전략 생성 뮤테이션
-  const createStrategyFromTemplate = useMutation({
-    ...templatesCreateStrategyFromTemplateMutation(),
-    onSuccess: (data: any) => {
-      queryClient.invalidateQueries({ queryKey: ["strategiesGetStrategies"] });
-      router.push(`/strategies/${data.id}`);
-    },
-  });
+	// 템플릿에서 전략 생성 뮤테이션
+	const createStrategyFromTemplate = useMutation({
+		...templatesCreateStrategyFromTemplateMutation(),
+		onSuccess: (data: any) => {
+			queryClient.invalidateQueries({ queryKey: ["strategiesGetStrategies"] });
+			router.push(`/strategies/${data.id}`);
+		},
+	});
 
-  const templates = templatesData?.templates || [];
+	const templates = templatesData?.templates || [];
 
-  // 필터링된 템플릿
-  const filteredTemplates = templates.filter((template: any) => {
-    // 검색어 필터
-    if (
-      searchQuery &&
-      !template.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-      !template.description.toLowerCase().includes(searchQuery.toLowerCase())
-    ) {
-      return false;
-    }
+	// 필터링된 템플릿
+	const filteredTemplates = templates.filter((template: any) => {
+		// 검색어 필터
+		if (
+			searchQuery &&
+			!template.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+			!template.description.toLowerCase().includes(searchQuery.toLowerCase())
+		) {
+			return false;
+		}
 
-    // 타입 필터
-    if (selectedType !== "all" && template.strategy_type !== selectedType) {
-      return false;
-    }
+		// 타입 필터
+		if (selectedType !== "all" && template.strategy_type !== selectedType) {
+			return false;
+		}
 
-    // 태그 필터
-    if (
-      selectedTags.length > 0 &&
-      !selectedTags.some((tag: any) => template.tags?.includes(tag))
-    ) {
-      return false;
-    }
+		// 태그 필터
+		if (
+			selectedTags.length > 0 &&
+			!selectedTags.some((tag: any) => template.tags?.includes(tag))
+		) {
+			return false;
+		}
 
-    return true;
-  });
+		return true;
+	});
 
-  // 모든 태그 수집
-  const allTags = Array.from(
-    new Set(templates.flatMap((template: any) => template.tags || []))
-  );
+	// 모든 태그 수집
+	const allTags = Array.from(
+		new Set(templates.flatMap((template: any) => template.tags || [])),
+	);
 
-  const handleCreateFromTemplate = (template: any) => {
-    const strategyName = `${template.name} (사본)`;
+	const handleCreateFromTemplate = (template: any) => {
+		const strategyName = `${template.name} (사본)`;
 
-    createStrategyFromTemplate.mutate({
-      path: { template_id: template.id },
-      body: {
-        name: strategyName,
-      },
-    });
-  };
+		createStrategyFromTemplate.mutate({
+			path: { template_id: template.id },
+			body: {
+				name: strategyName,
+			},
+		});
+	};
 
-  const handleViewDetails = (template: any) => {
-    // 템플릿 상세 보기 모달이나 페이지로 이동
-    router.push(`/strategies/templates/${template.id}`);
-  };
+	const handleViewDetails = (template: any) => {
+		// 템플릿 상세 보기 모달이나 페이지로 이동
+		router.push(`/strategies/templates/${template.id}`);
+	};
 
-  if (error) {
-    return (
-      <PageContainer
-        title="Strategy Templates"
-        breadcrumbs={[
-          { title: "Strategy Center" },
-          { title: "Strategies" },
-          { title: "Templates" },
-        ]}
-      >
-        <Alert severity="error">
-          템플릿을 불러오는 중 오류가 발생했습니다: {(error as any)?.message}
-        </Alert>
-      </PageContainer>
-    );
-  }
+	if (error) {
+		return (
+			<PageContainer
+				title="Strategy Templates"
+				breadcrumbs={[
+					{ title: "Strategy Center" },
+					{ title: "Strategies" },
+					{ title: "Templates" },
+				]}
+			>
+				<Alert severity="error">
+					템플릿을 불러오는 중 오류가 발생했습니다: {(error as any)?.message}
+				</Alert>
+			</PageContainer>
+		);
+	}
 
-  return (
-    <PageContainer
-      title="Strategy Templates"
-      breadcrumbs={[
-        { title: "Strategy Center" },
-        { title: "Strategies" },
-        { title: "Templates" },
-      ]}
-    >
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="body1" color="text.secondary">
-          검증된 전략 템플릿을 선택하여 나만의 전략을 만들어보세요.
-        </Typography>
-      </Box>
+	return (
+		<PageContainer
+			title="Strategy Templates"
+			breadcrumbs={[
+				{ title: "Strategy Center" },
+				{ title: "Strategies" },
+				{ title: "Templates" },
+			]}
+		>
+			<Box sx={{ mb: 3 }}>
+				<Typography variant="body1" color="text.secondary">
+					검증된 전략 템플릿을 선택하여 나만의 전략을 만들어보세요.
+				</Typography>
+			</Box>
 
-      <StrategyFilters
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        selectedType={selectedType}
-        onTypeChange={setSelectedType}
-        selectedDifficulty={selectedDifficulty}
-        onDifficultyChange={setSelectedDifficulty}
-        selectedTags={selectedTags}
-        onTagsChange={setSelectedTags}
-        availableTags={allTags}
-        isTemplate={true}
-      />
+			<StrategyFilters
+				searchQuery={searchQuery}
+				onSearchChange={setSearchQuery}
+				selectedType={selectedType}
+				onTypeChange={setSelectedType}
+				selectedDifficulty={selectedDifficulty}
+				onDifficultyChange={setSelectedDifficulty}
+				selectedTags={selectedTags}
+				onTagsChange={setSelectedTags}
+				availableTags={allTags}
+				isTemplate={true}
+			/>
 
-      {isLoading ? (
-        <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
-          <CircularProgress />
-        </Box>
-      ) : (
-        <>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              mb: 2,
-            }}
-          >
-            <Typography variant="h6">
-              템플릿 목록 ({filteredTemplates.length}개)
-            </Typography>
-          </Box>
+			{isLoading ? (
+				<Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
+					<CircularProgress />
+				</Box>
+			) : (
+				<>
+					<Box
+						sx={{
+							display: "flex",
+							justifyContent: "space-between",
+							alignItems: "center",
+							mb: 2,
+						}}
+					>
+						<Typography variant="h6">
+							템플릿 목록 ({filteredTemplates.length}개)
+						</Typography>
+					</Box>
 
-          {filteredTemplates.length === 0 ? (
-            <Alert severity="info">
-              조건에 맞는 템플릿이 없습니다. 필터 조건을 변경해보세요.
-            </Alert>
-          ) : (
-            <Grid container spacing={3}>
-              {filteredTemplates.map((template: any) => (
-                <Grid key={template.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-                  <StrategyCard
-                    strategy={{
-                      ...template,
-                      is_active: true,
-                      is_template: true,
-                      created_by: null,
-                      // 템플릿에는 difficulty와 performance_rating 추가
-                      difficulty: "중급", // 실제로는 백엔드에서 가져와야 함
-                      performance_rating: 4, // 실제로는 백엔드에서 가져와야 함
-                    }}
-                    isTemplate={true}
-                    onClone={handleCreateFromTemplate}
-                    onViewDetails={handleViewDetails}
-                  />
-                </Grid>
-              ))}
-            </Grid>
-          )}
-        </>
-      )}
+					{filteredTemplates.length === 0 ? (
+						<Alert severity="info">
+							조건에 맞는 템플릿이 없습니다. 필터 조건을 변경해보세요.
+						</Alert>
+					) : (
+						<Grid container spacing={3}>
+							{filteredTemplates.map((template: any) => (
+								<Grid key={template.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+									<StrategyCard
+										strategy={{
+											...template,
+											is_active: true,
+											is_template: true,
+											created_by: null,
+											// 템플릿에는 difficulty와 performance_rating 추가
+											difficulty: "중급", // 실제로는 백엔드에서 가져와야 함
+											performance_rating: 4, // 실제로는 백엔드에서 가져와야 함
+										}}
+										isTemplate={true}
+										onClone={handleCreateFromTemplate}
+										onViewDetails={handleViewDetails}
+									/>
+								</Grid>
+							))}
+						</Grid>
+					)}
+				</>
+			)}
 
-      {createStrategyFromTemplate.isPending && (
-        <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
-          <CircularProgress size={24} />
-          <Typography variant="body2" sx={{ ml: 1 }}>
-            전략을 생성하는 중...
-          </Typography>
-        </Box>
-      )}
-    </PageContainer>
-  );
+			{createStrategyFromTemplate.isPending && (
+				<Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
+					<CircularProgress size={24} />
+					<Typography variant="body2" sx={{ ml: 1 }}>
+						전략을 생성하는 중...
+					</Typography>
+				</Box>
+			)}
+		</PageContainer>
+	);
 }

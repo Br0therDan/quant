@@ -1,6 +1,6 @@
-import type { CreateClientConfig } from './client/client.gen';
+import type { CreateClientConfig } from "./client/client.gen";
 
 export const createClientConfig: CreateClientConfig = (config) => ({
-  ...config,
-  baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000',
+	...config,
+	baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000",
 });
