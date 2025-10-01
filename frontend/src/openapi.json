@@ -410,20 +410,22 @@
         ]
       }
     },
-    "/api/v1/pipeline/status/status": {
+    "/api/v1/market-data/health/": {
       "get": {
         "tags": [
-          "Pipeline Status"
+          "Market Data"
         ],
-        "summary": "Get Pipeline Status",
-        "description": "Get comprehensive pipeline status and health information.\n\nReturns detailed information about the current state of the data pipeline,\nincluding data coverage statistics, update timestamps, and system health metrics.\nThis endpoint is essential for monitoring the overall health of the data\ncollection and processing system.\n\nReturns:\n    dict: Pipeline status containing:\n        - overall_status: Current pipeline health status\n        - last_update: Timestamp of last successful update\n        - coverage_stats: Data coverage statistics per symbol\n        - active_symbols: Currently monitored symbols count\n        - error_count: Number of recent errors\n\nRaises:\n    HTTPException: 500 if status retrieval fails",
-        "operationId": "Pipeline Status-get_pipeline_status",
+        "summary": "Service Health Check",
+        "description": "Health check endpoint",
+        "operationId": "Market Data-service_health_check",
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/HealthCheckResponse"
+                }
               }
             }
           }
@@ -435,44 +437,19 @@
         ]
       }
     },
-    "/api/v1/pipeline/status/setup-defaults": {
+    "/api/v1/pipeline/watchlists/watchlist": {
       "post": {
         "tags": [
-          "Pipeline Status"
+          "Pipeline"
         ],
-        "summary": "Setup Default Symbols",
-        "description": "Initialize default watchlist with standard symbols.\n\nSets up the pipeline with a predefined set of popular stock symbols\nfor immediate use. This is typically called during initial system setup\nor when resetting the pipeline to defaults. Creates the 'default' watchlist\nif it doesn't exist.\n\nDefault symbols include major tech stocks: AAPL, MSFT, GOOGL, AMZN, etc.\n\nReturns:\n    dict: Setup confirmation containing:\n        - message: Success confirmation message\n        - symbols: List of symbols that were set up\n\nRaises:\n    HTTPException: 500 if default setup fails",
-        "operationId": "Pipeline Status-setup_default_symbols",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ]
-      }
-    },
-    "/api/v1/pipeline/status/update": {
-      "post": {
-        "tags": [
-          "Pipeline Status"
-        ],
-        "summary": "Run Pipeline Update",
-        "description": "Execute comprehensive data pipeline update for specified symbols.\n\nInitiates a full data collection and update process for the specified\nsymbols or the default watchlist. The update runs asynchronously in the\nbackground to avoid blocking the API response. Includes company information\nretrieval, historical price data collection, and data validation.\n\nArgs:\n    request: Update configuration containing:\n        - symbols: Optional list of symbols to update (uses default if None)\n        - start_date: Optional start date for data collection\n        - end_date: Optional end date for data collection\n    background_tasks: FastAPI background task manager\n\nReturns:\n    dict: Update initiation confirmation containing:\n        - message: Update start confirmation\n        - symbols: Symbols being updated\n        - started_at: UTC timestamp when update began\n\nRaises:\n    HTTPException: 500 if update initiation fails\n\nNote:\n    This is an asynchronous operation. Use /status endpoint to monitor progress.",
-        "operationId": "Pipeline Status-run_pipeline_update",
+        "summary": "Update Watchlist",
+        "description": "Create or update a watchlist with flexible naming support.\n\nThis endpoint provides a convenient way to create new watchlists or update\nexisting ones. If no name is provided, it defaults to the 'default' watchlist\nwhich is used by the pipeline for automated updates. This endpoint combines\ncreation and update functionality for ease of use.\n\nArgs:\n    request: Watchlist configuration containing:\n        - symbols: List of stock symbols to include\n        - name: Optional watchlist name (defaults to 'default')\n        - description: Optional description of the watchlist\n\nReturns:\n    dict: Operation result containing:\n        - message: Success message indicating action taken\n        - name: Watchlist name that was processed\n        - symbols: List of symbols in the watchlist\n        - count: Number of symbols in the watchlist\n        - action: Either 'created' or 'updated'\n\nRaises:\n    HTTPException: 400 if watchlist creation fails\n    HTTPException: 500 if operation fails\n\nNote:\n    Updates to the 'default' watchlist automatically update pipeline symbols.\n    This affects which symbols are processed during automated updates.",
+        "operationId": "Pipeline-update_watchlist",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateRequest"
+                "$ref": "#/components/schemas/WatchlistUpdate"
               }
             }
           },
@@ -505,14 +482,226 @@
         ]
       }
     },
+    "/api/v1/pipeline/watchlists/watchlists": {
+      "get": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "List Watchlists",
+        "description": "Retrieve a comprehensive list of all watchlists.\n\nReturns summary information for all watchlists in the system, including\nmetadata like symbol counts, update settings, and timestamps. This is\nuseful for dashboard displays and watchlist management interfaces.\n\nReturns:\n    dict: All watchlists summary containing:\n        - watchlists: List of watchlist summaries with:\n            - name: Watchlist name\n            - description: Watchlist description\n            - symbol_count: Number of symbols in the watchlist\n            - auto_update: Whether automatic updates are enabled\n            - last_updated: Timestamp of last modification\n            - created_at: Timestamp of creation\n        - total_count: Total number of watchlists in the system\n\nRaises:\n    HTTPException: 500 if retrieval fails\n\nNote:\n    This endpoint returns summary data only. Use GET /watchlists/{name}\n    for detailed information including full symbol lists.",
+        "operationId": "Pipeline-list_watchlists",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Create Watchlist",
+        "description": "Create a new named watchlist with validation.\n\nThis endpoint is specifically for creating new watchlists with explicit\nnaming requirements. Unlike the /watchlist endpoint, this requires a name\nand will fail if a watchlist with the same name already exists.\n\nArgs:\n    request: Watchlist creation parameters containing:\n        - name: Required unique name for the watchlist\n        - symbols: List of stock symbols to include\n        - description: Optional description of the watchlist purpose\n\nReturns:\n    dict: Creation result containing:\n        - message: Success confirmation message\n        - name: Name of the created watchlist\n        - symbols: List of symbols in the watchlist\n        - description: Watchlist description\n        - created_at: UTC timestamp of creation\n\nRaises:\n    HTTPException: 400 if watchlist creation fails or name conflicts\n    HTTPException: 500 if database operation fails\n\nNote:\n    Watchlist names must be unique. Use PUT /watchlists/{name} to update existing ones.",
+        "operationId": "Pipeline-create_watchlist",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WatchlistCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/pipeline/watchlists/{name}": {
+      "get": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Get Watchlist",
+        "description": "Retrieve complete information for a specific watchlist.\n\nReturns detailed information about a named watchlist including the full\nlist of symbols, configuration settings, and all metadata. This provides\nall information needed to display or modify a specific watchlist.\n\nArgs:\n    name: Name of the watchlist to retrieve (case-sensitive)\n\nReturns:\n    dict: Complete watchlist information containing:\n        - name: Watchlist name\n        - description: Detailed description\n        - symbols: Complete list of stock symbols\n        - auto_update: Automatic update configuration\n        - update_interval: Update frequency in seconds\n        - last_updated: Timestamp of last symbol update\n        - created_at: Timestamp of watchlist creation\n\nRaises:\n    HTTPException: 404 if watchlist with specified name not found\n    HTTPException: 500 if retrieval operation fails\n\nNote:\n    Watchlist names are case-sensitive. Use GET /watchlists to see all available names.",
+        "operationId": "Pipeline-get_watchlist",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Update Watchlist By Name",
+        "description": "Update an existing watchlist with new symbols and settings.\n\nModifies the symbols and metadata of an existing watchlist. This endpoint\nrequires the watchlist to exist and will fail if the specified name is\nnot found. Use POST /watchlists to create new watchlists.\n\nArgs:\n    name: Name of the existing watchlist to update\n    request: Update parameters containing:\n        - symbols: New list of symbols (replaces current list)\n        - description: Optional new description (if provided)\n\nReturns:\n    dict: Update confirmation containing:\n        - message: Success confirmation message\n        - name: Name of the updated watchlist\n        - symbols: New symbols list\n        - description: Current description (updated if provided)\n        - count: Number of symbols in updated watchlist\n        - updated_at: Timestamp of the update\n\nRaises:\n    HTTPException: 404 if watchlist with specified name not found\n    HTTPException: 500 if update operation fails\n\nNote:\n    Updates to the 'default' watchlist automatically update pipeline symbols.\n    Symbol list is completely replaced, not merged with existing symbols.",
+        "operationId": "Pipeline-update_watchlist_by_name",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Name"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WatchlistUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Delete Watchlist",
+        "description": "Delete a named watchlist from the system.\n\nPermanently removes a watchlist and all associated metadata. This action\ncannot be undone. The 'default' watchlist cannot be deleted as it is\nrequired for pipeline operations.\n\nArgs:\n    name: Name of the watchlist to delete\n\nReturns:\n    dict: Deletion confirmation containing:\n        - message: Success confirmation message\n        - name: Name of the deleted watchlist\n\nRaises:\n    HTTPException: 400 if attempting to delete the 'default' watchlist\n    HTTPException: 404 if watchlist with specified name not found\n    HTTPException: 500 if deletion operation fails\n\nNote:\n    Deletion is permanent and cannot be undone. Consider backing up\n    important watchlists before deletion.",
+        "operationId": "Pipeline-delete_watchlist",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/pipeline/companies/collect-info/{symbol}": {
       "post": {
         "tags": [
-          "Company Data"
+          "Pipeline"
         ],
         "summary": "Collect Stock Info",
         "description": "Collect and store basic company information for a specific symbol.\n\nRetrieves fundamental company data from external APIs (Alpha Vantage)\nincluding company name, sector, industry, market cap, and key financial\nratios. This information is stored in the database for future reference\nand analysis.\n\nArgs:\n    symbol: Stock symbol (e.g., 'AAPL', 'MSFT') - automatically converted to uppercase\n\nReturns:\n    dict: Collection result containing:\n        - message: Success/failure message\n        - symbol: Processed symbol (uppercase)\n        - success: Boolean indicating operation success\n\nRaises:\n    HTTPException: 500 if data collection fails\n\nNote:\n    Respects Alpha Vantage API rate limits (5 calls/min, 500 calls/day).\n    Duplicate requests for same symbol within 24 hours may return cached data.",
-        "operationId": "Company Data-collect_stock_info",
+        "operationId": "Pipeline-collect_stock_info",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -554,11 +743,11 @@
     "/api/v1/pipeline/companies/collect-data/{symbol}": {
       "post": {
         "tags": [
-          "Company Data"
+          "Pipeline"
         ],
         "summary": "Collect Daily Data",
         "description": "Collect historical daily price data for a specific symbol.\n\nRetrieves OHLCV (Open, High, Low, Close, Volume) daily price data\nfor the specified symbol and date range. If no dates are provided,\ncollects maximum available historical data. Data is validated,\nadjusted for splits/dividends, and stored in DuckDB for fast access.\n\nArgs:\n    symbol: Stock symbol (e.g., 'AAPL') - automatically converted to uppercase\n    start_date: Optional start date for data collection (defaults to earliest available)\n    end_date: Optional end date for data collection (defaults to latest available)\n\nReturns:\n    dict: Collection result containing:\n        - message: Detailed success/failure message\n        - symbol: Processed symbol (uppercase)\n        - start_date: Actual start date used\n        - end_date: Actual end date used\n        - success: Boolean indicating operation success\n\nRaises:\n    HTTPException: 500 if data collection fails\n\nNote:\n    Large date ranges may take several minutes to complete.\n    Data is automatically cached to minimize API calls.",
-        "operationId": "Company Data-collect_daily_data",
+        "operationId": "Pipeline-collect_daily_data",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -634,11 +823,11 @@
     "/api/v1/pipeline/companies/coverage/{symbol}": {
       "get": {
         "tags": [
-          "Company Data"
+          "Pipeline"
         ],
         "summary": "Get Symbol Coverage",
         "description": "Get detailed data coverage information for a specific symbol.\n\nReturns comprehensive information about the availability and quality\nof data for the specified symbol, including date ranges, data gaps,\nlast update timestamps, and data quality metrics.\n\nArgs:\n    symbol: Stock symbol to check coverage for (automatically converted to uppercase)\n\nReturns:\n    dict: Coverage information containing:\n        - symbol: Processed symbol\n        - date_range: Start and end dates of available data\n        - total_records: Number of data points available\n        - gaps: List of date ranges with missing data\n        - last_updated: Timestamp of most recent data update\n        - data_quality: Quality metrics (completeness, accuracy scores)\n\nRaises:\n    HTTPException: 500 if coverage check fails\n    HTTPException: 404 if symbol not found in database",
-        "operationId": "Company Data-get_symbol_coverage",
+        "operationId": "Pipeline-get_symbol_coverage",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -680,11 +869,11 @@
     "/api/v1/pipeline/companies/company/{symbol}": {
       "get": {
         "tags": [
-          "Company Data"
+          "Pipeline"
         ],
         "summary": "Get Company Info",
         "description": "Retrieve stored company information for a specific symbol.\n\nReturns comprehensive company fundamentals and metadata previously\ncollected and stored in the database. This includes financial ratios,\ncompany description, sector classification, and market data.\n\nArgs:\n    symbol: Stock symbol (automatically converted to uppercase)\n\nReturns:\n    dict: Company information containing:\n        - symbol: Stock symbol\n        - name: Company name\n        - description: Business description\n        - sector: Industry sector classification\n        - industry: Specific industry classification\n        - country: Country of incorporation\n        - currency: Reporting currency\n        - market_cap: Market capitalization (if available)\n        - pe_ratio: Price-to-earnings ratio (if available)\n        - dividend_yield: Annual dividend yield (if available)\n        - updated_at: Last information update timestamp\n\nRaises:\n    HTTPException: 404 if company information not found\n    HTTPException: 500 if retrieval fails\n\nNote:\n    If company info not found, use POST /collect-info/{symbol} first.",
-        "operationId": "Company Data-get_company_info",
+        "operationId": "Pipeline-get_company_info",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -723,14 +912,14 @@
         }
       }
     },
-    "/api/v1/pipeline/companies/companies": {
+    "/api/v1/pipeline/companies/": {
       "get": {
         "tags": [
-          "Company Data"
+          "Pipeline"
         ],
-        "summary": "Get All Companies",
+        "summary": "List Companies",
         "description": "Retrieve information for all companies in the database.\n\nReturns a comprehensive list of all companies for which information\nhas been collected and stored. Useful for portfolio analysis,\nscreening, and getting an overview of available data.\n\nReturns:\n    dict: All companies data containing:\n        - companies: List of company objects with key information:\n            - symbol: Stock symbol\n            - name: Company name\n            - sector: Industry sector\n            - industry: Specific industry\n            - market_cap: Market capitalization\n            - updated_at: Last update timestamp\n        - total_count: Total number of companies in database\n\nRaises:\n    HTTPException: 500 if retrieval fails\n\nNote:\n    Large datasets may take time to load. Consider pagination for production use.",
-        "operationId": "Company Data-get_all_companies",
+        "operationId": "Pipeline-list_companies",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -748,19 +937,69 @@
         ]
       }
     },
-    "/api/v1/pipeline/watchlists/watchlist": {
+    "/api/v1/pipeline/status/": {
+      "get": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Get Pipeline Status",
+        "description": "Get comprehensive pipeline status and health information.\n\nReturns detailed information about the current state of the data pipeline,\nincluding data coverage statistics, update timestamps, and system health metrics.\nThis endpoint is essential for monitoring the overall health of the data\ncollection and processing system.\n\nReturns:\n    dict: Pipeline status containing:\n        - overall_status: Current pipeline health status\n        - last_update: Timestamp of last successful update\n        - coverage_stats: Data coverage statistics per symbol\n        - active_symbols: Currently monitored symbols count\n        - error_count: Number of recent errors\n\nRaises:\n    HTTPException: 500 if status retrieval fails",
+        "operationId": "Pipeline-get_pipeline_status",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/pipeline/status/setup-defaults": {
       "post": {
         "tags": [
-          "Watchlists"
+          "Pipeline"
         ],
-        "summary": "Update Watchlist",
-        "description": "Create or update a watchlist with flexible naming support.\n\nThis endpoint provides a convenient way to create new watchlists or update\nexisting ones. If no name is provided, it defaults to the 'default' watchlist\nwhich is used by the pipeline for automated updates. This endpoint combines\ncreation and update functionality for ease of use.\n\nArgs:\n    request: Watchlist configuration containing:\n        - symbols: List of stock symbols to include\n        - name: Optional watchlist name (defaults to 'default')\n        - description: Optional description of the watchlist\n\nReturns:\n    dict: Operation result containing:\n        - message: Success message indicating action taken\n        - name: Watchlist name that was processed\n        - symbols: List of symbols in the watchlist\n        - count: Number of symbols in the watchlist\n        - action: Either 'created' or 'updated'\n\nRaises:\n    HTTPException: 400 if watchlist creation fails\n    HTTPException: 500 if operation fails\n\nNote:\n    Updates to the 'default' watchlist automatically update pipeline symbols.\n    This affects which symbols are processed during automated updates.",
-        "operationId": "Watchlists-update_watchlist",
+        "summary": "Setup Default Symbols",
+        "description": "Initialize default watchlist with standard symbols.\n\nSets up the pipeline with a predefined set of popular stock symbols\nfor immediate use. This is typically called during initial system setup\nor when resetting the pipeline to defaults. Creates the 'default' watchlist\nif it doesn't exist.\n\nDefault symbols include major tech stocks: AAPL, MSFT, GOOGL, AMZN, etc.\n\nReturns:\n    dict: Setup confirmation containing:\n        - message: Success confirmation message\n        - symbols: List of symbols that were set up\n\nRaises:\n    HTTPException: 500 if default setup fails",
+        "operationId": "Pipeline-setup_default_symbols",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/pipeline/status/update": {
+      "post": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Run Pipeline Update",
+        "description": "Execute comprehensive data pipeline update for specified symbols.\n\nInitiates a full data collection and update process for the specified\nsymbols or the default watchlist. The update runs asynchronously in the\nbackground to avoid blocking the API response. Includes company information\nretrieval, historical price data collection, and data validation.\n\nArgs:\n    request: Update configuration containing:\n        - symbols: Optional list of symbols to update (uses default if None)\n        - start_date: Optional start date for data collection\n        - end_date: Optional end date for data collection\n    background_tasks: FastAPI background task manager\n\nReturns:\n    dict: Update initiation confirmation containing:\n        - message: Update start confirmation\n        - symbols: Symbols being updated\n        - started_at: UTC timestamp when update began\n\nRaises:\n    HTTPException: 500 if update initiation fails\n\nNote:\n    This is an asynchronous operation. Use /status endpoint to monitor progress.",
+        "operationId": "Pipeline-run_pipeline_update",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/WatchlistUpdate"
+                "$ref": "#/components/schemas/UpdateRequest"
               }
             }
           },
@@ -793,82 +1032,59 @@
         ]
       }
     },
-    "/api/v1/pipeline/watchlists/watchlists": {
-      "get": {
+    "/api/v1/strategies/": {
+      "post": {
         "tags": [
-          "Watchlists"
+          "Strategy"
         ],
-        "summary": "List Watchlists",
-        "description": "Retrieve a comprehensive list of all watchlists.\n\nReturns summary information for all watchlists in the system, including\nmetadata like symbol counts, update settings, and timestamps. This is\nuseful for dashboard displays and watchlist management interfaces.\n\nReturns:\n    dict: All watchlists summary containing:\n        - watchlists: List of watchlist summaries with:\n            - name: Watchlist name\n            - description: Watchlist description\n            - symbol_count: Number of symbols in the watchlist\n            - auto_update: Whether automatic updates are enabled\n            - last_updated: Timestamp of last modification\n            - created_at: Timestamp of creation\n        - total_count: Total number of watchlists in the system\n\nRaises:\n    HTTPException: 500 if retrieval fails\n\nNote:\n    This endpoint returns summary data only. Use GET /watchlists/{name}\n    for detailed information including full symbol lists.",
-        "operationId": "Watchlists-list_watchlists",
+        "summary": "Create Strategy",
+        "description": "Create a new strategy",
+        "operationId": "Strategy-create_strategy",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StrategyCreateRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/StrategyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
-        },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ]
+        }
       },
-      "post": {
-        "tags": [
-          "Watchlists"
-        ],
-        "summary": "Create Watchlist",
-        "description": "Create a new named watchlist with validation.\n\nThis endpoint is specifically for creating new watchlists with explicit\nnaming requirements. Unlike the /watchlist endpoint, this requires a name\nand will fail if a watchlist with the same name already exists.\n\nArgs:\n    request: Watchlist creation parameters containing:\n        - name: Required unique name for the watchlist\n        - symbols: List of stock symbols to include\n        - description: Optional description of the watchlist purpose\n\nReturns:\n    dict: Creation result containing:\n        - message: Success confirmation message\n        - name: Name of the created watchlist\n        - symbols: List of symbols in the watchlist\n        - description: Watchlist description\n        - created_at: UTC timestamp of creation\n\nRaises:\n    HTTPException: 400 if watchlist creation fails or name conflicts\n    HTTPException: 500 if database operation fails\n\nNote:\n    Watchlist names must be unique. Use PUT /watchlists/{name} to update existing ones.",
-        "operationId": "Watchlists-create_watchlist",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/WatchlistCreate"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ]
-      }
-    },
-    "/api/v1/pipeline/watchlists/watchlists/{name}": {
       "get": {
         "tags": [
-          "Watchlists"
+          "Strategy"
         ],
-        "summary": "Get Watchlist",
-        "description": "Retrieve complete information for a specific watchlist.\n\nReturns detailed information about a named watchlist including the full\nlist of symbols, configuration settings, and all metadata. This provides\nall information needed to display or modify a specific watchlist.\n\nArgs:\n    name: Name of the watchlist to retrieve (case-sensitive)\n\nReturns:\n    dict: Complete watchlist information containing:\n        - name: Watchlist name\n        - description: Detailed description\n        - symbols: Complete list of stock symbols\n        - auto_update: Automatic update configuration\n        - update_interval: Update frequency in seconds\n        - last_updated: Timestamp of last symbol update\n        - created_at: Timestamp of watchlist creation\n\nRaises:\n    HTTPException: 404 if watchlist with specified name not found\n    HTTPException: 500 if retrieval operation fails\n\nNote:\n    Watchlist names are case-sensitive. Use GET /watchlists to see all available names.",
-        "operationId": "Watchlists-get_watchlist",
+        "summary": "Get Strategies",
+        "description": "Get list of strategies",
+        "operationId": "Strategy-get_strategies",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -876,12 +1092,119 @@
         ],
         "parameters": [
           {
-            "name": "name",
+            "name": "strategy_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/StrategyType"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "전략 타입 필터",
+              "title": "Strategy Type"
+            },
+            "description": "전략 타입 필터"
+          },
+          {
+            "name": "is_active",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "활성화 상태 필터",
+              "title": "Is Active"
+            },
+            "description": "활성화 상태 필터"
+          },
+          {
+            "name": "is_template",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "템플릿 여부 필터",
+              "title": "Is Template"
+            },
+            "description": "템플릿 여부 필터"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "description": "결과 수 제한",
+              "default": 50,
+              "title": "Limit"
+            },
+            "description": "결과 수 제한"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StrategyListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/strategies/{strategy_id}": {
+      "get": {
+        "tags": [
+          "Strategy"
+        ],
+        "summary": "Get Strategy",
+        "description": "Get strategy by ID",
+        "operationId": "Strategy-get_strategy",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "strategy_id",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string",
-              "title": "Name"
+              "title": "Strategy Id"
             }
           }
         ],
@@ -890,7 +1213,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/StrategyResponse"
+                }
               }
             }
           },
@@ -908,11 +1233,11 @@
       },
       "put": {
         "tags": [
-          "Watchlists"
+          "Strategy"
         ],
-        "summary": "Update Watchlist By Name",
-        "description": "Update an existing watchlist with new symbols and settings.\n\nModifies the symbols and metadata of an existing watchlist. This endpoint\nrequires the watchlist to exist and will fail if the specified name is\nnot found. Use POST /watchlists to create new watchlists.\n\nArgs:\n    name: Name of the existing watchlist to update\n    request: Update parameters containing:\n        - symbols: New list of symbols (replaces current list)\n        - description: Optional new description (if provided)\n\nReturns:\n    dict: Update confirmation containing:\n        - message: Success confirmation message\n        - name: Name of the updated watchlist\n        - symbols: New symbols list\n        - description: Current description (updated if provided)\n        - count: Number of symbols in updated watchlist\n        - updated_at: Timestamp of the update\n\nRaises:\n    HTTPException: 404 if watchlist with specified name not found\n    HTTPException: 500 if update operation fails\n\nNote:\n    Updates to the 'default' watchlist automatically update pipeline symbols.\n    Symbol list is completely replaced, not merged with existing symbols.",
-        "operationId": "Watchlists-update_watchlist_by_name",
+        "summary": "Update Strategy",
+        "description": "Update strategy",
+        "operationId": "Strategy-update_strategy",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -920,12 +1245,12 @@
         ],
         "parameters": [
           {
-            "name": "name",
+            "name": "strategy_id",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string",
-              "title": "Name"
+              "title": "Strategy Id"
             }
           }
         ],
@@ -934,7 +1259,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/WatchlistUpdate"
+                "$ref": "#/components/schemas/StrategyUpdateRequest"
               }
             }
           }
@@ -944,7 +1269,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/StrategyResponse"
+                }
               }
             }
           },
@@ -962,11 +1289,11 @@
       },
       "delete": {
         "tags": [
-          "Watchlists"
+          "Strategy"
         ],
-        "summary": "Delete Watchlist",
-        "description": "Delete a named watchlist from the system.\n\nPermanently removes a watchlist and all associated metadata. This action\ncannot be undone. The 'default' watchlist cannot be deleted as it is\nrequired for pipeline operations.\n\nArgs:\n    name: Name of the watchlist to delete\n\nReturns:\n    dict: Deletion confirmation containing:\n        - message: Success confirmation message\n        - name: Name of the deleted watchlist\n\nRaises:\n    HTTPException: 400 if attempting to delete the 'default' watchlist\n    HTTPException: 404 if watchlist with specified name not found\n    HTTPException: 500 if deletion operation fails\n\nNote:\n    Deletion is permanent and cannot be undone. Consider backing up\n    important watchlists before deletion.",
-        "operationId": "Watchlists-delete_watchlist",
+        "summary": "Delete Strategy",
+        "description": "Delete strategy (soft delete)",
+        "operationId": "Strategy-delete_strategy",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -974,12 +1301,12 @@
         ],
         "parameters": [
           {
-            "name": "name",
+            "name": "strategy_id",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string",
-              "title": "Name"
+              "title": "Strategy Id"
             }
           }
         ],
@@ -1005,21 +1332,57 @@
         }
       }
     },
-    "/api/v1/health/": {
-      "get": {
+    "/api/v1/strategies/{strategy_id}/execute": {
+      "post": {
         "tags": [
-          "Health"
+          "Strategy"
         ],
-        "summary": "Health Check",
-        "description": "Health check endpoint",
-        "operationId": "Health-health_check",
+        "summary": "Execute Strategy",
+        "description": "Execute strategy and generate signal",
+        "operationId": "Strategy-execute_strategy",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "strategy_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Strategy Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StrategyExecuteRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HealthCheckResponse"
+                  "$ref": "#/components/schemas/ExecutionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
@@ -1027,11 +1390,453 @@
         }
       }
     },
+    "/api/v1/strategies/{strategy_id}/executions": {
+      "get": {
+        "tags": [
+          "Strategy"
+        ],
+        "summary": "Get Strategy Executions",
+        "description": "Get strategy execution history",
+        "operationId": "Strategy-get_strategy_executions",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "strategy_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Strategy Id"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 500,
+              "minimum": 1,
+              "description": "결과 수 제한",
+              "default": 100,
+              "title": "Limit"
+            },
+            "description": "결과 수 제한"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExecutionListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/strategies/{strategy_id}/performance": {
+      "get": {
+        "tags": [
+          "Strategy"
+        ],
+        "summary": "Get Strategy Performance",
+        "description": "Get strategy performance metrics",
+        "operationId": "Strategy-get_strategy_performance",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "strategy_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Strategy Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PerformanceResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/strategies/templates/": {
+      "post": {
+        "tags": [
+          "Strategy"
+        ],
+        "summary": "Create Template",
+        "description": "Create a new strategy template (Superuser only)",
+        "operationId": "Strategy-create_template",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TemplateCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Strategy"
+        ],
+        "summary": "Get Templates",
+        "description": "Get list of strategy templates",
+        "operationId": "Strategy-get_templates",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "strategy_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/StrategyType"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "전략 타입 필터",
+              "title": "Strategy Type"
+            },
+            "description": "전략 타입 필터"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/strategies/templates/{template_id}": {
+      "get": {
+        "tags": [
+          "Strategy"
+        ],
+        "summary": "Get Template",
+        "description": "Get template by ID",
+        "operationId": "Strategy-get_template",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "template_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Template Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Strategy"
+        ],
+        "summary": "Update Template",
+        "description": "Update template by ID (Superuser only)",
+        "operationId": "Strategy-update_template",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "template_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Template Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TemplateUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Strategy"
+        ],
+        "summary": "Delete Template",
+        "description": "Delete template by ID (Superuser only)",
+        "operationId": "Strategy-delete_template",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "template_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Template Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/strategies/templates/{template_id}/create-strategy": {
+      "post": {
+        "tags": [
+          "Strategy"
+        ],
+        "summary": "Create Strategy From Template",
+        "description": "Create a strategy instance from template",
+        "operationId": "Strategy-create_strategy_from_template",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "template_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Template Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StrategyFromTemplateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StrategyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/strategies/templates/analytics/usage-stats": {
+      "get": {
+        "tags": [
+          "Strategy"
+        ],
+        "summary": "Get Template Usage Stats",
+        "description": "Get template usage statistics",
+        "operationId": "Strategy-get_template_usage_stats",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
     "/api/v1/backtests/": {
       "post": {
         "tags": [
-          "Backtests",
-          "Integrated Backtest"
+          "Backtests"
         ],
         "summary": "Create Backtest",
         "description": "Create a new backtest",
@@ -1076,8 +1881,7 @@
       },
       "get": {
         "tags": [
-          "Backtests",
-          "Integrated Backtest"
+          "Backtests"
         ],
         "summary": "Get Backtests",
         "description": "Get list of backtests",
@@ -1161,8 +1965,7 @@
     "/api/v1/backtests/{backtest_id}": {
       "get": {
         "tags": [
-          "Backtests",
-          "Integrated Backtest"
+          "Backtests"
         ],
         "summary": "Get Backtest",
         "description": "Get backtest by ID",
@@ -1208,8 +2011,7 @@
       },
       "put": {
         "tags": [
-          "Backtests",
-          "Integrated Backtest"
+          "Backtests"
         ],
         "summary": "Update Backtest",
         "description": "Update backtest",
@@ -1265,8 +2067,7 @@
       },
       "delete": {
         "tags": [
-          "Backtests",
-          "Integrated Backtest"
+          "Backtests"
         ],
         "summary": "Delete Backtest",
         "description": "Delete backtest",
@@ -1312,8 +2113,7 @@
     "/api/v1/backtests/{backtest_id}/execute": {
       "post": {
         "tags": [
-          "Backtests",
-          "Integrated Backtest"
+          "Backtests"
         ],
         "summary": "Execute Backtest",
         "description": "Execute backtest with trading signals",
@@ -1371,8 +2171,7 @@
     "/api/v1/backtests/{backtest_id}/executions": {
       "get": {
         "tags": [
-          "Backtests",
-          "Integrated Backtest"
+          "Backtests"
         ],
         "summary": "Get Backtest Executions",
         "description": "Get execution history for a backtest",
@@ -1447,8 +2246,7 @@
     "/api/v1/backtests/results/": {
       "get": {
         "tags": [
-          "Backtests",
-          "Integrated Backtest"
+          "Backtests"
         ],
         "summary": "Get Backtest Results",
         "description": "Get backtest results from DuckDB (고성능 분석용)",
@@ -1552,8 +2350,7 @@
     "/api/v1/backtests/integrated": {
       "post": {
         "tags": [
-          "Backtests",
-          "Integrated Backtest"
+          "Backtests"
         ],
         "summary": "Create And Run Integrated Backtest",
         "description": "통합 백테스트 생성 및 실행 - 모든 서비스 연동",
@@ -1600,8 +2397,7 @@
     "/api/v1/backtests/health": {
       "get": {
         "tags": [
-          "Backtests",
-          "Integrated Backtest"
+          "Backtests"
         ],
         "summary": "Health Check",
         "description": "백테스트 시스템 상태 확인 (DuckDB + MongoDB 통합 상태)",
@@ -1626,8 +2422,7 @@
     "/api/v1/backtests/analytics/performance-stats": {
       "get": {
         "tags": [
-          "Backtests",
-          "Integrated Backtest"
+          "Backtests"
         ],
         "summary": "Get Performance Analytics",
         "description": "백테스트 성과 분석 (DuckDB 고성능 분석)",
@@ -1652,8 +2447,7 @@
     "/api/v1/backtests/analytics/trades": {
       "get": {
         "tags": [
-          "Backtests",
-          "Integrated Backtest"
+          "Backtests"
         ],
         "summary": "Get Trades Analytics",
         "description": "거래 기록 분석 (DuckDB 고성능 쿼리)",
@@ -1726,8 +2520,7 @@
     "/api/v1/backtests/analytics/summary": {
       "get": {
         "tags": [
-          "Backtests",
-          "Integrated Backtest"
+          "Backtests"
         ],
         "summary": "Get Backtest Summary Analytics",
         "description": "백테스트 결과 요약 분석 (DuckDB 기반)",
@@ -1749,808 +2542,7 @@
         ]
       }
     },
-    "/api/v1/strategies/": {
-      "post": {
-        "tags": [
-          "Strategies"
-        ],
-        "summary": "Create Strategy",
-        "description": "Create a new strategy",
-        "operationId": "Strategies-create_strategy",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/StrategyCreateRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StrategyResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      },
-      "get": {
-        "tags": [
-          "Strategies"
-        ],
-        "summary": "Get Strategies",
-        "description": "Get list of strategies",
-        "operationId": "Strategies-get_strategies",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "strategy_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/StrategyType"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "description": "전략 타입 필터",
-              "title": "Strategy Type"
-            },
-            "description": "전략 타입 필터"
-          },
-          {
-            "name": "is_active",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "description": "활성화 상태 필터",
-              "title": "Is Active"
-            },
-            "description": "활성화 상태 필터"
-          },
-          {
-            "name": "is_template",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "description": "템플릿 여부 필터",
-              "title": "Is Template"
-            },
-            "description": "템플릿 여부 필터"
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "maximum": 200,
-              "minimum": 1,
-              "description": "결과 수 제한",
-              "default": 50,
-              "title": "Limit"
-            },
-            "description": "결과 수 제한"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StrategyListResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/strategies/{strategy_id}": {
-      "get": {
-        "tags": [
-          "Strategies"
-        ],
-        "summary": "Get Strategy",
-        "description": "Get strategy by ID",
-        "operationId": "Strategies-get_strategy",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "strategy_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Strategy Id"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StrategyResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Strategies"
-        ],
-        "summary": "Update Strategy",
-        "description": "Update strategy",
-        "operationId": "Strategies-update_strategy",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "strategy_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Strategy Id"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/StrategyUpdateRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StrategyResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Strategies"
-        ],
-        "summary": "Delete Strategy",
-        "description": "Delete strategy (soft delete)",
-        "operationId": "Strategies-delete_strategy",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "strategy_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Strategy Id"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/strategies/{strategy_id}/execute": {
-      "post": {
-        "tags": [
-          "Strategies"
-        ],
-        "summary": "Execute Strategy",
-        "description": "Execute strategy and generate signal",
-        "operationId": "Strategies-execute_strategy",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "strategy_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Strategy Id"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/StrategyExecuteRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExecutionResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/strategies/{strategy_id}/executions": {
-      "get": {
-        "tags": [
-          "Strategies"
-        ],
-        "summary": "Get Strategy Executions",
-        "description": "Get strategy execution history",
-        "operationId": "Strategies-get_strategy_executions",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "strategy_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Strategy Id"
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "maximum": 500,
-              "minimum": 1,
-              "description": "결과 수 제한",
-              "default": 100,
-              "title": "Limit"
-            },
-            "description": "결과 수 제한"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExecutionListResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/strategies/{strategy_id}/performance": {
-      "get": {
-        "tags": [
-          "Strategies"
-        ],
-        "summary": "Get Strategy Performance",
-        "description": "Get strategy performance metrics",
-        "operationId": "Strategies-get_strategy_performance",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "strategy_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Strategy Id"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PerformanceResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/templates/": {
-      "post": {
-        "tags": [
-          "Templates"
-        ],
-        "summary": "Create Template",
-        "description": "Create a new strategy template (Superuser only)",
-        "operationId": "Templates-create_template",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TemplateCreateRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TemplateResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      },
-      "get": {
-        "tags": [
-          "Templates"
-        ],
-        "summary": "Get Templates",
-        "description": "Get list of strategy templates",
-        "operationId": "Templates-get_templates",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "strategy_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/StrategyType"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "description": "전략 타입 필터",
-              "title": "Strategy Type"
-            },
-            "description": "전략 타입 필터"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TemplateListResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/templates/{template_id}": {
-      "get": {
-        "tags": [
-          "Templates"
-        ],
-        "summary": "Get Template",
-        "description": "Get template by ID",
-        "operationId": "Templates-get_template",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "template_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Template Id"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TemplateResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      },
-      "patch": {
-        "tags": [
-          "Templates"
-        ],
-        "summary": "Update Template",
-        "description": "Update template by ID (Superuser only)",
-        "operationId": "Templates-update_template",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "template_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Template Id"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TemplateUpdateRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TemplateResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Templates"
-        ],
-        "summary": "Delete Template",
-        "description": "Delete template by ID (Superuser only)",
-        "operationId": "Templates-delete_template",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "template_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Template Id"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/templates/{template_id}/create-strategy": {
-      "post": {
-        "tags": [
-          "Templates"
-        ],
-        "summary": "Create Strategy From Template",
-        "description": "Create a strategy instance from template",
-        "operationId": "Templates-create_strategy_from_template",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "template_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Template Id"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/StrategyFromTemplateRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StrategyResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/templates/analytics/usage-stats": {
-      "get": {
-        "tags": [
-          "Templates"
-        ],
-        "summary": "Get Template Usage Stats",
-        "description": "Get template usage statistics",
-        "operationId": "Templates-get_template_usage_stats",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ]
-      }
-    },
-    "/api/v1/auth/jwt/login": {
+    "/api/v1/auth/login": {
       "post": {
         "tags": [
           "Auth"
@@ -2619,7 +2611,7 @@
         }
       }
     },
-    "/api/v1/auth/jwt/logout": {
+    "/api/v1/auth/logout": {
       "post": {
         "tags": [
           "Auth"
@@ -2923,13 +2915,13 @@
         }
       }
     },
-    "/api/v1/auth/google/authorize": {
+    "/api/v1/oauth2/authorize": {
       "get": {
         "tags": [
-          "Auth"
+          "OAuth2"
         ],
         "summary": "Oauth:Google.Jwt.Authorize",
-        "operationId": "Auth-oauth:google.jwt.authorize",
+        "operationId": "OAuth2-oauth:google.jwt.authorize",
         "parameters": [
           {
             "name": "scopes",
@@ -2968,14 +2960,14 @@
         }
       }
     },
-    "/api/v1/auth/google/callback": {
+    "/api/v1/oauth2/callback": {
       "get": {
         "tags": [
-          "Auth"
+          "OAuth2"
         ],
         "summary": "Oauth:Google.Jwt.Callback",
         "description": "The response varies based on the authentication backend used.",
-        "operationId": "Auth-oauth:google.jwt.callback",
+        "operationId": "OAuth2-oauth:google.jwt.callback",
         "parameters": [
           {
             "name": "code",
@@ -3085,181 +3077,13 @@
         }
       }
     },
-    "/api/v1/auth/associate/google/authorize": {
-      "get": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "Oauth-Associate:Google.Authorize",
-        "operationId": "Auth-oauth-associate:google.authorize",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "scopes",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "title": "Scopes"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OAuth2AuthorizeResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/auth/associate/google/callback": {
-      "get": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "Oauth-Associate:Google.Callback",
-        "description": "The response varies based on the authentication backend used.",
-        "operationId": "Auth-oauth-associate:google.callback",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "code",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Code"
-            }
-          },
-          {
-            "name": "code_verifier",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Code Verifier"
-            }
-          },
-          {
-            "name": "state",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "State"
-            }
-          },
-          {
-            "name": "error",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Error"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserRead"
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "examples": {
-                  "INVALID_STATE_TOKEN": {
-                    "summary": "Invalid state token."
-                  }
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorModel"
-                }
-              }
-            },
-            "description": "Bad Request"
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/users/me": {
       "get": {
         "tags": [
-          "Users"
+          "User"
         ],
         "summary": "Users:Current User",
-        "operationId": "Users-users:current_user",
+        "operationId": "User-users:current_user",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -3283,10 +3107,10 @@
       },
       "patch": {
         "tags": [
-          "Users"
+          "User"
         ],
         "summary": "Users:Patch Current User",
-        "operationId": "Users-users:patch_current_user",
+        "operationId": "User-users:patch_current_user",
         "requestBody": {
           "content": {
             "application/json": {
@@ -3359,10 +3183,10 @@
     "/api/v1/users/{id}": {
       "get": {
         "tags": [
-          "Users"
+          "User"
         ],
         "summary": "Users:User",
-        "operationId": "Users-users:user",
+        "operationId": "User-users:user",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -3413,10 +3237,10 @@
       },
       "patch": {
         "tags": [
-          "Users"
+          "User"
         ],
         "summary": "Users:Patch User",
-        "operationId": "Users-users:patch_user",
+        "operationId": "User-users:patch_user",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -3504,10 +3328,10 @@
       },
       "delete": {
         "tags": [
-          "Users"
+          "User"
         ],
         "summary": "Users:Delete User",
-        "operationId": "Users-users:delete_user",
+        "operationId": "User-users:delete_user",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -6456,7 +6280,7 @@
         "flows": {
           "password": {
             "scopes": {},
-            "tokenUrl": "auth/jwt/login"
+            "tokenUrl": "/api/v1/auth/login"
           }
         }
       }

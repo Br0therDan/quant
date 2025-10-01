@@ -35,6 +35,16 @@ class Settings(CommonSettings):
     GOOGLE_CLIENT_ID: str = "your-google-client-id"
     GOOGLE_CLIENT_SECRET: str = "your-google-client-secret"
 
+    OKTA_CLIENT_ID: str = "your-okta-client-id"
+    OKTA_CLIENT_SECRET: str = "your-okta-client-secret"
+    OKTA_DOMAIN: str = "your-okta-domain"
+
+    KAKAO_CLIENT_ID: str = "your-kakao-client-id"
+    KAKAO_CLIENT_SECRET: str = "your-kakao-client-secret"
+
+    NAVER_CLIENT_ID: str = "your-naver-client-id"
+    NAVER_CLIENT_SECRET: str = "your-naver-client-secret"
+
     # Frontend URL for email links
     FRONTEND_URL: str = "http://localhost:3000"
 

@@ -1964,59 +1964,173 @@ export type MarketDataGetSymbolsCoverageAnalyticsResponses = {
 	200: unknown;
 };
 
-export type PipelineStatusGetPipelineStatusData = {
+export type MarketDataServiceHealthCheckData = {
 	body?: never;
 	path?: never;
 	query?: never;
-	url: "/api/v1/pipeline/status/status";
+	url: "/api/v1/market-data/health/";
 };
 
-export type PipelineStatusGetPipelineStatusResponses = {
+export type MarketDataServiceHealthCheckResponses = {
 	/**
 	 * Successful Response
 	 */
-	200: unknown;
+	200: HealthCheckResponse;
 };
 
-export type PipelineStatusSetupDefaultSymbolsData = {
-	body?: never;
+export type MarketDataServiceHealthCheckResponse =
+	MarketDataServiceHealthCheckResponses[keyof MarketDataServiceHealthCheckResponses];
+
+export type PipelineUpdateWatchlistData = {
+	body: WatchlistUpdate;
 	path?: never;
 	query?: never;
-	url: "/api/v1/pipeline/status/setup-defaults";
+	url: "/api/v1/pipeline/watchlists/watchlist";
 };
 
-export type PipelineStatusSetupDefaultSymbolsResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: unknown;
-};
-
-export type PipelineStatusRunPipelineUpdateData = {
-	body: UpdateRequest;
-	path?: never;
-	query?: never;
-	url: "/api/v1/pipeline/status/update";
-};
-
-export type PipelineStatusRunPipelineUpdateErrors = {
+export type PipelineUpdateWatchlistErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type PipelineStatusRunPipelineUpdateError =
-	PipelineStatusRunPipelineUpdateErrors[keyof PipelineStatusRunPipelineUpdateErrors];
+export type PipelineUpdateWatchlistError =
+	PipelineUpdateWatchlistErrors[keyof PipelineUpdateWatchlistErrors];
 
-export type PipelineStatusRunPipelineUpdateResponses = {
+export type PipelineUpdateWatchlistResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type CompanyDataCollectStockInfoData = {
+export type PipelineListWatchlistsData = {
+	body?: never;
+	path?: never;
+	query?: never;
+	url: "/api/v1/pipeline/watchlists/watchlists";
+};
+
+export type PipelineListWatchlistsResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: unknown;
+};
+
+export type PipelineCreateWatchlistData = {
+	body: WatchlistCreate;
+	path?: never;
+	query?: never;
+	url: "/api/v1/pipeline/watchlists/watchlists";
+};
+
+export type PipelineCreateWatchlistErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type PipelineCreateWatchlistError =
+	PipelineCreateWatchlistErrors[keyof PipelineCreateWatchlistErrors];
+
+export type PipelineCreateWatchlistResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: unknown;
+};
+
+export type PipelineDeleteWatchlistData = {
+	body?: never;
+	path: {
+		/**
+		 * Name
+		 */
+		name: string;
+	};
+	query?: never;
+	url: "/api/v1/pipeline/watchlists/{name}";
+};
+
+export type PipelineDeleteWatchlistErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type PipelineDeleteWatchlistError =
+	PipelineDeleteWatchlistErrors[keyof PipelineDeleteWatchlistErrors];
+
+export type PipelineDeleteWatchlistResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: unknown;
+};
+
+export type PipelineGetWatchlistData = {
+	body?: never;
+	path: {
+		/**
+		 * Name
+		 */
+		name: string;
+	};
+	query?: never;
+	url: "/api/v1/pipeline/watchlists/{name}";
+};
+
+export type PipelineGetWatchlistErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type PipelineGetWatchlistError =
+	PipelineGetWatchlistErrors[keyof PipelineGetWatchlistErrors];
+
+export type PipelineGetWatchlistResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: unknown;
+};
+
+export type PipelineUpdateWatchlistByNameData = {
+	body: WatchlistUpdate;
+	path: {
+		/**
+		 * Name
+		 */
+		name: string;
+	};
+	query?: never;
+	url: "/api/v1/pipeline/watchlists/{name}";
+};
+
+export type PipelineUpdateWatchlistByNameErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type PipelineUpdateWatchlistByNameError =
+	PipelineUpdateWatchlistByNameErrors[keyof PipelineUpdateWatchlistByNameErrors];
+
+export type PipelineUpdateWatchlistByNameResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: unknown;
+};
+
+export type PipelineCollectStockInfoData = {
 	body?: never;
 	path: {
 		/**
@@ -2028,24 +2142,24 @@ export type CompanyDataCollectStockInfoData = {
 	url: "/api/v1/pipeline/companies/collect-info/{symbol}";
 };
 
-export type CompanyDataCollectStockInfoErrors = {
+export type PipelineCollectStockInfoErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type CompanyDataCollectStockInfoError =
-	CompanyDataCollectStockInfoErrors[keyof CompanyDataCollectStockInfoErrors];
+export type PipelineCollectStockInfoError =
+	PipelineCollectStockInfoErrors[keyof PipelineCollectStockInfoErrors];
 
-export type CompanyDataCollectStockInfoResponses = {
+export type PipelineCollectStockInfoResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type CompanyDataCollectDailyDataData = {
+export type PipelineCollectDailyDataData = {
 	body?: never;
 	path: {
 		/**
@@ -2066,24 +2180,24 @@ export type CompanyDataCollectDailyDataData = {
 	url: "/api/v1/pipeline/companies/collect-data/{symbol}";
 };
 
-export type CompanyDataCollectDailyDataErrors = {
+export type PipelineCollectDailyDataErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type CompanyDataCollectDailyDataError =
-	CompanyDataCollectDailyDataErrors[keyof CompanyDataCollectDailyDataErrors];
+export type PipelineCollectDailyDataError =
+	PipelineCollectDailyDataErrors[keyof PipelineCollectDailyDataErrors];
 
-export type CompanyDataCollectDailyDataResponses = {
+export type PipelineCollectDailyDataResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type CompanyDataGetSymbolCoverageData = {
+export type PipelineGetSymbolCoverageData = {
 	body?: never;
 	path: {
 		/**
@@ -2095,24 +2209,24 @@ export type CompanyDataGetSymbolCoverageData = {
 	url: "/api/v1/pipeline/companies/coverage/{symbol}";
 };
 
-export type CompanyDataGetSymbolCoverageErrors = {
+export type PipelineGetSymbolCoverageErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type CompanyDataGetSymbolCoverageError =
-	CompanyDataGetSymbolCoverageErrors[keyof CompanyDataGetSymbolCoverageErrors];
+export type PipelineGetSymbolCoverageError =
+	PipelineGetSymbolCoverageErrors[keyof PipelineGetSymbolCoverageErrors];
 
-export type CompanyDataGetSymbolCoverageResponses = {
+export type PipelineGetSymbolCoverageResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type CompanyDataGetCompanyInfoData = {
+export type PipelineGetCompanyInfoData = {
 	body?: never;
 	path: {
 		/**
@@ -2124,202 +2238,557 @@ export type CompanyDataGetCompanyInfoData = {
 	url: "/api/v1/pipeline/companies/company/{symbol}";
 };
 
-export type CompanyDataGetCompanyInfoErrors = {
+export type PipelineGetCompanyInfoErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type CompanyDataGetCompanyInfoError =
-	CompanyDataGetCompanyInfoErrors[keyof CompanyDataGetCompanyInfoErrors];
+export type PipelineGetCompanyInfoError =
+	PipelineGetCompanyInfoErrors[keyof PipelineGetCompanyInfoErrors];
 
-export type CompanyDataGetCompanyInfoResponses = {
+export type PipelineGetCompanyInfoResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type CompanyDataGetAllCompaniesData = {
+export type PipelineListCompaniesData = {
 	body?: never;
 	path?: never;
 	query?: never;
-	url: "/api/v1/pipeline/companies/companies";
+	url: "/api/v1/pipeline/companies/";
 };
 
-export type CompanyDataGetAllCompaniesResponses = {
+export type PipelineListCompaniesResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type WatchlistsUpdateWatchlistData = {
-	body: WatchlistUpdate;
-	path?: never;
-	query?: never;
-	url: "/api/v1/pipeline/watchlists/watchlist";
-};
-
-export type WatchlistsUpdateWatchlistErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type WatchlistsUpdateWatchlistError =
-	WatchlistsUpdateWatchlistErrors[keyof WatchlistsUpdateWatchlistErrors];
-
-export type WatchlistsUpdateWatchlistResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: unknown;
-};
-
-export type WatchlistsListWatchlistsData = {
+export type PipelineGetPipelineStatusData = {
 	body?: never;
 	path?: never;
 	query?: never;
-	url: "/api/v1/pipeline/watchlists/watchlists";
+	url: "/api/v1/pipeline/status/";
 };
 
-export type WatchlistsListWatchlistsResponses = {
+export type PipelineGetPipelineStatusResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type WatchlistsCreateWatchlistData = {
-	body: WatchlistCreate;
+export type PipelineSetupDefaultSymbolsData = {
+	body?: never;
 	path?: never;
 	query?: never;
-	url: "/api/v1/pipeline/watchlists/watchlists";
+	url: "/api/v1/pipeline/status/setup-defaults";
 };
 
-export type WatchlistsCreateWatchlistErrors = {
+export type PipelineSetupDefaultSymbolsResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: unknown;
+};
+
+export type PipelineRunPipelineUpdateData = {
+	body: UpdateRequest;
+	path?: never;
+	query?: never;
+	url: "/api/v1/pipeline/status/update";
+};
+
+export type PipelineRunPipelineUpdateErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type WatchlistsCreateWatchlistError =
-	WatchlistsCreateWatchlistErrors[keyof WatchlistsCreateWatchlistErrors];
+export type PipelineRunPipelineUpdateError =
+	PipelineRunPipelineUpdateErrors[keyof PipelineRunPipelineUpdateErrors];
 
-export type WatchlistsCreateWatchlistResponses = {
+export type PipelineRunPipelineUpdateResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type WatchlistsDeleteWatchlistData = {
+export type StrategyGetStrategiesData = {
+	body?: never;
+	path?: never;
+	query?: {
+		/**
+		 * Strategy Type
+		 * 전략 타입 필터
+		 */
+		strategy_type?: StrategyType | null;
+		/**
+		 * Is Active
+		 * 활성화 상태 필터
+		 */
+		is_active?: boolean | null;
+		/**
+		 * Is Template
+		 * 템플릿 여부 필터
+		 */
+		is_template?: boolean | null;
+		/**
+		 * Limit
+		 * 결과 수 제한
+		 */
+		limit?: number;
+	};
+	url: "/api/v1/strategies/";
+};
+
+export type StrategyGetStrategiesErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type StrategyGetStrategiesError =
+	StrategyGetStrategiesErrors[keyof StrategyGetStrategiesErrors];
+
+export type StrategyGetStrategiesResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: StrategyListResponse;
+};
+
+export type StrategyGetStrategiesResponse =
+	StrategyGetStrategiesResponses[keyof StrategyGetStrategiesResponses];
+
+export type StrategyCreateStrategyData = {
+	body: StrategyCreateRequest;
+	path?: never;
+	query?: never;
+	url: "/api/v1/strategies/";
+};
+
+export type StrategyCreateStrategyErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type StrategyCreateStrategyError =
+	StrategyCreateStrategyErrors[keyof StrategyCreateStrategyErrors];
+
+export type StrategyCreateStrategyResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: StrategyResponse;
+};
+
+export type StrategyCreateStrategyResponse =
+	StrategyCreateStrategyResponses[keyof StrategyCreateStrategyResponses];
+
+export type StrategyDeleteStrategyData = {
 	body?: never;
 	path: {
 		/**
-		 * Name
+		 * Strategy Id
 		 */
-		name: string;
+		strategy_id: string;
 	};
 	query?: never;
-	url: "/api/v1/pipeline/watchlists/watchlists/{name}";
+	url: "/api/v1/strategies/{strategy_id}";
 };
 
-export type WatchlistsDeleteWatchlistErrors = {
+export type StrategyDeleteStrategyErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type WatchlistsDeleteWatchlistError =
-	WatchlistsDeleteWatchlistErrors[keyof WatchlistsDeleteWatchlistErrors];
+export type StrategyDeleteStrategyError =
+	StrategyDeleteStrategyErrors[keyof StrategyDeleteStrategyErrors];
 
-export type WatchlistsDeleteWatchlistResponses = {
+export type StrategyDeleteStrategyResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type WatchlistsGetWatchlistData = {
+export type StrategyGetStrategyData = {
 	body?: never;
 	path: {
 		/**
-		 * Name
+		 * Strategy Id
 		 */
-		name: string;
+		strategy_id: string;
 	};
 	query?: never;
-	url: "/api/v1/pipeline/watchlists/watchlists/{name}";
+	url: "/api/v1/strategies/{strategy_id}";
 };
 
-export type WatchlistsGetWatchlistErrors = {
+export type StrategyGetStrategyErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type WatchlistsGetWatchlistError =
-	WatchlistsGetWatchlistErrors[keyof WatchlistsGetWatchlistErrors];
+export type StrategyGetStrategyError =
+	StrategyGetStrategyErrors[keyof StrategyGetStrategyErrors];
 
-export type WatchlistsGetWatchlistResponses = {
+export type StrategyGetStrategyResponses = {
 	/**
 	 * Successful Response
 	 */
-	200: unknown;
+	200: StrategyResponse;
 };
 
-export type WatchlistsUpdateWatchlistByNameData = {
-	body: WatchlistUpdate;
+export type StrategyGetStrategyResponse =
+	StrategyGetStrategyResponses[keyof StrategyGetStrategyResponses];
+
+export type StrategyUpdateStrategyData = {
+	body: StrategyUpdateRequest;
 	path: {
 		/**
-		 * Name
+		 * Strategy Id
 		 */
-		name: string;
+		strategy_id: string;
 	};
 	query?: never;
-	url: "/api/v1/pipeline/watchlists/watchlists/{name}";
+	url: "/api/v1/strategies/{strategy_id}";
 };
 
-export type WatchlistsUpdateWatchlistByNameErrors = {
+export type StrategyUpdateStrategyErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type WatchlistsUpdateWatchlistByNameError =
-	WatchlistsUpdateWatchlistByNameErrors[keyof WatchlistsUpdateWatchlistByNameErrors];
+export type StrategyUpdateStrategyError =
+	StrategyUpdateStrategyErrors[keyof StrategyUpdateStrategyErrors];
 
-export type WatchlistsUpdateWatchlistByNameResponses = {
+export type StrategyUpdateStrategyResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: StrategyResponse;
+};
+
+export type StrategyUpdateStrategyResponse =
+	StrategyUpdateStrategyResponses[keyof StrategyUpdateStrategyResponses];
+
+export type StrategyExecuteStrategyData = {
+	body: StrategyExecuteRequest;
+	path: {
+		/**
+		 * Strategy Id
+		 */
+		strategy_id: string;
+	};
+	query?: never;
+	url: "/api/v1/strategies/{strategy_id}/execute";
+};
+
+export type StrategyExecuteStrategyErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type StrategyExecuteStrategyError =
+	StrategyExecuteStrategyErrors[keyof StrategyExecuteStrategyErrors];
+
+export type StrategyExecuteStrategyResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: ExecutionResponse;
+};
+
+export type StrategyExecuteStrategyResponse =
+	StrategyExecuteStrategyResponses[keyof StrategyExecuteStrategyResponses];
+
+export type StrategyGetStrategyExecutionsData = {
+	body?: never;
+	path: {
+		/**
+		 * Strategy Id
+		 */
+		strategy_id: string;
+	};
+	query?: {
+		/**
+		 * Limit
+		 * 결과 수 제한
+		 */
+		limit?: number;
+	};
+	url: "/api/v1/strategies/{strategy_id}/executions";
+};
+
+export type StrategyGetStrategyExecutionsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type StrategyGetStrategyExecutionsError =
+	StrategyGetStrategyExecutionsErrors[keyof StrategyGetStrategyExecutionsErrors];
+
+export type StrategyGetStrategyExecutionsResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: ExecutionListResponse;
+};
+
+export type StrategyGetStrategyExecutionsResponse =
+	StrategyGetStrategyExecutionsResponses[keyof StrategyGetStrategyExecutionsResponses];
+
+export type StrategyGetStrategyPerformanceData = {
+	body?: never;
+	path: {
+		/**
+		 * Strategy Id
+		 */
+		strategy_id: string;
+	};
+	query?: never;
+	url: "/api/v1/strategies/{strategy_id}/performance";
+};
+
+export type StrategyGetStrategyPerformanceErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type StrategyGetStrategyPerformanceError =
+	StrategyGetStrategyPerformanceErrors[keyof StrategyGetStrategyPerformanceErrors];
+
+export type StrategyGetStrategyPerformanceResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: PerformanceResponse;
+};
+
+export type StrategyGetStrategyPerformanceResponse =
+	StrategyGetStrategyPerformanceResponses[keyof StrategyGetStrategyPerformanceResponses];
+
+export type StrategyGetTemplatesData = {
+	body?: never;
+	path?: never;
+	query?: {
+		/**
+		 * Strategy Type
+		 * 전략 타입 필터
+		 */
+		strategy_type?: StrategyType | null;
+	};
+	url: "/api/v1/strategies/templates/";
+};
+
+export type StrategyGetTemplatesErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type StrategyGetTemplatesError =
+	StrategyGetTemplatesErrors[keyof StrategyGetTemplatesErrors];
+
+export type StrategyGetTemplatesResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: TemplateListResponse;
+};
+
+export type StrategyGetTemplatesResponse =
+	StrategyGetTemplatesResponses[keyof StrategyGetTemplatesResponses];
+
+export type StrategyCreateTemplateData = {
+	body: TemplateCreateRequest;
+	path?: never;
+	query?: never;
+	url: "/api/v1/strategies/templates/";
+};
+
+export type StrategyCreateTemplateErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type StrategyCreateTemplateError =
+	StrategyCreateTemplateErrors[keyof StrategyCreateTemplateErrors];
+
+export type StrategyCreateTemplateResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: TemplateResponse;
+};
+
+export type StrategyCreateTemplateResponse =
+	StrategyCreateTemplateResponses[keyof StrategyCreateTemplateResponses];
+
+export type StrategyDeleteTemplateData = {
+	body?: never;
+	path: {
+		/**
+		 * Template Id
+		 */
+		template_id: string;
+	};
+	query?: never;
+	url: "/api/v1/strategies/templates/{template_id}";
+};
+
+export type StrategyDeleteTemplateErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type StrategyDeleteTemplateError =
+	StrategyDeleteTemplateErrors[keyof StrategyDeleteTemplateErrors];
+
+export type StrategyDeleteTemplateResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type HealthHealthCheck2Data = {
+export type StrategyGetTemplateData = {
+	body?: never;
+	path: {
+		/**
+		 * Template Id
+		 */
+		template_id: string;
+	};
+	query?: never;
+	url: "/api/v1/strategies/templates/{template_id}";
+};
+
+export type StrategyGetTemplateErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type StrategyGetTemplateError =
+	StrategyGetTemplateErrors[keyof StrategyGetTemplateErrors];
+
+export type StrategyGetTemplateResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: TemplateResponse;
+};
+
+export type StrategyGetTemplateResponse =
+	StrategyGetTemplateResponses[keyof StrategyGetTemplateResponses];
+
+export type StrategyUpdateTemplateData = {
+	body: TemplateUpdateRequest;
+	path: {
+		/**
+		 * Template Id
+		 */
+		template_id: string;
+	};
+	query?: never;
+	url: "/api/v1/strategies/templates/{template_id}";
+};
+
+export type StrategyUpdateTemplateErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type StrategyUpdateTemplateError =
+	StrategyUpdateTemplateErrors[keyof StrategyUpdateTemplateErrors];
+
+export type StrategyUpdateTemplateResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: TemplateResponse;
+};
+
+export type StrategyUpdateTemplateResponse =
+	StrategyUpdateTemplateResponses[keyof StrategyUpdateTemplateResponses];
+
+export type StrategyCreateStrategyFromTemplateData = {
+	body: StrategyFromTemplateRequest;
+	path: {
+		/**
+		 * Template Id
+		 */
+		template_id: string;
+	};
+	query?: never;
+	url: "/api/v1/strategies/templates/{template_id}/create-strategy";
+};
+
+export type StrategyCreateStrategyFromTemplateErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type StrategyCreateStrategyFromTemplateError =
+	StrategyCreateStrategyFromTemplateErrors[keyof StrategyCreateStrategyFromTemplateErrors];
+
+export type StrategyCreateStrategyFromTemplateResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: StrategyResponse;
+};
+
+export type StrategyCreateStrategyFromTemplateResponse =
+	StrategyCreateStrategyFromTemplateResponses[keyof StrategyCreateStrategyFromTemplateResponses];
+
+export type StrategyGetTemplateUsageStatsData = {
 	body?: never;
 	path?: never;
 	query?: never;
-	url: "/api/v1/health/";
+	url: "/api/v1/strategies/templates/analytics/usage-stats";
 };
 
-export type HealthHealthCheck2Responses = {
+export type StrategyGetTemplateUsageStatsResponses = {
 	/**
 	 * Successful Response
 	 */
-	200: HealthCheckResponse;
+	200: unknown;
 };
-
-export type HealthHealthCheck2Response =
-	HealthHealthCheck2Responses[keyof HealthHealthCheck2Responses];
 
 export type BacktestsGetBacktestsData = {
 	body?: never;
@@ -2714,480 +3183,11 @@ export type BacktestsGetBacktestSummaryAnalyticsResponses = {
 	200: unknown;
 };
 
-export type StrategiesGetStrategiesData = {
-	body?: never;
-	path?: never;
-	query?: {
-		/**
-		 * Strategy Type
-		 * 전략 타입 필터
-		 */
-		strategy_type?: StrategyType | null;
-		/**
-		 * Is Active
-		 * 활성화 상태 필터
-		 */
-		is_active?: boolean | null;
-		/**
-		 * Is Template
-		 * 템플릿 여부 필터
-		 */
-		is_template?: boolean | null;
-		/**
-		 * Limit
-		 * 결과 수 제한
-		 */
-		limit?: number;
-	};
-	url: "/api/v1/strategies/";
-};
-
-export type StrategiesGetStrategiesErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type StrategiesGetStrategiesError =
-	StrategiesGetStrategiesErrors[keyof StrategiesGetStrategiesErrors];
-
-export type StrategiesGetStrategiesResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: StrategyListResponse;
-};
-
-export type StrategiesGetStrategiesResponse =
-	StrategiesGetStrategiesResponses[keyof StrategiesGetStrategiesResponses];
-
-export type StrategiesCreateStrategyData = {
-	body: StrategyCreateRequest;
-	path?: never;
-	query?: never;
-	url: "/api/v1/strategies/";
-};
-
-export type StrategiesCreateStrategyErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type StrategiesCreateStrategyError =
-	StrategiesCreateStrategyErrors[keyof StrategiesCreateStrategyErrors];
-
-export type StrategiesCreateStrategyResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: StrategyResponse;
-};
-
-export type StrategiesCreateStrategyResponse =
-	StrategiesCreateStrategyResponses[keyof StrategiesCreateStrategyResponses];
-
-export type StrategiesDeleteStrategyData = {
-	body?: never;
-	path: {
-		/**
-		 * Strategy Id
-		 */
-		strategy_id: string;
-	};
-	query?: never;
-	url: "/api/v1/strategies/{strategy_id}";
-};
-
-export type StrategiesDeleteStrategyErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type StrategiesDeleteStrategyError =
-	StrategiesDeleteStrategyErrors[keyof StrategiesDeleteStrategyErrors];
-
-export type StrategiesDeleteStrategyResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: unknown;
-};
-
-export type StrategiesGetStrategyData = {
-	body?: never;
-	path: {
-		/**
-		 * Strategy Id
-		 */
-		strategy_id: string;
-	};
-	query?: never;
-	url: "/api/v1/strategies/{strategy_id}";
-};
-
-export type StrategiesGetStrategyErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type StrategiesGetStrategyError =
-	StrategiesGetStrategyErrors[keyof StrategiesGetStrategyErrors];
-
-export type StrategiesGetStrategyResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: StrategyResponse;
-};
-
-export type StrategiesGetStrategyResponse =
-	StrategiesGetStrategyResponses[keyof StrategiesGetStrategyResponses];
-
-export type StrategiesUpdateStrategyData = {
-	body: StrategyUpdateRequest;
-	path: {
-		/**
-		 * Strategy Id
-		 */
-		strategy_id: string;
-	};
-	query?: never;
-	url: "/api/v1/strategies/{strategy_id}";
-};
-
-export type StrategiesUpdateStrategyErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type StrategiesUpdateStrategyError =
-	StrategiesUpdateStrategyErrors[keyof StrategiesUpdateStrategyErrors];
-
-export type StrategiesUpdateStrategyResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: StrategyResponse;
-};
-
-export type StrategiesUpdateStrategyResponse =
-	StrategiesUpdateStrategyResponses[keyof StrategiesUpdateStrategyResponses];
-
-export type StrategiesExecuteStrategyData = {
-	body: StrategyExecuteRequest;
-	path: {
-		/**
-		 * Strategy Id
-		 */
-		strategy_id: string;
-	};
-	query?: never;
-	url: "/api/v1/strategies/{strategy_id}/execute";
-};
-
-export type StrategiesExecuteStrategyErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type StrategiesExecuteStrategyError =
-	StrategiesExecuteStrategyErrors[keyof StrategiesExecuteStrategyErrors];
-
-export type StrategiesExecuteStrategyResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: ExecutionResponse;
-};
-
-export type StrategiesExecuteStrategyResponse =
-	StrategiesExecuteStrategyResponses[keyof StrategiesExecuteStrategyResponses];
-
-export type StrategiesGetStrategyExecutionsData = {
-	body?: never;
-	path: {
-		/**
-		 * Strategy Id
-		 */
-		strategy_id: string;
-	};
-	query?: {
-		/**
-		 * Limit
-		 * 결과 수 제한
-		 */
-		limit?: number;
-	};
-	url: "/api/v1/strategies/{strategy_id}/executions";
-};
-
-export type StrategiesGetStrategyExecutionsErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type StrategiesGetStrategyExecutionsError =
-	StrategiesGetStrategyExecutionsErrors[keyof StrategiesGetStrategyExecutionsErrors];
-
-export type StrategiesGetStrategyExecutionsResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: ExecutionListResponse;
-};
-
-export type StrategiesGetStrategyExecutionsResponse =
-	StrategiesGetStrategyExecutionsResponses[keyof StrategiesGetStrategyExecutionsResponses];
-
-export type StrategiesGetStrategyPerformanceData = {
-	body?: never;
-	path: {
-		/**
-		 * Strategy Id
-		 */
-		strategy_id: string;
-	};
-	query?: never;
-	url: "/api/v1/strategies/{strategy_id}/performance";
-};
-
-export type StrategiesGetStrategyPerformanceErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type StrategiesGetStrategyPerformanceError =
-	StrategiesGetStrategyPerformanceErrors[keyof StrategiesGetStrategyPerformanceErrors];
-
-export type StrategiesGetStrategyPerformanceResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: PerformanceResponse;
-};
-
-export type StrategiesGetStrategyPerformanceResponse =
-	StrategiesGetStrategyPerformanceResponses[keyof StrategiesGetStrategyPerformanceResponses];
-
-export type TemplatesGetTemplatesData = {
-	body?: never;
-	path?: never;
-	query?: {
-		/**
-		 * Strategy Type
-		 * 전략 타입 필터
-		 */
-		strategy_type?: StrategyType | null;
-	};
-	url: "/api/v1/templates/";
-};
-
-export type TemplatesGetTemplatesErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type TemplatesGetTemplatesError =
-	TemplatesGetTemplatesErrors[keyof TemplatesGetTemplatesErrors];
-
-export type TemplatesGetTemplatesResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: TemplateListResponse;
-};
-
-export type TemplatesGetTemplatesResponse =
-	TemplatesGetTemplatesResponses[keyof TemplatesGetTemplatesResponses];
-
-export type TemplatesCreateTemplateData = {
-	body: TemplateCreateRequest;
-	path?: never;
-	query?: never;
-	url: "/api/v1/templates/";
-};
-
-export type TemplatesCreateTemplateErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type TemplatesCreateTemplateError =
-	TemplatesCreateTemplateErrors[keyof TemplatesCreateTemplateErrors];
-
-export type TemplatesCreateTemplateResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: TemplateResponse;
-};
-
-export type TemplatesCreateTemplateResponse =
-	TemplatesCreateTemplateResponses[keyof TemplatesCreateTemplateResponses];
-
-export type TemplatesDeleteTemplateData = {
-	body?: never;
-	path: {
-		/**
-		 * Template Id
-		 */
-		template_id: string;
-	};
-	query?: never;
-	url: "/api/v1/templates/{template_id}";
-};
-
-export type TemplatesDeleteTemplateErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type TemplatesDeleteTemplateError =
-	TemplatesDeleteTemplateErrors[keyof TemplatesDeleteTemplateErrors];
-
-export type TemplatesDeleteTemplateResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: unknown;
-};
-
-export type TemplatesGetTemplateData = {
-	body?: never;
-	path: {
-		/**
-		 * Template Id
-		 */
-		template_id: string;
-	};
-	query?: never;
-	url: "/api/v1/templates/{template_id}";
-};
-
-export type TemplatesGetTemplateErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type TemplatesGetTemplateError =
-	TemplatesGetTemplateErrors[keyof TemplatesGetTemplateErrors];
-
-export type TemplatesGetTemplateResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: TemplateResponse;
-};
-
-export type TemplatesGetTemplateResponse =
-	TemplatesGetTemplateResponses[keyof TemplatesGetTemplateResponses];
-
-export type TemplatesUpdateTemplateData = {
-	body: TemplateUpdateRequest;
-	path: {
-		/**
-		 * Template Id
-		 */
-		template_id: string;
-	};
-	query?: never;
-	url: "/api/v1/templates/{template_id}";
-};
-
-export type TemplatesUpdateTemplateErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type TemplatesUpdateTemplateError =
-	TemplatesUpdateTemplateErrors[keyof TemplatesUpdateTemplateErrors];
-
-export type TemplatesUpdateTemplateResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: TemplateResponse;
-};
-
-export type TemplatesUpdateTemplateResponse =
-	TemplatesUpdateTemplateResponses[keyof TemplatesUpdateTemplateResponses];
-
-export type TemplatesCreateStrategyFromTemplateData = {
-	body: StrategyFromTemplateRequest;
-	path: {
-		/**
-		 * Template Id
-		 */
-		template_id: string;
-	};
-	query?: never;
-	url: "/api/v1/templates/{template_id}/create-strategy";
-};
-
-export type TemplatesCreateStrategyFromTemplateErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type TemplatesCreateStrategyFromTemplateError =
-	TemplatesCreateStrategyFromTemplateErrors[keyof TemplatesCreateStrategyFromTemplateErrors];
-
-export type TemplatesCreateStrategyFromTemplateResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: StrategyResponse;
-};
-
-export type TemplatesCreateStrategyFromTemplateResponse =
-	TemplatesCreateStrategyFromTemplateResponses[keyof TemplatesCreateStrategyFromTemplateResponses];
-
-export type TemplatesGetTemplateUsageStatsData = {
-	body?: never;
-	path?: never;
-	query?: never;
-	url: "/api/v1/templates/analytics/usage-stats";
-};
-
-export type TemplatesGetTemplateUsageStatsResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: unknown;
-};
-
 export type AuthAuthJwtLoginData = {
 	body: Login;
 	path?: never;
 	query?: never;
-	url: "/api/v1/auth/jwt/login";
+	url: "/api/v1/auth/login";
 };
 
 export type AuthAuthJwtLoginErrors = {
@@ -3218,7 +3218,7 @@ export type AuthAuthJwtLogoutData = {
 	body?: never;
 	path?: never;
 	query?: never;
-	url: "/api/v1/auth/jwt/logout";
+	url: "/api/v1/auth/logout";
 };
 
 export type AuthAuthJwtLogoutErrors = {
@@ -3373,7 +3373,7 @@ export type AuthVerifyVerifyResponses = {
 export type AuthVerifyVerifyResponse =
 	AuthVerifyVerifyResponses[keyof AuthVerifyVerifyResponses];
 
-export type AuthOauthGoogleJwtAuthorizeData = {
+export type OAuth2OauthGoogleJwtAuthorizeData = {
 	body?: never;
 	path?: never;
 	query?: {
@@ -3382,30 +3382,30 @@ export type AuthOauthGoogleJwtAuthorizeData = {
 		 */
 		scopes?: Array<string>;
 	};
-	url: "/api/v1/auth/google/authorize";
+	url: "/api/v1/oauth2/authorize";
 };
 
-export type AuthOauthGoogleJwtAuthorizeErrors = {
+export type OAuth2OauthGoogleJwtAuthorizeErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type AuthOauthGoogleJwtAuthorizeError =
-	AuthOauthGoogleJwtAuthorizeErrors[keyof AuthOauthGoogleJwtAuthorizeErrors];
+export type OAuth2OauthGoogleJwtAuthorizeError =
+	OAuth2OauthGoogleJwtAuthorizeErrors[keyof OAuth2OauthGoogleJwtAuthorizeErrors];
 
-export type AuthOauthGoogleJwtAuthorizeResponses = {
+export type OAuth2OauthGoogleJwtAuthorizeResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: OAuth2AuthorizeResponse;
 };
 
-export type AuthOauthGoogleJwtAuthorizeResponse =
-	AuthOauthGoogleJwtAuthorizeResponses[keyof AuthOauthGoogleJwtAuthorizeResponses];
+export type OAuth2OauthGoogleJwtAuthorizeResponse =
+	OAuth2OauthGoogleJwtAuthorizeResponses[keyof OAuth2OauthGoogleJwtAuthorizeResponses];
 
-export type AuthOauthGoogleJwtCallbackData = {
+export type OAuth2OauthGoogleJwtCallbackData = {
 	body?: never;
 	path?: never;
 	query?: {
@@ -3426,10 +3426,10 @@ export type AuthOauthGoogleJwtCallbackData = {
 		 */
 		error?: string | null;
 	};
-	url: "/api/v1/auth/google/callback";
+	url: "/api/v1/oauth2/callback";
 };
 
-export type AuthOauthGoogleJwtCallbackErrors = {
+export type OAuth2OauthGoogleJwtCallbackErrors = {
 	/**
 	 * Bad Request
 	 */
@@ -3440,128 +3440,48 @@ export type AuthOauthGoogleJwtCallbackErrors = {
 	422: HttpValidationError;
 };
 
-export type AuthOauthGoogleJwtCallbackError =
-	AuthOauthGoogleJwtCallbackErrors[keyof AuthOauthGoogleJwtCallbackErrors];
+export type OAuth2OauthGoogleJwtCallbackError =
+	OAuth2OauthGoogleJwtCallbackErrors[keyof OAuth2OauthGoogleJwtCallbackErrors];
 
-export type AuthOauthGoogleJwtCallbackResponses = {
+export type OAuth2OauthGoogleJwtCallbackResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type AuthOauthAssociateGoogleAuthorizeData = {
-	body?: never;
-	path?: never;
-	query?: {
-		/**
-		 * Scopes
-		 */
-		scopes?: Array<string>;
-	};
-	url: "/api/v1/auth/associate/google/authorize";
-};
-
-export type AuthOauthAssociateGoogleAuthorizeErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type AuthOauthAssociateGoogleAuthorizeError =
-	AuthOauthAssociateGoogleAuthorizeErrors[keyof AuthOauthAssociateGoogleAuthorizeErrors];
-
-export type AuthOauthAssociateGoogleAuthorizeResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: OAuth2AuthorizeResponse;
-};
-
-export type AuthOauthAssociateGoogleAuthorizeResponse =
-	AuthOauthAssociateGoogleAuthorizeResponses[keyof AuthOauthAssociateGoogleAuthorizeResponses];
-
-export type AuthOauthAssociateGoogleCallbackData = {
-	body?: never;
-	path?: never;
-	query?: {
-		/**
-		 * Code
-		 */
-		code?: string | null;
-		/**
-		 * Code Verifier
-		 */
-		code_verifier?: string | null;
-		/**
-		 * State
-		 */
-		state?: string | null;
-		/**
-		 * Error
-		 */
-		error?: string | null;
-	};
-	url: "/api/v1/auth/associate/google/callback";
-};
-
-export type AuthOauthAssociateGoogleCallbackErrors = {
-	/**
-	 * Bad Request
-	 */
-	400: ErrorModel;
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type AuthOauthAssociateGoogleCallbackError =
-	AuthOauthAssociateGoogleCallbackErrors[keyof AuthOauthAssociateGoogleCallbackErrors];
-
-export type AuthOauthAssociateGoogleCallbackResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: UserRead;
-};
-
-export type AuthOauthAssociateGoogleCallbackResponse =
-	AuthOauthAssociateGoogleCallbackResponses[keyof AuthOauthAssociateGoogleCallbackResponses];
-
-export type UsersUsersCurrentUserData = {
+export type UserUsersCurrentUserData = {
 	body?: never;
 	path?: never;
 	query?: never;
 	url: "/api/v1/users/me";
 };
 
-export type UsersUsersCurrentUserErrors = {
+export type UserUsersCurrentUserErrors = {
 	/**
 	 * Missing token or inactive user.
 	 */
 	401: unknown;
 };
 
-export type UsersUsersCurrentUserResponses = {
+export type UserUsersCurrentUserResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: UserRead;
 };
 
-export type UsersUsersCurrentUserResponse =
-	UsersUsersCurrentUserResponses[keyof UsersUsersCurrentUserResponses];
+export type UserUsersCurrentUserResponse =
+	UserUsersCurrentUserResponses[keyof UserUsersCurrentUserResponses];
 
-export type UsersUsersPatchCurrentUserData = {
+export type UserUsersPatchCurrentUserData = {
 	body: UserUpdate;
 	path?: never;
 	query?: never;
 	url: "/api/v1/users/me";
 };
 
-export type UsersUsersPatchCurrentUserErrors = {
+export type UserUsersPatchCurrentUserErrors = {
 	/**
 	 * Bad Request
 	 */
@@ -3576,20 +3496,20 @@ export type UsersUsersPatchCurrentUserErrors = {
 	422: HttpValidationError;
 };
 
-export type UsersUsersPatchCurrentUserError =
-	UsersUsersPatchCurrentUserErrors[keyof UsersUsersPatchCurrentUserErrors];
+export type UserUsersPatchCurrentUserError =
+	UserUsersPatchCurrentUserErrors[keyof UserUsersPatchCurrentUserErrors];
 
-export type UsersUsersPatchCurrentUserResponses = {
+export type UserUsersPatchCurrentUserResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: UserRead;
 };
 
-export type UsersUsersPatchCurrentUserResponse =
-	UsersUsersPatchCurrentUserResponses[keyof UsersUsersPatchCurrentUserResponses];
+export type UserUsersPatchCurrentUserResponse =
+	UserUsersPatchCurrentUserResponses[keyof UserUsersPatchCurrentUserResponses];
 
-export type UsersUsersDeleteUserData = {
+export type UserUsersDeleteUserData = {
 	body?: never;
 	path: {
 		/**
@@ -3601,7 +3521,7 @@ export type UsersUsersDeleteUserData = {
 	url: "/api/v1/users/{id}";
 };
 
-export type UsersUsersDeleteUserErrors = {
+export type UserUsersDeleteUserErrors = {
 	/**
 	 * Missing token or inactive user.
 	 */
@@ -3620,20 +3540,20 @@ export type UsersUsersDeleteUserErrors = {
 	422: HttpValidationError;
 };
 
-export type UsersUsersDeleteUserError =
-	UsersUsersDeleteUserErrors[keyof UsersUsersDeleteUserErrors];
+export type UserUsersDeleteUserError =
+	UserUsersDeleteUserErrors[keyof UserUsersDeleteUserErrors];
 
-export type UsersUsersDeleteUserResponses = {
+export type UserUsersDeleteUserResponses = {
 	/**
 	 * Successful Response
 	 */
 	204: void;
 };
 
-export type UsersUsersDeleteUserResponse =
-	UsersUsersDeleteUserResponses[keyof UsersUsersDeleteUserResponses];
+export type UserUsersDeleteUserResponse =
+	UserUsersDeleteUserResponses[keyof UserUsersDeleteUserResponses];
 
-export type UsersUsersUserData = {
+export type UserUsersUserData = {
 	body?: never;
 	path: {
 		/**
@@ -3645,7 +3565,7 @@ export type UsersUsersUserData = {
 	url: "/api/v1/users/{id}";
 };
 
-export type UsersUsersUserErrors = {
+export type UserUsersUserErrors = {
 	/**
 	 * Missing token or inactive user.
 	 */
@@ -3664,20 +3584,19 @@ export type UsersUsersUserErrors = {
 	422: HttpValidationError;
 };
 
-export type UsersUsersUserError =
-	UsersUsersUserErrors[keyof UsersUsersUserErrors];
+export type UserUsersUserError = UserUsersUserErrors[keyof UserUsersUserErrors];
 
-export type UsersUsersUserResponses = {
+export type UserUsersUserResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: UserRead;
 };
 
-export type UsersUsersUserResponse =
-	UsersUsersUserResponses[keyof UsersUsersUserResponses];
+export type UserUsersUserResponse =
+	UserUsersUserResponses[keyof UserUsersUserResponses];
 
-export type UsersUsersPatchUserData = {
+export type UserUsersPatchUserData = {
 	body: UserUpdate;
 	path: {
 		/**
@@ -3689,7 +3608,7 @@ export type UsersUsersPatchUserData = {
 	url: "/api/v1/users/{id}";
 };
 
-export type UsersUsersPatchUserErrors = {
+export type UserUsersPatchUserErrors = {
 	/**
 	 * Bad Request
 	 */
@@ -3712,15 +3631,15 @@ export type UsersUsersPatchUserErrors = {
 	422: HttpValidationError;
 };
 
-export type UsersUsersPatchUserError =
-	UsersUsersPatchUserErrors[keyof UsersUsersPatchUserErrors];
+export type UserUsersPatchUserError =
+	UserUsersPatchUserErrors[keyof UserUsersPatchUserErrors];
 
-export type UsersUsersPatchUserResponses = {
+export type UserUsersPatchUserResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: UserRead;
 };
 
-export type UsersUsersPatchUserResponse =
-	UsersUsersPatchUserResponses[keyof UsersUsersPatchUserResponses];
+export type UserUsersPatchUserResponse =
+	UserUsersPatchUserResponses[keyof UserUsersPatchUserResponses];

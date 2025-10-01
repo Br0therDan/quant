@@ -14,18 +14,6 @@ import type {
 	AuthAuthJwtLogoutData,
 	AuthAuthJwtLogoutErrors,
 	AuthAuthJwtLogoutResponses,
-	AuthOauthAssociateGoogleAuthorizeData,
-	AuthOauthAssociateGoogleAuthorizeErrors,
-	AuthOauthAssociateGoogleAuthorizeResponses,
-	AuthOauthAssociateGoogleCallbackData,
-	AuthOauthAssociateGoogleCallbackErrors,
-	AuthOauthAssociateGoogleCallbackResponses,
-	AuthOauthGoogleJwtAuthorizeData,
-	AuthOauthGoogleJwtAuthorizeErrors,
-	AuthOauthGoogleJwtAuthorizeResponses,
-	AuthOauthGoogleJwtCallbackData,
-	AuthOauthGoogleJwtCallbackErrors,
-	AuthOauthGoogleJwtCallbackResponses,
 	AuthRegisterRegisterData,
 	AuthRegisterRegisterErrors,
 	AuthRegisterRegisterResponses,
@@ -77,22 +65,6 @@ import type {
 	BacktestsUpdateBacktestData,
 	BacktestsUpdateBacktestErrors,
 	BacktestsUpdateBacktestResponses,
-	CompanyDataCollectDailyDataData,
-	CompanyDataCollectDailyDataErrors,
-	CompanyDataCollectDailyDataResponses,
-	CompanyDataCollectStockInfoData,
-	CompanyDataCollectStockInfoErrors,
-	CompanyDataCollectStockInfoResponses,
-	CompanyDataGetAllCompaniesData,
-	CompanyDataGetAllCompaniesResponses,
-	CompanyDataGetCompanyInfoData,
-	CompanyDataGetCompanyInfoErrors,
-	CompanyDataGetCompanyInfoResponses,
-	CompanyDataGetSymbolCoverageData,
-	CompanyDataGetSymbolCoverageErrors,
-	CompanyDataGetSymbolCoverageResponses,
-	HealthHealthCheck2Data,
-	HealthHealthCheck2Responses,
 	HealthHealthCheckData,
 	HealthHealthCheckResponses,
 	HealthLivenessProbeData,
@@ -117,89 +89,111 @@ import type {
 	MarketDataRequestBulkDataData,
 	MarketDataRequestBulkDataErrors,
 	MarketDataRequestBulkDataResponses,
-	PipelineStatusGetPipelineStatusData,
-	PipelineStatusGetPipelineStatusResponses,
-	PipelineStatusRunPipelineUpdateData,
-	PipelineStatusRunPipelineUpdateErrors,
-	PipelineStatusRunPipelineUpdateResponses,
-	PipelineStatusSetupDefaultSymbolsData,
-	PipelineStatusSetupDefaultSymbolsResponses,
-	StrategiesCreateStrategyData,
-	StrategiesCreateStrategyErrors,
-	StrategiesCreateStrategyResponses,
-	StrategiesDeleteStrategyData,
-	StrategiesDeleteStrategyErrors,
-	StrategiesDeleteStrategyResponses,
-	StrategiesExecuteStrategyData,
-	StrategiesExecuteStrategyErrors,
-	StrategiesExecuteStrategyResponses,
-	StrategiesGetStrategiesData,
-	StrategiesGetStrategiesErrors,
-	StrategiesGetStrategiesResponses,
-	StrategiesGetStrategyData,
-	StrategiesGetStrategyErrors,
-	StrategiesGetStrategyExecutionsData,
-	StrategiesGetStrategyExecutionsErrors,
-	StrategiesGetStrategyExecutionsResponses,
-	StrategiesGetStrategyPerformanceData,
-	StrategiesGetStrategyPerformanceErrors,
-	StrategiesGetStrategyPerformanceResponses,
-	StrategiesGetStrategyResponses,
-	StrategiesUpdateStrategyData,
-	StrategiesUpdateStrategyErrors,
-	StrategiesUpdateStrategyResponses,
-	TemplatesCreateStrategyFromTemplateData,
-	TemplatesCreateStrategyFromTemplateErrors,
-	TemplatesCreateStrategyFromTemplateResponses,
-	TemplatesCreateTemplateData,
-	TemplatesCreateTemplateErrors,
-	TemplatesCreateTemplateResponses,
-	TemplatesDeleteTemplateData,
-	TemplatesDeleteTemplateErrors,
-	TemplatesDeleteTemplateResponses,
-	TemplatesGetTemplateData,
-	TemplatesGetTemplateErrors,
-	TemplatesGetTemplateResponses,
-	TemplatesGetTemplatesData,
-	TemplatesGetTemplatesErrors,
-	TemplatesGetTemplatesResponses,
-	TemplatesGetTemplateUsageStatsData,
-	TemplatesGetTemplateUsageStatsResponses,
-	TemplatesUpdateTemplateData,
-	TemplatesUpdateTemplateErrors,
-	TemplatesUpdateTemplateResponses,
-	UsersUsersCurrentUserData,
-	UsersUsersCurrentUserErrors,
-	UsersUsersCurrentUserResponses,
-	UsersUsersDeleteUserData,
-	UsersUsersDeleteUserErrors,
-	UsersUsersDeleteUserResponses,
-	UsersUsersPatchCurrentUserData,
-	UsersUsersPatchCurrentUserErrors,
-	UsersUsersPatchCurrentUserResponses,
-	UsersUsersPatchUserData,
-	UsersUsersPatchUserErrors,
-	UsersUsersPatchUserResponses,
-	UsersUsersUserData,
-	UsersUsersUserErrors,
-	UsersUsersUserResponses,
-	WatchlistsCreateWatchlistData,
-	WatchlistsCreateWatchlistErrors,
-	WatchlistsCreateWatchlistResponses,
-	WatchlistsDeleteWatchlistData,
-	WatchlistsDeleteWatchlistErrors,
-	WatchlistsDeleteWatchlistResponses,
-	WatchlistsGetWatchlistData,
-	WatchlistsGetWatchlistErrors,
-	WatchlistsGetWatchlistResponses,
-	WatchlistsListWatchlistsData,
-	WatchlistsListWatchlistsResponses,
-	WatchlistsUpdateWatchlistByNameData,
-	WatchlistsUpdateWatchlistByNameErrors,
-	WatchlistsUpdateWatchlistByNameResponses,
-	WatchlistsUpdateWatchlistData,
-	WatchlistsUpdateWatchlistErrors,
-	WatchlistsUpdateWatchlistResponses,
+	MarketDataServiceHealthCheckData,
+	MarketDataServiceHealthCheckResponses,
+	OAuth2OauthGoogleJwtAuthorizeData,
+	OAuth2OauthGoogleJwtAuthorizeErrors,
+	OAuth2OauthGoogleJwtAuthorizeResponses,
+	OAuth2OauthGoogleJwtCallbackData,
+	OAuth2OauthGoogleJwtCallbackErrors,
+	OAuth2OauthGoogleJwtCallbackResponses,
+	PipelineCollectDailyDataData,
+	PipelineCollectDailyDataErrors,
+	PipelineCollectDailyDataResponses,
+	PipelineCollectStockInfoData,
+	PipelineCollectStockInfoErrors,
+	PipelineCollectStockInfoResponses,
+	PipelineCreateWatchlistData,
+	PipelineCreateWatchlistErrors,
+	PipelineCreateWatchlistResponses,
+	PipelineDeleteWatchlistData,
+	PipelineDeleteWatchlistErrors,
+	PipelineDeleteWatchlistResponses,
+	PipelineGetCompanyInfoData,
+	PipelineGetCompanyInfoErrors,
+	PipelineGetCompanyInfoResponses,
+	PipelineGetPipelineStatusData,
+	PipelineGetPipelineStatusResponses,
+	PipelineGetSymbolCoverageData,
+	PipelineGetSymbolCoverageErrors,
+	PipelineGetSymbolCoverageResponses,
+	PipelineGetWatchlistData,
+	PipelineGetWatchlistErrors,
+	PipelineGetWatchlistResponses,
+	PipelineListCompaniesData,
+	PipelineListCompaniesResponses,
+	PipelineListWatchlistsData,
+	PipelineListWatchlistsResponses,
+	PipelineRunPipelineUpdateData,
+	PipelineRunPipelineUpdateErrors,
+	PipelineRunPipelineUpdateResponses,
+	PipelineSetupDefaultSymbolsData,
+	PipelineSetupDefaultSymbolsResponses,
+	PipelineUpdateWatchlistByNameData,
+	PipelineUpdateWatchlistByNameErrors,
+	PipelineUpdateWatchlistByNameResponses,
+	PipelineUpdateWatchlistData,
+	PipelineUpdateWatchlistErrors,
+	PipelineUpdateWatchlistResponses,
+	StrategyCreateStrategyData,
+	StrategyCreateStrategyErrors,
+	StrategyCreateStrategyFromTemplateData,
+	StrategyCreateStrategyFromTemplateErrors,
+	StrategyCreateStrategyFromTemplateResponses,
+	StrategyCreateStrategyResponses,
+	StrategyCreateTemplateData,
+	StrategyCreateTemplateErrors,
+	StrategyCreateTemplateResponses,
+	StrategyDeleteStrategyData,
+	StrategyDeleteStrategyErrors,
+	StrategyDeleteStrategyResponses,
+	StrategyDeleteTemplateData,
+	StrategyDeleteTemplateErrors,
+	StrategyDeleteTemplateResponses,
+	StrategyExecuteStrategyData,
+	StrategyExecuteStrategyErrors,
+	StrategyExecuteStrategyResponses,
+	StrategyGetStrategiesData,
+	StrategyGetStrategiesErrors,
+	StrategyGetStrategiesResponses,
+	StrategyGetStrategyData,
+	StrategyGetStrategyErrors,
+	StrategyGetStrategyExecutionsData,
+	StrategyGetStrategyExecutionsErrors,
+	StrategyGetStrategyExecutionsResponses,
+	StrategyGetStrategyPerformanceData,
+	StrategyGetStrategyPerformanceErrors,
+	StrategyGetStrategyPerformanceResponses,
+	StrategyGetStrategyResponses,
+	StrategyGetTemplateData,
+	StrategyGetTemplateErrors,
+	StrategyGetTemplateResponses,
+	StrategyGetTemplatesData,
+	StrategyGetTemplatesErrors,
+	StrategyGetTemplatesResponses,
+	StrategyGetTemplateUsageStatsData,
+	StrategyGetTemplateUsageStatsResponses,
+	StrategyUpdateStrategyData,
+	StrategyUpdateStrategyErrors,
+	StrategyUpdateStrategyResponses,
+	StrategyUpdateTemplateData,
+	StrategyUpdateTemplateErrors,
+	StrategyUpdateTemplateResponses,
+	UserUsersCurrentUserData,
+	UserUsersCurrentUserErrors,
+	UserUsersCurrentUserResponses,
+	UserUsersDeleteUserData,
+	UserUsersDeleteUserErrors,
+	UserUsersDeleteUserResponses,
+	UserUsersPatchCurrentUserData,
+	UserUsersPatchCurrentUserErrors,
+	UserUsersPatchCurrentUserResponses,
+	UserUsersPatchUserData,
+	UserUsersPatchUserErrors,
+	UserUsersPatchUserResponses,
+	UserUsersUserData,
+	UserUsersUserErrors,
+	UserUsersUserResponses,
 } from "./types.gen";
 
 export type Options<
@@ -267,23 +261,6 @@ export class HealthService {
 			ThrowOnError
 		>({
 			url: "/health/ready",
-			...options,
-		});
-	}
-
-	/**
-	 * Health Check
-	 * Health check endpoint
-	 */
-	public static healthHealthCheck2<ThrowOnError extends boolean = false>(
-		options?: Options<HealthHealthCheck2Data, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			HealthHealthCheck2Responses,
-			unknown,
-			ThrowOnError
-		>({
-			url: "/api/v1/health/",
 			...options,
 		});
 	}
@@ -456,120 +433,69 @@ export class MarketDataService {
 			...options,
 		});
 	}
+
+	/**
+	 * Service Health Check
+	 * Health check endpoint
+	 */
+	public static marketDataServiceHealthCheck<
+		ThrowOnError extends boolean = false,
+	>(options?: Options<MarketDataServiceHealthCheckData, ThrowOnError>) {
+		return (options?.client ?? client).get<
+			MarketDataServiceHealthCheckResponses,
+			unknown,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/health/",
+			...options,
+		});
+	}
 }
 
-export class PipelineStatusService {
+export class PipelineService {
 	/**
-	 * Get Pipeline Status
-	 * Get comprehensive pipeline status and health information.
+	 * Update Watchlist
+	 * Create or update a watchlist with flexible naming support.
 	 *
-	 * Returns detailed information about the current state of the data pipeline,
-	 * including data coverage statistics, update timestamps, and system health metrics.
-	 * This endpoint is essential for monitoring the overall health of the data
-	 * collection and processing system.
-	 *
-	 * Returns:
-	 * dict: Pipeline status containing:
-	 * - overall_status: Current pipeline health status
-	 * - last_update: Timestamp of last successful update
-	 * - coverage_stats: Data coverage statistics per symbol
-	 * - active_symbols: Currently monitored symbols count
-	 * - error_count: Number of recent errors
-	 *
-	 * Raises:
-	 * HTTPException: 500 if status retrieval fails
-	 */
-	public static pipelineStatusGetPipelineStatus<
-		ThrowOnError extends boolean = false,
-	>(options?: Options<PipelineStatusGetPipelineStatusData, ThrowOnError>) {
-		return (options?.client ?? client).get<
-			PipelineStatusGetPipelineStatusResponses,
-			unknown,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/pipeline/status/status",
-			...options,
-		});
-	}
-
-	/**
-	 * Setup Default Symbols
-	 * Initialize default watchlist with standard symbols.
-	 *
-	 * Sets up the pipeline with a predefined set of popular stock symbols
-	 * for immediate use. This is typically called during initial system setup
-	 * or when resetting the pipeline to defaults. Creates the 'default' watchlist
-	 * if it doesn't exist.
-	 *
-	 * Default symbols include major tech stocks: AAPL, MSFT, GOOGL, AMZN, etc.
-	 *
-	 * Returns:
-	 * dict: Setup confirmation containing:
-	 * - message: Success confirmation message
-	 * - symbols: List of symbols that were set up
-	 *
-	 * Raises:
-	 * HTTPException: 500 if default setup fails
-	 */
-	public static pipelineStatusSetupDefaultSymbols<
-		ThrowOnError extends boolean = false,
-	>(options?: Options<PipelineStatusSetupDefaultSymbolsData, ThrowOnError>) {
-		return (options?.client ?? client).post<
-			PipelineStatusSetupDefaultSymbolsResponses,
-			unknown,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/pipeline/status/setup-defaults",
-			...options,
-		});
-	}
-
-	/**
-	 * Run Pipeline Update
-	 * Execute comprehensive data pipeline update for specified symbols.
-	 *
-	 * Initiates a full data collection and update process for the specified
-	 * symbols or the default watchlist. The update runs asynchronously in the
-	 * background to avoid blocking the API response. Includes company information
-	 * retrieval, historical price data collection, and data validation.
+	 * This endpoint provides a convenient way to create new watchlists or update
+	 * existing ones. If no name is provided, it defaults to the 'default' watchlist
+	 * which is used by the pipeline for automated updates. This endpoint combines
+	 * creation and update functionality for ease of use.
 	 *
 	 * Args:
-	 * request: Update configuration containing:
-	 * - symbols: Optional list of symbols to update (uses default if None)
-	 * - start_date: Optional start date for data collection
-	 * - end_date: Optional end date for data collection
-	 * background_tasks: FastAPI background task manager
+	 * request: Watchlist configuration containing:
+	 * - symbols: List of stock symbols to include
+	 * - name: Optional watchlist name (defaults to 'default')
+	 * - description: Optional description of the watchlist
 	 *
 	 * Returns:
-	 * dict: Update initiation confirmation containing:
-	 * - message: Update start confirmation
-	 * - symbols: Symbols being updated
-	 * - started_at: UTC timestamp when update began
+	 * dict: Operation result containing:
+	 * - message: Success message indicating action taken
+	 * - name: Watchlist name that was processed
+	 * - symbols: List of symbols in the watchlist
+	 * - count: Number of symbols in the watchlist
+	 * - action: Either 'created' or 'updated'
 	 *
 	 * Raises:
-	 * HTTPException: 500 if update initiation fails
+	 * HTTPException: 400 if watchlist creation fails
+	 * HTTPException: 500 if operation fails
 	 *
 	 * Note:
-	 * This is an asynchronous operation. Use /status endpoint to monitor progress.
+	 * Updates to the 'default' watchlist automatically update pipeline symbols.
+	 * This affects which symbols are processed during automated updates.
 	 */
-	public static pipelineStatusRunPipelineUpdate<
-		ThrowOnError extends boolean = false,
-	>(options: Options<PipelineStatusRunPipelineUpdateData, ThrowOnError>) {
+	public static pipelineUpdateWatchlist<ThrowOnError extends boolean = false>(
+		options: Options<PipelineUpdateWatchlistData, ThrowOnError>,
+	) {
 		return (options.client ?? client).post<
-			PipelineStatusRunPipelineUpdateResponses,
-			PipelineStatusRunPipelineUpdateErrors,
+			PipelineUpdateWatchlistResponses,
+			PipelineUpdateWatchlistErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -578,7 +504,7 @@ export class PipelineStatusService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/pipeline/status/update",
+			url: "/api/v1/pipeline/watchlists/watchlist",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -586,9 +512,249 @@ export class PipelineStatusService {
 			},
 		});
 	}
-}
 
-export class CompanyDataService {
+	/**
+	 * List Watchlists
+	 * Retrieve a comprehensive list of all watchlists.
+	 *
+	 * Returns summary information for all watchlists in the system, including
+	 * metadata like symbol counts, update settings, and timestamps. This is
+	 * useful for dashboard displays and watchlist management interfaces.
+	 *
+	 * Returns:
+	 * dict: All watchlists summary containing:
+	 * - watchlists: List of watchlist summaries with:
+	 * - name: Watchlist name
+	 * - description: Watchlist description
+	 * - symbol_count: Number of symbols in the watchlist
+	 * - auto_update: Whether automatic updates are enabled
+	 * - last_updated: Timestamp of last modification
+	 * - created_at: Timestamp of creation
+	 * - total_count: Total number of watchlists in the system
+	 *
+	 * Raises:
+	 * HTTPException: 500 if retrieval fails
+	 *
+	 * Note:
+	 * This endpoint returns summary data only. Use GET /watchlists/{name}
+	 * for detailed information including full symbol lists.
+	 */
+	public static pipelineListWatchlists<ThrowOnError extends boolean = false>(
+		options?: Options<PipelineListWatchlistsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			PipelineListWatchlistsResponses,
+			unknown,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/pipeline/watchlists/watchlists",
+			...options,
+		});
+	}
+
+	/**
+	 * Create Watchlist
+	 * Create a new named watchlist with validation.
+	 *
+	 * This endpoint is specifically for creating new watchlists with explicit
+	 * naming requirements. Unlike the /watchlist endpoint, this requires a name
+	 * and will fail if a watchlist with the same name already exists.
+	 *
+	 * Args:
+	 * request: Watchlist creation parameters containing:
+	 * - name: Required unique name for the watchlist
+	 * - symbols: List of stock symbols to include
+	 * - description: Optional description of the watchlist purpose
+	 *
+	 * Returns:
+	 * dict: Creation result containing:
+	 * - message: Success confirmation message
+	 * - name: Name of the created watchlist
+	 * - symbols: List of symbols in the watchlist
+	 * - description: Watchlist description
+	 * - created_at: UTC timestamp of creation
+	 *
+	 * Raises:
+	 * HTTPException: 400 if watchlist creation fails or name conflicts
+	 * HTTPException: 500 if database operation fails
+	 *
+	 * Note:
+	 * Watchlist names must be unique. Use PUT /watchlists/{name} to update existing ones.
+	 */
+	public static pipelineCreateWatchlist<ThrowOnError extends boolean = false>(
+		options: Options<PipelineCreateWatchlistData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			PipelineCreateWatchlistResponses,
+			PipelineCreateWatchlistErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/pipeline/watchlists/watchlists",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Delete Watchlist
+	 * Delete a named watchlist from the system.
+	 *
+	 * Permanently removes a watchlist and all associated metadata. This action
+	 * cannot be undone. The 'default' watchlist cannot be deleted as it is
+	 * required for pipeline operations.
+	 *
+	 * Args:
+	 * name: Name of the watchlist to delete
+	 *
+	 * Returns:
+	 * dict: Deletion confirmation containing:
+	 * - message: Success confirmation message
+	 * - name: Name of the deleted watchlist
+	 *
+	 * Raises:
+	 * HTTPException: 400 if attempting to delete the 'default' watchlist
+	 * HTTPException: 404 if watchlist with specified name not found
+	 * HTTPException: 500 if deletion operation fails
+	 *
+	 * Note:
+	 * Deletion is permanent and cannot be undone. Consider backing up
+	 * important watchlists before deletion.
+	 */
+	public static pipelineDeleteWatchlist<ThrowOnError extends boolean = false>(
+		options: Options<PipelineDeleteWatchlistData, ThrowOnError>,
+	) {
+		return (options.client ?? client).delete<
+			PipelineDeleteWatchlistResponses,
+			PipelineDeleteWatchlistErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/pipeline/watchlists/{name}",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Watchlist
+	 * Retrieve complete information for a specific watchlist.
+	 *
+	 * Returns detailed information about a named watchlist including the full
+	 * list of symbols, configuration settings, and all metadata. This provides
+	 * all information needed to display or modify a specific watchlist.
+	 *
+	 * Args:
+	 * name: Name of the watchlist to retrieve (case-sensitive)
+	 *
+	 * Returns:
+	 * dict: Complete watchlist information containing:
+	 * - name: Watchlist name
+	 * - description: Detailed description
+	 * - symbols: Complete list of stock symbols
+	 * - auto_update: Automatic update configuration
+	 * - update_interval: Update frequency in seconds
+	 * - last_updated: Timestamp of last symbol update
+	 * - created_at: Timestamp of watchlist creation
+	 *
+	 * Raises:
+	 * HTTPException: 404 if watchlist with specified name not found
+	 * HTTPException: 500 if retrieval operation fails
+	 *
+	 * Note:
+	 * Watchlist names are case-sensitive. Use GET /watchlists to see all available names.
+	 */
+	public static pipelineGetWatchlist<ThrowOnError extends boolean = false>(
+		options: Options<PipelineGetWatchlistData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			PipelineGetWatchlistResponses,
+			PipelineGetWatchlistErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/pipeline/watchlists/{name}",
+			...options,
+		});
+	}
+
+	/**
+	 * Update Watchlist By Name
+	 * Update an existing watchlist with new symbols and settings.
+	 *
+	 * Modifies the symbols and metadata of an existing watchlist. This endpoint
+	 * requires the watchlist to exist and will fail if the specified name is
+	 * not found. Use POST /watchlists to create new watchlists.
+	 *
+	 * Args:
+	 * name: Name of the existing watchlist to update
+	 * request: Update parameters containing:
+	 * - symbols: New list of symbols (replaces current list)
+	 * - description: Optional new description (if provided)
+	 *
+	 * Returns:
+	 * dict: Update confirmation containing:
+	 * - message: Success confirmation message
+	 * - name: Name of the updated watchlist
+	 * - symbols: New symbols list
+	 * - description: Current description (updated if provided)
+	 * - count: Number of symbols in updated watchlist
+	 * - updated_at: Timestamp of the update
+	 *
+	 * Raises:
+	 * HTTPException: 404 if watchlist with specified name not found
+	 * HTTPException: 500 if update operation fails
+	 *
+	 * Note:
+	 * Updates to the 'default' watchlist automatically update pipeline symbols.
+	 * Symbol list is completely replaced, not merged with existing symbols.
+	 */
+	public static pipelineUpdateWatchlistByName<
+		ThrowOnError extends boolean = false,
+	>(options: Options<PipelineUpdateWatchlistByNameData, ThrowOnError>) {
+		return (options.client ?? client).put<
+			PipelineUpdateWatchlistByNameResponses,
+			PipelineUpdateWatchlistByNameErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/pipeline/watchlists/{name}",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
 	/**
 	 * Collect Stock Info
 	 * Collect and store basic company information for a specific symbol.
@@ -614,12 +780,12 @@ export class CompanyDataService {
 	 * Respects Alpha Vantage API rate limits (5 calls/min, 500 calls/day).
 	 * Duplicate requests for same symbol within 24 hours may return cached data.
 	 */
-	public static companyDataCollectStockInfo<
-		ThrowOnError extends boolean = false,
-	>(options: Options<CompanyDataCollectStockInfoData, ThrowOnError>) {
+	public static pipelineCollectStockInfo<ThrowOnError extends boolean = false>(
+		options: Options<PipelineCollectStockInfoData, ThrowOnError>,
+	) {
 		return (options.client ?? client).post<
-			CompanyDataCollectStockInfoResponses,
-			CompanyDataCollectStockInfoErrors,
+			PipelineCollectStockInfoResponses,
+			PipelineCollectStockInfoErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -662,12 +828,12 @@ export class CompanyDataService {
 	 * Large date ranges may take several minutes to complete.
 	 * Data is automatically cached to minimize API calls.
 	 */
-	public static companyDataCollectDailyData<
-		ThrowOnError extends boolean = false,
-	>(options: Options<CompanyDataCollectDailyDataData, ThrowOnError>) {
+	public static pipelineCollectDailyData<ThrowOnError extends boolean = false>(
+		options: Options<PipelineCollectDailyDataData, ThrowOnError>,
+	) {
 		return (options.client ?? client).post<
-			CompanyDataCollectDailyDataResponses,
-			CompanyDataCollectDailyDataErrors,
+			PipelineCollectDailyDataResponses,
+			PipelineCollectDailyDataErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -705,12 +871,12 @@ export class CompanyDataService {
 	 * HTTPException: 500 if coverage check fails
 	 * HTTPException: 404 if symbol not found in database
 	 */
-	public static companyDataGetSymbolCoverage<
-		ThrowOnError extends boolean = false,
-	>(options: Options<CompanyDataGetSymbolCoverageData, ThrowOnError>) {
+	public static pipelineGetSymbolCoverage<ThrowOnError extends boolean = false>(
+		options: Options<PipelineGetSymbolCoverageData, ThrowOnError>,
+	) {
 		return (options.client ?? client).get<
-			CompanyDataGetSymbolCoverageResponses,
-			CompanyDataGetSymbolCoverageErrors,
+			PipelineGetSymbolCoverageResponses,
+			PipelineGetSymbolCoverageErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -756,12 +922,12 @@ export class CompanyDataService {
 	 * Note:
 	 * If company info not found, use POST /collect-info/{symbol} first.
 	 */
-	public static companyDataGetCompanyInfo<ThrowOnError extends boolean = false>(
-		options: Options<CompanyDataGetCompanyInfoData, ThrowOnError>,
+	public static pipelineGetCompanyInfo<ThrowOnError extends boolean = false>(
+		options: Options<PipelineGetCompanyInfoData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			CompanyDataGetCompanyInfoResponses,
-			CompanyDataGetCompanyInfoErrors,
+			PipelineGetCompanyInfoResponses,
+			PipelineGetCompanyInfoErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -776,7 +942,7 @@ export class CompanyDataService {
 	}
 
 	/**
-	 * Get All Companies
+	 * List Companies
 	 * Retrieve information for all companies in the database.
 	 *
 	 * Returns a comprehensive list of all companies for which information
@@ -800,11 +966,11 @@ export class CompanyDataService {
 	 * Note:
 	 * Large datasets may take time to load. Consider pagination for production use.
 	 */
-	public static companyDataGetAllCompanies<
-		ThrowOnError extends boolean = false,
-	>(options?: Options<CompanyDataGetAllCompaniesData, ThrowOnError>) {
+	public static pipelineListCompanies<ThrowOnError extends boolean = false>(
+		options?: Options<PipelineListCompaniesData, ThrowOnError>,
+	) {
 		return (options?.client ?? client).get<
-			CompanyDataGetAllCompaniesResponses,
+			PipelineListCompaniesResponses,
 			unknown,
 			ThrowOnError
 		>({
@@ -814,50 +980,151 @@ export class CompanyDataService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/pipeline/companies/companies",
+			url: "/api/v1/pipeline/companies/",
 			...options,
+		});
+	}
+
+	/**
+	 * Get Pipeline Status
+	 * Get comprehensive pipeline status and health information.
+	 *
+	 * Returns detailed information about the current state of the data pipeline,
+	 * including data coverage statistics, update timestamps, and system health metrics.
+	 * This endpoint is essential for monitoring the overall health of the data
+	 * collection and processing system.
+	 *
+	 * Returns:
+	 * dict: Pipeline status containing:
+	 * - overall_status: Current pipeline health status
+	 * - last_update: Timestamp of last successful update
+	 * - coverage_stats: Data coverage statistics per symbol
+	 * - active_symbols: Currently monitored symbols count
+	 * - error_count: Number of recent errors
+	 *
+	 * Raises:
+	 * HTTPException: 500 if status retrieval fails
+	 */
+	public static pipelineGetPipelineStatus<ThrowOnError extends boolean = false>(
+		options?: Options<PipelineGetPipelineStatusData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			PipelineGetPipelineStatusResponses,
+			unknown,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/pipeline/status/",
+			...options,
+		});
+	}
+
+	/**
+	 * Setup Default Symbols
+	 * Initialize default watchlist with standard symbols.
+	 *
+	 * Sets up the pipeline with a predefined set of popular stock symbols
+	 * for immediate use. This is typically called during initial system setup
+	 * or when resetting the pipeline to defaults. Creates the 'default' watchlist
+	 * if it doesn't exist.
+	 *
+	 * Default symbols include major tech stocks: AAPL, MSFT, GOOGL, AMZN, etc.
+	 *
+	 * Returns:
+	 * dict: Setup confirmation containing:
+	 * - message: Success confirmation message
+	 * - symbols: List of symbols that were set up
+	 *
+	 * Raises:
+	 * HTTPException: 500 if default setup fails
+	 */
+	public static pipelineSetupDefaultSymbols<
+		ThrowOnError extends boolean = false,
+	>(options?: Options<PipelineSetupDefaultSymbolsData, ThrowOnError>) {
+		return (options?.client ?? client).post<
+			PipelineSetupDefaultSymbolsResponses,
+			unknown,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/pipeline/status/setup-defaults",
+			...options,
+		});
+	}
+
+	/**
+	 * Run Pipeline Update
+	 * Execute comprehensive data pipeline update for specified symbols.
+	 *
+	 * Initiates a full data collection and update process for the specified
+	 * symbols or the default watchlist. The update runs asynchronously in the
+	 * background to avoid blocking the API response. Includes company information
+	 * retrieval, historical price data collection, and data validation.
+	 *
+	 * Args:
+	 * request: Update configuration containing:
+	 * - symbols: Optional list of symbols to update (uses default if None)
+	 * - start_date: Optional start date for data collection
+	 * - end_date: Optional end date for data collection
+	 * background_tasks: FastAPI background task manager
+	 *
+	 * Returns:
+	 * dict: Update initiation confirmation containing:
+	 * - message: Update start confirmation
+	 * - symbols: Symbols being updated
+	 * - started_at: UTC timestamp when update began
+	 *
+	 * Raises:
+	 * HTTPException: 500 if update initiation fails
+	 *
+	 * Note:
+	 * This is an asynchronous operation. Use /status endpoint to monitor progress.
+	 */
+	public static pipelineRunPipelineUpdate<ThrowOnError extends boolean = false>(
+		options: Options<PipelineRunPipelineUpdateData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			PipelineRunPipelineUpdateResponses,
+			PipelineRunPipelineUpdateErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/pipeline/status/update",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
 		});
 	}
 }
 
-export class WatchlistsService {
+export class StrategyService {
 	/**
-	 * Update Watchlist
-	 * Create or update a watchlist with flexible naming support.
-	 *
-	 * This endpoint provides a convenient way to create new watchlists or update
-	 * existing ones. If no name is provided, it defaults to the 'default' watchlist
-	 * which is used by the pipeline for automated updates. This endpoint combines
-	 * creation and update functionality for ease of use.
-	 *
-	 * Args:
-	 * request: Watchlist configuration containing:
-	 * - symbols: List of stock symbols to include
-	 * - name: Optional watchlist name (defaults to 'default')
-	 * - description: Optional description of the watchlist
-	 *
-	 * Returns:
-	 * dict: Operation result containing:
-	 * - message: Success message indicating action taken
-	 * - name: Watchlist name that was processed
-	 * - symbols: List of symbols in the watchlist
-	 * - count: Number of symbols in the watchlist
-	 * - action: Either 'created' or 'updated'
-	 *
-	 * Raises:
-	 * HTTPException: 400 if watchlist creation fails
-	 * HTTPException: 500 if operation fails
-	 *
-	 * Note:
-	 * Updates to the 'default' watchlist automatically update pipeline symbols.
-	 * This affects which symbols are processed during automated updates.
+	 * Get Strategies
+	 * Get list of strategies
 	 */
-	public static watchlistsUpdateWatchlist<ThrowOnError extends boolean = false>(
-		options: Options<WatchlistsUpdateWatchlistData, ThrowOnError>,
+	public static strategyGetStrategies<ThrowOnError extends boolean = false>(
+		options?: Options<StrategyGetStrategiesData, ThrowOnError>,
 	) {
-		return (options.client ?? client).post<
-			WatchlistsUpdateWatchlistResponses,
-			WatchlistsUpdateWatchlistErrors,
+		return (options?.client ?? client).get<
+			StrategyGetStrategiesResponses,
+			StrategyGetStrategiesErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -866,7 +1133,30 @@ export class WatchlistsService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/pipeline/watchlists/watchlist",
+			url: "/api/v1/strategies/",
+			...options,
+		});
+	}
+
+	/**
+	 * Create Strategy
+	 * Create a new strategy
+	 */
+	public static strategyCreateStrategy<ThrowOnError extends boolean = false>(
+		options: Options<StrategyCreateStrategyData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			StrategyCreateStrategyResponses,
+			StrategyCreateStrategyErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -876,36 +1166,310 @@ export class WatchlistsService {
 	}
 
 	/**
-	 * List Watchlists
-	 * Retrieve a comprehensive list of all watchlists.
-	 *
-	 * Returns summary information for all watchlists in the system, including
-	 * metadata like symbol counts, update settings, and timestamps. This is
-	 * useful for dashboard displays and watchlist management interfaces.
-	 *
-	 * Returns:
-	 * dict: All watchlists summary containing:
-	 * - watchlists: List of watchlist summaries with:
-	 * - name: Watchlist name
-	 * - description: Watchlist description
-	 * - symbol_count: Number of symbols in the watchlist
-	 * - auto_update: Whether automatic updates are enabled
-	 * - last_updated: Timestamp of last modification
-	 * - created_at: Timestamp of creation
-	 * - total_count: Total number of watchlists in the system
-	 *
-	 * Raises:
-	 * HTTPException: 500 if retrieval fails
-	 *
-	 * Note:
-	 * This endpoint returns summary data only. Use GET /watchlists/{name}
-	 * for detailed information including full symbol lists.
+	 * Delete Strategy
+	 * Delete strategy (soft delete)
 	 */
-	public static watchlistsListWatchlists<ThrowOnError extends boolean = false>(
-		options?: Options<WatchlistsListWatchlistsData, ThrowOnError>,
+	public static strategyDeleteStrategy<ThrowOnError extends boolean = false>(
+		options: Options<StrategyDeleteStrategyData, ThrowOnError>,
+	) {
+		return (options.client ?? client).delete<
+			StrategyDeleteStrategyResponses,
+			StrategyDeleteStrategyErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/{strategy_id}",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Strategy
+	 * Get strategy by ID
+	 */
+	public static strategyGetStrategy<ThrowOnError extends boolean = false>(
+		options: Options<StrategyGetStrategyData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			StrategyGetStrategyResponses,
+			StrategyGetStrategyErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/{strategy_id}",
+			...options,
+		});
+	}
+
+	/**
+	 * Update Strategy
+	 * Update strategy
+	 */
+	public static strategyUpdateStrategy<ThrowOnError extends boolean = false>(
+		options: Options<StrategyUpdateStrategyData, ThrowOnError>,
+	) {
+		return (options.client ?? client).put<
+			StrategyUpdateStrategyResponses,
+			StrategyUpdateStrategyErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/{strategy_id}",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Execute Strategy
+	 * Execute strategy and generate signal
+	 */
+	public static strategyExecuteStrategy<ThrowOnError extends boolean = false>(
+		options: Options<StrategyExecuteStrategyData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			StrategyExecuteStrategyResponses,
+			StrategyExecuteStrategyErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/{strategy_id}/execute",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Get Strategy Executions
+	 * Get strategy execution history
+	 */
+	public static strategyGetStrategyExecutions<
+		ThrowOnError extends boolean = false,
+	>(options: Options<StrategyGetStrategyExecutionsData, ThrowOnError>) {
+		return (options.client ?? client).get<
+			StrategyGetStrategyExecutionsResponses,
+			StrategyGetStrategyExecutionsErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/{strategy_id}/executions",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Strategy Performance
+	 * Get strategy performance metrics
+	 */
+	public static strategyGetStrategyPerformance<
+		ThrowOnError extends boolean = false,
+	>(options: Options<StrategyGetStrategyPerformanceData, ThrowOnError>) {
+		return (options.client ?? client).get<
+			StrategyGetStrategyPerformanceResponses,
+			StrategyGetStrategyPerformanceErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/{strategy_id}/performance",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Templates
+	 * Get list of strategy templates
+	 */
+	public static strategyGetTemplates<ThrowOnError extends boolean = false>(
+		options?: Options<StrategyGetTemplatesData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
-			WatchlistsListWatchlistsResponses,
+			StrategyGetTemplatesResponses,
+			StrategyGetTemplatesErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/templates/",
+			...options,
+		});
+	}
+
+	/**
+	 * Create Template
+	 * Create a new strategy template (Superuser only)
+	 */
+	public static strategyCreateTemplate<ThrowOnError extends boolean = false>(
+		options: Options<StrategyCreateTemplateData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			StrategyCreateTemplateResponses,
+			StrategyCreateTemplateErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/templates/",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Delete Template
+	 * Delete template by ID (Superuser only)
+	 */
+	public static strategyDeleteTemplate<ThrowOnError extends boolean = false>(
+		options: Options<StrategyDeleteTemplateData, ThrowOnError>,
+	) {
+		return (options.client ?? client).delete<
+			StrategyDeleteTemplateResponses,
+			StrategyDeleteTemplateErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/templates/{template_id}",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Template
+	 * Get template by ID
+	 */
+	public static strategyGetTemplate<ThrowOnError extends boolean = false>(
+		options: Options<StrategyGetTemplateData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			StrategyGetTemplateResponses,
+			StrategyGetTemplateErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/templates/{template_id}",
+			...options,
+		});
+	}
+
+	/**
+	 * Update Template
+	 * Update template by ID (Superuser only)
+	 */
+	public static strategyUpdateTemplate<ThrowOnError extends boolean = false>(
+		options: Options<StrategyUpdateTemplateData, ThrowOnError>,
+	) {
+		return (options.client ?? client).patch<
+			StrategyUpdateTemplateResponses,
+			StrategyUpdateTemplateErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/templates/{template_id}",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Create Strategy From Template
+	 * Create a strategy instance from template
+	 */
+	public static strategyCreateStrategyFromTemplate<
+		ThrowOnError extends boolean = false,
+	>(options: Options<StrategyCreateStrategyFromTemplateData, ThrowOnError>) {
+		return (options.client ?? client).post<
+			StrategyCreateStrategyFromTemplateResponses,
+			StrategyCreateStrategyFromTemplateErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/templates/{template_id}/create-strategy",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Get Template Usage Stats
+	 * Get template usage statistics
+	 */
+	public static strategyGetTemplateUsageStats<
+		ThrowOnError extends boolean = false,
+	>(options?: Options<StrategyGetTemplateUsageStatsData, ThrowOnError>) {
+		return (options?.client ?? client).get<
+			StrategyGetTemplateUsageStatsResponses,
 			unknown,
 			ThrowOnError
 		>({
@@ -915,205 +1479,8 @@ export class WatchlistsService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/pipeline/watchlists/watchlists",
+			url: "/api/v1/strategies/templates/analytics/usage-stats",
 			...options,
-		});
-	}
-
-	/**
-	 * Create Watchlist
-	 * Create a new named watchlist with validation.
-	 *
-	 * This endpoint is specifically for creating new watchlists with explicit
-	 * naming requirements. Unlike the /watchlist endpoint, this requires a name
-	 * and will fail if a watchlist with the same name already exists.
-	 *
-	 * Args:
-	 * request: Watchlist creation parameters containing:
-	 * - name: Required unique name for the watchlist
-	 * - symbols: List of stock symbols to include
-	 * - description: Optional description of the watchlist purpose
-	 *
-	 * Returns:
-	 * dict: Creation result containing:
-	 * - message: Success confirmation message
-	 * - name: Name of the created watchlist
-	 * - symbols: List of symbols in the watchlist
-	 * - description: Watchlist description
-	 * - created_at: UTC timestamp of creation
-	 *
-	 * Raises:
-	 * HTTPException: 400 if watchlist creation fails or name conflicts
-	 * HTTPException: 500 if database operation fails
-	 *
-	 * Note:
-	 * Watchlist names must be unique. Use PUT /watchlists/{name} to update existing ones.
-	 */
-	public static watchlistsCreateWatchlist<ThrowOnError extends boolean = false>(
-		options: Options<WatchlistsCreateWatchlistData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			WatchlistsCreateWatchlistResponses,
-			WatchlistsCreateWatchlistErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/pipeline/watchlists/watchlists",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Delete Watchlist
-	 * Delete a named watchlist from the system.
-	 *
-	 * Permanently removes a watchlist and all associated metadata. This action
-	 * cannot be undone. The 'default' watchlist cannot be deleted as it is
-	 * required for pipeline operations.
-	 *
-	 * Args:
-	 * name: Name of the watchlist to delete
-	 *
-	 * Returns:
-	 * dict: Deletion confirmation containing:
-	 * - message: Success confirmation message
-	 * - name: Name of the deleted watchlist
-	 *
-	 * Raises:
-	 * HTTPException: 400 if attempting to delete the 'default' watchlist
-	 * HTTPException: 404 if watchlist with specified name not found
-	 * HTTPException: 500 if deletion operation fails
-	 *
-	 * Note:
-	 * Deletion is permanent and cannot be undone. Consider backing up
-	 * important watchlists before deletion.
-	 */
-	public static watchlistsDeleteWatchlist<ThrowOnError extends boolean = false>(
-		options: Options<WatchlistsDeleteWatchlistData, ThrowOnError>,
-	) {
-		return (options.client ?? client).delete<
-			WatchlistsDeleteWatchlistResponses,
-			WatchlistsDeleteWatchlistErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/pipeline/watchlists/watchlists/{name}",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Watchlist
-	 * Retrieve complete information for a specific watchlist.
-	 *
-	 * Returns detailed information about a named watchlist including the full
-	 * list of symbols, configuration settings, and all metadata. This provides
-	 * all information needed to display or modify a specific watchlist.
-	 *
-	 * Args:
-	 * name: Name of the watchlist to retrieve (case-sensitive)
-	 *
-	 * Returns:
-	 * dict: Complete watchlist information containing:
-	 * - name: Watchlist name
-	 * - description: Detailed description
-	 * - symbols: Complete list of stock symbols
-	 * - auto_update: Automatic update configuration
-	 * - update_interval: Update frequency in seconds
-	 * - last_updated: Timestamp of last symbol update
-	 * - created_at: Timestamp of watchlist creation
-	 *
-	 * Raises:
-	 * HTTPException: 404 if watchlist with specified name not found
-	 * HTTPException: 500 if retrieval operation fails
-	 *
-	 * Note:
-	 * Watchlist names are case-sensitive. Use GET /watchlists to see all available names.
-	 */
-	public static watchlistsGetWatchlist<ThrowOnError extends boolean = false>(
-		options: Options<WatchlistsGetWatchlistData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			WatchlistsGetWatchlistResponses,
-			WatchlistsGetWatchlistErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/pipeline/watchlists/watchlists/{name}",
-			...options,
-		});
-	}
-
-	/**
-	 * Update Watchlist By Name
-	 * Update an existing watchlist with new symbols and settings.
-	 *
-	 * Modifies the symbols and metadata of an existing watchlist. This endpoint
-	 * requires the watchlist to exist and will fail if the specified name is
-	 * not found. Use POST /watchlists to create new watchlists.
-	 *
-	 * Args:
-	 * name: Name of the existing watchlist to update
-	 * request: Update parameters containing:
-	 * - symbols: New list of symbols (replaces current list)
-	 * - description: Optional new description (if provided)
-	 *
-	 * Returns:
-	 * dict: Update confirmation containing:
-	 * - message: Success confirmation message
-	 * - name: Name of the updated watchlist
-	 * - symbols: New symbols list
-	 * - description: Current description (updated if provided)
-	 * - count: Number of symbols in updated watchlist
-	 * - updated_at: Timestamp of the update
-	 *
-	 * Raises:
-	 * HTTPException: 404 if watchlist with specified name not found
-	 * HTTPException: 500 if update operation fails
-	 *
-	 * Note:
-	 * Updates to the 'default' watchlist automatically update pipeline symbols.
-	 * Symbol list is completely replaced, not merged with existing symbols.
-	 */
-	public static watchlistsUpdateWatchlistByName<
-		ThrowOnError extends boolean = false,
-	>(options: Options<WatchlistsUpdateWatchlistByNameData, ThrowOnError>) {
-		return (options.client ?? client).put<
-			WatchlistsUpdateWatchlistByNameResponses,
-			WatchlistsUpdateWatchlistByNameErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/pipeline/watchlists/watchlists/{name}",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
 		});
 	}
 }
@@ -1437,698 +1804,6 @@ export class BacktestsService {
 	}
 }
 
-export class IntegratedBacktestService {
-	/**
-	 * Get Backtests
-	 * Get list of backtests
-	 */
-	public static backtestsGetBacktests<ThrowOnError extends boolean = false>(
-		options?: Options<BacktestsGetBacktestsData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			BacktestsGetBacktestsResponses,
-			BacktestsGetBacktestsErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/",
-			...options,
-		});
-	}
-
-	/**
-	 * Create Backtest
-	 * Create a new backtest
-	 */
-	public static backtestsCreateBacktest<ThrowOnError extends boolean = false>(
-		options: Options<BacktestsCreateBacktestData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			BacktestsCreateBacktestResponses,
-			BacktestsCreateBacktestErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Delete Backtest
-	 * Delete backtest
-	 */
-	public static backtestsDeleteBacktest<ThrowOnError extends boolean = false>(
-		options: Options<BacktestsDeleteBacktestData, ThrowOnError>,
-	) {
-		return (options.client ?? client).delete<
-			BacktestsDeleteBacktestResponses,
-			BacktestsDeleteBacktestErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/{backtest_id}",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Backtest
-	 * Get backtest by ID
-	 */
-	public static backtestsGetBacktest<ThrowOnError extends boolean = false>(
-		options: Options<BacktestsGetBacktestData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			BacktestsGetBacktestResponses,
-			BacktestsGetBacktestErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/{backtest_id}",
-			...options,
-		});
-	}
-
-	/**
-	 * Update Backtest
-	 * Update backtest
-	 */
-	public static backtestsUpdateBacktest<ThrowOnError extends boolean = false>(
-		options: Options<BacktestsUpdateBacktestData, ThrowOnError>,
-	) {
-		return (options.client ?? client).put<
-			BacktestsUpdateBacktestResponses,
-			BacktestsUpdateBacktestErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/{backtest_id}",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Execute Backtest
-	 * Execute backtest with trading signals
-	 */
-	public static backtestsExecuteBacktest<ThrowOnError extends boolean = false>(
-		options: Options<BacktestsExecuteBacktestData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			BacktestsExecuteBacktestResponses,
-			BacktestsExecuteBacktestErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/{backtest_id}/execute",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Get Backtest Executions
-	 * Get execution history for a backtest
-	 */
-	public static backtestsGetBacktestExecutions<
-		ThrowOnError extends boolean = false,
-	>(options: Options<BacktestsGetBacktestExecutionsData, ThrowOnError>) {
-		return (options.client ?? client).get<
-			BacktestsGetBacktestExecutionsResponses,
-			BacktestsGetBacktestExecutionsErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/{backtest_id}/executions",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Backtest Results
-	 * Get backtest results from DuckDB (고성능 분석용)
-	 */
-	public static backtestsGetBacktestResults<
-		ThrowOnError extends boolean = false,
-	>(options?: Options<BacktestsGetBacktestResultsData, ThrowOnError>) {
-		return (options?.client ?? client).get<
-			BacktestsGetBacktestResultsResponses,
-			BacktestsGetBacktestResultsErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/results/",
-			...options,
-		});
-	}
-
-	/**
-	 * Create And Run Integrated Backtest
-	 * 통합 백테스트 생성 및 실행 - 모든 서비스 연동
-	 */
-	public static backtestsCreateAndRunIntegratedBacktest<
-		ThrowOnError extends boolean = false,
-	>(
-		options: Options<BacktestsCreateAndRunIntegratedBacktestData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			BacktestsCreateAndRunIntegratedBacktestResponses,
-			BacktestsCreateAndRunIntegratedBacktestErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/integrated",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Health Check
-	 * 백테스트 시스템 상태 확인 (DuckDB + MongoDB 통합 상태)
-	 */
-	public static backtestsHealthCheck<ThrowOnError extends boolean = false>(
-		options?: Options<BacktestsHealthCheckData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			BacktestsHealthCheckResponses,
-			unknown,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/health",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Performance Analytics
-	 * 백테스트 성과 분석 (DuckDB 고성능 분석)
-	 */
-	public static backtestsGetPerformanceAnalytics<
-		ThrowOnError extends boolean = false,
-	>(options?: Options<BacktestsGetPerformanceAnalyticsData, ThrowOnError>) {
-		return (options?.client ?? client).get<
-			BacktestsGetPerformanceAnalyticsResponses,
-			unknown,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/analytics/performance-stats",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Trades Analytics
-	 * 거래 기록 분석 (DuckDB 고성능 쿼리)
-	 */
-	public static backtestsGetTradesAnalytics<
-		ThrowOnError extends boolean = false,
-	>(options?: Options<BacktestsGetTradesAnalyticsData, ThrowOnError>) {
-		return (options?.client ?? client).get<
-			BacktestsGetTradesAnalyticsResponses,
-			BacktestsGetTradesAnalyticsErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/analytics/trades",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Backtest Summary Analytics
-	 * 백테스트 결과 요약 분석 (DuckDB 기반)
-	 */
-	public static backtestsGetBacktestSummaryAnalytics<
-		ThrowOnError extends boolean = false,
-	>(options?: Options<BacktestsGetBacktestSummaryAnalyticsData, ThrowOnError>) {
-		return (options?.client ?? client).get<
-			BacktestsGetBacktestSummaryAnalyticsResponses,
-			unknown,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/analytics/summary",
-			...options,
-		});
-	}
-}
-
-export class StrategiesService {
-	/**
-	 * Get Strategies
-	 * Get list of strategies
-	 */
-	public static strategiesGetStrategies<ThrowOnError extends boolean = false>(
-		options?: Options<StrategiesGetStrategiesData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			StrategiesGetStrategiesResponses,
-			StrategiesGetStrategiesErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/strategies/",
-			...options,
-		});
-	}
-
-	/**
-	 * Create Strategy
-	 * Create a new strategy
-	 */
-	public static strategiesCreateStrategy<ThrowOnError extends boolean = false>(
-		options: Options<StrategiesCreateStrategyData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			StrategiesCreateStrategyResponses,
-			StrategiesCreateStrategyErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/strategies/",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Delete Strategy
-	 * Delete strategy (soft delete)
-	 */
-	public static strategiesDeleteStrategy<ThrowOnError extends boolean = false>(
-		options: Options<StrategiesDeleteStrategyData, ThrowOnError>,
-	) {
-		return (options.client ?? client).delete<
-			StrategiesDeleteStrategyResponses,
-			StrategiesDeleteStrategyErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/strategies/{strategy_id}",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Strategy
-	 * Get strategy by ID
-	 */
-	public static strategiesGetStrategy<ThrowOnError extends boolean = false>(
-		options: Options<StrategiesGetStrategyData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			StrategiesGetStrategyResponses,
-			StrategiesGetStrategyErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/strategies/{strategy_id}",
-			...options,
-		});
-	}
-
-	/**
-	 * Update Strategy
-	 * Update strategy
-	 */
-	public static strategiesUpdateStrategy<ThrowOnError extends boolean = false>(
-		options: Options<StrategiesUpdateStrategyData, ThrowOnError>,
-	) {
-		return (options.client ?? client).put<
-			StrategiesUpdateStrategyResponses,
-			StrategiesUpdateStrategyErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/strategies/{strategy_id}",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Execute Strategy
-	 * Execute strategy and generate signal
-	 */
-	public static strategiesExecuteStrategy<ThrowOnError extends boolean = false>(
-		options: Options<StrategiesExecuteStrategyData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			StrategiesExecuteStrategyResponses,
-			StrategiesExecuteStrategyErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/strategies/{strategy_id}/execute",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Get Strategy Executions
-	 * Get strategy execution history
-	 */
-	public static strategiesGetStrategyExecutions<
-		ThrowOnError extends boolean = false,
-	>(options: Options<StrategiesGetStrategyExecutionsData, ThrowOnError>) {
-		return (options.client ?? client).get<
-			StrategiesGetStrategyExecutionsResponses,
-			StrategiesGetStrategyExecutionsErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/strategies/{strategy_id}/executions",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Strategy Performance
-	 * Get strategy performance metrics
-	 */
-	public static strategiesGetStrategyPerformance<
-		ThrowOnError extends boolean = false,
-	>(options: Options<StrategiesGetStrategyPerformanceData, ThrowOnError>) {
-		return (options.client ?? client).get<
-			StrategiesGetStrategyPerformanceResponses,
-			StrategiesGetStrategyPerformanceErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/strategies/{strategy_id}/performance",
-			...options,
-		});
-	}
-}
-
-export class TemplatesService {
-	/**
-	 * Get Templates
-	 * Get list of strategy templates
-	 */
-	public static templatesGetTemplates<ThrowOnError extends boolean = false>(
-		options?: Options<TemplatesGetTemplatesData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			TemplatesGetTemplatesResponses,
-			TemplatesGetTemplatesErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/templates/",
-			...options,
-		});
-	}
-
-	/**
-	 * Create Template
-	 * Create a new strategy template (Superuser only)
-	 */
-	public static templatesCreateTemplate<ThrowOnError extends boolean = false>(
-		options: Options<TemplatesCreateTemplateData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			TemplatesCreateTemplateResponses,
-			TemplatesCreateTemplateErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/templates/",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Delete Template
-	 * Delete template by ID (Superuser only)
-	 */
-	public static templatesDeleteTemplate<ThrowOnError extends boolean = false>(
-		options: Options<TemplatesDeleteTemplateData, ThrowOnError>,
-	) {
-		return (options.client ?? client).delete<
-			TemplatesDeleteTemplateResponses,
-			TemplatesDeleteTemplateErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/templates/{template_id}",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Template
-	 * Get template by ID
-	 */
-	public static templatesGetTemplate<ThrowOnError extends boolean = false>(
-		options: Options<TemplatesGetTemplateData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			TemplatesGetTemplateResponses,
-			TemplatesGetTemplateErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/templates/{template_id}",
-			...options,
-		});
-	}
-
-	/**
-	 * Update Template
-	 * Update template by ID (Superuser only)
-	 */
-	public static templatesUpdateTemplate<ThrowOnError extends boolean = false>(
-		options: Options<TemplatesUpdateTemplateData, ThrowOnError>,
-	) {
-		return (options.client ?? client).patch<
-			TemplatesUpdateTemplateResponses,
-			TemplatesUpdateTemplateErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/templates/{template_id}",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Create Strategy From Template
-	 * Create a strategy instance from template
-	 */
-	public static templatesCreateStrategyFromTemplate<
-		ThrowOnError extends boolean = false,
-	>(options: Options<TemplatesCreateStrategyFromTemplateData, ThrowOnError>) {
-		return (options.client ?? client).post<
-			TemplatesCreateStrategyFromTemplateResponses,
-			TemplatesCreateStrategyFromTemplateErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/templates/{template_id}/create-strategy",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Get Template Usage Stats
-	 * Get template usage statistics
-	 */
-	public static templatesGetTemplateUsageStats<
-		ThrowOnError extends boolean = false,
-	>(options?: Options<TemplatesGetTemplateUsageStatsData, ThrowOnError>) {
-		return (options?.client ?? client).get<
-			TemplatesGetTemplateUsageStatsResponses,
-			unknown,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/templates/analytics/usage-stats",
-			...options,
-		});
-	}
-}
-
 export class AuthAuthJwtService {
 	/**
 	 * Auth:Jwt.Login
@@ -2142,7 +1817,7 @@ export class AuthAuthJwtService {
 			ThrowOnError
 		>({
 			...urlSearchParamsBodySerializer,
-			url: "/api/v1/auth/jwt/login",
+			url: "/api/v1/auth/login",
 			...options,
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded",
@@ -2168,93 +1843,7 @@ export class AuthAuthJwtService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/auth/jwt/logout",
-			...options,
-		});
-	}
-}
-
-export class JwtService {
-	/**
-	 * Oauth:Google.Jwt.Authorize
-	 */
-	public static authorize<ThrowOnError extends boolean = false>(
-		options?: Options<AuthOauthGoogleJwtAuthorizeData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			AuthOauthGoogleJwtAuthorizeResponses,
-			AuthOauthGoogleJwtAuthorizeErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/auth/google/authorize",
-			...options,
-		});
-	}
-
-	/**
-	 * Oauth:Google.Jwt.Callback
-	 * The response varies based on the authentication backend used.
-	 */
-	public static callback<ThrowOnError extends boolean = false>(
-		options?: Options<AuthOauthGoogleJwtCallbackData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			AuthOauthGoogleJwtCallbackResponses,
-			AuthOauthGoogleJwtCallbackErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/auth/google/callback",
-			...options,
-		});
-	}
-}
-
-export class AuthOauthGoogleService {
-	static jwtService = JwtService;
-}
-
-export class AuthOauthAssociateGoogleService {
-	/**
-	 * Oauth-Associate:Google.Authorize
-	 */
-	public static authorize<ThrowOnError extends boolean = false>(
-		options?: Options<AuthOauthAssociateGoogleAuthorizeData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			AuthOauthAssociateGoogleAuthorizeResponses,
-			AuthOauthAssociateGoogleAuthorizeErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/auth/associate/google/authorize",
-			...options,
-		});
-	}
-
-	/**
-	 * Oauth-Associate:Google.Callback
-	 * The response varies based on the authentication backend used.
-	 */
-	public static callback<ThrowOnError extends boolean = false>(
-		options?: Options<AuthOauthAssociateGoogleCallbackData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			AuthOauthAssociateGoogleCallbackResponses,
-			AuthOauthAssociateGoogleCallbackErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/auth/associate/google/callback",
+			url: "/api/v1/auth/logout",
 			...options,
 		});
 	}
@@ -2361,20 +1950,61 @@ export class AuthService {
 		});
 	}
 	static authAuthJwtService = AuthAuthJwtService;
-	static authOauthGoogleService = AuthOauthGoogleService;
-	static authOauthAssociateGoogleService = AuthOauthAssociateGoogleService;
 }
 
-export class UsersService {
+export class JwtService {
+	/**
+	 * Oauth:Google.Jwt.Authorize
+	 */
+	public static authorize<ThrowOnError extends boolean = false>(
+		options?: Options<OAuth2OauthGoogleJwtAuthorizeData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			OAuth2OauthGoogleJwtAuthorizeResponses,
+			OAuth2OauthGoogleJwtAuthorizeErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/oauth2/authorize",
+			...options,
+		});
+	}
+
+	/**
+	 * Oauth:Google.Jwt.Callback
+	 * The response varies based on the authentication backend used.
+	 */
+	public static callback<ThrowOnError extends boolean = false>(
+		options?: Options<OAuth2OauthGoogleJwtCallbackData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			OAuth2OauthGoogleJwtCallbackResponses,
+			OAuth2OauthGoogleJwtCallbackErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/oauth2/callback",
+			...options,
+		});
+	}
+}
+
+export class OAuth2OauthGoogleService {
+	static jwtService = JwtService;
+}
+
+export class OAuth2Service {
+	static oAuth2OauthGoogleService = OAuth2OauthGoogleService;
+}
+
+export class UserService {
 	/**
 	 * Users:Current User
 	 */
-	public static usersUsersCurrentUser<ThrowOnError extends boolean = false>(
-		options?: Options<UsersUsersCurrentUserData, ThrowOnError>,
+	public static userUsersCurrentUser<ThrowOnError extends boolean = false>(
+		options?: Options<UserUsersCurrentUserData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
-			UsersUsersCurrentUserResponses,
-			UsersUsersCurrentUserErrors,
+			UserUsersCurrentUserResponses,
+			UserUsersCurrentUserErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -2391,12 +2021,12 @@ export class UsersService {
 	/**
 	 * Users:Patch Current User
 	 */
-	public static usersUsersPatchCurrentUser<
-		ThrowOnError extends boolean = false,
-	>(options: Options<UsersUsersPatchCurrentUserData, ThrowOnError>) {
+	public static userUsersPatchCurrentUser<ThrowOnError extends boolean = false>(
+		options: Options<UserUsersPatchCurrentUserData, ThrowOnError>,
+	) {
 		return (options.client ?? client).patch<
-			UsersUsersPatchCurrentUserResponses,
-			UsersUsersPatchCurrentUserErrors,
+			UserUsersPatchCurrentUserResponses,
+			UserUsersPatchCurrentUserErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -2417,12 +2047,12 @@ export class UsersService {
 	/**
 	 * Users:Delete User
 	 */
-	public static usersUsersDeleteUser<ThrowOnError extends boolean = false>(
-		options: Options<UsersUsersDeleteUserData, ThrowOnError>,
+	public static userUsersDeleteUser<ThrowOnError extends boolean = false>(
+		options: Options<UserUsersDeleteUserData, ThrowOnError>,
 	) {
 		return (options.client ?? client).delete<
-			UsersUsersDeleteUserResponses,
-			UsersUsersDeleteUserErrors,
+			UserUsersDeleteUserResponses,
+			UserUsersDeleteUserErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -2439,12 +2069,12 @@ export class UsersService {
 	/**
 	 * Users:User
 	 */
-	public static usersUsersUser<ThrowOnError extends boolean = false>(
-		options: Options<UsersUsersUserData, ThrowOnError>,
+	public static userUsersUser<ThrowOnError extends boolean = false>(
+		options: Options<UserUsersUserData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			UsersUsersUserResponses,
-			UsersUsersUserErrors,
+			UserUsersUserResponses,
+			UserUsersUserErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -2461,12 +2091,12 @@ export class UsersService {
 	/**
 	 * Users:Patch User
 	 */
-	public static usersUsersPatchUser<ThrowOnError extends boolean = false>(
-		options: Options<UsersUsersPatchUserData, ThrowOnError>,
+	public static userUsersPatchUser<ThrowOnError extends boolean = false>(
+		options: Options<UserUsersPatchUserData, ThrowOnError>,
 	) {
 		return (options.client ?? client).patch<
-			UsersUsersPatchUserResponses,
-			UsersUsersPatchUserErrors,
+			UserUsersPatchUserResponses,
+			UserUsersPatchUserErrors,
 			ThrowOnError
 		>({
 			security: [

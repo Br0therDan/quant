@@ -10,25 +10,19 @@ import { client } from "../client.gen";
 import {
 	AuthService,
 	BacktestsService,
-	CompanyDataService,
 	HealthService,
 	MarketDataService,
+	OAuth2Service,
 	type Options,
-	PipelineStatusService,
-	StrategiesService,
-	TemplatesService,
-	UsersService,
-	WatchlistsService,
+	PipelineService,
+	StrategyService,
+	UserService,
 } from "../sdk.gen";
 import type {
 	AuthAuthJwtLoginData,
 	AuthAuthJwtLoginError,
 	AuthAuthJwtLoginResponse,
 	AuthAuthJwtLogoutData,
-	AuthOauthAssociateGoogleAuthorizeData,
-	AuthOauthAssociateGoogleCallbackData,
-	AuthOauthGoogleJwtAuthorizeData,
-	AuthOauthGoogleJwtCallbackData,
 	AuthRegisterRegisterData,
 	AuthRegisterRegisterError,
 	AuthRegisterRegisterResponse,
@@ -63,14 +57,6 @@ import type {
 	BacktestsUpdateBacktestData,
 	BacktestsUpdateBacktestError,
 	BacktestsUpdateBacktestResponse,
-	CompanyDataCollectDailyDataData,
-	CompanyDataCollectDailyDataError,
-	CompanyDataCollectStockInfoData,
-	CompanyDataCollectStockInfoError,
-	CompanyDataGetAllCompaniesData,
-	CompanyDataGetCompanyInfoData,
-	CompanyDataGetSymbolCoverageData,
-	HealthHealthCheck2Data,
 	HealthHealthCheckData,
 	HealthLivenessProbeData,
 	HealthReadinessProbeData,
@@ -83,60 +69,70 @@ import type {
 	MarketDataRequestBulkDataData,
 	MarketDataRequestBulkDataError,
 	MarketDataRequestBulkDataResponse,
-	PipelineStatusGetPipelineStatusData,
-	PipelineStatusRunPipelineUpdateData,
-	PipelineStatusRunPipelineUpdateError,
-	PipelineStatusSetupDefaultSymbolsData,
-	StrategiesCreateStrategyData,
-	StrategiesCreateStrategyError,
-	StrategiesCreateStrategyResponse,
-	StrategiesDeleteStrategyData,
-	StrategiesDeleteStrategyError,
-	StrategiesExecuteStrategyData,
-	StrategiesExecuteStrategyError,
-	StrategiesExecuteStrategyResponse,
-	StrategiesGetStrategiesData,
-	StrategiesGetStrategyData,
-	StrategiesGetStrategyExecutionsData,
-	StrategiesGetStrategyPerformanceData,
-	StrategiesUpdateStrategyData,
-	StrategiesUpdateStrategyError,
-	StrategiesUpdateStrategyResponse,
-	TemplatesCreateStrategyFromTemplateData,
-	TemplatesCreateStrategyFromTemplateError,
-	TemplatesCreateStrategyFromTemplateResponse,
-	TemplatesCreateTemplateData,
-	TemplatesCreateTemplateError,
-	TemplatesCreateTemplateResponse,
-	TemplatesDeleteTemplateData,
-	TemplatesDeleteTemplateError,
-	TemplatesGetTemplateData,
-	TemplatesGetTemplatesData,
-	TemplatesGetTemplateUsageStatsData,
-	TemplatesUpdateTemplateData,
-	TemplatesUpdateTemplateError,
-	TemplatesUpdateTemplateResponse,
-	UsersUsersCurrentUserData,
-	UsersUsersDeleteUserData,
-	UsersUsersDeleteUserError,
-	UsersUsersDeleteUserResponse,
-	UsersUsersPatchCurrentUserData,
-	UsersUsersPatchCurrentUserError,
-	UsersUsersPatchCurrentUserResponse,
-	UsersUsersPatchUserData,
-	UsersUsersPatchUserError,
-	UsersUsersPatchUserResponse,
-	UsersUsersUserData,
-	WatchlistsCreateWatchlistData,
-	WatchlistsCreateWatchlistError,
-	WatchlistsDeleteWatchlistData,
-	WatchlistsDeleteWatchlistError,
-	WatchlistsGetWatchlistData,
-	WatchlistsListWatchlistsData,
-	WatchlistsUpdateWatchlistByNameData,
-	WatchlistsUpdateWatchlistByNameError,
-	WatchlistsUpdateWatchlistData,
-	WatchlistsUpdateWatchlistError,
+	MarketDataServiceHealthCheckData,
+	OAuth2OauthGoogleJwtAuthorizeData,
+	OAuth2OauthGoogleJwtCallbackData,
+	PipelineCollectDailyDataData,
+	PipelineCollectDailyDataError,
+	PipelineCollectStockInfoData,
+	PipelineCollectStockInfoError,
+	PipelineCreateWatchlistData,
+	PipelineCreateWatchlistError,
+	PipelineDeleteWatchlistData,
+	PipelineDeleteWatchlistError,
+	PipelineGetCompanyInfoData,
+	PipelineGetPipelineStatusData,
+	PipelineGetSymbolCoverageData,
+	PipelineGetWatchlistData,
+	PipelineListCompaniesData,
+	PipelineListWatchlistsData,
+	PipelineRunPipelineUpdateData,
+	PipelineRunPipelineUpdateError,
+	PipelineSetupDefaultSymbolsData,
+	PipelineUpdateWatchlistByNameData,
+	PipelineUpdateWatchlistByNameError,
+	PipelineUpdateWatchlistData,
+	PipelineUpdateWatchlistError,
+	StrategyCreateStrategyData,
+	StrategyCreateStrategyError,
+	StrategyCreateStrategyFromTemplateData,
+	StrategyCreateStrategyFromTemplateError,
+	StrategyCreateStrategyFromTemplateResponse,
+	StrategyCreateStrategyResponse,
+	StrategyCreateTemplateData,
+	StrategyCreateTemplateError,
+	StrategyCreateTemplateResponse,
+	StrategyDeleteStrategyData,
+	StrategyDeleteStrategyError,
+	StrategyDeleteTemplateData,
+	StrategyDeleteTemplateError,
+	StrategyExecuteStrategyData,
+	StrategyExecuteStrategyError,
+	StrategyExecuteStrategyResponse,
+	StrategyGetStrategiesData,
+	StrategyGetStrategyData,
+	StrategyGetStrategyExecutionsData,
+	StrategyGetStrategyPerformanceData,
+	StrategyGetTemplateData,
+	StrategyGetTemplatesData,
+	StrategyGetTemplateUsageStatsData,
+	StrategyUpdateStrategyData,
+	StrategyUpdateStrategyError,
+	StrategyUpdateStrategyResponse,
+	StrategyUpdateTemplateData,
+	StrategyUpdateTemplateError,
+	StrategyUpdateTemplateResponse,
+	UserUsersCurrentUserData,
+	UserUsersDeleteUserData,
+	UserUsersDeleteUserError,
+	UserUsersDeleteUserResponse,
+	UserUsersPatchCurrentUserData,
+	UserUsersPatchCurrentUserError,
+	UserUsersPatchCurrentUserResponse,
+	UserUsersPatchUserData,
+	UserUsersPatchUserError,
+	UserUsersPatchUserResponse,
+	UserUsersUserData,
 } from "../types.gen";
 
 export type QueryKey<TOptions extends Options> = [
@@ -434,86 +430,180 @@ export const marketDataGetSymbolsCoverageAnalyticsOptions = (
 	});
 };
 
-export const pipelineStatusGetPipelineStatusQueryKey = (
-	options?: Options<PipelineStatusGetPipelineStatusData>,
-) => createQueryKey("pipelineStatusGetPipelineStatus", options);
+export const marketDataServiceHealthCheckQueryKey = (
+	options?: Options<MarketDataServiceHealthCheckData>,
+) => createQueryKey("marketDataServiceHealthCheck", options);
 
 /**
- * Get Pipeline Status
- * Get comprehensive pipeline status and health information.
- *
- * Returns detailed information about the current state of the data pipeline,
- * including data coverage statistics, update timestamps, and system health metrics.
- * This endpoint is essential for monitoring the overall health of the data
- * collection and processing system.
- *
- * Returns:
- * dict: Pipeline status containing:
- * - overall_status: Current pipeline health status
- * - last_update: Timestamp of last successful update
- * - coverage_stats: Data coverage statistics per symbol
- * - active_symbols: Currently monitored symbols count
- * - error_count: Number of recent errors
- *
- * Raises:
- * HTTPException: 500 if status retrieval fails
+ * Service Health Check
+ * Health check endpoint
  */
-export const pipelineStatusGetPipelineStatusOptions = (
-	options?: Options<PipelineStatusGetPipelineStatusData>,
+export const marketDataServiceHealthCheckOptions = (
+	options?: Options<MarketDataServiceHealthCheckData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } =
-				await PipelineStatusService.pipelineStatusGetPipelineStatus({
-					...options,
-					...queryKey[0],
-					signal,
-					throwOnError: true,
-				});
+			const { data } = await MarketDataService.marketDataServiceHealthCheck({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			});
 			return data;
 		},
-		queryKey: pipelineStatusGetPipelineStatusQueryKey(options),
+		queryKey: marketDataServiceHealthCheckQueryKey(options),
 	});
 };
 
 /**
- * Setup Default Symbols
- * Initialize default watchlist with standard symbols.
+ * Update Watchlist
+ * Create or update a watchlist with flexible naming support.
  *
- * Sets up the pipeline with a predefined set of popular stock symbols
- * for immediate use. This is typically called during initial system setup
- * or when resetting the pipeline to defaults. Creates the 'default' watchlist
- * if it doesn't exist.
+ * This endpoint provides a convenient way to create new watchlists or update
+ * existing ones. If no name is provided, it defaults to the 'default' watchlist
+ * which is used by the pipeline for automated updates. This endpoint combines
+ * creation and update functionality for ease of use.
  *
- * Default symbols include major tech stocks: AAPL, MSFT, GOOGL, AMZN, etc.
+ * Args:
+ * request: Watchlist configuration containing:
+ * - symbols: List of stock symbols to include
+ * - name: Optional watchlist name (defaults to 'default')
+ * - description: Optional description of the watchlist
  *
  * Returns:
- * dict: Setup confirmation containing:
- * - message: Success confirmation message
- * - symbols: List of symbols that were set up
+ * dict: Operation result containing:
+ * - message: Success message indicating action taken
+ * - name: Watchlist name that was processed
+ * - symbols: List of symbols in the watchlist
+ * - count: Number of symbols in the watchlist
+ * - action: Either 'created' or 'updated'
  *
  * Raises:
- * HTTPException: 500 if default setup fails
+ * HTTPException: 400 if watchlist creation fails
+ * HTTPException: 500 if operation fails
+ *
+ * Note:
+ * Updates to the 'default' watchlist automatically update pipeline symbols.
+ * This affects which symbols are processed during automated updates.
  */
-export const pipelineStatusSetupDefaultSymbolsMutation = (
-	options?: Partial<Options<PipelineStatusSetupDefaultSymbolsData>>,
+export const pipelineUpdateWatchlistMutation = (
+	options?: Partial<Options<PipelineUpdateWatchlistData>>,
 ): UseMutationOptions<
 	unknown,
-	DefaultError,
-	Options<PipelineStatusSetupDefaultSymbolsData>
+	PipelineUpdateWatchlistError,
+	Options<PipelineUpdateWatchlistData>
 > => {
 	const mutationOptions: UseMutationOptions<
 		unknown,
-		DefaultError,
-		Options<PipelineStatusSetupDefaultSymbolsData>
+		PipelineUpdateWatchlistError,
+		Options<PipelineUpdateWatchlistData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } =
-				await PipelineStatusService.pipelineStatusSetupDefaultSymbols({
-					...options,
-					...fnOptions,
-					throwOnError: true,
-				});
+			const { data } = await PipelineService.pipelineUpdateWatchlist({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+	};
+	return mutationOptions;
+};
+
+export const pipelineListWatchlistsQueryKey = (
+	options?: Options<PipelineListWatchlistsData>,
+) => createQueryKey("pipelineListWatchlists", options);
+
+/**
+ * List Watchlists
+ * Retrieve a comprehensive list of all watchlists.
+ *
+ * Returns summary information for all watchlists in the system, including
+ * metadata like symbol counts, update settings, and timestamps. This is
+ * useful for dashboard displays and watchlist management interfaces.
+ *
+ * Returns:
+ * dict: All watchlists summary containing:
+ * - watchlists: List of watchlist summaries with:
+ * - name: Watchlist name
+ * - description: Watchlist description
+ * - symbol_count: Number of symbols in the watchlist
+ * - auto_update: Whether automatic updates are enabled
+ * - last_updated: Timestamp of last modification
+ * - created_at: Timestamp of creation
+ * - total_count: Total number of watchlists in the system
+ *
+ * Raises:
+ * HTTPException: 500 if retrieval fails
+ *
+ * Note:
+ * This endpoint returns summary data only. Use GET /watchlists/{name}
+ * for detailed information including full symbol lists.
+ */
+export const pipelineListWatchlistsOptions = (
+	options?: Options<PipelineListWatchlistsData>,
+) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await PipelineService.pipelineListWatchlists({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			});
+			return data;
+		},
+		queryKey: pipelineListWatchlistsQueryKey(options),
+	});
+};
+
+/**
+ * Create Watchlist
+ * Create a new named watchlist with validation.
+ *
+ * This endpoint is specifically for creating new watchlists with explicit
+ * naming requirements. Unlike the /watchlist endpoint, this requires a name
+ * and will fail if a watchlist with the same name already exists.
+ *
+ * Args:
+ * request: Watchlist creation parameters containing:
+ * - name: Required unique name for the watchlist
+ * - symbols: List of stock symbols to include
+ * - description: Optional description of the watchlist purpose
+ *
+ * Returns:
+ * dict: Creation result containing:
+ * - message: Success confirmation message
+ * - name: Name of the created watchlist
+ * - symbols: List of symbols in the watchlist
+ * - description: Watchlist description
+ * - created_at: UTC timestamp of creation
+ *
+ * Raises:
+ * HTTPException: 400 if watchlist creation fails or name conflicts
+ * HTTPException: 500 if database operation fails
+ *
+ * Note:
+ * Watchlist names must be unique. Use PUT /watchlists/{name} to update existing ones.
+ */
+export const pipelineCreateWatchlistMutation = (
+	options?: Partial<Options<PipelineCreateWatchlistData>>,
+): UseMutationOptions<
+	unknown,
+	PipelineCreateWatchlistError,
+	Options<PipelineCreateWatchlistData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		unknown,
+		PipelineCreateWatchlistError,
+		Options<PipelineCreateWatchlistData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await PipelineService.pipelineCreateWatchlist({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
 			return data;
 		},
 	};
@@ -521,52 +611,152 @@ export const pipelineStatusSetupDefaultSymbolsMutation = (
 };
 
 /**
- * Run Pipeline Update
- * Execute comprehensive data pipeline update for specified symbols.
+ * Delete Watchlist
+ * Delete a named watchlist from the system.
  *
- * Initiates a full data collection and update process for the specified
- * symbols or the default watchlist. The update runs asynchronously in the
- * background to avoid blocking the API response. Includes company information
- * retrieval, historical price data collection, and data validation.
+ * Permanently removes a watchlist and all associated metadata. This action
+ * cannot be undone. The 'default' watchlist cannot be deleted as it is
+ * required for pipeline operations.
  *
  * Args:
- * request: Update configuration containing:
- * - symbols: Optional list of symbols to update (uses default if None)
- * - start_date: Optional start date for data collection
- * - end_date: Optional end date for data collection
- * background_tasks: FastAPI background task manager
+ * name: Name of the watchlist to delete
  *
  * Returns:
- * dict: Update initiation confirmation containing:
- * - message: Update start confirmation
- * - symbols: Symbols being updated
- * - started_at: UTC timestamp when update began
+ * dict: Deletion confirmation containing:
+ * - message: Success confirmation message
+ * - name: Name of the deleted watchlist
  *
  * Raises:
- * HTTPException: 500 if update initiation fails
+ * HTTPException: 400 if attempting to delete the 'default' watchlist
+ * HTTPException: 404 if watchlist with specified name not found
+ * HTTPException: 500 if deletion operation fails
  *
  * Note:
- * This is an asynchronous operation. Use /status endpoint to monitor progress.
+ * Deletion is permanent and cannot be undone. Consider backing up
+ * important watchlists before deletion.
  */
-export const pipelineStatusRunPipelineUpdateMutation = (
-	options?: Partial<Options<PipelineStatusRunPipelineUpdateData>>,
+export const pipelineDeleteWatchlistMutation = (
+	options?: Partial<Options<PipelineDeleteWatchlistData>>,
 ): UseMutationOptions<
 	unknown,
-	PipelineStatusRunPipelineUpdateError,
-	Options<PipelineStatusRunPipelineUpdateData>
+	PipelineDeleteWatchlistError,
+	Options<PipelineDeleteWatchlistData>
 > => {
 	const mutationOptions: UseMutationOptions<
 		unknown,
-		PipelineStatusRunPipelineUpdateError,
-		Options<PipelineStatusRunPipelineUpdateData>
+		PipelineDeleteWatchlistError,
+		Options<PipelineDeleteWatchlistData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } =
-				await PipelineStatusService.pipelineStatusRunPipelineUpdate({
-					...options,
-					...fnOptions,
-					throwOnError: true,
-				});
+			const { data } = await PipelineService.pipelineDeleteWatchlist({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+	};
+	return mutationOptions;
+};
+
+export const pipelineGetWatchlistQueryKey = (
+	options: Options<PipelineGetWatchlistData>,
+) => createQueryKey("pipelineGetWatchlist", options);
+
+/**
+ * Get Watchlist
+ * Retrieve complete information for a specific watchlist.
+ *
+ * Returns detailed information about a named watchlist including the full
+ * list of symbols, configuration settings, and all metadata. This provides
+ * all information needed to display or modify a specific watchlist.
+ *
+ * Args:
+ * name: Name of the watchlist to retrieve (case-sensitive)
+ *
+ * Returns:
+ * dict: Complete watchlist information containing:
+ * - name: Watchlist name
+ * - description: Detailed description
+ * - symbols: Complete list of stock symbols
+ * - auto_update: Automatic update configuration
+ * - update_interval: Update frequency in seconds
+ * - last_updated: Timestamp of last symbol update
+ * - created_at: Timestamp of watchlist creation
+ *
+ * Raises:
+ * HTTPException: 404 if watchlist with specified name not found
+ * HTTPException: 500 if retrieval operation fails
+ *
+ * Note:
+ * Watchlist names are case-sensitive. Use GET /watchlists to see all available names.
+ */
+export const pipelineGetWatchlistOptions = (
+	options: Options<PipelineGetWatchlistData>,
+) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await PipelineService.pipelineGetWatchlist({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			});
+			return data;
+		},
+		queryKey: pipelineGetWatchlistQueryKey(options),
+	});
+};
+
+/**
+ * Update Watchlist By Name
+ * Update an existing watchlist with new symbols and settings.
+ *
+ * Modifies the symbols and metadata of an existing watchlist. This endpoint
+ * requires the watchlist to exist and will fail if the specified name is
+ * not found. Use POST /watchlists to create new watchlists.
+ *
+ * Args:
+ * name: Name of the existing watchlist to update
+ * request: Update parameters containing:
+ * - symbols: New list of symbols (replaces current list)
+ * - description: Optional new description (if provided)
+ *
+ * Returns:
+ * dict: Update confirmation containing:
+ * - message: Success confirmation message
+ * - name: Name of the updated watchlist
+ * - symbols: New symbols list
+ * - description: Current description (updated if provided)
+ * - count: Number of symbols in updated watchlist
+ * - updated_at: Timestamp of the update
+ *
+ * Raises:
+ * HTTPException: 404 if watchlist with specified name not found
+ * HTTPException: 500 if update operation fails
+ *
+ * Note:
+ * Updates to the 'default' watchlist automatically update pipeline symbols.
+ * Symbol list is completely replaced, not merged with existing symbols.
+ */
+export const pipelineUpdateWatchlistByNameMutation = (
+	options?: Partial<Options<PipelineUpdateWatchlistByNameData>>,
+): UseMutationOptions<
+	unknown,
+	PipelineUpdateWatchlistByNameError,
+	Options<PipelineUpdateWatchlistByNameData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		unknown,
+		PipelineUpdateWatchlistByNameError,
+		Options<PipelineUpdateWatchlistByNameData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await PipelineService.pipelineUpdateWatchlistByName({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
 			return data;
 		},
 	};
@@ -598,20 +788,20 @@ export const pipelineStatusRunPipelineUpdateMutation = (
  * Respects Alpha Vantage API rate limits (5 calls/min, 500 calls/day).
  * Duplicate requests for same symbol within 24 hours may return cached data.
  */
-export const companyDataCollectStockInfoMutation = (
-	options?: Partial<Options<CompanyDataCollectStockInfoData>>,
+export const pipelineCollectStockInfoMutation = (
+	options?: Partial<Options<PipelineCollectStockInfoData>>,
 ): UseMutationOptions<
 	unknown,
-	CompanyDataCollectStockInfoError,
-	Options<CompanyDataCollectStockInfoData>
+	PipelineCollectStockInfoError,
+	Options<PipelineCollectStockInfoData>
 > => {
 	const mutationOptions: UseMutationOptions<
 		unknown,
-		CompanyDataCollectStockInfoError,
-		Options<CompanyDataCollectStockInfoData>
+		PipelineCollectStockInfoError,
+		Options<PipelineCollectStockInfoData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await CompanyDataService.companyDataCollectStockInfo({
+			const { data } = await PipelineService.pipelineCollectStockInfo({
 				...options,
 				...fnOptions,
 				throwOnError: true,
@@ -651,20 +841,20 @@ export const companyDataCollectStockInfoMutation = (
  * Large date ranges may take several minutes to complete.
  * Data is automatically cached to minimize API calls.
  */
-export const companyDataCollectDailyDataMutation = (
-	options?: Partial<Options<CompanyDataCollectDailyDataData>>,
+export const pipelineCollectDailyDataMutation = (
+	options?: Partial<Options<PipelineCollectDailyDataData>>,
 ): UseMutationOptions<
 	unknown,
-	CompanyDataCollectDailyDataError,
-	Options<CompanyDataCollectDailyDataData>
+	PipelineCollectDailyDataError,
+	Options<PipelineCollectDailyDataData>
 > => {
 	const mutationOptions: UseMutationOptions<
 		unknown,
-		CompanyDataCollectDailyDataError,
-		Options<CompanyDataCollectDailyDataData>
+		PipelineCollectDailyDataError,
+		Options<PipelineCollectDailyDataData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await CompanyDataService.companyDataCollectDailyData({
+			const { data } = await PipelineService.pipelineCollectDailyData({
 				...options,
 				...fnOptions,
 				throwOnError: true,
@@ -675,9 +865,9 @@ export const companyDataCollectDailyDataMutation = (
 	return mutationOptions;
 };
 
-export const companyDataGetSymbolCoverageQueryKey = (
-	options: Options<CompanyDataGetSymbolCoverageData>,
-) => createQueryKey("companyDataGetSymbolCoverage", options);
+export const pipelineGetSymbolCoverageQueryKey = (
+	options: Options<PipelineGetSymbolCoverageData>,
+) => createQueryKey("pipelineGetSymbolCoverage", options);
 
 /**
  * Get Symbol Coverage
@@ -703,12 +893,12 @@ export const companyDataGetSymbolCoverageQueryKey = (
  * HTTPException: 500 if coverage check fails
  * HTTPException: 404 if symbol not found in database
  */
-export const companyDataGetSymbolCoverageOptions = (
-	options: Options<CompanyDataGetSymbolCoverageData>,
+export const pipelineGetSymbolCoverageOptions = (
+	options: Options<PipelineGetSymbolCoverageData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await CompanyDataService.companyDataGetSymbolCoverage({
+			const { data } = await PipelineService.pipelineGetSymbolCoverage({
 				...options,
 				...queryKey[0],
 				signal,
@@ -716,13 +906,13 @@ export const companyDataGetSymbolCoverageOptions = (
 			});
 			return data;
 		},
-		queryKey: companyDataGetSymbolCoverageQueryKey(options),
+		queryKey: pipelineGetSymbolCoverageQueryKey(options),
 	});
 };
 
-export const companyDataGetCompanyInfoQueryKey = (
-	options: Options<CompanyDataGetCompanyInfoData>,
-) => createQueryKey("companyDataGetCompanyInfo", options);
+export const pipelineGetCompanyInfoQueryKey = (
+	options: Options<PipelineGetCompanyInfoData>,
+) => createQueryKey("pipelineGetCompanyInfo", options);
 
 /**
  * Get Company Info
@@ -756,12 +946,12 @@ export const companyDataGetCompanyInfoQueryKey = (
  * Note:
  * If company info not found, use POST /collect-info/{symbol} first.
  */
-export const companyDataGetCompanyInfoOptions = (
-	options: Options<CompanyDataGetCompanyInfoData>,
+export const pipelineGetCompanyInfoOptions = (
+	options: Options<PipelineGetCompanyInfoData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await CompanyDataService.companyDataGetCompanyInfo({
+			const { data } = await PipelineService.pipelineGetCompanyInfo({
 				...options,
 				...queryKey[0],
 				signal,
@@ -769,16 +959,16 @@ export const companyDataGetCompanyInfoOptions = (
 			});
 			return data;
 		},
-		queryKey: companyDataGetCompanyInfoQueryKey(options),
+		queryKey: pipelineGetCompanyInfoQueryKey(options),
 	});
 };
 
-export const companyDataGetAllCompaniesQueryKey = (
-	options?: Options<CompanyDataGetAllCompaniesData>,
-) => createQueryKey("companyDataGetAllCompanies", options);
+export const pipelineListCompaniesQueryKey = (
+	options?: Options<PipelineListCompaniesData>,
+) => createQueryKey("pipelineListCompanies", options);
 
 /**
- * Get All Companies
+ * List Companies
  * Retrieve information for all companies in the database.
  *
  * Returns a comprehensive list of all companies for which information
@@ -802,12 +992,12 @@ export const companyDataGetAllCompaniesQueryKey = (
  * Note:
  * Large datasets may take time to load. Consider pagination for production use.
  */
-export const companyDataGetAllCompaniesOptions = (
-	options?: Options<CompanyDataGetAllCompaniesData>,
+export const pipelineListCompaniesOptions = (
+	options?: Options<PipelineListCompaniesData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await CompanyDataService.companyDataGetAllCompanies({
+			const { data } = await PipelineService.pipelineListCompanies({
 				...options,
 				...queryKey[0],
 				signal,
@@ -815,55 +1005,84 @@ export const companyDataGetAllCompaniesOptions = (
 			});
 			return data;
 		},
-		queryKey: companyDataGetAllCompaniesQueryKey(options),
+		queryKey: pipelineListCompaniesQueryKey(options),
+	});
+};
+
+export const pipelineGetPipelineStatusQueryKey = (
+	options?: Options<PipelineGetPipelineStatusData>,
+) => createQueryKey("pipelineGetPipelineStatus", options);
+
+/**
+ * Get Pipeline Status
+ * Get comprehensive pipeline status and health information.
+ *
+ * Returns detailed information about the current state of the data pipeline,
+ * including data coverage statistics, update timestamps, and system health metrics.
+ * This endpoint is essential for monitoring the overall health of the data
+ * collection and processing system.
+ *
+ * Returns:
+ * dict: Pipeline status containing:
+ * - overall_status: Current pipeline health status
+ * - last_update: Timestamp of last successful update
+ * - coverage_stats: Data coverage statistics per symbol
+ * - active_symbols: Currently monitored symbols count
+ * - error_count: Number of recent errors
+ *
+ * Raises:
+ * HTTPException: 500 if status retrieval fails
+ */
+export const pipelineGetPipelineStatusOptions = (
+	options?: Options<PipelineGetPipelineStatusData>,
+) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await PipelineService.pipelineGetPipelineStatus({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			});
+			return data;
+		},
+		queryKey: pipelineGetPipelineStatusQueryKey(options),
 	});
 };
 
 /**
- * Update Watchlist
- * Create or update a watchlist with flexible naming support.
+ * Setup Default Symbols
+ * Initialize default watchlist with standard symbols.
  *
- * This endpoint provides a convenient way to create new watchlists or update
- * existing ones. If no name is provided, it defaults to the 'default' watchlist
- * which is used by the pipeline for automated updates. This endpoint combines
- * creation and update functionality for ease of use.
+ * Sets up the pipeline with a predefined set of popular stock symbols
+ * for immediate use. This is typically called during initial system setup
+ * or when resetting the pipeline to defaults. Creates the 'default' watchlist
+ * if it doesn't exist.
  *
- * Args:
- * request: Watchlist configuration containing:
- * - symbols: List of stock symbols to include
- * - name: Optional watchlist name (defaults to 'default')
- * - description: Optional description of the watchlist
+ * Default symbols include major tech stocks: AAPL, MSFT, GOOGL, AMZN, etc.
  *
  * Returns:
- * dict: Operation result containing:
- * - message: Success message indicating action taken
- * - name: Watchlist name that was processed
- * - symbols: List of symbols in the watchlist
- * - count: Number of symbols in the watchlist
- * - action: Either 'created' or 'updated'
+ * dict: Setup confirmation containing:
+ * - message: Success confirmation message
+ * - symbols: List of symbols that were set up
  *
  * Raises:
- * HTTPException: 400 if watchlist creation fails
- * HTTPException: 500 if operation fails
- *
- * Note:
- * Updates to the 'default' watchlist automatically update pipeline symbols.
- * This affects which symbols are processed during automated updates.
+ * HTTPException: 500 if default setup fails
  */
-export const watchlistsUpdateWatchlistMutation = (
-	options?: Partial<Options<WatchlistsUpdateWatchlistData>>,
+export const pipelineSetupDefaultSymbolsMutation = (
+	options?: Partial<Options<PipelineSetupDefaultSymbolsData>>,
 ): UseMutationOptions<
 	unknown,
-	WatchlistsUpdateWatchlistError,
-	Options<WatchlistsUpdateWatchlistData>
+	DefaultError,
+	Options<PipelineSetupDefaultSymbolsData>
 > => {
 	const mutationOptions: UseMutationOptions<
 		unknown,
-		WatchlistsUpdateWatchlistError,
-		Options<WatchlistsUpdateWatchlistData>
+		DefaultError,
+		Options<PipelineSetupDefaultSymbolsData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await WatchlistsService.watchlistsUpdateWatchlist({
+			const { data } = await PipelineService.pipelineSetupDefaultSymbols({
 				...options,
 				...fnOptions,
 				throwOnError: true,
@@ -874,42 +1093,72 @@ export const watchlistsUpdateWatchlistMutation = (
 	return mutationOptions;
 };
 
-export const watchlistsListWatchlistsQueryKey = (
-	options?: Options<WatchlistsListWatchlistsData>,
-) => createQueryKey("watchlistsListWatchlists", options);
-
 /**
- * List Watchlists
- * Retrieve a comprehensive list of all watchlists.
+ * Run Pipeline Update
+ * Execute comprehensive data pipeline update for specified symbols.
  *
- * Returns summary information for all watchlists in the system, including
- * metadata like symbol counts, update settings, and timestamps. This is
- * useful for dashboard displays and watchlist management interfaces.
+ * Initiates a full data collection and update process for the specified
+ * symbols or the default watchlist. The update runs asynchronously in the
+ * background to avoid blocking the API response. Includes company information
+ * retrieval, historical price data collection, and data validation.
+ *
+ * Args:
+ * request: Update configuration containing:
+ * - symbols: Optional list of symbols to update (uses default if None)
+ * - start_date: Optional start date for data collection
+ * - end_date: Optional end date for data collection
+ * background_tasks: FastAPI background task manager
  *
  * Returns:
- * dict: All watchlists summary containing:
- * - watchlists: List of watchlist summaries with:
- * - name: Watchlist name
- * - description: Watchlist description
- * - symbol_count: Number of symbols in the watchlist
- * - auto_update: Whether automatic updates are enabled
- * - last_updated: Timestamp of last modification
- * - created_at: Timestamp of creation
- * - total_count: Total number of watchlists in the system
+ * dict: Update initiation confirmation containing:
+ * - message: Update start confirmation
+ * - symbols: Symbols being updated
+ * - started_at: UTC timestamp when update began
  *
  * Raises:
- * HTTPException: 500 if retrieval fails
+ * HTTPException: 500 if update initiation fails
  *
  * Note:
- * This endpoint returns summary data only. Use GET /watchlists/{name}
- * for detailed information including full symbol lists.
+ * This is an asynchronous operation. Use /status endpoint to monitor progress.
  */
-export const watchlistsListWatchlistsOptions = (
-	options?: Options<WatchlistsListWatchlistsData>,
+export const pipelineRunPipelineUpdateMutation = (
+	options?: Partial<Options<PipelineRunPipelineUpdateData>>,
+): UseMutationOptions<
+	unknown,
+	PipelineRunPipelineUpdateError,
+	Options<PipelineRunPipelineUpdateData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		unknown,
+		PipelineRunPipelineUpdateError,
+		Options<PipelineRunPipelineUpdateData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await PipelineService.pipelineRunPipelineUpdate({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+	};
+	return mutationOptions;
+};
+
+export const strategyGetStrategiesQueryKey = (
+	options?: Options<StrategyGetStrategiesData>,
+) => createQueryKey("strategyGetStrategies", options);
+
+/**
+ * Get Strategies
+ * Get list of strategies
+ */
+export const strategyGetStrategiesOptions = (
+	options?: Options<StrategyGetStrategiesData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await WatchlistsService.watchlistsListWatchlists({
+			const { data } = await StrategyService.strategyGetStrategies({
 				...options,
 				...queryKey[0],
 				signal,
@@ -917,53 +1166,28 @@ export const watchlistsListWatchlistsOptions = (
 			});
 			return data;
 		},
-		queryKey: watchlistsListWatchlistsQueryKey(options),
+		queryKey: strategyGetStrategiesQueryKey(options),
 	});
 };
 
 /**
- * Create Watchlist
- * Create a new named watchlist with validation.
- *
- * This endpoint is specifically for creating new watchlists with explicit
- * naming requirements. Unlike the /watchlist endpoint, this requires a name
- * and will fail if a watchlist with the same name already exists.
- *
- * Args:
- * request: Watchlist creation parameters containing:
- * - name: Required unique name for the watchlist
- * - symbols: List of stock symbols to include
- * - description: Optional description of the watchlist purpose
- *
- * Returns:
- * dict: Creation result containing:
- * - message: Success confirmation message
- * - name: Name of the created watchlist
- * - symbols: List of symbols in the watchlist
- * - description: Watchlist description
- * - created_at: UTC timestamp of creation
- *
- * Raises:
- * HTTPException: 400 if watchlist creation fails or name conflicts
- * HTTPException: 500 if database operation fails
- *
- * Note:
- * Watchlist names must be unique. Use PUT /watchlists/{name} to update existing ones.
+ * Create Strategy
+ * Create a new strategy
  */
-export const watchlistsCreateWatchlistMutation = (
-	options?: Partial<Options<WatchlistsCreateWatchlistData>>,
+export const strategyCreateStrategyMutation = (
+	options?: Partial<Options<StrategyCreateStrategyData>>,
 ): UseMutationOptions<
-	unknown,
-	WatchlistsCreateWatchlistError,
-	Options<WatchlistsCreateWatchlistData>
+	StrategyCreateStrategyResponse,
+	StrategyCreateStrategyError,
+	Options<StrategyCreateStrategyData>
 > => {
 	const mutationOptions: UseMutationOptions<
-		unknown,
-		WatchlistsCreateWatchlistError,
-		Options<WatchlistsCreateWatchlistData>
+		StrategyCreateStrategyResponse,
+		StrategyCreateStrategyError,
+		Options<StrategyCreateStrategyData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await WatchlistsService.watchlistsCreateWatchlist({
+			const { data } = await StrategyService.strategyCreateStrategy({
 				...options,
 				...fnOptions,
 				throwOnError: true,
@@ -975,44 +1199,23 @@ export const watchlistsCreateWatchlistMutation = (
 };
 
 /**
- * Delete Watchlist
- * Delete a named watchlist from the system.
- *
- * Permanently removes a watchlist and all associated metadata. This action
- * cannot be undone. The 'default' watchlist cannot be deleted as it is
- * required for pipeline operations.
- *
- * Args:
- * name: Name of the watchlist to delete
- *
- * Returns:
- * dict: Deletion confirmation containing:
- * - message: Success confirmation message
- * - name: Name of the deleted watchlist
- *
- * Raises:
- * HTTPException: 400 if attempting to delete the 'default' watchlist
- * HTTPException: 404 if watchlist with specified name not found
- * HTTPException: 500 if deletion operation fails
- *
- * Note:
- * Deletion is permanent and cannot be undone. Consider backing up
- * important watchlists before deletion.
+ * Delete Strategy
+ * Delete strategy (soft delete)
  */
-export const watchlistsDeleteWatchlistMutation = (
-	options?: Partial<Options<WatchlistsDeleteWatchlistData>>,
+export const strategyDeleteStrategyMutation = (
+	options?: Partial<Options<StrategyDeleteStrategyData>>,
 ): UseMutationOptions<
 	unknown,
-	WatchlistsDeleteWatchlistError,
-	Options<WatchlistsDeleteWatchlistData>
+	StrategyDeleteStrategyError,
+	Options<StrategyDeleteStrategyData>
 > => {
 	const mutationOptions: UseMutationOptions<
 		unknown,
-		WatchlistsDeleteWatchlistError,
-		Options<WatchlistsDeleteWatchlistData>
+		StrategyDeleteStrategyError,
+		Options<StrategyDeleteStrategyData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await WatchlistsService.watchlistsDeleteWatchlist({
+			const { data } = await StrategyService.strategyDeleteStrategy({
 				...options,
 				...fnOptions,
 				throwOnError: true,
@@ -1023,44 +1226,20 @@ export const watchlistsDeleteWatchlistMutation = (
 	return mutationOptions;
 };
 
-export const watchlistsGetWatchlistQueryKey = (
-	options: Options<WatchlistsGetWatchlistData>,
-) => createQueryKey("watchlistsGetWatchlist", options);
+export const strategyGetStrategyQueryKey = (
+	options: Options<StrategyGetStrategyData>,
+) => createQueryKey("strategyGetStrategy", options);
 
 /**
- * Get Watchlist
- * Retrieve complete information for a specific watchlist.
- *
- * Returns detailed information about a named watchlist including the full
- * list of symbols, configuration settings, and all metadata. This provides
- * all information needed to display or modify a specific watchlist.
- *
- * Args:
- * name: Name of the watchlist to retrieve (case-sensitive)
- *
- * Returns:
- * dict: Complete watchlist information containing:
- * - name: Watchlist name
- * - description: Detailed description
- * - symbols: Complete list of stock symbols
- * - auto_update: Automatic update configuration
- * - update_interval: Update frequency in seconds
- * - last_updated: Timestamp of last symbol update
- * - created_at: Timestamp of watchlist creation
- *
- * Raises:
- * HTTPException: 404 if watchlist with specified name not found
- * HTTPException: 500 if retrieval operation fails
- *
- * Note:
- * Watchlist names are case-sensitive. Use GET /watchlists to see all available names.
+ * Get Strategy
+ * Get strategy by ID
  */
-export const watchlistsGetWatchlistOptions = (
-	options: Options<WatchlistsGetWatchlistData>,
+export const strategyGetStrategyOptions = (
+	options: Options<StrategyGetStrategyData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await WatchlistsService.watchlistsGetWatchlist({
+			const { data } = await StrategyService.strategyGetStrategy({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1068,55 +1247,28 @@ export const watchlistsGetWatchlistOptions = (
 			});
 			return data;
 		},
-		queryKey: watchlistsGetWatchlistQueryKey(options),
+		queryKey: strategyGetStrategyQueryKey(options),
 	});
 };
 
 /**
- * Update Watchlist By Name
- * Update an existing watchlist with new symbols and settings.
- *
- * Modifies the symbols and metadata of an existing watchlist. This endpoint
- * requires the watchlist to exist and will fail if the specified name is
- * not found. Use POST /watchlists to create new watchlists.
- *
- * Args:
- * name: Name of the existing watchlist to update
- * request: Update parameters containing:
- * - symbols: New list of symbols (replaces current list)
- * - description: Optional new description (if provided)
- *
- * Returns:
- * dict: Update confirmation containing:
- * - message: Success confirmation message
- * - name: Name of the updated watchlist
- * - symbols: New symbols list
- * - description: Current description (updated if provided)
- * - count: Number of symbols in updated watchlist
- * - updated_at: Timestamp of the update
- *
- * Raises:
- * HTTPException: 404 if watchlist with specified name not found
- * HTTPException: 500 if update operation fails
- *
- * Note:
- * Updates to the 'default' watchlist automatically update pipeline symbols.
- * Symbol list is completely replaced, not merged with existing symbols.
+ * Update Strategy
+ * Update strategy
  */
-export const watchlistsUpdateWatchlistByNameMutation = (
-	options?: Partial<Options<WatchlistsUpdateWatchlistByNameData>>,
+export const strategyUpdateStrategyMutation = (
+	options?: Partial<Options<StrategyUpdateStrategyData>>,
 ): UseMutationOptions<
-	unknown,
-	WatchlistsUpdateWatchlistByNameError,
-	Options<WatchlistsUpdateWatchlistByNameData>
+	StrategyUpdateStrategyResponse,
+	StrategyUpdateStrategyError,
+	Options<StrategyUpdateStrategyData>
 > => {
 	const mutationOptions: UseMutationOptions<
-		unknown,
-		WatchlistsUpdateWatchlistByNameError,
-		Options<WatchlistsUpdateWatchlistByNameData>
+		StrategyUpdateStrategyResponse,
+		StrategyUpdateStrategyError,
+		Options<StrategyUpdateStrategyData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await WatchlistsService.watchlistsUpdateWatchlistByName({
+			const { data } = await StrategyService.strategyUpdateStrategy({
 				...options,
 				...fnOptions,
 				throwOnError: true,
@@ -1127,20 +1279,48 @@ export const watchlistsUpdateWatchlistByNameMutation = (
 	return mutationOptions;
 };
 
-export const healthHealthCheck2QueryKey = (
-	options?: Options<HealthHealthCheck2Data>,
-) => createQueryKey("healthHealthCheck2", options);
+/**
+ * Execute Strategy
+ * Execute strategy and generate signal
+ */
+export const strategyExecuteStrategyMutation = (
+	options?: Partial<Options<StrategyExecuteStrategyData>>,
+): UseMutationOptions<
+	StrategyExecuteStrategyResponse,
+	StrategyExecuteStrategyError,
+	Options<StrategyExecuteStrategyData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		StrategyExecuteStrategyResponse,
+		StrategyExecuteStrategyError,
+		Options<StrategyExecuteStrategyData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await StrategyService.strategyExecuteStrategy({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+	};
+	return mutationOptions;
+};
+
+export const strategyGetStrategyExecutionsQueryKey = (
+	options: Options<StrategyGetStrategyExecutionsData>,
+) => createQueryKey("strategyGetStrategyExecutions", options);
 
 /**
- * Health Check
- * Health check endpoint
+ * Get Strategy Executions
+ * Get strategy execution history
  */
-export const healthHealthCheck2Options = (
-	options?: Options<HealthHealthCheck2Data>,
+export const strategyGetStrategyExecutionsOptions = (
+	options: Options<StrategyGetStrategyExecutionsData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await HealthService.healthHealthCheck2({
+			const { data } = await StrategyService.strategyGetStrategyExecutions({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1148,7 +1328,221 @@ export const healthHealthCheck2Options = (
 			});
 			return data;
 		},
-		queryKey: healthHealthCheck2QueryKey(options),
+		queryKey: strategyGetStrategyExecutionsQueryKey(options),
+	});
+};
+
+export const strategyGetStrategyPerformanceQueryKey = (
+	options: Options<StrategyGetStrategyPerformanceData>,
+) => createQueryKey("strategyGetStrategyPerformance", options);
+
+/**
+ * Get Strategy Performance
+ * Get strategy performance metrics
+ */
+export const strategyGetStrategyPerformanceOptions = (
+	options: Options<StrategyGetStrategyPerformanceData>,
+) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await StrategyService.strategyGetStrategyPerformance({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			});
+			return data;
+		},
+		queryKey: strategyGetStrategyPerformanceQueryKey(options),
+	});
+};
+
+export const strategyGetTemplatesQueryKey = (
+	options?: Options<StrategyGetTemplatesData>,
+) => createQueryKey("strategyGetTemplates", options);
+
+/**
+ * Get Templates
+ * Get list of strategy templates
+ */
+export const strategyGetTemplatesOptions = (
+	options?: Options<StrategyGetTemplatesData>,
+) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await StrategyService.strategyGetTemplates({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			});
+			return data;
+		},
+		queryKey: strategyGetTemplatesQueryKey(options),
+	});
+};
+
+/**
+ * Create Template
+ * Create a new strategy template (Superuser only)
+ */
+export const strategyCreateTemplateMutation = (
+	options?: Partial<Options<StrategyCreateTemplateData>>,
+): UseMutationOptions<
+	StrategyCreateTemplateResponse,
+	StrategyCreateTemplateError,
+	Options<StrategyCreateTemplateData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		StrategyCreateTemplateResponse,
+		StrategyCreateTemplateError,
+		Options<StrategyCreateTemplateData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await StrategyService.strategyCreateTemplate({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+	};
+	return mutationOptions;
+};
+
+/**
+ * Delete Template
+ * Delete template by ID (Superuser only)
+ */
+export const strategyDeleteTemplateMutation = (
+	options?: Partial<Options<StrategyDeleteTemplateData>>,
+): UseMutationOptions<
+	unknown,
+	StrategyDeleteTemplateError,
+	Options<StrategyDeleteTemplateData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		unknown,
+		StrategyDeleteTemplateError,
+		Options<StrategyDeleteTemplateData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await StrategyService.strategyDeleteTemplate({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+	};
+	return mutationOptions;
+};
+
+export const strategyGetTemplateQueryKey = (
+	options: Options<StrategyGetTemplateData>,
+) => createQueryKey("strategyGetTemplate", options);
+
+/**
+ * Get Template
+ * Get template by ID
+ */
+export const strategyGetTemplateOptions = (
+	options: Options<StrategyGetTemplateData>,
+) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await StrategyService.strategyGetTemplate({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			});
+			return data;
+		},
+		queryKey: strategyGetTemplateQueryKey(options),
+	});
+};
+
+/**
+ * Update Template
+ * Update template by ID (Superuser only)
+ */
+export const strategyUpdateTemplateMutation = (
+	options?: Partial<Options<StrategyUpdateTemplateData>>,
+): UseMutationOptions<
+	StrategyUpdateTemplateResponse,
+	StrategyUpdateTemplateError,
+	Options<StrategyUpdateTemplateData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		StrategyUpdateTemplateResponse,
+		StrategyUpdateTemplateError,
+		Options<StrategyUpdateTemplateData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await StrategyService.strategyUpdateTemplate({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+	};
+	return mutationOptions;
+};
+
+/**
+ * Create Strategy From Template
+ * Create a strategy instance from template
+ */
+export const strategyCreateStrategyFromTemplateMutation = (
+	options?: Partial<Options<StrategyCreateStrategyFromTemplateData>>,
+): UseMutationOptions<
+	StrategyCreateStrategyFromTemplateResponse,
+	StrategyCreateStrategyFromTemplateError,
+	Options<StrategyCreateStrategyFromTemplateData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		StrategyCreateStrategyFromTemplateResponse,
+		StrategyCreateStrategyFromTemplateError,
+		Options<StrategyCreateStrategyFromTemplateData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await StrategyService.strategyCreateStrategyFromTemplate(
+				{
+					...options,
+					...fnOptions,
+					throwOnError: true,
+				},
+			);
+			return data;
+		},
+	};
+	return mutationOptions;
+};
+
+export const strategyGetTemplateUsageStatsQueryKey = (
+	options?: Options<StrategyGetTemplateUsageStatsData>,
+) => createQueryKey("strategyGetTemplateUsageStats", options);
+
+/**
+ * Get Template Usage Stats
+ * Get template usage statistics
+ */
+export const strategyGetTemplateUsageStatsOptions = (
+	options?: Options<StrategyGetTemplateUsageStatsData>,
+) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await StrategyService.strategyGetTemplateUsageStats({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			});
+			return data;
+		},
+		queryKey: strategyGetTemplateUsageStatsQueryKey(options),
 	});
 };
 
@@ -1494,408 +1888,6 @@ export const backtestsGetBacktestSummaryAnalyticsOptions = (
 	});
 };
 
-export const strategiesGetStrategiesQueryKey = (
-	options?: Options<StrategiesGetStrategiesData>,
-) => createQueryKey("strategiesGetStrategies", options);
-
-/**
- * Get Strategies
- * Get list of strategies
- */
-export const strategiesGetStrategiesOptions = (
-	options?: Options<StrategiesGetStrategiesData>,
-) => {
-	return queryOptions({
-		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await StrategiesService.strategiesGetStrategies({
-				...options,
-				...queryKey[0],
-				signal,
-				throwOnError: true,
-			});
-			return data;
-		},
-		queryKey: strategiesGetStrategiesQueryKey(options),
-	});
-};
-
-/**
- * Create Strategy
- * Create a new strategy
- */
-export const strategiesCreateStrategyMutation = (
-	options?: Partial<Options<StrategiesCreateStrategyData>>,
-): UseMutationOptions<
-	StrategiesCreateStrategyResponse,
-	StrategiesCreateStrategyError,
-	Options<StrategiesCreateStrategyData>
-> => {
-	const mutationOptions: UseMutationOptions<
-		StrategiesCreateStrategyResponse,
-		StrategiesCreateStrategyError,
-		Options<StrategiesCreateStrategyData>
-	> = {
-		mutationFn: async (fnOptions) => {
-			const { data } = await StrategiesService.strategiesCreateStrategy({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
-			return data;
-		},
-	};
-	return mutationOptions;
-};
-
-/**
- * Delete Strategy
- * Delete strategy (soft delete)
- */
-export const strategiesDeleteStrategyMutation = (
-	options?: Partial<Options<StrategiesDeleteStrategyData>>,
-): UseMutationOptions<
-	unknown,
-	StrategiesDeleteStrategyError,
-	Options<StrategiesDeleteStrategyData>
-> => {
-	const mutationOptions: UseMutationOptions<
-		unknown,
-		StrategiesDeleteStrategyError,
-		Options<StrategiesDeleteStrategyData>
-	> = {
-		mutationFn: async (fnOptions) => {
-			const { data } = await StrategiesService.strategiesDeleteStrategy({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
-			return data;
-		},
-	};
-	return mutationOptions;
-};
-
-export const strategiesGetStrategyQueryKey = (
-	options: Options<StrategiesGetStrategyData>,
-) => createQueryKey("strategiesGetStrategy", options);
-
-/**
- * Get Strategy
- * Get strategy by ID
- */
-export const strategiesGetStrategyOptions = (
-	options: Options<StrategiesGetStrategyData>,
-) => {
-	return queryOptions({
-		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await StrategiesService.strategiesGetStrategy({
-				...options,
-				...queryKey[0],
-				signal,
-				throwOnError: true,
-			});
-			return data;
-		},
-		queryKey: strategiesGetStrategyQueryKey(options),
-	});
-};
-
-/**
- * Update Strategy
- * Update strategy
- */
-export const strategiesUpdateStrategyMutation = (
-	options?: Partial<Options<StrategiesUpdateStrategyData>>,
-): UseMutationOptions<
-	StrategiesUpdateStrategyResponse,
-	StrategiesUpdateStrategyError,
-	Options<StrategiesUpdateStrategyData>
-> => {
-	const mutationOptions: UseMutationOptions<
-		StrategiesUpdateStrategyResponse,
-		StrategiesUpdateStrategyError,
-		Options<StrategiesUpdateStrategyData>
-	> = {
-		mutationFn: async (fnOptions) => {
-			const { data } = await StrategiesService.strategiesUpdateStrategy({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
-			return data;
-		},
-	};
-	return mutationOptions;
-};
-
-/**
- * Execute Strategy
- * Execute strategy and generate signal
- */
-export const strategiesExecuteStrategyMutation = (
-	options?: Partial<Options<StrategiesExecuteStrategyData>>,
-): UseMutationOptions<
-	StrategiesExecuteStrategyResponse,
-	StrategiesExecuteStrategyError,
-	Options<StrategiesExecuteStrategyData>
-> => {
-	const mutationOptions: UseMutationOptions<
-		StrategiesExecuteStrategyResponse,
-		StrategiesExecuteStrategyError,
-		Options<StrategiesExecuteStrategyData>
-	> = {
-		mutationFn: async (fnOptions) => {
-			const { data } = await StrategiesService.strategiesExecuteStrategy({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
-			return data;
-		},
-	};
-	return mutationOptions;
-};
-
-export const strategiesGetStrategyExecutionsQueryKey = (
-	options: Options<StrategiesGetStrategyExecutionsData>,
-) => createQueryKey("strategiesGetStrategyExecutions", options);
-
-/**
- * Get Strategy Executions
- * Get strategy execution history
- */
-export const strategiesGetStrategyExecutionsOptions = (
-	options: Options<StrategiesGetStrategyExecutionsData>,
-) => {
-	return queryOptions({
-		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await StrategiesService.strategiesGetStrategyExecutions({
-				...options,
-				...queryKey[0],
-				signal,
-				throwOnError: true,
-			});
-			return data;
-		},
-		queryKey: strategiesGetStrategyExecutionsQueryKey(options),
-	});
-};
-
-export const strategiesGetStrategyPerformanceQueryKey = (
-	options: Options<StrategiesGetStrategyPerformanceData>,
-) => createQueryKey("strategiesGetStrategyPerformance", options);
-
-/**
- * Get Strategy Performance
- * Get strategy performance metrics
- */
-export const strategiesGetStrategyPerformanceOptions = (
-	options: Options<StrategiesGetStrategyPerformanceData>,
-) => {
-	return queryOptions({
-		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await StrategiesService.strategiesGetStrategyPerformance(
-				{
-					...options,
-					...queryKey[0],
-					signal,
-					throwOnError: true,
-				},
-			);
-			return data;
-		},
-		queryKey: strategiesGetStrategyPerformanceQueryKey(options),
-	});
-};
-
-export const templatesGetTemplatesQueryKey = (
-	options?: Options<TemplatesGetTemplatesData>,
-) => createQueryKey("templatesGetTemplates", options);
-
-/**
- * Get Templates
- * Get list of strategy templates
- */
-export const templatesGetTemplatesOptions = (
-	options?: Options<TemplatesGetTemplatesData>,
-) => {
-	return queryOptions({
-		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await TemplatesService.templatesGetTemplates({
-				...options,
-				...queryKey[0],
-				signal,
-				throwOnError: true,
-			});
-			return data;
-		},
-		queryKey: templatesGetTemplatesQueryKey(options),
-	});
-};
-
-/**
- * Create Template
- * Create a new strategy template (Superuser only)
- */
-export const templatesCreateTemplateMutation = (
-	options?: Partial<Options<TemplatesCreateTemplateData>>,
-): UseMutationOptions<
-	TemplatesCreateTemplateResponse,
-	TemplatesCreateTemplateError,
-	Options<TemplatesCreateTemplateData>
-> => {
-	const mutationOptions: UseMutationOptions<
-		TemplatesCreateTemplateResponse,
-		TemplatesCreateTemplateError,
-		Options<TemplatesCreateTemplateData>
-	> = {
-		mutationFn: async (fnOptions) => {
-			const { data } = await TemplatesService.templatesCreateTemplate({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
-			return data;
-		},
-	};
-	return mutationOptions;
-};
-
-/**
- * Delete Template
- * Delete template by ID (Superuser only)
- */
-export const templatesDeleteTemplateMutation = (
-	options?: Partial<Options<TemplatesDeleteTemplateData>>,
-): UseMutationOptions<
-	unknown,
-	TemplatesDeleteTemplateError,
-	Options<TemplatesDeleteTemplateData>
-> => {
-	const mutationOptions: UseMutationOptions<
-		unknown,
-		TemplatesDeleteTemplateError,
-		Options<TemplatesDeleteTemplateData>
-	> = {
-		mutationFn: async (fnOptions) => {
-			const { data } = await TemplatesService.templatesDeleteTemplate({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
-			return data;
-		},
-	};
-	return mutationOptions;
-};
-
-export const templatesGetTemplateQueryKey = (
-	options: Options<TemplatesGetTemplateData>,
-) => createQueryKey("templatesGetTemplate", options);
-
-/**
- * Get Template
- * Get template by ID
- */
-export const templatesGetTemplateOptions = (
-	options: Options<TemplatesGetTemplateData>,
-) => {
-	return queryOptions({
-		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await TemplatesService.templatesGetTemplate({
-				...options,
-				...queryKey[0],
-				signal,
-				throwOnError: true,
-			});
-			return data;
-		},
-		queryKey: templatesGetTemplateQueryKey(options),
-	});
-};
-
-/**
- * Update Template
- * Update template by ID (Superuser only)
- */
-export const templatesUpdateTemplateMutation = (
-	options?: Partial<Options<TemplatesUpdateTemplateData>>,
-): UseMutationOptions<
-	TemplatesUpdateTemplateResponse,
-	TemplatesUpdateTemplateError,
-	Options<TemplatesUpdateTemplateData>
-> => {
-	const mutationOptions: UseMutationOptions<
-		TemplatesUpdateTemplateResponse,
-		TemplatesUpdateTemplateError,
-		Options<TemplatesUpdateTemplateData>
-	> = {
-		mutationFn: async (fnOptions) => {
-			const { data } = await TemplatesService.templatesUpdateTemplate({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
-			return data;
-		},
-	};
-	return mutationOptions;
-};
-
-/**
- * Create Strategy From Template
- * Create a strategy instance from template
- */
-export const templatesCreateStrategyFromTemplateMutation = (
-	options?: Partial<Options<TemplatesCreateStrategyFromTemplateData>>,
-): UseMutationOptions<
-	TemplatesCreateStrategyFromTemplateResponse,
-	TemplatesCreateStrategyFromTemplateError,
-	Options<TemplatesCreateStrategyFromTemplateData>
-> => {
-	const mutationOptions: UseMutationOptions<
-		TemplatesCreateStrategyFromTemplateResponse,
-		TemplatesCreateStrategyFromTemplateError,
-		Options<TemplatesCreateStrategyFromTemplateData>
-	> = {
-		mutationFn: async (fnOptions) => {
-			const { data } =
-				await TemplatesService.templatesCreateStrategyFromTemplate({
-					...options,
-					...fnOptions,
-					throwOnError: true,
-				});
-			return data;
-		},
-	};
-	return mutationOptions;
-};
-
-export const templatesGetTemplateUsageStatsQueryKey = (
-	options?: Options<TemplatesGetTemplateUsageStatsData>,
-) => createQueryKey("templatesGetTemplateUsageStats", options);
-
-/**
- * Get Template Usage Stats
- * Get template usage statistics
- */
-export const templatesGetTemplateUsageStatsOptions = (
-	options?: Options<TemplatesGetTemplateUsageStatsData>,
-) => {
-	return queryOptions({
-		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await TemplatesService.templatesGetTemplateUsageStats({
-				...options,
-				...queryKey[0],
-				signal,
-				throwOnError: true,
-			});
-			return data;
-		},
-		queryKey: templatesGetTemplateUsageStatsQueryKey(options),
-	});
-};
-
 /**
  * Auth:Jwt.Login
  */
@@ -2085,20 +2077,20 @@ export const authVerifyVerifyMutation = (
 	return mutationOptions;
 };
 
-export const authOauthGoogleJwtAuthorizeQueryKey = (
-	options?: Options<AuthOauthGoogleJwtAuthorizeData>,
-) => createQueryKey("authOauthGoogleJwtAuthorize", options);
+export const oAuth2OauthGoogleJwtAuthorizeQueryKey = (
+	options?: Options<OAuth2OauthGoogleJwtAuthorizeData>,
+) => createQueryKey("oAuth2OauthGoogleJwtAuthorize", options);
 
 /**
  * Oauth:Google.Jwt.Authorize
  */
-export const authOauthGoogleJwtAuthorizeOptions = (
-	options?: Options<AuthOauthGoogleJwtAuthorizeData>,
+export const oAuth2OauthGoogleJwtAuthorizeOptions = (
+	options?: Options<OAuth2OauthGoogleJwtAuthorizeData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
 			const { data } =
-				await AuthService.authOauthGoogleService.jwtService.authorize({
+				await OAuth2Service.oAuth2OauthGoogleService.jwtService.authorize({
 					...options,
 					...queryKey[0],
 					signal,
@@ -2106,25 +2098,25 @@ export const authOauthGoogleJwtAuthorizeOptions = (
 				});
 			return data;
 		},
-		queryKey: authOauthGoogleJwtAuthorizeQueryKey(options),
+		queryKey: oAuth2OauthGoogleJwtAuthorizeQueryKey(options),
 	});
 };
 
-export const authOauthGoogleJwtCallbackQueryKey = (
-	options?: Options<AuthOauthGoogleJwtCallbackData>,
-) => createQueryKey("authOauthGoogleJwtCallback", options);
+export const oAuth2OauthGoogleJwtCallbackQueryKey = (
+	options?: Options<OAuth2OauthGoogleJwtCallbackData>,
+) => createQueryKey("oAuth2OauthGoogleJwtCallback", options);
 
 /**
  * Oauth:Google.Jwt.Callback
  * The response varies based on the authentication backend used.
  */
-export const authOauthGoogleJwtCallbackOptions = (
-	options?: Options<AuthOauthGoogleJwtCallbackData>,
+export const oAuth2OauthGoogleJwtCallbackOptions = (
+	options?: Options<OAuth2OauthGoogleJwtCallbackData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
 			const { data } =
-				await AuthService.authOauthGoogleService.jwtService.callback({
+				await OAuth2Service.oAuth2OauthGoogleService.jwtService.callback({
 					...options,
 					...queryKey[0],
 					signal,
@@ -2132,74 +2124,23 @@ export const authOauthGoogleJwtCallbackOptions = (
 				});
 			return data;
 		},
-		queryKey: authOauthGoogleJwtCallbackQueryKey(options),
+		queryKey: oAuth2OauthGoogleJwtCallbackQueryKey(options),
 	});
 };
 
-export const authOauthAssociateGoogleAuthorizeQueryKey = (
-	options?: Options<AuthOauthAssociateGoogleAuthorizeData>,
-) => createQueryKey("authOauthAssociateGoogleAuthorize", options);
-
-/**
- * Oauth-Associate:Google.Authorize
- */
-export const authOauthAssociateGoogleAuthorizeOptions = (
-	options?: Options<AuthOauthAssociateGoogleAuthorizeData>,
-) => {
-	return queryOptions({
-		queryFn: async ({ queryKey, signal }) => {
-			const { data } =
-				await AuthService.authOauthAssociateGoogleService.authorize({
-					...options,
-					...queryKey[0],
-					signal,
-					throwOnError: true,
-				});
-			return data;
-		},
-		queryKey: authOauthAssociateGoogleAuthorizeQueryKey(options),
-	});
-};
-
-export const authOauthAssociateGoogleCallbackQueryKey = (
-	options?: Options<AuthOauthAssociateGoogleCallbackData>,
-) => createQueryKey("authOauthAssociateGoogleCallback", options);
-
-/**
- * Oauth-Associate:Google.Callback
- * The response varies based on the authentication backend used.
- */
-export const authOauthAssociateGoogleCallbackOptions = (
-	options?: Options<AuthOauthAssociateGoogleCallbackData>,
-) => {
-	return queryOptions({
-		queryFn: async ({ queryKey, signal }) => {
-			const { data } =
-				await AuthService.authOauthAssociateGoogleService.callback({
-					...options,
-					...queryKey[0],
-					signal,
-					throwOnError: true,
-				});
-			return data;
-		},
-		queryKey: authOauthAssociateGoogleCallbackQueryKey(options),
-	});
-};
-
-export const usersUsersCurrentUserQueryKey = (
-	options?: Options<UsersUsersCurrentUserData>,
-) => createQueryKey("usersUsersCurrentUser", options);
+export const userUsersCurrentUserQueryKey = (
+	options?: Options<UserUsersCurrentUserData>,
+) => createQueryKey("userUsersCurrentUser", options);
 
 /**
  * Users:Current User
  */
-export const usersUsersCurrentUserOptions = (
-	options?: Options<UsersUsersCurrentUserData>,
+export const userUsersCurrentUserOptions = (
+	options?: Options<UserUsersCurrentUserData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await UsersService.usersUsersCurrentUser({
+			const { data } = await UserService.userUsersCurrentUser({
 				...options,
 				...queryKey[0],
 				signal,
@@ -2207,27 +2148,27 @@ export const usersUsersCurrentUserOptions = (
 			});
 			return data;
 		},
-		queryKey: usersUsersCurrentUserQueryKey(options),
+		queryKey: userUsersCurrentUserQueryKey(options),
 	});
 };
 
 /**
  * Users:Patch Current User
  */
-export const usersUsersPatchCurrentUserMutation = (
-	options?: Partial<Options<UsersUsersPatchCurrentUserData>>,
+export const userUsersPatchCurrentUserMutation = (
+	options?: Partial<Options<UserUsersPatchCurrentUserData>>,
 ): UseMutationOptions<
-	UsersUsersPatchCurrentUserResponse,
-	UsersUsersPatchCurrentUserError,
-	Options<UsersUsersPatchCurrentUserData>
+	UserUsersPatchCurrentUserResponse,
+	UserUsersPatchCurrentUserError,
+	Options<UserUsersPatchCurrentUserData>
 > => {
 	const mutationOptions: UseMutationOptions<
-		UsersUsersPatchCurrentUserResponse,
-		UsersUsersPatchCurrentUserError,
-		Options<UsersUsersPatchCurrentUserData>
+		UserUsersPatchCurrentUserResponse,
+		UserUsersPatchCurrentUserError,
+		Options<UserUsersPatchCurrentUserData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await UsersService.usersUsersPatchCurrentUser({
+			const { data } = await UserService.userUsersPatchCurrentUser({
 				...options,
 				...fnOptions,
 				throwOnError: true,
@@ -2241,20 +2182,20 @@ export const usersUsersPatchCurrentUserMutation = (
 /**
  * Users:Delete User
  */
-export const usersUsersDeleteUserMutation = (
-	options?: Partial<Options<UsersUsersDeleteUserData>>,
+export const userUsersDeleteUserMutation = (
+	options?: Partial<Options<UserUsersDeleteUserData>>,
 ): UseMutationOptions<
-	UsersUsersDeleteUserResponse,
-	UsersUsersDeleteUserError,
-	Options<UsersUsersDeleteUserData>
+	UserUsersDeleteUserResponse,
+	UserUsersDeleteUserError,
+	Options<UserUsersDeleteUserData>
 > => {
 	const mutationOptions: UseMutationOptions<
-		UsersUsersDeleteUserResponse,
-		UsersUsersDeleteUserError,
-		Options<UsersUsersDeleteUserData>
+		UserUsersDeleteUserResponse,
+		UserUsersDeleteUserError,
+		Options<UserUsersDeleteUserData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await UsersService.usersUsersDeleteUser({
+			const { data } = await UserService.userUsersDeleteUser({
 				...options,
 				...fnOptions,
 				throwOnError: true,
@@ -2265,16 +2206,16 @@ export const usersUsersDeleteUserMutation = (
 	return mutationOptions;
 };
 
-export const usersUsersUserQueryKey = (options: Options<UsersUsersUserData>) =>
-	createQueryKey("usersUsersUser", options);
+export const userUsersUserQueryKey = (options: Options<UserUsersUserData>) =>
+	createQueryKey("userUsersUser", options);
 
 /**
  * Users:User
  */
-export const usersUsersUserOptions = (options: Options<UsersUsersUserData>) => {
+export const userUsersUserOptions = (options: Options<UserUsersUserData>) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await UsersService.usersUsersUser({
+			const { data } = await UserService.userUsersUser({
 				...options,
 				...queryKey[0],
 				signal,
@@ -2282,27 +2223,27 @@ export const usersUsersUserOptions = (options: Options<UsersUsersUserData>) => {
 			});
 			return data;
 		},
-		queryKey: usersUsersUserQueryKey(options),
+		queryKey: userUsersUserQueryKey(options),
 	});
 };
 
 /**
  * Users:Patch User
  */
-export const usersUsersPatchUserMutation = (
-	options?: Partial<Options<UsersUsersPatchUserData>>,
+export const userUsersPatchUserMutation = (
+	options?: Partial<Options<UserUsersPatchUserData>>,
 ): UseMutationOptions<
-	UsersUsersPatchUserResponse,
-	UsersUsersPatchUserError,
-	Options<UsersUsersPatchUserData>
+	UserUsersPatchUserResponse,
+	UserUsersPatchUserError,
+	Options<UserUsersPatchUserData>
 > => {
 	const mutationOptions: UseMutationOptions<
-		UsersUsersPatchUserResponse,
-		UsersUsersPatchUserError,
-		Options<UsersUsersPatchUserData>
+		UserUsersPatchUserResponse,
+		UserUsersPatchUserError,
+		Options<UserUsersPatchUserData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await UsersService.usersUsersPatchUser({
+			const { data } = await UserService.userUsersPatchUser({
 				...options,
 				...fnOptions,
 				throwOnError: true,

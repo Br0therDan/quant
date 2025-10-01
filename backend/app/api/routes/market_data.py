@@ -16,6 +16,7 @@ from app.schemas.market_data import (
 )
 from app.services.service_factory import service_factory
 from app.services.market_data_service import MarketDataService
+from .health import router as health_router
 
 router = APIRouter(dependencies=[Depends(get_current_active_verified_user)])
 
@@ -311,3 +312,6 @@ async def get_symbols_coverage_analytics(
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"커버리지 분석 실패: {str(e)}")
+
+
+router.include_router(health_router, prefix="/health")
