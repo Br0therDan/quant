@@ -528,7 +528,7 @@ export const BearerResponseSchema = {
 	title: "BearerResponse",
 } as const;
 
-export const Body_Auth_reset_forgot_passwordSchema = {
+export const Body_Auth_forgot_passwordSchema = {
 	properties: {
 		email: {
 			type: "string",
@@ -538,10 +538,80 @@ export const Body_Auth_reset_forgot_passwordSchema = {
 	},
 	type: "object",
 	required: ["email"],
-	title: "Body_Auth-reset:forgot_password",
+	title: "Body_Auth-forgot_password",
 } as const;
 
-export const Body_Auth_reset_reset_passwordSchema = {
+export const Body_Auth_loginSchema = {
+	properties: {
+		grant_type: {
+			anyOf: [
+				{
+					type: "string",
+					pattern: "^password$",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Grant Type",
+		},
+		username: {
+			type: "string",
+			title: "Username",
+		},
+		password: {
+			type: "string",
+			format: "password",
+			title: "Password",
+		},
+		scope: {
+			type: "string",
+			title: "Scope",
+			default: "",
+		},
+		client_id: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Client Id",
+		},
+		client_secret: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			format: "password",
+			title: "Client Secret",
+		},
+	},
+	type: "object",
+	required: ["username", "password"],
+	title: "Body_Auth-login",
+} as const;
+
+export const Body_Auth_request_verify_tokenSchema = {
+	properties: {
+		email: {
+			type: "string",
+			format: "email",
+			title: "Email",
+		},
+	},
+	type: "object",
+	required: ["email"],
+	title: "Body_Auth-request_verify_token",
+} as const;
+
+export const Body_Auth_reset_passwordSchema = {
 	properties: {
 		token: {
 			type: "string",
@@ -554,23 +624,10 @@ export const Body_Auth_reset_reset_passwordSchema = {
 	},
 	type: "object",
 	required: ["token", "password"],
-	title: "Body_Auth-reset:reset_password",
+	title: "Body_Auth-reset_password",
 } as const;
 
-export const Body_Auth_verify_request_tokenSchema = {
-	properties: {
-		email: {
-			type: "string",
-			format: "email",
-			title: "Email",
-		},
-	},
-	type: "object",
-	required: ["email"],
-	title: "Body_Auth-verify:request-token",
-} as const;
-
-export const Body_Auth_verify_verifySchema = {
+export const Body_Auth_verifySchema = {
 	properties: {
 		token: {
 			type: "string",
@@ -579,7 +636,7 @@ export const Body_Auth_verify_verifySchema = {
 	},
 	type: "object",
 	required: ["token"],
-	title: "Body_Auth-verify:verify",
+	title: "Body_Auth-verify",
 } as const;
 
 export const BulkDataRequestSchema = {
@@ -2761,61 +2818,4 @@ export const WatchlistUpdateSchema = {
 	required: ["symbols"],
 	title: "WatchlistUpdate",
 	description: "Watchlist update model",
-} as const;
-
-export const loginSchema = {
-	properties: {
-		grant_type: {
-			anyOf: [
-				{
-					type: "string",
-					pattern: "^password$",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "Grant Type",
-		},
-		username: {
-			type: "string",
-			title: "Username",
-		},
-		password: {
-			type: "string",
-			format: "password",
-			title: "Password",
-		},
-		scope: {
-			type: "string",
-			title: "Scope",
-			default: "",
-		},
-		client_id: {
-			anyOf: [
-				{
-					type: "string",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "Client Id",
-		},
-		client_secret: {
-			anyOf: [
-				{
-					type: "string",
-				},
-				{
-					type: "null",
-				},
-			],
-			format: "password",
-			title: "Client Secret",
-		},
-	},
-	type: "object",
-	required: ["username", "password"],
-	title: "Body_Auth-auth:jwt.login",
 } as const;

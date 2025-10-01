@@ -332,9 +332,9 @@ export type BearerResponse = {
 };
 
 /**
- * Body_Auth-reset:forgot_password
+ * Body_Auth-forgot_password
  */
-export type BodyAuthResetForgotPassword = {
+export type BodyAuthForgotPassword = {
 	/**
 	 * Email
 	 */
@@ -342,9 +342,49 @@ export type BodyAuthResetForgotPassword = {
 };
 
 /**
- * Body_Auth-reset:reset_password
+ * Body_Auth-login
  */
-export type BodyAuthResetResetPassword = {
+export type BodyAuthLogin = {
+	/**
+	 * Grant Type
+	 */
+	grant_type?: string | null;
+	/**
+	 * Username
+	 */
+	username: string;
+	/**
+	 * Password
+	 */
+	password: string;
+	/**
+	 * Scope
+	 */
+	scope?: string;
+	/**
+	 * Client Id
+	 */
+	client_id?: string | null;
+	/**
+	 * Client Secret
+	 */
+	client_secret?: string | null;
+};
+
+/**
+ * Body_Auth-request_verify_token
+ */
+export type BodyAuthRequestVerifyToken = {
+	/**
+	 * Email
+	 */
+	email: string;
+};
+
+/**
+ * Body_Auth-reset_password
+ */
+export type BodyAuthResetPassword = {
 	/**
 	 * Token
 	 */
@@ -356,19 +396,9 @@ export type BodyAuthResetResetPassword = {
 };
 
 /**
- * Body_Auth-verify:request-token
+ * Body_Auth-verify
  */
-export type BodyAuthVerifyRequestToken = {
-	/**
-	 * Email
-	 */
-	email: string;
-};
-
-/**
- * Body_Auth-verify:verify
- */
-export type BodyAuthVerifyVerify = {
+export type BodyAuthVerify = {
 	/**
 	 * Token
 	 */
@@ -1686,36 +1716,6 @@ export type WatchlistUpdate = {
 	 * Description
 	 */
 	description?: string | null;
-};
-
-/**
- * Body_Auth-auth:jwt.login
- */
-export type Login = {
-	/**
-	 * Grant Type
-	 */
-	grant_type?: string | null;
-	/**
-	 * Username
-	 */
-	username: string;
-	/**
-	 * Password
-	 */
-	password: string;
-	/**
-	 * Scope
-	 */
-	scope?: string;
-	/**
-	 * Client Id
-	 */
-	client_id?: string | null;
-	/**
-	 * Client Secret
-	 */
-	client_secret?: string | null;
 };
 
 export type HealthHealthCheckData = {
@@ -3183,14 +3183,14 @@ export type BacktestsGetBacktestSummaryAnalyticsResponses = {
 	200: unknown;
 };
 
-export type AuthAuthJwtLoginData = {
-	body: Login;
+export type AuthLoginData = {
+	body: BodyAuthLogin;
 	path?: never;
 	query?: never;
 	url: "/api/v1/auth/login";
 };
 
-export type AuthAuthJwtLoginErrors = {
+export type AuthLoginErrors = {
 	/**
 	 * Bad Request
 	 */
@@ -3201,103 +3201,70 @@ export type AuthAuthJwtLoginErrors = {
 	422: HttpValidationError;
 };
 
-export type AuthAuthJwtLoginError =
-	AuthAuthJwtLoginErrors[keyof AuthAuthJwtLoginErrors];
+export type AuthLoginError = AuthLoginErrors[keyof AuthLoginErrors];
 
-export type AuthAuthJwtLoginResponses = {
+export type AuthLoginResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: BearerResponse;
 };
 
-export type AuthAuthJwtLoginResponse =
-	AuthAuthJwtLoginResponses[keyof AuthAuthJwtLoginResponses];
+export type AuthLoginResponse = AuthLoginResponses[keyof AuthLoginResponses];
 
-export type AuthAuthJwtLogoutData = {
+export type AuthLogoutData = {
 	body?: never;
 	path?: never;
 	query?: never;
 	url: "/api/v1/auth/logout";
 };
 
-export type AuthAuthJwtLogoutErrors = {
+export type AuthLogoutErrors = {
 	/**
 	 * Missing token or inactive user.
 	 */
 	401: unknown;
 };
 
-export type AuthAuthJwtLogoutResponses = {
+export type AuthLogoutResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type AuthRegisterRegisterData = {
-	body: UserCreate;
-	path?: never;
-	query?: never;
-	url: "/api/v1/auth/register";
-};
-
-export type AuthRegisterRegisterErrors = {
-	/**
-	 * Bad Request
-	 */
-	400: ErrorModel;
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type AuthRegisterRegisterError =
-	AuthRegisterRegisterErrors[keyof AuthRegisterRegisterErrors];
-
-export type AuthRegisterRegisterResponses = {
-	/**
-	 * Successful Response
-	 */
-	201: UserRead;
-};
-
-export type AuthRegisterRegisterResponse =
-	AuthRegisterRegisterResponses[keyof AuthRegisterRegisterResponses];
-
-export type AuthResetForgotPasswordData = {
-	body: BodyAuthResetForgotPassword;
+export type AuthForgotPasswordData = {
+	body: BodyAuthForgotPassword;
 	path?: never;
 	query?: never;
 	url: "/api/v1/auth/forgot-password";
 };
 
-export type AuthResetForgotPasswordErrors = {
+export type AuthForgotPasswordErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type AuthResetForgotPasswordError =
-	AuthResetForgotPasswordErrors[keyof AuthResetForgotPasswordErrors];
+export type AuthForgotPasswordError =
+	AuthForgotPasswordErrors[keyof AuthForgotPasswordErrors];
 
-export type AuthResetForgotPasswordResponses = {
+export type AuthForgotPasswordResponses = {
 	/**
 	 * Successful Response
 	 */
 	202: unknown;
 };
 
-export type AuthResetResetPasswordData = {
-	body: BodyAuthResetResetPassword;
+export type AuthResetPasswordData = {
+	body: BodyAuthResetPassword;
 	path?: never;
 	query?: never;
 	url: "/api/v1/auth/reset-password";
 };
 
-export type AuthResetResetPasswordErrors = {
+export type AuthResetPasswordErrors = {
 	/**
 	 * Bad Request
 	 */
@@ -3308,48 +3275,48 @@ export type AuthResetResetPasswordErrors = {
 	422: HttpValidationError;
 };
 
-export type AuthResetResetPasswordError =
-	AuthResetResetPasswordErrors[keyof AuthResetResetPasswordErrors];
+export type AuthResetPasswordError =
+	AuthResetPasswordErrors[keyof AuthResetPasswordErrors];
 
-export type AuthResetResetPasswordResponses = {
+export type AuthResetPasswordResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type AuthVerifyRequestTokenData = {
-	body: BodyAuthVerifyRequestToken;
+export type AuthRequestVerifyTokenData = {
+	body: BodyAuthRequestVerifyToken;
 	path?: never;
 	query?: never;
 	url: "/api/v1/auth/request-verify-token";
 };
 
-export type AuthVerifyRequestTokenErrors = {
+export type AuthRequestVerifyTokenErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type AuthVerifyRequestTokenError =
-	AuthVerifyRequestTokenErrors[keyof AuthVerifyRequestTokenErrors];
+export type AuthRequestVerifyTokenError =
+	AuthRequestVerifyTokenErrors[keyof AuthRequestVerifyTokenErrors];
 
-export type AuthVerifyRequestTokenResponses = {
+export type AuthRequestVerifyTokenResponses = {
 	/**
 	 * Successful Response
 	 */
 	202: unknown;
 };
 
-export type AuthVerifyVerifyData = {
-	body: BodyAuthVerifyVerify;
+export type AuthVerifyData = {
+	body: BodyAuthVerify;
 	path?: never;
 	query?: never;
 	url: "/api/v1/auth/verify";
 };
 
-export type AuthVerifyVerifyErrors = {
+export type AuthVerifyErrors = {
 	/**
 	 * Bad Request
 	 */
@@ -3360,18 +3327,46 @@ export type AuthVerifyVerifyErrors = {
 	422: HttpValidationError;
 };
 
-export type AuthVerifyVerifyError =
-	AuthVerifyVerifyErrors[keyof AuthVerifyVerifyErrors];
+export type AuthVerifyError = AuthVerifyErrors[keyof AuthVerifyErrors];
 
-export type AuthVerifyVerifyResponses = {
+export type AuthVerifyResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: UserRead;
 };
 
-export type AuthVerifyVerifyResponse =
-	AuthVerifyVerifyResponses[keyof AuthVerifyVerifyResponses];
+export type AuthVerifyResponse = AuthVerifyResponses[keyof AuthVerifyResponses];
+
+export type AuthRegisterData = {
+	body: UserCreate;
+	path?: never;
+	query?: never;
+	url: "/api/v1/auth/register";
+};
+
+export type AuthRegisterErrors = {
+	/**
+	 * Bad Request
+	 */
+	400: ErrorModel;
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type AuthRegisterError = AuthRegisterErrors[keyof AuthRegisterErrors];
+
+export type AuthRegisterResponses = {
+	/**
+	 * Successful Response
+	 */
+	201: UserRead;
+};
+
+export type AuthRegisterResponse =
+	AuthRegisterResponses[keyof AuthRegisterResponses];
 
 export type OAuth2OauthGoogleJwtAuthorizeData = {
 	body?: never;

@@ -2547,13 +2547,13 @@
         "tags": [
           "Auth"
         ],
-        "summary": "Auth:Jwt.Login",
-        "operationId": "Auth-auth:jwt.login",
+        "summary": "Login",
+        "operationId": "Auth-login",
         "requestBody": {
           "content": {
             "application/x-www-form-urlencoded": {
               "schema": {
-                "$ref": "#/components/schemas/login"
+                "$ref": "#/components/schemas/Body_Auth-login"
               }
             }
           },
@@ -2616,8 +2616,8 @@
         "tags": [
           "Auth"
         ],
-        "summary": "Auth:Jwt.Logout",
-        "operationId": "Auth-auth:jwt.logout",
+        "summary": "Logout",
+        "operationId": "Auth-logout",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -2638,86 +2638,18 @@
         ]
       }
     },
-    "/api/v1/auth/register": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "Register:Register",
-        "operationId": "Auth-register:register",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserCreate"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserRead"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorModel"
-                },
-                "examples": {
-                  "REGISTER_USER_ALREADY_EXISTS": {
-                    "summary": "A user with this email already exists.",
-                    "value": {
-                      "detail": "REGISTER_USER_ALREADY_EXISTS"
-                    }
-                  },
-                  "REGISTER_INVALID_PASSWORD": {
-                    "summary": "Password validation failed.",
-                    "value": {
-                      "detail": {
-                        "code": "REGISTER_INVALID_PASSWORD",
-                        "reason": "Password should beat least 3 characters"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/auth/forgot-password": {
       "post": {
         "tags": [
           "Auth"
         ],
-        "summary": "Reset:Forgot Password",
-        "operationId": "Auth-reset:forgot_password",
+        "summary": "Forgot Password",
+        "operationId": "Auth-forgot_password",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Body_Auth-reset_forgot_password"
+                "$ref": "#/components/schemas/Body_Auth-forgot_password"
               }
             }
           },
@@ -2750,13 +2682,13 @@
         "tags": [
           "Auth"
         ],
-        "summary": "Reset:Reset Password",
-        "operationId": "Auth-reset:reset_password",
+        "summary": "Reset Password",
+        "operationId": "Auth-reset_password",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Body_Auth-reset_reset_password"
+                "$ref": "#/components/schemas/Body_Auth-reset_password"
               }
             }
           },
@@ -2816,13 +2748,13 @@
         "tags": [
           "Auth"
         ],
-        "summary": "Verify:Request-Token",
-        "operationId": "Auth-verify:request-token",
+        "summary": "Request Verify Token",
+        "operationId": "Auth-request_verify_token",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Body_Auth-verify_request-token"
+                "$ref": "#/components/schemas/Body_Auth-request_verify_token"
               }
             }
           },
@@ -2855,13 +2787,13 @@
         "tags": [
           "Auth"
         ],
-        "summary": "Verify:Verify",
-        "operationId": "Auth-verify:verify",
+        "summary": "Verify",
+        "operationId": "Auth-verify",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Body_Auth-verify_verify"
+                "$ref": "#/components/schemas/Body_Auth-verify"
               }
             }
           },
@@ -2896,6 +2828,74 @@
                     "summary": "The user is already verified.",
                     "value": {
                       "detail": "VERIFY_USER_ALREADY_VERIFIED"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Register",
+        "operationId": "Auth-register",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRead"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                },
+                "examples": {
+                  "REGISTER_USER_ALREADY_EXISTS": {
+                    "summary": "A user with this email already exists.",
+                    "value": {
+                      "detail": "REGISTER_USER_ALREADY_EXISTS"
+                    }
+                  },
+                  "REGISTER_INVALID_PASSWORD": {
+                    "summary": "Password validation failed.",
+                    "value": {
+                      "detail": {
+                        "code": "REGISTER_INVALID_PASSWORD",
+                        "reason": "Password should beat least 3 characters"
+                      }
                     }
                   }
                 }
@@ -3927,7 +3927,7 @@
         ],
         "title": "BearerResponse"
       },
-      "Body_Auth-reset_forgot_password": {
+      "Body_Auth-forgot_password": {
         "properties": {
           "email": {
             "type": "string",
@@ -3939,9 +3939,82 @@
         "required": [
           "email"
         ],
-        "title": "Body_Auth-reset:forgot_password"
+        "title": "Body_Auth-forgot_password"
       },
-      "Body_Auth-reset_reset_password": {
+      "Body_Auth-login": {
+        "properties": {
+          "grant_type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^password$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Grant Type"
+          },
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "title": "Password"
+          },
+          "scope": {
+            "type": "string",
+            "title": "Scope",
+            "default": ""
+          },
+          "client_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Client Id"
+          },
+          "client_secret": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "format": "password",
+            "title": "Client Secret"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "password"
+        ],
+        "title": "Body_Auth-login"
+      },
+      "Body_Auth-request_verify_token": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email"
+        ],
+        "title": "Body_Auth-request_verify_token"
+      },
+      "Body_Auth-reset_password": {
         "properties": {
           "token": {
             "type": "string",
@@ -3957,23 +4030,9 @@
           "token",
           "password"
         ],
-        "title": "Body_Auth-reset:reset_password"
+        "title": "Body_Auth-reset_password"
       },
-      "Body_Auth-verify_request-token": {
-        "properties": {
-          "email": {
-            "type": "string",
-            "format": "email",
-            "title": "Email"
-          }
-        },
-        "type": "object",
-        "required": [
-          "email"
-        ],
-        "title": "Body_Auth-verify:request-token"
-      },
-      "Body_Auth-verify_verify": {
+      "Body_Auth-verify": {
         "properties": {
           "token": {
             "type": "string",
@@ -3984,7 +4043,7 @@
         "required": [
           "token"
         ],
-        "title": "Body_Auth-verify:verify"
+        "title": "Body_Auth-verify"
       },
       "BulkDataRequest": {
         "properties": {
@@ -6213,65 +6272,6 @@
         ],
         "title": "WatchlistUpdate",
         "description": "Watchlist update model"
-      },
-      "login": {
-        "properties": {
-          "grant_type": {
-            "anyOf": [
-              {
-                "type": "string",
-                "pattern": "^password$"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Grant Type"
-          },
-          "username": {
-            "type": "string",
-            "title": "Username"
-          },
-          "password": {
-            "type": "string",
-            "format": "password",
-            "title": "Password"
-          },
-          "scope": {
-            "type": "string",
-            "title": "Scope",
-            "default": ""
-          },
-          "client_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Client Id"
-          },
-          "client_secret": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "format": "password",
-            "title": "Client Secret"
-          }
-        },
-        "type": "object",
-        "required": [
-          "username",
-          "password"
-        ],
-        "title": "Body_Auth-auth:jwt.login"
       }
     },
     "securitySchemes": {

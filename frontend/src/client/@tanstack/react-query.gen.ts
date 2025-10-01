@@ -19,22 +19,22 @@ import {
 	UserService,
 } from "../sdk.gen";
 import type {
-	AuthAuthJwtLoginData,
-	AuthAuthJwtLoginError,
-	AuthAuthJwtLoginResponse,
-	AuthAuthJwtLogoutData,
-	AuthRegisterRegisterData,
-	AuthRegisterRegisterError,
-	AuthRegisterRegisterResponse,
-	AuthResetForgotPasswordData,
-	AuthResetForgotPasswordError,
-	AuthResetResetPasswordData,
-	AuthResetResetPasswordError,
-	AuthVerifyRequestTokenData,
-	AuthVerifyRequestTokenError,
-	AuthVerifyVerifyData,
-	AuthVerifyVerifyError,
-	AuthVerifyVerifyResponse,
+	AuthForgotPasswordData,
+	AuthForgotPasswordError,
+	AuthLoginData,
+	AuthLoginError,
+	AuthLoginResponse,
+	AuthLogoutData,
+	AuthRegisterData,
+	AuthRegisterError,
+	AuthRegisterResponse,
+	AuthRequestVerifyTokenData,
+	AuthRequestVerifyTokenError,
+	AuthResetPasswordData,
+	AuthResetPasswordError,
+	AuthVerifyData,
+	AuthVerifyError,
+	AuthVerifyResponse,
 	BacktestsCreateAndRunIntegratedBacktestData,
 	BacktestsCreateAndRunIntegratedBacktestError,
 	BacktestsCreateAndRunIntegratedBacktestResponse,
@@ -1889,22 +1889,22 @@ export const backtestsGetBacktestSummaryAnalyticsOptions = (
 };
 
 /**
- * Auth:Jwt.Login
+ * Login
  */
-export const authAuthJwtLoginMutation = (
-	options?: Partial<Options<AuthAuthJwtLoginData>>,
+export const authLoginMutation = (
+	options?: Partial<Options<AuthLoginData>>,
 ): UseMutationOptions<
-	AuthAuthJwtLoginResponse,
-	AuthAuthJwtLoginError,
-	Options<AuthAuthJwtLoginData>
+	AuthLoginResponse,
+	AuthLoginError,
+	Options<AuthLoginData>
 > => {
 	const mutationOptions: UseMutationOptions<
-		AuthAuthJwtLoginResponse,
-		AuthAuthJwtLoginError,
-		Options<AuthAuthJwtLoginData>
+		AuthLoginResponse,
+		AuthLoginError,
+		Options<AuthLoginData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await AuthService.authAuthJwtService.login({
+			const { data } = await AuthService.authLogin({
 				...options,
 				...fnOptions,
 				throwOnError: true,
@@ -1916,22 +1916,18 @@ export const authAuthJwtLoginMutation = (
 };
 
 /**
- * Auth:Jwt.Logout
+ * Logout
  */
-export const authAuthJwtLogoutMutation = (
-	options?: Partial<Options<AuthAuthJwtLogoutData>>,
-): UseMutationOptions<
-	unknown,
-	DefaultError,
-	Options<AuthAuthJwtLogoutData>
-> => {
+export const authLogoutMutation = (
+	options?: Partial<Options<AuthLogoutData>>,
+): UseMutationOptions<unknown, DefaultError, Options<AuthLogoutData>> => {
 	const mutationOptions: UseMutationOptions<
 		unknown,
 		DefaultError,
-		Options<AuthAuthJwtLogoutData>
+		Options<AuthLogoutData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await AuthService.authAuthJwtService.logout({
+			const { data } = await AuthService.authLogout({
 				...options,
 				...fnOptions,
 				throwOnError: true,
@@ -1943,49 +1939,22 @@ export const authAuthJwtLogoutMutation = (
 };
 
 /**
- * Register:Register
+ * Forgot Password
  */
-export const authRegisterRegisterMutation = (
-	options?: Partial<Options<AuthRegisterRegisterData>>,
-): UseMutationOptions<
-	AuthRegisterRegisterResponse,
-	AuthRegisterRegisterError,
-	Options<AuthRegisterRegisterData>
-> => {
-	const mutationOptions: UseMutationOptions<
-		AuthRegisterRegisterResponse,
-		AuthRegisterRegisterError,
-		Options<AuthRegisterRegisterData>
-	> = {
-		mutationFn: async (fnOptions) => {
-			const { data } = await AuthService.authRegisterRegister({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
-			return data;
-		},
-	};
-	return mutationOptions;
-};
-
-/**
- * Reset:Forgot Password
- */
-export const authResetForgotPasswordMutation = (
-	options?: Partial<Options<AuthResetForgotPasswordData>>,
+export const authForgotPasswordMutation = (
+	options?: Partial<Options<AuthForgotPasswordData>>,
 ): UseMutationOptions<
 	unknown,
-	AuthResetForgotPasswordError,
-	Options<AuthResetForgotPasswordData>
+	AuthForgotPasswordError,
+	Options<AuthForgotPasswordData>
 > => {
 	const mutationOptions: UseMutationOptions<
 		unknown,
-		AuthResetForgotPasswordError,
-		Options<AuthResetForgotPasswordData>
+		AuthForgotPasswordError,
+		Options<AuthForgotPasswordData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await AuthService.authResetForgotPassword({
+			const { data } = await AuthService.authForgotPassword({
 				...options,
 				...fnOptions,
 				throwOnError: true,
@@ -1997,22 +1966,22 @@ export const authResetForgotPasswordMutation = (
 };
 
 /**
- * Reset:Reset Password
+ * Reset Password
  */
-export const authResetResetPasswordMutation = (
-	options?: Partial<Options<AuthResetResetPasswordData>>,
+export const authResetPasswordMutation = (
+	options?: Partial<Options<AuthResetPasswordData>>,
 ): UseMutationOptions<
 	unknown,
-	AuthResetResetPasswordError,
-	Options<AuthResetResetPasswordData>
+	AuthResetPasswordError,
+	Options<AuthResetPasswordData>
 > => {
 	const mutationOptions: UseMutationOptions<
 		unknown,
-		AuthResetResetPasswordError,
-		Options<AuthResetResetPasswordData>
+		AuthResetPasswordError,
+		Options<AuthResetPasswordData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await AuthService.authResetResetPassword({
+			const { data } = await AuthService.authResetPassword({
 				...options,
 				...fnOptions,
 				throwOnError: true,
@@ -2024,22 +1993,22 @@ export const authResetResetPasswordMutation = (
 };
 
 /**
- * Verify:Request-Token
+ * Request Verify Token
  */
-export const authVerifyRequestTokenMutation = (
-	options?: Partial<Options<AuthVerifyRequestTokenData>>,
+export const authRequestVerifyTokenMutation = (
+	options?: Partial<Options<AuthRequestVerifyTokenData>>,
 ): UseMutationOptions<
 	unknown,
-	AuthVerifyRequestTokenError,
-	Options<AuthVerifyRequestTokenData>
+	AuthRequestVerifyTokenError,
+	Options<AuthRequestVerifyTokenData>
 > => {
 	const mutationOptions: UseMutationOptions<
 		unknown,
-		AuthVerifyRequestTokenError,
-		Options<AuthVerifyRequestTokenData>
+		AuthRequestVerifyTokenError,
+		Options<AuthRequestVerifyTokenData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await AuthService.authVerifyRequestToken({
+			const { data } = await AuthService.authRequestVerifyToken({
 				...options,
 				...fnOptions,
 				throwOnError: true,
@@ -2051,22 +2020,49 @@ export const authVerifyRequestTokenMutation = (
 };
 
 /**
- * Verify:Verify
+ * Verify
  */
-export const authVerifyVerifyMutation = (
-	options?: Partial<Options<AuthVerifyVerifyData>>,
+export const authVerifyMutation = (
+	options?: Partial<Options<AuthVerifyData>>,
 ): UseMutationOptions<
-	AuthVerifyVerifyResponse,
-	AuthVerifyVerifyError,
-	Options<AuthVerifyVerifyData>
+	AuthVerifyResponse,
+	AuthVerifyError,
+	Options<AuthVerifyData>
 > => {
 	const mutationOptions: UseMutationOptions<
-		AuthVerifyVerifyResponse,
-		AuthVerifyVerifyError,
-		Options<AuthVerifyVerifyData>
+		AuthVerifyResponse,
+		AuthVerifyError,
+		Options<AuthVerifyData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await AuthService.authVerifyVerify({
+			const { data } = await AuthService.authVerify({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+	};
+	return mutationOptions;
+};
+
+/**
+ * Register
+ */
+export const authRegisterMutation = (
+	options?: Partial<Options<AuthRegisterData>>,
+): UseMutationOptions<
+	AuthRegisterResponse,
+	AuthRegisterError,
+	Options<AuthRegisterData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		AuthRegisterResponse,
+		AuthRegisterError,
+		Options<AuthRegisterData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await AuthService.authRegister({
 				...options,
 				...fnOptions,
 				throwOnError: true,

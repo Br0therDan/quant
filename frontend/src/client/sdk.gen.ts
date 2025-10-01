@@ -8,27 +8,27 @@ import {
 } from "./client";
 import { client } from "./client.gen";
 import type {
-	AuthAuthJwtLoginData,
-	AuthAuthJwtLoginErrors,
-	AuthAuthJwtLoginResponses,
-	AuthAuthJwtLogoutData,
-	AuthAuthJwtLogoutErrors,
-	AuthAuthJwtLogoutResponses,
-	AuthRegisterRegisterData,
-	AuthRegisterRegisterErrors,
-	AuthRegisterRegisterResponses,
-	AuthResetForgotPasswordData,
-	AuthResetForgotPasswordErrors,
-	AuthResetForgotPasswordResponses,
-	AuthResetResetPasswordData,
-	AuthResetResetPasswordErrors,
-	AuthResetResetPasswordResponses,
-	AuthVerifyRequestTokenData,
-	AuthVerifyRequestTokenErrors,
-	AuthVerifyRequestTokenResponses,
-	AuthVerifyVerifyData,
-	AuthVerifyVerifyErrors,
-	AuthVerifyVerifyResponses,
+	AuthForgotPasswordData,
+	AuthForgotPasswordErrors,
+	AuthForgotPasswordResponses,
+	AuthLoginData,
+	AuthLoginErrors,
+	AuthLoginResponses,
+	AuthLogoutData,
+	AuthLogoutErrors,
+	AuthLogoutResponses,
+	AuthRegisterData,
+	AuthRegisterErrors,
+	AuthRegisterResponses,
+	AuthRequestVerifyTokenData,
+	AuthRequestVerifyTokenErrors,
+	AuthRequestVerifyTokenResponses,
+	AuthResetPasswordData,
+	AuthResetPasswordErrors,
+	AuthResetPasswordResponses,
+	AuthVerifyData,
+	AuthVerifyErrors,
+	AuthVerifyResponses,
 	BacktestsCreateAndRunIntegratedBacktestData,
 	BacktestsCreateAndRunIntegratedBacktestErrors,
 	BacktestsCreateAndRunIntegratedBacktestResponses,
@@ -1804,16 +1804,16 @@ export class BacktestsService {
 	}
 }
 
-export class AuthAuthJwtService {
+export class AuthService {
 	/**
-	 * Auth:Jwt.Login
+	 * Login
 	 */
-	public static login<ThrowOnError extends boolean = false>(
-		options: Options<AuthAuthJwtLoginData, ThrowOnError>,
+	public static authLogin<ThrowOnError extends boolean = false>(
+		options: Options<AuthLoginData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			AuthAuthJwtLoginResponses,
-			AuthAuthJwtLoginErrors,
+			AuthLoginResponses,
+			AuthLoginErrors,
 			ThrowOnError
 		>({
 			...urlSearchParamsBodySerializer,
@@ -1827,14 +1827,14 @@ export class AuthAuthJwtService {
 	}
 
 	/**
-	 * Auth:Jwt.Logout
+	 * Logout
 	 */
-	public static logout<ThrowOnError extends boolean = false>(
-		options?: Options<AuthAuthJwtLogoutData, ThrowOnError>,
+	public static authLogout<ThrowOnError extends boolean = false>(
+		options?: Options<AuthLogoutData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).post<
-			AuthAuthJwtLogoutResponses,
-			AuthAuthJwtLogoutErrors,
+			AuthLogoutResponses,
+			AuthLogoutErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1847,38 +1847,16 @@ export class AuthAuthJwtService {
 			...options,
 		});
 	}
-}
-
-export class AuthService {
-	/**
-	 * Register:Register
-	 */
-	public static authRegisterRegister<ThrowOnError extends boolean = false>(
-		options: Options<AuthRegisterRegisterData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			AuthRegisterRegisterResponses,
-			AuthRegisterRegisterErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/auth/register",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
 
 	/**
-	 * Reset:Forgot Password
+	 * Forgot Password
 	 */
-	public static authResetForgotPassword<ThrowOnError extends boolean = false>(
-		options: Options<AuthResetForgotPasswordData, ThrowOnError>,
+	public static authForgotPassword<ThrowOnError extends boolean = false>(
+		options: Options<AuthForgotPasswordData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			AuthResetForgotPasswordResponses,
-			AuthResetForgotPasswordErrors,
+			AuthForgotPasswordResponses,
+			AuthForgotPasswordErrors,
 			ThrowOnError
 		>({
 			url: "/api/v1/auth/forgot-password",
@@ -1891,14 +1869,14 @@ export class AuthService {
 	}
 
 	/**
-	 * Reset:Reset Password
+	 * Reset Password
 	 */
-	public static authResetResetPassword<ThrowOnError extends boolean = false>(
-		options: Options<AuthResetResetPasswordData, ThrowOnError>,
+	public static authResetPassword<ThrowOnError extends boolean = false>(
+		options: Options<AuthResetPasswordData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			AuthResetResetPasswordResponses,
-			AuthResetResetPasswordErrors,
+			AuthResetPasswordResponses,
+			AuthResetPasswordErrors,
 			ThrowOnError
 		>({
 			url: "/api/v1/auth/reset-password",
@@ -1911,14 +1889,14 @@ export class AuthService {
 	}
 
 	/**
-	 * Verify:Request-Token
+	 * Request Verify Token
 	 */
-	public static authVerifyRequestToken<ThrowOnError extends boolean = false>(
-		options: Options<AuthVerifyRequestTokenData, ThrowOnError>,
+	public static authRequestVerifyToken<ThrowOnError extends boolean = false>(
+		options: Options<AuthRequestVerifyTokenData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			AuthVerifyRequestTokenResponses,
-			AuthVerifyRequestTokenErrors,
+			AuthRequestVerifyTokenResponses,
+			AuthRequestVerifyTokenErrors,
 			ThrowOnError
 		>({
 			url: "/api/v1/auth/request-verify-token",
@@ -1931,14 +1909,14 @@ export class AuthService {
 	}
 
 	/**
-	 * Verify:Verify
+	 * Verify
 	 */
-	public static authVerifyVerify<ThrowOnError extends boolean = false>(
-		options: Options<AuthVerifyVerifyData, ThrowOnError>,
+	public static authVerify<ThrowOnError extends boolean = false>(
+		options: Options<AuthVerifyData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			AuthVerifyVerifyResponses,
-			AuthVerifyVerifyErrors,
+			AuthVerifyResponses,
+			AuthVerifyErrors,
 			ThrowOnError
 		>({
 			url: "/api/v1/auth/verify",
@@ -1949,7 +1927,26 @@ export class AuthService {
 			},
 		});
 	}
-	static authAuthJwtService = AuthAuthJwtService;
+
+	/**
+	 * Register
+	 */
+	public static authRegister<ThrowOnError extends boolean = false>(
+		options: Options<AuthRegisterData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			AuthRegisterResponses,
+			AuthRegisterErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/auth/register",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
 }
 
 export class JwtService {
