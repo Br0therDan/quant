@@ -6,7 +6,9 @@ from datetime import datetime, timezone
 from typing import AsyncGenerator
 from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
 
-from app.api.deps import get_current_active_verified_user
+from mysingle_quant.auth import (
+    get_current_active_verified_user,
+)
 from app.schemas.watchlist import UpdateRequest
 from app.services.data_pipeline import DataPipeline
 

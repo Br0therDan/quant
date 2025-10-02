@@ -11,7 +11,6 @@ from app.core.config import settings
 from app.core.logging_config import setup_logging
 from mysingle_quant import create_fastapi_app
 from mysingle_quant.core import get_mongodb_url
-from app.core.init_data import create_first_super_admin
 from app.utils import seed_strategy_templates
 
 # 로깅 설정 초기화
@@ -26,8 +25,6 @@ async def lifespan(app: FastAPI):
     logger.info("🚀 Starting Quant Service...")
 
     try:
-        await create_first_super_admin()
-        # Initialize ServiceFactory and DuckDB early
         from app.services.service_factory import service_factory
 
         logger.info("📊 Initializing DuckDB...")

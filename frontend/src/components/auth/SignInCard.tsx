@@ -46,24 +46,7 @@ export default function SignInCard() {
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
   const [open, setOpen] = React.useState(false);
-
   const { login, isLoading, error } = useLogin();
-  //   const { isAuthenticated } = useAuthStatus();
-
-  //   // 이미 로그인된 경우 리다이렉트
-  //   React.useEffect(() => {
-  //     if (isAuthenticated) {
-  //       // URL 파라미터에서 redirect 값 가져오기
-  //       const urlParams = new URLSearchParams(window.location.search);
-  //       const redirectUrl = urlParams.get("redirect") || "/dashboard";
-  //       console.log("Login successful, redirecting to:", redirectUrl);
-
-  //       // router.push가 작동하지 않으므로 window.location.href 사용
-  //       setTimeout(() => {
-  //         window.location.href = redirectUrl;
-  //       }, 100); // 약간의 지연을 추가하여 state 업데이트 완료 보장
-  //     }
-  //   }, [isAuthenticated]);
 
   const handleClickOpen = () => {
     setOpen(true);

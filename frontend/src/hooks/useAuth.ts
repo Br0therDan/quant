@@ -62,3 +62,13 @@ export function useAuthInitialization() {
 		isLoading,
 	};
 }
+
+
+export function useRegister() {
+	const { register, isLoading } = useAuthContext();
+	return {
+		register,
+		isLoading,
+		error: null, // 에러는 AuthContext 내부에서 처리
+	};
+}

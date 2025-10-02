@@ -7,7 +7,7 @@ from typing import List, AsyncGenerator
 from fastapi import APIRouter, HTTPException, Depends, Query
 from pydantic import ValidationError
 
-from app.api.deps import get_current_active_verified_user
+from mysingle_quant.auth import get_current_active_verified_user
 from app.schemas.market_data import (
     MarketDataResponse,
     DataQualityResponse,

@@ -7,8 +7,11 @@ from collections.abc import AsyncGenerator
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import ValidationError
 
-from app.api.deps import get_current_active_superuser, get_current_active_verified_user
-from app.models.user import User
+from mysingle_quant.auth import (
+    get_current_active_verified_user,
+    get_current_active_superuser,
+    User,
+)
 from app.models.strategy import StrategyType
 from app.schemas.strategy import (
     StrategyFromTemplateRequest,

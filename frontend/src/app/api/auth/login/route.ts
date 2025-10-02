@@ -1,7 +1,7 @@
 
 import { type NextRequest, NextResponse } from 'next/server';
-import { AuthService, client } from '@/client';
-import { LoginCredentials } from '@/types/auth';
+import { AuthService, type BodyAuthLogin } from '@/client';
+
 
 /**
  * 로그인 Route Handler
@@ -10,14 +10,13 @@ import { LoginCredentials } from '@/types/auth';
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
-        const { username, password } = body;
+        const loginData: BodyAuthLogin = {
+            username: body.username,
+            password: body.password
+        };
 
         // 백엔드 API 호출
-        const response = await AuthService.authAuthJwtService.login({
-            client: client,
-
-            password
-        });
+        const response = await AuthService.authLogin<LoginResponse>(loginData);
 
         if (response.error) {
             return NextResponse.json(

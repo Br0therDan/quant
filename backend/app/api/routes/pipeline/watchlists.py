@@ -5,11 +5,9 @@ Watchlist Management API Routes
 from datetime import datetime, timezone
 from typing import AsyncGenerator
 from fastapi import APIRouter, HTTPException, Depends
-
-from app.models.user import User
 from app.schemas.watchlist import WatchlistCreate, WatchlistUpdate
 from app.services.data_pipeline import DataPipeline
-from app.api.deps import get_current_active_verified_user
+from mysingle_quant.auth import get_current_active_verified_user, User
 
 router = APIRouter()
 

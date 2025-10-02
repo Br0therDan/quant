@@ -8,7 +8,6 @@ from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, Query
 
 from app.models.backtest import BacktestStatus
-from app.models.user import User
 from app.schemas.backtest import (
     BacktestCreateRequest,
     BacktestExecutionListResponse,
@@ -25,7 +24,7 @@ from app.services.backtest_service import BacktestService
 from app.services.integrated_backtest_executor import IntegratedBacktestExecutor
 from app.models.strategy import StrategyType
 from app.models.backtest import BacktestConfig
-from app.api.deps import get_current_active_verified_user
+from mysingle_quant.auth import get_current_active_verified_user, User
 
 router = APIRouter(dependencies=[Depends(get_current_active_verified_user)])
 
