@@ -7,7 +7,7 @@ from .company import Company, Watchlist
 from .market_data import MarketData, DataRequest, DataQuality
 from .performance import StrategyPerformance
 from .strategy import Strategy, StrategyTemplate, StrategyExecution
-from .user import User
+from mysingle_quant.auth.models import User, OAuthAccount
 
 collections = [
     # 백테스트
@@ -27,8 +27,9 @@ collections = [
     Strategy,
     StrategyTemplate,
     StrategyExecution,
-    # 사용자
+    # 인증
     User,
+    OAuthAccount,
 ]
 
 __all__ = [
@@ -44,5 +45,4 @@ __all__ = [
     "StrategyTemplate",
     "StrategyExecution",
     "StrategyPerformance",
-    "User",
 ]

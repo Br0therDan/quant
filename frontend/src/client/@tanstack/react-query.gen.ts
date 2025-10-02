@@ -12,26 +12,29 @@ import {
 	BacktestsService,
 	HealthService,
 	MarketDataService,
-	OAuth2Service,
 	type Options,
 	PipelineService,
 	StrategyService,
 	UserService,
 } from "../sdk.gen";
 import type {
-	AuthForgotPasswordData,
-	AuthForgotPasswordError,
 	AuthLoginData,
 	AuthLoginError,
 	AuthLoginResponse,
 	AuthLogoutData,
+	AuthLogoutResponse,
+	AuthRefreshTokenData,
+	AuthRefreshTokenError,
+	AuthRefreshTokenResponse,
 	AuthRegisterData,
 	AuthRegisterError,
 	AuthRegisterResponse,
 	AuthRequestVerifyTokenData,
 	AuthRequestVerifyTokenError,
-	AuthResetPasswordData,
-	AuthResetPasswordError,
+	AuthResetForgotPasswordData,
+	AuthResetForgotPasswordError,
+	AuthResetResetPasswordData,
+	AuthResetResetPasswordError,
 	AuthVerifyData,
 	AuthVerifyError,
 	AuthVerifyResponse,
@@ -70,8 +73,6 @@ import type {
 	MarketDataRequestBulkDataError,
 	MarketDataRequestBulkDataResponse,
 	MarketDataServiceHealthCheckData,
-	OAuth2OauthGoogleJwtAuthorizeData,
-	OAuth2OauthGoogleJwtCallbackData,
 	PipelineCollectDailyDataData,
 	PipelineCollectDailyDataError,
 	PipelineCollectStockInfoData,
@@ -122,17 +123,22 @@ import type {
 	StrategyUpdateTemplateData,
 	StrategyUpdateTemplateError,
 	StrategyUpdateTemplateResponse,
-	UserUsersCurrentUserData,
-	UserUsersDeleteUserData,
-	UserUsersDeleteUserError,
-	UserUsersDeleteUserResponse,
-	UserUsersPatchCurrentUserData,
-	UserUsersPatchCurrentUserError,
-	UserUsersPatchCurrentUserResponse,
-	UserUsersPatchUserData,
-	UserUsersPatchUserError,
-	UserUsersPatchUserResponse,
-	UserUsersUserData,
+	UserDeleteUserData,
+	UserDeleteUserError,
+	UserDeleteUserResponse,
+	UserGetMyOauthAccountsData,
+	UserGetUserData,
+	UserGetUserMeData,
+	UserGetUserOauthAccountsData,
+	UserRemoveOauthAccountData,
+	UserRemoveOauthAccountError,
+	UserRemoveOauthAccountResponse,
+	UserUpdateUserData,
+	UserUpdateUserError,
+	UserUpdateUserMeData,
+	UserUpdateUserMeError,
+	UserUpdateUserMeResponse,
+	UserUpdateUserResponse,
 } from "../types.gen";
 
 export type QueryKey<TOptions extends Options> = [
@@ -247,6 +253,430 @@ export const healthReadinessProbeOptions = (
 			return data;
 		},
 		queryKey: healthReadinessProbeQueryKey(options),
+	});
+};
+
+/**
+ * Login
+ */
+export const authLoginMutation = (
+	options?: Partial<Options<AuthLoginData>>,
+): UseMutationOptions<
+	AuthLoginResponse,
+	AuthLoginError,
+	Options<AuthLoginData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		AuthLoginResponse,
+		AuthLoginError,
+		Options<AuthLoginData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await AuthService.authLogin({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+	};
+	return mutationOptions;
+};
+
+/**
+ * Logout
+ * 로그아웃 엔드포인트.
+ *
+ * 현재는 클라이언트 측에서 토큰을 삭제하는 방식으로 처리합니다.
+ * JWT 토큰은 서버에서 무효화할 수 없으므로, 클라이언트에서 토큰을 삭제해야 합니다.
+ */
+export const authLogoutMutation = (
+	options?: Partial<Options<AuthLogoutData>>,
+): UseMutationOptions<
+	AuthLogoutResponse,
+	DefaultError,
+	Options<AuthLogoutData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		AuthLogoutResponse,
+		DefaultError,
+		Options<AuthLogoutData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await AuthService.authLogout({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+	};
+	return mutationOptions;
+};
+
+/**
+ * Refresh Token
+ * JWT 토큰 갱신 엔드포인트.
+ *
+ * 현재는 Access Token과 Refresh Token을 모두 새로 발급합니다.
+ */
+export const authRefreshTokenMutation = (
+	options?: Partial<Options<AuthRefreshTokenData>>,
+): UseMutationOptions<
+	AuthRefreshTokenResponse,
+	AuthRefreshTokenError,
+	Options<AuthRefreshTokenData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		AuthRefreshTokenResponse,
+		AuthRefreshTokenError,
+		Options<AuthRefreshTokenData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await AuthService.authRefreshToken({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+	};
+	return mutationOptions;
+};
+
+/**
+ * Register
+ */
+export const authRegisterMutation = (
+	options?: Partial<Options<AuthRegisterData>>,
+): UseMutationOptions<
+	AuthRegisterResponse,
+	AuthRegisterError,
+	Options<AuthRegisterData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		AuthRegisterResponse,
+		AuthRegisterError,
+		Options<AuthRegisterData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await AuthService.authRegister({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+	};
+	return mutationOptions;
+};
+
+/**
+ * Reset:Forgot Password
+ */
+export const authResetForgotPasswordMutation = (
+	options?: Partial<Options<AuthResetForgotPasswordData>>,
+): UseMutationOptions<
+	unknown,
+	AuthResetForgotPasswordError,
+	Options<AuthResetForgotPasswordData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		unknown,
+		AuthResetForgotPasswordError,
+		Options<AuthResetForgotPasswordData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await AuthService.authResetForgotPassword({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+	};
+	return mutationOptions;
+};
+
+/**
+ * Reset:Reset Password
+ */
+export const authResetResetPasswordMutation = (
+	options?: Partial<Options<AuthResetResetPasswordData>>,
+): UseMutationOptions<
+	unknown,
+	AuthResetResetPasswordError,
+	Options<AuthResetResetPasswordData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		unknown,
+		AuthResetResetPasswordError,
+		Options<AuthResetResetPasswordData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await AuthService.authResetResetPassword({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+	};
+	return mutationOptions;
+};
+
+/**
+ * Request Verify Token
+ */
+export const authRequestVerifyTokenMutation = (
+	options?: Partial<Options<AuthRequestVerifyTokenData>>,
+): UseMutationOptions<
+	unknown,
+	AuthRequestVerifyTokenError,
+	Options<AuthRequestVerifyTokenData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		unknown,
+		AuthRequestVerifyTokenError,
+		Options<AuthRequestVerifyTokenData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await AuthService.authRequestVerifyToken({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+	};
+	return mutationOptions;
+};
+
+/**
+ * Verify
+ */
+export const authVerifyMutation = (
+	options?: Partial<Options<AuthVerifyData>>,
+): UseMutationOptions<
+	AuthVerifyResponse,
+	AuthVerifyError,
+	Options<AuthVerifyData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		AuthVerifyResponse,
+		AuthVerifyError,
+		Options<AuthVerifyData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await AuthService.authVerify({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+	};
+	return mutationOptions;
+};
+
+export const userGetUserMeQueryKey = (options?: Options<UserGetUserMeData>) =>
+	createQueryKey("userGetUserMe", options);
+
+/**
+ * Get User Me
+ */
+export const userGetUserMeOptions = (options?: Options<UserGetUserMeData>) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await UserService.userGetUserMe({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			});
+			return data;
+		},
+		queryKey: userGetUserMeQueryKey(options),
+	});
+};
+
+/**
+ * Update User Me
+ */
+export const userUpdateUserMeMutation = (
+	options?: Partial<Options<UserUpdateUserMeData>>,
+): UseMutationOptions<
+	UserUpdateUserMeResponse,
+	UserUpdateUserMeError,
+	Options<UserUpdateUserMeData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		UserUpdateUserMeResponse,
+		UserUpdateUserMeError,
+		Options<UserUpdateUserMeData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await UserService.userUpdateUserMe({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+	};
+	return mutationOptions;
+};
+
+/**
+ * Delete User
+ */
+export const userDeleteUserMutation = (
+	options?: Partial<Options<UserDeleteUserData>>,
+): UseMutationOptions<
+	UserDeleteUserResponse,
+	UserDeleteUserError,
+	Options<UserDeleteUserData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		UserDeleteUserResponse,
+		UserDeleteUserError,
+		Options<UserDeleteUserData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await UserService.userDeleteUser({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+	};
+	return mutationOptions;
+};
+
+export const userGetUserQueryKey = (options: Options<UserGetUserData>) =>
+	createQueryKey("userGetUser", options);
+
+/**
+ * Get User
+ */
+export const userGetUserOptions = (options: Options<UserGetUserData>) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await UserService.userGetUser({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			});
+			return data;
+		},
+		queryKey: userGetUserQueryKey(options),
+	});
+};
+
+/**
+ * Update User
+ */
+export const userUpdateUserMutation = (
+	options?: Partial<Options<UserUpdateUserData>>,
+): UseMutationOptions<
+	UserUpdateUserResponse,
+	UserUpdateUserError,
+	Options<UserUpdateUserData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		UserUpdateUserResponse,
+		UserUpdateUserError,
+		Options<UserUpdateUserData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await UserService.userUpdateUser({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+	};
+	return mutationOptions;
+};
+
+export const userGetMyOauthAccountsQueryKey = (
+	options?: Options<UserGetMyOauthAccountsData>,
+) => createQueryKey("userGetMyOauthAccounts", options);
+
+/**
+ * 내 OAuth 계정 목록 조회
+ * 현재 사용자의 연결된 OAuth 계정 목록을 조회합니다.
+ */
+export const userGetMyOauthAccountsOptions = (
+	options?: Options<UserGetMyOauthAccountsData>,
+) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await UserService.userGetMyOauthAccounts({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			});
+			return data;
+		},
+		queryKey: userGetMyOauthAccountsQueryKey(options),
+	});
+};
+
+/**
+ * OAuth 계정 연결 해제
+ * 특정 OAuth 계정 연결을 해제합니다.
+ */
+export const userRemoveOauthAccountMutation = (
+	options?: Partial<Options<UserRemoveOauthAccountData>>,
+): UseMutationOptions<
+	UserRemoveOauthAccountResponse,
+	UserRemoveOauthAccountError,
+	Options<UserRemoveOauthAccountData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		UserRemoveOauthAccountResponse,
+		UserRemoveOauthAccountError,
+		Options<UserRemoveOauthAccountData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await UserService.userRemoveOauthAccount({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+	};
+	return mutationOptions;
+};
+
+export const userGetUserOauthAccountsQueryKey = (
+	options: Options<UserGetUserOauthAccountsData>,
+) => createQueryKey("userGetUserOauthAccounts", options);
+
+/**
+ * 사용자 OAuth 계정 목록 조회 (관리자용)
+ * 특정 사용자의 OAuth 계정 목록을 조회합니다. (관리자 전용)
+ */
+export const userGetUserOauthAccountsOptions = (
+	options: Options<UserGetUserOauthAccountsData>,
+) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await UserService.userGetUserOauthAccounts({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			});
+			return data;
+		},
+		queryKey: userGetUserOauthAccountsQueryKey(options),
 	});
 };
 
@@ -1886,366 +2316,4 @@ export const backtestsGetBacktestSummaryAnalyticsOptions = (
 		},
 		queryKey: backtestsGetBacktestSummaryAnalyticsQueryKey(options),
 	});
-};
-
-/**
- * Login
- */
-export const authLoginMutation = (
-	options?: Partial<Options<AuthLoginData>>,
-): UseMutationOptions<
-	AuthLoginResponse,
-	AuthLoginError,
-	Options<AuthLoginData>
-> => {
-	const mutationOptions: UseMutationOptions<
-		AuthLoginResponse,
-		AuthLoginError,
-		Options<AuthLoginData>
-	> = {
-		mutationFn: async (fnOptions) => {
-			const { data } = await AuthService.authLogin({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
-			return data;
-		},
-	};
-	return mutationOptions;
-};
-
-/**
- * Logout
- */
-export const authLogoutMutation = (
-	options?: Partial<Options<AuthLogoutData>>,
-): UseMutationOptions<unknown, DefaultError, Options<AuthLogoutData>> => {
-	const mutationOptions: UseMutationOptions<
-		unknown,
-		DefaultError,
-		Options<AuthLogoutData>
-	> = {
-		mutationFn: async (fnOptions) => {
-			const { data } = await AuthService.authLogout({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
-			return data;
-		},
-	};
-	return mutationOptions;
-};
-
-/**
- * Forgot Password
- */
-export const authForgotPasswordMutation = (
-	options?: Partial<Options<AuthForgotPasswordData>>,
-): UseMutationOptions<
-	unknown,
-	AuthForgotPasswordError,
-	Options<AuthForgotPasswordData>
-> => {
-	const mutationOptions: UseMutationOptions<
-		unknown,
-		AuthForgotPasswordError,
-		Options<AuthForgotPasswordData>
-	> = {
-		mutationFn: async (fnOptions) => {
-			const { data } = await AuthService.authForgotPassword({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
-			return data;
-		},
-	};
-	return mutationOptions;
-};
-
-/**
- * Reset Password
- */
-export const authResetPasswordMutation = (
-	options?: Partial<Options<AuthResetPasswordData>>,
-): UseMutationOptions<
-	unknown,
-	AuthResetPasswordError,
-	Options<AuthResetPasswordData>
-> => {
-	const mutationOptions: UseMutationOptions<
-		unknown,
-		AuthResetPasswordError,
-		Options<AuthResetPasswordData>
-	> = {
-		mutationFn: async (fnOptions) => {
-			const { data } = await AuthService.authResetPassword({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
-			return data;
-		},
-	};
-	return mutationOptions;
-};
-
-/**
- * Request Verify Token
- */
-export const authRequestVerifyTokenMutation = (
-	options?: Partial<Options<AuthRequestVerifyTokenData>>,
-): UseMutationOptions<
-	unknown,
-	AuthRequestVerifyTokenError,
-	Options<AuthRequestVerifyTokenData>
-> => {
-	const mutationOptions: UseMutationOptions<
-		unknown,
-		AuthRequestVerifyTokenError,
-		Options<AuthRequestVerifyTokenData>
-	> = {
-		mutationFn: async (fnOptions) => {
-			const { data } = await AuthService.authRequestVerifyToken({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
-			return data;
-		},
-	};
-	return mutationOptions;
-};
-
-/**
- * Verify
- */
-export const authVerifyMutation = (
-	options?: Partial<Options<AuthVerifyData>>,
-): UseMutationOptions<
-	AuthVerifyResponse,
-	AuthVerifyError,
-	Options<AuthVerifyData>
-> => {
-	const mutationOptions: UseMutationOptions<
-		AuthVerifyResponse,
-		AuthVerifyError,
-		Options<AuthVerifyData>
-	> = {
-		mutationFn: async (fnOptions) => {
-			const { data } = await AuthService.authVerify({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
-			return data;
-		},
-	};
-	return mutationOptions;
-};
-
-/**
- * Register
- */
-export const authRegisterMutation = (
-	options?: Partial<Options<AuthRegisterData>>,
-): UseMutationOptions<
-	AuthRegisterResponse,
-	AuthRegisterError,
-	Options<AuthRegisterData>
-> => {
-	const mutationOptions: UseMutationOptions<
-		AuthRegisterResponse,
-		AuthRegisterError,
-		Options<AuthRegisterData>
-	> = {
-		mutationFn: async (fnOptions) => {
-			const { data } = await AuthService.authRegister({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
-			return data;
-		},
-	};
-	return mutationOptions;
-};
-
-export const oAuth2OauthGoogleJwtAuthorizeQueryKey = (
-	options?: Options<OAuth2OauthGoogleJwtAuthorizeData>,
-) => createQueryKey("oAuth2OauthGoogleJwtAuthorize", options);
-
-/**
- * Oauth:Google.Jwt.Authorize
- */
-export const oAuth2OauthGoogleJwtAuthorizeOptions = (
-	options?: Options<OAuth2OauthGoogleJwtAuthorizeData>,
-) => {
-	return queryOptions({
-		queryFn: async ({ queryKey, signal }) => {
-			const { data } =
-				await OAuth2Service.oAuth2OauthGoogleService.jwtService.authorize({
-					...options,
-					...queryKey[0],
-					signal,
-					throwOnError: true,
-				});
-			return data;
-		},
-		queryKey: oAuth2OauthGoogleJwtAuthorizeQueryKey(options),
-	});
-};
-
-export const oAuth2OauthGoogleJwtCallbackQueryKey = (
-	options?: Options<OAuth2OauthGoogleJwtCallbackData>,
-) => createQueryKey("oAuth2OauthGoogleJwtCallback", options);
-
-/**
- * Oauth:Google.Jwt.Callback
- * The response varies based on the authentication backend used.
- */
-export const oAuth2OauthGoogleJwtCallbackOptions = (
-	options?: Options<OAuth2OauthGoogleJwtCallbackData>,
-) => {
-	return queryOptions({
-		queryFn: async ({ queryKey, signal }) => {
-			const { data } =
-				await OAuth2Service.oAuth2OauthGoogleService.jwtService.callback({
-					...options,
-					...queryKey[0],
-					signal,
-					throwOnError: true,
-				});
-			return data;
-		},
-		queryKey: oAuth2OauthGoogleJwtCallbackQueryKey(options),
-	});
-};
-
-export const userUsersCurrentUserQueryKey = (
-	options?: Options<UserUsersCurrentUserData>,
-) => createQueryKey("userUsersCurrentUser", options);
-
-/**
- * Users:Current User
- */
-export const userUsersCurrentUserOptions = (
-	options?: Options<UserUsersCurrentUserData>,
-) => {
-	return queryOptions({
-		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await UserService.userUsersCurrentUser({
-				...options,
-				...queryKey[0],
-				signal,
-				throwOnError: true,
-			});
-			return data;
-		},
-		queryKey: userUsersCurrentUserQueryKey(options),
-	});
-};
-
-/**
- * Users:Patch Current User
- */
-export const userUsersPatchCurrentUserMutation = (
-	options?: Partial<Options<UserUsersPatchCurrentUserData>>,
-): UseMutationOptions<
-	UserUsersPatchCurrentUserResponse,
-	UserUsersPatchCurrentUserError,
-	Options<UserUsersPatchCurrentUserData>
-> => {
-	const mutationOptions: UseMutationOptions<
-		UserUsersPatchCurrentUserResponse,
-		UserUsersPatchCurrentUserError,
-		Options<UserUsersPatchCurrentUserData>
-	> = {
-		mutationFn: async (fnOptions) => {
-			const { data } = await UserService.userUsersPatchCurrentUser({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
-			return data;
-		},
-	};
-	return mutationOptions;
-};
-
-/**
- * Users:Delete User
- */
-export const userUsersDeleteUserMutation = (
-	options?: Partial<Options<UserUsersDeleteUserData>>,
-): UseMutationOptions<
-	UserUsersDeleteUserResponse,
-	UserUsersDeleteUserError,
-	Options<UserUsersDeleteUserData>
-> => {
-	const mutationOptions: UseMutationOptions<
-		UserUsersDeleteUserResponse,
-		UserUsersDeleteUserError,
-		Options<UserUsersDeleteUserData>
-	> = {
-		mutationFn: async (fnOptions) => {
-			const { data } = await UserService.userUsersDeleteUser({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
-			return data;
-		},
-	};
-	return mutationOptions;
-};
-
-export const userUsersUserQueryKey = (options: Options<UserUsersUserData>) =>
-	createQueryKey("userUsersUser", options);
-
-/**
- * Users:User
- */
-export const userUsersUserOptions = (options: Options<UserUsersUserData>) => {
-	return queryOptions({
-		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await UserService.userUsersUser({
-				...options,
-				...queryKey[0],
-				signal,
-				throwOnError: true,
-			});
-			return data;
-		},
-		queryKey: userUsersUserQueryKey(options),
-	});
-};
-
-/**
- * Users:Patch User
- */
-export const userUsersPatchUserMutation = (
-	options?: Partial<Options<UserUsersPatchUserData>>,
-): UseMutationOptions<
-	UserUsersPatchUserResponse,
-	UserUsersPatchUserError,
-	Options<UserUsersPatchUserData>
-> => {
-	const mutationOptions: UseMutationOptions<
-		UserUsersPatchUserResponse,
-		UserUsersPatchUserError,
-		Options<UserUsersPatchUserData>
-	> = {
-		mutationFn: async (fnOptions) => {
-			const { data } = await UserService.userUsersPatchUser({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
-			return data;
-		},
-	};
-	return mutationOptions;
 };

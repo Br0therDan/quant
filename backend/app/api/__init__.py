@@ -8,9 +8,6 @@ from .routes import (
     pipeline_router,
     backtests_router,
     strategies_router,
-    auth_router,
-    oauth_router,
-    users_router,
 )
 
 # Create main API router
@@ -23,9 +20,6 @@ api_router.include_router(
 api_router.include_router(pipeline_router, prefix="/pipeline", tags=["Pipeline"])
 api_router.include_router(strategies_router, prefix="/strategies", tags=["Strategy"])
 api_router.include_router(backtests_router, prefix="/backtests", tags=["Backtests"])
-api_router.include_router(auth_router, prefix="/auth", tags=["Auth"])
-api_router.include_router(oauth_router, prefix="/oauth2", tags=["OAuth2"])
-api_router.include_router(users_router, prefix="/users", tags=["User"])
 
 
 __all__ = ["api_router"]

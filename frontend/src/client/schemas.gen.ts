@@ -512,35 +512,6 @@ export const BacktestUpdateRequestSchema = {
 	description: "백테스트 수정 요청",
 } as const;
 
-export const BearerResponseSchema = {
-	properties: {
-		access_token: {
-			type: "string",
-			title: "Access Token",
-		},
-		token_type: {
-			type: "string",
-			title: "Token Type",
-		},
-	},
-	type: "object",
-	required: ["access_token", "token_type"],
-	title: "BearerResponse",
-} as const;
-
-export const Body_Auth_forgot_passwordSchema = {
-	properties: {
-		email: {
-			type: "string",
-			format: "email",
-			title: "Email",
-		},
-	},
-	type: "object",
-	required: ["email"],
-	title: "Body_Auth-forgot_password",
-} as const;
-
 export const Body_Auth_loginSchema = {
 	properties: {
 		grant_type: {
@@ -611,7 +582,20 @@ export const Body_Auth_request_verify_tokenSchema = {
 	title: "Body_Auth-request_verify_token",
 } as const;
 
-export const Body_Auth_reset_passwordSchema = {
+export const Body_Auth_reset_forgot_passwordSchema = {
+	properties: {
+		email: {
+			type: "string",
+			format: "email",
+			title: "Email",
+		},
+	},
+	type: "object",
+	required: ["email"],
+	title: "Body_Auth-reset:forgot_password",
+} as const;
+
+export const Body_Auth_reset_reset_passwordSchema = {
 	properties: {
 		token: {
 			type: "string",
@@ -624,7 +608,7 @@ export const Body_Auth_reset_passwordSchema = {
 	},
 	type: "object",
 	required: ["token", "password"],
-	title: "Body_Auth-reset_password",
+	title: "Body_Auth-reset:reset_password",
 } as const;
 
 export const Body_Auth_verifySchema = {
@@ -840,28 +824,6 @@ export const DataRequestStatusSchema = {
 	],
 	title: "DataRequestStatus",
 	description: "Response model for data request status",
-} as const;
-
-export const ErrorModelSchema = {
-	properties: {
-		detail: {
-			anyOf: [
-				{
-					type: "string",
-				},
-				{
-					additionalProperties: {
-						type: "string",
-					},
-					type: "object",
-				},
-			],
-			title: "Detail",
-		},
-	},
-	type: "object",
-	required: ["detail"],
-	title: "ErrorModel",
 } as const;
 
 export const ExecutionListResponseSchema = {
@@ -1264,6 +1226,50 @@ export const IntegratedBacktestResponseSchema = {
 	description: "통합 백테스트 응답",
 } as const;
 
+export const LoginResponseSchema = {
+	properties: {
+		access_token: {
+			type: "string",
+			title: "Access Token",
+		},
+		refresh_token: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Refresh Token",
+		},
+		token_type: {
+			type: "string",
+			title: "Token Type",
+			default: "bearer",
+		},
+		user_info: {
+			$ref: "#/components/schemas/UserResponse",
+		},
+	},
+	type: "object",
+	required: ["access_token", "user_info"],
+	title: "LoginResponse",
+	example: {
+		access_token: "string",
+		refresh_token: "string",
+		token_type: "bearer",
+		user_info: {
+			email: "user@example.com",
+			full_name: "string",
+			id: "string",
+			is_active: true,
+			is_superuser: false,
+			is_verified: false,
+		},
+	},
+} as const;
+
 export const MarketDataResponseSchema = {
 	properties: {
 		user_id: {
@@ -1346,16 +1352,60 @@ export const MarketDataResponseSchema = {
 	description: "Response model for market data",
 } as const;
 
-export const OAuth2AuthorizeResponseSchema = {
+export const OAuthAccountSchema = {
 	properties: {
-		authorization_url: {
+		oauth_name: {
 			type: "string",
-			title: "Authorization Url",
+			title: "Oauth Name",
+		},
+		access_token: {
+			type: "string",
+			title: "Access Token",
+		},
+		expires_at: {
+			anyOf: [
+				{
+					type: "integer",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Expires At",
+		},
+		refresh_token: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Refresh Token",
+		},
+		account_id: {
+			type: "string",
+			title: "Account Id",
+		},
+		account_email: {
+			type: "string",
+			title: "Account Email",
 		},
 	},
 	type: "object",
-	required: ["authorization_url"],
-	title: "OAuth2AuthorizeResponse",
+	required: ["oauth_name", "access_token", "account_id", "account_email"],
+	title: "OAuthAccount",
+	description: "Base OAuth account model.",
+	example: {
+		_id: "string",
+		access_token: "string",
+		account_email: "user@example.com",
+		account_id: "string",
+		expires_at: 1234567890,
+		oauth_name: "string",
+		refresh_token: "string",
+	},
 } as const;
 
 export const OrderTypeSchema = {
@@ -2530,6 +2580,17 @@ export const UserCreateSchema = {
 			format: "email",
 			title: "Email",
 		},
+		full_name: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Full Name",
+		},
 		password: {
 			type: "string",
 			title: "Password",
@@ -2570,7 +2631,28 @@ export const UserCreateSchema = {
 			title: "Is Verified",
 			default: false,
 		},
-		fullname: {
+	},
+	type: "object",
+	required: ["email", "password"],
+	title: "UserCreate",
+	example: {
+		email: "user@example.com",
+		full_name: "string",
+		is_active: true,
+		is_superuser: false,
+		is_verified: false,
+		password: "string",
+	},
+} as const;
+
+export const UserResponseSchema = {
+	properties: {
+		email: {
+			type: "string",
+			format: "email",
+			title: "Email",
+		},
+		full_name: {
 			anyOf: [
 				{
 					type: "string",
@@ -2579,23 +2661,7 @@ export const UserCreateSchema = {
 					type: "null",
 				},
 			],
-			title: "Fullname",
-		},
-	},
-	type: "object",
-	required: ["email", "password"],
-	title: "UserCreate",
-} as const;
-
-export const UserReadSchema = {
-	properties: {
-		id: {
-			$ref: "#/components/schemas/PydanticObjectId",
-		},
-		email: {
-			type: "string",
-			format: "email",
-			title: "Email",
+			title: "Full Name",
 		},
 		is_active: {
 			type: "boolean",
@@ -2612,21 +2678,37 @@ export const UserReadSchema = {
 			title: "Is Verified",
 			default: false,
 		},
-		fullname: {
-			anyOf: [
-				{
-					type: "string",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "Fullname",
+		oauth_accounts: {
+			items: {
+				$ref: "#/components/schemas/OAuthAccount",
+			},
+			type: "array",
+			title: "Oauth Accounts",
 		},
 	},
 	type: "object",
-	required: ["id", "email"],
-	title: "UserRead",
+	required: ["email"],
+	title: "UserResponse",
+	description: "Base User model.",
+	example: {
+		_id: "string",
+		email: "user@example.com",
+		full_name: "string",
+		is_active: true,
+		is_superuser: false,
+		is_verified: false,
+		oauth_accounts: [
+			{
+				_id: "string",
+				access_token: "string",
+				account_email: "user@example.com",
+				account_id: "string",
+				expires_at: 1234567890,
+				oauth_name: "string",
+				refresh_token: "string",
+			},
+		],
+	},
 } as const;
 
 export const UserUpdateSchema = {
@@ -2654,6 +2736,17 @@ export const UserUpdateSchema = {
 			],
 			title: "Email",
 		},
+		full_name: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Full Name",
+		},
 		is_active: {
 			anyOf: [
 				{
@@ -2687,20 +2780,17 @@ export const UserUpdateSchema = {
 			],
 			title: "Is Verified",
 		},
-		fullname: {
-			anyOf: [
-				{
-					type: "string",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "Fullname",
-		},
 	},
 	type: "object",
 	title: "UserUpdate",
+	example: {
+		email: "user@example.com",
+		full_name: "string",
+		is_active: true,
+		is_superuser: false,
+		is_verified: false,
+		password: "string",
+	},
 } as const;
 
 export const ValidationErrorSchema = {

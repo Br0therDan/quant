@@ -8,24 +8,26 @@ import {
 } from "./client";
 import { client } from "./client.gen";
 import type {
-	AuthForgotPasswordData,
-	AuthForgotPasswordErrors,
-	AuthForgotPasswordResponses,
 	AuthLoginData,
 	AuthLoginErrors,
 	AuthLoginResponses,
 	AuthLogoutData,
-	AuthLogoutErrors,
 	AuthLogoutResponses,
+	AuthRefreshTokenData,
+	AuthRefreshTokenErrors,
+	AuthRefreshTokenResponses,
 	AuthRegisterData,
 	AuthRegisterErrors,
 	AuthRegisterResponses,
 	AuthRequestVerifyTokenData,
 	AuthRequestVerifyTokenErrors,
 	AuthRequestVerifyTokenResponses,
-	AuthResetPasswordData,
-	AuthResetPasswordErrors,
-	AuthResetPasswordResponses,
+	AuthResetForgotPasswordData,
+	AuthResetForgotPasswordErrors,
+	AuthResetForgotPasswordResponses,
+	AuthResetResetPasswordData,
+	AuthResetResetPasswordErrors,
+	AuthResetResetPasswordResponses,
 	AuthVerifyData,
 	AuthVerifyErrors,
 	AuthVerifyResponses,
@@ -91,12 +93,6 @@ import type {
 	MarketDataRequestBulkDataResponses,
 	MarketDataServiceHealthCheckData,
 	MarketDataServiceHealthCheckResponses,
-	OAuth2OauthGoogleJwtAuthorizeData,
-	OAuth2OauthGoogleJwtAuthorizeErrors,
-	OAuth2OauthGoogleJwtAuthorizeResponses,
-	OAuth2OauthGoogleJwtCallbackData,
-	OAuth2OauthGoogleJwtCallbackErrors,
-	OAuth2OauthGoogleJwtCallbackResponses,
 	PipelineCollectDailyDataData,
 	PipelineCollectDailyDataErrors,
 	PipelineCollectDailyDataResponses,
@@ -179,21 +175,28 @@ import type {
 	StrategyUpdateTemplateData,
 	StrategyUpdateTemplateErrors,
 	StrategyUpdateTemplateResponses,
-	UserUsersCurrentUserData,
-	UserUsersCurrentUserErrors,
-	UserUsersCurrentUserResponses,
-	UserUsersDeleteUserData,
-	UserUsersDeleteUserErrors,
-	UserUsersDeleteUserResponses,
-	UserUsersPatchCurrentUserData,
-	UserUsersPatchCurrentUserErrors,
-	UserUsersPatchCurrentUserResponses,
-	UserUsersPatchUserData,
-	UserUsersPatchUserErrors,
-	UserUsersPatchUserResponses,
-	UserUsersUserData,
-	UserUsersUserErrors,
-	UserUsersUserResponses,
+	UserDeleteUserData,
+	UserDeleteUserErrors,
+	UserDeleteUserResponses,
+	UserGetMyOauthAccountsData,
+	UserGetMyOauthAccountsResponses,
+	UserGetUserData,
+	UserGetUserErrors,
+	UserGetUserMeData,
+	UserGetUserMeResponses,
+	UserGetUserOauthAccountsData,
+	UserGetUserOauthAccountsErrors,
+	UserGetUserOauthAccountsResponses,
+	UserGetUserResponses,
+	UserRemoveOauthAccountData,
+	UserRemoveOauthAccountErrors,
+	UserRemoveOauthAccountResponses,
+	UserUpdateUserData,
+	UserUpdateUserErrors,
+	UserUpdateUserMeData,
+	UserUpdateUserMeErrors,
+	UserUpdateUserMeResponses,
+	UserUpdateUserResponses,
 } from "./types.gen";
 
 export type Options<
@@ -261,6 +264,363 @@ export class HealthService {
 			ThrowOnError
 		>({
 			url: "/health/ready",
+			...options,
+		});
+	}
+}
+
+export class AuthService {
+	/**
+	 * Login
+	 */
+	public static authLogin<ThrowOnError extends boolean = false>(
+		options: Options<AuthLoginData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			AuthLoginResponses,
+			AuthLoginErrors,
+			ThrowOnError
+		>({
+			...urlSearchParamsBodySerializer,
+			url: "/api/v1/auth/login",
+			...options,
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Logout
+	 * 로그아웃 엔드포인트.
+	 *
+	 * 현재는 클라이언트 측에서 토큰을 삭제하는 방식으로 처리합니다.
+	 * JWT 토큰은 서버에서 무효화할 수 없으므로, 클라이언트에서 토큰을 삭제해야 합니다.
+	 */
+	public static authLogout<ThrowOnError extends boolean = false>(
+		options?: Options<AuthLogoutData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).post<
+			AuthLogoutResponses,
+			unknown,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/auth/logout",
+			...options,
+		});
+	}
+
+	/**
+	 * Refresh Token
+	 * JWT 토큰 갱신 엔드포인트.
+	 *
+	 * 현재는 Access Token과 Refresh Token을 모두 새로 발급합니다.
+	 */
+	public static authRefreshToken<ThrowOnError extends boolean = false>(
+		options: Options<AuthRefreshTokenData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			AuthRefreshTokenResponses,
+			AuthRefreshTokenErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/auth/refresh",
+			...options,
+		});
+	}
+
+	/**
+	 * Register
+	 */
+	public static authRegister<ThrowOnError extends boolean = false>(
+		options: Options<AuthRegisterData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			AuthRegisterResponses,
+			AuthRegisterErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/auth/register",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Reset:Forgot Password
+	 */
+	public static authResetForgotPassword<ThrowOnError extends boolean = false>(
+		options: Options<AuthResetForgotPasswordData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			AuthResetForgotPasswordResponses,
+			AuthResetForgotPasswordErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/auth/forgot-password",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Reset:Reset Password
+	 */
+	public static authResetResetPassword<ThrowOnError extends boolean = false>(
+		options: Options<AuthResetResetPasswordData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			AuthResetResetPasswordResponses,
+			AuthResetResetPasswordErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/auth/reset-password",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Request Verify Token
+	 */
+	public static authRequestVerifyToken<ThrowOnError extends boolean = false>(
+		options: Options<AuthRequestVerifyTokenData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			AuthRequestVerifyTokenResponses,
+			AuthRequestVerifyTokenErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/auth/request-verify-token",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Verify
+	 */
+	public static authVerify<ThrowOnError extends boolean = false>(
+		options: Options<AuthVerifyData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			AuthVerifyResponses,
+			AuthVerifyErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/auth/verify",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+}
+
+export class UserService {
+	/**
+	 * Get User Me
+	 */
+	public static userGetUserMe<ThrowOnError extends boolean = false>(
+		options?: Options<UserGetUserMeData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			UserGetUserMeResponses,
+			unknown,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/users/me",
+			...options,
+		});
+	}
+
+	/**
+	 * Update User Me
+	 */
+	public static userUpdateUserMe<ThrowOnError extends boolean = false>(
+		options: Options<UserUpdateUserMeData, ThrowOnError>,
+	) {
+		return (options.client ?? client).patch<
+			UserUpdateUserMeResponses,
+			UserUpdateUserMeErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/users/me",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Delete User
+	 */
+	public static userDeleteUser<ThrowOnError extends boolean = false>(
+		options: Options<UserDeleteUserData, ThrowOnError>,
+	) {
+		return (options.client ?? client).delete<
+			UserDeleteUserResponses,
+			UserDeleteUserErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/users/{id}",
+			...options,
+		});
+	}
+
+	/**
+	 * Get User
+	 */
+	public static userGetUser<ThrowOnError extends boolean = false>(
+		options: Options<UserGetUserData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			UserGetUserResponses,
+			UserGetUserErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/users/{id}",
+			...options,
+		});
+	}
+
+	/**
+	 * Update User
+	 */
+	public static userUpdateUser<ThrowOnError extends boolean = false>(
+		options: Options<UserUpdateUserData, ThrowOnError>,
+	) {
+		return (options.client ?? client).patch<
+			UserUpdateUserResponses,
+			UserUpdateUserErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/users/{id}",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * 내 OAuth 계정 목록 조회
+	 * 현재 사용자의 연결된 OAuth 계정 목록을 조회합니다.
+	 */
+	public static userGetMyOauthAccounts<ThrowOnError extends boolean = false>(
+		options?: Options<UserGetMyOauthAccountsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			UserGetMyOauthAccountsResponses,
+			unknown,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/users/me/oauth-accounts",
+			...options,
+		});
+	}
+
+	/**
+	 * OAuth 계정 연결 해제
+	 * 특정 OAuth 계정 연결을 해제합니다.
+	 */
+	public static userRemoveOauthAccount<ThrowOnError extends boolean = false>(
+		options: Options<UserRemoveOauthAccountData, ThrowOnError>,
+	) {
+		return (options.client ?? client).delete<
+			UserRemoveOauthAccountResponses,
+			UserRemoveOauthAccountErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/users/me/oauth-accounts/{oauth_name}/{account_id}",
+			...options,
+		});
+	}
+
+	/**
+	 * 사용자 OAuth 계정 목록 조회 (관리자용)
+	 * 특정 사용자의 OAuth 계정 목록을 조회합니다. (관리자 전용)
+	 */
+	public static userGetUserOauthAccounts<ThrowOnError extends boolean = false>(
+		options: Options<UserGetUserOauthAccountsData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			UserGetUserOauthAccountsResponses,
+			UserGetUserOauthAccountsErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/users/users/{user_id}/oauth-accounts",
 			...options,
 		});
 	}
@@ -1800,314 +2160,6 @@ export class BacktestsService {
 			],
 			url: "/api/v1/backtests/analytics/summary",
 			...options,
-		});
-	}
-}
-
-export class AuthService {
-	/**
-	 * Login
-	 */
-	public static authLogin<ThrowOnError extends boolean = false>(
-		options: Options<AuthLoginData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			AuthLoginResponses,
-			AuthLoginErrors,
-			ThrowOnError
-		>({
-			...urlSearchParamsBodySerializer,
-			url: "/api/v1/auth/login",
-			...options,
-			headers: {
-				"Content-Type": "application/x-www-form-urlencoded",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Logout
-	 */
-	public static authLogout<ThrowOnError extends boolean = false>(
-		options?: Options<AuthLogoutData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).post<
-			AuthLogoutResponses,
-			AuthLogoutErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/auth/logout",
-			...options,
-		});
-	}
-
-	/**
-	 * Forgot Password
-	 */
-	public static authForgotPassword<ThrowOnError extends boolean = false>(
-		options: Options<AuthForgotPasswordData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			AuthForgotPasswordResponses,
-			AuthForgotPasswordErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/auth/forgot-password",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Reset Password
-	 */
-	public static authResetPassword<ThrowOnError extends boolean = false>(
-		options: Options<AuthResetPasswordData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			AuthResetPasswordResponses,
-			AuthResetPasswordErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/auth/reset-password",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Request Verify Token
-	 */
-	public static authRequestVerifyToken<ThrowOnError extends boolean = false>(
-		options: Options<AuthRequestVerifyTokenData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			AuthRequestVerifyTokenResponses,
-			AuthRequestVerifyTokenErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/auth/request-verify-token",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Verify
-	 */
-	public static authVerify<ThrowOnError extends boolean = false>(
-		options: Options<AuthVerifyData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			AuthVerifyResponses,
-			AuthVerifyErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/auth/verify",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Register
-	 */
-	public static authRegister<ThrowOnError extends boolean = false>(
-		options: Options<AuthRegisterData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			AuthRegisterResponses,
-			AuthRegisterErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/auth/register",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-}
-
-export class JwtService {
-	/**
-	 * Oauth:Google.Jwt.Authorize
-	 */
-	public static authorize<ThrowOnError extends boolean = false>(
-		options?: Options<OAuth2OauthGoogleJwtAuthorizeData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			OAuth2OauthGoogleJwtAuthorizeResponses,
-			OAuth2OauthGoogleJwtAuthorizeErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/oauth2/authorize",
-			...options,
-		});
-	}
-
-	/**
-	 * Oauth:Google.Jwt.Callback
-	 * The response varies based on the authentication backend used.
-	 */
-	public static callback<ThrowOnError extends boolean = false>(
-		options?: Options<OAuth2OauthGoogleJwtCallbackData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			OAuth2OauthGoogleJwtCallbackResponses,
-			OAuth2OauthGoogleJwtCallbackErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/oauth2/callback",
-			...options,
-		});
-	}
-}
-
-export class OAuth2OauthGoogleService {
-	static jwtService = JwtService;
-}
-
-export class OAuth2Service {
-	static oAuth2OauthGoogleService = OAuth2OauthGoogleService;
-}
-
-export class UserService {
-	/**
-	 * Users:Current User
-	 */
-	public static userUsersCurrentUser<ThrowOnError extends boolean = false>(
-		options?: Options<UserUsersCurrentUserData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			UserUsersCurrentUserResponses,
-			UserUsersCurrentUserErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/users/me",
-			...options,
-		});
-	}
-
-	/**
-	 * Users:Patch Current User
-	 */
-	public static userUsersPatchCurrentUser<ThrowOnError extends boolean = false>(
-		options: Options<UserUsersPatchCurrentUserData, ThrowOnError>,
-	) {
-		return (options.client ?? client).patch<
-			UserUsersPatchCurrentUserResponses,
-			UserUsersPatchCurrentUserErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/users/me",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Users:Delete User
-	 */
-	public static userUsersDeleteUser<ThrowOnError extends boolean = false>(
-		options: Options<UserUsersDeleteUserData, ThrowOnError>,
-	) {
-		return (options.client ?? client).delete<
-			UserUsersDeleteUserResponses,
-			UserUsersDeleteUserErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/users/{id}",
-			...options,
-		});
-	}
-
-	/**
-	 * Users:User
-	 */
-	public static userUsersUser<ThrowOnError extends boolean = false>(
-		options: Options<UserUsersUserData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			UserUsersUserResponses,
-			UserUsersUserErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/users/{id}",
-			...options,
-		});
-	}
-
-	/**
-	 * Users:Patch User
-	 */
-	public static userUsersPatchUser<ThrowOnError extends boolean = false>(
-		options: Options<UserUsersPatchUserData, ThrowOnError>,
-	) {
-		return (options.client ?? client).patch<
-			UserUsersPatchUserResponses,
-			UserUsersPatchUserErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/users/{id}",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
 		});
 	}
 }
