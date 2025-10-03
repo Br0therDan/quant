@@ -19,6 +19,7 @@
 		"clsx": "^2.1.1",
 		"date-fns": "^4.1.0",
 		"dayjs": "^1.11.18",
+		"js-cookie": "^3.0.5",
 		"lightweight-charts": "^5.0.8",
 		"next": "^15.0.0",
 		"prop-types": "^15.8.1",
@@ -28,6 +29,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.2.0",
+		"@types/js-cookie": "^3.0.6",
 		"@types/node": "latest",
 		"@types/prop-types": "^15.7.15",
 		"@types/react": "^19.0.0",

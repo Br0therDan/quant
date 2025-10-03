@@ -13,18 +13,17 @@ export default defineConfig({
 			asClass: true,
 			operationId: true,
 			classNameBuilder: "{{name}}Service",
-			methodNameBuilder: (operation: { id: string; }) => {
+			methodNameBuilder: (operation: { id: string | null; }) => {
 
-				const id: string = operation.id
-				return id.charAt(0).toLowerCase() + id.slice(1)
+				const id = operation.id ?? "defaultId";
+				return id.charAt(0).toLowerCase() + id.slice(1);
 			},
 		},
 		{
 			name: "@hey-api/schemas",
 			type: "json",
-			namespace: "Schemas",
 			exportFromIndex: true,
-			// groupByTag: true,
+			nameBuilder: "{{name}}",
 		},
 		{
 			name: "@hey-api/client-next",
@@ -35,8 +34,9 @@ export default defineConfig({
 			name: "@tanstack/react-query",
 			exportFromIndex: true,
 			queryKeys: true,
-			mutationKeys: true,
-
+			mutationOptions: true,
+			queryOptions: true,
+			infiniteQueryOptions: true,
 		},
 	],
 });

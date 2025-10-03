@@ -1,6 +1,4 @@
 import { MyLogo } from "@/components/common/logo";
-import { useLogin } from "@/hooks/useAuth";
-import type { LoginCredentials } from "@/types/auth";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -18,6 +16,7 @@ import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { FacebookIcon, GoogleIcon } from "./CustomIcons";
 import ForgotPassword from "./ForgotPassword";
+import type { BodyAuthLogin } from '@/client';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -46,7 +45,7 @@ export default function SignInCard() {
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
   const [open, setOpen] = React.useState(false);
-  const { login, isLoading, error } = useLogin();
+
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -64,7 +63,7 @@ export default function SignInCard() {
     }
 
     try {
-      await login({ email, password } as LoginCredentials);
+      // await login({ username: email, password } as BodyAuthLogin);
       console.log("Login API call successful");
       // 성공 시 useAuthStatus의 useEffect에서 자동으로 리다이렉트됨
     } catch (err) {

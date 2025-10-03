@@ -1,11 +1,11 @@
-import type { UserRead } from "@/client";
+import type { UserResponse } from "@/client";
 
 /**
  * 인증 상태 인터페이스
  */
 export interface AuthState {
     /** 현재 로그인한 사용자 정보 */
-    user: UserRead | null;
+    user: UserResponse | null;
     /** 액세스 토큰 */
     token: string | null;
     /** 로딩 상태 */
@@ -20,7 +20,7 @@ export interface AuthState {
  * 로그인 자격 증명
  */
 export interface LoginCredentials {
-    email: string;
+    username: string;
     password: string;
 }
 
