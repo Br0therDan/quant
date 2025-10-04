@@ -145,10 +145,33 @@
           {
             "name": "X-Refresh-Token",
             "in": "header",
-            "required": true,
+            "required": false,
             "schema": {
-              "type": "string",
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "title": "X-Refresh-Token"
+            }
+          },
+          {
+            "name": "refresh_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Refresh Token"
             }
           }
         ],
@@ -174,6 +197,35 @@
             }
           }
         }
+      }
+    },
+    "/api/v1/auth/token/verify": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Verify Token",
+        "description": "토큰 검증 및 사용자 정보 반환 (디버깅용)",
+        "operationId": "Auth-verify_token",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Auth-Verify Token"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
       }
     },
     "/api/v1/auth/register": {

@@ -91,7 +91,7 @@ export function middleware(request: NextRequest) {
     }
 
     // 쿠키에서 토큰 확인
-    const token = request.cookies.get("auth_token")?.value;
+    const token = request.cookies.get("access_token")?.value;
     const isAuthenticated = isTokenValid(token);
 
     // 루트 경로 처리

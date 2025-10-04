@@ -48,12 +48,8 @@ export default function MarketDataChartPage() {
 		...marketDataGetMarketDataOptions({
 			path: { symbol: selectedSymbol },
 			query: {
-				start_date: new Date(
-					startDate?.format("YYYY-MM-DD") || dayjs().format("YYYY-MM-DD"),
-				),
-				end_date: new Date(
-					endDate?.format("YYYY-MM-DD") || dayjs().format("YYYY-MM-DD"),
-				),
+				start_date: startDate?.format("YYYY-MM-DD") || dayjs().format("YYYY-MM-DD"),
+				end_date: endDate?.format("YYYY-MM-DD") || dayjs().format("YYYY-MM-DD"),
 				force_refresh: forceRefresh,
 			},
 		}),

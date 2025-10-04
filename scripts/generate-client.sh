@@ -6,7 +6,7 @@ set -x
 cd backend
 
 # OpenAPI JSON을 깔끔하게 생성하고 포맷팅
-python -c "
+uv run python -c "
 import sys
 import json
 import os

@@ -38,6 +38,7 @@ import type {
 	AuthVerifyData,
 	AuthVerifyError,
 	AuthVerifyResponse,
+	AuthVerifyTokenData,
 	BacktestsCreateAndRunIntegratedBacktestData,
 	BacktestsCreateAndRunIntegratedBacktestError,
 	BacktestsCreateAndRunIntegratedBacktestResponse,
@@ -342,6 +343,31 @@ export const authRefreshTokenMutation = (
 		},
 	};
 	return mutationOptions;
+};
+
+export const authVerifyTokenQueryKey = (
+	options?: Options<AuthVerifyTokenData>,
+) => createQueryKey("authVerifyToken", options);
+
+/**
+ * Verify Token
+ * 토큰 검증 및 사용자 정보 반환 (디버깅용)
+ */
+export const authVerifyTokenOptions = (
+	options?: Options<AuthVerifyTokenData>,
+) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await AuthService.authVerifyToken({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			});
+			return data;
+		},
+		queryKey: authVerifyTokenQueryKey(options),
+	});
 };
 
 /**

@@ -1828,11 +1828,11 @@ export type AuthLogoutResponse = AuthLogoutResponses[keyof AuthLogoutResponses];
 
 export type AuthRefreshTokenData = {
 	body?: never;
-	headers: {
+	headers?: {
 		/**
 		 * X-Refresh-Token
 		 */
-		"X-Refresh-Token": string;
+		"X-Refresh-Token"?: string | null;
 	};
 	path?: never;
 	query?: never;
@@ -1858,6 +1858,26 @@ export type AuthRefreshTokenResponses = {
 
 export type AuthRefreshTokenResponse =
 	AuthRefreshTokenResponses[keyof AuthRefreshTokenResponses];
+
+export type AuthVerifyTokenData = {
+	body?: never;
+	path?: never;
+	query?: never;
+	url: "/api/v1/auth/token/verify";
+};
+
+export type AuthVerifyTokenResponses = {
+	/**
+	 * Response Auth-Verify Token
+	 * Successful Response
+	 */
+	200: {
+		[key: string]: unknown;
+	};
+};
+
+export type AuthVerifyTokenResponse =
+	AuthVerifyTokenResponses[keyof AuthVerifyTokenResponses];
 
 export type AuthRegisterData = {
 	body: UserCreate;

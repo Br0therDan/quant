@@ -1,11 +1,11 @@
 "use client";
 
-import { UserService,  type  BodyAuthLogin } from "@/client";
+import { UserService, type BodyAuthLogin } from "@/client";
 
+import type { AuthActions, AuthState } from "@/types/auth";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, type ReactNode } from "react";
-import type { AuthState, AuthActions } from "@/types/auth";
 
 /**
  * AuthContext 타입
@@ -134,12 +134,24 @@ export function AuthProvider({ children }: AuthProviderProps) {
   // 현재 사용자 정보 쿼리
   const { data: user, isLoading } = useQuery({
     queryKey: ["auth", "user"],
-    queryFn: async () => await UserService.userGetUserMe(),
-    retry: false,
+    queryFn: async () => {
+      const token = getTokenFromCookie();
+      if (!token) {
+        throw new Error("No token found");
+      }
+      return await UserService.userGetUserMe();
+    },
+    retry: (failureCount, error: any) => {
+      // 401 에러나 토큰이 없는 경우 재시도하지 않음
+      if (error?.message === "No token found" || error?.status === 401) {
+        return false;
+      }
+      return failureCount < 3;
+    },
     staleTime: 5 * 60 * 1000, // 5분
     gcTime: 10 * 60 * 1000, // 10분
+    enabled: !!getTokenFromCookie(), // 토큰이 있을 때만 쿼리 실행
   });
-
 
   // 로그인 뮤테이션
   const loginMutation = useMutation({
@@ -243,10 +255,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const contextValue: AuthContextType = {
     // 상태
     user: user?.data || null,
-    isLoading:
-      isLoading ||
-      loginMutation.isPending ||
-      logoutMutation.isPending,
+    isLoading: isLoading || loginMutation.isPending || logoutMutation.isPending,
     token: getTokenFromCookie() || null,
     isAuthenticated: !!user && !!getTokenFromCookie(),
     isInitialized: !isLoading,
@@ -263,7 +272,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
       console.warn("Refresh token function is not implemented yet.");
     },
     refreshUser: async () => {
-      console.warn("Refresh user function is not implemented yet.");
+      // 사용자 정보 쿼리 무효화 및 재조회
+      await queryClient.invalidateQueries({
+        queryKey: ["auth", "user"],
+      });
     },
     initialize: async () => {
       queryClient.invalidateQueries({

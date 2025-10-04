@@ -19,7 +19,7 @@ import type {} from "@mui/material/themeCssVarsAugmentation";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { usePathname } from "next/navigation";
 import * as React from "react";
-import SidebarContext from "@/context/SidebarContext";
+import SidebarContext from "@/contexts/SidebarContext";
 import { DRAWER_WIDTH, MINI_DRAWER_WIDTH } from "./constants";
 import {
 	getDrawerSxTransitionMixin,

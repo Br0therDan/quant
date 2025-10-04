@@ -21,7 +21,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 
-import { watchlistsGetWatchlistOptions } from "@/client/@tanstack/react-query.gen";
+import { pipelineGetWatchlistOptions } from "@/client/@tanstack/react-query.gen";
 
 interface WatchlistCardProps {
 	watchlist: {
@@ -48,7 +48,7 @@ export default function WatchlistCard({
 
 	// 워치리스트 상세 정보 가져오기
 	const { data: watchlistDetails } = useQuery(
-		watchlistsGetWatchlistOptions({
+		pipelineGetWatchlistOptions({
 			path: { name: watchlist.name },
 		}),
 	);

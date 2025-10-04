@@ -1,5 +1,6 @@
 import QueryProvider from "@/components/providers/QueryProvider";
-import { AuthProvider } from "@/context/AuthContext";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { SnackbarProvider } from "@/contexts/SnackbarContext";
 import theme from "@/theme";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -27,12 +28,14 @@ export default function RootLayout(props: { children: React.ReactNode }) {
         <InitColorSchemeScript attribute="class" />
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
           <ThemeProvider theme={theme}>
-            <QueryProvider>
-              <AuthProvider>
-                <CssBaseline enableColorScheme />
-                {props.children}
-              </AuthProvider>
-            </QueryProvider>
+            <SnackbarProvider>
+              <QueryProvider>
+                <AuthProvider>
+                  <CssBaseline enableColorScheme />
+                  {props.children}
+                </AuthProvider>
+              </QueryProvider>
+            </SnackbarProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

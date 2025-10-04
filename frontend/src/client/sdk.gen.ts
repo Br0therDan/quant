@@ -31,6 +31,8 @@ import type {
 	AuthVerifyData,
 	AuthVerifyErrors,
 	AuthVerifyResponses,
+	AuthVerifyTokenData,
+	AuthVerifyTokenResponses,
 	BacktestsCreateAndRunIntegratedBacktestData,
 	BacktestsCreateAndRunIntegratedBacktestErrors,
 	BacktestsCreateAndRunIntegratedBacktestResponses,
@@ -324,14 +326,37 @@ export class AuthService {
 	 * 현재는 Access Token과 Refresh Token을 모두 새로 발급합니다.
 	 */
 	public static authRefreshToken<ThrowOnError extends boolean = false>(
-		options: Options<AuthRefreshTokenData, ThrowOnError>,
+		options?: Options<AuthRefreshTokenData, ThrowOnError>,
 	) {
-		return (options.client ?? client).post<
+		return (options?.client ?? client).post<
 			AuthRefreshTokenResponses,
 			AuthRefreshTokenErrors,
 			ThrowOnError
 		>({
 			url: "/api/v1/auth/refresh",
+			...options,
+		});
+	}
+
+	/**
+	 * Verify Token
+	 * 토큰 검증 및 사용자 정보 반환 (디버깅용)
+	 */
+	public static authVerifyToken<ThrowOnError extends boolean = false>(
+		options?: Options<AuthVerifyTokenData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			AuthVerifyTokenResponses,
+			unknown,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/auth/token/verify",
 			...options,
 		});
 	}

@@ -1,4 +1,6 @@
+import type { BodyAuthLogin } from "@/client";
 import { MyLogo } from "@/components/common/logo";
+import { useAuth } from "@/hooks/useAuth";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -16,7 +18,6 @@ import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { FacebookIcon, GoogleIcon } from "./CustomIcons";
 import ForgotPassword from "./ForgotPassword";
-import type { BodyAuthLogin } from '@/client';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -46,6 +47,7 @@ export default function SignInCard() {
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
   const [open, setOpen] = React.useState(false);
 
+  const { login, isLoginPending, loginError } = useAuth();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -63,11 +65,11 @@ export default function SignInCard() {
     }
 
     try {
-      // await login({ username: email, password } as BodyAuthLogin);
+      await login({ username: email, password } as BodyAuthLogin);
       console.log("Login API call successful");
-      // 성공 시 useAuthStatus의 useEffect에서 자동으로 리다이렉트됨
+      // 성공 시 useAuth의 onSuccess에서 자동으로 리다이렉트됨
     } catch (err) {
-      // 에러는 useLogin에서 자동으로 처리됨
+      // 에러는 useAuth에서 자동으로 처리됨
       console.error("Login failed:", err);
     }
   };
@@ -109,7 +111,7 @@ export default function SignInCard() {
         로그인
       </Typography>
 
-      {error && (
+      {loginError && (
         <Alert severity="error" sx={{ mb: 2 }}>
           로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.
         </Alert>
@@ -136,7 +138,7 @@ export default function SignInCard() {
             color={emailError ? "error" : "primary"}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            disabled={isLoading}
+            disabled={isLoginPending}
           />
         </FormControl>
         <FormControl>
@@ -165,7 +167,7 @@ export default function SignInCard() {
             color={passwordError ? "error" : "primary"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            disabled={isLoading}
+            disabled={isLoginPending}
           />
         </FormControl>
         <FormControlLabel
@@ -175,7 +177,7 @@ export default function SignInCard() {
               color="primary"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
-              disabled={isLoading}
+              disabled={isLoginPending}
             />
           }
           label="로그인 상태 유지"
@@ -185,10 +187,10 @@ export default function SignInCard() {
           type="submit"
           fullWidth
           variant="contained"
-          disabled={isLoading}
+          disabled={isLoginPending}
           sx={{ mt: 3, mb: 2 }}
         >
-          {isLoading ? (
+          {isLoginPending ? (
             <CircularProgress size={24} color="inherit" />
           ) : (
             "로그인"
@@ -210,7 +212,7 @@ export default function SignInCard() {
           variant="outlined"
           onClick={() => alert("Google 로그인 기능 구현 예정")}
           startIcon={<GoogleIcon />}
-          disabled={isLoading}
+          disabled={isLoginPending}
         >
           Google로 로그인
         </Button>
@@ -219,7 +221,7 @@ export default function SignInCard() {
           variant="outlined"
           onClick={() => alert("Facebook 로그인 기능 구현 예정")}
           startIcon={<FacebookIcon />}
-          disabled={isLoading}
+          disabled={isLoginPending}
         >
           Facebook으로 로그인
         </Button>
