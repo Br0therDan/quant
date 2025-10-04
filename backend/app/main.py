@@ -75,6 +75,7 @@ app = create_fastapi_app(
     document_models=models.collections,
     database_name="data_service",
     enable_auth=True,
+    enable_oauth=True,
     enable_metrics=True,
     enable_health_check=True,
     lifespan=lifespan,

@@ -90,7 +90,7 @@
           "required": true
         },
         "responses": {
-          "202": {
+          "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
@@ -119,7 +119,7 @@
           "Auth"
         ],
         "summary": "Logout",
-        "description": "로그아웃 엔드포인트.\n\n현재는 클라이언트 측에서 토큰을 삭제하는 방식으로 처리합니다.\nJWT 토큰은 서버에서 무효화할 수 없으므로, 클라이언트에서 토큰을 삭제해야 합니다.",
+        "description": "로그아웃 엔드포인트.\n\n쿠키에서 토큰을 삭제하고 로그아웃 처리를 합니다.",
         "operationId": "Auth-logout",
         "responses": {
           "204": {
@@ -139,7 +139,7 @@
           "Auth"
         ],
         "summary": "Refresh Token",
-        "description": "JWT 토큰 갱신 엔드포인트.\n\n현재는 Access Token과 Refresh Token을 모두 새로 발급합니다.",
+        "description": "JWT 토큰 갱신 엔드포인트",
         "operationId": "Auth-refresh_token",
         "parameters": [
           {
@@ -403,6 +403,124 @@
           },
           "required": true
         },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/{provider}/authorize": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Authorize",
+        "description": "Initiate the OAuth2 authorization process for associating an OAuth account\nwith the currently authenticated user.",
+        "operationId": "Auth-authorize",
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Provider"
+            }
+          },
+          {
+            "name": "redirect_url",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Redirect Url"
+            }
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "State"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuth2AuthorizeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/{provider}/callback": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Callback",
+        "description": "The response varies based on the authentication backend used.",
+        "operationId": "Auth-callback",
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Provider"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -4505,7 +4623,14 @@
       "LoginResponse": {
         "properties": {
           "access_token": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Access Token"
           },
           "refresh_token": {
@@ -4520,9 +4645,15 @@
             "title": "Refresh Token"
           },
           "token_type": {
-            "type": "string",
-            "title": "Token Type",
-            "default": "bearer"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Token Type"
           },
           "user_info": {
             "$ref": "#/components/schemas/UserResponse"
@@ -4530,7 +4661,6 @@
         },
         "type": "object",
         "required": [
-          "access_token",
           "user_info"
         ],
         "title": "LoginResponse",
@@ -4636,6 +4766,22 @@
         ],
         "title": "MarketDataResponse",
         "description": "Response model for market data"
+      },
+      "OAuth2AuthorizeResponse": {
+        "properties": {
+          "authorization_url": {
+            "type": "string",
+            "title": "Authorization Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "authorization_url"
+        ],
+        "title": "OAuth2AuthorizeResponse",
+        "example": {
+          "authorization_url": "https://example.com/oauth/authorize?response_type=code&client_id=your_client_id&redirect_uri=your_redirect_uri&scope=your_scope"
+        }
       },
       "OAuthAccount": {
         "properties": {

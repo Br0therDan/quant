@@ -790,7 +790,7 @@ export type LoginResponse = {
 	/**
 	 * Access Token
 	 */
-	access_token: string;
+	access_token?: string | null;
 	/**
 	 * Refresh Token
 	 */
@@ -798,7 +798,7 @@ export type LoginResponse = {
 	/**
 	 * Token Type
 	 */
-	token_type?: string;
+	token_type?: string | null;
 	user_info: UserResponse;
 };
 
@@ -851,6 +851,16 @@ export type MarketDataResponse = {
 	 * Split Coefficient
 	 */
 	split_coefficient?: number | null;
+};
+
+/**
+ * OAuth2AuthorizeResponse
+ */
+export type OAuth2AuthorizeResponse = {
+	/**
+	 * Authorization Url
+	 */
+	authorization_url: string;
 };
 
 /**
@@ -1805,7 +1815,7 @@ export type AuthLoginResponses = {
 	/**
 	 * Successful Response
 	 */
-	202: LoginResponse;
+	200: LoginResponse;
 };
 
 export type AuthLoginResponse = AuthLoginResponses[keyof AuthLoginResponses];
@@ -2001,6 +2011,77 @@ export type AuthVerifyResponses = {
 };
 
 export type AuthVerifyResponse = AuthVerifyResponses[keyof AuthVerifyResponses];
+
+export type AuthAuthorizeData = {
+	body?: never;
+	path: {
+		/**
+		 * Provider
+		 */
+		provider: string;
+	};
+	query?: {
+		/**
+		 * Redirect Url
+		 */
+		redirect_url?: string | null;
+		/**
+		 * State
+		 */
+		state?: string | null;
+	};
+	url: "/api/v1/auth/{provider}/authorize";
+};
+
+export type AuthAuthorizeErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type AuthAuthorizeError = AuthAuthorizeErrors[keyof AuthAuthorizeErrors];
+
+export type AuthAuthorizeResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: OAuth2AuthorizeResponse;
+};
+
+export type AuthAuthorizeResponse =
+	AuthAuthorizeResponses[keyof AuthAuthorizeResponses];
+
+export type AuthCallbackData = {
+	body?: never;
+	path: {
+		/**
+		 * Provider
+		 */
+		provider: string;
+	};
+	query?: never;
+	url: "/api/v1/auth/{provider}/callback";
+};
+
+export type AuthCallbackErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type AuthCallbackError = AuthCallbackErrors[keyof AuthCallbackErrors];
+
+export type AuthCallbackResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: UserResponse;
+};
+
+export type AuthCallbackResponse =
+	AuthCallbackResponses[keyof AuthCallbackResponses];
 
 export type UserGetUserMeData = {
 	body?: never;

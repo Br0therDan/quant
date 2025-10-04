@@ -18,6 +18,8 @@ import {
 	UserService,
 } from "../sdk.gen";
 import type {
+	AuthAuthorizeData,
+	AuthCallbackData,
 	AuthLoginData,
 	AuthLoginError,
 	AuthLoginResponse,
@@ -288,8 +290,7 @@ export const authLoginMutation = (
  * Logout
  * 로그아웃 엔드포인트.
  *
- * 현재는 클라이언트 측에서 토큰을 삭제하는 방식으로 처리합니다.
- * JWT 토큰은 서버에서 무효화할 수 없으므로, 클라이언트에서 토큰을 삭제해야 합니다.
+ * 쿠키에서 토큰을 삭제하고 로그아웃 처리를 합니다.
  */
 export const authLogoutMutation = (
 	options?: Partial<Options<AuthLogoutData>>,
@@ -317,9 +318,7 @@ export const authLogoutMutation = (
 
 /**
  * Refresh Token
- * JWT 토큰 갱신 엔드포인트.
- *
- * 현재는 Access Token과 Refresh Token을 모두 새로 발급합니다.
+ * JWT 토큰 갱신 엔드포인트
  */
 export const authRefreshTokenMutation = (
 	options?: Partial<Options<AuthRefreshTokenData>>,
@@ -503,6 +502,51 @@ export const authVerifyMutation = (
 		},
 	};
 	return mutationOptions;
+};
+
+export const authAuthorizeQueryKey = (options: Options<AuthAuthorizeData>) =>
+	createQueryKey("authAuthorize", options);
+
+/**
+ * Authorize
+ * Initiate the OAuth2 authorization process for associating an OAuth account
+ * with the currently authenticated user.
+ */
+export const authAuthorizeOptions = (options: Options<AuthAuthorizeData>) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await AuthService.authAuthorize({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			});
+			return data;
+		},
+		queryKey: authAuthorizeQueryKey(options),
+	});
+};
+
+export const authCallbackQueryKey = (options: Options<AuthCallbackData>) =>
+	createQueryKey("authCallback", options);
+
+/**
+ * Callback
+ * The response varies based on the authentication backend used.
+ */
+export const authCallbackOptions = (options: Options<AuthCallbackData>) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await AuthService.authCallback({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			});
+			return data;
+		},
+		queryKey: authCallbackQueryKey(options),
+	});
 };
 
 export const userGetUserMeQueryKey = (options?: Options<UserGetUserMeData>) =>

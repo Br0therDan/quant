@@ -8,6 +8,12 @@ import {
 } from "./client";
 import { client } from "./client.gen";
 import type {
+	AuthAuthorizeData,
+	AuthAuthorizeErrors,
+	AuthAuthorizeResponses,
+	AuthCallbackData,
+	AuthCallbackErrors,
+	AuthCallbackResponses,
 	AuthLoginData,
 	AuthLoginErrors,
 	AuthLoginResponses,
@@ -297,8 +303,7 @@ export class AuthService {
 	 * Logout
 	 * 로그아웃 엔드포인트.
 	 *
-	 * 현재는 클라이언트 측에서 토큰을 삭제하는 방식으로 처리합니다.
-	 * JWT 토큰은 서버에서 무효화할 수 없으므로, 클라이언트에서 토큰을 삭제해야 합니다.
+	 * 쿠키에서 토큰을 삭제하고 로그아웃 처리를 합니다.
 	 */
 	public static authLogout<ThrowOnError extends boolean = false>(
 		options?: Options<AuthLogoutData, ThrowOnError>,
@@ -321,9 +326,7 @@ export class AuthService {
 
 	/**
 	 * Refresh Token
-	 * JWT 토큰 갱신 엔드포인트.
-	 *
-	 * 현재는 Access Token과 Refresh Token을 모두 새로 발급합니다.
+	 * JWT 토큰 갱신 엔드포인트
 	 */
 	public static authRefreshToken<ThrowOnError extends boolean = false>(
 		options?: Options<AuthRefreshTokenData, ThrowOnError>,
@@ -458,6 +461,41 @@ export class AuthService {
 				"Content-Type": "application/json",
 				...options.headers,
 			},
+		});
+	}
+
+	/**
+	 * Authorize
+	 * Initiate the OAuth2 authorization process for associating an OAuth account
+	 * with the currently authenticated user.
+	 */
+	public static authAuthorize<ThrowOnError extends boolean = false>(
+		options: Options<AuthAuthorizeData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			AuthAuthorizeResponses,
+			AuthAuthorizeErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/auth/{provider}/authorize",
+			...options,
+		});
+	}
+
+	/**
+	 * Callback
+	 * The response varies based on the authentication backend used.
+	 */
+	public static authCallback<ThrowOnError extends boolean = false>(
+		options: Options<AuthCallbackData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			AuthCallbackResponses,
+			AuthCallbackErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/auth/{provider}/callback",
+			...options,
 		});
 	}
 }

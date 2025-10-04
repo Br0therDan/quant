@@ -1229,7 +1229,14 @@ export const IntegratedBacktestResponse = {
 export const LoginResponse = {
 	properties: {
 		access_token: {
-			type: "string",
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
 			title: "Access Token",
 		},
 		refresh_token: {
@@ -1244,16 +1251,22 @@ export const LoginResponse = {
 			title: "Refresh Token",
 		},
 		token_type: {
-			type: "string",
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
 			title: "Token Type",
-			default: "bearer",
 		},
 		user_info: {
 			$ref: "#/components/schemas/UserResponse",
 		},
 	},
 	type: "object",
-	required: ["access_token", "user_info"],
+	required: ["user_info"],
 	title: "LoginResponse",
 	example: {
 		access_token: "string",
@@ -1350,6 +1363,22 @@ export const MarketDataResponse = {
 	required: ["symbol", "date", "open", "high", "low", "close", "volume"],
 	title: "MarketDataResponse",
 	description: "Response model for market data",
+} as const;
+
+export const OAuth2AuthorizeResponse = {
+	properties: {
+		authorization_url: {
+			type: "string",
+			title: "Authorization Url",
+		},
+	},
+	type: "object",
+	required: ["authorization_url"],
+	title: "OAuth2AuthorizeResponse",
+	example: {
+		authorization_url:
+			"https://example.com/oauth/authorize?response_type=code&client_id=your_client_id&redirect_uri=your_redirect_uri&scope=your_scope",
+	},
 } as const;
 
 export const OAuthAccount = {
