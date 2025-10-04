@@ -1,7 +1,7 @@
 "use client";
 import type {
   BodyAuthLogin,
-  BodyAuthResetResetPassword,
+  BodyAuthResetPassword,
   UserCreate,
   UserUpdate
 } from "@/client";
@@ -41,7 +41,7 @@ export function useAuth() {
   // 로그인 뮤테이션
   const createLoginMutation = useMutation({
     mutationFn: async (data: BodyAuthLogin) => {
-      const response = await AuthService.authLogin({
+      const response = await AuthService.login({
         body: {
           username: data.username,
           password: data.password,
@@ -51,7 +51,7 @@ export function useAuth() {
       if (response.error) {
         throw new Error(typeof response.error.detail === "string" ? response.error.detail : "로그인에 실패했습니다");
       }
-      Cookies.set("access_token", response.data.access_token);
+      Cookies.set("access_token", response.data.access_token ?? "");
       Cookies.set("refresh_token", response.data.refresh_token ?? "");
       Cookies.set("token_type", response.data.token_type ?? "");
       Cookies.set("user_info", JSON.stringify(response.data.user_info));
@@ -75,7 +75,7 @@ export function useAuth() {
   // 비밀번호 찾기 뮤테이션
   const createForgotPasswordMutation = useMutation({
     mutationFn: async (email: string) => {
-      const response = await AuthService.authResetForgotPassword({
+      const response = await AuthService.forgotPassword({
         body: {
           email,
         }
@@ -92,8 +92,8 @@ export function useAuth() {
 
   // 비밀번호 재설정 뮤테이션
   const createResetPasswordMutation = useMutation({
-    mutationFn: async (data: BodyAuthResetResetPassword) => {
-      const response = await AuthService.authResetResetPassword({
+    mutationFn: async (data: BodyAuthResetPassword) => {
+      const response = await AuthService.resetPassword({
         body: data,
       });
       return response;
@@ -110,7 +110,7 @@ export function useAuth() {
   // 사용자 정보 업데이트 뮤테이션
   const createUpdateUserMutation = useMutation({
     mutationFn: async (data: UserUpdate) => {
-      const response = await UserService.userUpdateUserMe({
+      const response = await UserService.updateUserMe({
         body: data,
       });
       return response;
@@ -132,7 +132,7 @@ export function useAuth() {
         throw new Error("사용자 정보를 찾을 수 없습니다");
       }
       // 현재 사용자의 ID를 사용하여 계정 삭제
-      const response = await UserService.userDeleteUser({
+      const response = await UserService.deleteUser({
         path: { id: user.email }, // 이메일을 ID로 사용
       });
       return response;
@@ -150,7 +150,7 @@ export function useAuth() {
   // 회원가입 뮤테이션
   const createSignupMutation = useMutation({
     mutationFn: async (userData: UserCreate) => {
-      const response = await AuthService.authRegister({
+      const response = await AuthService.register({
         body: userData,
       });
       return response;
@@ -186,7 +186,7 @@ export function useAuth() {
     login: (data: BodyAuthLogin) => createLoginMutation.mutateAsync(data),
     signup: (userData: UserCreate) => createSignupMutation.mutateAsync(userData),
     forgotPassword: (email: string) => createForgotPasswordMutation.mutateAsync(email),
-    resetPassword: (data: BodyAuthResetResetPassword) => createResetPasswordMutation.mutateAsync(data),
+    resetPassword: (data: BodyAuthResetPassword) => createResetPasswordMutation.mutateAsync(data),
     updateUser: (data: UserUpdate) => createUpdateUserMutation.mutateAsync(data),
     deleteAccount: () => createDeleteAccountMutation.mutateAsync(),
 

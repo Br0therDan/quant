@@ -237,7 +237,6 @@ export class HealthService {
 			unknown,
 			ThrowOnError
 		>({
-			responseType: "json",
 			url: "/health/",
 			...options,
 		});
@@ -255,7 +254,6 @@ export class HealthService {
 			unknown,
 			ThrowOnError
 		>({
-			responseType: "json",
 			url: "/health/live",
 			...options,
 		});
@@ -273,7 +271,6 @@ export class HealthService {
 			unknown,
 			ThrowOnError
 		>({
-			responseType: "json",
 			url: "/health/ready",
 			...options,
 		});
@@ -293,7 +290,6 @@ export class AuthService {
 			ThrowOnError
 		>({
 			...urlSearchParamsBodySerializer,
-			responseType: "json",
 			url: "/api/v1/auth/login",
 			...options,
 			headers: {
@@ -340,7 +336,6 @@ export class AuthService {
 			AuthRefreshTokenErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			url: "/api/v1/auth/refresh",
 			...options,
 		});
@@ -358,7 +353,6 @@ export class AuthService {
 			unknown,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -381,7 +375,6 @@ export class AuthService {
 			AuthRegisterErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			url: "/api/v1/auth/register",
 			...options,
 			headers: {
@@ -402,7 +395,6 @@ export class AuthService {
 			AuthForgotPasswordErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			url: "/api/v1/auth/forgot-password",
 			...options,
 			headers: {
@@ -423,7 +415,6 @@ export class AuthService {
 			AuthResetPasswordErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			url: "/api/v1/auth/reset-password",
 			...options,
 			headers: {
@@ -444,7 +435,6 @@ export class AuthService {
 			AuthRequestVerifyTokenErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			url: "/api/v1/auth/request-verify-token",
 			...options,
 			headers: {
@@ -465,7 +455,6 @@ export class AuthService {
 			AuthVerifyErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			url: "/api/v1/auth/verify",
 			...options,
 			headers: {
@@ -488,7 +477,6 @@ export class AuthService {
 			AuthAuthorizeErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			url: "/api/v1/auth/{provider}/authorize",
 			...options,
 		});
@@ -506,7 +494,6 @@ export class AuthService {
 			AuthCallbackErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			url: "/api/v1/auth/{provider}/callback",
 			...options,
 		});
@@ -525,7 +512,6 @@ export class UserService {
 			unknown,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -548,7 +534,6 @@ export class UserService {
 			UserUpdateUserMeErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -597,7 +582,6 @@ export class UserService {
 			UserGetUserErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -620,7 +604,6 @@ export class UserService {
 			UserUpdateUserErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -648,7 +631,6 @@ export class UserService {
 			unknown,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -695,7 +677,6 @@ export class UserService {
 			UserGetUserOauthAccountsErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -721,7 +702,6 @@ export class MarketDataService {
 			unknown,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -745,7 +725,6 @@ export class MarketDataService {
 			MarketDataGetMarketDataErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -769,7 +748,6 @@ export class MarketDataService {
 			MarketDataRequestBulkDataErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -797,7 +775,6 @@ export class MarketDataService {
 			MarketDataGetDataCoverageErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -821,7 +798,6 @@ export class MarketDataService {
 			MarketDataAnalyzeDataQualityErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -845,7 +821,6 @@ export class MarketDataService {
 			unknown,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -871,7 +846,6 @@ export class MarketDataService {
 			unknown,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -895,7 +869,6 @@ export class MarketDataService {
 			unknown,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -948,7 +921,6 @@ export class PipelineService {
 			PipelineUpdateWatchlistErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -998,7 +970,6 @@ export class PipelineService {
 			unknown,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1047,7 +1018,6 @@ export class PipelineService {
 			PipelineCreateWatchlistErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1096,7 +1066,6 @@ export class PipelineService {
 			PipelineDeleteWatchlistErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1144,7 +1113,6 @@ export class PipelineService {
 			PipelineGetWatchlistErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1195,7 +1163,6 @@ export class PipelineService {
 			PipelineUpdateWatchlistByNameErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1244,7 +1211,6 @@ export class PipelineService {
 			PipelineCollectStockInfoErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1293,7 +1259,6 @@ export class PipelineService {
 			PipelineCollectDailyDataErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1337,7 +1302,6 @@ export class PipelineService {
 			PipelineGetSymbolCoverageErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1389,7 +1353,6 @@ export class PipelineService {
 			PipelineGetCompanyInfoErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1434,7 +1397,6 @@ export class PipelineService {
 			unknown,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1474,7 +1436,6 @@ export class PipelineService {
 			unknown,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1513,7 +1474,6 @@ export class PipelineService {
 			unknown,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1561,7 +1521,6 @@ export class PipelineService {
 			PipelineRunPipelineUpdateErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1591,7 +1550,6 @@ export class StrategyService {
 			StrategyGetStrategiesErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1615,7 +1573,6 @@ export class StrategyService {
 			StrategyCreateStrategyErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1643,7 +1600,6 @@ export class StrategyService {
 			StrategyDeleteStrategyErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1667,7 +1623,6 @@ export class StrategyService {
 			StrategyGetStrategyErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1691,7 +1646,6 @@ export class StrategyService {
 			StrategyUpdateStrategyErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1719,7 +1673,6 @@ export class StrategyService {
 			StrategyExecuteStrategyErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1747,7 +1700,6 @@ export class StrategyService {
 			StrategyGetStrategyExecutionsErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1771,7 +1723,6 @@ export class StrategyService {
 			StrategyGetStrategyPerformanceErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1795,7 +1746,6 @@ export class StrategyService {
 			StrategyGetTemplatesErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1819,7 +1769,6 @@ export class StrategyService {
 			StrategyCreateTemplateErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1847,7 +1796,6 @@ export class StrategyService {
 			StrategyDeleteTemplateErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1871,7 +1819,6 @@ export class StrategyService {
 			StrategyGetTemplateErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1895,7 +1842,6 @@ export class StrategyService {
 			StrategyUpdateTemplateErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1923,7 +1869,6 @@ export class StrategyService {
 			StrategyCreateStrategyFromTemplateErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1951,7 +1896,6 @@ export class StrategyService {
 			unknown,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1977,7 +1921,6 @@ export class BacktestsService {
 			BacktestsGetBacktestsErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -2001,7 +1944,6 @@ export class BacktestsService {
 			BacktestsCreateBacktestErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -2029,7 +1971,6 @@ export class BacktestsService {
 			BacktestsDeleteBacktestErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -2053,7 +1994,6 @@ export class BacktestsService {
 			BacktestsGetBacktestErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -2077,7 +2017,6 @@ export class BacktestsService {
 			BacktestsUpdateBacktestErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -2105,7 +2044,6 @@ export class BacktestsService {
 			BacktestsExecuteBacktestErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -2133,7 +2071,6 @@ export class BacktestsService {
 			BacktestsGetBacktestExecutionsErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -2157,7 +2094,6 @@ export class BacktestsService {
 			BacktestsGetBacktestResultsErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -2183,7 +2119,6 @@ export class BacktestsService {
 			BacktestsCreateAndRunIntegratedBacktestErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -2211,7 +2146,6 @@ export class BacktestsService {
 			unknown,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -2235,7 +2169,6 @@ export class BacktestsService {
 			unknown,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -2259,7 +2192,6 @@ export class BacktestsService {
 			BacktestsGetTradesAnalyticsErrors,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -2283,7 +2215,6 @@ export class BacktestsService {
 			unknown,
 			ThrowOnError
 		>({
-			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
