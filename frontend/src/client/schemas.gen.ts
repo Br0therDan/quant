@@ -512,6 +512,19 @@ export const BacktestUpdateRequest = {
 	description: "백테스트 수정 요청",
 } as const;
 
+export const Body_Auth_forgot_password = {
+	properties: {
+		email: {
+			type: "string",
+			format: "email",
+			title: "Email",
+		},
+	},
+	type: "object",
+	required: ["email"],
+	title: "Body_Auth-forgot_password",
+} as const;
+
 export const Body_Auth_login = {
 	properties: {
 		grant_type: {
@@ -582,20 +595,7 @@ export const Body_Auth_request_verify_token = {
 	title: "Body_Auth-request_verify_token",
 } as const;
 
-export const Body_Auth_reset_forgot_password = {
-	properties: {
-		email: {
-			type: "string",
-			format: "email",
-			title: "Email",
-		},
-	},
-	type: "object",
-	required: ["email"],
-	title: "Body_Auth-reset:forgot_password",
-} as const;
-
-export const Body_Auth_reset_reset_password = {
+export const Body_Auth_reset_password = {
 	properties: {
 		token: {
 			type: "string",
@@ -608,7 +608,7 @@ export const Body_Auth_reset_reset_password = {
 	},
 	type: "object",
 	required: ["token", "password"],
-	title: "Body_Auth-reset:reset_password",
+	title: "Body_Auth-reset_password",
 } as const;
 
 export const Body_Auth_verify = {

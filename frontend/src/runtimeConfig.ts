@@ -1,4 +1,4 @@
-import type { CreateClientConfig } from "./client/client.gen";
+import type { CreateClientConfig } from "./client";
 
 /**
  * 쿠키에서 토큰 가져오기 (클라이언트 사이드)

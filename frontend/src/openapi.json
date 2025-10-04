@@ -274,13 +274,13 @@
         "tags": [
           "Auth"
         ],
-        "summary": "Reset:Forgot Password",
-        "operationId": "Auth-reset:forgot_password",
+        "summary": "Forgot Password",
+        "operationId": "Auth-forgot_password",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Body_Auth-reset_forgot_password"
+                "$ref": "#/components/schemas/Body_Auth-forgot_password"
               }
             }
           },
@@ -313,13 +313,13 @@
         "tags": [
           "Auth"
         ],
-        "summary": "Reset:Reset Password",
-        "operationId": "Auth-reset:reset_password",
+        "summary": "Reset Password",
+        "operationId": "Auth-reset_password",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Body_Auth-reset_reset_password"
+                "$ref": "#/components/schemas/Body_Auth-reset_password"
               }
             }
           },
@@ -757,7 +757,7 @@
         "tags": [
           "User"
         ],
-        "summary": "내 OAuth 계정 목록 조회",
+        "summary": "Get My Oauth Accounts",
         "description": "현재 사용자의 연결된 OAuth 계정 목록을 조회합니다.",
         "operationId": "User-get_my_oauth_accounts",
         "responses": {
@@ -786,7 +786,7 @@
         "tags": [
           "User"
         ],
-        "summary": "OAuth 계정 연결 해제",
+        "summary": "Remove Oauth Account",
         "description": "특정 OAuth 계정 연결을 해제합니다.",
         "operationId": "User-remove_oauth_account",
         "security": [
@@ -836,7 +836,7 @@
         "tags": [
           "User"
         ],
-        "summary": "사용자 OAuth 계정 목록 조회 (관리자용)",
+        "summary": "Get User Oauth Accounts",
         "description": "특정 사용자의 OAuth 계정 목록을 조회합니다. (관리자 전용)",
         "operationId": "User-get_user_oauth_accounts",
         "security": [
@@ -3885,6 +3885,20 @@
         "title": "BacktestUpdateRequest",
         "description": "백테스트 수정 요청"
       },
+      "Body_Auth-forgot_password": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email"
+        ],
+        "title": "Body_Auth-forgot_password"
+      },
       "Body_Auth-login": {
         "properties": {
           "grant_type": {
@@ -3958,21 +3972,7 @@
         ],
         "title": "Body_Auth-request_verify_token"
       },
-      "Body_Auth-reset_forgot_password": {
-        "properties": {
-          "email": {
-            "type": "string",
-            "format": "email",
-            "title": "Email"
-          }
-        },
-        "type": "object",
-        "required": [
-          "email"
-        ],
-        "title": "Body_Auth-reset:forgot_password"
-      },
-      "Body_Auth-reset_reset_password": {
+      "Body_Auth-reset_password": {
         "properties": {
           "token": {
             "type": "string",
@@ -3988,7 +3988,7 @@
           "token",
           "password"
         ],
-        "title": "Body_Auth-reset:reset_password"
+        "title": "Body_Auth-reset_password"
       },
       "Body_Auth-verify": {
         "properties": {

@@ -1,6 +1,7 @@
 import { defineConfig } from "@hey-api/openapi-ts";
 
 export default defineConfig({
+
 	input: "./src/openapi.json",
 	output: {
 		format: "prettier",
@@ -8,16 +9,24 @@ export default defineConfig({
 	},
 	plugins: [
 		{
+			name: "@hey-api/client-axios",
+			exportFromIndex: true,
+			runtimeConfigPath: "../runtimeConfig",
+		},
+		{
 			name: "@hey-api/sdk",
 			// NOTE: this doesn't allow tree-shaking
 			asClass: true,
-			operationId: true,
 			classNameBuilder: "{{name}}Service",
-			methodNameBuilder: (operation: { id: string | null; }) => {
-
-				const id = operation.id ?? "defaultId";
-				return id.charAt(0).toLowerCase() + id.slice(1);
-			},
+			methodNameBuilder: (operation) => {
+				let name = operation.summary;
+				if (name) {
+					name = name.toLowerCase()
+					.replace(/[\s\-_]+(\w)/g, (_, c) => c.toUpperCase())
+					.replace(/[\s\-_]+/g, "");
+				}
+				return name || "defaultMethodName";
+			}
 		},
 		{
 			name: "@hey-api/schemas",
@@ -25,18 +34,18 @@ export default defineConfig({
 			exportFromIndex: true,
 			nameBuilder: "{{name}}",
 		},
-		{
-			name: "@hey-api/client-next",
-			exportFromIndex: true,
-			runtimeConfigPath: "../runtimeConfig",
-		},
-		{
-			name: "@tanstack/react-query",
-			exportFromIndex: true,
-			queryKeys: true,
-			mutationOptions: true,
-			queryOptions: true,
-			infiniteQueryOptions: true,
-		},
+		// {
+		// 	name: "@hey-api/client-next",
+		// 	exportFromIndex: true,
+		// 	runtimeConfigPath: "../runtimeConfig",
+		// },
+		// {
+		// 	name: "@tanstack/react-query",
+		// 	exportFromIndex: true,
+		// 	queryKeys: true,
+		// 	mutationOptions: true,
+		// 	queryOptions: true,
+		// 	infiniteQueryOptions: true,
+		// },
 	],
 });

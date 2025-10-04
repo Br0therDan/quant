@@ -14,6 +14,9 @@ import type {
 	AuthCallbackData,
 	AuthCallbackErrors,
 	AuthCallbackResponses,
+	AuthForgotPasswordData,
+	AuthForgotPasswordErrors,
+	AuthForgotPasswordResponses,
 	AuthLoginData,
 	AuthLoginErrors,
 	AuthLoginResponses,
@@ -28,12 +31,9 @@ import type {
 	AuthRequestVerifyTokenData,
 	AuthRequestVerifyTokenErrors,
 	AuthRequestVerifyTokenResponses,
-	AuthResetForgotPasswordData,
-	AuthResetForgotPasswordErrors,
-	AuthResetForgotPasswordResponses,
-	AuthResetResetPasswordData,
-	AuthResetResetPasswordErrors,
-	AuthResetResetPasswordResponses,
+	AuthResetPasswordData,
+	AuthResetPasswordErrors,
+	AuthResetPasswordResponses,
 	AuthVerifyData,
 	AuthVerifyErrors,
 	AuthVerifyResponses,
@@ -229,7 +229,7 @@ export class HealthService {
 	 * Health Check
 	 * Get comprehensive health status.
 	 */
-	public static healthHealthCheck<ThrowOnError extends boolean = false>(
+	public static healthCheck<ThrowOnError extends boolean = false>(
 		options?: Options<HealthHealthCheckData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
@@ -237,6 +237,7 @@ export class HealthService {
 			unknown,
 			ThrowOnError
 		>({
+			responseType: "json",
 			url: "/health/",
 			...options,
 		});
@@ -246,7 +247,7 @@ export class HealthService {
 	 * Liveness Probe
 	 * Kubernetes liveness probe endpoint.
 	 */
-	public static healthLivenessProbe<ThrowOnError extends boolean = false>(
+	public static livenessProbe<ThrowOnError extends boolean = false>(
 		options?: Options<HealthLivenessProbeData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
@@ -254,6 +255,7 @@ export class HealthService {
 			unknown,
 			ThrowOnError
 		>({
+			responseType: "json",
 			url: "/health/live",
 			...options,
 		});
@@ -263,7 +265,7 @@ export class HealthService {
 	 * Readiness Probe
 	 * Kubernetes readiness probe endpoint.
 	 */
-	public static healthReadinessProbe<ThrowOnError extends boolean = false>(
+	public static readinessProbe<ThrowOnError extends boolean = false>(
 		options?: Options<HealthReadinessProbeData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
@@ -271,6 +273,7 @@ export class HealthService {
 			unknown,
 			ThrowOnError
 		>({
+			responseType: "json",
 			url: "/health/ready",
 			...options,
 		});
@@ -281,7 +284,7 @@ export class AuthService {
 	/**
 	 * Login
 	 */
-	public static authLogin<ThrowOnError extends boolean = false>(
+	public static login<ThrowOnError extends boolean = false>(
 		options: Options<AuthLoginData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
@@ -290,6 +293,7 @@ export class AuthService {
 			ThrowOnError
 		>({
 			...urlSearchParamsBodySerializer,
+			responseType: "json",
 			url: "/api/v1/auth/login",
 			...options,
 			headers: {
@@ -305,7 +309,7 @@ export class AuthService {
 	 *
 	 * 쿠키에서 토큰을 삭제하고 로그아웃 처리를 합니다.
 	 */
-	public static authLogout<ThrowOnError extends boolean = false>(
+	public static logout<ThrowOnError extends boolean = false>(
 		options?: Options<AuthLogoutData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).post<
@@ -328,7 +332,7 @@ export class AuthService {
 	 * Refresh Token
 	 * JWT 토큰 갱신 엔드포인트
 	 */
-	public static authRefreshToken<ThrowOnError extends boolean = false>(
+	public static refreshToken<ThrowOnError extends boolean = false>(
 		options?: Options<AuthRefreshTokenData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).post<
@@ -336,6 +340,7 @@ export class AuthService {
 			AuthRefreshTokenErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			url: "/api/v1/auth/refresh",
 			...options,
 		});
@@ -345,7 +350,7 @@ export class AuthService {
 	 * Verify Token
 	 * 토큰 검증 및 사용자 정보 반환 (디버깅용)
 	 */
-	public static authVerifyToken<ThrowOnError extends boolean = false>(
+	public static verifyToken<ThrowOnError extends boolean = false>(
 		options?: Options<AuthVerifyTokenData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
@@ -353,6 +358,7 @@ export class AuthService {
 			unknown,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -367,7 +373,7 @@ export class AuthService {
 	/**
 	 * Register
 	 */
-	public static authRegister<ThrowOnError extends boolean = false>(
+	public static register<ThrowOnError extends boolean = false>(
 		options: Options<AuthRegisterData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
@@ -375,6 +381,7 @@ export class AuthService {
 			AuthRegisterErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			url: "/api/v1/auth/register",
 			...options,
 			headers: {
@@ -385,16 +392,17 @@ export class AuthService {
 	}
 
 	/**
-	 * Reset:Forgot Password
+	 * Forgot Password
 	 */
-	public static authResetForgotPassword<ThrowOnError extends boolean = false>(
-		options: Options<AuthResetForgotPasswordData, ThrowOnError>,
+	public static forgotPassword<ThrowOnError extends boolean = false>(
+		options: Options<AuthForgotPasswordData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			AuthResetForgotPasswordResponses,
-			AuthResetForgotPasswordErrors,
+			AuthForgotPasswordResponses,
+			AuthForgotPasswordErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			url: "/api/v1/auth/forgot-password",
 			...options,
 			headers: {
@@ -405,16 +413,17 @@ export class AuthService {
 	}
 
 	/**
-	 * Reset:Reset Password
+	 * Reset Password
 	 */
-	public static authResetResetPassword<ThrowOnError extends boolean = false>(
-		options: Options<AuthResetResetPasswordData, ThrowOnError>,
+	public static resetPassword<ThrowOnError extends boolean = false>(
+		options: Options<AuthResetPasswordData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			AuthResetResetPasswordResponses,
-			AuthResetResetPasswordErrors,
+			AuthResetPasswordResponses,
+			AuthResetPasswordErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			url: "/api/v1/auth/reset-password",
 			...options,
 			headers: {
@@ -427,7 +436,7 @@ export class AuthService {
 	/**
 	 * Request Verify Token
 	 */
-	public static authRequestVerifyToken<ThrowOnError extends boolean = false>(
+	public static requestVerifyToken<ThrowOnError extends boolean = false>(
 		options: Options<AuthRequestVerifyTokenData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
@@ -435,6 +444,7 @@ export class AuthService {
 			AuthRequestVerifyTokenErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			url: "/api/v1/auth/request-verify-token",
 			...options,
 			headers: {
@@ -447,7 +457,7 @@ export class AuthService {
 	/**
 	 * Verify
 	 */
-	public static authVerify<ThrowOnError extends boolean = false>(
+	public static verify<ThrowOnError extends boolean = false>(
 		options: Options<AuthVerifyData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
@@ -455,6 +465,7 @@ export class AuthService {
 			AuthVerifyErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			url: "/api/v1/auth/verify",
 			...options,
 			headers: {
@@ -469,7 +480,7 @@ export class AuthService {
 	 * Initiate the OAuth2 authorization process for associating an OAuth account
 	 * with the currently authenticated user.
 	 */
-	public static authAuthorize<ThrowOnError extends boolean = false>(
+	public static authorize<ThrowOnError extends boolean = false>(
 		options: Options<AuthAuthorizeData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
@@ -477,6 +488,7 @@ export class AuthService {
 			AuthAuthorizeErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			url: "/api/v1/auth/{provider}/authorize",
 			...options,
 		});
@@ -486,7 +498,7 @@ export class AuthService {
 	 * Callback
 	 * The response varies based on the authentication backend used.
 	 */
-	public static authCallback<ThrowOnError extends boolean = false>(
+	public static callback<ThrowOnError extends boolean = false>(
 		options: Options<AuthCallbackData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
@@ -494,6 +506,7 @@ export class AuthService {
 			AuthCallbackErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			url: "/api/v1/auth/{provider}/callback",
 			...options,
 		});
@@ -504,7 +517,7 @@ export class UserService {
 	/**
 	 * Get User Me
 	 */
-	public static userGetUserMe<ThrowOnError extends boolean = false>(
+	public static getUserMe<ThrowOnError extends boolean = false>(
 		options?: Options<UserGetUserMeData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
@@ -512,6 +525,7 @@ export class UserService {
 			unknown,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -526,7 +540,7 @@ export class UserService {
 	/**
 	 * Update User Me
 	 */
-	public static userUpdateUserMe<ThrowOnError extends boolean = false>(
+	public static updateUserMe<ThrowOnError extends boolean = false>(
 		options: Options<UserUpdateUserMeData, ThrowOnError>,
 	) {
 		return (options.client ?? client).patch<
@@ -534,6 +548,7 @@ export class UserService {
 			UserUpdateUserMeErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -552,7 +567,7 @@ export class UserService {
 	/**
 	 * Delete User
 	 */
-	public static userDeleteUser<ThrowOnError extends boolean = false>(
+	public static deleteUser<ThrowOnError extends boolean = false>(
 		options: Options<UserDeleteUserData, ThrowOnError>,
 	) {
 		return (options.client ?? client).delete<
@@ -574,7 +589,7 @@ export class UserService {
 	/**
 	 * Get User
 	 */
-	public static userGetUser<ThrowOnError extends boolean = false>(
+	public static getUser<ThrowOnError extends boolean = false>(
 		options: Options<UserGetUserData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
@@ -582,6 +597,7 @@ export class UserService {
 			UserGetUserErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -596,7 +612,7 @@ export class UserService {
 	/**
 	 * Update User
 	 */
-	public static userUpdateUser<ThrowOnError extends boolean = false>(
+	public static updateUser<ThrowOnError extends boolean = false>(
 		options: Options<UserUpdateUserData, ThrowOnError>,
 	) {
 		return (options.client ?? client).patch<
@@ -604,6 +620,7 @@ export class UserService {
 			UserUpdateUserErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -620,10 +637,10 @@ export class UserService {
 	}
 
 	/**
-	 * 내 OAuth 계정 목록 조회
+	 * Get My Oauth Accounts
 	 * 현재 사용자의 연결된 OAuth 계정 목록을 조회합니다.
 	 */
-	public static userGetMyOauthAccounts<ThrowOnError extends boolean = false>(
+	public static getMyOauthAccounts<ThrowOnError extends boolean = false>(
 		options?: Options<UserGetMyOauthAccountsData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
@@ -631,6 +648,7 @@ export class UserService {
 			unknown,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -643,10 +661,10 @@ export class UserService {
 	}
 
 	/**
-	 * OAuth 계정 연결 해제
+	 * Remove Oauth Account
 	 * 특정 OAuth 계정 연결을 해제합니다.
 	 */
-	public static userRemoveOauthAccount<ThrowOnError extends boolean = false>(
+	public static removeOauthAccount<ThrowOnError extends boolean = false>(
 		options: Options<UserRemoveOauthAccountData, ThrowOnError>,
 	) {
 		return (options.client ?? client).delete<
@@ -666,10 +684,10 @@ export class UserService {
 	}
 
 	/**
-	 * 사용자 OAuth 계정 목록 조회 (관리자용)
+	 * Get User Oauth Accounts
 	 * 특정 사용자의 OAuth 계정 목록을 조회합니다. (관리자 전용)
 	 */
-	public static userGetUserOauthAccounts<ThrowOnError extends boolean = false>(
+	public static getUserOauthAccounts<ThrowOnError extends boolean = false>(
 		options: Options<UserGetUserOauthAccountsData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
@@ -677,6 +695,7 @@ export class UserService {
 			UserGetUserOauthAccountsErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -694,14 +713,15 @@ export class MarketDataService {
 	 * Get Available Symbols
 	 * Get list of all available symbols
 	 */
-	public static marketDataGetAvailableSymbols<
-		ThrowOnError extends boolean = false,
-	>(options?: Options<MarketDataGetAvailableSymbolsData, ThrowOnError>) {
+	public static getAvailableSymbols<ThrowOnError extends boolean = false>(
+		options?: Options<MarketDataGetAvailableSymbolsData, ThrowOnError>,
+	) {
 		return (options?.client ?? client).get<
 			MarketDataGetAvailableSymbolsResponses,
 			unknown,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -717,7 +737,7 @@ export class MarketDataService {
 	 * Get Market Data
 	 * Get market data for a specific symbol and date range
 	 */
-	public static marketDataGetMarketData<ThrowOnError extends boolean = false>(
+	public static getMarketData<ThrowOnError extends boolean = false>(
 		options: Options<MarketDataGetMarketDataData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
@@ -725,6 +745,7 @@ export class MarketDataService {
 			MarketDataGetMarketDataErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -740,7 +761,7 @@ export class MarketDataService {
 	 * Request Bulk Data
 	 * Request bulk market data for multiple symbols
 	 */
-	public static marketDataRequestBulkData<ThrowOnError extends boolean = false>(
+	public static requestBulkData<ThrowOnError extends boolean = false>(
 		options: Options<MarketDataRequestBulkDataData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
@@ -748,6 +769,7 @@ export class MarketDataService {
 			MarketDataRequestBulkDataErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -767,7 +789,7 @@ export class MarketDataService {
 	 * Get Data Coverage
 	 * Get data coverage information for a symbol
 	 */
-	public static marketDataGetDataCoverage<ThrowOnError extends boolean = false>(
+	public static getDataCoverage<ThrowOnError extends boolean = false>(
 		options: Options<MarketDataGetDataCoverageData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
@@ -775,6 +797,7 @@ export class MarketDataService {
 			MarketDataGetDataCoverageErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -790,14 +813,15 @@ export class MarketDataService {
 	 * Analyze Data Quality
 	 * Analyze data quality for a symbol and date range
 	 */
-	public static marketDataAnalyzeDataQuality<
-		ThrowOnError extends boolean = false,
-	>(options: Options<MarketDataAnalyzeDataQualityData, ThrowOnError>) {
+	public static analyzeDataQuality<ThrowOnError extends boolean = false>(
+		options: Options<MarketDataAnalyzeDataQualityData, ThrowOnError>,
+	) {
 		return (options.client ?? client).get<
 			MarketDataAnalyzeDataQualityResponses,
 			MarketDataAnalyzeDataQualityErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -813,14 +837,15 @@ export class MarketDataService {
 	 * Get Cache Performance Stats
 	 * DuckDB 캐시 성능 통계 조회
 	 */
-	public static marketDataGetCachePerformanceStats<
-		ThrowOnError extends boolean = false,
-	>(options?: Options<MarketDataGetCachePerformanceStatsData, ThrowOnError>) {
+	public static getCachePerformanceStats<ThrowOnError extends boolean = false>(
+		options?: Options<MarketDataGetCachePerformanceStatsData, ThrowOnError>,
+	) {
 		return (options?.client ?? client).get<
 			MarketDataGetCachePerformanceStatsResponses,
 			unknown,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -836,7 +861,7 @@ export class MarketDataService {
 	 * Get Symbols Coverage Analytics
 	 * 심볼별 데이터 커버리지 분석
 	 */
-	public static marketDataGetSymbolsCoverageAnalytics<
+	public static getSymbolsCoverageAnalytics<
 		ThrowOnError extends boolean = false,
 	>(
 		options?: Options<MarketDataGetSymbolsCoverageAnalyticsData, ThrowOnError>,
@@ -846,6 +871,7 @@ export class MarketDataService {
 			unknown,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -861,14 +887,15 @@ export class MarketDataService {
 	 * Service Health Check
 	 * Health check endpoint
 	 */
-	public static marketDataServiceHealthCheck<
-		ThrowOnError extends boolean = false,
-	>(options?: Options<MarketDataServiceHealthCheckData, ThrowOnError>) {
+	public static serviceHealthCheck<ThrowOnError extends boolean = false>(
+		options?: Options<MarketDataServiceHealthCheckData, ThrowOnError>,
+	) {
 		return (options?.client ?? client).get<
 			MarketDataServiceHealthCheckResponses,
 			unknown,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -913,7 +940,7 @@ export class PipelineService {
 	 * Updates to the 'default' watchlist automatically update pipeline symbols.
 	 * This affects which symbols are processed during automated updates.
 	 */
-	public static pipelineUpdateWatchlist<ThrowOnError extends boolean = false>(
+	public static updateWatchlist<ThrowOnError extends boolean = false>(
 		options: Options<PipelineUpdateWatchlistData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
@@ -921,6 +948,7 @@ export class PipelineService {
 			PipelineUpdateWatchlistErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -962,7 +990,7 @@ export class PipelineService {
 	 * This endpoint returns summary data only. Use GET /watchlists/{name}
 	 * for detailed information including full symbol lists.
 	 */
-	public static pipelineListWatchlists<ThrowOnError extends boolean = false>(
+	public static listWatchlists<ThrowOnError extends boolean = false>(
 		options?: Options<PipelineListWatchlistsData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
@@ -970,6 +998,7 @@ export class PipelineService {
 			unknown,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1010,7 +1039,7 @@ export class PipelineService {
 	 * Note:
 	 * Watchlist names must be unique. Use PUT /watchlists/{name} to update existing ones.
 	 */
-	public static pipelineCreateWatchlist<ThrowOnError extends boolean = false>(
+	public static createWatchlist<ThrowOnError extends boolean = false>(
 		options: Options<PipelineCreateWatchlistData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
@@ -1018,6 +1047,7 @@ export class PipelineService {
 			PipelineCreateWatchlistErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1058,7 +1088,7 @@ export class PipelineService {
 	 * Deletion is permanent and cannot be undone. Consider backing up
 	 * important watchlists before deletion.
 	 */
-	public static pipelineDeleteWatchlist<ThrowOnError extends boolean = false>(
+	public static deleteWatchlist<ThrowOnError extends boolean = false>(
 		options: Options<PipelineDeleteWatchlistData, ThrowOnError>,
 	) {
 		return (options.client ?? client).delete<
@@ -1066,6 +1096,7 @@ export class PipelineService {
 			PipelineDeleteWatchlistErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1105,7 +1136,7 @@ export class PipelineService {
 	 * Note:
 	 * Watchlist names are case-sensitive. Use GET /watchlists to see all available names.
 	 */
-	public static pipelineGetWatchlist<ThrowOnError extends boolean = false>(
+	public static getWatchlist<ThrowOnError extends boolean = false>(
 		options: Options<PipelineGetWatchlistData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
@@ -1113,6 +1144,7 @@ export class PipelineService {
 			PipelineGetWatchlistErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1155,14 +1187,15 @@ export class PipelineService {
 	 * Updates to the 'default' watchlist automatically update pipeline symbols.
 	 * Symbol list is completely replaced, not merged with existing symbols.
 	 */
-	public static pipelineUpdateWatchlistByName<
-		ThrowOnError extends boolean = false,
-	>(options: Options<PipelineUpdateWatchlistByNameData, ThrowOnError>) {
+	public static updateWatchlistByName<ThrowOnError extends boolean = false>(
+		options: Options<PipelineUpdateWatchlistByNameData, ThrowOnError>,
+	) {
 		return (options.client ?? client).put<
 			PipelineUpdateWatchlistByNameResponses,
 			PipelineUpdateWatchlistByNameErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1203,7 +1236,7 @@ export class PipelineService {
 	 * Respects Alpha Vantage API rate limits (5 calls/min, 500 calls/day).
 	 * Duplicate requests for same symbol within 24 hours may return cached data.
 	 */
-	public static pipelineCollectStockInfo<ThrowOnError extends boolean = false>(
+	public static collectStockInfo<ThrowOnError extends boolean = false>(
 		options: Options<PipelineCollectStockInfoData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
@@ -1211,6 +1244,7 @@ export class PipelineService {
 			PipelineCollectStockInfoErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1251,7 +1285,7 @@ export class PipelineService {
 	 * Large date ranges may take several minutes to complete.
 	 * Data is automatically cached to minimize API calls.
 	 */
-	public static pipelineCollectDailyData<ThrowOnError extends boolean = false>(
+	public static collectDailyData<ThrowOnError extends boolean = false>(
 		options: Options<PipelineCollectDailyDataData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
@@ -1259,6 +1293,7 @@ export class PipelineService {
 			PipelineCollectDailyDataErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1294,7 +1329,7 @@ export class PipelineService {
 	 * HTTPException: 500 if coverage check fails
 	 * HTTPException: 404 if symbol not found in database
 	 */
-	public static pipelineGetSymbolCoverage<ThrowOnError extends boolean = false>(
+	public static getSymbolCoverage<ThrowOnError extends boolean = false>(
 		options: Options<PipelineGetSymbolCoverageData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
@@ -1302,6 +1337,7 @@ export class PipelineService {
 			PipelineGetSymbolCoverageErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1345,7 +1381,7 @@ export class PipelineService {
 	 * Note:
 	 * If company info not found, use POST /collect-info/{symbol} first.
 	 */
-	public static pipelineGetCompanyInfo<ThrowOnError extends boolean = false>(
+	public static getCompanyInfo<ThrowOnError extends boolean = false>(
 		options: Options<PipelineGetCompanyInfoData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
@@ -1353,6 +1389,7 @@ export class PipelineService {
 			PipelineGetCompanyInfoErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1389,7 +1426,7 @@ export class PipelineService {
 	 * Note:
 	 * Large datasets may take time to load. Consider pagination for production use.
 	 */
-	public static pipelineListCompanies<ThrowOnError extends boolean = false>(
+	public static listCompanies<ThrowOnError extends boolean = false>(
 		options?: Options<PipelineListCompaniesData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
@@ -1397,6 +1434,7 @@ export class PipelineService {
 			unknown,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1428,7 +1466,7 @@ export class PipelineService {
 	 * Raises:
 	 * HTTPException: 500 if status retrieval fails
 	 */
-	public static pipelineGetPipelineStatus<ThrowOnError extends boolean = false>(
+	public static getPipelineStatus<ThrowOnError extends boolean = false>(
 		options?: Options<PipelineGetPipelineStatusData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
@@ -1436,6 +1474,7 @@ export class PipelineService {
 			unknown,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1466,14 +1505,15 @@ export class PipelineService {
 	 * Raises:
 	 * HTTPException: 500 if default setup fails
 	 */
-	public static pipelineSetupDefaultSymbols<
-		ThrowOnError extends boolean = false,
-	>(options?: Options<PipelineSetupDefaultSymbolsData, ThrowOnError>) {
+	public static setupDefaultSymbols<ThrowOnError extends boolean = false>(
+		options?: Options<PipelineSetupDefaultSymbolsData, ThrowOnError>,
+	) {
 		return (options?.client ?? client).post<
 			PipelineSetupDefaultSymbolsResponses,
 			unknown,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1513,7 +1553,7 @@ export class PipelineService {
 	 * Note:
 	 * This is an asynchronous operation. Use /status endpoint to monitor progress.
 	 */
-	public static pipelineRunPipelineUpdate<ThrowOnError extends boolean = false>(
+	public static runPipelineUpdate<ThrowOnError extends boolean = false>(
 		options: Options<PipelineRunPipelineUpdateData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
@@ -1521,6 +1561,7 @@ export class PipelineService {
 			PipelineRunPipelineUpdateErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1542,7 +1583,7 @@ export class StrategyService {
 	 * Get Strategies
 	 * Get list of strategies
 	 */
-	public static strategyGetStrategies<ThrowOnError extends boolean = false>(
+	public static getStrategies<ThrowOnError extends boolean = false>(
 		options?: Options<StrategyGetStrategiesData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
@@ -1550,6 +1591,7 @@ export class StrategyService {
 			StrategyGetStrategiesErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1565,7 +1607,7 @@ export class StrategyService {
 	 * Create Strategy
 	 * Create a new strategy
 	 */
-	public static strategyCreateStrategy<ThrowOnError extends boolean = false>(
+	public static createStrategy<ThrowOnError extends boolean = false>(
 		options: Options<StrategyCreateStrategyData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
@@ -1573,6 +1615,7 @@ export class StrategyService {
 			StrategyCreateStrategyErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1592,7 +1635,7 @@ export class StrategyService {
 	 * Delete Strategy
 	 * Delete strategy (soft delete)
 	 */
-	public static strategyDeleteStrategy<ThrowOnError extends boolean = false>(
+	public static deleteStrategy<ThrowOnError extends boolean = false>(
 		options: Options<StrategyDeleteStrategyData, ThrowOnError>,
 	) {
 		return (options.client ?? client).delete<
@@ -1600,6 +1643,7 @@ export class StrategyService {
 			StrategyDeleteStrategyErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1615,7 +1659,7 @@ export class StrategyService {
 	 * Get Strategy
 	 * Get strategy by ID
 	 */
-	public static strategyGetStrategy<ThrowOnError extends boolean = false>(
+	public static getStrategy<ThrowOnError extends boolean = false>(
 		options: Options<StrategyGetStrategyData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
@@ -1623,6 +1667,7 @@ export class StrategyService {
 			StrategyGetStrategyErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1638,7 +1683,7 @@ export class StrategyService {
 	 * Update Strategy
 	 * Update strategy
 	 */
-	public static strategyUpdateStrategy<ThrowOnError extends boolean = false>(
+	public static updateStrategy<ThrowOnError extends boolean = false>(
 		options: Options<StrategyUpdateStrategyData, ThrowOnError>,
 	) {
 		return (options.client ?? client).put<
@@ -1646,6 +1691,7 @@ export class StrategyService {
 			StrategyUpdateStrategyErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1665,7 +1711,7 @@ export class StrategyService {
 	 * Execute Strategy
 	 * Execute strategy and generate signal
 	 */
-	public static strategyExecuteStrategy<ThrowOnError extends boolean = false>(
+	public static executeStrategy<ThrowOnError extends boolean = false>(
 		options: Options<StrategyExecuteStrategyData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
@@ -1673,6 +1719,7 @@ export class StrategyService {
 			StrategyExecuteStrategyErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1692,14 +1739,15 @@ export class StrategyService {
 	 * Get Strategy Executions
 	 * Get strategy execution history
 	 */
-	public static strategyGetStrategyExecutions<
-		ThrowOnError extends boolean = false,
-	>(options: Options<StrategyGetStrategyExecutionsData, ThrowOnError>) {
+	public static getStrategyExecutions<ThrowOnError extends boolean = false>(
+		options: Options<StrategyGetStrategyExecutionsData, ThrowOnError>,
+	) {
 		return (options.client ?? client).get<
 			StrategyGetStrategyExecutionsResponses,
 			StrategyGetStrategyExecutionsErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1715,14 +1763,15 @@ export class StrategyService {
 	 * Get Strategy Performance
 	 * Get strategy performance metrics
 	 */
-	public static strategyGetStrategyPerformance<
-		ThrowOnError extends boolean = false,
-	>(options: Options<StrategyGetStrategyPerformanceData, ThrowOnError>) {
+	public static getStrategyPerformance<ThrowOnError extends boolean = false>(
+		options: Options<StrategyGetStrategyPerformanceData, ThrowOnError>,
+	) {
 		return (options.client ?? client).get<
 			StrategyGetStrategyPerformanceResponses,
 			StrategyGetStrategyPerformanceErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1738,7 +1787,7 @@ export class StrategyService {
 	 * Get Templates
 	 * Get list of strategy templates
 	 */
-	public static strategyGetTemplates<ThrowOnError extends boolean = false>(
+	public static getTemplates<ThrowOnError extends boolean = false>(
 		options?: Options<StrategyGetTemplatesData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
@@ -1746,6 +1795,7 @@ export class StrategyService {
 			StrategyGetTemplatesErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1761,7 +1811,7 @@ export class StrategyService {
 	 * Create Template
 	 * Create a new strategy template (Superuser only)
 	 */
-	public static strategyCreateTemplate<ThrowOnError extends boolean = false>(
+	public static createTemplate<ThrowOnError extends boolean = false>(
 		options: Options<StrategyCreateTemplateData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
@@ -1769,6 +1819,7 @@ export class StrategyService {
 			StrategyCreateTemplateErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1788,7 +1839,7 @@ export class StrategyService {
 	 * Delete Template
 	 * Delete template by ID (Superuser only)
 	 */
-	public static strategyDeleteTemplate<ThrowOnError extends boolean = false>(
+	public static deleteTemplate<ThrowOnError extends boolean = false>(
 		options: Options<StrategyDeleteTemplateData, ThrowOnError>,
 	) {
 		return (options.client ?? client).delete<
@@ -1796,6 +1847,7 @@ export class StrategyService {
 			StrategyDeleteTemplateErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1811,7 +1863,7 @@ export class StrategyService {
 	 * Get Template
 	 * Get template by ID
 	 */
-	public static strategyGetTemplate<ThrowOnError extends boolean = false>(
+	public static getTemplate<ThrowOnError extends boolean = false>(
 		options: Options<StrategyGetTemplateData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
@@ -1819,6 +1871,7 @@ export class StrategyService {
 			StrategyGetTemplateErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1834,7 +1887,7 @@ export class StrategyService {
 	 * Update Template
 	 * Update template by ID (Superuser only)
 	 */
-	public static strategyUpdateTemplate<ThrowOnError extends boolean = false>(
+	public static updateTemplate<ThrowOnError extends boolean = false>(
 		options: Options<StrategyUpdateTemplateData, ThrowOnError>,
 	) {
 		return (options.client ?? client).patch<
@@ -1842,6 +1895,7 @@ export class StrategyService {
 			StrategyUpdateTemplateErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1861,7 +1915,7 @@ export class StrategyService {
 	 * Create Strategy From Template
 	 * Create a strategy instance from template
 	 */
-	public static strategyCreateStrategyFromTemplate<
+	public static createStrategyFromTemplate<
 		ThrowOnError extends boolean = false,
 	>(options: Options<StrategyCreateStrategyFromTemplateData, ThrowOnError>) {
 		return (options.client ?? client).post<
@@ -1869,6 +1923,7 @@ export class StrategyService {
 			StrategyCreateStrategyFromTemplateErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1888,14 +1943,15 @@ export class StrategyService {
 	 * Get Template Usage Stats
 	 * Get template usage statistics
 	 */
-	public static strategyGetTemplateUsageStats<
-		ThrowOnError extends boolean = false,
-	>(options?: Options<StrategyGetTemplateUsageStatsData, ThrowOnError>) {
+	public static getTemplateUsageStats<ThrowOnError extends boolean = false>(
+		options?: Options<StrategyGetTemplateUsageStatsData, ThrowOnError>,
+	) {
 		return (options?.client ?? client).get<
 			StrategyGetTemplateUsageStatsResponses,
 			unknown,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1913,7 +1969,7 @@ export class BacktestsService {
 	 * Get Backtests
 	 * Get list of backtests
 	 */
-	public static backtestsGetBacktests<ThrowOnError extends boolean = false>(
+	public static getBacktests<ThrowOnError extends boolean = false>(
 		options?: Options<BacktestsGetBacktestsData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
@@ -1921,6 +1977,7 @@ export class BacktestsService {
 			BacktestsGetBacktestsErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1936,7 +1993,7 @@ export class BacktestsService {
 	 * Create Backtest
 	 * Create a new backtest
 	 */
-	public static backtestsCreateBacktest<ThrowOnError extends boolean = false>(
+	public static createBacktest<ThrowOnError extends boolean = false>(
 		options: Options<BacktestsCreateBacktestData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
@@ -1944,6 +2001,7 @@ export class BacktestsService {
 			BacktestsCreateBacktestErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1963,7 +2021,7 @@ export class BacktestsService {
 	 * Delete Backtest
 	 * Delete backtest
 	 */
-	public static backtestsDeleteBacktest<ThrowOnError extends boolean = false>(
+	public static deleteBacktest<ThrowOnError extends boolean = false>(
 		options: Options<BacktestsDeleteBacktestData, ThrowOnError>,
 	) {
 		return (options.client ?? client).delete<
@@ -1971,6 +2029,7 @@ export class BacktestsService {
 			BacktestsDeleteBacktestErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -1986,7 +2045,7 @@ export class BacktestsService {
 	 * Get Backtest
 	 * Get backtest by ID
 	 */
-	public static backtestsGetBacktest<ThrowOnError extends boolean = false>(
+	public static getBacktest<ThrowOnError extends boolean = false>(
 		options: Options<BacktestsGetBacktestData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
@@ -1994,6 +2053,7 @@ export class BacktestsService {
 			BacktestsGetBacktestErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -2009,7 +2069,7 @@ export class BacktestsService {
 	 * Update Backtest
 	 * Update backtest
 	 */
-	public static backtestsUpdateBacktest<ThrowOnError extends boolean = false>(
+	public static updateBacktest<ThrowOnError extends boolean = false>(
 		options: Options<BacktestsUpdateBacktestData, ThrowOnError>,
 	) {
 		return (options.client ?? client).put<
@@ -2017,6 +2077,7 @@ export class BacktestsService {
 			BacktestsUpdateBacktestErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -2036,7 +2097,7 @@ export class BacktestsService {
 	 * Execute Backtest
 	 * Execute backtest with trading signals
 	 */
-	public static backtestsExecuteBacktest<ThrowOnError extends boolean = false>(
+	public static executeBacktest<ThrowOnError extends boolean = false>(
 		options: Options<BacktestsExecuteBacktestData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
@@ -2044,6 +2105,7 @@ export class BacktestsService {
 			BacktestsExecuteBacktestErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -2063,14 +2125,15 @@ export class BacktestsService {
 	 * Get Backtest Executions
 	 * Get execution history for a backtest
 	 */
-	public static backtestsGetBacktestExecutions<
-		ThrowOnError extends boolean = false,
-	>(options: Options<BacktestsGetBacktestExecutionsData, ThrowOnError>) {
+	public static getBacktestExecutions<ThrowOnError extends boolean = false>(
+		options: Options<BacktestsGetBacktestExecutionsData, ThrowOnError>,
+	) {
 		return (options.client ?? client).get<
 			BacktestsGetBacktestExecutionsResponses,
 			BacktestsGetBacktestExecutionsErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -2086,14 +2149,15 @@ export class BacktestsService {
 	 * Get Backtest Results
 	 * Get backtest results from DuckDB (고성능 분석용)
 	 */
-	public static backtestsGetBacktestResults<
-		ThrowOnError extends boolean = false,
-	>(options?: Options<BacktestsGetBacktestResultsData, ThrowOnError>) {
+	public static getBacktestResults<ThrowOnError extends boolean = false>(
+		options?: Options<BacktestsGetBacktestResultsData, ThrowOnError>,
+	) {
 		return (options?.client ?? client).get<
 			BacktestsGetBacktestResultsResponses,
 			BacktestsGetBacktestResultsErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -2109,7 +2173,7 @@ export class BacktestsService {
 	 * Create And Run Integrated Backtest
 	 * 통합 백테스트 생성 및 실행 - 모든 서비스 연동
 	 */
-	public static backtestsCreateAndRunIntegratedBacktest<
+	public static createAndRunIntegratedBacktest<
 		ThrowOnError extends boolean = false,
 	>(
 		options: Options<BacktestsCreateAndRunIntegratedBacktestData, ThrowOnError>,
@@ -2119,6 +2183,7 @@ export class BacktestsService {
 			BacktestsCreateAndRunIntegratedBacktestErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -2138,7 +2203,7 @@ export class BacktestsService {
 	 * Health Check
 	 * 백테스트 시스템 상태 확인 (DuckDB + MongoDB 통합 상태)
 	 */
-	public static backtestsHealthCheck<ThrowOnError extends boolean = false>(
+	public static healthCheck<ThrowOnError extends boolean = false>(
 		options?: Options<BacktestsHealthCheckData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
@@ -2146,6 +2211,7 @@ export class BacktestsService {
 			unknown,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -2161,14 +2227,15 @@ export class BacktestsService {
 	 * Get Performance Analytics
 	 * 백테스트 성과 분석 (DuckDB 고성능 분석)
 	 */
-	public static backtestsGetPerformanceAnalytics<
-		ThrowOnError extends boolean = false,
-	>(options?: Options<BacktestsGetPerformanceAnalyticsData, ThrowOnError>) {
+	public static getPerformanceAnalytics<ThrowOnError extends boolean = false>(
+		options?: Options<BacktestsGetPerformanceAnalyticsData, ThrowOnError>,
+	) {
 		return (options?.client ?? client).get<
 			BacktestsGetPerformanceAnalyticsResponses,
 			unknown,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -2184,14 +2251,15 @@ export class BacktestsService {
 	 * Get Trades Analytics
 	 * 거래 기록 분석 (DuckDB 고성능 쿼리)
 	 */
-	public static backtestsGetTradesAnalytics<
-		ThrowOnError extends boolean = false,
-	>(options?: Options<BacktestsGetTradesAnalyticsData, ThrowOnError>) {
+	public static getTradesAnalytics<ThrowOnError extends boolean = false>(
+		options?: Options<BacktestsGetTradesAnalyticsData, ThrowOnError>,
+	) {
 		return (options?.client ?? client).get<
 			BacktestsGetTradesAnalyticsResponses,
 			BacktestsGetTradesAnalyticsErrors,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
@@ -2207,7 +2275,7 @@ export class BacktestsService {
 	 * Get Backtest Summary Analytics
 	 * 백테스트 결과 요약 분석 (DuckDB 기반)
 	 */
-	public static backtestsGetBacktestSummaryAnalytics<
+	public static getBacktestSummaryAnalytics<
 		ThrowOnError extends boolean = false,
 	>(options?: Options<BacktestsGetBacktestSummaryAnalyticsData, ThrowOnError>) {
 		return (options?.client ?? client).get<
@@ -2215,6 +2283,7 @@ export class BacktestsService {
 			unknown,
 			ThrowOnError
 		>({
+			responseType: "json",
 			security: [
 				{
 					scheme: "bearer",
