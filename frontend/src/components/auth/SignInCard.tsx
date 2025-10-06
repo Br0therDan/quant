@@ -1,3 +1,4 @@
+"use client";
 import type { BodyAuthLogin } from "@/client";
 import { MyLogo } from "@/components/common/logo";
 import { useAuth } from "@/hooks/useAuth";
@@ -5,11 +6,9 @@ import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import MuiCard from "@mui/material/Card";
-import Checkbox from "@mui/material/Checkbox";
 import CircularProgress from "@mui/material/CircularProgress";
 import Divider from "@mui/material/Divider";
 import FormControl from "@mui/material/FormControl";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
@@ -40,14 +39,23 @@ const Card = styled(MuiCard)(({ theme }) => ({
 export default function SignInCard() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [rememberMe, setRememberMe] = React.useState(false);
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
   const [open, setOpen] = React.useState(false);
+  const [mounted, setMounted] = React.useState(false);
 
-  const { login, isLoginPending, loginError } = useAuth();
+  const { login, isLoading } = useAuth();
+  const [loginError, setLoginError] = React.useState<string | null>(null);
+
+  // hydration mismatch 방지
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // 서버 사이드에서는 항상 loading 상태가 false
+  const actualIsLoading = mounted ? isLoading : false;
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -64,13 +72,22 @@ export default function SignInCard() {
       return;
     }
 
+    setLoginError(null); // 이전 에러 초기화
+
     try {
       await login({ username: email, password } as BodyAuthLogin);
-      console.log("Login API call successful");
-      // 성공 시 useAuth의 onSuccess에서 자동으로 리다이렉트됨
-    } catch (err) {
-      // 에러는 useAuth에서 자동으로 처리됨
-      console.error("Login failed:", err);
+
+      // 로그인 성공 후 리다이렉트 처리는 AuthContext에서 자동으로 수행됨
+      // AuthContext는 URL 쿼리 파라미터나 기본값으로 리다이렉트
+      console.log("[Auth] 로그인 성공 - AuthContext에서 리다이렉트 처리");
+    } catch (error) {
+      console.error("[Auth] 로그인 처리 중 오류:", error);
+      // 에러 메시지 설정
+      if (error instanceof Error) {
+        setLoginError(error.message);
+      } else {
+        setLoginError("로그인에 실패했습니다. 다시 시도해주세요.");
+      }
     }
   };
 
@@ -113,7 +130,11 @@ export default function SignInCard() {
 
       {loginError && (
         <Alert severity="error" sx={{ mb: 2 }}>
-          로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.
+          {loginError.includes("401") || loginError.includes("Unauthorized")
+            ? "이메일 또는 비밀번호가 올바르지 않습니다."
+            : loginError.includes("Network")
+            ? "네트워크 연결을 확인해주세요."
+            : loginError}
         </Alert>
       )}
       <Box
@@ -138,7 +159,7 @@ export default function SignInCard() {
             color={emailError ? "error" : "primary"}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            disabled={isLoginPending}
+            disabled={actualIsLoading}
           />
         </FormControl>
         <FormControl>
@@ -167,30 +188,18 @@ export default function SignInCard() {
             color={passwordError ? "error" : "primary"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            disabled={isLoginPending}
+            disabled={actualIsLoading}
           />
         </FormControl>
-        <FormControlLabel
-          control={
-            <Checkbox
-              value="remember"
-              color="primary"
-              checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
-              disabled={isLoginPending}
-            />
-          }
-          label="로그인 상태 유지"
-        />
         <ForgotPassword open={open} handleClose={handleClose} />
         <Button
           type="submit"
           fullWidth
           variant="contained"
-          disabled={isLoginPending}
+          disabled={actualIsLoading}
           sx={{ mt: 3, mb: 2 }}
         >
-          {isLoginPending ? (
+          {actualIsLoading ? (
             <CircularProgress size={24} color="inherit" />
           ) : (
             "로그인"
@@ -199,7 +208,11 @@ export default function SignInCard() {
         <Typography sx={{ textAlign: "center" }}>
           계정이 없으신가요?{" "}
           <span>
-            <Link href="/sign-up" variant="body2" sx={{ alignSelf: "center" }}>
+            <Link
+              href="/auth/register"
+              variant="body2"
+              sx={{ alignSelf: "center" }}
+            >
               회원가입
             </Link>
           </span>
@@ -212,7 +225,7 @@ export default function SignInCard() {
           variant="outlined"
           onClick={() => alert("Google 로그인 기능 구현 예정")}
           startIcon={<GoogleIcon />}
-          disabled={isLoginPending}
+          disabled={actualIsLoading}
         >
           Google로 로그인
         </Button>
@@ -221,7 +234,7 @@ export default function SignInCard() {
           variant="outlined"
           onClick={() => alert("Facebook 로그인 기능 구현 예정")}
           startIcon={<FacebookIcon />}
-          disabled={isLoginPending}
+          disabled={actualIsLoading}
         >
           Facebook으로 로그인
         </Button>

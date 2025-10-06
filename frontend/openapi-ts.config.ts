@@ -9,11 +9,11 @@ export default defineConfig({
 	},
 	plugins: [
 		"@hey-api/schemas",
-		// {
-		// 	name: "@hey-api/client-axios",
-		// 	exportFromIndex: true,
-		// 	runtimeConfigPath: "../runtimeConfig",
-		// },
+		{
+			name: "@hey-api/client-next",
+			exportFromIndex: true,
+			runtimeConfigPath: "../runtimeConfig",
+		},
 		{
 			name: '@hey-api/transformers',
 		},
@@ -33,29 +33,9 @@ export default defineConfig({
 				return name || "defaultMethodName";
 			},
 		},
-		// {
-		// 	name: "@hey-api/schemas",
-		// 	nameBuilder: (schema) => {
-		// 		const splitPascal = (s:string) => s.match(/([A-Z]+(?=[A-Z][a-z])|[A-Z][a-z0-9]*)/g) ?? [s];
-		// 		const dropFirstWord = (s:string) => {
-		// 			const parts = splitPascal(s);
-		// 			return parts.slice(1).join('');
-		// 			};
-		// 		return dropFirstWord(schema);
-		// 	}
-		// },
-		// {
-		// 	name: "@hey-api/client-next",
-		// 	exportFromIndex: true,
-		// 	runtimeConfigPath: "../runtimeConfig",
-		// },
-		// {
-		// 	name: "@tanstack/react-query",
-		// 	exportFromIndex: true,
-		// 	queryKeys: true,
-		// 	mutationOptions: true,
-		// 	queryOptions: true,
-		// 	infiniteQueryOptions: true,
-		// },
+		{
+			name: "@tanstack/react-query",
+			exportFromIndex: true,
+		},
 	],
 });

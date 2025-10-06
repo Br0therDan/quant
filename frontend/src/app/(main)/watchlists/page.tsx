@@ -17,10 +17,10 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import {
-	watchlistsCreateWatchlistMutation,
-	watchlistsDeleteWatchlistMutation,
-	watchlistsListWatchlistsOptions,
-	watchlistsUpdateWatchlistMutation,
+	pipelineCreateWatchlistMutation,
+	pipelineDeleteWatchlistMutation,
+	pipelineListWatchlistsOptions,
+	pipelineUpdateWatchlistMutation,
 } from "@/client/@tanstack/react-query.gen";
 import PageContainer from "@/components/layout/PageContainer";
 import CreateWatchlistDialog from "@/components/watchlists/CreateWatchlistDialog";
@@ -43,7 +43,7 @@ export default function WatchlistsPage() {
 		isLoading,
 		error,
 		refetch,
-	} = useQuery(watchlistsListWatchlistsOptions());
+	} = useQuery(pipelineListWatchlistsOptions());
 
 	// 백엔드 응답 구조: { watchlists: [...], total_count: number }
 	const watchlists = (watchlistsResponse as any)?.watchlists || [];
@@ -60,7 +60,7 @@ export default function WatchlistsPage() {
 
 	// 워치리스트 생성 뮤테이션
 	const createMutation = useMutation({
-		...watchlistsCreateWatchlistMutation(),
+		...pipelineCreateWatchlistMutation(),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["watchlistsListWatchlists"] });
 			setCreateDialogOpen(false);
@@ -69,7 +69,7 @@ export default function WatchlistsPage() {
 
 	// 워치리스트 수정 뮤테이션
 	const updateMutation = useMutation({
-		...watchlistsUpdateWatchlistMutation(),
+		...pipelineUpdateWatchlistMutation(),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["watchlistsListWatchlists"] });
 			setEditDialogOpen(false);
@@ -79,7 +79,7 @@ export default function WatchlistsPage() {
 
 	// 워치리스트 삭제 뮤테이션
 	const deleteMutation = useMutation({
-		...watchlistsDeleteWatchlistMutation(),
+		...pipelineDeleteWatchlistMutation(),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["watchlistsListWatchlists"] });
 			setDeleteDialogOpen(false);

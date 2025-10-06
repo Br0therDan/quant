@@ -2012,77 +2012,6 @@ export type AuthVerifyResponses = {
 
 export type AuthVerifyResponse = AuthVerifyResponses[keyof AuthVerifyResponses];
 
-export type AuthAuthorizeData = {
-	body?: never;
-	path: {
-		/**
-		 * Provider
-		 */
-		provider: string;
-	};
-	query?: {
-		/**
-		 * Redirect Url
-		 */
-		redirect_url?: string | null;
-		/**
-		 * State
-		 */
-		state?: string | null;
-	};
-	url: "/api/v1/auth/{provider}/authorize";
-};
-
-export type AuthAuthorizeErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type AuthAuthorizeError = AuthAuthorizeErrors[keyof AuthAuthorizeErrors];
-
-export type AuthAuthorizeResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: OAuth2AuthorizeResponse;
-};
-
-export type AuthAuthorizeResponse =
-	AuthAuthorizeResponses[keyof AuthAuthorizeResponses];
-
-export type AuthCallbackData = {
-	body?: never;
-	path: {
-		/**
-		 * Provider
-		 */
-		provider: string;
-	};
-	query?: never;
-	url: "/api/v1/auth/{provider}/callback";
-};
-
-export type AuthCallbackErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type AuthCallbackError = AuthCallbackErrors[keyof AuthCallbackErrors];
-
-export type AuthCallbackResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: UserResponse;
-};
-
-export type AuthCallbackResponse =
-	AuthCallbackResponses[keyof AuthCallbackResponses];
-
 export type UserGetUserMeData = {
 	body?: never;
 	path?: never;
@@ -2300,6 +2229,79 @@ export type UserGetUserOauthAccountsResponses = {
 
 export type UserGetUserOauthAccountsResponse =
 	UserGetUserOauthAccountsResponses[keyof UserGetUserOauthAccountsResponses];
+
+export type OAuth2AuthorizeData = {
+	body?: never;
+	path: {
+		/**
+		 * Provider
+		 */
+		provider: string;
+	};
+	query?: {
+		/**
+		 * Redirect Url
+		 */
+		redirect_url?: string | null;
+		/**
+		 * State
+		 */
+		state?: string | null;
+	};
+	url: "/api/v1/oauth2/{provider}/authorize";
+};
+
+export type OAuth2AuthorizeErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type OAuth2AuthorizeError =
+	OAuth2AuthorizeErrors[keyof OAuth2AuthorizeErrors];
+
+export type OAuth2AuthorizeResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: OAuth2AuthorizeResponse;
+};
+
+export type OAuth2AuthorizeResponse2 =
+	OAuth2AuthorizeResponses[keyof OAuth2AuthorizeResponses];
+
+export type OAuth2CallbackData = {
+	body?: never;
+	path: {
+		/**
+		 * Provider
+		 */
+		provider: string;
+	};
+	query?: never;
+	url: "/api/v1/oauth2/{provider}/callback";
+};
+
+export type OAuth2CallbackErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type OAuth2CallbackError =
+	OAuth2CallbackErrors[keyof OAuth2CallbackErrors];
+
+export type OAuth2CallbackResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: UserResponse;
+};
+
+export type OAuth2CallbackResponse =
+	OAuth2CallbackResponses[keyof OAuth2CallbackResponses];
 
 export type MarketDataGetAvailableSymbolsData = {
 	body?: never;

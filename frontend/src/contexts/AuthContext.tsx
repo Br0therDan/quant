@@ -1,174 +1,111 @@
 "use client";
 
-import { UserService, type BodyAuthLogin } from "@/client";
-
+import { AuthService, UserService, type BodyAuthLogin } from "@/client";
 import type { AuthActions, AuthState } from "@/types/auth";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, type ReactNode } from "react";
 
-/**
- * AuthContext 타입
- */
 interface AuthContextType extends AuthState, AuthActions {}
-/**
- * 인증 컨텍스트
- */
+
 export const AuthContext = createContext<AuthContextType | undefined>(
   undefined
 );
 
-/**
- * 쿠키에서 토큰 가져오기 (클라이언트 사이드)
- */
-function getTokenFromCookie(): string | null {
-  if (typeof window === "undefined") return null;
-
-  const cookies = document.cookie
-    .split(";")
-    .map((cookie) => cookie.trim())
-    .find((cookie) => cookie.startsWith("access_token"));
-
-  return cookies ? cookies.split("=")[1] : null;
-}
-
-/**
- * Route Handler API 호출 함수들
- */
-
-/**
- * 로그인 API 호출
- */
 async function loginApi(credentials: BodyAuthLogin) {
   const response = await fetch("/api/auth/login", {
     method: "POST",
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
+      "Content-Type": "application/json",
     },
-    body: new URLSearchParams({
+    body: JSON.stringify({
       username: credentials.username,
       password: credentials.password,
     }),
   });
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.detail || "로그인에 실패했습니다.");
+  if (response.status !== 200) {
+    console.error("[Auth] 로그인 API 에러:", response.statusText);
+    throw new Error("로그인에 실패했습니다.");
   }
 
-  return response.json();
+  return response;
 }
 
-/**
- * 로그아웃 API 호출
- */
 async function logoutApi() {
-  const response = await fetch("/api/auth/logout", {
-    method: "POST",
-  });
+  const response = await AuthService.logout();
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.detail || "로그아웃에 실패했습니다.");
+  if (response.error) {
+    throw new Error("로그아웃에 실패했습니다.");
   }
-
-  return response.json();
+  return response.data;
 }
 
-/**
- * 현재 사용자 정보 API 호출
- */
-// async function getCurrentUserApi(): Promise<UserResponse> {
-//   const response = await fetch("/api/auth/user", {
-//     method: "GET",
-//   });
-
-//   if (!response.ok) {
-//     if (response.status === 401) {
-//       throw new Error("인증이 필요합니다.");
-//     }
-//     const error = await response.json();
-//     throw new Error(error.detail || "사용자 정보를 가져올 수 없습니다.");
-//   }
-
-//   return response.json();
-// }
-
-/**
- * 회원가입 API 호출 (백엔드 직접 호출)
- */
-// async function registerApi(data: RegisterData) {
-//   const response = await fetch(
-//     `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
-//     {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify(data),
-//     }
-//   );
-
-//   if (!response.ok) {
-//     const error = await response.json();
-//     throw new Error(error.detail || "회원가입에 실패했습니다.");
-//   }
-
-//   return response.json();
-// }
-
-/**
- * AuthProvider Props
- */
 interface AuthProviderProps {
   children: ReactNode;
 }
 
-/**
- * 통합된 AuthProvider 컴포넌트
- */
 export function AuthProvider({ children }: AuthProviderProps) {
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  // 현재 사용자 정보 쿼리
-  const { data: user, isLoading } = useQuery({
+  // 현재 사용자 정보 쿼리 (HTTPOnly 쿠키 기반)
+  const {
+    data: user,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["auth", "user"],
     queryFn: async () => {
-      const token = getTokenFromCookie();
-      if (!token) {
-        throw new Error("No token found");
+      const response = await UserService.getUserMe();
+
+      if (response.error) {
+        throw new Error("사용자 정보를 가져올 수 없습니다.");
       }
-      return await UserService.userGetUserMe();
+      return response.data;
     },
     retry: (failureCount, error: any) => {
-      // 401 에러나 토큰이 없는 경우 재시도하지 않음
-      if (error?.message === "No token found" || error?.status === 401) {
+      // 401 또는 404 에러의 경우 재시도하지 않음 (토큰 만료 또는 무효)
+      if (
+        error?.status === 401 ||
+        error?.status === 404 ||
+        error?.message?.includes("401") ||
+        error?.message?.includes("404")
+      ) {
         return false;
       }
-      return failureCount < 3;
+      return failureCount < 1; // 재시도 횟수 감소
     },
     staleTime: 5 * 60 * 1000, // 5분
     gcTime: 10 * 60 * 1000, // 10분
-    enabled: !!getTokenFromCookie(), // 토큰이 있을 때만 쿼리 실행
+    // 클라이언트에서만 활성화 (서버 사이드는 비활성화)
+    enabled: typeof window !== "undefined",
+    refetchOnWindowFocus: false, // 창 포커스 시 재조회 비활성화
+    refetchOnReconnect: false, // 재연결 시 재조회 비활성화
   });
 
   // 로그인 뮤테이션
   const loginMutation = useMutation({
     mutationFn: loginApi,
-    onSuccess: () => {
-      console.log("Login successful");
+    onSuccess: async () => {
+      console.log("로그인 성공");
+
+      // HTTPOnly 쿠키가 완전히 설정될 때까지 충분히 대기 (500ms)
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       // 사용자 정보 쿼리 무효화 및 재조회
-      queryClient.invalidateQueries({
+      await queryClient.invalidateQueries({
         queryKey: ["auth", "user"],
       });
 
-      // 대시보드로 리다이렉트
-      router.push("/dashboard");
+      // 성공적으로 로그인하면 리다이렉트
+      const urlParams = new URLSearchParams(window.location.search);
+      const redirectTo = urlParams.get("redirect") || "/dashboard";
+
+      router.push(redirectTo);
     },
     onError: (error) => {
-      console.error("Login failed:", error);
+      console.error("로그인 실패:", error);
       // 실패시 캐시 정리
       queryClient.removeQueries({
         queryKey: ["auth", "user"],
@@ -180,85 +117,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const logoutMutation = useMutation({
     mutationFn: logoutApi,
     onSettled: () => {
-      // 성공/실패 관계없이 클라이언트 상태 정리
       queryClient.clear(); // 모든 쿼리 캐시 정리
       router.push("/login");
     },
   });
 
-  // // 회원가입 뮤테이션
-  // const registerMutation = useMutation({
-  //   mutationFn: async (data: RegisterData) => {
-  //     return await AuthService.authRegisterCreate({
-  //       email: data.email,
-  //       password: data.password,
-  //     });
-  //   },
-  //   onSuccess: () => {
-  //     // 회원가입 성공 후 사용자 정보 쿼리 무효화
-  //     queryClient.invalidateQueries({
-  //       queryKey: ["auth", "user"],
-  //     });
-  //   },
-  // });
-
-  // // 사용자 정보 갱신 뮤테이션
-  // const refreshUserMutation = useMutation({
-  //   mutationFn: getCurrentUserApi,
-  //   onSuccess: (userData) => {
-  //     // 쿼리 캐시 업데이트
-  //     queryClient.setQueryData(["auth", "user"], userData);
-  //   },
-  // });
-
-  // // 상태 계산
-  // const token = getTokenFromCookie();
-  // const isAuthenticated = !!user && !!token;
-  // const isInitialized = !isLoading;
-
-  // // 액션 함수들
-  // const login = useCallback(
-  //   async (credentials: LoginCredentials) => {
-  //     await loginMutation.mutateAsync(credentials);
-  //   },
-  //   [loginMutation]
-  // );
-
-  // const logout = useCallback(async () => {
-  //   await logoutMutation.mutateAsync();
-  // }, [logoutMutation]);
-
-  // const register = useCallback(
-  //   async (data: RegisterData) => {
-  //     await registerMutation.mutateAsync(data);
-  //   },
-  //   [registerMutation]
-  // );
-
-  // const refreshToken = useCallback(async () => {
-  //   // Route Handler 패턴에서는 토큰 갱신이 자동으로 처리됨
-  //   await refreshUserMutation.mutateAsync();
-  // }, [refreshUserMutation]);
-
-  // const refreshUser = useCallback(async () => {
-  //   await refreshUserMutation.mutateAsync();
-  // }, [refreshUserMutation]);
-
-  // const initialize = useCallback(async () => {
-  //   // React Query가 자동으로 처리하므로 별도 초기화 불필요
-  //   queryClient.invalidateQueries({
-  //     queryKey: ["auth", "user"],
-  //   });
-  // }, [queryClient]);
-
-  // Context 값
+  // Context 값 (HTTPOnly 쿠키 기반)
   const contextValue: AuthContextType = {
-    // 상태
-    user: user?.data || null,
-    isLoading: isLoading || loginMutation.isPending || logoutMutation.isPending,
-    token: getTokenFromCookie() || null,
-    isAuthenticated: !!user && !!getTokenFromCookie(),
-    isInitialized: !isLoading,
+    user: user || null,
+    isLoading:
+      typeof window !== "undefined"
+        ? isLoading || loginMutation.isPending || logoutMutation.isPending
+        : false,
+    token: null, // HTTPOnly 쿠키는 클라이언트에서 접근 불가
+    isAuthenticated: !!user && !error,
+    isInitialized: typeof window !== "undefined" ? !isLoading : true, // 서버에서는 항상 초기화됨
+
+    // 액션
     login: async (credentials) => {
       await loginMutation.mutateAsync(credentials);
     },
@@ -269,16 +144,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
       console.warn("Register function is not implemented yet.");
     },
     refreshToken: async () => {
-      console.warn("Refresh token function is not implemented yet.");
+      await queryClient.invalidateQueries({
+        queryKey: ["auth", "user"],
+      });
     },
     refreshUser: async () => {
-      // 사용자 정보 쿼리 무효화 및 재조회
       await queryClient.invalidateQueries({
         queryKey: ["auth", "user"],
       });
     },
     initialize: async () => {
-      queryClient.invalidateQueries({
+      await queryClient.invalidateQueries({
         queryKey: ["auth", "user"],
       });
     },

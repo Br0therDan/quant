@@ -8,12 +8,6 @@ import {
 } from "./client";
 import { client } from "./client.gen";
 import type {
-	AuthAuthorizeData,
-	AuthAuthorizeErrors,
-	AuthAuthorizeResponses,
-	AuthCallbackData,
-	AuthCallbackErrors,
-	AuthCallbackResponses,
 	AuthForgotPasswordData,
 	AuthForgotPasswordErrors,
 	AuthForgotPasswordResponses,
@@ -101,6 +95,12 @@ import type {
 	MarketDataRequestBulkDataResponses,
 	MarketDataServiceHealthCheckData,
 	MarketDataServiceHealthCheckResponses,
+	OAuth2AuthorizeData,
+	OAuth2AuthorizeErrors,
+	OAuth2AuthorizeResponses,
+	OAuth2CallbackData,
+	OAuth2CallbackErrors,
+	OAuth2CallbackResponses,
 	PipelineCollectDailyDataData,
 	PipelineCollectDailyDataErrors,
 	PipelineCollectDailyDataResponses,
@@ -463,41 +463,6 @@ export class AuthService {
 			},
 		});
 	}
-
-	/**
-	 * Authorize
-	 * Initiate the OAuth2 authorization process for associating an OAuth account
-	 * with the currently authenticated user.
-	 */
-	public static authorize<ThrowOnError extends boolean = false>(
-		options: Options<AuthAuthorizeData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			AuthAuthorizeResponses,
-			AuthAuthorizeErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/auth/{provider}/authorize",
-			...options,
-		});
-	}
-
-	/**
-	 * Callback
-	 * The response varies based on the authentication backend used.
-	 */
-	public static callback<ThrowOnError extends boolean = false>(
-		options: Options<AuthCallbackData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			AuthCallbackResponses,
-			AuthCallbackErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/auth/{provider}/callback",
-			...options,
-		});
-	}
 }
 
 export class UserService {
@@ -684,6 +649,43 @@ export class UserService {
 				},
 			],
 			url: "/api/v1/users/users/{user_id}/oauth-accounts",
+			...options,
+		});
+	}
+}
+
+export class OAuth2Service {
+	/**
+	 * Authorize
+	 * Initiate the OAuth2 authorization process for associating an OAuth account
+	 * with the currently authenticated user.
+	 */
+	public static authorize<ThrowOnError extends boolean = false>(
+		options: Options<OAuth2AuthorizeData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			OAuth2AuthorizeResponses,
+			OAuth2AuthorizeErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/oauth2/{provider}/authorize",
+			...options,
+		});
+	}
+
+	/**
+	 * Callback
+	 * The response varies based on the authentication backend used.
+	 */
+	public static callback<ThrowOnError extends boolean = false>(
+		options: Options<OAuth2CallbackData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			OAuth2CallbackResponses,
+			OAuth2CallbackErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/oauth2/{provider}/callback",
 			...options,
 		});
 	}
