@@ -1,0 +1,1 @@
+import { StrategyTemplateService } from "@/client";

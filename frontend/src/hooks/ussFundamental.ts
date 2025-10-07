@@ -1,0 +1,1 @@
+import { MarketDataFundamentalService } from "@/client";
