@@ -534,7 +534,7 @@ class BacktestService:
             "volatility": result.performance.volatility,
             "sharpe_ratio": result.performance.sharpe_ratio,
             "max_drawdown": result.performance.max_drawdown,
-            "parameters": {},  # TODO: 전략 파라미터 필드 추가 후 업데이트
+            "parameters": {},  # 전략 파라미터 (향후 확장 예정)
         }
 
         result_id = self.database_manager.save_backtest_result(result_data)

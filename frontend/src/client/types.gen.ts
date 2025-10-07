@@ -318,6 +318,154 @@ export type BacktestUpdateRequest = {
 };
 
 /**
+ * BalanceSheetData
+ * 재무상태표 응답 모델
+ */
+export type BalanceSheetData = {
+	/**
+	 * Symbol
+	 * 주식 심볼
+	 */
+	symbol: string;
+	/**
+	 * Fiscal Date Ending
+	 * 회계연도 종료일
+	 */
+	fiscal_date_ending: Date;
+	/**
+	 * Reported Currency
+	 * 보고 통화
+	 */
+	reported_currency?: string;
+	/**
+	 * Total Assets
+	 * 총자산
+	 */
+	total_assets?: string | null;
+	/**
+	 * Total Current Assets
+	 * 총 유동자산
+	 */
+	total_current_assets?: string | null;
+	/**
+	 * Cash And Cash Equivalents
+	 * 현금 및 현금성자산
+	 */
+	cash_and_cash_equivalents?: string | null;
+	/**
+	 * Inventory
+	 * 재고자산
+	 */
+	inventory?: string | null;
+	/**
+	 * Current Net Receivables
+	 * 유동 순매출채권
+	 */
+	current_net_receivables?: string | null;
+	/**
+	 * Property Plant Equipment
+	 * 유형자산
+	 */
+	property_plant_equipment?: string | null;
+	/**
+	 * Goodwill
+	 * 영업권
+	 */
+	goodwill?: string | null;
+	/**
+	 * Intangible Assets
+	 * 무형자산
+	 */
+	intangible_assets?: string | null;
+	/**
+	 * Total Liabilities
+	 * 총부채
+	 */
+	total_liabilities?: string | null;
+	/**
+	 * Total Current Liabilities
+	 * 총 유동부채
+	 */
+	total_current_liabilities?: string | null;
+	/**
+	 * Current Accounts Payable
+	 * 유동 매입채무
+	 */
+	current_accounts_payable?: string | null;
+	/**
+	 * Current Debt
+	 * 유동부채
+	 */
+	current_debt?: string | null;
+	/**
+	 * Long Term Debt
+	 * 장기부채
+	 */
+	long_term_debt?: string | null;
+	/**
+	 * Total Shareholder Equity
+	 * 총 자기자본
+	 */
+	total_shareholder_equity?: string | null;
+	/**
+	 * Retained Earnings
+	 * 이익잉여금
+	 */
+	retained_earnings?: string | null;
+	/**
+	 * Common Stock
+	 * 보통주
+	 */
+	common_stock?: string | null;
+	/**
+	 * Treasury Stock
+	 * 자기주식
+	 */
+	treasury_stock?: string | null;
+	/**
+	 * Common Stock Shares Outstanding
+	 * 보통주 발행주식수
+	 */
+	common_stock_shares_outstanding?: number | null;
+};
+
+/**
+ * BalanceSheetResponse
+ * 재무상태표 조회 응답 스키마
+ */
+export type BalanceSheetResponse = {
+	/**
+	 * Success
+	 * 요청 성공 여부
+	 */
+	success?: boolean;
+	/**
+	 * Message
+	 * 응답 메시지
+	 */
+	message?: string | null;
+	/**
+	 * Timestamp
+	 * 응답 시간
+	 */
+	timestamp?: Date;
+	/**
+	 * Data
+	 * 데이터 목록
+	 */
+	data: Array<BalanceSheetData>;
+	/**
+	 * 메타데이터
+	 */
+	metadata: MetadataInfo;
+	/**
+	 * Count
+	 * 데이터 개수
+	 */
+	count: number;
+};
+
+/**
  * Body_Auth-forgot_password
  */
 export type BodyAuthForgotPassword = {
@@ -389,6 +537,438 @@ export type BodyAuthVerify = {
 	 * Token
 	 */
 	token: string;
+};
+
+/**
+ * CacheInfo
+ * 캐시 정보
+ */
+export type CacheInfo = {
+	/**
+	 * Cached
+	 * 캐시된 데이터 여부
+	 */
+	cached: boolean;
+	/**
+	 * Cache Hit
+	 * 캐시 히트 여부
+	 */
+	cache_hit: boolean;
+	/**
+	 * Cache Timestamp
+	 * 캐시 생성 시간
+	 */
+	cache_timestamp?: Date | null;
+	/**
+	 * Cache Ttl
+	 * 캐시 TTL (초)
+	 */
+	cache_ttl?: number | null;
+};
+
+/**
+ * CashFlowData
+ * 현금흐름표 응답 모델
+ */
+export type CashFlowData = {
+	/**
+	 * Symbol
+	 * 주식 심볼
+	 */
+	symbol: string;
+	/**
+	 * Fiscal Date Ending
+	 * 회계연도 종료일
+	 */
+	fiscal_date_ending: Date;
+	/**
+	 * Reported Currency
+	 * 보고 통화
+	 */
+	reported_currency?: string;
+	/**
+	 * Operating Cashflow
+	 * 영업활동 현금흐름
+	 */
+	operating_cashflow?: string | null;
+	/**
+	 * Payments For Operating Activities
+	 * 영업활동 현금지출
+	 */
+	payments_for_operating_activities?: string | null;
+	/**
+	 * Proceeds From Operating Activities
+	 * 영업활동 현금수입
+	 */
+	proceeds_from_operating_activities?: string | null;
+	/**
+	 * Capital Expenditures
+	 * 자본적지출
+	 */
+	capital_expenditures?: string | null;
+	/**
+	 * Cashflow From Investment
+	 * 투자활동 현금흐름
+	 */
+	cashflow_from_investment?: string | null;
+	/**
+	 * Cashflow From Financing
+	 * 재무활동 현금흐름
+	 */
+	cashflow_from_financing?: string | null;
+	/**
+	 * Dividend Payments
+	 * 배당금 지급
+	 */
+	dividend_payments?: string | null;
+	/**
+	 * Payments For Repurchase Of Common Stock
+	 * 자기주식 취득지출
+	 */
+	payments_for_repurchase_of_common_stock?: string | null;
+	/**
+	 * Change In Cash And Cash Equivalents
+	 * 현금 및 현금성자산 변동
+	 */
+	change_in_cash_and_cash_equivalents?: string | null;
+};
+
+/**
+ * CashFlowResponse
+ * 현금흐름표 조회 응답 스키마
+ */
+export type CashFlowResponse = {
+	/**
+	 * Success
+	 * 요청 성공 여부
+	 */
+	success?: boolean;
+	/**
+	 * Message
+	 * 응답 메시지
+	 */
+	message?: string | null;
+	/**
+	 * Timestamp
+	 * 응답 시간
+	 */
+	timestamp?: Date;
+	/**
+	 * Data
+	 * 데이터 목록
+	 */
+	data: Array<CashFlowData>;
+	/**
+	 * 메타데이터
+	 */
+	metadata: MetadataInfo;
+	/**
+	 * Count
+	 * 데이터 개수
+	 */
+	count: number;
+};
+
+/**
+ * CompanyOverviewData
+ * 기업 개요 응답 모델
+ */
+export type CompanyOverviewData = {
+	/**
+	 * Symbol
+	 * 주식 심볼
+	 */
+	symbol: string;
+	/**
+	 * Name
+	 * 회사명
+	 */
+	name: string;
+	/**
+	 * Exchange
+	 * 거래소
+	 */
+	exchange: string;
+	/**
+	 * Sector
+	 * 섹터
+	 */
+	sector?: string | null;
+	/**
+	 * Industry
+	 * 산업
+	 */
+	industry?: string | null;
+	/**
+	 * Description
+	 * 회사 설명
+	 */
+	description?: string | null;
+	/**
+	 * Currency
+	 * 통화
+	 */
+	currency?: string;
+	/**
+	 * Country
+	 * 국가
+	 */
+	country?: string | null;
+	/**
+	 * Fiscal Year End
+	 * 회계연도 종료월
+	 */
+	fiscal_year_end?: string | null;
+	/**
+	 * Latest Quarter
+	 * 최근 분기
+	 */
+	latest_quarter?: Date | null;
+	/**
+	 * Market Capitalization
+	 * 시가총액
+	 */
+	market_capitalization?: string | null;
+	/**
+	 * Ebitda
+	 * EBITDA
+	 */
+	ebitda?: string | null;
+	/**
+	 * Pe Ratio
+	 * PER
+	 */
+	pe_ratio?: string | null;
+	/**
+	 * Peg Ratio
+	 * PEG 비율
+	 */
+	peg_ratio?: string | null;
+	/**
+	 * Book Value
+	 * 장부가치
+	 */
+	book_value?: string | null;
+	/**
+	 * Dividend Per Share
+	 * 주당 배당금
+	 */
+	dividend_per_share?: string | null;
+	/**
+	 * Dividend Yield
+	 * 배당 수익률 (%)
+	 */
+	dividend_yield?: string | null;
+	/**
+	 * Eps
+	 * 주당 순이익
+	 */
+	eps?: string | null;
+	/**
+	 * Revenue Per Share Ttm
+	 * 주당 매출(TTM)
+	 */
+	revenue_per_share_ttm?: string | null;
+	/**
+	 * Profit Margin
+	 * 순이익률 (%)
+	 */
+	profit_margin?: string | null;
+	/**
+	 * Operating Margin Ttm
+	 * 영업이익률(TTM) (%)
+	 */
+	operating_margin_ttm?: string | null;
+	/**
+	 * Return On Assets Ttm
+	 * 총자산수익률(TTM) (%)
+	 */
+	return_on_assets_ttm?: string | null;
+	/**
+	 * Return On Equity Ttm
+	 * 자기자본수익률(TTM) (%)
+	 */
+	return_on_equity_ttm?: string | null;
+	/**
+	 * Revenue Ttm
+	 * 매출(TTM)
+	 */
+	revenue_ttm?: string | null;
+	/**
+	 * Gross Profit Ttm
+	 * 매출총이익(TTM)
+	 */
+	gross_profit_ttm?: string | null;
+	/**
+	 * Fifty Two Week High
+	 * 52주 최고가
+	 */
+	fifty_two_week_high?: string | null;
+	/**
+	 * Fifty Two Week Low
+	 * 52주 최저가
+	 */
+	fifty_two_week_low?: string | null;
+	/**
+	 * Fifty Day Moving Average
+	 * 50일 이동평균
+	 */
+	fifty_day_moving_average?: string | null;
+	/**
+	 * Two Hundred Day Moving Average
+	 * 200일 이동평균
+	 */
+	two_hundred_day_moving_average?: string | null;
+	/**
+	 * Shares Outstanding
+	 * 발행주식수
+	 */
+	shares_outstanding?: number | null;
+	/**
+	 * Beta
+	 * 베타
+	 */
+	beta?: string | null;
+	/**
+	 * Analyst Target Price
+	 * 목표 주가
+	 */
+	analyst_target_price?: string | null;
+};
+
+/**
+ * CompanyOverviewResponse
+ * 기업 개요 조회 응답 스키마
+ */
+export type CompanyOverviewResponse = {
+	/**
+	 * Success
+	 * 요청 성공 여부
+	 */
+	success?: boolean;
+	/**
+	 * Message
+	 * 응답 메시지
+	 */
+	message?: string | null;
+	/**
+	 * Timestamp
+	 * 응답 시간
+	 */
+	timestamp?: Date;
+	/**
+	 * 데이터
+	 */
+	data: CompanyOverviewData;
+	/**
+	 * 메타데이터
+	 */
+	metadata: MetadataInfo;
+};
+
+/**
+ * DataQualityInfo
+ * 데이터 품질 정보
+ */
+export type DataQualityInfo = {
+	/**
+	 * Quality Score
+	 * 품질 점수 (0-100)
+	 */
+	quality_score: string;
+	/**
+	 * Last Updated
+	 * 마지막 업데이트 시간
+	 */
+	last_updated: Date;
+	/**
+	 * Data Source
+	 * 데이터 출처
+	 */
+	data_source: string;
+	/**
+	 * Confidence Level
+	 * 신뢰도 수준
+	 */
+	confidence_level?: string | null;
+};
+
+/**
+ * EarningsData
+ * 실적 발표 응답 모델
+ */
+export type EarningsData = {
+	/**
+	 * Symbol
+	 * 주식 심볼
+	 */
+	symbol: string;
+	/**
+	 * Fiscal Date Ending
+	 * 회계연도 종료일
+	 */
+	fiscal_date_ending: Date;
+	/**
+	 * Reported Date
+	 * 발표일
+	 */
+	reported_date: Date;
+	/**
+	 * Reported Eps
+	 * 발표 EPS
+	 */
+	reported_eps?: string | null;
+	/**
+	 * Estimated Eps
+	 * 예상 EPS
+	 */
+	estimated_eps?: string | null;
+	/**
+	 * Surprise
+	 * 서프라이즈
+	 */
+	surprise?: string | null;
+	/**
+	 * Surprise Percentage
+	 * 서프라이즈 비율 (%)
+	 */
+	surprise_percentage?: string | null;
+};
+
+/**
+ * EarningsResponse
+ * 실적 데이터 조회 응답 스키마
+ */
+export type EarningsResponse = {
+	/**
+	 * Success
+	 * 요청 성공 여부
+	 */
+	success?: boolean;
+	/**
+	 * Message
+	 * 응답 메시지
+	 */
+	message?: string | null;
+	/**
+	 * Timestamp
+	 * 응답 시간
+	 */
+	timestamp?: Date;
+	/**
+	 * Data
+	 * 데이터 목록
+	 */
+	data: Array<EarningsData>;
+	/**
+	 * 메타데이터
+	 */
+	metadata: MetadataInfo;
+	/**
+	 * Count
+	 * 데이터 개수
+	 */
+	count: number;
 };
 
 /**
@@ -554,6 +1134,144 @@ export type HistoricalDataResponse = {
 };
 
 /**
+ * IncomeStatementData
+ * 손익계산서 응답 모델
+ */
+export type IncomeStatementData = {
+	/**
+	 * Symbol
+	 * 주식 심볼
+	 */
+	symbol: string;
+	/**
+	 * Fiscal Date Ending
+	 * 회계연도 종료일
+	 */
+	fiscal_date_ending: Date;
+	/**
+	 * Reported Currency
+	 * 보고 통화
+	 */
+	reported_currency?: string;
+	/**
+	 * Total Revenue
+	 * 총 매출
+	 */
+	total_revenue?: string | null;
+	/**
+	 * Cost Of Revenue
+	 * 매출원가
+	 */
+	cost_of_revenue?: string | null;
+	/**
+	 * Gross Profit
+	 * 매출총이익
+	 */
+	gross_profit?: string | null;
+	/**
+	 * Research And Development
+	 * 연구개발비
+	 */
+	research_and_development?: string | null;
+	/**
+	 * Selling General Administrative
+	 * 판매관리비
+	 */
+	selling_general_administrative?: string | null;
+	/**
+	 * Operating Expenses
+	 * 영업비용
+	 */
+	operating_expenses?: string | null;
+	/**
+	 * Operating Income
+	 * 영업이익
+	 */
+	operating_income?: string | null;
+	/**
+	 * Interest Income
+	 * 이자수익
+	 */
+	interest_income?: string | null;
+	/**
+	 * Interest Expense
+	 * 이자비용
+	 */
+	interest_expense?: string | null;
+	/**
+	 * Income Before Tax
+	 * 세전이익
+	 */
+	income_before_tax?: string | null;
+	/**
+	 * Income Tax Expense
+	 * 법인세비용
+	 */
+	income_tax_expense?: string | null;
+	/**
+	 * Net Income
+	 * 순이익
+	 */
+	net_income?: string | null;
+	/**
+	 * Basic Shares Outstanding
+	 * 기본 주식수
+	 */
+	basic_shares_outstanding?: number | null;
+	/**
+	 * Diluted Shares Outstanding
+	 * 희석 주식수
+	 */
+	diluted_shares_outstanding?: number | null;
+	/**
+	 * Basic Eps
+	 * 기본 주당순이익
+	 */
+	basic_eps?: string | null;
+	/**
+	 * Diluted Eps
+	 * 희석 주당순이익
+	 */
+	diluted_eps?: string | null;
+};
+
+/**
+ * IncomeStatementResponse
+ * 손익계산서 조회 응답 스키마
+ */
+export type IncomeStatementResponse = {
+	/**
+	 * Success
+	 * 요청 성공 여부
+	 */
+	success?: boolean;
+	/**
+	 * Message
+	 * 응답 메시지
+	 */
+	message?: string | null;
+	/**
+	 * Timestamp
+	 * 응답 시간
+	 */
+	timestamp?: Date;
+	/**
+	 * Data
+	 * 데이터 목록
+	 */
+	data: Array<IncomeStatementData>;
+	/**
+	 * 메타데이터
+	 */
+	metadata: MetadataInfo;
+	/**
+	 * Count
+	 * 데이터 개수
+	 */
+	count: number;
+};
+
+/**
  * IntegratedBacktestRequest
  * 통합 백테스트 요청
  */
@@ -672,6 +1390,20 @@ export type LoginResponse = {
 	 */
 	token_type?: string | null;
 	user_info: UserResponse;
+};
+
+/**
+ * MetadataInfo
+ * 메타데이터 정보
+ */
+export type MetadataInfo = {
+	data_quality: DataQualityInfo;
+	cache_info: CacheInfo;
+	/**
+	 * Processing Time Ms
+	 * 처리 시간 (밀리초)
+	 */
+	processing_time_ms?: number | null;
 };
 
 /**
@@ -2355,12 +3087,9 @@ export type MarketDataGetCompanyOverviewError =
 
 export type MarketDataGetCompanyOverviewResponses = {
 	/**
-	 * Response Market Data-Get Company Overview
 	 * Successful Response
 	 */
-	200: {
-		[key: string]: unknown;
-	};
+	200: CompanyOverviewResponse;
 };
 
 export type MarketDataGetCompanyOverviewResponse =
@@ -2397,12 +3126,9 @@ export type MarketDataGetIncomeStatementError =
 
 export type MarketDataGetIncomeStatementResponses = {
 	/**
-	 * Response Market Data-Get Income Statement
 	 * Successful Response
 	 */
-	200: {
-		[key: string]: unknown;
-	};
+	200: IncomeStatementResponse;
 };
 
 export type MarketDataGetIncomeStatementResponse =
@@ -2439,12 +3165,9 @@ export type MarketDataGetBalanceSheetError =
 
 export type MarketDataGetBalanceSheetResponses = {
 	/**
-	 * Response Market Data-Get Balance Sheet
 	 * Successful Response
 	 */
-	200: {
-		[key: string]: unknown;
-	};
+	200: BalanceSheetResponse;
 };
 
 export type MarketDataGetBalanceSheetResponse =
@@ -2481,12 +3204,9 @@ export type MarketDataGetCashFlowError =
 
 export type MarketDataGetCashFlowResponses = {
 	/**
-	 * Response Market Data-Get Cash Flow
 	 * Successful Response
 	 */
-	200: {
-		[key: string]: unknown;
-	};
+	200: CashFlowResponse;
 };
 
 export type MarketDataGetCashFlowResponse =
@@ -2517,12 +3237,9 @@ export type MarketDataGetEarningsError =
 
 export type MarketDataGetEarningsResponses = {
 	/**
-	 * Response Market Data-Get Earnings
 	 * Successful Response
 	 */
-	200: {
-		[key: string]: unknown;
-	};
+	200: EarningsResponse;
 };
 
 export type MarketDataGetEarningsResponse =

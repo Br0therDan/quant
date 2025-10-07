@@ -512,6 +512,298 @@ export const BacktestUpdateRequestSchema = {
 	description: "백테스트 수정 요청",
 } as const;
 
+export const BalanceSheetDataSchema = {
+	properties: {
+		symbol: {
+			type: "string",
+			title: "Symbol",
+			description: "주식 심볼",
+		},
+		fiscal_date_ending: {
+			type: "string",
+			format: "date-time",
+			title: "Fiscal Date Ending",
+			description: "회계연도 종료일",
+		},
+		reported_currency: {
+			type: "string",
+			title: "Reported Currency",
+			description: "보고 통화",
+			default: "USD",
+		},
+		total_assets: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Total Assets",
+			description: "총자산",
+		},
+		total_current_assets: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Total Current Assets",
+			description: "총 유동자산",
+		},
+		cash_and_cash_equivalents: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Cash And Cash Equivalents",
+			description: "현금 및 현금성자산",
+		},
+		inventory: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Inventory",
+			description: "재고자산",
+		},
+		current_net_receivables: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Current Net Receivables",
+			description: "유동 순매출채권",
+		},
+		property_plant_equipment: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Property Plant Equipment",
+			description: "유형자산",
+		},
+		goodwill: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Goodwill",
+			description: "영업권",
+		},
+		intangible_assets: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Intangible Assets",
+			description: "무형자산",
+		},
+		total_liabilities: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Total Liabilities",
+			description: "총부채",
+		},
+		total_current_liabilities: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Total Current Liabilities",
+			description: "총 유동부채",
+		},
+		current_accounts_payable: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Current Accounts Payable",
+			description: "유동 매입채무",
+		},
+		current_debt: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Current Debt",
+			description: "유동부채",
+		},
+		long_term_debt: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Long Term Debt",
+			description: "장기부채",
+		},
+		total_shareholder_equity: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Total Shareholder Equity",
+			description: "총 자기자본",
+		},
+		retained_earnings: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Retained Earnings",
+			description: "이익잉여금",
+		},
+		common_stock: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Common Stock",
+			description: "보통주",
+		},
+		treasury_stock: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Treasury Stock",
+			description: "자기주식",
+		},
+		common_stock_shares_outstanding: {
+			anyOf: [
+				{
+					type: "integer",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Common Stock Shares Outstanding",
+			description: "보통주 발행주식수",
+		},
+	},
+	type: "object",
+	required: ["symbol", "fiscal_date_ending"],
+	title: "BalanceSheetData",
+	description: "재무상태표 응답 모델",
+} as const;
+
+export const BalanceSheetResponseSchema = {
+	properties: {
+		success: {
+			type: "boolean",
+			title: "Success",
+			description: "요청 성공 여부",
+			default: true,
+		},
+		message: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Message",
+			description: "응답 메시지",
+		},
+		timestamp: {
+			type: "string",
+			format: "date-time",
+			title: "Timestamp",
+			description: "응답 시간",
+		},
+		data: {
+			items: {
+				$ref: "#/components/schemas/BalanceSheetData",
+			},
+			type: "array",
+			title: "Data",
+			description: "데이터 목록",
+		},
+		metadata: {
+			$ref: "#/components/schemas/MetadataInfo",
+			description: "메타데이터",
+		},
+		count: {
+			type: "integer",
+			title: "Count",
+			description: "데이터 개수",
+		},
+	},
+	type: "object",
+	required: ["data", "metadata", "count"],
+	title: "BalanceSheetResponse",
+	description: "재무상태표 조회 응답 스키마",
+} as const;
+
 export const Body_Auth_forgot_passwordSchema = {
 	properties: {
 		email: {
@@ -621,6 +913,803 @@ export const Body_Auth_verifySchema = {
 	type: "object",
 	required: ["token"],
 	title: "Body_Auth-verify",
+} as const;
+
+export const CacheInfoSchema = {
+	properties: {
+		cached: {
+			type: "boolean",
+			title: "Cached",
+			description: "캐시된 데이터 여부",
+		},
+		cache_hit: {
+			type: "boolean",
+			title: "Cache Hit",
+			description: "캐시 히트 여부",
+		},
+		cache_timestamp: {
+			anyOf: [
+				{
+					type: "string",
+					format: "date-time",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Cache Timestamp",
+			description: "캐시 생성 시간",
+		},
+		cache_ttl: {
+			anyOf: [
+				{
+					type: "integer",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Cache Ttl",
+			description: "캐시 TTL (초)",
+		},
+	},
+	type: "object",
+	required: ["cached", "cache_hit"],
+	title: "CacheInfo",
+	description: "캐시 정보",
+} as const;
+
+export const CashFlowDataSchema = {
+	properties: {
+		symbol: {
+			type: "string",
+			title: "Symbol",
+			description: "주식 심볼",
+		},
+		fiscal_date_ending: {
+			type: "string",
+			format: "date-time",
+			title: "Fiscal Date Ending",
+			description: "회계연도 종료일",
+		},
+		reported_currency: {
+			type: "string",
+			title: "Reported Currency",
+			description: "보고 통화",
+			default: "USD",
+		},
+		operating_cashflow: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Operating Cashflow",
+			description: "영업활동 현금흐름",
+		},
+		payments_for_operating_activities: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Payments For Operating Activities",
+			description: "영업활동 현금지출",
+		},
+		proceeds_from_operating_activities: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Proceeds From Operating Activities",
+			description: "영업활동 현금수입",
+		},
+		capital_expenditures: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Capital Expenditures",
+			description: "자본적지출",
+		},
+		cashflow_from_investment: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Cashflow From Investment",
+			description: "투자활동 현금흐름",
+		},
+		cashflow_from_financing: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Cashflow From Financing",
+			description: "재무활동 현금흐름",
+		},
+		dividend_payments: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Dividend Payments",
+			description: "배당금 지급",
+		},
+		payments_for_repurchase_of_common_stock: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Payments For Repurchase Of Common Stock",
+			description: "자기주식 취득지출",
+		},
+		change_in_cash_and_cash_equivalents: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Change In Cash And Cash Equivalents",
+			description: "현금 및 현금성자산 변동",
+		},
+	},
+	type: "object",
+	required: ["symbol", "fiscal_date_ending"],
+	title: "CashFlowData",
+	description: "현금흐름표 응답 모델",
+} as const;
+
+export const CashFlowResponseSchema = {
+	properties: {
+		success: {
+			type: "boolean",
+			title: "Success",
+			description: "요청 성공 여부",
+			default: true,
+		},
+		message: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Message",
+			description: "응답 메시지",
+		},
+		timestamp: {
+			type: "string",
+			format: "date-time",
+			title: "Timestamp",
+			description: "응답 시간",
+		},
+		data: {
+			items: {
+				$ref: "#/components/schemas/CashFlowData",
+			},
+			type: "array",
+			title: "Data",
+			description: "데이터 목록",
+		},
+		metadata: {
+			$ref: "#/components/schemas/MetadataInfo",
+			description: "메타데이터",
+		},
+		count: {
+			type: "integer",
+			title: "Count",
+			description: "데이터 개수",
+		},
+	},
+	type: "object",
+	required: ["data", "metadata", "count"],
+	title: "CashFlowResponse",
+	description: "현금흐름표 조회 응답 스키마",
+} as const;
+
+export const CompanyOverviewDataSchema = {
+	properties: {
+		symbol: {
+			type: "string",
+			title: "Symbol",
+			description: "주식 심볼",
+		},
+		name: {
+			type: "string",
+			title: "Name",
+			description: "회사명",
+		},
+		exchange: {
+			type: "string",
+			title: "Exchange",
+			description: "거래소",
+		},
+		sector: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Sector",
+			description: "섹터",
+		},
+		industry: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Industry",
+			description: "산업",
+		},
+		description: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Description",
+			description: "회사 설명",
+		},
+		currency: {
+			type: "string",
+			title: "Currency",
+			description: "통화",
+			default: "USD",
+		},
+		country: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Country",
+			description: "국가",
+		},
+		fiscal_year_end: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Fiscal Year End",
+			description: "회계연도 종료월",
+		},
+		latest_quarter: {
+			anyOf: [
+				{
+					type: "string",
+					format: "date-time",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Latest Quarter",
+			description: "최근 분기",
+		},
+		market_capitalization: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Market Capitalization",
+			description: "시가총액",
+		},
+		ebitda: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Ebitda",
+			description: "EBITDA",
+		},
+		pe_ratio: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Pe Ratio",
+			description: "PER",
+		},
+		peg_ratio: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Peg Ratio",
+			description: "PEG 비율",
+		},
+		book_value: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Book Value",
+			description: "장부가치",
+		},
+		dividend_per_share: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Dividend Per Share",
+			description: "주당 배당금",
+		},
+		dividend_yield: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Dividend Yield",
+			description: "배당 수익률 (%)",
+		},
+		eps: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Eps",
+			description: "주당 순이익",
+		},
+		revenue_per_share_ttm: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Revenue Per Share Ttm",
+			description: "주당 매출(TTM)",
+		},
+		profit_margin: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Profit Margin",
+			description: "순이익률 (%)",
+		},
+		operating_margin_ttm: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Operating Margin Ttm",
+			description: "영업이익률(TTM) (%)",
+		},
+		return_on_assets_ttm: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Return On Assets Ttm",
+			description: "총자산수익률(TTM) (%)",
+		},
+		return_on_equity_ttm: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Return On Equity Ttm",
+			description: "자기자본수익률(TTM) (%)",
+		},
+		revenue_ttm: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Revenue Ttm",
+			description: "매출(TTM)",
+		},
+		gross_profit_ttm: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Gross Profit Ttm",
+			description: "매출총이익(TTM)",
+		},
+		fifty_two_week_high: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Fifty Two Week High",
+			description: "52주 최고가",
+		},
+		fifty_two_week_low: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Fifty Two Week Low",
+			description: "52주 최저가",
+		},
+		fifty_day_moving_average: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Fifty Day Moving Average",
+			description: "50일 이동평균",
+		},
+		two_hundred_day_moving_average: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Two Hundred Day Moving Average",
+			description: "200일 이동평균",
+		},
+		shares_outstanding: {
+			anyOf: [
+				{
+					type: "integer",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Shares Outstanding",
+			description: "발행주식수",
+		},
+		beta: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Beta",
+			description: "베타",
+		},
+		analyst_target_price: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Analyst Target Price",
+			description: "목표 주가",
+		},
+	},
+	type: "object",
+	required: ["symbol", "name", "exchange"],
+	title: "CompanyOverviewData",
+	description: "기업 개요 응답 모델",
+} as const;
+
+export const CompanyOverviewResponseSchema = {
+	properties: {
+		success: {
+			type: "boolean",
+			title: "Success",
+			description: "요청 성공 여부",
+			default: true,
+		},
+		message: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Message",
+			description: "응답 메시지",
+		},
+		timestamp: {
+			type: "string",
+			format: "date-time",
+			title: "Timestamp",
+			description: "응답 시간",
+		},
+		data: {
+			$ref: "#/components/schemas/CompanyOverviewData",
+			description: "데이터",
+		},
+		metadata: {
+			$ref: "#/components/schemas/MetadataInfo",
+			description: "메타데이터",
+		},
+	},
+	type: "object",
+	required: ["data", "metadata"],
+	title: "CompanyOverviewResponse",
+	description: "기업 개요 조회 응답 스키마",
+} as const;
+
+export const DataQualityInfoSchema = {
+	properties: {
+		quality_score: {
+			type: "string",
+			title: "Quality Score",
+			description: "품질 점수 (0-100)",
+		},
+		last_updated: {
+			type: "string",
+			format: "date-time",
+			title: "Last Updated",
+			description: "마지막 업데이트 시간",
+		},
+		data_source: {
+			type: "string",
+			title: "Data Source",
+			description: "데이터 출처",
+		},
+		confidence_level: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Confidence Level",
+			description: "신뢰도 수준",
+		},
+	},
+	type: "object",
+	required: ["quality_score", "last_updated", "data_source"],
+	title: "DataQualityInfo",
+	description: "데이터 품질 정보",
+} as const;
+
+export const EarningsDataSchema = {
+	properties: {
+		symbol: {
+			type: "string",
+			title: "Symbol",
+			description: "주식 심볼",
+		},
+		fiscal_date_ending: {
+			type: "string",
+			format: "date-time",
+			title: "Fiscal Date Ending",
+			description: "회계연도 종료일",
+		},
+		reported_date: {
+			type: "string",
+			format: "date-time",
+			title: "Reported Date",
+			description: "발표일",
+		},
+		reported_eps: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Reported Eps",
+			description: "발표 EPS",
+		},
+		estimated_eps: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Estimated Eps",
+			description: "예상 EPS",
+		},
+		surprise: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Surprise",
+			description: "서프라이즈",
+		},
+		surprise_percentage: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Surprise Percentage",
+			description: "서프라이즈 비율 (%)",
+		},
+	},
+	type: "object",
+	required: ["symbol", "fiscal_date_ending", "reported_date"],
+	title: "EarningsData",
+	description: "실적 발표 응답 모델",
+} as const;
+
+export const EarningsResponseSchema = {
+	properties: {
+		success: {
+			type: "boolean",
+			title: "Success",
+			description: "요청 성공 여부",
+			default: true,
+		},
+		message: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Message",
+			description: "응답 메시지",
+		},
+		timestamp: {
+			type: "string",
+			format: "date-time",
+			title: "Timestamp",
+			description: "응답 시간",
+		},
+		data: {
+			items: {
+				$ref: "#/components/schemas/EarningsData",
+			},
+			type: "array",
+			title: "Data",
+			description: "데이터 목록",
+		},
+		metadata: {
+			$ref: "#/components/schemas/MetadataInfo",
+			description: "메타데이터",
+		},
+		count: {
+			type: "integer",
+			title: "Count",
+			description: "데이터 개수",
+		},
+	},
+	type: "object",
+	required: ["data", "metadata", "count"],
+	title: "EarningsResponse",
+	description: "실적 데이터 조회 응답 스키마",
 } as const;
 
 export const ExecutionListResponseSchema = {
@@ -853,6 +1942,274 @@ export const HistoricalDataResponseSchema = {
 	title: "HistoricalDataResponse",
 } as const;
 
+export const IncomeStatementDataSchema = {
+	properties: {
+		symbol: {
+			type: "string",
+			title: "Symbol",
+			description: "주식 심볼",
+		},
+		fiscal_date_ending: {
+			type: "string",
+			format: "date-time",
+			title: "Fiscal Date Ending",
+			description: "회계연도 종료일",
+		},
+		reported_currency: {
+			type: "string",
+			title: "Reported Currency",
+			description: "보고 통화",
+			default: "USD",
+		},
+		total_revenue: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Total Revenue",
+			description: "총 매출",
+		},
+		cost_of_revenue: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Cost Of Revenue",
+			description: "매출원가",
+		},
+		gross_profit: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Gross Profit",
+			description: "매출총이익",
+		},
+		research_and_development: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Research And Development",
+			description: "연구개발비",
+		},
+		selling_general_administrative: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Selling General Administrative",
+			description: "판매관리비",
+		},
+		operating_expenses: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Operating Expenses",
+			description: "영업비용",
+		},
+		operating_income: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Operating Income",
+			description: "영업이익",
+		},
+		interest_income: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Interest Income",
+			description: "이자수익",
+		},
+		interest_expense: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Interest Expense",
+			description: "이자비용",
+		},
+		income_before_tax: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Income Before Tax",
+			description: "세전이익",
+		},
+		income_tax_expense: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Income Tax Expense",
+			description: "법인세비용",
+		},
+		net_income: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Net Income",
+			description: "순이익",
+		},
+		basic_shares_outstanding: {
+			anyOf: [
+				{
+					type: "integer",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Basic Shares Outstanding",
+			description: "기본 주식수",
+		},
+		diluted_shares_outstanding: {
+			anyOf: [
+				{
+					type: "integer",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Diluted Shares Outstanding",
+			description: "희석 주식수",
+		},
+		basic_eps: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Basic Eps",
+			description: "기본 주당순이익",
+		},
+		diluted_eps: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Diluted Eps",
+			description: "희석 주당순이익",
+		},
+	},
+	type: "object",
+	required: ["symbol", "fiscal_date_ending"],
+	title: "IncomeStatementData",
+	description: "손익계산서 응답 모델",
+} as const;
+
+export const IncomeStatementResponseSchema = {
+	properties: {
+		success: {
+			type: "boolean",
+			title: "Success",
+			description: "요청 성공 여부",
+			default: true,
+		},
+		message: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Message",
+			description: "응답 메시지",
+		},
+		timestamp: {
+			type: "string",
+			format: "date-time",
+			title: "Timestamp",
+			description: "응답 시간",
+		},
+		data: {
+			items: {
+				$ref: "#/components/schemas/IncomeStatementData",
+			},
+			type: "array",
+			title: "Data",
+			description: "데이터 목록",
+		},
+		metadata: {
+			$ref: "#/components/schemas/MetadataInfo",
+			description: "메타데이터",
+		},
+		count: {
+			type: "integer",
+			title: "Count",
+			description: "데이터 개수",
+		},
+	},
+	type: "object",
+	required: ["data", "metadata", "count"],
+	title: "IncomeStatementResponse",
+	description: "손익계산서 조회 응답 스키마",
+} as const;
+
 export const IntegratedBacktestRequestSchema = {
 	properties: {
 		user_id: {
@@ -1071,6 +2428,33 @@ export const LoginResponseSchema = {
 			is_verified: false,
 		},
 	},
+} as const;
+
+export const MetadataInfoSchema = {
+	properties: {
+		data_quality: {
+			$ref: "#/components/schemas/DataQualityInfo",
+		},
+		cache_info: {
+			$ref: "#/components/schemas/CacheInfo",
+		},
+		processing_time_ms: {
+			anyOf: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Processing Time Ms",
+			description: "처리 시간 (밀리초)",
+		},
+	},
+	type: "object",
+	required: ["data_quality", "cache_info"],
+	title: "MetadataInfo",
+	description: "메타데이터 정보",
 } as const;
 
 export const OAuth2AuthorizeResponseSchema = {

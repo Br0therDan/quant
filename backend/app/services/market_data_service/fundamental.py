@@ -513,15 +513,63 @@ class FundamentalService(BaseMarketDataService):
         Returns:
             계산된 재무 비율들
 
-        TODO: 구현 예정
-        1. P/E, P/B, ROE, ROA 등 주요 비율
-        2. 업종별 비교 지표
-        3. 시계열 분석
+        Note:
+            주요 재무 비율들을 계산합니다.
+            - P/E, P/B, ROE, ROA 등 주요 비율
+            - 수익성, 안정성, 성장성 지표
         """
         logger.info(f"Calculating financial ratios for {symbol}")
 
-        # TODO: 실제 구현
-        return {}
+        try:
+            # 기업 개요 데이터 가져오기
+            overview = await self.get_company_overview(symbol)
+            if not overview:
+                logger.warning(f"No overview data available for {symbol}")
+                return {}
+
+            # 기본 비율들 (Alpha Vantage에서 제공)
+            ratios = {
+                "pe_ratio": float(overview.pe_ratio or 0),
+                "peg_ratio": float(overview.peg_ratio or 0),
+                "book_value": float(overview.book_value or 0),
+                "dividend_yield": float(overview.dividend_yield or 0),
+                "eps": float(overview.eps or 0),
+                "profit_margin": float(overview.profit_margin or 0),
+                "operating_margin_ttm": float(overview.operating_margin_ttm or 0),
+                "return_on_assets_ttm": float(overview.return_on_assets_ttm or 0),
+                "return_on_equity_ttm": float(overview.return_on_equity_ttm or 0),
+                "revenue_per_share_ttm": float(overview.revenue_per_share_ttm or 0),
+                "beta": float(overview.beta or 0),
+            }
+
+            # 추가 계산 비율들
+            if overview.market_capitalization and overview.revenue_ttm:
+                ratios["price_to_sales"] = float(
+                    overview.market_capitalization
+                ) / float(overview.revenue_ttm)
+
+            if (
+                overview.market_capitalization
+                and overview.book_value
+                and overview.shares_outstanding
+            ):
+                book_value_total = float(overview.book_value) * float(
+                    overview.shares_outstanding
+                )
+                if book_value_total > 0:
+                    ratios["price_to_book"] = (
+                        float(overview.market_capitalization) / book_value_total
+                    )
+
+            # 0인 값들 제거
+            ratios = {k: v for k, v in ratios.items() if v != 0}
+
+            logger.info(f"Calculated {len(ratios)} financial ratios for {symbol}")
+            return ratios
+
+        except Exception as e:
+            logger.error(f"Failed to calculate financial ratios for {symbol}: {e}")
+            return {}
 
     # BaseMarketDataService 추상 메서드 구현
     async def _fetch_from_source(self, **kwargs) -> Any:

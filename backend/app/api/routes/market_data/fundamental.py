@@ -4,17 +4,23 @@ Fundamental Data API Routes
 """
 
 from datetime import datetime
-from typing import Dict, Any
 from fastapi import APIRouter, HTTPException, Query, Path
 
 from app.services.service_factory import service_factory
+from app.schemas.market_data.fundamental import (
+    CompanyOverviewResponse,
+    IncomeStatementResponse,
+    BalanceSheetResponse,
+    CashFlowResponse,
+    EarningsResponse,
+)
 
 router = APIRouter()
 
 
 @router.get(
     "/overview/{symbol}",
-    response_model=Dict[str, Any],
+    response_model=CompanyOverviewResponse,
     description="지정된 종목의 기업 개요 정보를 조회합니다.",
 )
 async def get_company_overview(
@@ -44,7 +50,7 @@ async def get_company_overview(
 
 @router.get(
     "/income-statement/{symbol}",
-    response_model=Dict[str, Any],
+    response_model=IncomeStatementResponse,
     description="지정된 종목의 손익계산서를 조회합니다.",
 )
 async def get_income_statement(
@@ -53,15 +59,20 @@ async def get_income_statement(
 ):
     """손익계산서 조회"""
     try:
-        # TODO: FundamentalService에 get_income_statement 메서드 구현 필요
+        market_service = service_factory.get_market_data_service()
+        income_statements = await market_service.fundamental.get_income_statement(
+            symbol=symbol.upper(), period=period
+        )
+
         return {
-            "success": False,
-            "message": "손익계산서 조회 기능은 아직 구현되지 않았습니다.",
-            "data": None,
+            "success": True,
+            "message": f"{symbol.upper()}의 손익계산서를 성공적으로 조회했습니다.",
+            "data": [stmt.model_dump() for stmt in income_statements],
             "metadata": {
                 "symbol": symbol.upper(),
                 "period": period,
-                "status": "not_implemented",
+                "count": len(income_statements),
+                "status": "success",
             },
         }
 
@@ -71,7 +82,7 @@ async def get_income_statement(
 
 @router.get(
     "/balance-sheet/{symbol}",
-    response_model=Dict[str, Any],
+    response_model=BalanceSheetResponse,
     description="지정된 종목의 재무상태표를 조회합니다.",
 )
 async def get_balance_sheet(
@@ -80,15 +91,20 @@ async def get_balance_sheet(
 ):
     """재무상태표 조회"""
     try:
-        # TODO: FundamentalService에 get_balance_sheet 메서드 구현 필요
+        market_service = service_factory.get_market_data_service()
+        balance_sheets = await market_service.fundamental.get_balance_sheet(
+            symbol=symbol.upper(), period=period
+        )
+
         return {
-            "success": False,
-            "message": "재무상태표 조회 기능은 아직 구현되지 않았습니다.",
-            "data": None,
+            "success": True,
+            "message": f"{symbol.upper()}의 재무상태표를 성공적으로 조회했습니다.",
+            "data": [sheet.model_dump() for sheet in balance_sheets],
             "metadata": {
                 "symbol": symbol.upper(),
                 "period": period,
-                "status": "not_implemented",
+                "count": len(balance_sheets),
+                "status": "success",
             },
         }
 
@@ -98,7 +114,7 @@ async def get_balance_sheet(
 
 @router.get(
     "/cash-flow/{symbol}",
-    response_model=Dict[str, Any],
+    response_model=CashFlowResponse,
     description="지정된 종목의 현금흐름표를 조회합니다.",
 )
 async def get_cash_flow(
@@ -107,15 +123,20 @@ async def get_cash_flow(
 ):
     """현금흐름표 조회"""
     try:
-        # TODO: FundamentalService에 get_cash_flow 메서드 구현 필요
+        market_service = service_factory.get_market_data_service()
+        cash_flows = await market_service.fundamental.get_cash_flow(
+            symbol=symbol.upper(), period=period
+        )
+
         return {
-            "success": False,
-            "message": "현금흐름표 조회 기능은 아직 구현되지 않았습니다.",
-            "data": None,
+            "success": True,
+            "message": f"{symbol.upper()}의 현금흐름표를 성공적으로 조회했습니다.",
+            "data": [flow.model_dump() for flow in cash_flows],
             "metadata": {
                 "symbol": symbol.upper(),
                 "period": period,
-                "status": "not_implemented",
+                "count": len(cash_flows),
+                "status": "success",
             },
         }
 
@@ -125,18 +146,24 @@ async def get_cash_flow(
 
 @router.get(
     "/earnings/{symbol}",
-    response_model=Dict[str, Any],
+    response_model=EarningsResponse,
     description="지정된 종목의 실적 데이터를 조회합니다.",
 )
 async def get_earnings(symbol: str = Path(..., description="종목 심볼 (예: AAPL, TSLA)")):
     """실적 데이터 조회"""
     try:
-        # TODO: FundamentalService에 get_earnings 메서드 구현 필요
+        market_service = service_factory.get_market_data_service()
+        earnings = await market_service.fundamental.get_earnings(symbol=symbol.upper())
+
         return {
-            "success": False,
-            "message": "실적 데이터 조회 기능은 아직 구현되지 않았습니다.",
-            "data": None,
-            "metadata": {"symbol": symbol.upper(), "status": "not_implemented"},
+            "success": True,
+            "message": f"{symbol.upper()}의 실적 발표 데이터를 성공적으로 조회했습니다.",
+            "data": [earning.model_dump() for earning in earnings],
+            "metadata": {
+                "symbol": symbol.upper(),
+                "count": len(earnings),
+                "status": "success",
+            },
         }
 
     except Exception as e:

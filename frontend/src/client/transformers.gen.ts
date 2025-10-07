@@ -9,7 +9,12 @@ import type {
 	BacktestsGetBacktestsResponse,
 	BacktestsUpdateBacktestResponse,
 	HealthHealthCheckResponse,
+	MarketDataGetBalanceSheetResponse,
+	MarketDataGetCashFlowResponse,
+	MarketDataGetCompanyOverviewResponse,
+	MarketDataGetEarningsResponse,
 	MarketDataGetHistoricalDataResponse,
+	MarketDataGetIncomeStatementResponse,
 	StrategyCreateStrategyFromTemplateResponse,
 	StrategyCreateStrategyResponse,
 	StrategyCreateTemplateResponse,
@@ -50,6 +55,142 @@ const historicalDataResponseSchemaResponseTransformer = (data: any) => {
 	if (data.end_date) {
 		data.end_date = new Date(data.end_date);
 	}
+	return data;
+};
+
+export const marketDataGetCompanyOverviewResponseTransformer = async (
+	data: any,
+): Promise<MarketDataGetCompanyOverviewResponse> => {
+	data = companyOverviewResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const companyOverviewResponseSchemaResponseTransformer = (data: any) => {
+	if (data.timestamp) {
+		data.timestamp = new Date(data.timestamp);
+	}
+	data.data = companyOverviewDataSchemaResponseTransformer(data.data);
+	data.metadata = metadataInfoSchemaResponseTransformer(data.metadata);
+	return data;
+};
+
+const companyOverviewDataSchemaResponseTransformer = (data: any) => {
+	if (data.latest_quarter) {
+		data.latest_quarter = new Date(data.latest_quarter);
+	}
+	return data;
+};
+
+const metadataInfoSchemaResponseTransformer = (data: any) => {
+	data.data_quality = dataQualityInfoSchemaResponseTransformer(
+		data.data_quality,
+	);
+	data.cache_info = cacheInfoSchemaResponseTransformer(data.cache_info);
+	return data;
+};
+
+const dataQualityInfoSchemaResponseTransformer = (data: any) => {
+	data.last_updated = new Date(data.last_updated);
+	return data;
+};
+
+const cacheInfoSchemaResponseTransformer = (data: any) => {
+	if (data.cache_timestamp) {
+		data.cache_timestamp = new Date(data.cache_timestamp);
+	}
+	return data;
+};
+
+export const marketDataGetIncomeStatementResponseTransformer = async (
+	data: any,
+): Promise<MarketDataGetIncomeStatementResponse> => {
+	data = incomeStatementResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const incomeStatementResponseSchemaResponseTransformer = (data: any) => {
+	if (data.timestamp) {
+		data.timestamp = new Date(data.timestamp);
+	}
+	data.data = data.data.map((item: any) => {
+		return incomeStatementDataSchemaResponseTransformer(item);
+	});
+	data.metadata = metadataInfoSchemaResponseTransformer(data.metadata);
+	return data;
+};
+
+const incomeStatementDataSchemaResponseTransformer = (data: any) => {
+	data.fiscal_date_ending = new Date(data.fiscal_date_ending);
+	return data;
+};
+
+export const marketDataGetBalanceSheetResponseTransformer = async (
+	data: any,
+): Promise<MarketDataGetBalanceSheetResponse> => {
+	data = balanceSheetResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const balanceSheetResponseSchemaResponseTransformer = (data: any) => {
+	if (data.timestamp) {
+		data.timestamp = new Date(data.timestamp);
+	}
+	data.data = data.data.map((item: any) => {
+		return balanceSheetDataSchemaResponseTransformer(item);
+	});
+	data.metadata = metadataInfoSchemaResponseTransformer(data.metadata);
+	return data;
+};
+
+const balanceSheetDataSchemaResponseTransformer = (data: any) => {
+	data.fiscal_date_ending = new Date(data.fiscal_date_ending);
+	return data;
+};
+
+export const marketDataGetCashFlowResponseTransformer = async (
+	data: any,
+): Promise<MarketDataGetCashFlowResponse> => {
+	data = cashFlowResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const cashFlowResponseSchemaResponseTransformer = (data: any) => {
+	if (data.timestamp) {
+		data.timestamp = new Date(data.timestamp);
+	}
+	data.data = data.data.map((item: any) => {
+		return cashFlowDataSchemaResponseTransformer(item);
+	});
+	data.metadata = metadataInfoSchemaResponseTransformer(data.metadata);
+	return data;
+};
+
+const cashFlowDataSchemaResponseTransformer = (data: any) => {
+	data.fiscal_date_ending = new Date(data.fiscal_date_ending);
+	return data;
+};
+
+export const marketDataGetEarningsResponseTransformer = async (
+	data: any,
+): Promise<MarketDataGetEarningsResponse> => {
+	data = earningsResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const earningsResponseSchemaResponseTransformer = (data: any) => {
+	if (data.timestamp) {
+		data.timestamp = new Date(data.timestamp);
+	}
+	data.data = data.data.map((item: any) => {
+		return earningsDataSchemaResponseTransformer(item);
+	});
+	data.metadata = metadataInfoSchemaResponseTransformer(data.metadata);
+	return data;
+};
+
+const earningsDataSchemaResponseTransformer = (data: any) => {
+	data.fiscal_date_ending = new Date(data.fiscal_date_ending);
+	data.reported_date = new Date(data.reported_date);
 	return data;
 };
 

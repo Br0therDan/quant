@@ -36,19 +36,69 @@ class DataQualityMixin:
     """데이터 품질 관련 메서드를 제공하는 Mixin"""
 
     def calculate_quality_score(self) -> float:
-        """데이터 품질 점수 계산 (0-100)"""
-        # TODO: 구현 예정 - 각 모델별로 오버라이드
-        return 100.0
+        """데이터 품질 점수 계산 (0-100)
+
+        기본 구현: 필수 필드의 존재 여부를 기반으로 점수 계산
+        각 모델별로 오버라이드하여 특화된 품질 검증 로직 구현 가능
+        """
+        total_fields = 0
+        valid_fields = 0
+
+        # 모델의 모든 필드 검사 (Pydantic v2)
+        if hasattr(self, "model_fields"):
+            model_fields = getattr(self, "model_fields", {})
+            for field_name in model_fields:
+                total_fields += 1
+                value = getattr(self, field_name, None)
+
+                # None이 아니고 빈 문자열이 아닌 경우 유효한 데이터로 간주
+                if value is not None and value != "":
+                    valid_fields += 1
+
+        # 기본 점수 (필드가 없을 경우 100점)
+        if total_fields == 0:
+            return 100.0
+
+        return (valid_fields / total_fields) * 100.0
 
     def is_valid_data(self) -> bool:
-        """데이터 유효성 검증"""
-        # TODO: 구현 예정 - 각 모델별로 오버라이드
-        return True
+        """데이터 유효성 검증
+
+        기본 구현: 품질 점수가 50점 이상이면 유효한 데이터로 간주
+        각 모델별로 오버라이드하여 특화된 검증 로직 구현 가능
+        """
+        return self.calculate_quality_score() >= 50.0
 
     def get_anomalies(self) -> list:
-        """데이터 이상치 탐지"""
-        # TODO: 구현 예정 - 각 모델별로 오버라이드
-        return []
+        """데이터 이상치 탐지
+
+        기본 구현: 기본적인 이상치 패턴 검사
+        각 모델별로 오버라이드하여 특화된 이상치 탐지 로직 구현 가능
+        """
+        anomalies = []
+
+        # 숫자 필드에서 극값 검사 (Pydantic v2)
+        if hasattr(self, "model_fields"):
+            model_fields = getattr(self, "model_fields", {})
+            for field_name in model_fields:
+                value = getattr(self, field_name, None)
+
+                # 숫자 타입 필드에서 음수 가격이나 거래량 검사
+                if isinstance(value, (int, float)) and value is not None:
+                    if "price" in field_name.lower() and value < 0:
+                        anomalies.append(
+                            f"Negative price detected: {field_name}={value}"
+                        )
+                    elif "volume" in field_name.lower() and value < 0:
+                        anomalies.append(
+                            f"Negative volume detected: {field_name}={value}"
+                        )
+                    elif value == float("inf") or value == float("-inf"):
+                        anomalies.append(
+                            f"Infinite value detected: {field_name}={value}"
+                        )
+
+        return anomalies
 
 
 class DataQualityScore(BaseModel):

@@ -247,17 +247,6 @@ class FundamentalAnalysisData(BaseModel):
     dividend_yield: Optional[Decimal] = Field(None, description="배당 수익률 (%)")
     payout_ratio: Optional[Decimal] = Field(None, description="배당성향 (%)")
 
-
-# Response Schemas
-class CompanyOverviewResponse(DataResponse[CompanyOverviewData]):
-    """기업 개요 응답 스키마"""
-
-    pass
-
-
-class IncomeStatementListResponse(BulkDataResponse[IncomeStatementData]):
-    """손익계산서 목록 응답 스키마"""
-
     pass
 
 
@@ -334,5 +323,36 @@ class SectorAnalysisData(BaseModel):
 
 class SectorAnalysisResponse(DataResponse[SectorAnalysisData]):
     """섹터 분석 응답 스키마"""
+
+    pass
+
+
+# API Response Models
+class CompanyOverviewResponse(DataResponse[CompanyOverviewData]):
+    """기업 개요 조회 응답 스키마"""
+
+    pass
+
+
+class IncomeStatementResponse(BulkDataResponse[IncomeStatementData]):
+    """손익계산서 조회 응답 스키마"""
+
+    pass
+
+
+class BalanceSheetResponse(BulkDataResponse[BalanceSheetData]):
+    """재무상태표 조회 응답 스키마"""
+
+    pass
+
+
+class CashFlowResponse(BulkDataResponse[CashFlowData]):
+    """현금흐름표 조회 응답 스키마"""
+
+    pass
+
+
+class EarningsResponse(BulkDataResponse[EarningsData]):
+    """실적 데이터 조회 응답 스키마"""
 
     pass
