@@ -5,9 +5,24 @@
 이 프로젝트에서는 Alpha Vantage API를 MCP (Model Context Protocol) 서버를 통해
 VS Code GitHub Copilot과 OpenAI Codex에서 직접 사용할 수 있도록 설정했습니다.
 
+## 🔐 보안 고려사항
+
+**중요**: API 키는 환경변수를 통해 관리되며, 설정 파일에 하드코딩하지 않습니다.
+
+- `.env` 파일에 `ALPHA_VANTAGE_API_KEY=M9TJCCBXW5PJZ3HF` 설정
+- `.vscode/` 디렉토리는 `.gitignore`에 포함되어 있음
+- 모든 MCP 설정은 환경변수 참조 방식 사용
+
 ## 설정 파일들
 
-### 1. 로컬 서버 설정 (기본) - `.vscode/mcp.json`
+### 1. 환경변수 설정 - `.env`
+
+```bash
+# Alpha Vantage API 키 (필수)
+ALPHA_VANTAGE_API_KEY=M9TJCCBXW5PJZ3HF
+```
+
+### 2. 로컬 서버 설정 (권장) - `.vscode/mcp.json`
 
 ```json
 {
@@ -15,20 +30,39 @@ VS Code GitHub Copilot과 OpenAI Codex에서 직접 사용할 수 있도록 설�
     "alphavantage": {
       "type": "stdio",
       "command": "uvx",
-      "args": ["av-mcp", "M9TJCCBXW5PJZ3HF"]
+      "args": ["av-mcp"],
+      "env": {
+        "ALPHA_VANTAGE_API_KEY": "${ALPHA_VANTAGE_API_KEY}"
+      }
     }
   }
 }
 ```
 
-### 2. 원격 서버 설정 (대안) - `.vscode/mcp-remote.json`
+### 3. 원격 서버 설정 (대안) - `.vscode/mcp-remote.json`
 
 ```json
 {
   "servers": {
     "alphavantage": {
       "type": "http",
-      "url": "https://mcp.alphavantage.co/mcp?apikey=M9TJCCBXW5PJZ3HF"
+      "url": "https://mcp.alphavantage.co/mcp?apikey=${ALPHA_VANTAGE_API_KEY}"
+    }
+  }
+}
+```
+
+### 4. 범용 설정 - `mcp_config.json` (선택사항)
+
+```json
+{
+  "mcpServers": {
+    "alphavantage": {
+      "command": "uvx",
+      "args": ["av-mcp"],
+      "env": {
+        "ALPHA_VANTAGE_API_KEY": "${ALPHA_VANTAGE_API_KEY}"
+      }
     }
   }
 }

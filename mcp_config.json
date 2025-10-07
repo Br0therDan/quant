@@ -3,11 +3,10 @@
         "alphavantage": {
             "command": "uvx",
             "args": [
-                "av-mcp",
-                "M9TJCCBXW5PJZ3HF"
+                "av-mcp"
             ],
             "env": {
-                "ALPHA_VANTAGE_API_KEY": "M9TJCCBXW5PJZ3HF"
+                "ALPHA_VANTAGE_API_KEY": "${ALPHA_VANTAGE_API_KEY}"
             }
         }
     }

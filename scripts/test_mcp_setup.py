@@ -11,15 +11,27 @@ import subprocess
 import sys
 from pathlib import Path
 
+# .env 파일 로드 시도
+try:
+    from dotenv import load_dotenv
+
+    # 프로젝트 루트의 .env 파일 로드
+    env_path = Path(__file__).parent.parent / ".env"
+    load_dotenv(env_path)
+except ImportError:
+    print("⚠️  python-dotenv가 설치되지 않았습니다. 환경변수를 수동으로 설정해주세요.")
+    print("   설치: pip install python-dotenv")
+
 
 async def test_mcp_server():
     """MCP 서버 기본 연결 테스트"""
     print("🔄 Alpha Vantage MCP Server 테스트 시작...")
 
-    # API 키 확인
-    api_key = "M9TJCCBXW5PJZ3HF"
+    # API 키 확인 (환경변수에서 읽기)
+    api_key = os.getenv("ALPHA_VANTAGE_API_KEY")
     if not api_key:
         print("❌ ALPHA_VANTAGE_API_KEY 환경변수가 설정되지 않았습니다.")
+        print("   .env 파일에 ALPHA_VANTAGE_API_KEY=your_api_key 를 설정해주세요.")
         return False
 
     print(f"✅ API Key 확인: {api_key[:8]}...")
