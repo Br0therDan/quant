@@ -19,7 +19,6 @@ from app.schemas.strategy import (
     StrategyResponse,
     StrategyUpdateRequest,
 )
-from .templates import router as templates_router
 from app.services.service_factory import service_factory
 from app.services.strategy_service import StrategyService
 
@@ -384,6 +383,3 @@ async def get_strategy_performance(
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-
-router.include_router(templates_router, prefix="/templates")

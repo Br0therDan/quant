@@ -184,19 +184,10 @@ import type {
 	OAuth2CallbackResponses,
 	StrategyCreateStrategyData,
 	StrategyCreateStrategyErrors,
-	StrategyCreateStrategyFromTemplateData,
-	StrategyCreateStrategyFromTemplateErrors,
-	StrategyCreateStrategyFromTemplateResponses,
 	StrategyCreateStrategyResponses,
-	StrategyCreateTemplateData,
-	StrategyCreateTemplateErrors,
-	StrategyCreateTemplateResponses,
 	StrategyDeleteStrategyData,
 	StrategyDeleteStrategyErrors,
 	StrategyDeleteStrategyResponses,
-	StrategyDeleteTemplateData,
-	StrategyDeleteTemplateErrors,
-	StrategyDeleteTemplateResponses,
 	StrategyExecuteStrategyData,
 	StrategyExecuteStrategyErrors,
 	StrategyExecuteStrategyResponses,
@@ -212,21 +203,30 @@ import type {
 	StrategyGetStrategyPerformanceErrors,
 	StrategyGetStrategyPerformanceResponses,
 	StrategyGetStrategyResponses,
-	StrategyGetTemplateData,
-	StrategyGetTemplateErrors,
-	StrategyGetTemplateResponses,
-	StrategyGetTemplatesData,
-	StrategyGetTemplatesErrors,
-	StrategyGetTemplatesResponses,
-	StrategyGetTemplateUsageStatsData,
-	StrategyGetTemplateUsageStatsErrors,
-	StrategyGetTemplateUsageStatsResponses,
+	StrategyTemplateCreateStrategyFromTemplateData,
+	StrategyTemplateCreateStrategyFromTemplateErrors,
+	StrategyTemplateCreateStrategyFromTemplateResponses,
+	StrategyTemplateCreateTemplateData,
+	StrategyTemplateCreateTemplateErrors,
+	StrategyTemplateCreateTemplateResponses,
+	StrategyTemplateDeleteTemplateData,
+	StrategyTemplateDeleteTemplateErrors,
+	StrategyTemplateDeleteTemplateResponses,
+	StrategyTemplateGetTemplateData,
+	StrategyTemplateGetTemplateErrors,
+	StrategyTemplateGetTemplateResponses,
+	StrategyTemplateGetTemplatesData,
+	StrategyTemplateGetTemplatesErrors,
+	StrategyTemplateGetTemplatesResponses,
+	StrategyTemplateGetTemplateUsageStatsData,
+	StrategyTemplateGetTemplateUsageStatsErrors,
+	StrategyTemplateGetTemplateUsageStatsResponses,
+	StrategyTemplateUpdateTemplateData,
+	StrategyTemplateUpdateTemplateErrors,
+	StrategyTemplateUpdateTemplateResponses,
 	StrategyUpdateStrategyData,
 	StrategyUpdateStrategyErrors,
 	StrategyUpdateStrategyResponses,
-	StrategyUpdateTemplateData,
-	StrategyUpdateTemplateErrors,
-	StrategyUpdateTemplateResponses,
 	UserDeleteUserData,
 	UserDeleteUserErrors,
 	UserDeleteUserResponses,
@@ -1389,7 +1389,7 @@ export class StrategyService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/strategies/",
+			url: "/api/v1/strategies/strategies/",
 			...options,
 		});
 	}
@@ -1412,7 +1412,7 @@ export class StrategyService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/strategies/",
+			url: "/api/v1/strategies/strategies/",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -1439,7 +1439,7 @@ export class StrategyService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/strategies/{strategy_id}",
+			url: "/api/v1/strategies/strategies/{strategy_id}",
 			...options,
 		});
 	}
@@ -1462,7 +1462,7 @@ export class StrategyService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/strategies/{strategy_id}",
+			url: "/api/v1/strategies/strategies/{strategy_id}",
 			...options,
 		});
 	}
@@ -1485,7 +1485,7 @@ export class StrategyService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/strategies/{strategy_id}",
+			url: "/api/v1/strategies/strategies/{strategy_id}",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -1512,7 +1512,7 @@ export class StrategyService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/strategies/{strategy_id}/execute",
+			url: "/api/v1/strategies/strategies/{strategy_id}/execute",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -1539,7 +1539,7 @@ export class StrategyService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/strategies/{strategy_id}/executions",
+			url: "/api/v1/strategies/strategies/{strategy_id}/executions",
 			...options,
 		});
 	}
@@ -1562,180 +1562,7 @@ export class StrategyService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/strategies/{strategy_id}/performance",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Templates
-	 * Get list of strategy templates
-	 */
-	public static getTemplates<ThrowOnError extends boolean = false>(
-		options?: Options<StrategyGetTemplatesData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			StrategyGetTemplatesResponses,
-			StrategyGetTemplatesErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/strategies/templates/",
-			...options,
-		});
-	}
-
-	/**
-	 * Create Template
-	 * Create a new strategy template (Superuser only)
-	 */
-	public static createTemplate<ThrowOnError extends boolean = false>(
-		options: Options<StrategyCreateTemplateData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			StrategyCreateTemplateResponses,
-			StrategyCreateTemplateErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/strategies/templates/",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Delete Template
-	 * Delete template by ID (Superuser only)
-	 */
-	public static deleteTemplate<ThrowOnError extends boolean = false>(
-		options: Options<StrategyDeleteTemplateData, ThrowOnError>,
-	) {
-		return (options.client ?? client).delete<
-			StrategyDeleteTemplateResponses,
-			StrategyDeleteTemplateErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/strategies/templates/{template_id}",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Template
-	 * Get template by ID
-	 */
-	public static getTemplate<ThrowOnError extends boolean = false>(
-		options: Options<StrategyGetTemplateData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			StrategyGetTemplateResponses,
-			StrategyGetTemplateErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/strategies/templates/{template_id}",
-			...options,
-		});
-	}
-
-	/**
-	 * Update Template
-	 * Update template by ID (Superuser only)
-	 */
-	public static updateTemplate<ThrowOnError extends boolean = false>(
-		options: Options<StrategyUpdateTemplateData, ThrowOnError>,
-	) {
-		return (options.client ?? client).patch<
-			StrategyUpdateTemplateResponses,
-			StrategyUpdateTemplateErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/strategies/templates/{template_id}",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Create Strategy From Template
-	 * Create a strategy instance from template
-	 */
-	public static createStrategyFromTemplate<
-		ThrowOnError extends boolean = false,
-	>(options: Options<StrategyCreateStrategyFromTemplateData, ThrowOnError>) {
-		return (options.client ?? client).post<
-			StrategyCreateStrategyFromTemplateResponses,
-			StrategyCreateStrategyFromTemplateErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/strategies/templates/{template_id}/create-strategy",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Get Template Usage Stats
-	 * Get template usage statistics
-	 */
-	public static getTemplateUsageStats<ThrowOnError extends boolean = false>(
-		options?: Options<StrategyGetTemplateUsageStatsData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			StrategyGetTemplateUsageStatsResponses,
-			StrategyGetTemplateUsageStatsErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/strategies/templates/analytics/usage-stats",
+			url: "/api/v1/strategies/strategies/{strategy_id}/performance",
 			...options,
 		});
 	}
@@ -1747,11 +1574,11 @@ export class StrategyTemplateService {
 	 * Get list of strategy templates
 	 */
 	public static getTemplates<ThrowOnError extends boolean = false>(
-		options?: Options<StrategyGetTemplatesData, ThrowOnError>,
+		options?: Options<StrategyTemplateGetTemplatesData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
-			StrategyGetTemplatesResponses,
-			StrategyGetTemplatesErrors,
+			StrategyTemplateGetTemplatesResponses,
+			StrategyTemplateGetTemplatesErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1760,7 +1587,7 @@ export class StrategyTemplateService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/strategies/templates/",
+			url: "/api/v1/strategies/strategies/templates/",
 			...options,
 		});
 	}
@@ -1770,11 +1597,11 @@ export class StrategyTemplateService {
 	 * Create a new strategy template (Superuser only)
 	 */
 	public static createTemplate<ThrowOnError extends boolean = false>(
-		options: Options<StrategyCreateTemplateData, ThrowOnError>,
+		options: Options<StrategyTemplateCreateTemplateData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			StrategyCreateTemplateResponses,
-			StrategyCreateTemplateErrors,
+			StrategyTemplateCreateTemplateResponses,
+			StrategyTemplateCreateTemplateErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1783,7 +1610,7 @@ export class StrategyTemplateService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/strategies/templates/",
+			url: "/api/v1/strategies/strategies/templates/",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -1797,11 +1624,11 @@ export class StrategyTemplateService {
 	 * Delete template by ID (Superuser only)
 	 */
 	public static deleteTemplate<ThrowOnError extends boolean = false>(
-		options: Options<StrategyDeleteTemplateData, ThrowOnError>,
+		options: Options<StrategyTemplateDeleteTemplateData, ThrowOnError>,
 	) {
 		return (options.client ?? client).delete<
-			StrategyDeleteTemplateResponses,
-			StrategyDeleteTemplateErrors,
+			StrategyTemplateDeleteTemplateResponses,
+			StrategyTemplateDeleteTemplateErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1810,7 +1637,7 @@ export class StrategyTemplateService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/strategies/templates/{template_id}",
+			url: "/api/v1/strategies/strategies/templates/{template_id}",
 			...options,
 		});
 	}
@@ -1820,11 +1647,11 @@ export class StrategyTemplateService {
 	 * Get template by ID
 	 */
 	public static getTemplate<ThrowOnError extends boolean = false>(
-		options: Options<StrategyGetTemplateData, ThrowOnError>,
+		options: Options<StrategyTemplateGetTemplateData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			StrategyGetTemplateResponses,
-			StrategyGetTemplateErrors,
+			StrategyTemplateGetTemplateResponses,
+			StrategyTemplateGetTemplateErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1833,7 +1660,7 @@ export class StrategyTemplateService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/strategies/templates/{template_id}",
+			url: "/api/v1/strategies/strategies/templates/{template_id}",
 			...options,
 		});
 	}
@@ -1843,11 +1670,11 @@ export class StrategyTemplateService {
 	 * Update template by ID (Superuser only)
 	 */
 	public static updateTemplate<ThrowOnError extends boolean = false>(
-		options: Options<StrategyUpdateTemplateData, ThrowOnError>,
+		options: Options<StrategyTemplateUpdateTemplateData, ThrowOnError>,
 	) {
 		return (options.client ?? client).patch<
-			StrategyUpdateTemplateResponses,
-			StrategyUpdateTemplateErrors,
+			StrategyTemplateUpdateTemplateResponses,
+			StrategyTemplateUpdateTemplateErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1856,7 +1683,7 @@ export class StrategyTemplateService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/strategies/templates/{template_id}",
+			url: "/api/v1/strategies/strategies/templates/{template_id}",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -1871,10 +1698,15 @@ export class StrategyTemplateService {
 	 */
 	public static createStrategyFromTemplate<
 		ThrowOnError extends boolean = false,
-	>(options: Options<StrategyCreateStrategyFromTemplateData, ThrowOnError>) {
+	>(
+		options: Options<
+			StrategyTemplateCreateStrategyFromTemplateData,
+			ThrowOnError
+		>,
+	) {
 		return (options.client ?? client).post<
-			StrategyCreateStrategyFromTemplateResponses,
-			StrategyCreateStrategyFromTemplateErrors,
+			StrategyTemplateCreateStrategyFromTemplateResponses,
+			StrategyTemplateCreateStrategyFromTemplateErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1883,7 +1715,7 @@ export class StrategyTemplateService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/strategies/templates/{template_id}/create-strategy",
+			url: "/api/v1/strategies/strategies/templates/{template_id}/create-strategy",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -1897,11 +1729,11 @@ export class StrategyTemplateService {
 	 * Get template usage statistics
 	 */
 	public static getTemplateUsageStats<ThrowOnError extends boolean = false>(
-		options?: Options<StrategyGetTemplateUsageStatsData, ThrowOnError>,
+		options?: Options<StrategyTemplateGetTemplateUsageStatsData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
-			StrategyGetTemplateUsageStatsResponses,
-			StrategyGetTemplateUsageStatsErrors,
+			StrategyTemplateGetTemplateUsageStatsResponses,
+			StrategyTemplateGetTemplateUsageStatsErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1910,7 +1742,7 @@ export class StrategyTemplateService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/strategies/templates/analytics/usage-stats",
+			url: "/api/v1/strategies/strategies/templates/analytics/usage-stats",
 			...options,
 		});
 	}

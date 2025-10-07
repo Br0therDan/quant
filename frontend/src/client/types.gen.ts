@@ -4502,7 +4502,7 @@ export type StrategyGetStrategiesData = {
 		 */
 		limit?: number;
 	};
-	url: "/api/v1/strategies/";
+	url: "/api/v1/strategies/strategies/";
 };
 
 export type StrategyGetStrategiesErrors = {
@@ -4529,7 +4529,7 @@ export type StrategyCreateStrategyData = {
 	body: StrategyCreateRequest;
 	path?: never;
 	query?: never;
-	url: "/api/v1/strategies/";
+	url: "/api/v1/strategies/strategies/";
 };
 
 export type StrategyCreateStrategyErrors = {
@@ -4561,7 +4561,7 @@ export type StrategyDeleteStrategyData = {
 		strategy_id: string;
 	};
 	query?: never;
-	url: "/api/v1/strategies/{strategy_id}";
+	url: "/api/v1/strategies/strategies/{strategy_id}";
 };
 
 export type StrategyDeleteStrategyErrors = {
@@ -4590,7 +4590,7 @@ export type StrategyGetStrategyData = {
 		strategy_id: string;
 	};
 	query?: never;
-	url: "/api/v1/strategies/{strategy_id}";
+	url: "/api/v1/strategies/strategies/{strategy_id}";
 };
 
 export type StrategyGetStrategyErrors = {
@@ -4622,7 +4622,7 @@ export type StrategyUpdateStrategyData = {
 		strategy_id: string;
 	};
 	query?: never;
-	url: "/api/v1/strategies/{strategy_id}";
+	url: "/api/v1/strategies/strategies/{strategy_id}";
 };
 
 export type StrategyUpdateStrategyErrors = {
@@ -4654,7 +4654,7 @@ export type StrategyExecuteStrategyData = {
 		strategy_id: string;
 	};
 	query?: never;
-	url: "/api/v1/strategies/{strategy_id}/execute";
+	url: "/api/v1/strategies/strategies/{strategy_id}/execute";
 };
 
 export type StrategyExecuteStrategyErrors = {
@@ -4692,7 +4692,7 @@ export type StrategyGetStrategyExecutionsData = {
 		 */
 		limit?: number;
 	};
-	url: "/api/v1/strategies/{strategy_id}/executions";
+	url: "/api/v1/strategies/strategies/{strategy_id}/executions";
 };
 
 export type StrategyGetStrategyExecutionsErrors = {
@@ -4724,7 +4724,7 @@ export type StrategyGetStrategyPerformanceData = {
 		strategy_id: string;
 	};
 	query?: never;
-	url: "/api/v1/strategies/{strategy_id}/performance";
+	url: "/api/v1/strategies/strategies/{strategy_id}/performance";
 };
 
 export type StrategyGetStrategyPerformanceErrors = {
@@ -4747,7 +4747,7 @@ export type StrategyGetStrategyPerformanceResponses = {
 export type StrategyGetStrategyPerformanceResponse =
 	StrategyGetStrategyPerformanceResponses[keyof StrategyGetStrategyPerformanceResponses];
 
-export type StrategyGetTemplatesData = {
+export type StrategyTemplateGetTemplatesData = {
 	body?: never;
 	path?: never;
 	query?: {
@@ -4757,57 +4757,57 @@ export type StrategyGetTemplatesData = {
 		 */
 		strategy_type?: StrategyType | null;
 	};
-	url: "/api/v1/strategies/templates/";
+	url: "/api/v1/strategies/strategies/templates/";
 };
 
-export type StrategyGetTemplatesErrors = {
+export type StrategyTemplateGetTemplatesErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type StrategyGetTemplatesError =
-	StrategyGetTemplatesErrors[keyof StrategyGetTemplatesErrors];
+export type StrategyTemplateGetTemplatesError =
+	StrategyTemplateGetTemplatesErrors[keyof StrategyTemplateGetTemplatesErrors];
 
-export type StrategyGetTemplatesResponses = {
+export type StrategyTemplateGetTemplatesResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: TemplateListResponse;
 };
 
-export type StrategyGetTemplatesResponse =
-	StrategyGetTemplatesResponses[keyof StrategyGetTemplatesResponses];
+export type StrategyTemplateGetTemplatesResponse =
+	StrategyTemplateGetTemplatesResponses[keyof StrategyTemplateGetTemplatesResponses];
 
-export type StrategyCreateTemplateData = {
+export type StrategyTemplateCreateTemplateData = {
 	body: TemplateCreateRequest;
 	path?: never;
 	query?: never;
-	url: "/api/v1/strategies/templates/";
+	url: "/api/v1/strategies/strategies/templates/";
 };
 
-export type StrategyCreateTemplateErrors = {
+export type StrategyTemplateCreateTemplateErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type StrategyCreateTemplateError =
-	StrategyCreateTemplateErrors[keyof StrategyCreateTemplateErrors];
+export type StrategyTemplateCreateTemplateError =
+	StrategyTemplateCreateTemplateErrors[keyof StrategyTemplateCreateTemplateErrors];
 
-export type StrategyCreateTemplateResponses = {
+export type StrategyTemplateCreateTemplateResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: TemplateResponse;
 };
 
-export type StrategyCreateTemplateResponse =
-	StrategyCreateTemplateResponses[keyof StrategyCreateTemplateResponses];
+export type StrategyTemplateCreateTemplateResponse =
+	StrategyTemplateCreateTemplateResponses[keyof StrategyTemplateCreateTemplateResponses];
 
-export type StrategyDeleteTemplateData = {
+export type StrategyTemplateDeleteTemplateData = {
 	body?: never;
 	path: {
 		/**
@@ -4816,27 +4816,27 @@ export type StrategyDeleteTemplateData = {
 		template_id: string;
 	};
 	query?: never;
-	url: "/api/v1/strategies/templates/{template_id}";
+	url: "/api/v1/strategies/strategies/templates/{template_id}";
 };
 
-export type StrategyDeleteTemplateErrors = {
+export type StrategyTemplateDeleteTemplateErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type StrategyDeleteTemplateError =
-	StrategyDeleteTemplateErrors[keyof StrategyDeleteTemplateErrors];
+export type StrategyTemplateDeleteTemplateError =
+	StrategyTemplateDeleteTemplateErrors[keyof StrategyTemplateDeleteTemplateErrors];
 
-export type StrategyDeleteTemplateResponses = {
+export type StrategyTemplateDeleteTemplateResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type StrategyGetTemplateData = {
+export type StrategyTemplateGetTemplateData = {
 	body?: never;
 	path: {
 		/**
@@ -4845,30 +4845,30 @@ export type StrategyGetTemplateData = {
 		template_id: string;
 	};
 	query?: never;
-	url: "/api/v1/strategies/templates/{template_id}";
+	url: "/api/v1/strategies/strategies/templates/{template_id}";
 };
 
-export type StrategyGetTemplateErrors = {
+export type StrategyTemplateGetTemplateErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type StrategyGetTemplateError =
-	StrategyGetTemplateErrors[keyof StrategyGetTemplateErrors];
+export type StrategyTemplateGetTemplateError =
+	StrategyTemplateGetTemplateErrors[keyof StrategyTemplateGetTemplateErrors];
 
-export type StrategyGetTemplateResponses = {
+export type StrategyTemplateGetTemplateResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: TemplateResponse;
 };
 
-export type StrategyGetTemplateResponse =
-	StrategyGetTemplateResponses[keyof StrategyGetTemplateResponses];
+export type StrategyTemplateGetTemplateResponse =
+	StrategyTemplateGetTemplateResponses[keyof StrategyTemplateGetTemplateResponses];
 
-export type StrategyUpdateTemplateData = {
+export type StrategyTemplateUpdateTemplateData = {
 	body: TemplateUpdateRequest;
 	path: {
 		/**
@@ -4877,30 +4877,30 @@ export type StrategyUpdateTemplateData = {
 		template_id: string;
 	};
 	query?: never;
-	url: "/api/v1/strategies/templates/{template_id}";
+	url: "/api/v1/strategies/strategies/templates/{template_id}";
 };
 
-export type StrategyUpdateTemplateErrors = {
+export type StrategyTemplateUpdateTemplateErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type StrategyUpdateTemplateError =
-	StrategyUpdateTemplateErrors[keyof StrategyUpdateTemplateErrors];
+export type StrategyTemplateUpdateTemplateError =
+	StrategyTemplateUpdateTemplateErrors[keyof StrategyTemplateUpdateTemplateErrors];
 
-export type StrategyUpdateTemplateResponses = {
+export type StrategyTemplateUpdateTemplateResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: TemplateResponse;
 };
 
-export type StrategyUpdateTemplateResponse =
-	StrategyUpdateTemplateResponses[keyof StrategyUpdateTemplateResponses];
+export type StrategyTemplateUpdateTemplateResponse =
+	StrategyTemplateUpdateTemplateResponses[keyof StrategyTemplateUpdateTemplateResponses];
 
-export type StrategyCreateStrategyFromTemplateData = {
+export type StrategyTemplateCreateStrategyFromTemplateData = {
 	body: StrategyFromTemplateRequest;
 	path: {
 		/**
@@ -4909,47 +4909,47 @@ export type StrategyCreateStrategyFromTemplateData = {
 		template_id: string;
 	};
 	query?: never;
-	url: "/api/v1/strategies/templates/{template_id}/create-strategy";
+	url: "/api/v1/strategies/strategies/templates/{template_id}/create-strategy";
 };
 
-export type StrategyCreateStrategyFromTemplateErrors = {
+export type StrategyTemplateCreateStrategyFromTemplateErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type StrategyCreateStrategyFromTemplateError =
-	StrategyCreateStrategyFromTemplateErrors[keyof StrategyCreateStrategyFromTemplateErrors];
+export type StrategyTemplateCreateStrategyFromTemplateError =
+	StrategyTemplateCreateStrategyFromTemplateErrors[keyof StrategyTemplateCreateStrategyFromTemplateErrors];
 
-export type StrategyCreateStrategyFromTemplateResponses = {
+export type StrategyTemplateCreateStrategyFromTemplateResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: StrategyResponse;
 };
 
-export type StrategyCreateStrategyFromTemplateResponse =
-	StrategyCreateStrategyFromTemplateResponses[keyof StrategyCreateStrategyFromTemplateResponses];
+export type StrategyTemplateCreateStrategyFromTemplateResponse =
+	StrategyTemplateCreateStrategyFromTemplateResponses[keyof StrategyTemplateCreateStrategyFromTemplateResponses];
 
-export type StrategyGetTemplateUsageStatsData = {
+export type StrategyTemplateGetTemplateUsageStatsData = {
 	body?: never;
 	path?: never;
 	query?: never;
-	url: "/api/v1/strategies/templates/analytics/usage-stats";
+	url: "/api/v1/strategies/strategies/templates/analytics/usage-stats";
 };
 
-export type StrategyGetTemplateUsageStatsErrors = {
+export type StrategyTemplateGetTemplateUsageStatsErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type StrategyGetTemplateUsageStatsError =
-	StrategyGetTemplateUsageStatsErrors[keyof StrategyGetTemplateUsageStatsErrors];
+export type StrategyTemplateGetTemplateUsageStatsError =
+	StrategyTemplateGetTemplateUsageStatsErrors[keyof StrategyTemplateGetTemplateUsageStatsErrors];
 
-export type StrategyGetTemplateUsageStatsResponses = {
+export type StrategyTemplateGetTemplateUsageStatsResponses = {
 	/**
 	 * Successful Response
 	 */
