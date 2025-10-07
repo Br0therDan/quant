@@ -4,7 +4,7 @@ Economic Indicator Service
 """
 
 from typing import List, Optional, Dict, Any
-from datetime import datetime
+from datetime import datetime, UTC
 import logging
 
 from .base_service import BaseMarketDataService
@@ -355,8 +355,8 @@ class EconomicIndicatorService(BaseMarketDataService):
                             "value": item.get("value", 0),
                             "unit": data.get("unit", ""),
                             "source": "Alpha Vantage Economic Indicators",
-                            "created_at": datetime.utcnow().isoformat(),
-                            "updated_at": datetime.utcnow().isoformat(),
+                            "created_at": datetime.now(UTC).isoformat(),
+                            "updated_at": datetime.now(UTC).isoformat(),
                         }
                         records.append(record)
 

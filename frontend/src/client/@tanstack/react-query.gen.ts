@@ -766,7 +766,7 @@ export const marketDataGetDailyPricesQueryKey = (
 ) => createQueryKey("marketDataGetDailyPrices", options);
 
 /**
- * 일일 주가 데이터 조회
+ * Get Daily Prices
  * 지정된 종목의 일일 주가 데이터(OHLCV)를 조회합니다.
  */
 export const marketDataGetDailyPricesOptions = (
@@ -774,7 +774,7 @@ export const marketDataGetDailyPricesOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataService.일일주가데이터조회({
+			const { data } = await MarketDataService.getDailyPrices({
 				...options,
 				...queryKey[0],
 				signal,
@@ -791,7 +791,7 @@ export const marketDataGetQuoteQueryKey = (
 ) => createQueryKey("marketDataGetQuote", options);
 
 /**
- * 실시간 주식 호가 조회
+ * Get Quote
  * 지정된 종목의 실시간 호가 정보를 조회합니다.
  */
 export const marketDataGetQuoteOptions = (
@@ -799,7 +799,7 @@ export const marketDataGetQuoteOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataService.실시간주식호가조회({
+			const { data } = await MarketDataService.getQuote({
 				...options,
 				...queryKey[0],
 				signal,
@@ -816,7 +816,7 @@ export const marketDataGetIntradayDataQueryKey = (
 ) => createQueryKey("marketDataGetIntradayData", options);
 
 /**
- * 실시간/인트라데이 데이터 조회
+ * Get Intraday Data
  * 지정된 종목의 실시간 또는 분봉 데이터를 조회합니다.
  */
 export const marketDataGetIntradayDataOptions = (
@@ -824,14 +824,12 @@ export const marketDataGetIntradayDataOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } =
-				(await MarketDataService.실시간) /
-				인트라데이데이터조회({
-					...options,
-					...queryKey[0],
-					signal,
-					throwOnError: true,
-				});
+			const { data } = await MarketDataService.getIntradayData({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			});
 			return data;
 		},
 		queryKey: marketDataGetIntradayDataQueryKey(options),
@@ -843,7 +841,7 @@ export const marketDataGetHistoricalDataQueryKey = (
 ) => createQueryKey("marketDataGetHistoricalData", options);
 
 /**
- * 장기 히스토리 데이터 조회
+ * Get Historical Data
  * 지정된 종목의 장기 히스토리 데이터를 조회합니다.
  */
 export const marketDataGetHistoricalDataOptions = (
@@ -851,7 +849,7 @@ export const marketDataGetHistoricalDataOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataService.장기히스토리데이터조회({
+			const { data } = await MarketDataService.getHistoricalData({
 				...options,
 				...queryKey[0],
 				signal,
@@ -868,7 +866,7 @@ export const marketDataGetCompanyOverviewQueryKey = (
 ) => createQueryKey("marketDataGetCompanyOverview", options);
 
 /**
- * 기업 개요 조회
+ * Get Company Overview
  * 지정된 종목의 기업 개요 정보를 조회합니다.
  */
 export const marketDataGetCompanyOverviewOptions = (
@@ -876,7 +874,7 @@ export const marketDataGetCompanyOverviewOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataService.기업개요조회({
+			const { data } = await MarketDataService.getCompanyOverview({
 				...options,
 				...queryKey[0],
 				signal,
@@ -893,7 +891,7 @@ export const marketDataGetIncomeStatementQueryKey = (
 ) => createQueryKey("marketDataGetIncomeStatement", options);
 
 /**
- * 손익계산서 조회
+ * Get Income Statement
  * 지정된 종목의 손익계산서를 조회합니다.
  */
 export const marketDataGetIncomeStatementOptions = (
@@ -901,7 +899,7 @@ export const marketDataGetIncomeStatementOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataService.손익계산서조회({
+			const { data } = await MarketDataService.getIncomeStatement({
 				...options,
 				...queryKey[0],
 				signal,
@@ -918,7 +916,7 @@ export const marketDataGetBalanceSheetQueryKey = (
 ) => createQueryKey("marketDataGetBalanceSheet", options);
 
 /**
- * 재무상태표 조회
+ * Get Balance Sheet
  * 지정된 종목의 재무상태표를 조회합니다.
  */
 export const marketDataGetBalanceSheetOptions = (
@@ -926,7 +924,7 @@ export const marketDataGetBalanceSheetOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataService.재무상태표조회({
+			const { data } = await MarketDataService.getBalanceSheet({
 				...options,
 				...queryKey[0],
 				signal,
@@ -943,7 +941,7 @@ export const marketDataGetCashFlowQueryKey = (
 ) => createQueryKey("marketDataGetCashFlow", options);
 
 /**
- * 현금흐름표 조회
+ * Get Cash Flow
  * 지정된 종목의 현금흐름표를 조회합니다.
  */
 export const marketDataGetCashFlowOptions = (
@@ -951,7 +949,7 @@ export const marketDataGetCashFlowOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataService.현금흐름표조회({
+			const { data } = await MarketDataService.getCashFlow({
 				...options,
 				...queryKey[0],
 				signal,
@@ -968,7 +966,7 @@ export const marketDataGetEarningsQueryKey = (
 ) => createQueryKey("marketDataGetEarnings", options);
 
 /**
- * 실적 데이터 조회
+ * Get Earnings
  * 지정된 종목의 실적 데이터를 조회합니다.
  */
 export const marketDataGetEarningsOptions = (
@@ -976,7 +974,7 @@ export const marketDataGetEarningsOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataService.실적데이터조회({
+			const { data } = await MarketDataService.getEarnings({
 				...options,
 				...queryKey[0],
 				signal,
@@ -993,7 +991,7 @@ export const marketDataGetGdpDataQueryKey = (
 ) => createQueryKey("marketDataGetGdpData", options);
 
 /**
- * GDP 데이터 조회
+ * Get Gdp Data
  * 미국 GDP 데이터를 조회합니다.
  */
 export const marketDataGetGdpDataOptions = (
@@ -1001,7 +999,7 @@ export const marketDataGetGdpDataOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataService.gdp데이터조회({
+			const { data } = await MarketDataService.getGdpData({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1018,7 +1016,7 @@ export const marketDataGetInflationDataQueryKey = (
 ) => createQueryKey("marketDataGetInflationData", options);
 
 /**
- * 인플레이션 데이터 조회
+ * Get Inflation Data
  * 미국 인플레이션 지표 데이터를 조회합니다.
  */
 export const marketDataGetInflationDataOptions = (
@@ -1026,7 +1024,7 @@ export const marketDataGetInflationDataOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataService.인플레이션데이터조회({
+			const { data } = await MarketDataService.getInflationData({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1043,7 +1041,7 @@ export const marketDataGetInterestRatesQueryKey = (
 ) => createQueryKey("marketDataGetInterestRates", options);
 
 /**
- * 금리 데이터 조회
+ * Get Interest Rates
  * 미국 기준금리 및 채권 수익률 데이터를 조회합니다.
  */
 export const marketDataGetInterestRatesOptions = (
@@ -1051,7 +1049,7 @@ export const marketDataGetInterestRatesOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataService.금리데이터조회({
+			const { data } = await MarketDataService.getInterestRates({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1068,7 +1066,7 @@ export const marketDataGetEmploymentDataQueryKey = (
 ) => createQueryKey("marketDataGetEmploymentData", options);
 
 /**
- * 고용 지표 조회
+ * Get Employment Data
  * 미국 실업률 및 고용 관련 지표를 조회합니다.
  */
 export const marketDataGetEmploymentDataOptions = (
@@ -1076,7 +1074,7 @@ export const marketDataGetEmploymentDataOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataService.고용지표조회({
+			const { data } = await MarketDataService.getEmploymentData({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1093,7 +1091,7 @@ export const marketDataGetConsumerSentimentQueryKey = (
 ) => createQueryKey("marketDataGetConsumerSentiment", options);
 
 /**
- * 소비자 심리 지수 조회
+ * Get Consumer Sentiment
  * 미국 소비자 심리 지수를 조회합니다.
  */
 export const marketDataGetConsumerSentimentOptions = (
@@ -1101,7 +1099,7 @@ export const marketDataGetConsumerSentimentOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataService.소비자심리지수조회({
+			const { data } = await MarketDataService.getConsumerSentiment({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1118,7 +1116,7 @@ export const marketDataGetNewsQueryKey = (
 ) => createQueryKey("marketDataGetNews", options);
 
 /**
- * 종목 뉴스 조회
+ * Get News
  * 지정된 종목 관련 뉴스를 조회합니다.
  */
 export const marketDataGetNewsOptions = (
@@ -1126,7 +1124,7 @@ export const marketDataGetNewsOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataService.종목뉴스조회({
+			const { data } = await MarketDataService.getNews({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1143,7 +1141,7 @@ export const marketDataGetSentimentAnalysisQueryKey = (
 ) => createQueryKey("marketDataGetSentimentAnalysis", options);
 
 /**
- * 감정 분석 조회
+ * Get Sentiment Analysis
  * 지정된 종목의 감정 분석 결과를 조회합니다.
  */
 export const marketDataGetSentimentAnalysisOptions = (
@@ -1151,7 +1149,7 @@ export const marketDataGetSentimentAnalysisOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataService.감정분석조회({
+			const { data } = await MarketDataService.getSentimentAnalysis({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1168,7 +1166,7 @@ export const marketDataGetAnalystRecommendationsQueryKey = (
 ) => createQueryKey("marketDataGetAnalystRecommendations", options);
 
 /**
- * 분석가 추천 조회
+ * Get Analyst Recommendations
  * 지정된 종목의 분석가 추천 정보를 조회합니다.
  */
 export const marketDataGetAnalystRecommendationsOptions = (
@@ -1176,7 +1174,7 @@ export const marketDataGetAnalystRecommendationsOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataService.분석가추천조회({
+			const { data } = await MarketDataService.getAnalystRecommendations({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1193,7 +1191,7 @@ export const marketDataGetSocialSentimentQueryKey = (
 ) => createQueryKey("marketDataGetSocialSentiment", options);
 
 /**
- * 소셜 미디어 감정 분석 조회
+ * Get Social Sentiment
  * 지정된 종목의 소셜 미디어 감정 분석을 조회합니다.
  */
 export const marketDataGetSocialSentimentOptions = (
@@ -1201,7 +1199,7 @@ export const marketDataGetSocialSentimentOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataService.소셜미디어감정분석조회({
+			const { data } = await MarketDataService.getSocialSentiment({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1214,7 +1212,7 @@ export const marketDataGetSocialSentimentOptions = (
 };
 
 /**
- * 기업 정보 수집
+ * Collect Company Info
  * 지정된 심볼의 기업 정보를 수집하여 저장
  *
  * Alpha Vantage API를 통해 기업의 기본 정보, 재무 지표,
@@ -1233,7 +1231,7 @@ export const marketDataCollectCompanyInfoMutation = (
 		Options<MarketDataCollectCompanyInfoData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await MarketDataService.기업정보수집({
+			const { data } = await MarketDataService.collectCompanyInfo({
 				...options,
 				...fnOptions,
 				throwOnError: true,
@@ -1245,7 +1243,7 @@ export const marketDataCollectCompanyInfoMutation = (
 };
 
 /**
- * 주가 데이터 수집
+ * Collect Market Data
  * 지정된 심볼의 주가 데이터를 수집하여 저장
  *
  * Alpha Vantage API를 통해 일일 OHLCV 데이터를 수집하고
@@ -1264,7 +1262,7 @@ export const marketDataCollectMarketDataMutation = (
 		Options<MarketDataCollectMarketDataData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await MarketDataService.주가데이터수집({
+			const { data } = await MarketDataService.collectMarketData({
 				...options,
 				...fnOptions,
 				throwOnError: true,
@@ -1276,7 +1274,7 @@ export const marketDataCollectMarketDataMutation = (
 };
 
 /**
- * 대량 데이터 수집
+ * Collect Bulk Data
  * 여러 심볼의 데이터를 일괄 수집
  *
  * 백그라운드 작업으로 처리되며, 대량의 심볼에 대해
@@ -1295,7 +1293,7 @@ export const marketDataCollectBulkDataMutation = (
 		Options<MarketDataCollectBulkDataData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await MarketDataService.대량데이터수집({
+			const { data } = await MarketDataService.collectBulkData({
 				...options,
 				...fnOptions,
 				throwOnError: true,
@@ -1311,7 +1309,7 @@ export const marketDataGetDataCoverageQueryKey = (
 ) => createQueryKey("marketDataGetDataCoverage", options);
 
 /**
- * 데이터 커버리지 확인
+ * Get Data Coverage
  * 지정된 심볼의 데이터 커버리지 정보 조회
  *
  * 기업 정보, 주가 데이터의 수집 상태와 품질을 확인합니다.
@@ -1321,7 +1319,7 @@ export const marketDataGetDataCoverageOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataService.데이터커버리지확인({
+			const { data } = await MarketDataService.getDataCoverage({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1338,7 +1336,7 @@ export const marketDataGetSystemStatusQueryKey = (
 ) => createQueryKey("marketDataGetSystemStatus", options);
 
 /**
- * 시스템 상태 조회
+ * Get System Status
  * 시장 데이터 시스템의 전반적인 상태 조회
  *
  * API 연결 상태, 캐시 성능, 수집 통계 등을 확인합니다.
@@ -1348,7 +1346,7 @@ export const marketDataGetSystemStatusOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataService.시스템상태조회({
+			const { data } = await MarketDataService.getSystemStatus({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1365,7 +1363,7 @@ export const marketDataGetMarketDataInfoQueryKey = (
 ) => createQueryKey("marketDataGetMarketDataInfo", options);
 
 /**
- * Market Data API 정보
+ * Get Market Data Info
  * 마켓 데이터 API 정보 및 사용 가능한 엔드포인트 목록
  */
 export const marketDataGetMarketDataInfoOptions = (
@@ -1373,7 +1371,7 @@ export const marketDataGetMarketDataInfoOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataService.marketDataApi정보({
+			const { data } = await MarketDataService.getMarketDataInfo({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1390,7 +1388,7 @@ export const marketDataHealthCheckQueryKey = (
 ) => createQueryKey("marketDataHealthCheck", options);
 
 /**
- * Market Data 서비스 상태 확인
+ * Health Check
  * 마켓 데이터 서비스 상태 확인
  */
 export const marketDataHealthCheckOptions = (
@@ -1398,7 +1396,7 @@ export const marketDataHealthCheckOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataService.marketData서비스상태확인({
+			const { data } = await MarketDataService.healthCheck({
 				...options,
 				...queryKey[0],
 				signal,
@@ -2154,7 +2152,7 @@ export const watchlistsListWatchlistsQueryKey = (
 ) => createQueryKey("watchlistsListWatchlists", options);
 
 /**
- * 워치리스트 목록 조회
+ * List Watchlists
  * 사용자의 모든 워치리스트 목록 조회
  *
  * 사용자에게 속한 모든 워치리스트의 요약 정보를 반환합니다.
@@ -2164,7 +2162,7 @@ export const watchlistsListWatchlistsOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await WatchlistsService.워치리스트목록조회({
+			const { data } = await WatchlistsService.listWatchlists({
 				...options,
 				...queryKey[0],
 				signal,
@@ -2177,7 +2175,7 @@ export const watchlistsListWatchlistsOptions = (
 };
 
 /**
- * 워치리스트 생성/업데이트
+ * Create Or Update Watchlist
  * 워치리스트 생성 또는 업데이트
  *
  * 유연한 워치리스트 관리를 위한 엔드포인트입니다.
@@ -2198,13 +2196,11 @@ export const watchlistsCreateOrUpdateWatchlistMutation = (
 		Options<WatchlistsCreateOrUpdateWatchlistData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } =
-				(await WatchlistsService.워치리스트생성) /
-				업데이트({
-					...options,
-					...fnOptions,
-					throwOnError: true,
-				});
+			const { data } = await WatchlistsService.createOrUpdateWatchlist({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
 			return data;
 		},
 	};
@@ -2212,7 +2208,7 @@ export const watchlistsCreateOrUpdateWatchlistMutation = (
 };
 
 /**
- * 새 워치리스트 생성
+ * Create Watchlist
  * 새로운 명명된 워치리스트 생성
  *
  * 명시적인 이름을 가진 새 워치리스트를 생성합니다.
@@ -2231,7 +2227,7 @@ export const watchlistsCreateWatchlistMutation = (
 		Options<WatchlistsCreateWatchlistData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await WatchlistsService.새워치리스트생성({
+			const { data } = await WatchlistsService.createWatchlist({
 				...options,
 				...fnOptions,
 				throwOnError: true,
@@ -2243,7 +2239,7 @@ export const watchlistsCreateWatchlistMutation = (
 };
 
 /**
- * 워치리스트 삭제
+ * Delete Watchlist
  * 워치리스트 삭제
  */
 export const watchlistsDeleteWatchlistMutation = (
@@ -2259,7 +2255,7 @@ export const watchlistsDeleteWatchlistMutation = (
 		Options<WatchlistsDeleteWatchlistData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await WatchlistsService.워치리스트삭제({
+			const { data } = await WatchlistsService.deleteWatchlist({
 				...options,
 				...fnOptions,
 				throwOnError: true,
@@ -2275,7 +2271,7 @@ export const watchlistsGetWatchlistQueryKey = (
 ) => createQueryKey("watchlistsGetWatchlist", options);
 
 /**
- * 특정 워치리스트 조회
+ * Get Watchlist
  * 특정 워치리스트의 상세 정보 조회
  */
 export const watchlistsGetWatchlistOptions = (
@@ -2283,7 +2279,7 @@ export const watchlistsGetWatchlistOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await WatchlistsService.특정워치리스트조회({
+			const { data } = await WatchlistsService.getWatchlist({
 				...options,
 				...queryKey[0],
 				signal,
@@ -2296,7 +2292,7 @@ export const watchlistsGetWatchlistOptions = (
 };
 
 /**
- * 워치리스트 업데이트
+ * Update Watchlist
  * 기존 워치리스트 업데이트
  */
 export const watchlistsUpdateWatchlistMutation = (
@@ -2312,7 +2308,7 @@ export const watchlistsUpdateWatchlistMutation = (
 		Options<WatchlistsUpdateWatchlistData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await WatchlistsService.워치리스트업데이트({
+			const { data } = await WatchlistsService.updateWatchlist({
 				...options,
 				...fnOptions,
 				throwOnError: true,
@@ -2328,7 +2324,7 @@ export const watchlistsGetWatchlistCoverageQueryKey = (
 ) => createQueryKey("watchlistsGetWatchlistCoverage", options);
 
 /**
- * 워치리스트 데이터 커버리지
+ * Get Watchlist Coverage
  * 워치리스트의 데이터 커버리지 정보 조회
  *
  * 각 심볼별로 수집된 데이터의 상태와 품질을 확인합니다.
@@ -2338,7 +2334,7 @@ export const watchlistsGetWatchlistCoverageOptions = (
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await WatchlistsService.워치리스트데이터커버리지({
+			const { data } = await WatchlistsService.getWatchlistCoverage({
 				...options,
 				...queryKey[0],
 				signal,
@@ -2351,7 +2347,7 @@ export const watchlistsGetWatchlistCoverageOptions = (
 };
 
 /**
- * 기본 워치리스트 설정
+ * Setup Default Watchlist
  * 기본 워치리스트 설정
  *
  * 인기 주식들로 구성된 기본 워치리스트를 생성합니다.
@@ -2369,7 +2365,7 @@ export const watchlistsSetupDefaultWatchlistMutation = (
 		Options<WatchlistsSetupDefaultWatchlistData>
 	> = {
 		mutationFn: async (fnOptions) => {
-			const { data } = await WatchlistsService.기본워치리스트설정({
+			const { data } = await WatchlistsService.setupDefaultWatchlist({
 				...options,
 				...fnOptions,
 				throwOnError: true,

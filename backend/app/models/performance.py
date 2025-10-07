@@ -2,7 +2,7 @@
 Performance Models using Beanie (MongoDB ODM)
 """
 
-from datetime import datetime
+from datetime import datetime, UTC
 
 from .base_model import BaseDocument
 from pydantic import Field
@@ -45,8 +45,8 @@ class StrategyPerformance(BaseDocument):
     )
 
     # 메타데이터
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
     class Settings:
         name = "strategy_performance"

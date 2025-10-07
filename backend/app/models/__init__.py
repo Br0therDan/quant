@@ -3,7 +3,6 @@ Initialize models package
 """
 
 from .backtest import Backtest, BacktestExecution, BacktestResult
-from .company import Company
 from .watchlist import Watchlist
 from .market_data import (
     DailyPrice,
@@ -43,7 +42,6 @@ collections = [
     BacktestExecution,
     BacktestResult,
     # Company 및 Watchlist
-    Company,
     Watchlist,
     # 시장 데이터
     DailyPrice,
@@ -110,7 +108,6 @@ __all__ = [
     "MarketMood",
     "OptionFlow",
     # Other models
-    "Company",
     "Watchlist",
     "Backtest",
     "BacktestExecution",

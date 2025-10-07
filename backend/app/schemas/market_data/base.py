@@ -3,7 +3,7 @@ Base schemas for market data API
 시장 데이터 API용 기본 스키마들
 """
 
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Optional, List, Generic, TypeVar
 from pydantic import BaseModel, Field
 from decimal import Decimal
@@ -18,7 +18,9 @@ class BaseResponse(BaseModel):
 
     success: bool = Field(True, description="요청 성공 여부")
     message: Optional[str] = Field(None, description="응답 메시지")
-    timestamp: datetime = Field(default_factory=datetime.utcnow, description="응답 시간")
+    timestamp: datetime = Field(
+        default_factory=lambda: datetime.now(UTC), description="응답 시간"
+    )
 
 
 class ErrorResponse(BaseResponse):

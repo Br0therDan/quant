@@ -2,7 +2,7 @@
 Watchlist Models
 """
 
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import List, Optional
 from .base_model import BaseDocument
 from pydantic import Field
@@ -20,8 +20,8 @@ class Watchlist(BaseDocument):
     update_interval: int = Field(default=3600, description="Update interval in seconds")
 
     # Metadata
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     last_updated: Optional[datetime] = Field(
         default=None, description="Last data update"
     )

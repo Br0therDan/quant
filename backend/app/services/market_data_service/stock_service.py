@@ -113,6 +113,140 @@ class StockService(BaseMarketDataService):
         # 이 메서드는 더 이상 직접 사용되지 않으므로 빈 구현
         return []
 
+    # BaseMarketDataService 추상 메서드 구현
+    async def _fetch_from_source(self, **kwargs):
+        """Alpha Vantage에서 주식 데이터 가져오기"""
+        try:
+            method = kwargs.get("method", "daily")
+            symbol = kwargs.get("symbol")
+
+            if not symbol:
+                raise ValueError("Symbol is required for stock data")
+
+            if method == "daily":
+                outputsize = kwargs.get("outputsize", "compact")
+                return await self.alpha_vantage.stock.daily_adjusted(
+                    symbol=symbol, outputsize=outputsize
+                )
+            elif method == "quote":
+                return await self.alpha_vantage.stock.quote(symbol=symbol)
+            elif method == "intraday":
+                interval = kwargs.get("interval", "5min")
+                outputsize = kwargs.get("outputsize", "compact")
+                return await self.alpha_vantage.stock.intraday(
+                    symbol=symbol, interval=interval, outputsize=outputsize
+                )
+            else:
+                raise ValueError(f"Unknown stock method: {method}")
+
+        except Exception as e:
+            logger.error(f"Error fetching stock data from source: {e}")
+            raise
+
+    async def _save_to_cache(self, data, **kwargs) -> bool:
+        """주식 데이터를 캐시에 저장"""
+        try:
+            cache_key = kwargs.get("cache_key", "stock_data")
+            method = kwargs.get("method", "daily")
+            symbol = kwargs.get("symbol", "UNKNOWN")
+
+            # 데이터를 DailyPrice 모델로 변환
+            if isinstance(data, dict) and method == "daily":
+                try:
+                    # Alpha Vantage 응답에서 Time Series 추출
+                    time_series = data.get("Time Series (Daily)", {})
+                    if not time_series:
+                        logger.warning(f"No time series data found for {symbol}")
+                        return True
+
+                    daily_prices = []
+                    for date_str, price_data in time_series.items():
+                        try:
+                            # date 객체를 datetime으로 변환
+                            date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+
+                            daily_price = DailyPrice(
+                                symbol=symbol,
+                                date=date_obj,
+                                open=Decimal(str(price_data["1. open"])),
+                                high=Decimal(str(price_data["2. high"])),
+                                low=Decimal(str(price_data["3. low"])),
+                                close=Decimal(str(price_data["4. close"])),
+                                volume=int(price_data["6. volume"]),
+                                adjusted_close=Decimal(
+                                    str(price_data["5. adjusted close"])
+                                ),
+                                dividend_amount=Decimal(
+                                    str(price_data.get("7. dividend amount", 0))
+                                ),
+                                split_coefficient=Decimal(
+                                    str(price_data.get("8. split coefficient", 1))
+                                ),
+                                data_quality_score=95.0,  # 기본 품질 점수
+                                source="alpha_vantage",
+                                price_change=Decimal("0.0"),
+                                price_change_percent=Decimal("0.0"),
+                            )
+                            daily_prices.append(daily_price)
+                        except (ValueError, KeyError) as parse_error:
+                            logger.warning(
+                                f"Failed to parse price data for {date_str}: {parse_error}"
+                            )
+                            continue
+
+                    if daily_prices:
+                        # DuckDB 캐시에 저장
+                        success = await self._store_to_duckdb_cache(
+                            cache_key=cache_key,
+                            data=daily_prices,
+                            table_name="stock_cache",
+                        )
+
+                        if success:
+                            logger.info(
+                                f"Stock data cached successfully: {cache_key} ({len(daily_prices)} items)"
+                            )
+                        return success
+
+                except Exception as model_error:
+                    logger.warning(f"Failed to create DailyPrice models: {model_error}")
+                    # 원본 데이터를 딕셔너리로 저장
+                    if self._db_manager:
+                        return self._db_manager.store_cache_data(
+                            cache_key=cache_key, data=[data], table_name="stock_cache"
+                        )
+
+            logger.info(f"No valid stock data to cache for: {cache_key}")
+            return True
+
+        except Exception as e:
+            logger.error(f"Error saving stock data to cache: {e}")
+            return False
+
+    async def _get_from_cache(self, **kwargs):
+        """캐시에서 주식 데이터 조회"""
+        try:
+            cache_key = kwargs.get("cache_key", "stock_data")
+
+            # DuckDB 캐시에서 데이터 조회
+            cached_data = await self._get_from_duckdb_cache(
+                cache_key=cache_key,
+                start_date=kwargs.get("start_date"),
+                end_date=kwargs.get("end_date"),
+                ignore_ttl=kwargs.get("ignore_ttl", False),
+            )
+
+            if cached_data:
+                logger.info(f"Stock cache hit: {cache_key} ({len(cached_data)} items)")
+                return cached_data
+            else:
+                logger.debug(f"Stock cache miss: {cache_key}")
+                return None
+
+        except Exception as e:
+            logger.error(f"Error getting stock data from cache: {e}")
+            return None
+
     async def get_real_time_quote(self, symbol: str) -> dict:
         """실시간 주식 호가 조회 (Alpha Vantage GLOBAL_QUOTE)"""
         try:

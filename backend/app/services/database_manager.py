@@ -5,6 +5,7 @@
 
 import logging
 from pathlib import Path
+from datetime import UTC
 
 import duckdb
 import pandas as pd
@@ -481,8 +482,8 @@ class DatabaseManager:
                         [
                             cache_key,
                             json.dumps(item),
-                            datetime.utcnow(),
-                            datetime.utcnow(),
+                            datetime.now(UTC),
+                            datetime.now(UTC),
                         ],
                     )
 
@@ -506,7 +507,7 @@ class DatabaseManager:
             from datetime import datetime, timedelta
 
             # TTL 체크
-            ttl_threshold = datetime.utcnow() - timedelta(hours=ttl_hours)
+            ttl_threshold = datetime.now(UTC) - timedelta(hours=ttl_hours)
 
             results = self.connection.execute(
                 f"""

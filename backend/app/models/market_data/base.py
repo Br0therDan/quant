@@ -3,7 +3,7 @@ Base models for Market Data
 모든 마켓 데이터 모델의 기본 클래스들
 """
 
-from datetime import datetime, timezone
+from datetime import datetime, UTC, timezone
 from typing import Optional, List
 from beanie import Document
 from pydantic import BaseModel, Field
@@ -29,7 +29,7 @@ class BaseMarketDataDocument(Document):
         super().__init__(**data)
         # 수정 시간 자동 업데이트
         if hasattr(self, "id") and self.id:
-            self.updated_at = datetime.utcnow()
+            self.updated_at = datetime.now(UTC)
 
 
 class DataQualityMixin:

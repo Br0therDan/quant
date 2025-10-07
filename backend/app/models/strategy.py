@@ -2,7 +2,7 @@
 Strategy Models using Beanie (MongoDB ODM)
 """
 
-from datetime import datetime
+from datetime import datetime, UTC
 from enum import Enum
 from typing import Any
 
@@ -43,8 +43,8 @@ class Strategy(BaseDocument):
 
     # 메타데이터
     created_by: str | None = Field(None, description="생성자")
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     tags: list[str] = Field(default_factory=list, description="태그")
 
     class Settings:
@@ -75,8 +75,10 @@ class StrategyTemplate(BaseDocument):
     usage_count: int = Field(default=0, description="사용 횟수")
 
     # 메타데이터
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    category: str = Field(..., description="카테고리")
+    difficulty: str = Field(default="intermediate", description="난이도")
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     tags: list[str] = Field(default_factory=list, description="태그")
 
     class Settings:
@@ -110,7 +112,7 @@ class StrategyExecution(BaseDocument):
     backtest_id: str | None = Field(None, description="백테스트 ID")
 
     # 메타데이터
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
     class Settings:
         name = "strategy_executions"

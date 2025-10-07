@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from typing import Any, Dict, List, Optional, Type
 from decimal import Decimal
 import asyncio
@@ -305,7 +305,7 @@ class BaseMarketDataService(ABC):
             # TTL 확인
             ttl_filter: Dict[str, Any] = {
                 "updated_at": {
-                    "$gte": datetime.utcnow() - self.cache_strategy.mongodb_ttl
+                    "$gte": datetime.now(UTC) - self.cache_strategy.mongodb_ttl
                 }
             }
             query_filter.update(ttl_filter)
@@ -365,7 +365,7 @@ class BaseMarketDataService(ABC):
 
             # 타임스탬프 업데이트
             for item in data:
-                item.updated_at = datetime.utcnow()
+                item.updated_at = datetime.now(UTC)
 
             # MongoDB에 저장 (upsert 사용)
             for item in data:

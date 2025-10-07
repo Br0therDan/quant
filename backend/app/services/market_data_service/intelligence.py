@@ -4,7 +4,7 @@ Intelligence Service
 """
 
 from typing import List, Optional, Dict, Any
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 import logging
 
 from .base_service import BaseMarketDataService
@@ -809,7 +809,7 @@ class IntelligenceService(BaseMarketDataService):
                                 "title", item.get("overall_sentiment_label", "News")
                             ),
                             "url": item.get("url", item.get("link", "")),
-                            "published_at": datetime.utcnow(),
+                            "published_at": datetime.now(UTC),
                             "source": item.get("source", "Alpha Vantage Intelligence"),
                             "summary": str(item),  # 전체 데이터를 요약으로 저장
                             "sentiment_score": item.get("overall_sentiment_score", 0.0),
