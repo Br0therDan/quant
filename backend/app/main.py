@@ -36,6 +36,8 @@ async def lifespan(app: FastAPI):
         service_factory.get_market_data_service()
         service_factory.get_strategy_service()
         service_factory.get_backtest_service()
+        service_factory.get_portfolio_service()
+        service_factory.get_dashboard_service()
         logger.info("✅ All services pre-initialized")
 
         # Seed strategy templates

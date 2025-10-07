@@ -14,6 +14,8 @@ from .strategy_service import StrategyService
 from .backtest_service import BacktestService
 from .database_manager import DatabaseManager
 from .watchlist_service import WatchlistService
+from .portfolio_service import PortfolioService
+from .dashboard_service import DashboardService
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +33,8 @@ class ServiceFactory:
     _backtest_service: Optional[BacktestService] = None
     _database_manager: Optional[DatabaseManager] = None
     _watchlist_service: Optional[WatchlistService] = None
+    _portfolio_service: Optional[PortfolioService] = None
+    _dashboard_service: Optional[DashboardService] = None
 
     def __new__(cls):
         if cls._instance is None:
@@ -111,6 +115,35 @@ class ServiceFactory:
             self._watchlist_service = WatchlistService()
             logger.info("Created WatchlistService instance")
         return self._watchlist_service
+
+    def get_portfolio_service(self) -> PortfolioService:
+        """포트폴리오 서비스 인스턴스 반환"""
+        if self._portfolio_service is None:
+            database_manager = self.get_database_manager()
+            self._portfolio_service = PortfolioService(database_manager)
+            logger.info("Created PortfolioService instance")
+        return self._portfolio_service
+
+    def get_dashboard_service(self) -> DashboardService:
+        """대시보드 서비스 인스턴스 반환"""
+        if self._dashboard_service is None:
+            database_manager = self.get_database_manager()
+            portfolio_service = self.get_portfolio_service()
+            strategy_service = self.get_strategy_service()
+            backtest_service = self.get_backtest_service()
+            market_data_service = self.get_market_data_service()
+            watchlist_service = self.get_watchlist_service()
+
+            self._dashboard_service = DashboardService(
+                database_manager=database_manager,
+                portfolio_service=portfolio_service,
+                strategy_service=strategy_service,
+                backtest_service=backtest_service,
+                market_data_service=market_data_service,
+                watchlist_service=watchlist_service,
+            )
+            logger.info("Created DashboardService instance")
+        return self._dashboard_service
 
     async def cleanup(self):
         """모든 서비스 정리"""

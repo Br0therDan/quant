@@ -8,6 +8,7 @@ from .templates import router as templates_router
 from .backtests import router as backtests_router
 from .health import router as health_router
 from .watchlists import router as watchlists_router
+from .dashboard import router as dashboard_router
 
 
 __all__ = [
@@ -17,4 +18,5 @@ __all__ = [
     "strategies_router",
     "templates_router",
     "watchlists_router",
+    "dashboard_router",
 ]
