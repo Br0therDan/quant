@@ -940,24 +940,6 @@ export type PydanticObjectId = string;
 export type SignalType = "BUY" | "SELL" | "HOLD";
 
 /**
- * StockSymbolsResponse
- */
-export type StockSymbolsResponse = {
-	/**
-	 * Symbols
-	 */
-	symbols: Array<SymbolInfo>;
-	/**
-	 * Count
-	 */
-	count: number;
-	/**
-	 * Search Term
-	 */
-	search_term?: string | null;
-};
-
-/**
  * StrategyCreateRequest
  * Strategy creation request
  */
@@ -1174,28 +1156,6 @@ export type StrategyUpdateRequest = {
 	 * 태그
 	 */
 	tags?: Array<string | null> | null;
-};
-
-/**
- * SymbolInfo
- */
-export type SymbolInfo = {
-	/**
-	 * Symbol
-	 */
-	symbol: string;
-	/**
-	 * Name
-	 */
-	name: string;
-	/**
-	 * Type
-	 */
-	type: string;
-	/**
-	 * Region
-	 */
-	region: string;
 };
 
 /**
@@ -1428,29 +1388,6 @@ export type Trade = {
 export type TradeType = "BUY" | "SELL";
 
 /**
- * UpdateRequest
- * Update request model
- */
-export type UpdateRequest = {
-	/**
-	 * User Id
-	 */
-	user_id?: string | null;
-	/**
-	 * Symbols
-	 */
-	symbols?: Array<string> | null;
-	/**
-	 * Start Date
-	 */
-	start_date?: Date | null;
-	/**
-	 * End Date
-	 */
-	end_date?: Date | null;
-};
-
-/**
  * UserCreate
  */
 export type UserCreate = {
@@ -1573,7 +1510,7 @@ export type ValidationError = {
 
 /**
  * WatchlistCreate
- * Watchlist creation model
+ * 워치리스트 생성 모델
  */
 export type WatchlistCreate = {
 	/**
@@ -1596,7 +1533,7 @@ export type WatchlistCreate = {
 
 /**
  * WatchlistUpdate
- * Watchlist update model
+ * 워치리스트 업데이트 모델
  */
 export type WatchlistUpdate = {
 	/**
@@ -2219,7 +2156,7 @@ export type UserGetUserOauthAccountsResponses = {
 export type UserGetUserOauthAccountsResponse =
 	UserGetUserOauthAccountsResponses[keyof UserGetUserOauthAccountsResponses];
 
-export type MarketDataV2GetDailyPricesData = {
+export type MarketDataGetDailyPricesData = {
 	body?: never;
 	path: {
 		/**
@@ -2238,19 +2175,19 @@ export type MarketDataV2GetDailyPricesData = {
 	url: "/api/v1/market-data/stock/daily/{symbol}";
 };
 
-export type MarketDataV2GetDailyPricesErrors = {
+export type MarketDataGetDailyPricesErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type MarketDataV2GetDailyPricesError =
-	MarketDataV2GetDailyPricesErrors[keyof MarketDataV2GetDailyPricesErrors];
+export type MarketDataGetDailyPricesError =
+	MarketDataGetDailyPricesErrors[keyof MarketDataGetDailyPricesErrors];
 
-export type MarketDataV2GetDailyPricesResponses = {
+export type MarketDataGetDailyPricesResponses = {
 	/**
-	 * Response Market Data V2-Get Daily Prices
+	 * Response Market Data-Get Daily Prices
 	 * Successful Response
 	 */
 	200: {
@@ -2258,10 +2195,10 @@ export type MarketDataV2GetDailyPricesResponses = {
 	};
 };
 
-export type MarketDataV2GetDailyPricesResponse =
-	MarketDataV2GetDailyPricesResponses[keyof MarketDataV2GetDailyPricesResponses];
+export type MarketDataGetDailyPricesResponse =
+	MarketDataGetDailyPricesResponses[keyof MarketDataGetDailyPricesResponses];
 
-export type MarketDataV2GetQuoteData = {
+export type MarketDataGetQuoteData = {
 	body?: never;
 	path: {
 		/**
@@ -2274,19 +2211,19 @@ export type MarketDataV2GetQuoteData = {
 	url: "/api/v1/market-data/stock/quote/{symbol}";
 };
 
-export type MarketDataV2GetQuoteErrors = {
+export type MarketDataGetQuoteErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type MarketDataV2GetQuoteError =
-	MarketDataV2GetQuoteErrors[keyof MarketDataV2GetQuoteErrors];
+export type MarketDataGetQuoteError =
+	MarketDataGetQuoteErrors[keyof MarketDataGetQuoteErrors];
 
-export type MarketDataV2GetQuoteResponses = {
+export type MarketDataGetQuoteResponses = {
 	/**
-	 * Response Market Data V2-Get Quote
+	 * Response Market Data-Get Quote
 	 * Successful Response
 	 */
 	200: {
@@ -2294,10 +2231,10 @@ export type MarketDataV2GetQuoteResponses = {
 	};
 };
 
-export type MarketDataV2GetQuoteResponse =
-	MarketDataV2GetQuoteResponses[keyof MarketDataV2GetQuoteResponses];
+export type MarketDataGetQuoteResponse =
+	MarketDataGetQuoteResponses[keyof MarketDataGetQuoteResponses];
 
-export type MarketDataV2GetIntradayDataData = {
+export type MarketDataGetIntradayDataData = {
 	body?: never;
 	path: {
 		/**
@@ -2321,19 +2258,19 @@ export type MarketDataV2GetIntradayDataData = {
 	url: "/api/v1/market-data/stock/intraday/{symbol}";
 };
 
-export type MarketDataV2GetIntradayDataErrors = {
+export type MarketDataGetIntradayDataErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type MarketDataV2GetIntradayDataError =
-	MarketDataV2GetIntradayDataErrors[keyof MarketDataV2GetIntradayDataErrors];
+export type MarketDataGetIntradayDataError =
+	MarketDataGetIntradayDataErrors[keyof MarketDataGetIntradayDataErrors];
 
-export type MarketDataV2GetIntradayDataResponses = {
+export type MarketDataGetIntradayDataResponses = {
 	/**
-	 * Response Market Data V2-Get Intraday Data
+	 * Response Market Data-Get Intraday Data
 	 * Successful Response
 	 */
 	200: {
@@ -2341,10 +2278,10 @@ export type MarketDataV2GetIntradayDataResponses = {
 	};
 };
 
-export type MarketDataV2GetIntradayDataResponse =
-	MarketDataV2GetIntradayDataResponses[keyof MarketDataV2GetIntradayDataResponses];
+export type MarketDataGetIntradayDataResponse =
+	MarketDataGetIntradayDataResponses[keyof MarketDataGetIntradayDataResponses];
 
-export type MarketDataV2GetHistoricalDataData = {
+export type MarketDataGetHistoricalDataData = {
 	body?: never;
 	path: {
 		/**
@@ -2373,65 +2310,27 @@ export type MarketDataV2GetHistoricalDataData = {
 	url: "/api/v1/market-data/stock/historical/{symbol}";
 };
 
-export type MarketDataV2GetHistoricalDataErrors = {
+export type MarketDataGetHistoricalDataErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type MarketDataV2GetHistoricalDataError =
-	MarketDataV2GetHistoricalDataErrors[keyof MarketDataV2GetHistoricalDataErrors];
+export type MarketDataGetHistoricalDataError =
+	MarketDataGetHistoricalDataErrors[keyof MarketDataGetHistoricalDataErrors];
 
-export type MarketDataV2GetHistoricalDataResponses = {
+export type MarketDataGetHistoricalDataResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: HistoricalDataResponse;
 };
 
-export type MarketDataV2GetHistoricalDataResponse =
-	MarketDataV2GetHistoricalDataResponses[keyof MarketDataV2GetHistoricalDataResponses];
+export type MarketDataGetHistoricalDataResponse =
+	MarketDataGetHistoricalDataResponses[keyof MarketDataGetHistoricalDataResponses];
 
-export type MarketDataV2GetAvailableSymbolsData = {
-	body?: never;
-	path?: never;
-	query?: {
-		/**
-		 * Search
-		 * 검색 키워드
-		 */
-		search?: string | null;
-		/**
-		 * Limit
-		 * 결과 개수 제한
-		 */
-		limit?: number;
-	};
-	url: "/api/v1/market-data/stock/symbols";
-};
-
-export type MarketDataV2GetAvailableSymbolsErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type MarketDataV2GetAvailableSymbolsError =
-	MarketDataV2GetAvailableSymbolsErrors[keyof MarketDataV2GetAvailableSymbolsErrors];
-
-export type MarketDataV2GetAvailableSymbolsResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: StockSymbolsResponse;
-};
-
-export type MarketDataV2GetAvailableSymbolsResponse =
-	MarketDataV2GetAvailableSymbolsResponses[keyof MarketDataV2GetAvailableSymbolsResponses];
-
-export type MarketDataV2GetCompanyOverviewData = {
+export type MarketDataGetCompanyOverviewData = {
 	body?: never;
 	path: {
 		/**
@@ -2444,19 +2343,19 @@ export type MarketDataV2GetCompanyOverviewData = {
 	url: "/api/v1/market-data/fundamental/overview/{symbol}";
 };
 
-export type MarketDataV2GetCompanyOverviewErrors = {
+export type MarketDataGetCompanyOverviewErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type MarketDataV2GetCompanyOverviewError =
-	MarketDataV2GetCompanyOverviewErrors[keyof MarketDataV2GetCompanyOverviewErrors];
+export type MarketDataGetCompanyOverviewError =
+	MarketDataGetCompanyOverviewErrors[keyof MarketDataGetCompanyOverviewErrors];
 
-export type MarketDataV2GetCompanyOverviewResponses = {
+export type MarketDataGetCompanyOverviewResponses = {
 	/**
-	 * Response Market Data V2-Get Company Overview
+	 * Response Market Data-Get Company Overview
 	 * Successful Response
 	 */
 	200: {
@@ -2464,10 +2363,10 @@ export type MarketDataV2GetCompanyOverviewResponses = {
 	};
 };
 
-export type MarketDataV2GetCompanyOverviewResponse =
-	MarketDataV2GetCompanyOverviewResponses[keyof MarketDataV2GetCompanyOverviewResponses];
+export type MarketDataGetCompanyOverviewResponse =
+	MarketDataGetCompanyOverviewResponses[keyof MarketDataGetCompanyOverviewResponses];
 
-export type MarketDataV2GetIncomeStatementData = {
+export type MarketDataGetIncomeStatementData = {
 	body?: never;
 	path: {
 		/**
@@ -2486,19 +2385,19 @@ export type MarketDataV2GetIncomeStatementData = {
 	url: "/api/v1/market-data/fundamental/income-statement/{symbol}";
 };
 
-export type MarketDataV2GetIncomeStatementErrors = {
+export type MarketDataGetIncomeStatementErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type MarketDataV2GetIncomeStatementError =
-	MarketDataV2GetIncomeStatementErrors[keyof MarketDataV2GetIncomeStatementErrors];
+export type MarketDataGetIncomeStatementError =
+	MarketDataGetIncomeStatementErrors[keyof MarketDataGetIncomeStatementErrors];
 
-export type MarketDataV2GetIncomeStatementResponses = {
+export type MarketDataGetIncomeStatementResponses = {
 	/**
-	 * Response Market Data V2-Get Income Statement
+	 * Response Market Data-Get Income Statement
 	 * Successful Response
 	 */
 	200: {
@@ -2506,10 +2405,10 @@ export type MarketDataV2GetIncomeStatementResponses = {
 	};
 };
 
-export type MarketDataV2GetIncomeStatementResponse =
-	MarketDataV2GetIncomeStatementResponses[keyof MarketDataV2GetIncomeStatementResponses];
+export type MarketDataGetIncomeStatementResponse =
+	MarketDataGetIncomeStatementResponses[keyof MarketDataGetIncomeStatementResponses];
 
-export type MarketDataV2GetBalanceSheetData = {
+export type MarketDataGetBalanceSheetData = {
 	body?: never;
 	path: {
 		/**
@@ -2528,19 +2427,19 @@ export type MarketDataV2GetBalanceSheetData = {
 	url: "/api/v1/market-data/fundamental/balance-sheet/{symbol}";
 };
 
-export type MarketDataV2GetBalanceSheetErrors = {
+export type MarketDataGetBalanceSheetErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type MarketDataV2GetBalanceSheetError =
-	MarketDataV2GetBalanceSheetErrors[keyof MarketDataV2GetBalanceSheetErrors];
+export type MarketDataGetBalanceSheetError =
+	MarketDataGetBalanceSheetErrors[keyof MarketDataGetBalanceSheetErrors];
 
-export type MarketDataV2GetBalanceSheetResponses = {
+export type MarketDataGetBalanceSheetResponses = {
 	/**
-	 * Response Market Data V2-Get Balance Sheet
+	 * Response Market Data-Get Balance Sheet
 	 * Successful Response
 	 */
 	200: {
@@ -2548,10 +2447,10 @@ export type MarketDataV2GetBalanceSheetResponses = {
 	};
 };
 
-export type MarketDataV2GetBalanceSheetResponse =
-	MarketDataV2GetBalanceSheetResponses[keyof MarketDataV2GetBalanceSheetResponses];
+export type MarketDataGetBalanceSheetResponse =
+	MarketDataGetBalanceSheetResponses[keyof MarketDataGetBalanceSheetResponses];
 
-export type MarketDataV2GetCashFlowData = {
+export type MarketDataGetCashFlowData = {
 	body?: never;
 	path: {
 		/**
@@ -2570,19 +2469,19 @@ export type MarketDataV2GetCashFlowData = {
 	url: "/api/v1/market-data/fundamental/cash-flow/{symbol}";
 };
 
-export type MarketDataV2GetCashFlowErrors = {
+export type MarketDataGetCashFlowErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type MarketDataV2GetCashFlowError =
-	MarketDataV2GetCashFlowErrors[keyof MarketDataV2GetCashFlowErrors];
+export type MarketDataGetCashFlowError =
+	MarketDataGetCashFlowErrors[keyof MarketDataGetCashFlowErrors];
 
-export type MarketDataV2GetCashFlowResponses = {
+export type MarketDataGetCashFlowResponses = {
 	/**
-	 * Response Market Data V2-Get Cash Flow
+	 * Response Market Data-Get Cash Flow
 	 * Successful Response
 	 */
 	200: {
@@ -2590,10 +2489,10 @@ export type MarketDataV2GetCashFlowResponses = {
 	};
 };
 
-export type MarketDataV2GetCashFlowResponse =
-	MarketDataV2GetCashFlowResponses[keyof MarketDataV2GetCashFlowResponses];
+export type MarketDataGetCashFlowResponse =
+	MarketDataGetCashFlowResponses[keyof MarketDataGetCashFlowResponses];
 
-export type MarketDataV2GetEarningsData = {
+export type MarketDataGetEarningsData = {
 	body?: never;
 	path: {
 		/**
@@ -2606,19 +2505,19 @@ export type MarketDataV2GetEarningsData = {
 	url: "/api/v1/market-data/fundamental/earnings/{symbol}";
 };
 
-export type MarketDataV2GetEarningsErrors = {
+export type MarketDataGetEarningsErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type MarketDataV2GetEarningsError =
-	MarketDataV2GetEarningsErrors[keyof MarketDataV2GetEarningsErrors];
+export type MarketDataGetEarningsError =
+	MarketDataGetEarningsErrors[keyof MarketDataGetEarningsErrors];
 
-export type MarketDataV2GetEarningsResponses = {
+export type MarketDataGetEarningsResponses = {
 	/**
-	 * Response Market Data V2-Get Earnings
+	 * Response Market Data-Get Earnings
 	 * Successful Response
 	 */
 	200: {
@@ -2626,10 +2525,10 @@ export type MarketDataV2GetEarningsResponses = {
 	};
 };
 
-export type MarketDataV2GetEarningsResponse =
-	MarketDataV2GetEarningsResponses[keyof MarketDataV2GetEarningsResponses];
+export type MarketDataGetEarningsResponse =
+	MarketDataGetEarningsResponses[keyof MarketDataGetEarningsResponses];
 
-export type MarketDataV2GetGdpDataData = {
+export type MarketDataGetGdpDataData = {
 	body?: never;
 	path?: never;
 	query?: {
@@ -2642,19 +2541,19 @@ export type MarketDataV2GetGdpDataData = {
 	url: "/api/v1/market-data/economic/gdp";
 };
 
-export type MarketDataV2GetGdpDataErrors = {
+export type MarketDataGetGdpDataErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type MarketDataV2GetGdpDataError =
-	MarketDataV2GetGdpDataErrors[keyof MarketDataV2GetGdpDataErrors];
+export type MarketDataGetGdpDataError =
+	MarketDataGetGdpDataErrors[keyof MarketDataGetGdpDataErrors];
 
-export type MarketDataV2GetGdpDataResponses = {
+export type MarketDataGetGdpDataResponses = {
 	/**
-	 * Response Market Data V2-Get Gdp Data
+	 * Response Market Data-Get Gdp Data
 	 * Successful Response
 	 */
 	200: {
@@ -2662,10 +2561,10 @@ export type MarketDataV2GetGdpDataResponses = {
 	};
 };
 
-export type MarketDataV2GetGdpDataResponse =
-	MarketDataV2GetGdpDataResponses[keyof MarketDataV2GetGdpDataResponses];
+export type MarketDataGetGdpDataResponse =
+	MarketDataGetGdpDataResponses[keyof MarketDataGetGdpDataResponses];
 
-export type MarketDataV2GetInflationDataData = {
+export type MarketDataGetInflationDataData = {
 	body?: never;
 	path?: never;
 	query?: {
@@ -2678,19 +2577,19 @@ export type MarketDataV2GetInflationDataData = {
 	url: "/api/v1/market-data/economic/inflation";
 };
 
-export type MarketDataV2GetInflationDataErrors = {
+export type MarketDataGetInflationDataErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type MarketDataV2GetInflationDataError =
-	MarketDataV2GetInflationDataErrors[keyof MarketDataV2GetInflationDataErrors];
+export type MarketDataGetInflationDataError =
+	MarketDataGetInflationDataErrors[keyof MarketDataGetInflationDataErrors];
 
-export type MarketDataV2GetInflationDataResponses = {
+export type MarketDataGetInflationDataResponses = {
 	/**
-	 * Response Market Data V2-Get Inflation Data
+	 * Response Market Data-Get Inflation Data
 	 * Successful Response
 	 */
 	200: {
@@ -2698,10 +2597,10 @@ export type MarketDataV2GetInflationDataResponses = {
 	};
 };
 
-export type MarketDataV2GetInflationDataResponse =
-	MarketDataV2GetInflationDataResponses[keyof MarketDataV2GetInflationDataResponses];
+export type MarketDataGetInflationDataResponse =
+	MarketDataGetInflationDataResponses[keyof MarketDataGetInflationDataResponses];
 
-export type MarketDataV2GetInterestRatesData = {
+export type MarketDataGetInterestRatesData = {
 	body?: never;
 	path?: never;
 	query?: {
@@ -2714,19 +2613,19 @@ export type MarketDataV2GetInterestRatesData = {
 	url: "/api/v1/market-data/economic/interest-rates";
 };
 
-export type MarketDataV2GetInterestRatesErrors = {
+export type MarketDataGetInterestRatesErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type MarketDataV2GetInterestRatesError =
-	MarketDataV2GetInterestRatesErrors[keyof MarketDataV2GetInterestRatesErrors];
+export type MarketDataGetInterestRatesError =
+	MarketDataGetInterestRatesErrors[keyof MarketDataGetInterestRatesErrors];
 
-export type MarketDataV2GetInterestRatesResponses = {
+export type MarketDataGetInterestRatesResponses = {
 	/**
-	 * Response Market Data V2-Get Interest Rates
+	 * Response Market Data-Get Interest Rates
 	 * Successful Response
 	 */
 	200: {
@@ -2734,29 +2633,29 @@ export type MarketDataV2GetInterestRatesResponses = {
 	};
 };
 
-export type MarketDataV2GetInterestRatesResponse =
-	MarketDataV2GetInterestRatesResponses[keyof MarketDataV2GetInterestRatesResponses];
+export type MarketDataGetInterestRatesResponse =
+	MarketDataGetInterestRatesResponses[keyof MarketDataGetInterestRatesResponses];
 
-export type MarketDataV2GetEmploymentDataData = {
+export type MarketDataGetEmploymentDataData = {
 	body?: never;
 	path?: never;
 	query?: never;
 	url: "/api/v1/market-data/economic/employment";
 };
 
-export type MarketDataV2GetEmploymentDataErrors = {
+export type MarketDataGetEmploymentDataErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type MarketDataV2GetEmploymentDataError =
-	MarketDataV2GetEmploymentDataErrors[keyof MarketDataV2GetEmploymentDataErrors];
+export type MarketDataGetEmploymentDataError =
+	MarketDataGetEmploymentDataErrors[keyof MarketDataGetEmploymentDataErrors];
 
-export type MarketDataV2GetEmploymentDataResponses = {
+export type MarketDataGetEmploymentDataResponses = {
 	/**
-	 * Response Market Data V2-Get Employment Data
+	 * Response Market Data-Get Employment Data
 	 * Successful Response
 	 */
 	200: {
@@ -2764,29 +2663,29 @@ export type MarketDataV2GetEmploymentDataResponses = {
 	};
 };
 
-export type MarketDataV2GetEmploymentDataResponse =
-	MarketDataV2GetEmploymentDataResponses[keyof MarketDataV2GetEmploymentDataResponses];
+export type MarketDataGetEmploymentDataResponse =
+	MarketDataGetEmploymentDataResponses[keyof MarketDataGetEmploymentDataResponses];
 
-export type MarketDataV2GetConsumerSentimentData = {
+export type MarketDataGetConsumerSentimentData = {
 	body?: never;
 	path?: never;
 	query?: never;
 	url: "/api/v1/market-data/economic/consumer-sentiment";
 };
 
-export type MarketDataV2GetConsumerSentimentErrors = {
+export type MarketDataGetConsumerSentimentErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type MarketDataV2GetConsumerSentimentError =
-	MarketDataV2GetConsumerSentimentErrors[keyof MarketDataV2GetConsumerSentimentErrors];
+export type MarketDataGetConsumerSentimentError =
+	MarketDataGetConsumerSentimentErrors[keyof MarketDataGetConsumerSentimentErrors];
 
-export type MarketDataV2GetConsumerSentimentResponses = {
+export type MarketDataGetConsumerSentimentResponses = {
 	/**
-	 * Response Market Data V2-Get Consumer Sentiment
+	 * Response Market Data-Get Consumer Sentiment
 	 * Successful Response
 	 */
 	200: {
@@ -2794,10 +2693,10 @@ export type MarketDataV2GetConsumerSentimentResponses = {
 	};
 };
 
-export type MarketDataV2GetConsumerSentimentResponse =
-	MarketDataV2GetConsumerSentimentResponses[keyof MarketDataV2GetConsumerSentimentResponses];
+export type MarketDataGetConsumerSentimentResponse =
+	MarketDataGetConsumerSentimentResponses[keyof MarketDataGetConsumerSentimentResponses];
 
-export type MarketDataV2GetNewsData = {
+export type MarketDataGetNewsData = {
 	body?: never;
 	path: {
 		/**
@@ -2831,19 +2730,19 @@ export type MarketDataV2GetNewsData = {
 	url: "/api/v1/market-data/intelligence/news/{symbol}";
 };
 
-export type MarketDataV2GetNewsErrors = {
+export type MarketDataGetNewsErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type MarketDataV2GetNewsError =
-	MarketDataV2GetNewsErrors[keyof MarketDataV2GetNewsErrors];
+export type MarketDataGetNewsError =
+	MarketDataGetNewsErrors[keyof MarketDataGetNewsErrors];
 
-export type MarketDataV2GetNewsResponses = {
+export type MarketDataGetNewsResponses = {
 	/**
-	 * Response Market Data V2-Get News
+	 * Response Market Data-Get News
 	 * Successful Response
 	 */
 	200: {
@@ -2851,10 +2750,10 @@ export type MarketDataV2GetNewsResponses = {
 	};
 };
 
-export type MarketDataV2GetNewsResponse =
-	MarketDataV2GetNewsResponses[keyof MarketDataV2GetNewsResponses];
+export type MarketDataGetNewsResponse =
+	MarketDataGetNewsResponses[keyof MarketDataGetNewsResponses];
 
-export type MarketDataV2GetSentimentAnalysisData = {
+export type MarketDataGetSentimentAnalysisData = {
 	body?: never;
 	path: {
 		/**
@@ -2878,19 +2777,19 @@ export type MarketDataV2GetSentimentAnalysisData = {
 	url: "/api/v1/market-data/intelligence/sentiment/{symbol}";
 };
 
-export type MarketDataV2GetSentimentAnalysisErrors = {
+export type MarketDataGetSentimentAnalysisErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type MarketDataV2GetSentimentAnalysisError =
-	MarketDataV2GetSentimentAnalysisErrors[keyof MarketDataV2GetSentimentAnalysisErrors];
+export type MarketDataGetSentimentAnalysisError =
+	MarketDataGetSentimentAnalysisErrors[keyof MarketDataGetSentimentAnalysisErrors];
 
-export type MarketDataV2GetSentimentAnalysisResponses = {
+export type MarketDataGetSentimentAnalysisResponses = {
 	/**
-	 * Response Market Data V2-Get Sentiment Analysis
+	 * Response Market Data-Get Sentiment Analysis
 	 * Successful Response
 	 */
 	200: {
@@ -2898,10 +2797,10 @@ export type MarketDataV2GetSentimentAnalysisResponses = {
 	};
 };
 
-export type MarketDataV2GetSentimentAnalysisResponse =
-	MarketDataV2GetSentimentAnalysisResponses[keyof MarketDataV2GetSentimentAnalysisResponses];
+export type MarketDataGetSentimentAnalysisResponse =
+	MarketDataGetSentimentAnalysisResponses[keyof MarketDataGetSentimentAnalysisResponses];
 
-export type MarketDataV2GetAnalystRecommendationsData = {
+export type MarketDataGetAnalystRecommendationsData = {
 	body?: never;
 	path: {
 		/**
@@ -2925,19 +2824,19 @@ export type MarketDataV2GetAnalystRecommendationsData = {
 	url: "/api/v1/market-data/intelligence/analyst-recommendations/{symbol}";
 };
 
-export type MarketDataV2GetAnalystRecommendationsErrors = {
+export type MarketDataGetAnalystRecommendationsErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type MarketDataV2GetAnalystRecommendationsError =
-	MarketDataV2GetAnalystRecommendationsErrors[keyof MarketDataV2GetAnalystRecommendationsErrors];
+export type MarketDataGetAnalystRecommendationsError =
+	MarketDataGetAnalystRecommendationsErrors[keyof MarketDataGetAnalystRecommendationsErrors];
 
-export type MarketDataV2GetAnalystRecommendationsResponses = {
+export type MarketDataGetAnalystRecommendationsResponses = {
 	/**
-	 * Response Market Data V2-Get Analyst Recommendations
+	 * Response Market Data-Get Analyst Recommendations
 	 * Successful Response
 	 */
 	200: {
@@ -2945,10 +2844,10 @@ export type MarketDataV2GetAnalystRecommendationsResponses = {
 	};
 };
 
-export type MarketDataV2GetAnalystRecommendationsResponse =
-	MarketDataV2GetAnalystRecommendationsResponses[keyof MarketDataV2GetAnalystRecommendationsResponses];
+export type MarketDataGetAnalystRecommendationsResponse =
+	MarketDataGetAnalystRecommendationsResponses[keyof MarketDataGetAnalystRecommendationsResponses];
 
-export type MarketDataV2GetSocialSentimentData = {
+export type MarketDataGetSocialSentimentData = {
 	body?: never;
 	path: {
 		/**
@@ -2972,19 +2871,19 @@ export type MarketDataV2GetSocialSentimentData = {
 	url: "/api/v1/market-data/intelligence/social-sentiment/{symbol}";
 };
 
-export type MarketDataV2GetSocialSentimentErrors = {
+export type MarketDataGetSocialSentimentErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type MarketDataV2GetSocialSentimentError =
-	MarketDataV2GetSocialSentimentErrors[keyof MarketDataV2GetSocialSentimentErrors];
+export type MarketDataGetSocialSentimentError =
+	MarketDataGetSocialSentimentErrors[keyof MarketDataGetSocialSentimentErrors];
 
-export type MarketDataV2GetSocialSentimentResponses = {
+export type MarketDataGetSocialSentimentResponses = {
 	/**
-	 * Response Market Data V2-Get Social Sentiment
+	 * Response Market Data-Get Social Sentiment
 	 * Successful Response
 	 */
 	200: {
@@ -2992,431 +2891,221 @@ export type MarketDataV2GetSocialSentimentResponses = {
 	};
 };
 
-export type MarketDataV2GetSocialSentimentResponse =
-	MarketDataV2GetSocialSentimentResponses[keyof MarketDataV2GetSocialSentimentResponses];
+export type MarketDataGetSocialSentimentResponse =
+	MarketDataGetSocialSentimentResponses[keyof MarketDataGetSocialSentimentResponses];
 
-export type MarketDataV2GetMarketDataInfoData = {
-	body?: never;
-	path?: never;
-	query?: never;
-	url: "/api/v1/market-data/";
-};
-
-export type MarketDataV2GetMarketDataInfoErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type MarketDataV2GetMarketDataInfoError =
-	MarketDataV2GetMarketDataInfoErrors[keyof MarketDataV2GetMarketDataInfoErrors];
-
-export type MarketDataV2GetMarketDataInfoResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: unknown;
-};
-
-export type MarketDataV2HealthCheckData = {
-	body?: never;
-	path?: never;
-	query?: never;
-	url: "/api/v1/market-data/health";
-};
-
-export type MarketDataV2HealthCheckErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type MarketDataV2HealthCheckError =
-	MarketDataV2HealthCheckErrors[keyof MarketDataV2HealthCheckErrors];
-
-export type MarketDataV2HealthCheckResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: unknown;
-};
-
-export type PipelineUpdateWatchlistData = {
-	body: WatchlistUpdate;
-	path?: never;
-	query?: never;
-	url: "/api/v1/pipeline/watchlists/watchlist";
-};
-
-export type PipelineUpdateWatchlistErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type PipelineUpdateWatchlistError =
-	PipelineUpdateWatchlistErrors[keyof PipelineUpdateWatchlistErrors];
-
-export type PipelineUpdateWatchlistResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: unknown;
-};
-
-export type PipelineListWatchlistsData = {
-	body?: never;
-	path?: never;
-	query?: never;
-	url: "/api/v1/pipeline/watchlists/watchlists";
-};
-
-export type PipelineListWatchlistsErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type PipelineListWatchlistsError =
-	PipelineListWatchlistsErrors[keyof PipelineListWatchlistsErrors];
-
-export type PipelineListWatchlistsResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: unknown;
-};
-
-export type PipelineCreateWatchlistData = {
-	body: WatchlistCreate;
-	path?: never;
-	query?: never;
-	url: "/api/v1/pipeline/watchlists/watchlists";
-};
-
-export type PipelineCreateWatchlistErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type PipelineCreateWatchlistError =
-	PipelineCreateWatchlistErrors[keyof PipelineCreateWatchlistErrors];
-
-export type PipelineCreateWatchlistResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: unknown;
-};
-
-export type PipelineDeleteWatchlistData = {
-	body?: never;
-	path: {
-		/**
-		 * Name
-		 */
-		name: string;
-	};
-	query?: never;
-	url: "/api/v1/pipeline/watchlists/{name}";
-};
-
-export type PipelineDeleteWatchlistErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type PipelineDeleteWatchlistError =
-	PipelineDeleteWatchlistErrors[keyof PipelineDeleteWatchlistErrors];
-
-export type PipelineDeleteWatchlistResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: unknown;
-};
-
-export type PipelineGetWatchlistData = {
-	body?: never;
-	path: {
-		/**
-		 * Name
-		 */
-		name: string;
-	};
-	query?: never;
-	url: "/api/v1/pipeline/watchlists/{name}";
-};
-
-export type PipelineGetWatchlistErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type PipelineGetWatchlistError =
-	PipelineGetWatchlistErrors[keyof PipelineGetWatchlistErrors];
-
-export type PipelineGetWatchlistResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: unknown;
-};
-
-export type PipelineUpdateWatchlistByNameData = {
-	body: WatchlistUpdate;
-	path: {
-		/**
-		 * Name
-		 */
-		name: string;
-	};
-	query?: never;
-	url: "/api/v1/pipeline/watchlists/{name}";
-};
-
-export type PipelineUpdateWatchlistByNameErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type PipelineUpdateWatchlistByNameError =
-	PipelineUpdateWatchlistByNameErrors[keyof PipelineUpdateWatchlistByNameErrors];
-
-export type PipelineUpdateWatchlistByNameResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: unknown;
-};
-
-export type PipelineCollectStockInfoData = {
+export type MarketDataCollectCompanyInfoData = {
 	body?: never;
 	path: {
 		/**
 		 * Symbol
+		 * 종목 심볼 (예: AAPL)
 		 */
 		symbol: string;
 	};
 	query?: never;
-	url: "/api/v1/pipeline/companies/collect-info/{symbol}";
+	url: "/api/v1/market-data/management/collect/company-info/{symbol}";
 };
 
-export type PipelineCollectStockInfoErrors = {
+export type MarketDataCollectCompanyInfoErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type PipelineCollectStockInfoError =
-	PipelineCollectStockInfoErrors[keyof PipelineCollectStockInfoErrors];
+export type MarketDataCollectCompanyInfoError =
+	MarketDataCollectCompanyInfoErrors[keyof MarketDataCollectCompanyInfoErrors];
 
-export type PipelineCollectStockInfoResponses = {
+export type MarketDataCollectCompanyInfoResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type PipelineCollectDailyDataData = {
+export type MarketDataCollectMarketDataData = {
 	body?: never;
 	path: {
 		/**
 		 * Symbol
+		 * 종목 심볼 (예: AAPL)
 		 */
 		symbol: string;
 	};
 	query?: {
 		/**
 		 * Start Date
+		 * 시작일
 		 */
 		start_date?: Date | null;
 		/**
 		 * End Date
+		 * 종료일
 		 */
 		end_date?: Date | null;
+		/**
+		 * Outputsize
+		 * 데이터 크기 (compact/full)
+		 */
+		outputsize?: string;
 	};
-	url: "/api/v1/pipeline/companies/collect-data/{symbol}";
+	url: "/api/v1/market-data/management/collect/market-data/{symbol}";
 };
 
-export type PipelineCollectDailyDataErrors = {
+export type MarketDataCollectMarketDataErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type PipelineCollectDailyDataError =
-	PipelineCollectDailyDataErrors[keyof PipelineCollectDailyDataErrors];
+export type MarketDataCollectMarketDataError =
+	MarketDataCollectMarketDataErrors[keyof MarketDataCollectMarketDataErrors];
 
-export type PipelineCollectDailyDataResponses = {
+export type MarketDataCollectMarketDataResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type PipelineGetSymbolCoverageData = {
+export type MarketDataCollectBulkDataData = {
+	body?: never;
+	path?: never;
+	query: {
+		/**
+		 * Symbols
+		 * 수집할 심볼 목록
+		 */
+		symbols: Array<string>;
+		/**
+		 * Include Company Info
+		 * 기업 정보 포함 여부
+		 */
+		include_company_info?: boolean;
+		/**
+		 * Include Market Data
+		 * 주가 데이터 포함 여부
+		 */
+		include_market_data?: boolean;
+	};
+	url: "/api/v1/market-data/management/collect/bulk";
+};
+
+export type MarketDataCollectBulkDataErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MarketDataCollectBulkDataError =
+	MarketDataCollectBulkDataErrors[keyof MarketDataCollectBulkDataErrors];
+
+export type MarketDataCollectBulkDataResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: unknown;
+};
+
+export type MarketDataGetDataCoverageData = {
 	body?: never;
 	path: {
 		/**
 		 * Symbol
+		 * 종목 심볼 (예: AAPL)
 		 */
 		symbol: string;
 	};
 	query?: never;
-	url: "/api/v1/pipeline/companies/coverage/{symbol}";
+	url: "/api/v1/market-data/management/coverage/{symbol}";
 };
 
-export type PipelineGetSymbolCoverageErrors = {
+export type MarketDataGetDataCoverageErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type PipelineGetSymbolCoverageError =
-	PipelineGetSymbolCoverageErrors[keyof PipelineGetSymbolCoverageErrors];
+export type MarketDataGetDataCoverageError =
+	MarketDataGetDataCoverageErrors[keyof MarketDataGetDataCoverageErrors];
 
-export type PipelineGetSymbolCoverageResponses = {
+export type MarketDataGetDataCoverageResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type PipelineGetCompanyInfoData = {
-	body?: never;
-	path: {
-		/**
-		 * Symbol
-		 */
-		symbol: string;
-	};
-	query?: never;
-	url: "/api/v1/pipeline/companies/company/{symbol}";
-};
-
-export type PipelineGetCompanyInfoErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type PipelineGetCompanyInfoError =
-	PipelineGetCompanyInfoErrors[keyof PipelineGetCompanyInfoErrors];
-
-export type PipelineGetCompanyInfoResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: unknown;
-};
-
-export type PipelineListCompaniesData = {
+export type MarketDataGetSystemStatusData = {
 	body?: never;
 	path?: never;
 	query?: never;
-	url: "/api/v1/pipeline/companies/";
+	url: "/api/v1/market-data/management/status";
 };
 
-export type PipelineListCompaniesErrors = {
+export type MarketDataGetSystemStatusErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type PipelineListCompaniesError =
-	PipelineListCompaniesErrors[keyof PipelineListCompaniesErrors];
+export type MarketDataGetSystemStatusError =
+	MarketDataGetSystemStatusErrors[keyof MarketDataGetSystemStatusErrors];
 
-export type PipelineListCompaniesResponses = {
+export type MarketDataGetSystemStatusResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type PipelineGetPipelineStatusData = {
+export type MarketDataGetMarketDataInfoData = {
 	body?: never;
 	path?: never;
 	query?: never;
-	url: "/api/v1/pipeline/status/";
+	url: "/api/v1/market-data/";
 };
 
-export type PipelineGetPipelineStatusErrors = {
+export type MarketDataGetMarketDataInfoErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type PipelineGetPipelineStatusError =
-	PipelineGetPipelineStatusErrors[keyof PipelineGetPipelineStatusErrors];
+export type MarketDataGetMarketDataInfoError =
+	MarketDataGetMarketDataInfoErrors[keyof MarketDataGetMarketDataInfoErrors];
 
-export type PipelineGetPipelineStatusResponses = {
+export type MarketDataGetMarketDataInfoResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type PipelineSetupDefaultSymbolsData = {
+export type MarketDataHealthCheckData = {
 	body?: never;
 	path?: never;
 	query?: never;
-	url: "/api/v1/pipeline/status/setup-defaults";
+	url: "/api/v1/market-data/health";
 };
 
-export type PipelineSetupDefaultSymbolsErrors = {
+export type MarketDataHealthCheckErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type PipelineSetupDefaultSymbolsError =
-	PipelineSetupDefaultSymbolsErrors[keyof PipelineSetupDefaultSymbolsErrors];
+export type MarketDataHealthCheckError =
+	MarketDataHealthCheckErrors[keyof MarketDataHealthCheckErrors];
 
-export type PipelineSetupDefaultSymbolsResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: unknown;
-};
-
-export type PipelineRunPipelineUpdateData = {
-	body: UpdateRequest;
-	path?: never;
-	query?: never;
-	url: "/api/v1/pipeline/status/update";
-};
-
-export type PipelineRunPipelineUpdateErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type PipelineRunPipelineUpdateError =
-	PipelineRunPipelineUpdateErrors[keyof PipelineRunPipelineUpdateErrors];
-
-export type PipelineRunPipelineUpdateResponses = {
+export type MarketDataHealthCheckResponses = {
 	/**
 	 * Successful Response
 	 */
@@ -4319,6 +4008,222 @@ export type BacktestsGetBacktestSummaryAnalyticsError =
 	BacktestsGetBacktestSummaryAnalyticsErrors[keyof BacktestsGetBacktestSummaryAnalyticsErrors];
 
 export type BacktestsGetBacktestSummaryAnalyticsResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: unknown;
+};
+
+export type WatchlistsListWatchlistsData = {
+	body?: never;
+	path?: never;
+	query?: never;
+	url: "/api/v1/watchlists/";
+};
+
+export type WatchlistsListWatchlistsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type WatchlistsListWatchlistsError =
+	WatchlistsListWatchlistsErrors[keyof WatchlistsListWatchlistsErrors];
+
+export type WatchlistsListWatchlistsResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: unknown;
+};
+
+export type WatchlistsCreateOrUpdateWatchlistData = {
+	body: WatchlistUpdate;
+	path?: never;
+	query?: never;
+	url: "/api/v1/watchlists/";
+};
+
+export type WatchlistsCreateOrUpdateWatchlistErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type WatchlistsCreateOrUpdateWatchlistError =
+	WatchlistsCreateOrUpdateWatchlistErrors[keyof WatchlistsCreateOrUpdateWatchlistErrors];
+
+export type WatchlistsCreateOrUpdateWatchlistResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: unknown;
+};
+
+export type WatchlistsCreateWatchlistData = {
+	body: WatchlistCreate;
+	path?: never;
+	query?: never;
+	url: "/api/v1/watchlists/create";
+};
+
+export type WatchlistsCreateWatchlistErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type WatchlistsCreateWatchlistError =
+	WatchlistsCreateWatchlistErrors[keyof WatchlistsCreateWatchlistErrors];
+
+export type WatchlistsCreateWatchlistResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: unknown;
+};
+
+export type WatchlistsDeleteWatchlistData = {
+	body?: never;
+	path: {
+		/**
+		 * Name
+		 * 워치리스트 이름
+		 */
+		name: string;
+	};
+	query?: never;
+	url: "/api/v1/watchlists/{name}";
+};
+
+export type WatchlistsDeleteWatchlistErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type WatchlistsDeleteWatchlistError =
+	WatchlistsDeleteWatchlistErrors[keyof WatchlistsDeleteWatchlistErrors];
+
+export type WatchlistsDeleteWatchlistResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: unknown;
+};
+
+export type WatchlistsGetWatchlistData = {
+	body?: never;
+	path: {
+		/**
+		 * Name
+		 * 워치리스트 이름
+		 */
+		name: string;
+	};
+	query?: never;
+	url: "/api/v1/watchlists/{name}";
+};
+
+export type WatchlistsGetWatchlistErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type WatchlistsGetWatchlistError =
+	WatchlistsGetWatchlistErrors[keyof WatchlistsGetWatchlistErrors];
+
+export type WatchlistsGetWatchlistResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: unknown;
+};
+
+export type WatchlistsUpdateWatchlistData = {
+	body: WatchlistUpdate;
+	path: {
+		/**
+		 * Name
+		 * 워치리스트 이름
+		 */
+		name: string;
+	};
+	query?: never;
+	url: "/api/v1/watchlists/{name}";
+};
+
+export type WatchlistsUpdateWatchlistErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type WatchlistsUpdateWatchlistError =
+	WatchlistsUpdateWatchlistErrors[keyof WatchlistsUpdateWatchlistErrors];
+
+export type WatchlistsUpdateWatchlistResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: unknown;
+};
+
+export type WatchlistsGetWatchlistCoverageData = {
+	body?: never;
+	path: {
+		/**
+		 * Name
+		 * 워치리스트 이름
+		 */
+		name: string;
+	};
+	query?: never;
+	url: "/api/v1/watchlists/{name}/coverage";
+};
+
+export type WatchlistsGetWatchlistCoverageErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type WatchlistsGetWatchlistCoverageError =
+	WatchlistsGetWatchlistCoverageErrors[keyof WatchlistsGetWatchlistCoverageErrors];
+
+export type WatchlistsGetWatchlistCoverageResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: unknown;
+};
+
+export type WatchlistsSetupDefaultWatchlistData = {
+	body?: never;
+	path?: never;
+	query?: never;
+	url: "/api/v1/watchlists/setup-default";
+};
+
+export type WatchlistsSetupDefaultWatchlistErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type WatchlistsSetupDefaultWatchlistError =
+	WatchlistsSetupDefaultWatchlistErrors[keyof WatchlistsSetupDefaultWatchlistErrors];
+
+export type WatchlistsSetupDefaultWatchlistResponses = {
 	/**
 	 * Successful Response
 	 */

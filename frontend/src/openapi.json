@@ -1102,13 +1102,11 @@
     "/api/v1/market-data/stock/daily/{symbol}": {
       "get": {
         "tags": [
-          "Market Data v2",
-          "market-data",
-          "stock"
+          "Market Data"
         ],
         "summary": "일일 주가 데이터 조회",
         "description": "지정된 종목의 일일 주가 데이터(OHLCV)를 조회합니다.",
-        "operationId": "Market Data v2-get_daily_prices",
+        "operationId": "Market Data-get_daily_prices",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1163,7 +1161,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Market Data V2-Get Daily Prices"
+                  "title": "Response Market Data-Get Daily Prices"
                 }
               }
             }
@@ -1184,13 +1182,11 @@
     "/api/v1/market-data/stock/quote/{symbol}": {
       "get": {
         "tags": [
-          "Market Data v2",
-          "market-data",
-          "stock"
+          "Market Data"
         ],
         "summary": "실시간 주식 호가 조회",
         "description": "지정된 종목의 실시간 호가 정보를 조회합니다.",
-        "operationId": "Market Data v2-get_quote",
+        "operationId": "Market Data-get_quote",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1233,7 +1229,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Market Data V2-Get Quote"
+                  "title": "Response Market Data-Get Quote"
                 }
               }
             }
@@ -1254,13 +1250,11 @@
     "/api/v1/market-data/stock/intraday/{symbol}": {
       "get": {
         "tags": [
-          "Market Data v2",
-          "market-data",
-          "stock"
+          "Market Data"
         ],
         "summary": "실시간/인트라데이 데이터 조회",
         "description": "지정된 종목의 실시간 또는 분봉 데이터를 조회합니다.",
-        "operationId": "Market Data v2-get_intraday_data",
+        "operationId": "Market Data-get_intraday_data",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1327,7 +1321,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Market Data V2-Get Intraday Data"
+                  "title": "Response Market Data-Get Intraday Data"
                 }
               }
             }
@@ -1348,13 +1342,11 @@
     "/api/v1/market-data/stock/historical/{symbol}": {
       "get": {
         "tags": [
-          "Market Data v2",
-          "market-data",
-          "stock"
+          "Market Data"
         ],
         "summary": "장기 히스토리 데이터 조회",
         "description": "지정된 종목의 장기 히스토리 데이터를 조회합니다.",
-        "operationId": "Market Data v2-get_historical_data",
+        "operationId": "Market Data-get_historical_data",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1463,105 +1455,14 @@
         }
       }
     },
-    "/api/v1/market-data/stock/symbols": {
-      "get": {
-        "tags": [
-          "Market Data v2",
-          "market-data",
-          "stock"
-        ],
-        "summary": "사용 가능한 종목 심볼 목록 조회",
-        "description": "API에서 지원하는 종목 심볼 목록을 조회합니다.",
-        "operationId": "Market Data v2-get_available_symbols",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "search",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "description": "검색 키워드",
-              "title": "Search"
-            },
-            "description": "검색 키워드"
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "maximum": 1000,
-              "minimum": 1,
-              "description": "결과 개수 제한",
-              "default": 100,
-              "title": "Limit"
-            },
-            "description": "결과 개수 제한"
-          },
-          {
-            "name": "access_token",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Access Token"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StockSymbolsResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/market-data/fundamental/overview/{symbol}": {
       "get": {
         "tags": [
-          "Market Data v2",
-          "market-data",
-          "fundamental"
+          "Market Data"
         ],
         "summary": "기업 개요 조회",
         "description": "지정된 종목의 기업 개요 정보를 조회합니다.",
-        "operationId": "Market Data v2-get_company_overview",
+        "operationId": "Market Data-get_company_overview",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1604,7 +1505,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Market Data V2-Get Company Overview"
+                  "title": "Response Market Data-Get Company Overview"
                 }
               }
             }
@@ -1625,13 +1526,11 @@
     "/api/v1/market-data/fundamental/income-statement/{symbol}": {
       "get": {
         "tags": [
-          "Market Data v2",
-          "market-data",
-          "fundamental"
+          "Market Data"
         ],
         "summary": "손익계산서 조회",
         "description": "지정된 종목의 손익계산서를 조회합니다.",
-        "operationId": "Market Data v2-get_income_statement",
+        "operationId": "Market Data-get_income_statement",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1686,7 +1585,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Market Data V2-Get Income Statement"
+                  "title": "Response Market Data-Get Income Statement"
                 }
               }
             }
@@ -1707,13 +1606,11 @@
     "/api/v1/market-data/fundamental/balance-sheet/{symbol}": {
       "get": {
         "tags": [
-          "Market Data v2",
-          "market-data",
-          "fundamental"
+          "Market Data"
         ],
         "summary": "재무상태표 조회",
         "description": "지정된 종목의 재무상태표를 조회합니다.",
-        "operationId": "Market Data v2-get_balance_sheet",
+        "operationId": "Market Data-get_balance_sheet",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1768,7 +1665,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Market Data V2-Get Balance Sheet"
+                  "title": "Response Market Data-Get Balance Sheet"
                 }
               }
             }
@@ -1789,13 +1686,11 @@
     "/api/v1/market-data/fundamental/cash-flow/{symbol}": {
       "get": {
         "tags": [
-          "Market Data v2",
-          "market-data",
-          "fundamental"
+          "Market Data"
         ],
         "summary": "현금흐름표 조회",
         "description": "지정된 종목의 현금흐름표를 조회합니다.",
-        "operationId": "Market Data v2-get_cash_flow",
+        "operationId": "Market Data-get_cash_flow",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1850,7 +1745,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Market Data V2-Get Cash Flow"
+                  "title": "Response Market Data-Get Cash Flow"
                 }
               }
             }
@@ -1871,13 +1766,11 @@
     "/api/v1/market-data/fundamental/earnings/{symbol}": {
       "get": {
         "tags": [
-          "Market Data v2",
-          "market-data",
-          "fundamental"
+          "Market Data"
         ],
         "summary": "실적 데이터 조회",
         "description": "지정된 종목의 실적 데이터를 조회합니다.",
-        "operationId": "Market Data v2-get_earnings",
+        "operationId": "Market Data-get_earnings",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1920,7 +1813,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Market Data V2-Get Earnings"
+                  "title": "Response Market Data-Get Earnings"
                 }
               }
             }
@@ -1941,13 +1834,11 @@
     "/api/v1/market-data/economic/gdp": {
       "get": {
         "tags": [
-          "Market Data v2",
-          "market-data",
-          "economic"
+          "Market Data"
         ],
         "summary": "GDP 데이터 조회",
         "description": "미국 GDP 데이터를 조회합니다.",
-        "operationId": "Market Data v2-get_gdp_data",
+        "operationId": "Market Data-get_gdp_data",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1991,7 +1882,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Market Data V2-Get Gdp Data"
+                  "title": "Response Market Data-Get Gdp Data"
                 }
               }
             }
@@ -2012,13 +1903,11 @@
     "/api/v1/market-data/economic/inflation": {
       "get": {
         "tags": [
-          "Market Data v2",
-          "market-data",
-          "economic"
+          "Market Data"
         ],
         "summary": "인플레이션 데이터 조회",
         "description": "미국 인플레이션 지표 데이터를 조회합니다.",
-        "operationId": "Market Data v2-get_inflation_data",
+        "operationId": "Market Data-get_inflation_data",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2062,7 +1951,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Market Data V2-Get Inflation Data"
+                  "title": "Response Market Data-Get Inflation Data"
                 }
               }
             }
@@ -2083,13 +1972,11 @@
     "/api/v1/market-data/economic/interest-rates": {
       "get": {
         "tags": [
-          "Market Data v2",
-          "market-data",
-          "economic"
+          "Market Data"
         ],
         "summary": "금리 데이터 조회",
         "description": "미국 기준금리 및 채권 수익률 데이터를 조회합니다.",
-        "operationId": "Market Data v2-get_interest_rates",
+        "operationId": "Market Data-get_interest_rates",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2133,7 +2020,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Market Data V2-Get Interest Rates"
+                  "title": "Response Market Data-Get Interest Rates"
                 }
               }
             }
@@ -2154,13 +2041,11 @@
     "/api/v1/market-data/economic/employment": {
       "get": {
         "tags": [
-          "Market Data v2",
-          "market-data",
-          "economic"
+          "Market Data"
         ],
         "summary": "고용 지표 조회",
         "description": "미국 실업률 및 고용 관련 지표를 조회합니다.",
-        "operationId": "Market Data v2-get_employment_data",
+        "operationId": "Market Data-get_employment_data",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2192,7 +2077,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Market Data V2-Get Employment Data"
+                  "title": "Response Market Data-Get Employment Data"
                 }
               }
             }
@@ -2213,13 +2098,11 @@
     "/api/v1/market-data/economic/consumer-sentiment": {
       "get": {
         "tags": [
-          "Market Data v2",
-          "market-data",
-          "economic"
+          "Market Data"
         ],
         "summary": "소비자 심리 지수 조회",
         "description": "미국 소비자 심리 지수를 조회합니다.",
-        "operationId": "Market Data v2-get_consumer_sentiment",
+        "operationId": "Market Data-get_consumer_sentiment",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2251,7 +2134,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Market Data V2-Get Consumer Sentiment"
+                  "title": "Response Market Data-Get Consumer Sentiment"
                 }
               }
             }
@@ -2272,13 +2155,11 @@
     "/api/v1/market-data/intelligence/news/{symbol}": {
       "get": {
         "tags": [
-          "Market Data v2",
-          "market-data",
-          "intelligence"
+          "Market Data"
         ],
         "summary": "종목 뉴스 조회",
         "description": "지정된 종목 관련 뉴스를 조회합니다.",
-        "operationId": "Market Data v2-get_news",
+        "operationId": "Market Data-get_news",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2391,7 +2272,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Market Data V2-Get News"
+                  "title": "Response Market Data-Get News"
                 }
               }
             }
@@ -2412,13 +2293,11 @@
     "/api/v1/market-data/intelligence/sentiment/{symbol}": {
       "get": {
         "tags": [
-          "Market Data v2",
-          "market-data",
-          "intelligence"
+          "Market Data"
         ],
         "summary": "감정 분석 조회",
         "description": "지정된 종목의 감정 분석 결과를 조회합니다.",
-        "operationId": "Market Data v2-get_sentiment_analysis",
+        "operationId": "Market Data-get_sentiment_analysis",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2491,7 +2370,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Market Data V2-Get Sentiment Analysis"
+                  "title": "Response Market Data-Get Sentiment Analysis"
                 }
               }
             }
@@ -2512,13 +2391,11 @@
     "/api/v1/market-data/intelligence/analyst-recommendations/{symbol}": {
       "get": {
         "tags": [
-          "Market Data v2",
-          "market-data",
-          "intelligence"
+          "Market Data"
         ],
         "summary": "분석가 추천 조회",
         "description": "지정된 종목의 분석가 추천 정보를 조회합니다.",
-        "operationId": "Market Data v2-get_analyst_recommendations",
+        "operationId": "Market Data-get_analyst_recommendations",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2591,7 +2468,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Market Data V2-Get Analyst Recommendations"
+                  "title": "Response Market Data-Get Analyst Recommendations"
                 }
               }
             }
@@ -2612,13 +2489,11 @@
     "/api/v1/market-data/intelligence/social-sentiment/{symbol}": {
       "get": {
         "tags": [
-          "Market Data v2",
-          "market-data",
-          "intelligence"
+          "Market Data"
         ],
         "summary": "소셜 미디어 감정 분석 조회",
         "description": "지정된 종목의 소셜 미디어 감정 분석을 조회합니다.",
-        "operationId": "Market Data v2-get_social_sentiment",
+        "operationId": "Market Data-get_social_sentiment",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2691,8 +2566,394 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Market Data V2-Get Social Sentiment"
+                  "title": "Response Market Data-Get Social Sentiment"
                 }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/market-data/management/collect/company-info/{symbol}": {
+      "post": {
+        "tags": [
+          "Market Data"
+        ],
+        "summary": "기업 정보 수집",
+        "description": "지정된 심볼의 기업 정보를 수집하여 저장\n\nAlpha Vantage API를 통해 기업의 기본 정보, 재무 지표,\n업종 분류 등을 수집하고 데이터베이스에 저장합니다.",
+        "operationId": "Market Data-collect_company_info",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "종목 심볼 (예: AAPL)",
+              "title": "Symbol"
+            },
+            "description": "종목 심볼 (예: AAPL)"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/market-data/management/collect/market-data/{symbol}": {
+      "post": {
+        "tags": [
+          "Market Data"
+        ],
+        "summary": "주가 데이터 수집",
+        "description": "지정된 심볼의 주가 데이터를 수집하여 저장\n\nAlpha Vantage API를 통해 일일 OHLCV 데이터를 수집하고\nDuckDB 캐시 및 MongoDB에 저장합니다.",
+        "operationId": "Market Data-collect_market_data",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "종목 심볼 (예: AAPL)",
+              "title": "Symbol"
+            },
+            "description": "종목 심볼 (예: AAPL)"
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "시작일",
+              "title": "Start Date"
+            },
+            "description": "시작일"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "종료일",
+              "title": "End Date"
+            },
+            "description": "종료일"
+          },
+          {
+            "name": "outputsize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "데이터 크기 (compact/full)",
+              "default": "compact",
+              "title": "Outputsize"
+            },
+            "description": "데이터 크기 (compact/full)"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/market-data/management/collect/bulk": {
+      "post": {
+        "tags": [
+          "Market Data"
+        ],
+        "summary": "대량 데이터 수집",
+        "description": "여러 심볼의 데이터를 일괄 수집\n\n백그라운드 작업으로 처리되며, 대량의 심볼에 대해\n기업 정보와 주가 데이터를 순차적으로 수집합니다.",
+        "operationId": "Market Data-collect_bulk_data",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbols",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "수집할 심볼 목록",
+              "title": "Symbols"
+            },
+            "description": "수집할 심볼 목록"
+          },
+          {
+            "name": "include_company_info",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "description": "기업 정보 포함 여부",
+              "default": true,
+              "title": "Include Company Info"
+            },
+            "description": "기업 정보 포함 여부"
+          },
+          {
+            "name": "include_market_data",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "description": "주가 데이터 포함 여부",
+              "default": true,
+              "title": "Include Market Data"
+            },
+            "description": "주가 데이터 포함 여부"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/market-data/management/coverage/{symbol}": {
+      "get": {
+        "tags": [
+          "Market Data"
+        ],
+        "summary": "데이터 커버리지 확인",
+        "description": "지정된 심볼의 데이터 커버리지 정보 조회\n\n기업 정보, 주가 데이터의 수집 상태와 품질을 확인합니다.",
+        "operationId": "Market Data-get_data_coverage",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "종목 심볼 (예: AAPL)",
+              "title": "Symbol"
+            },
+            "description": "종목 심볼 (예: AAPL)"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/market-data/management/status": {
+      "get": {
+        "tags": [
+          "Market Data"
+        ],
+        "summary": "시스템 상태 조회",
+        "description": "시장 데이터 시스템의 전반적인 상태 조회\n\nAPI 연결 상태, 캐시 성능, 수집 통계 등을 확인합니다.",
+        "operationId": "Market Data-get_system_status",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
               }
             }
           },
@@ -2712,12 +2973,11 @@
     "/api/v1/market-data/": {
       "get": {
         "tags": [
-          "Market Data v2",
-          "market-data"
+          "Market Data"
         ],
         "summary": "Market Data API 정보",
         "description": "마켓 데이터 API 정보 및 사용 가능한 엔드포인트 목록",
-        "operationId": "Market Data v2-get_market_data_info",
+        "operationId": "Market Data-get_market_data_info",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2766,12 +3026,11 @@
     "/api/v1/market-data/health": {
       "get": {
         "tags": [
-          "Market Data v2",
-          "market-data"
+          "Market Data"
         ],
         "summary": "Market Data 서비스 상태 확인",
         "description": "마켓 데이터 서비스 상태 확인",
-        "operationId": "Market Data v2-health_check",
+        "operationId": "Market Data-health_check",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2795,879 +3054,6 @@
             }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/pipeline/watchlists/watchlist": {
-      "post": {
-        "tags": [
-          "Pipeline"
-        ],
-        "summary": "Update Watchlist",
-        "description": "Create or update a watchlist with flexible naming support.\n\nThis endpoint provides a convenient way to create new watchlists or update\nexisting ones. If no name is provided, it defaults to the 'default' watchlist\nwhich is used by the pipeline for automated updates. This endpoint combines\ncreation and update functionality for ease of use.\n\nArgs:\n    request: Watchlist configuration containing:\n        - symbols: List of stock symbols to include\n        - name: Optional watchlist name (defaults to 'default')\n        - description: Optional description of the watchlist\n\nReturns:\n    dict: Operation result containing:\n        - message: Success message indicating action taken\n        - name: Watchlist name that was processed\n        - symbols: List of symbols in the watchlist\n        - count: Number of symbols in the watchlist\n        - action: Either 'created' or 'updated'\n\nRaises:\n    HTTPException: 400 if watchlist creation fails\n    HTTPException: 500 if operation fails\n\nNote:\n    Updates to the 'default' watchlist automatically update pipeline symbols.\n    This affects which symbols are processed during automated updates.",
-        "operationId": "Pipeline-update_watchlist",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "access_token",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Access Token"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/WatchlistUpdate"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/pipeline/watchlists/watchlists": {
-      "post": {
-        "tags": [
-          "Pipeline"
-        ],
-        "summary": "Create Watchlist",
-        "description": "Create a new named watchlist with validation.\n\nThis endpoint is specifically for creating new watchlists with explicit\nnaming requirements. Unlike the /watchlist endpoint, this requires a name\nand will fail if a watchlist with the same name already exists.\n\nArgs:\n    request: Watchlist creation parameters containing:\n        - name: Required unique name for the watchlist\n        - symbols: List of stock symbols to include\n        - description: Optional description of the watchlist purpose\n\nReturns:\n    dict: Creation result containing:\n        - message: Success confirmation message\n        - name: Name of the created watchlist\n        - symbols: List of symbols in the watchlist\n        - description: Watchlist description\n        - created_at: UTC timestamp of creation\n\nRaises:\n    HTTPException: 400 if watchlist creation fails or name conflicts\n    HTTPException: 500 if database operation fails\n\nNote:\n    Watchlist names must be unique. Use PUT /watchlists/{name} to update existing ones.",
-        "operationId": "Pipeline-create_watchlist",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "access_token",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Access Token"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/WatchlistCreate"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      },
-      "get": {
-        "tags": [
-          "Pipeline"
-        ],
-        "summary": "List Watchlists",
-        "description": "Retrieve a comprehensive list of all watchlists.\n\nReturns summary information for all watchlists in the system, including\nmetadata like symbol counts, update settings, and timestamps. This is\nuseful for dashboard displays and watchlist management interfaces.\n\nReturns:\n    dict: All watchlists summary containing:\n        - watchlists: List of watchlist summaries with:\n            - name: Watchlist name\n            - description: Watchlist description\n            - symbol_count: Number of symbols in the watchlist\n            - auto_update: Whether automatic updates are enabled\n            - last_updated: Timestamp of last modification\n            - created_at: Timestamp of creation\n        - total_count: Total number of watchlists in the system\n\nRaises:\n    HTTPException: 500 if retrieval fails\n\nNote:\n    This endpoint returns summary data only. Use GET /watchlists/{name}\n    for detailed information including full symbol lists.",
-        "operationId": "Pipeline-list_watchlists",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "access_token",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Access Token"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/pipeline/watchlists/{name}": {
-      "get": {
-        "tags": [
-          "Pipeline"
-        ],
-        "summary": "Get Watchlist",
-        "description": "Retrieve complete information for a specific watchlist.\n\nReturns detailed information about a named watchlist including the full\nlist of symbols, configuration settings, and all metadata. This provides\nall information needed to display or modify a specific watchlist.\n\nArgs:\n    name: Name of the watchlist to retrieve (case-sensitive)\n\nReturns:\n    dict: Complete watchlist information containing:\n        - name: Watchlist name\n        - description: Detailed description\n        - symbols: Complete list of stock symbols\n        - auto_update: Automatic update configuration\n        - update_interval: Update frequency in seconds\n        - last_updated: Timestamp of last symbol update\n        - created_at: Timestamp of watchlist creation\n\nRaises:\n    HTTPException: 404 if watchlist with specified name not found\n    HTTPException: 500 if retrieval operation fails\n\nNote:\n    Watchlist names are case-sensitive. Use GET /watchlists to see all available names.",
-        "operationId": "Pipeline-get_watchlist",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "name",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Name"
-            }
-          },
-          {
-            "name": "access_token",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Access Token"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Pipeline"
-        ],
-        "summary": "Update Watchlist By Name",
-        "description": "Update an existing watchlist with new symbols and settings.\n\nModifies the symbols and metadata of an existing watchlist. This endpoint\nrequires the watchlist to exist and will fail if the specified name is\nnot found. Use POST /watchlists to create new watchlists.\n\nArgs:\n    name: Name of the existing watchlist to update\n    request: Update parameters containing:\n        - symbols: New list of symbols (replaces current list)\n        - description: Optional new description (if provided)\n\nReturns:\n    dict: Update confirmation containing:\n        - message: Success confirmation message\n        - name: Name of the updated watchlist\n        - symbols: New symbols list\n        - description: Current description (updated if provided)\n        - count: Number of symbols in updated watchlist\n        - updated_at: Timestamp of the update\n\nRaises:\n    HTTPException: 404 if watchlist with specified name not found\n    HTTPException: 500 if update operation fails\n\nNote:\n    Updates to the 'default' watchlist automatically update pipeline symbols.\n    Symbol list is completely replaced, not merged with existing symbols.",
-        "operationId": "Pipeline-update_watchlist_by_name",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "name",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Name"
-            }
-          },
-          {
-            "name": "access_token",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Access Token"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/WatchlistUpdate"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Pipeline"
-        ],
-        "summary": "Delete Watchlist",
-        "description": "Delete a named watchlist from the system.\n\nPermanently removes a watchlist and all associated metadata. This action\ncannot be undone. The 'default' watchlist cannot be deleted as it is\nrequired for pipeline operations.\n\nArgs:\n    name: Name of the watchlist to delete\n\nReturns:\n    dict: Deletion confirmation containing:\n        - message: Success confirmation message\n        - name: Name of the deleted watchlist\n\nRaises:\n    HTTPException: 400 if attempting to delete the 'default' watchlist\n    HTTPException: 404 if watchlist with specified name not found\n    HTTPException: 500 if deletion operation fails\n\nNote:\n    Deletion is permanent and cannot be undone. Consider backing up\n    important watchlists before deletion.",
-        "operationId": "Pipeline-delete_watchlist",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "name",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Name"
-            }
-          },
-          {
-            "name": "access_token",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Access Token"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/pipeline/companies/collect-info/{symbol}": {
-      "post": {
-        "tags": [
-          "Pipeline"
-        ],
-        "summary": "Collect Stock Info",
-        "description": "Collect and store basic company information for a specific symbol.\n\nRetrieves fundamental company data from external APIs (Alpha Vantage)\nincluding company name, sector, industry, market cap, and key financial\nratios. This information is stored in the database for future reference\nand analysis.\n\nArgs:\n    symbol: Stock symbol (e.g., 'AAPL', 'MSFT') - automatically converted to uppercase\n\nReturns:\n    dict: Collection result containing:\n        - message: Success/failure message\n        - symbol: Processed symbol (uppercase)\n        - success: Boolean indicating operation success\n\nRaises:\n    HTTPException: 500 if data collection fails\n\nNote:\n    Respects Alpha Vantage API rate limits (5 calls/min, 500 calls/day).\n    Duplicate requests for same symbol within 24 hours may return cached data.",
-        "operationId": "Pipeline-collect_stock_info",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "symbol",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Symbol"
-            }
-          },
-          {
-            "name": "access_token",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Access Token"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/pipeline/companies/collect-data/{symbol}": {
-      "post": {
-        "tags": [
-          "Pipeline"
-        ],
-        "summary": "Collect Daily Data",
-        "description": "Collect historical daily price data for a specific symbol.\n\nRetrieves OHLCV (Open, High, Low, Close, Volume) daily price data\nfor the specified symbol and date range. If no dates are provided,\ncollects maximum available historical data. Data is validated,\nadjusted for splits/dividends, and stored in DuckDB for fast access.\n\nArgs:\n    symbol: Stock symbol (e.g., 'AAPL') - automatically converted to uppercase\n    start_date: Optional start date for data collection (defaults to earliest available)\n    end_date: Optional end date for data collection (defaults to latest available)\n\nReturns:\n    dict: Collection result containing:\n        - message: Detailed success/failure message\n        - symbol: Processed symbol (uppercase)\n        - start_date: Actual start date used\n        - end_date: Actual end date used\n        - success: Boolean indicating operation success\n\nRaises:\n    HTTPException: 500 if data collection fails\n\nNote:\n    Large date ranges may take several minutes to complete.\n    Data is automatically cached to minimize API calls.",
-        "operationId": "Pipeline-collect_daily_data",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "symbol",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Symbol"
-            }
-          },
-          {
-            "name": "start_date",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Start Date"
-            }
-          },
-          {
-            "name": "end_date",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "End Date"
-            }
-          },
-          {
-            "name": "access_token",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Access Token"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/pipeline/companies/coverage/{symbol}": {
-      "get": {
-        "tags": [
-          "Pipeline"
-        ],
-        "summary": "Get Symbol Coverage",
-        "description": "Get detailed data coverage information for a specific symbol.\n\nReturns comprehensive information about the availability and quality\nof data for the specified symbol, including date ranges, data gaps,\nlast update timestamps, and data quality metrics.\n\nArgs:\n    symbol: Stock symbol to check coverage for (automatically converted to uppercase)\n\nReturns:\n    dict: Coverage information containing:\n        - symbol: Processed symbol\n        - date_range: Start and end dates of available data\n        - total_records: Number of data points available\n        - gaps: List of date ranges with missing data\n        - last_updated: Timestamp of most recent data update\n        - data_quality: Quality metrics (completeness, accuracy scores)\n\nRaises:\n    HTTPException: 500 if coverage check fails\n    HTTPException: 404 if symbol not found in database",
-        "operationId": "Pipeline-get_symbol_coverage",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "symbol",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Symbol"
-            }
-          },
-          {
-            "name": "access_token",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Access Token"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/pipeline/companies/company/{symbol}": {
-      "get": {
-        "tags": [
-          "Pipeline"
-        ],
-        "summary": "Get Company Info",
-        "description": "Retrieve stored company information for a specific symbol.\n\nReturns comprehensive company fundamentals and metadata previously\ncollected and stored in the database. This includes financial ratios,\ncompany description, sector classification, and market data.\n\nArgs:\n    symbol: Stock symbol (automatically converted to uppercase)\n\nReturns:\n    dict: Company information containing:\n        - symbol: Stock symbol\n        - name: Company name\n        - description: Business description\n        - sector: Industry sector classification\n        - industry: Specific industry classification\n        - country: Country of incorporation\n        - currency: Reporting currency\n        - market_cap: Market capitalization (if available)\n        - pe_ratio: Price-to-earnings ratio (if available)\n        - dividend_yield: Annual dividend yield (if available)\n        - updated_at: Last information update timestamp\n\nRaises:\n    HTTPException: 404 if company information not found\n    HTTPException: 500 if retrieval fails\n\nNote:\n    If company info not found, use POST /collect-info/{symbol} first.",
-        "operationId": "Pipeline-get_company_info",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "symbol",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Symbol"
-            }
-          },
-          {
-            "name": "access_token",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Access Token"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/pipeline/companies/": {
-      "get": {
-        "tags": [
-          "Pipeline"
-        ],
-        "summary": "List Companies",
-        "description": "Retrieve information for all companies in the database.\n\nReturns a comprehensive list of all companies for which information\nhas been collected and stored. Useful for portfolio analysis,\nscreening, and getting an overview of available data.\n\nReturns:\n    dict: All companies data containing:\n        - companies: List of company objects with key information:\n            - symbol: Stock symbol\n            - name: Company name\n            - sector: Industry sector\n            - industry: Specific industry\n            - market_cap: Market capitalization\n            - updated_at: Last update timestamp\n        - total_count: Total number of companies in database\n\nRaises:\n    HTTPException: 500 if retrieval fails\n\nNote:\n    Large datasets may take time to load. Consider pagination for production use.",
-        "operationId": "Pipeline-list_companies",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "access_token",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Access Token"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/pipeline/status/": {
-      "get": {
-        "tags": [
-          "Pipeline"
-        ],
-        "summary": "Get Pipeline Status",
-        "description": "Get comprehensive pipeline status and health information.\n\nReturns detailed information about the current state of the data pipeline,\nincluding data coverage statistics, update timestamps, and system health metrics.\nThis endpoint is essential for monitoring the overall health of the data\ncollection and processing system.\n\nReturns:\n    dict: Pipeline status containing:\n        - overall_status: Current pipeline health status\n        - last_update: Timestamp of last successful update\n        - coverage_stats: Data coverage statistics per symbol\n        - active_symbols: Currently monitored symbols count\n        - error_count: Number of recent errors\n\nRaises:\n    HTTPException: 500 if status retrieval fails",
-        "operationId": "Pipeline-get_pipeline_status",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "access_token",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Access Token"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/pipeline/status/setup-defaults": {
-      "post": {
-        "tags": [
-          "Pipeline"
-        ],
-        "summary": "Setup Default Symbols",
-        "description": "Initialize default watchlist with standard symbols.\n\nSets up the pipeline with a predefined set of popular stock symbols\nfor immediate use. This is typically called during initial system setup\nor when resetting the pipeline to defaults. Creates the 'default' watchlist\nif it doesn't exist.\n\nDefault symbols include major tech stocks: AAPL, MSFT, GOOGL, AMZN, etc.\n\nReturns:\n    dict: Setup confirmation containing:\n        - message: Success confirmation message\n        - symbols: List of symbols that were set up\n\nRaises:\n    HTTPException: 500 if default setup fails",
-        "operationId": "Pipeline-setup_default_symbols",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "access_token",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Access Token"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/pipeline/status/update": {
-      "post": {
-        "tags": [
-          "Pipeline"
-        ],
-        "summary": "Run Pipeline Update",
-        "description": "Execute comprehensive data pipeline update for specified symbols.\n\nInitiates a full data collection and update process for the specified\nsymbols or the default watchlist. The update runs asynchronously in the\nbackground to avoid blocking the API response. Includes company information\nretrieval, historical price data collection, and data validation.\n\nArgs:\n    request: Update configuration containing:\n        - symbols: Optional list of symbols to update (uses default if None)\n        - start_date: Optional start date for data collection\n        - end_date: Optional end date for data collection\n    background_tasks: FastAPI background task manager\n\nReturns:\n    dict: Update initiation confirmation containing:\n        - message: Update start confirmation\n        - symbols: Symbols being updated\n        - started_at: UTC timestamp when update began\n\nRaises:\n    HTTPException: 500 if update initiation fails\n\nNote:\n    This is an asynchronous operation. Use /status endpoint to monitor progress.",
-        "operationId": "Pipeline-run_pipeline_update",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "access_token",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Access Token"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateRequest"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -5703,6 +5089,498 @@
           }
         }
       }
+    },
+    "/api/v1/watchlists/": {
+      "post": {
+        "tags": [
+          "Watchlists"
+        ],
+        "summary": "워치리스트 생성/업데이트",
+        "description": "워치리스트 생성 또는 업데이트\n\n유연한 워치리스트 관리를 위한 엔드포인트입니다.\n- 이름이 없으면 'default' 워치리스트로 처리\n- 기존 워치리스트가 있으면 업데이트, 없으면 생성\n- 심볼 데이터는 백그라운드에서 자동 수집",
+        "operationId": "Watchlists-create_or_update_watchlist",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WatchlistUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Watchlists"
+        ],
+        "summary": "워치리스트 목록 조회",
+        "description": "사용자의 모든 워치리스트 목록 조회\n\n사용자에게 속한 모든 워치리스트의 요약 정보를 반환합니다.",
+        "operationId": "Watchlists-list_watchlists",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/watchlists/create": {
+      "post": {
+        "tags": [
+          "Watchlists"
+        ],
+        "summary": "새 워치리스트 생성",
+        "description": "새로운 명명된 워치리스트 생성\n\n명시적인 이름을 가진 새 워치리스트를 생성합니다.\n동일한 이름의 워치리스트가 이미 있으면 실패합니다.",
+        "operationId": "Watchlists-create_watchlist",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WatchlistCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/watchlists/{name}": {
+      "get": {
+        "tags": [
+          "Watchlists"
+        ],
+        "summary": "특정 워치리스트 조회",
+        "description": "특정 워치리스트의 상세 정보 조회",
+        "operationId": "Watchlists-get_watchlist",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "워치리스트 이름",
+              "title": "Name"
+            },
+            "description": "워치리스트 이름"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Watchlists"
+        ],
+        "summary": "워치리스트 업데이트",
+        "description": "기존 워치리스트 업데이트",
+        "operationId": "Watchlists-update_watchlist",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "워치리스트 이름",
+              "title": "Name"
+            },
+            "description": "워치리스트 이름"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WatchlistUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Watchlists"
+        ],
+        "summary": "워치리스트 삭제",
+        "description": "워치리스트 삭제",
+        "operationId": "Watchlists-delete_watchlist",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "워치리스트 이름",
+              "title": "Name"
+            },
+            "description": "워치리스트 이름"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/watchlists/{name}/coverage": {
+      "get": {
+        "tags": [
+          "Watchlists"
+        ],
+        "summary": "워치리스트 데이터 커버리지",
+        "description": "워치리스트의 데이터 커버리지 정보 조회\n\n각 심볼별로 수집된 데이터의 상태와 품질을 확인합니다.",
+        "operationId": "Watchlists-get_watchlist_coverage",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "워치리스트 이름",
+              "title": "Name"
+            },
+            "description": "워치리스트 이름"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/watchlists/setup-default": {
+      "post": {
+        "tags": [
+          "Watchlists"
+        ],
+        "summary": "기본 워치리스트 설정",
+        "description": "기본 워치리스트 설정\n\n인기 주식들로 구성된 기본 워치리스트를 생성합니다.",
+        "operationId": "Watchlists-setup_default_watchlist",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -7261,38 +7139,6 @@
         "title": "SignalType",
         "description": "신호 타입"
       },
-      "StockSymbolsResponse": {
-        "properties": {
-          "symbols": {
-            "items": {
-              "$ref": "#/components/schemas/SymbolInfo"
-            },
-            "type": "array",
-            "title": "Symbols"
-          },
-          "count": {
-            "type": "integer",
-            "title": "Count"
-          },
-          "search_term": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Search Term"
-          }
-        },
-        "type": "object",
-        "required": [
-          "symbols",
-          "count"
-        ],
-        "title": "StockSymbolsResponse"
-      },
       "StrategyCreateRequest": {
         "properties": {
           "user_id": {
@@ -7671,34 +7517,6 @@
         "type": "object",
         "title": "StrategyUpdateRequest",
         "description": "Strategy update request"
-      },
-      "SymbolInfo": {
-        "properties": {
-          "symbol": {
-            "type": "string",
-            "title": "Symbol"
-          },
-          "name": {
-            "type": "string",
-            "title": "Name"
-          },
-          "type": {
-            "type": "string",
-            "title": "Type"
-          },
-          "region": {
-            "type": "string",
-            "title": "Region"
-          }
-        },
-        "type": "object",
-        "required": [
-          "symbol",
-          "name",
-          "type",
-          "region"
-        ],
-        "title": "SymbolInfo"
       },
       "TemplateCreateRequest": {
         "properties": {
@@ -8086,62 +7904,6 @@
         "title": "TradeType",
         "description": "거래 타입"
       },
-      "UpdateRequest": {
-        "properties": {
-          "user_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "User Id"
-          },
-          "symbols": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Symbols"
-          },
-          "start_date": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Start Date"
-          },
-          "end_date": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "End Date"
-          }
-        },
-        "type": "object",
-        "title": "UpdateRequest",
-        "description": "Update request model"
-      },
       "UserCreate": {
         "properties": {
           "email": {
@@ -8469,7 +8231,7 @@
           "symbols"
         ],
         "title": "WatchlistCreate",
-        "description": "Watchlist creation model"
+        "description": "워치리스트 생성 모델"
       },
       "WatchlistUpdate": {
         "properties": {
@@ -8521,7 +8283,7 @@
           "symbols"
         ],
         "title": "WatchlistUpdate",
-        "description": "Watchlist update model"
+        "description": "워치리스트 업데이트 모델"
       }
     },
     "securitySchemes": {

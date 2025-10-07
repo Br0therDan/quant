@@ -23,7 +23,7 @@ router.include_router(intelligence_router, prefix="/intelligence")
 router.include_router(management_router, prefix="/management")
 
 
-@router.get("/", summary="Market Data API 정보")
+@router.get("/")
 async def get_market_data_info():
     """마켓 데이터 API 정보 및 사용 가능한 엔드포인트 목록"""
     return {
@@ -73,7 +73,7 @@ async def get_market_data_info():
     }
 
 
-@router.get("/health", summary="Market Data 서비스 상태 확인")
+@router.get("/health")
 async def health_check():
     """마켓 데이터 서비스 상태 확인"""
     return {

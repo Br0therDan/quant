@@ -1501,36 +1501,6 @@ export const SignalTypeSchema = {
 	description: "신호 타입",
 } as const;
 
-export const StockSymbolsResponseSchema = {
-	properties: {
-		symbols: {
-			items: {
-				$ref: "#/components/schemas/SymbolInfo",
-			},
-			type: "array",
-			title: "Symbols",
-		},
-		count: {
-			type: "integer",
-			title: "Count",
-		},
-		search_term: {
-			anyOf: [
-				{
-					type: "string",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "Search Term",
-		},
-	},
-	type: "object",
-	required: ["symbols", "count"],
-	title: "StockSymbolsResponse",
-} as const;
-
 export const StrategyCreateRequestSchema = {
 	properties: {
 		user_id: {
@@ -1899,30 +1869,6 @@ export const StrategyUpdateRequestSchema = {
 	type: "object",
 	title: "StrategyUpdateRequest",
 	description: "Strategy update request",
-} as const;
-
-export const SymbolInfoSchema = {
-	properties: {
-		symbol: {
-			type: "string",
-			title: "Symbol",
-		},
-		name: {
-			type: "string",
-			title: "Name",
-		},
-		type: {
-			type: "string",
-			title: "Type",
-		},
-		region: {
-			type: "string",
-			title: "Region",
-		},
-	},
-	type: "object",
-	required: ["symbol", "name", "type", "region"],
-	title: "SymbolInfo",
 } as const;
 
 export const TemplateCreateRequestSchema = {
@@ -2307,63 +2253,6 @@ export const TradeTypeSchema = {
 	description: "거래 타입",
 } as const;
 
-export const UpdateRequestSchema = {
-	properties: {
-		user_id: {
-			anyOf: [
-				{
-					type: "string",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "User Id",
-		},
-		symbols: {
-			anyOf: [
-				{
-					items: {
-						type: "string",
-					},
-					type: "array",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "Symbols",
-		},
-		start_date: {
-			anyOf: [
-				{
-					type: "string",
-					format: "date-time",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "Start Date",
-		},
-		end_date: {
-			anyOf: [
-				{
-					type: "string",
-					format: "date-time",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "End Date",
-		},
-	},
-	type: "object",
-	title: "UpdateRequest",
-	description: "Update request model",
-} as const;
-
 export const UserCreateSchema = {
 	properties: {
 		email: {
@@ -2683,7 +2572,7 @@ export const WatchlistCreateSchema = {
 	type: "object",
 	required: ["name", "symbols"],
 	title: "WatchlistCreate",
-	description: "Watchlist creation model",
+	description: "워치리스트 생성 모델",
 } as const;
 
 export const WatchlistUpdateSchema = {
@@ -2734,5 +2623,5 @@ export const WatchlistUpdateSchema = {
 	type: "object",
 	required: ["symbols"],
 	title: "WatchlistUpdate",
-	description: "Watchlist update model",
+	description: "워치리스트 업데이트 모델",
 } as const;

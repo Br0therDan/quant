@@ -7,12 +7,12 @@ import {
 	AuthService,
 	BacktestsService,
 	HealthService,
-	MarketDataV2Service,
+	MarketDataService,
 	OAuth2Service,
 	type Options,
-	PipelineService,
 	StrategyService,
 	UserService,
+	WatchlistsService,
 } from "../sdk.gen";
 import type {
 	AuthForgotPasswordData,
@@ -62,51 +62,36 @@ import type {
 	HealthHealthCheckData,
 	HealthLivenessProbeData,
 	HealthReadinessProbeData,
-	MarketDataV2GetAnalystRecommendationsData,
-	MarketDataV2GetAvailableSymbolsData,
-	MarketDataV2GetBalanceSheetData,
-	MarketDataV2GetCashFlowData,
-	MarketDataV2GetCompanyOverviewData,
-	MarketDataV2GetConsumerSentimentData,
-	MarketDataV2GetDailyPricesData,
-	MarketDataV2GetEarningsData,
-	MarketDataV2GetEmploymentDataData,
-	MarketDataV2GetGdpDataData,
-	MarketDataV2GetHistoricalDataData,
-	MarketDataV2GetIncomeStatementData,
-	MarketDataV2GetInflationDataData,
-	MarketDataV2GetInterestRatesData,
-	MarketDataV2GetIntradayDataData,
-	MarketDataV2GetMarketDataInfoData,
-	MarketDataV2GetNewsData,
-	MarketDataV2GetQuoteData,
-	MarketDataV2GetSentimentAnalysisData,
-	MarketDataV2GetSocialSentimentData,
-	MarketDataV2HealthCheckData,
+	MarketDataCollectBulkDataData,
+	MarketDataCollectBulkDataError,
+	MarketDataCollectCompanyInfoData,
+	MarketDataCollectCompanyInfoError,
+	MarketDataCollectMarketDataData,
+	MarketDataCollectMarketDataError,
+	MarketDataGetAnalystRecommendationsData,
+	MarketDataGetBalanceSheetData,
+	MarketDataGetCashFlowData,
+	MarketDataGetCompanyOverviewData,
+	MarketDataGetConsumerSentimentData,
+	MarketDataGetDailyPricesData,
+	MarketDataGetDataCoverageData,
+	MarketDataGetEarningsData,
+	MarketDataGetEmploymentDataData,
+	MarketDataGetGdpDataData,
+	MarketDataGetHistoricalDataData,
+	MarketDataGetIncomeStatementData,
+	MarketDataGetInflationDataData,
+	MarketDataGetInterestRatesData,
+	MarketDataGetIntradayDataData,
+	MarketDataGetMarketDataInfoData,
+	MarketDataGetNewsData,
+	MarketDataGetQuoteData,
+	MarketDataGetSentimentAnalysisData,
+	MarketDataGetSocialSentimentData,
+	MarketDataGetSystemStatusData,
+	MarketDataHealthCheckData,
 	OAuth2AuthorizeData,
 	OAuth2CallbackData,
-	PipelineCollectDailyDataData,
-	PipelineCollectDailyDataError,
-	PipelineCollectStockInfoData,
-	PipelineCollectStockInfoError,
-	PipelineCreateWatchlistData,
-	PipelineCreateWatchlistError,
-	PipelineDeleteWatchlistData,
-	PipelineDeleteWatchlistError,
-	PipelineGetCompanyInfoData,
-	PipelineGetPipelineStatusData,
-	PipelineGetSymbolCoverageData,
-	PipelineGetWatchlistData,
-	PipelineListCompaniesData,
-	PipelineListWatchlistsData,
-	PipelineRunPipelineUpdateData,
-	PipelineRunPipelineUpdateError,
-	PipelineSetupDefaultSymbolsData,
-	PipelineSetupDefaultSymbolsError,
-	PipelineUpdateWatchlistByNameData,
-	PipelineUpdateWatchlistByNameError,
-	PipelineUpdateWatchlistData,
-	PipelineUpdateWatchlistError,
 	StrategyCreateStrategyData,
 	StrategyCreateStrategyError,
 	StrategyCreateStrategyFromTemplateData,
@@ -152,6 +137,19 @@ import type {
 	UserUpdateUserMeError,
 	UserUpdateUserMeResponse,
 	UserUpdateUserResponse,
+	WatchlistsCreateOrUpdateWatchlistData,
+	WatchlistsCreateOrUpdateWatchlistError,
+	WatchlistsCreateWatchlistData,
+	WatchlistsCreateWatchlistError,
+	WatchlistsDeleteWatchlistData,
+	WatchlistsDeleteWatchlistError,
+	WatchlistsGetWatchlistCoverageData,
+	WatchlistsGetWatchlistData,
+	WatchlistsListWatchlistsData,
+	WatchlistsSetupDefaultWatchlistData,
+	WatchlistsSetupDefaultWatchlistError,
+	WatchlistsUpdateWatchlistData,
+	WatchlistsUpdateWatchlistError,
 } from "../types.gen";
 
 export type QueryKey<TOptions extends Options> = [
@@ -763,20 +761,20 @@ export const userGetUserOauthAccountsOptions = (
 	});
 };
 
-export const marketDataV2GetDailyPricesQueryKey = (
-	options: Options<MarketDataV2GetDailyPricesData>,
-) => createQueryKey("marketDataV2GetDailyPrices", options);
+export const marketDataGetDailyPricesQueryKey = (
+	options: Options<MarketDataGetDailyPricesData>,
+) => createQueryKey("marketDataGetDailyPrices", options);
 
 /**
  * 일일 주가 데이터 조회
  * 지정된 종목의 일일 주가 데이터(OHLCV)를 조회합니다.
  */
-export const marketDataV2GetDailyPricesOptions = (
-	options: Options<MarketDataV2GetDailyPricesData>,
+export const marketDataGetDailyPricesOptions = (
+	options: Options<MarketDataGetDailyPricesData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataV2Service.일일주가데이터조회({
+			const { data } = await MarketDataService.일일주가데이터조회({
 				...options,
 				...queryKey[0],
 				signal,
@@ -784,24 +782,24 @@ export const marketDataV2GetDailyPricesOptions = (
 			});
 			return data;
 		},
-		queryKey: marketDataV2GetDailyPricesQueryKey(options),
+		queryKey: marketDataGetDailyPricesQueryKey(options),
 	});
 };
 
-export const marketDataV2GetQuoteQueryKey = (
-	options: Options<MarketDataV2GetQuoteData>,
-) => createQueryKey("marketDataV2GetQuote", options);
+export const marketDataGetQuoteQueryKey = (
+	options: Options<MarketDataGetQuoteData>,
+) => createQueryKey("marketDataGetQuote", options);
 
 /**
  * 실시간 주식 호가 조회
  * 지정된 종목의 실시간 호가 정보를 조회합니다.
  */
-export const marketDataV2GetQuoteOptions = (
-	options: Options<MarketDataV2GetQuoteData>,
+export const marketDataGetQuoteOptions = (
+	options: Options<MarketDataGetQuoteData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataV2Service.실시간주식호가조회({
+			const { data } = await MarketDataService.실시간주식호가조회({
 				...options,
 				...queryKey[0],
 				signal,
@@ -809,25 +807,25 @@ export const marketDataV2GetQuoteOptions = (
 			});
 			return data;
 		},
-		queryKey: marketDataV2GetQuoteQueryKey(options),
+		queryKey: marketDataGetQuoteQueryKey(options),
 	});
 };
 
-export const marketDataV2GetIntradayDataQueryKey = (
-	options: Options<MarketDataV2GetIntradayDataData>,
-) => createQueryKey("marketDataV2GetIntradayData", options);
+export const marketDataGetIntradayDataQueryKey = (
+	options: Options<MarketDataGetIntradayDataData>,
+) => createQueryKey("marketDataGetIntradayData", options);
 
 /**
  * 실시간/인트라데이 데이터 조회
  * 지정된 종목의 실시간 또는 분봉 데이터를 조회합니다.
  */
-export const marketDataV2GetIntradayDataOptions = (
-	options: Options<MarketDataV2GetIntradayDataData>,
+export const marketDataGetIntradayDataOptions = (
+	options: Options<MarketDataGetIntradayDataData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
 			const { data } =
-				(await MarketDataV2Service.실시간) /
+				(await MarketDataService.실시간) /
 				인트라데이데이터조회({
 					...options,
 					...queryKey[0],
@@ -836,24 +834,24 @@ export const marketDataV2GetIntradayDataOptions = (
 				});
 			return data;
 		},
-		queryKey: marketDataV2GetIntradayDataQueryKey(options),
+		queryKey: marketDataGetIntradayDataQueryKey(options),
 	});
 };
 
-export const marketDataV2GetHistoricalDataQueryKey = (
-	options: Options<MarketDataV2GetHistoricalDataData>,
-) => createQueryKey("marketDataV2GetHistoricalData", options);
+export const marketDataGetHistoricalDataQueryKey = (
+	options: Options<MarketDataGetHistoricalDataData>,
+) => createQueryKey("marketDataGetHistoricalData", options);
 
 /**
  * 장기 히스토리 데이터 조회
  * 지정된 종목의 장기 히스토리 데이터를 조회합니다.
  */
-export const marketDataV2GetHistoricalDataOptions = (
-	options: Options<MarketDataV2GetHistoricalDataData>,
+export const marketDataGetHistoricalDataOptions = (
+	options: Options<MarketDataGetHistoricalDataData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataV2Service.장기히스토리데이터조회({
+			const { data } = await MarketDataService.장기히스토리데이터조회({
 				...options,
 				...queryKey[0],
 				signal,
@@ -861,49 +859,24 @@ export const marketDataV2GetHistoricalDataOptions = (
 			});
 			return data;
 		},
-		queryKey: marketDataV2GetHistoricalDataQueryKey(options),
+		queryKey: marketDataGetHistoricalDataQueryKey(options),
 	});
 };
 
-export const marketDataV2GetAvailableSymbolsQueryKey = (
-	options?: Options<MarketDataV2GetAvailableSymbolsData>,
-) => createQueryKey("marketDataV2GetAvailableSymbols", options);
-
-/**
- * 사용 가능한 종목 심볼 목록 조회
- * API에서 지원하는 종목 심볼 목록을 조회합니다.
- */
-export const marketDataV2GetAvailableSymbolsOptions = (
-	options?: Options<MarketDataV2GetAvailableSymbolsData>,
-) => {
-	return queryOptions({
-		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataV2Service.사용가능한종목심볼목록조회({
-				...options,
-				...queryKey[0],
-				signal,
-				throwOnError: true,
-			});
-			return data;
-		},
-		queryKey: marketDataV2GetAvailableSymbolsQueryKey(options),
-	});
-};
-
-export const marketDataV2GetCompanyOverviewQueryKey = (
-	options: Options<MarketDataV2GetCompanyOverviewData>,
-) => createQueryKey("marketDataV2GetCompanyOverview", options);
+export const marketDataGetCompanyOverviewQueryKey = (
+	options: Options<MarketDataGetCompanyOverviewData>,
+) => createQueryKey("marketDataGetCompanyOverview", options);
 
 /**
  * 기업 개요 조회
  * 지정된 종목의 기업 개요 정보를 조회합니다.
  */
-export const marketDataV2GetCompanyOverviewOptions = (
-	options: Options<MarketDataV2GetCompanyOverviewData>,
+export const marketDataGetCompanyOverviewOptions = (
+	options: Options<MarketDataGetCompanyOverviewData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataV2Service.기업개요조회({
+			const { data } = await MarketDataService.기업개요조회({
 				...options,
 				...queryKey[0],
 				signal,
@@ -911,24 +884,24 @@ export const marketDataV2GetCompanyOverviewOptions = (
 			});
 			return data;
 		},
-		queryKey: marketDataV2GetCompanyOverviewQueryKey(options),
+		queryKey: marketDataGetCompanyOverviewQueryKey(options),
 	});
 };
 
-export const marketDataV2GetIncomeStatementQueryKey = (
-	options: Options<MarketDataV2GetIncomeStatementData>,
-) => createQueryKey("marketDataV2GetIncomeStatement", options);
+export const marketDataGetIncomeStatementQueryKey = (
+	options: Options<MarketDataGetIncomeStatementData>,
+) => createQueryKey("marketDataGetIncomeStatement", options);
 
 /**
  * 손익계산서 조회
  * 지정된 종목의 손익계산서를 조회합니다.
  */
-export const marketDataV2GetIncomeStatementOptions = (
-	options: Options<MarketDataV2GetIncomeStatementData>,
+export const marketDataGetIncomeStatementOptions = (
+	options: Options<MarketDataGetIncomeStatementData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataV2Service.손익계산서조회({
+			const { data } = await MarketDataService.손익계산서조회({
 				...options,
 				...queryKey[0],
 				signal,
@@ -936,24 +909,24 @@ export const marketDataV2GetIncomeStatementOptions = (
 			});
 			return data;
 		},
-		queryKey: marketDataV2GetIncomeStatementQueryKey(options),
+		queryKey: marketDataGetIncomeStatementQueryKey(options),
 	});
 };
 
-export const marketDataV2GetBalanceSheetQueryKey = (
-	options: Options<MarketDataV2GetBalanceSheetData>,
-) => createQueryKey("marketDataV2GetBalanceSheet", options);
+export const marketDataGetBalanceSheetQueryKey = (
+	options: Options<MarketDataGetBalanceSheetData>,
+) => createQueryKey("marketDataGetBalanceSheet", options);
 
 /**
  * 재무상태표 조회
  * 지정된 종목의 재무상태표를 조회합니다.
  */
-export const marketDataV2GetBalanceSheetOptions = (
-	options: Options<MarketDataV2GetBalanceSheetData>,
+export const marketDataGetBalanceSheetOptions = (
+	options: Options<MarketDataGetBalanceSheetData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataV2Service.재무상태표조회({
+			const { data } = await MarketDataService.재무상태표조회({
 				...options,
 				...queryKey[0],
 				signal,
@@ -961,24 +934,24 @@ export const marketDataV2GetBalanceSheetOptions = (
 			});
 			return data;
 		},
-		queryKey: marketDataV2GetBalanceSheetQueryKey(options),
+		queryKey: marketDataGetBalanceSheetQueryKey(options),
 	});
 };
 
-export const marketDataV2GetCashFlowQueryKey = (
-	options: Options<MarketDataV2GetCashFlowData>,
-) => createQueryKey("marketDataV2GetCashFlow", options);
+export const marketDataGetCashFlowQueryKey = (
+	options: Options<MarketDataGetCashFlowData>,
+) => createQueryKey("marketDataGetCashFlow", options);
 
 /**
  * 현금흐름표 조회
  * 지정된 종목의 현금흐름표를 조회합니다.
  */
-export const marketDataV2GetCashFlowOptions = (
-	options: Options<MarketDataV2GetCashFlowData>,
+export const marketDataGetCashFlowOptions = (
+	options: Options<MarketDataGetCashFlowData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataV2Service.현금흐름표조회({
+			const { data } = await MarketDataService.현금흐름표조회({
 				...options,
 				...queryKey[0],
 				signal,
@@ -986,24 +959,24 @@ export const marketDataV2GetCashFlowOptions = (
 			});
 			return data;
 		},
-		queryKey: marketDataV2GetCashFlowQueryKey(options),
+		queryKey: marketDataGetCashFlowQueryKey(options),
 	});
 };
 
-export const marketDataV2GetEarningsQueryKey = (
-	options: Options<MarketDataV2GetEarningsData>,
-) => createQueryKey("marketDataV2GetEarnings", options);
+export const marketDataGetEarningsQueryKey = (
+	options: Options<MarketDataGetEarningsData>,
+) => createQueryKey("marketDataGetEarnings", options);
 
 /**
  * 실적 데이터 조회
  * 지정된 종목의 실적 데이터를 조회합니다.
  */
-export const marketDataV2GetEarningsOptions = (
-	options: Options<MarketDataV2GetEarningsData>,
+export const marketDataGetEarningsOptions = (
+	options: Options<MarketDataGetEarningsData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataV2Service.실적데이터조회({
+			const { data } = await MarketDataService.실적데이터조회({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1011,24 +984,24 @@ export const marketDataV2GetEarningsOptions = (
 			});
 			return data;
 		},
-		queryKey: marketDataV2GetEarningsQueryKey(options),
+		queryKey: marketDataGetEarningsQueryKey(options),
 	});
 };
 
-export const marketDataV2GetGdpDataQueryKey = (
-	options?: Options<MarketDataV2GetGdpDataData>,
-) => createQueryKey("marketDataV2GetGdpData", options);
+export const marketDataGetGdpDataQueryKey = (
+	options?: Options<MarketDataGetGdpDataData>,
+) => createQueryKey("marketDataGetGdpData", options);
 
 /**
  * GDP 데이터 조회
  * 미국 GDP 데이터를 조회합니다.
  */
-export const marketDataV2GetGdpDataOptions = (
-	options?: Options<MarketDataV2GetGdpDataData>,
+export const marketDataGetGdpDataOptions = (
+	options?: Options<MarketDataGetGdpDataData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataV2Service.gdp데이터조회({
+			const { data } = await MarketDataService.gdp데이터조회({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1036,24 +1009,24 @@ export const marketDataV2GetGdpDataOptions = (
 			});
 			return data;
 		},
-		queryKey: marketDataV2GetGdpDataQueryKey(options),
+		queryKey: marketDataGetGdpDataQueryKey(options),
 	});
 };
 
-export const marketDataV2GetInflationDataQueryKey = (
-	options?: Options<MarketDataV2GetInflationDataData>,
-) => createQueryKey("marketDataV2GetInflationData", options);
+export const marketDataGetInflationDataQueryKey = (
+	options?: Options<MarketDataGetInflationDataData>,
+) => createQueryKey("marketDataGetInflationData", options);
 
 /**
  * 인플레이션 데이터 조회
  * 미국 인플레이션 지표 데이터를 조회합니다.
  */
-export const marketDataV2GetInflationDataOptions = (
-	options?: Options<MarketDataV2GetInflationDataData>,
+export const marketDataGetInflationDataOptions = (
+	options?: Options<MarketDataGetInflationDataData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataV2Service.인플레이션데이터조회({
+			const { data } = await MarketDataService.인플레이션데이터조회({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1061,24 +1034,24 @@ export const marketDataV2GetInflationDataOptions = (
 			});
 			return data;
 		},
-		queryKey: marketDataV2GetInflationDataQueryKey(options),
+		queryKey: marketDataGetInflationDataQueryKey(options),
 	});
 };
 
-export const marketDataV2GetInterestRatesQueryKey = (
-	options?: Options<MarketDataV2GetInterestRatesData>,
-) => createQueryKey("marketDataV2GetInterestRates", options);
+export const marketDataGetInterestRatesQueryKey = (
+	options?: Options<MarketDataGetInterestRatesData>,
+) => createQueryKey("marketDataGetInterestRates", options);
 
 /**
  * 금리 데이터 조회
  * 미국 기준금리 및 채권 수익률 데이터를 조회합니다.
  */
-export const marketDataV2GetInterestRatesOptions = (
-	options?: Options<MarketDataV2GetInterestRatesData>,
+export const marketDataGetInterestRatesOptions = (
+	options?: Options<MarketDataGetInterestRatesData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataV2Service.금리데이터조회({
+			const { data } = await MarketDataService.금리데이터조회({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1086,24 +1059,24 @@ export const marketDataV2GetInterestRatesOptions = (
 			});
 			return data;
 		},
-		queryKey: marketDataV2GetInterestRatesQueryKey(options),
+		queryKey: marketDataGetInterestRatesQueryKey(options),
 	});
 };
 
-export const marketDataV2GetEmploymentDataQueryKey = (
-	options?: Options<MarketDataV2GetEmploymentDataData>,
-) => createQueryKey("marketDataV2GetEmploymentData", options);
+export const marketDataGetEmploymentDataQueryKey = (
+	options?: Options<MarketDataGetEmploymentDataData>,
+) => createQueryKey("marketDataGetEmploymentData", options);
 
 /**
  * 고용 지표 조회
  * 미국 실업률 및 고용 관련 지표를 조회합니다.
  */
-export const marketDataV2GetEmploymentDataOptions = (
-	options?: Options<MarketDataV2GetEmploymentDataData>,
+export const marketDataGetEmploymentDataOptions = (
+	options?: Options<MarketDataGetEmploymentDataData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataV2Service.고용지표조회({
+			const { data } = await MarketDataService.고용지표조회({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1111,24 +1084,24 @@ export const marketDataV2GetEmploymentDataOptions = (
 			});
 			return data;
 		},
-		queryKey: marketDataV2GetEmploymentDataQueryKey(options),
+		queryKey: marketDataGetEmploymentDataQueryKey(options),
 	});
 };
 
-export const marketDataV2GetConsumerSentimentQueryKey = (
-	options?: Options<MarketDataV2GetConsumerSentimentData>,
-) => createQueryKey("marketDataV2GetConsumerSentiment", options);
+export const marketDataGetConsumerSentimentQueryKey = (
+	options?: Options<MarketDataGetConsumerSentimentData>,
+) => createQueryKey("marketDataGetConsumerSentiment", options);
 
 /**
  * 소비자 심리 지수 조회
  * 미국 소비자 심리 지수를 조회합니다.
  */
-export const marketDataV2GetConsumerSentimentOptions = (
-	options?: Options<MarketDataV2GetConsumerSentimentData>,
+export const marketDataGetConsumerSentimentOptions = (
+	options?: Options<MarketDataGetConsumerSentimentData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataV2Service.소비자심리지수조회({
+			const { data } = await MarketDataService.소비자심리지수조회({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1136,24 +1109,24 @@ export const marketDataV2GetConsumerSentimentOptions = (
 			});
 			return data;
 		},
-		queryKey: marketDataV2GetConsumerSentimentQueryKey(options),
+		queryKey: marketDataGetConsumerSentimentQueryKey(options),
 	});
 };
 
-export const marketDataV2GetNewsQueryKey = (
-	options: Options<MarketDataV2GetNewsData>,
-) => createQueryKey("marketDataV2GetNews", options);
+export const marketDataGetNewsQueryKey = (
+	options: Options<MarketDataGetNewsData>,
+) => createQueryKey("marketDataGetNews", options);
 
 /**
  * 종목 뉴스 조회
  * 지정된 종목 관련 뉴스를 조회합니다.
  */
-export const marketDataV2GetNewsOptions = (
-	options: Options<MarketDataV2GetNewsData>,
+export const marketDataGetNewsOptions = (
+	options: Options<MarketDataGetNewsData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataV2Service.종목뉴스조회({
+			const { data } = await MarketDataService.종목뉴스조회({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1161,24 +1134,24 @@ export const marketDataV2GetNewsOptions = (
 			});
 			return data;
 		},
-		queryKey: marketDataV2GetNewsQueryKey(options),
+		queryKey: marketDataGetNewsQueryKey(options),
 	});
 };
 
-export const marketDataV2GetSentimentAnalysisQueryKey = (
-	options: Options<MarketDataV2GetSentimentAnalysisData>,
-) => createQueryKey("marketDataV2GetSentimentAnalysis", options);
+export const marketDataGetSentimentAnalysisQueryKey = (
+	options: Options<MarketDataGetSentimentAnalysisData>,
+) => createQueryKey("marketDataGetSentimentAnalysis", options);
 
 /**
  * 감정 분석 조회
  * 지정된 종목의 감정 분석 결과를 조회합니다.
  */
-export const marketDataV2GetSentimentAnalysisOptions = (
-	options: Options<MarketDataV2GetSentimentAnalysisData>,
+export const marketDataGetSentimentAnalysisOptions = (
+	options: Options<MarketDataGetSentimentAnalysisData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataV2Service.감정분석조회({
+			const { data } = await MarketDataService.감정분석조회({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1186,24 +1159,24 @@ export const marketDataV2GetSentimentAnalysisOptions = (
 			});
 			return data;
 		},
-		queryKey: marketDataV2GetSentimentAnalysisQueryKey(options),
+		queryKey: marketDataGetSentimentAnalysisQueryKey(options),
 	});
 };
 
-export const marketDataV2GetAnalystRecommendationsQueryKey = (
-	options: Options<MarketDataV2GetAnalystRecommendationsData>,
-) => createQueryKey("marketDataV2GetAnalystRecommendations", options);
+export const marketDataGetAnalystRecommendationsQueryKey = (
+	options: Options<MarketDataGetAnalystRecommendationsData>,
+) => createQueryKey("marketDataGetAnalystRecommendations", options);
 
 /**
  * 분석가 추천 조회
  * 지정된 종목의 분석가 추천 정보를 조회합니다.
  */
-export const marketDataV2GetAnalystRecommendationsOptions = (
-	options: Options<MarketDataV2GetAnalystRecommendationsData>,
+export const marketDataGetAnalystRecommendationsOptions = (
+	options: Options<MarketDataGetAnalystRecommendationsData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataV2Service.분석가추천조회({
+			const { data } = await MarketDataService.분석가추천조회({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1211,24 +1184,24 @@ export const marketDataV2GetAnalystRecommendationsOptions = (
 			});
 			return data;
 		},
-		queryKey: marketDataV2GetAnalystRecommendationsQueryKey(options),
+		queryKey: marketDataGetAnalystRecommendationsQueryKey(options),
 	});
 };
 
-export const marketDataV2GetSocialSentimentQueryKey = (
-	options: Options<MarketDataV2GetSocialSentimentData>,
-) => createQueryKey("marketDataV2GetSocialSentiment", options);
+export const marketDataGetSocialSentimentQueryKey = (
+	options: Options<MarketDataGetSocialSentimentData>,
+) => createQueryKey("marketDataGetSocialSentiment", options);
 
 /**
  * 소셜 미디어 감정 분석 조회
  * 지정된 종목의 소셜 미디어 감정 분석을 조회합니다.
  */
-export const marketDataV2GetSocialSentimentOptions = (
-	options: Options<MarketDataV2GetSocialSentimentData>,
+export const marketDataGetSocialSentimentOptions = (
+	options: Options<MarketDataGetSocialSentimentData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataV2Service.소셜미디어감정분석조회({
+			const { data } = await MarketDataService.소셜미디어감정분석조회({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1236,24 +1209,171 @@ export const marketDataV2GetSocialSentimentOptions = (
 			});
 			return data;
 		},
-		queryKey: marketDataV2GetSocialSentimentQueryKey(options),
+		queryKey: marketDataGetSocialSentimentQueryKey(options),
 	});
 };
 
-export const marketDataV2GetMarketDataInfoQueryKey = (
-	options?: Options<MarketDataV2GetMarketDataInfoData>,
-) => createQueryKey("marketDataV2GetMarketDataInfo", options);
+/**
+ * 기업 정보 수집
+ * 지정된 심볼의 기업 정보를 수집하여 저장
+ *
+ * Alpha Vantage API를 통해 기업의 기본 정보, 재무 지표,
+ * 업종 분류 등을 수집하고 데이터베이스에 저장합니다.
+ */
+export const marketDataCollectCompanyInfoMutation = (
+	options?: Partial<Options<MarketDataCollectCompanyInfoData>>,
+): UseMutationOptions<
+	unknown,
+	MarketDataCollectCompanyInfoError,
+	Options<MarketDataCollectCompanyInfoData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		unknown,
+		MarketDataCollectCompanyInfoError,
+		Options<MarketDataCollectCompanyInfoData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await MarketDataService.기업정보수집({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+	};
+	return mutationOptions;
+};
+
+/**
+ * 주가 데이터 수집
+ * 지정된 심볼의 주가 데이터를 수집하여 저장
+ *
+ * Alpha Vantage API를 통해 일일 OHLCV 데이터를 수집하고
+ * DuckDB 캐시 및 MongoDB에 저장합니다.
+ */
+export const marketDataCollectMarketDataMutation = (
+	options?: Partial<Options<MarketDataCollectMarketDataData>>,
+): UseMutationOptions<
+	unknown,
+	MarketDataCollectMarketDataError,
+	Options<MarketDataCollectMarketDataData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		unknown,
+		MarketDataCollectMarketDataError,
+		Options<MarketDataCollectMarketDataData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await MarketDataService.주가데이터수집({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+	};
+	return mutationOptions;
+};
+
+/**
+ * 대량 데이터 수집
+ * 여러 심볼의 데이터를 일괄 수집
+ *
+ * 백그라운드 작업으로 처리되며, 대량의 심볼에 대해
+ * 기업 정보와 주가 데이터를 순차적으로 수집합니다.
+ */
+export const marketDataCollectBulkDataMutation = (
+	options?: Partial<Options<MarketDataCollectBulkDataData>>,
+): UseMutationOptions<
+	unknown,
+	MarketDataCollectBulkDataError,
+	Options<MarketDataCollectBulkDataData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		unknown,
+		MarketDataCollectBulkDataError,
+		Options<MarketDataCollectBulkDataData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await MarketDataService.대량데이터수집({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+	};
+	return mutationOptions;
+};
+
+export const marketDataGetDataCoverageQueryKey = (
+	options: Options<MarketDataGetDataCoverageData>,
+) => createQueryKey("marketDataGetDataCoverage", options);
+
+/**
+ * 데이터 커버리지 확인
+ * 지정된 심볼의 데이터 커버리지 정보 조회
+ *
+ * 기업 정보, 주가 데이터의 수집 상태와 품질을 확인합니다.
+ */
+export const marketDataGetDataCoverageOptions = (
+	options: Options<MarketDataGetDataCoverageData>,
+) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await MarketDataService.데이터커버리지확인({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			});
+			return data;
+		},
+		queryKey: marketDataGetDataCoverageQueryKey(options),
+	});
+};
+
+export const marketDataGetSystemStatusQueryKey = (
+	options?: Options<MarketDataGetSystemStatusData>,
+) => createQueryKey("marketDataGetSystemStatus", options);
+
+/**
+ * 시스템 상태 조회
+ * 시장 데이터 시스템의 전반적인 상태 조회
+ *
+ * API 연결 상태, 캐시 성능, 수집 통계 등을 확인합니다.
+ */
+export const marketDataGetSystemStatusOptions = (
+	options?: Options<MarketDataGetSystemStatusData>,
+) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await MarketDataService.시스템상태조회({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			});
+			return data;
+		},
+		queryKey: marketDataGetSystemStatusQueryKey(options),
+	});
+};
+
+export const marketDataGetMarketDataInfoQueryKey = (
+	options?: Options<MarketDataGetMarketDataInfoData>,
+) => createQueryKey("marketDataGetMarketDataInfo", options);
 
 /**
  * Market Data API 정보
  * 마켓 데이터 API 정보 및 사용 가능한 엔드포인트 목록
  */
-export const marketDataV2GetMarketDataInfoOptions = (
-	options?: Options<MarketDataV2GetMarketDataInfoData>,
+export const marketDataGetMarketDataInfoOptions = (
+	options?: Options<MarketDataGetMarketDataInfoData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataV2Service.marketDataApi정보({
+			const { data } = await MarketDataService.marketDataApi정보({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1261,24 +1381,24 @@ export const marketDataV2GetMarketDataInfoOptions = (
 			});
 			return data;
 		},
-		queryKey: marketDataV2GetMarketDataInfoQueryKey(options),
+		queryKey: marketDataGetMarketDataInfoQueryKey(options),
 	});
 };
 
-export const marketDataV2HealthCheckQueryKey = (
-	options?: Options<MarketDataV2HealthCheckData>,
-) => createQueryKey("marketDataV2HealthCheck", options);
+export const marketDataHealthCheckQueryKey = (
+	options?: Options<MarketDataHealthCheckData>,
+) => createQueryKey("marketDataHealthCheck", options);
 
 /**
  * Market Data 서비스 상태 확인
  * 마켓 데이터 서비스 상태 확인
  */
-export const marketDataV2HealthCheckOptions = (
-	options?: Options<MarketDataV2HealthCheckData>,
+export const marketDataHealthCheckOptions = (
+	options?: Options<MarketDataHealthCheckData>,
 ) => {
 	return queryOptions({
 		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await MarketDataV2Service.marketData서비스상태확인({
+			const { data } = await MarketDataService.marketData서비스상태확인({
 				...options,
 				...queryKey[0],
 				signal,
@@ -1286,698 +1406,8 @@ export const marketDataV2HealthCheckOptions = (
 			});
 			return data;
 		},
-		queryKey: marketDataV2HealthCheckQueryKey(options),
+		queryKey: marketDataHealthCheckQueryKey(options),
 	});
-};
-
-/**
- * Update Watchlist
- * Create or update a watchlist with flexible naming support.
- *
- * This endpoint provides a convenient way to create new watchlists or update
- * existing ones. If no name is provided, it defaults to the 'default' watchlist
- * which is used by the pipeline for automated updates. This endpoint combines
- * creation and update functionality for ease of use.
- *
- * Args:
- * request: Watchlist configuration containing:
- * - symbols: List of stock symbols to include
- * - name: Optional watchlist name (defaults to 'default')
- * - description: Optional description of the watchlist
- *
- * Returns:
- * dict: Operation result containing:
- * - message: Success message indicating action taken
- * - name: Watchlist name that was processed
- * - symbols: List of symbols in the watchlist
- * - count: Number of symbols in the watchlist
- * - action: Either 'created' or 'updated'
- *
- * Raises:
- * HTTPException: 400 if watchlist creation fails
- * HTTPException: 500 if operation fails
- *
- * Note:
- * Updates to the 'default' watchlist automatically update pipeline symbols.
- * This affects which symbols are processed during automated updates.
- */
-export const pipelineUpdateWatchlistMutation = (
-	options?: Partial<Options<PipelineUpdateWatchlistData>>,
-): UseMutationOptions<
-	unknown,
-	PipelineUpdateWatchlistError,
-	Options<PipelineUpdateWatchlistData>
-> => {
-	const mutationOptions: UseMutationOptions<
-		unknown,
-		PipelineUpdateWatchlistError,
-		Options<PipelineUpdateWatchlistData>
-	> = {
-		mutationFn: async (fnOptions) => {
-			const { data } = await PipelineService.updateWatchlist({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
-			return data;
-		},
-	};
-	return mutationOptions;
-};
-
-export const pipelineListWatchlistsQueryKey = (
-	options?: Options<PipelineListWatchlistsData>,
-) => createQueryKey("pipelineListWatchlists", options);
-
-/**
- * List Watchlists
- * Retrieve a comprehensive list of all watchlists.
- *
- * Returns summary information for all watchlists in the system, including
- * metadata like symbol counts, update settings, and timestamps. This is
- * useful for dashboard displays and watchlist management interfaces.
- *
- * Returns:
- * dict: All watchlists summary containing:
- * - watchlists: List of watchlist summaries with:
- * - name: Watchlist name
- * - description: Watchlist description
- * - symbol_count: Number of symbols in the watchlist
- * - auto_update: Whether automatic updates are enabled
- * - last_updated: Timestamp of last modification
- * - created_at: Timestamp of creation
- * - total_count: Total number of watchlists in the system
- *
- * Raises:
- * HTTPException: 500 if retrieval fails
- *
- * Note:
- * This endpoint returns summary data only. Use GET /watchlists/{name}
- * for detailed information including full symbol lists.
- */
-export const pipelineListWatchlistsOptions = (
-	options?: Options<PipelineListWatchlistsData>,
-) => {
-	return queryOptions({
-		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await PipelineService.listWatchlists({
-				...options,
-				...queryKey[0],
-				signal,
-				throwOnError: true,
-			});
-			return data;
-		},
-		queryKey: pipelineListWatchlistsQueryKey(options),
-	});
-};
-
-/**
- * Create Watchlist
- * Create a new named watchlist with validation.
- *
- * This endpoint is specifically for creating new watchlists with explicit
- * naming requirements. Unlike the /watchlist endpoint, this requires a name
- * and will fail if a watchlist with the same name already exists.
- *
- * Args:
- * request: Watchlist creation parameters containing:
- * - name: Required unique name for the watchlist
- * - symbols: List of stock symbols to include
- * - description: Optional description of the watchlist purpose
- *
- * Returns:
- * dict: Creation result containing:
- * - message: Success confirmation message
- * - name: Name of the created watchlist
- * - symbols: List of symbols in the watchlist
- * - description: Watchlist description
- * - created_at: UTC timestamp of creation
- *
- * Raises:
- * HTTPException: 400 if watchlist creation fails or name conflicts
- * HTTPException: 500 if database operation fails
- *
- * Note:
- * Watchlist names must be unique. Use PUT /watchlists/{name} to update existing ones.
- */
-export const pipelineCreateWatchlistMutation = (
-	options?: Partial<Options<PipelineCreateWatchlistData>>,
-): UseMutationOptions<
-	unknown,
-	PipelineCreateWatchlistError,
-	Options<PipelineCreateWatchlistData>
-> => {
-	const mutationOptions: UseMutationOptions<
-		unknown,
-		PipelineCreateWatchlistError,
-		Options<PipelineCreateWatchlistData>
-	> = {
-		mutationFn: async (fnOptions) => {
-			const { data } = await PipelineService.createWatchlist({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
-			return data;
-		},
-	};
-	return mutationOptions;
-};
-
-/**
- * Delete Watchlist
- * Delete a named watchlist from the system.
- *
- * Permanently removes a watchlist and all associated metadata. This action
- * cannot be undone. The 'default' watchlist cannot be deleted as it is
- * required for pipeline operations.
- *
- * Args:
- * name: Name of the watchlist to delete
- *
- * Returns:
- * dict: Deletion confirmation containing:
- * - message: Success confirmation message
- * - name: Name of the deleted watchlist
- *
- * Raises:
- * HTTPException: 400 if attempting to delete the 'default' watchlist
- * HTTPException: 404 if watchlist with specified name not found
- * HTTPException: 500 if deletion operation fails
- *
- * Note:
- * Deletion is permanent and cannot be undone. Consider backing up
- * important watchlists before deletion.
- */
-export const pipelineDeleteWatchlistMutation = (
-	options?: Partial<Options<PipelineDeleteWatchlistData>>,
-): UseMutationOptions<
-	unknown,
-	PipelineDeleteWatchlistError,
-	Options<PipelineDeleteWatchlistData>
-> => {
-	const mutationOptions: UseMutationOptions<
-		unknown,
-		PipelineDeleteWatchlistError,
-		Options<PipelineDeleteWatchlistData>
-	> = {
-		mutationFn: async (fnOptions) => {
-			const { data } = await PipelineService.deleteWatchlist({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
-			return data;
-		},
-	};
-	return mutationOptions;
-};
-
-export const pipelineGetWatchlistQueryKey = (
-	options: Options<PipelineGetWatchlistData>,
-) => createQueryKey("pipelineGetWatchlist", options);
-
-/**
- * Get Watchlist
- * Retrieve complete information for a specific watchlist.
- *
- * Returns detailed information about a named watchlist including the full
- * list of symbols, configuration settings, and all metadata. This provides
- * all information needed to display or modify a specific watchlist.
- *
- * Args:
- * name: Name of the watchlist to retrieve (case-sensitive)
- *
- * Returns:
- * dict: Complete watchlist information containing:
- * - name: Watchlist name
- * - description: Detailed description
- * - symbols: Complete list of stock symbols
- * - auto_update: Automatic update configuration
- * - update_interval: Update frequency in seconds
- * - last_updated: Timestamp of last symbol update
- * - created_at: Timestamp of watchlist creation
- *
- * Raises:
- * HTTPException: 404 if watchlist with specified name not found
- * HTTPException: 500 if retrieval operation fails
- *
- * Note:
- * Watchlist names are case-sensitive. Use GET /watchlists to see all available names.
- */
-export const pipelineGetWatchlistOptions = (
-	options: Options<PipelineGetWatchlistData>,
-) => {
-	return queryOptions({
-		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await PipelineService.getWatchlist({
-				...options,
-				...queryKey[0],
-				signal,
-				throwOnError: true,
-			});
-			return data;
-		},
-		queryKey: pipelineGetWatchlistQueryKey(options),
-	});
-};
-
-/**
- * Update Watchlist By Name
- * Update an existing watchlist with new symbols and settings.
- *
- * Modifies the symbols and metadata of an existing watchlist. This endpoint
- * requires the watchlist to exist and will fail if the specified name is
- * not found. Use POST /watchlists to create new watchlists.
- *
- * Args:
- * name: Name of the existing watchlist to update
- * request: Update parameters containing:
- * - symbols: New list of symbols (replaces current list)
- * - description: Optional new description (if provided)
- *
- * Returns:
- * dict: Update confirmation containing:
- * - message: Success confirmation message
- * - name: Name of the updated watchlist
- * - symbols: New symbols list
- * - description: Current description (updated if provided)
- * - count: Number of symbols in updated watchlist
- * - updated_at: Timestamp of the update
- *
- * Raises:
- * HTTPException: 404 if watchlist with specified name not found
- * HTTPException: 500 if update operation fails
- *
- * Note:
- * Updates to the 'default' watchlist automatically update pipeline symbols.
- * Symbol list is completely replaced, not merged with existing symbols.
- */
-export const pipelineUpdateWatchlistByNameMutation = (
-	options?: Partial<Options<PipelineUpdateWatchlistByNameData>>,
-): UseMutationOptions<
-	unknown,
-	PipelineUpdateWatchlistByNameError,
-	Options<PipelineUpdateWatchlistByNameData>
-> => {
-	const mutationOptions: UseMutationOptions<
-		unknown,
-		PipelineUpdateWatchlistByNameError,
-		Options<PipelineUpdateWatchlistByNameData>
-	> = {
-		mutationFn: async (fnOptions) => {
-			const { data } = await PipelineService.updateWatchlistByName({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
-			return data;
-		},
-	};
-	return mutationOptions;
-};
-
-/**
- * Collect Stock Info
- * Collect and store basic company information for a specific symbol.
- *
- * Retrieves fundamental company data from external APIs (Alpha Vantage)
- * including company name, sector, industry, market cap, and key financial
- * ratios. This information is stored in the database for future reference
- * and analysis.
- *
- * Args:
- * symbol: Stock symbol (e.g., 'AAPL', 'MSFT') - automatically converted to uppercase
- *
- * Returns:
- * dict: Collection result containing:
- * - message: Success/failure message
- * - symbol: Processed symbol (uppercase)
- * - success: Boolean indicating operation success
- *
- * Raises:
- * HTTPException: 500 if data collection fails
- *
- * Note:
- * Respects Alpha Vantage API rate limits (5 calls/min, 500 calls/day).
- * Duplicate requests for same symbol within 24 hours may return cached data.
- */
-export const pipelineCollectStockInfoMutation = (
-	options?: Partial<Options<PipelineCollectStockInfoData>>,
-): UseMutationOptions<
-	unknown,
-	PipelineCollectStockInfoError,
-	Options<PipelineCollectStockInfoData>
-> => {
-	const mutationOptions: UseMutationOptions<
-		unknown,
-		PipelineCollectStockInfoError,
-		Options<PipelineCollectStockInfoData>
-	> = {
-		mutationFn: async (fnOptions) => {
-			const { data } = await PipelineService.collectStockInfo({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
-			return data;
-		},
-	};
-	return mutationOptions;
-};
-
-/**
- * Collect Daily Data
- * Collect historical daily price data for a specific symbol.
- *
- * Retrieves OHLCV (Open, High, Low, Close, Volume) daily price data
- * for the specified symbol and date range. If no dates are provided,
- * collects maximum available historical data. Data is validated,
- * adjusted for splits/dividends, and stored in DuckDB for fast access.
- *
- * Args:
- * symbol: Stock symbol (e.g., 'AAPL') - automatically converted to uppercase
- * start_date: Optional start date for data collection (defaults to earliest available)
- * end_date: Optional end date for data collection (defaults to latest available)
- *
- * Returns:
- * dict: Collection result containing:
- * - message: Detailed success/failure message
- * - symbol: Processed symbol (uppercase)
- * - start_date: Actual start date used
- * - end_date: Actual end date used
- * - success: Boolean indicating operation success
- *
- * Raises:
- * HTTPException: 500 if data collection fails
- *
- * Note:
- * Large date ranges may take several minutes to complete.
- * Data is automatically cached to minimize API calls.
- */
-export const pipelineCollectDailyDataMutation = (
-	options?: Partial<Options<PipelineCollectDailyDataData>>,
-): UseMutationOptions<
-	unknown,
-	PipelineCollectDailyDataError,
-	Options<PipelineCollectDailyDataData>
-> => {
-	const mutationOptions: UseMutationOptions<
-		unknown,
-		PipelineCollectDailyDataError,
-		Options<PipelineCollectDailyDataData>
-	> = {
-		mutationFn: async (fnOptions) => {
-			const { data } = await PipelineService.collectDailyData({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
-			return data;
-		},
-	};
-	return mutationOptions;
-};
-
-export const pipelineGetSymbolCoverageQueryKey = (
-	options: Options<PipelineGetSymbolCoverageData>,
-) => createQueryKey("pipelineGetSymbolCoverage", options);
-
-/**
- * Get Symbol Coverage
- * Get detailed data coverage information for a specific symbol.
- *
- * Returns comprehensive information about the availability and quality
- * of data for the specified symbol, including date ranges, data gaps,
- * last update timestamps, and data quality metrics.
- *
- * Args:
- * symbol: Stock symbol to check coverage for (automatically converted to uppercase)
- *
- * Returns:
- * dict: Coverage information containing:
- * - symbol: Processed symbol
- * - date_range: Start and end dates of available data
- * - total_records: Number of data points available
- * - gaps: List of date ranges with missing data
- * - last_updated: Timestamp of most recent data update
- * - data_quality: Quality metrics (completeness, accuracy scores)
- *
- * Raises:
- * HTTPException: 500 if coverage check fails
- * HTTPException: 404 if symbol not found in database
- */
-export const pipelineGetSymbolCoverageOptions = (
-	options: Options<PipelineGetSymbolCoverageData>,
-) => {
-	return queryOptions({
-		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await PipelineService.getSymbolCoverage({
-				...options,
-				...queryKey[0],
-				signal,
-				throwOnError: true,
-			});
-			return data;
-		},
-		queryKey: pipelineGetSymbolCoverageQueryKey(options),
-	});
-};
-
-export const pipelineGetCompanyInfoQueryKey = (
-	options: Options<PipelineGetCompanyInfoData>,
-) => createQueryKey("pipelineGetCompanyInfo", options);
-
-/**
- * Get Company Info
- * Retrieve stored company information for a specific symbol.
- *
- * Returns comprehensive company fundamentals and metadata previously
- * collected and stored in the database. This includes financial ratios,
- * company description, sector classification, and market data.
- *
- * Args:
- * symbol: Stock symbol (automatically converted to uppercase)
- *
- * Returns:
- * dict: Company information containing:
- * - symbol: Stock symbol
- * - name: Company name
- * - description: Business description
- * - sector: Industry sector classification
- * - industry: Specific industry classification
- * - country: Country of incorporation
- * - currency: Reporting currency
- * - market_cap: Market capitalization (if available)
- * - pe_ratio: Price-to-earnings ratio (if available)
- * - dividend_yield: Annual dividend yield (if available)
- * - updated_at: Last information update timestamp
- *
- * Raises:
- * HTTPException: 404 if company information not found
- * HTTPException: 500 if retrieval fails
- *
- * Note:
- * If company info not found, use POST /collect-info/{symbol} first.
- */
-export const pipelineGetCompanyInfoOptions = (
-	options: Options<PipelineGetCompanyInfoData>,
-) => {
-	return queryOptions({
-		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await PipelineService.getCompanyInfo({
-				...options,
-				...queryKey[0],
-				signal,
-				throwOnError: true,
-			});
-			return data;
-		},
-		queryKey: pipelineGetCompanyInfoQueryKey(options),
-	});
-};
-
-export const pipelineListCompaniesQueryKey = (
-	options?: Options<PipelineListCompaniesData>,
-) => createQueryKey("pipelineListCompanies", options);
-
-/**
- * List Companies
- * Retrieve information for all companies in the database.
- *
- * Returns a comprehensive list of all companies for which information
- * has been collected and stored. Useful for portfolio analysis,
- * screening, and getting an overview of available data.
- *
- * Returns:
- * dict: All companies data containing:
- * - companies: List of company objects with key information:
- * - symbol: Stock symbol
- * - name: Company name
- * - sector: Industry sector
- * - industry: Specific industry
- * - market_cap: Market capitalization
- * - updated_at: Last update timestamp
- * - total_count: Total number of companies in database
- *
- * Raises:
- * HTTPException: 500 if retrieval fails
- *
- * Note:
- * Large datasets may take time to load. Consider pagination for production use.
- */
-export const pipelineListCompaniesOptions = (
-	options?: Options<PipelineListCompaniesData>,
-) => {
-	return queryOptions({
-		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await PipelineService.listCompanies({
-				...options,
-				...queryKey[0],
-				signal,
-				throwOnError: true,
-			});
-			return data;
-		},
-		queryKey: pipelineListCompaniesQueryKey(options),
-	});
-};
-
-export const pipelineGetPipelineStatusQueryKey = (
-	options?: Options<PipelineGetPipelineStatusData>,
-) => createQueryKey("pipelineGetPipelineStatus", options);
-
-/**
- * Get Pipeline Status
- * Get comprehensive pipeline status and health information.
- *
- * Returns detailed information about the current state of the data pipeline,
- * including data coverage statistics, update timestamps, and system health metrics.
- * This endpoint is essential for monitoring the overall health of the data
- * collection and processing system.
- *
- * Returns:
- * dict: Pipeline status containing:
- * - overall_status: Current pipeline health status
- * - last_update: Timestamp of last successful update
- * - coverage_stats: Data coverage statistics per symbol
- * - active_symbols: Currently monitored symbols count
- * - error_count: Number of recent errors
- *
- * Raises:
- * HTTPException: 500 if status retrieval fails
- */
-export const pipelineGetPipelineStatusOptions = (
-	options?: Options<PipelineGetPipelineStatusData>,
-) => {
-	return queryOptions({
-		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await PipelineService.getPipelineStatus({
-				...options,
-				...queryKey[0],
-				signal,
-				throwOnError: true,
-			});
-			return data;
-		},
-		queryKey: pipelineGetPipelineStatusQueryKey(options),
-	});
-};
-
-/**
- * Setup Default Symbols
- * Initialize default watchlist with standard symbols.
- *
- * Sets up the pipeline with a predefined set of popular stock symbols
- * for immediate use. This is typically called during initial system setup
- * or when resetting the pipeline to defaults. Creates the 'default' watchlist
- * if it doesn't exist.
- *
- * Default symbols include major tech stocks: AAPL, MSFT, GOOGL, AMZN, etc.
- *
- * Returns:
- * dict: Setup confirmation containing:
- * - message: Success confirmation message
- * - symbols: List of symbols that were set up
- *
- * Raises:
- * HTTPException: 500 if default setup fails
- */
-export const pipelineSetupDefaultSymbolsMutation = (
-	options?: Partial<Options<PipelineSetupDefaultSymbolsData>>,
-): UseMutationOptions<
-	unknown,
-	PipelineSetupDefaultSymbolsError,
-	Options<PipelineSetupDefaultSymbolsData>
-> => {
-	const mutationOptions: UseMutationOptions<
-		unknown,
-		PipelineSetupDefaultSymbolsError,
-		Options<PipelineSetupDefaultSymbolsData>
-	> = {
-		mutationFn: async (fnOptions) => {
-			const { data } = await PipelineService.setupDefaultSymbols({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
-			return data;
-		},
-	};
-	return mutationOptions;
-};
-
-/**
- * Run Pipeline Update
- * Execute comprehensive data pipeline update for specified symbols.
- *
- * Initiates a full data collection and update process for the specified
- * symbols or the default watchlist. The update runs asynchronously in the
- * background to avoid blocking the API response. Includes company information
- * retrieval, historical price data collection, and data validation.
- *
- * Args:
- * request: Update configuration containing:
- * - symbols: Optional list of symbols to update (uses default if None)
- * - start_date: Optional start date for data collection
- * - end_date: Optional end date for data collection
- * background_tasks: FastAPI background task manager
- *
- * Returns:
- * dict: Update initiation confirmation containing:
- * - message: Update start confirmation
- * - symbols: Symbols being updated
- * - started_at: UTC timestamp when update began
- *
- * Raises:
- * HTTPException: 500 if update initiation fails
- *
- * Note:
- * This is an asynchronous operation. Use /status endpoint to monitor progress.
- */
-export const pipelineRunPipelineUpdateMutation = (
-	options?: Partial<Options<PipelineRunPipelineUpdateData>>,
-): UseMutationOptions<
-	unknown,
-	PipelineRunPipelineUpdateError,
-	Options<PipelineRunPipelineUpdateData>
-> => {
-	const mutationOptions: UseMutationOptions<
-		unknown,
-		PipelineRunPipelineUpdateError,
-		Options<PipelineRunPipelineUpdateData>
-	> = {
-		mutationFn: async (fnOptions) => {
-			const { data } = await PipelineService.runPipelineUpdate({
-				...options,
-				...fnOptions,
-				throwOnError: true,
-			});
-			return data;
-		},
-	};
-	return mutationOptions;
 };
 
 export const strategyGetStrategiesQueryKey = (
@@ -2717,4 +2147,235 @@ export const backtestsGetBacktestSummaryAnalyticsOptions = (
 		},
 		queryKey: backtestsGetBacktestSummaryAnalyticsQueryKey(options),
 	});
+};
+
+export const watchlistsListWatchlistsQueryKey = (
+	options?: Options<WatchlistsListWatchlistsData>,
+) => createQueryKey("watchlistsListWatchlists", options);
+
+/**
+ * 워치리스트 목록 조회
+ * 사용자의 모든 워치리스트 목록 조회
+ *
+ * 사용자에게 속한 모든 워치리스트의 요약 정보를 반환합니다.
+ */
+export const watchlistsListWatchlistsOptions = (
+	options?: Options<WatchlistsListWatchlistsData>,
+) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await WatchlistsService.워치리스트목록조회({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			});
+			return data;
+		},
+		queryKey: watchlistsListWatchlistsQueryKey(options),
+	});
+};
+
+/**
+ * 워치리스트 생성/업데이트
+ * 워치리스트 생성 또는 업데이트
+ *
+ * 유연한 워치리스트 관리를 위한 엔드포인트입니다.
+ * - 이름이 없으면 'default' 워치리스트로 처리
+ * - 기존 워치리스트가 있으면 업데이트, 없으면 생성
+ * - 심볼 데이터는 백그라운드에서 자동 수집
+ */
+export const watchlistsCreateOrUpdateWatchlistMutation = (
+	options?: Partial<Options<WatchlistsCreateOrUpdateWatchlistData>>,
+): UseMutationOptions<
+	unknown,
+	WatchlistsCreateOrUpdateWatchlistError,
+	Options<WatchlistsCreateOrUpdateWatchlistData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		unknown,
+		WatchlistsCreateOrUpdateWatchlistError,
+		Options<WatchlistsCreateOrUpdateWatchlistData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } =
+				(await WatchlistsService.워치리스트생성) /
+				업데이트({
+					...options,
+					...fnOptions,
+					throwOnError: true,
+				});
+			return data;
+		},
+	};
+	return mutationOptions;
+};
+
+/**
+ * 새 워치리스트 생성
+ * 새로운 명명된 워치리스트 생성
+ *
+ * 명시적인 이름을 가진 새 워치리스트를 생성합니다.
+ * 동일한 이름의 워치리스트가 이미 있으면 실패합니다.
+ */
+export const watchlistsCreateWatchlistMutation = (
+	options?: Partial<Options<WatchlistsCreateWatchlistData>>,
+): UseMutationOptions<
+	unknown,
+	WatchlistsCreateWatchlistError,
+	Options<WatchlistsCreateWatchlistData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		unknown,
+		WatchlistsCreateWatchlistError,
+		Options<WatchlistsCreateWatchlistData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await WatchlistsService.새워치리스트생성({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+	};
+	return mutationOptions;
+};
+
+/**
+ * 워치리스트 삭제
+ * 워치리스트 삭제
+ */
+export const watchlistsDeleteWatchlistMutation = (
+	options?: Partial<Options<WatchlistsDeleteWatchlistData>>,
+): UseMutationOptions<
+	unknown,
+	WatchlistsDeleteWatchlistError,
+	Options<WatchlistsDeleteWatchlistData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		unknown,
+		WatchlistsDeleteWatchlistError,
+		Options<WatchlistsDeleteWatchlistData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await WatchlistsService.워치리스트삭제({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+	};
+	return mutationOptions;
+};
+
+export const watchlistsGetWatchlistQueryKey = (
+	options: Options<WatchlistsGetWatchlistData>,
+) => createQueryKey("watchlistsGetWatchlist", options);
+
+/**
+ * 특정 워치리스트 조회
+ * 특정 워치리스트의 상세 정보 조회
+ */
+export const watchlistsGetWatchlistOptions = (
+	options: Options<WatchlistsGetWatchlistData>,
+) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await WatchlistsService.특정워치리스트조회({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			});
+			return data;
+		},
+		queryKey: watchlistsGetWatchlistQueryKey(options),
+	});
+};
+
+/**
+ * 워치리스트 업데이트
+ * 기존 워치리스트 업데이트
+ */
+export const watchlistsUpdateWatchlistMutation = (
+	options?: Partial<Options<WatchlistsUpdateWatchlistData>>,
+): UseMutationOptions<
+	unknown,
+	WatchlistsUpdateWatchlistError,
+	Options<WatchlistsUpdateWatchlistData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		unknown,
+		WatchlistsUpdateWatchlistError,
+		Options<WatchlistsUpdateWatchlistData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await WatchlistsService.워치리스트업데이트({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+	};
+	return mutationOptions;
+};
+
+export const watchlistsGetWatchlistCoverageQueryKey = (
+	options: Options<WatchlistsGetWatchlistCoverageData>,
+) => createQueryKey("watchlistsGetWatchlistCoverage", options);
+
+/**
+ * 워치리스트 데이터 커버리지
+ * 워치리스트의 데이터 커버리지 정보 조회
+ *
+ * 각 심볼별로 수집된 데이터의 상태와 품질을 확인합니다.
+ */
+export const watchlistsGetWatchlistCoverageOptions = (
+	options: Options<WatchlistsGetWatchlistCoverageData>,
+) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await WatchlistsService.워치리스트데이터커버리지({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			});
+			return data;
+		},
+		queryKey: watchlistsGetWatchlistCoverageQueryKey(options),
+	});
+};
+
+/**
+ * 기본 워치리스트 설정
+ * 기본 워치리스트 설정
+ *
+ * 인기 주식들로 구성된 기본 워치리스트를 생성합니다.
+ */
+export const watchlistsSetupDefaultWatchlistMutation = (
+	options?: Partial<Options<WatchlistsSetupDefaultWatchlistData>>,
+): UseMutationOptions<
+	unknown,
+	WatchlistsSetupDefaultWatchlistError,
+	Options<WatchlistsSetupDefaultWatchlistData>
+> => {
+	const mutationOptions: UseMutationOptions<
+		unknown,
+		WatchlistsSetupDefaultWatchlistError,
+		Options<WatchlistsSetupDefaultWatchlistData>
+	> = {
+		mutationFn: async (fnOptions) => {
+			const { data } = await WatchlistsService.기본워치리스트설정({
+				...options,
+				...fnOptions,
+				throwOnError: true,
+			});
+			return data;
+		},
+	};
+	return mutationOptions;
 };

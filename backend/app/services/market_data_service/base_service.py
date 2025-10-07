@@ -223,9 +223,59 @@ class BaseMarketDataService(ABC):
     ) -> Optional[List[Dict[str, Any]]]:
         """DuckDB 캐시에서 데이터 조회"""
         try:
-            # 간단한 구현 - 실제 DuckDB 접근은 DatabaseManager 개선 후 구현
-            # TODO: DatabaseManager의 DuckDB 메서드가 완성되면 실제 구현으로 교체
-            logger.info(f"DuckDB cache lookup for {cache_key} (placeholder)")
+            if not self._db_manager:
+                return None
+
+            # TTL 설정 (ignore_ttl이 True면 매우 긴 시간으로 설정)
+            ttl_hours = (
+                999999
+                if ignore_ttl
+                else self.cache_strategy.duckdb_ttl.total_seconds() // 3600
+            )
+
+            # DuckDB에서 캐시 데이터 조회
+            cached_data = self._db_manager.get_cache_data(
+                cache_key=cache_key,
+                table_name="market_data_cache",
+                ttl_hours=int(ttl_hours),
+            )
+
+            if cached_data:
+                # 날짜 범위 필터링
+                if start_date or end_date:
+                    filtered_data = []
+                    for item in cached_data:
+                        item_date = None
+                        # 날짜 필드 추출 (다양한 필드명 지원)
+                        for date_field in ["date", "timestamp", "time", "datetime"]:
+                            if date_field in item:
+                                try:
+                                    item_date = datetime.fromisoformat(
+                                        str(item[date_field]).replace("Z", "+00:00")
+                                    )
+                                    break
+                                except (ValueError, TypeError):
+                                    continue
+
+                        if item_date:
+                            if start_date and item_date < start_date:
+                                continue
+                            if end_date and item_date > end_date:
+                                continue
+
+                        filtered_data.append(item)
+
+                    logger.info(
+                        f"DuckDB cache hit: {cache_key} ({len(filtered_data)} items after filtering)"
+                    )
+                    return filtered_data
+                else:
+                    logger.info(
+                        f"DuckDB cache hit: {cache_key} ({len(cached_data)} items)"
+                    )
+                    return cached_data
+
+            logger.debug(f"DuckDB cache miss: {cache_key}")
             return None
 
         except Exception as e:
@@ -272,25 +322,36 @@ class BaseMarketDataService(ABC):
         self,
         cache_key: str,
         data: List[BaseMarketDataDocument],
-        table_name: str = "market_data",
+        table_name: str = "market_data_cache",
     ) -> bool:
         """DuckDB 캐시에 데이터 저장"""
         try:
-            if not data:
+            if not data or not self._db_manager:
                 return True
 
             # 데이터 변환
             records = []
             for item in data:
                 record = item.dict()
-                record["cache_key"] = cache_key
-                record["updated_at"] = datetime.utcnow()
+                # 날짜 필드가 datetime 객체면 ISO 문자열로 변환
+                for key, value in record.items():
+                    if isinstance(value, datetime):
+                        record[key] = value.isoformat()
                 records.append(record)
 
-            # DuckDB에 저장 (임시로 다른 메서드 사용)
-            # TODO: DatabaseManager에 적절한 메서드가 추가되면 수정
-            logger.info(f"Would store {len(records)} records to DuckDB cache")
-            return True
+            # DuckDB에 저장
+            success = self._db_manager.store_cache_data(
+                cache_key=cache_key, data=records, table_name=table_name
+            )
+
+            if success:
+                logger.info(
+                    f"DuckDB cache stored: {cache_key} ({len(records)} records)"
+                )
+            else:
+                logger.error(f"Failed to store DuckDB cache: {cache_key}")
+
+            return success
 
         except Exception as e:
             logger.error(f"DuckDB cache storage error: {e}")

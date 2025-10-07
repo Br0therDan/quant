@@ -16,3 +16,13 @@ class WatchlistCreate(BaseSchema):
     name: str
     symbols: List[str]
     description: str = ""
+
+
+class WatchlistResponse(BaseSchema):
+    """워치리스트 응답 모델"""
+
+    name: str
+    symbols: List[str]
+    description: Optional[str] = ""
+    created_at: Optional[str] = None
+    updated_at: Optional[str] = None

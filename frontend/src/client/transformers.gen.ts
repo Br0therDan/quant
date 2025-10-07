@@ -9,7 +9,7 @@ import type {
 	BacktestsGetBacktestsResponse,
 	BacktestsUpdateBacktestResponse,
 	HealthHealthCheckResponse,
-	MarketDataV2GetHistoricalDataResponse,
+	MarketDataGetHistoricalDataResponse,
 	StrategyCreateStrategyFromTemplateResponse,
 	StrategyCreateStrategyResponse,
 	StrategyCreateTemplateResponse,
@@ -36,9 +36,9 @@ const healthResponseSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const marketDataV2GetHistoricalDataResponseTransformer = async (
+export const marketDataGetHistoricalDataResponseTransformer = async (
 	data: any,
-): Promise<MarketDataV2GetHistoricalDataResponse> => {
+): Promise<MarketDataGetHistoricalDataResponse> => {
 	data = historicalDataResponseSchemaResponseTransformer(data);
 	return data;
 };

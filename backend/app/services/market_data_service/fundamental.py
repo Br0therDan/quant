@@ -526,18 +526,196 @@ class FundamentalService(BaseMarketDataService):
     # BaseMarketDataService 추상 메서드 구현
     async def _fetch_from_source(self, **kwargs) -> Any:
         """AlphaVantage에서 펀더멘털 데이터 가져오기"""
-        # TODO: 구현
-        pass
+        try:
+            method = kwargs.get("method", "overview")
+            symbol = kwargs.get("symbol")
+
+            if not symbol:
+                raise ValueError("Symbol is required for fundamental data")
+
+            if method == "overview":
+                return await self.alpha_vantage.fundamental.overview(symbol=symbol)
+            elif method == "income_statement":
+                return await self.alpha_vantage.fundamental.income_statement(
+                    symbol=symbol
+                )
+            elif method == "balance_sheet":
+                return await self.alpha_vantage.fundamental.balance_sheet(symbol=symbol)
+            elif method == "cash_flow":
+                return await self.alpha_vantage.fundamental.cash_flow(symbol=symbol)
+            elif method == "earnings":
+                return await self.alpha_vantage.fundamental.earnings(symbol=symbol)
+            else:
+                raise ValueError(f"Unknown fundamental method: {method}")
+
+        except Exception as e:
+            logger.error(f"Error fetching fundamental data from source: {e}")
+            raise
 
     async def _save_to_cache(self, data: Any, **kwargs) -> bool:
         """펀더멘털 데이터를 캐시에 저장"""
-        # TODO: 구현
-        return False
+        try:
+            cache_key = kwargs.get("cache_key", "fundamental_data")
+            symbol = kwargs.get("symbol", "UNKNOWN")
+
+            # 데이터를 CompanyOverview 모델로 변환
+            if isinstance(data, dict):
+                try:
+                    # CompanyOverview 모델 데이터 구성
+                    overview_data = {
+                        "symbol": symbol,
+                        "asset_type": data.get("AssetType", "Common Stock"),
+                        "name": data.get("Name", ""),
+                        "description": data.get("Description", ""),
+                        "cik": data.get("CIK", ""),
+                        "exchange": data.get("Exchange", ""),
+                        "currency": data.get("Currency", "USD"),
+                        "country": data.get("Country", "USA"),
+                        "sector": data.get("Sector", ""),
+                        "industry": data.get("Industry", ""),
+                        "address": data.get("Address", ""),
+                        "fiscal_year_end": data.get("FiscalYearEnd", ""),
+                        "latest_quarter": data.get("LatestQuarter", ""),
+                        "market_capitalization": self._safe_decimal(
+                            data.get("MarketCapitalization")
+                        ),
+                        "ebitda": self._safe_decimal(data.get("EBITDA")),
+                        "pe_ratio": self._safe_decimal(data.get("PERatio")),
+                        "peg_ratio": self._safe_decimal(data.get("PEGRatio")),
+                        "book_value": self._safe_decimal(data.get("BookValue")),
+                        "dividend_per_share": self._safe_decimal(
+                            data.get("DividendPerShare")
+                        ),
+                        "dividend_yield": self._safe_decimal(data.get("DividendYield")),
+                        "eps": self._safe_decimal(data.get("EPS")),
+                        "revenue_per_share_ttm": self._safe_decimal(
+                            data.get("RevenuePerShareTTM")
+                        ),
+                        "profit_margin": self._safe_decimal(data.get("ProfitMargin")),
+                        "operating_margin_ttm": self._safe_decimal(
+                            data.get("OperatingMarginTTM")
+                        ),
+                        "return_on_assets_ttm": self._safe_decimal(
+                            data.get("ReturnOnAssetsTTM")
+                        ),
+                        "return_on_equity_ttm": self._safe_decimal(
+                            data.get("ReturnOnEquityTTM")
+                        ),
+                        "revenue_ttm": self._safe_decimal(data.get("RevenueTTM")),
+                        "gross_profit_ttm": self._safe_decimal(
+                            data.get("GrossProfitTTM")
+                        ),
+                        "diluted_eps_ttm": self._safe_decimal(
+                            data.get("DilutedEPSTTM")
+                        ),
+                        "quarterly_earnings_growth_yoy": self._safe_decimal(
+                            data.get("QuarterlyEarningsGrowthYOY")
+                        ),
+                        "quarterly_revenue_growth_yoy": self._safe_decimal(
+                            data.get("QuarterlyRevenueGrowthYOY")
+                        ),
+                        "analyst_target_price": self._safe_decimal(
+                            data.get("AnalystTargetPrice")
+                        ),
+                        "trailing_pe": self._safe_decimal(data.get("TrailingPE")),
+                        "forward_pe": self._safe_decimal(data.get("ForwardPE")),
+                        "price_to_sales_ratio_ttm": self._safe_decimal(
+                            data.get("PriceToSalesRatioTTM")
+                        ),
+                        "price_to_book_ratio": self._safe_decimal(
+                            data.get("PriceToBookRatio")
+                        ),
+                        "ev_to_revenue": self._safe_decimal(data.get("EVToRevenue")),
+                        "ev_to_ebitda": self._safe_decimal(data.get("EVToEBITDA")),
+                        "beta": self._safe_decimal(data.get("Beta")),
+                        "week_52_high": self._safe_decimal(data.get("52WeekHigh")),
+                        "week_52_low": self._safe_decimal(data.get("52WeekLow")),
+                        "day_50_moving_average": self._safe_decimal(
+                            data.get("50DayMovingAverage")
+                        ),
+                        "day_200_moving_average": self._safe_decimal(
+                            data.get("200DayMovingAverage")
+                        ),
+                        "shares_outstanding": self._safe_decimal(
+                            data.get("SharesOutstanding")
+                        ),
+                        "dividend_date": data.get("DividendDate", ""),
+                        "ex_dividend_date": data.get("ExDividendDate", ""),
+                    }
+
+                    from app.models.market_data.fundamental import CompanyOverview
+
+                    overview = CompanyOverview(**overview_data)
+
+                    # DuckDB 캐시에 저장
+                    success = await self._store_to_duckdb_cache(
+                        cache_key=cache_key,
+                        data=[overview],
+                        table_name="fundamental_cache",
+                    )
+
+                    if success:
+                        logger.info(
+                            f"Fundamental data cached successfully: {cache_key}"
+                        )
+                    return success
+
+                except Exception as model_error:
+                    logger.warning(
+                        f"Failed to create CompanyOverview model: {model_error}"
+                    )
+                    # 원본 데이터를 딕셔너리로 저장
+                    if self._db_manager:
+                        return self._db_manager.store_cache_data(
+                            cache_key=cache_key,
+                            data=[data],
+                            table_name="fundamental_cache",
+                        )
+
+            logger.info(f"No valid fundamental data to cache for: {cache_key}")
+            return True
+
+        except Exception as e:
+            logger.error(f"Error saving fundamental data to cache: {e}")
+            return False
+
+    def _safe_decimal(self, value):
+        """문자열을 안전하게 Decimal로 변환"""
+        if value is None or value == "None" or value == "":
+            return None
+        try:
+            from decimal import Decimal
+
+            return Decimal(str(value))
+        except Exception:
+            return None
+            return None
 
     async def _get_from_cache(self, **kwargs) -> Optional[List[Any]]:
         """캐시에서 펀더멘털 데이터 조회"""
-        # TODO: 구현
-        return None
+        try:
+            cache_key = kwargs.get("cache_key", "fundamental_data")
+
+            # DuckDB 캐시에서 데이터 조회
+            cached_data = await self._get_from_duckdb_cache(
+                cache_key=cache_key,
+                start_date=kwargs.get("start_date"),
+                end_date=kwargs.get("end_date"),
+                ignore_ttl=kwargs.get("ignore_ttl", False),
+            )
+
+            if cached_data:
+                logger.info(
+                    f"Fundamental cache hit: {cache_key} ({len(cached_data)} items)"
+                )
+                return cached_data
+            else:
+                logger.debug(f"Fundamental cache miss: {cache_key}")
+                return None
+
+        except Exception as e:
+            logger.error(f"Error getting fundamental data from cache: {e}")
+            return None
 
     async def refresh_data_from_source(self, **kwargs) -> List[CompanyOverview]:
         """베이스 클래스의 추상 메서드 구현"""

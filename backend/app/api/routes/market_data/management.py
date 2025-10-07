@@ -12,7 +12,7 @@ from app.services.service_factory import service_factory
 router = APIRouter()
 
 
-@router.post("/collect/company-info/{symbol}", summary="기업 정보 수집")
+@router.post("/collect/company-info/{symbol}")
 async def collect_company_info(
     symbol: str = Path(..., description="종목 심볼 (예: AAPL)"),
 ):
@@ -49,7 +49,7 @@ async def collect_company_info(
         raise HTTPException(status_code=500, detail=f"기업 정보 수집 중 오류 발생: {str(e)}")
 
 
-@router.post("/collect/market-data/{symbol}", summary="주가 데이터 수집")
+@router.post("/collect/market-data/{symbol}")
 async def collect_market_data(
     symbol: str = Path(..., description="종목 심볼 (예: AAPL)"),
     start_date: Optional[datetime] = Query(None, description="시작일"),
@@ -92,7 +92,7 @@ async def collect_market_data(
         raise HTTPException(status_code=500, detail=f"주가 데이터 수집 중 오류 발생: {str(e)}")
 
 
-@router.post("/collect/bulk", summary="대량 데이터 수집")
+@router.post("/collect/bulk")
 async def collect_bulk_data(
     symbols: List[str] = Query(..., description="수집할 심볼 목록"),
     include_company_info: bool = Query(True, description="기업 정보 포함 여부"),
@@ -177,7 +177,7 @@ async def collect_bulk_data(
         raise HTTPException(status_code=500, detail=f"대량 수집 중 오류 발생: {str(e)}")
 
 
-@router.get("/coverage/{symbol}", summary="데이터 커버리지 확인")
+@router.get("/coverage/{symbol}")
 async def get_data_coverage(
     symbol: str = Path(..., description="종목 심볼 (예: AAPL)"),
 ):
@@ -249,7 +249,7 @@ async def get_data_coverage(
         raise HTTPException(status_code=500, detail=f"커버리지 확인 중 오류 발생: {str(e)}")
 
 
-@router.get("/status", summary="시스템 상태 조회")
+@router.get("/status")
 async def get_system_status():
     """
     시장 데이터 시스템의 전반적인 상태 조회

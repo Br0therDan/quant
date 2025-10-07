@@ -12,7 +12,7 @@ from app.schemas.watchlist import WatchlistCreate, WatchlistUpdate
 router = APIRouter()
 
 
-@router.post("/", summary="워치리스트 생성/업데이트")
+@router.post("/")
 async def create_or_update_watchlist(
     request: WatchlistUpdate,
     current_user: User = Depends(get_current_active_verified_user),
@@ -77,7 +77,7 @@ async def create_or_update_watchlist(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.post("/create", summary="새 워치리스트 생성")
+@router.post("/create")
 async def create_watchlist(
     request: WatchlistCreate,
     current_user: User = Depends(get_current_active_verified_user),
@@ -116,7 +116,7 @@ async def create_watchlist(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/", summary="워치리스트 목록 조회")
+@router.get("/")
 async def list_watchlists(
     current_user: User = Depends(get_current_active_verified_user),
 ):
@@ -155,7 +155,7 @@ async def list_watchlists(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/{name}", summary="특정 워치리스트 조회")
+@router.get("/{name}")
 async def get_watchlist(
     name: str = Path(..., description="워치리스트 이름"),
     current_user: User = Depends(get_current_active_verified_user),
@@ -189,7 +189,7 @@ async def get_watchlist(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.put("/{name}", summary="워치리스트 업데이트")
+@router.put("/{name}")
 async def update_watchlist(
     request: WatchlistUpdate,
     name: str = Path(..., description="워치리스트 이름"),
@@ -225,7 +225,7 @@ async def update_watchlist(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.delete("/{name}", summary="워치리스트 삭제")
+@router.delete("/{name}")
 async def delete_watchlist(
     name: str = Path(..., description="워치리스트 이름"),
     current_user: User = Depends(get_current_active_verified_user),
@@ -252,7 +252,7 @@ async def delete_watchlist(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/{name}/coverage", summary="워치리스트 데이터 커버리지")
+@router.get("/{name}/coverage")
 async def get_watchlist_coverage(
     name: str = Path(..., description="워치리스트 이름"),
     current_user: User = Depends(get_current_active_verified_user),
@@ -285,7 +285,7 @@ async def get_watchlist_coverage(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.post("/setup-default", summary="기본 워치리스트 설정")
+@router.post("/setup-default")
 async def setup_default_watchlist(
     current_user: User = Depends(get_current_active_verified_user),
 ):

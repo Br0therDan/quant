@@ -15,7 +15,6 @@ router = APIRouter()
 @router.get(
     "/overview/{symbol}",
     response_model=Dict[str, Any],
-    summary="기업 개요 조회",
     description="지정된 종목의 기업 개요 정보를 조회합니다.",
 )
 async def get_company_overview(
@@ -46,7 +45,6 @@ async def get_company_overview(
 @router.get(
     "/income-statement/{symbol}",
     response_model=Dict[str, Any],
-    summary="손익계산서 조회",
     description="지정된 종목의 손익계산서를 조회합니다.",
 )
 async def get_income_statement(
@@ -74,7 +72,6 @@ async def get_income_statement(
 @router.get(
     "/balance-sheet/{symbol}",
     response_model=Dict[str, Any],
-    summary="재무상태표 조회",
     description="지정된 종목의 재무상태표를 조회합니다.",
 )
 async def get_balance_sheet(
@@ -102,7 +99,6 @@ async def get_balance_sheet(
 @router.get(
     "/cash-flow/{symbol}",
     response_model=Dict[str, Any],
-    summary="현금흐름표 조회",
     description="지정된 종목의 현금흐름표를 조회합니다.",
 )
 async def get_cash_flow(
@@ -130,7 +126,6 @@ async def get_cash_flow(
 @router.get(
     "/earnings/{symbol}",
     response_model=Dict[str, Any],
-    summary="실적 데이터 조회",
     description="지정된 종목의 실적 데이터를 조회합니다.",
 )
 async def get_earnings(symbol: str = Path(..., description="종목 심볼 (예: AAPL, TSLA)")):

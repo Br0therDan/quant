@@ -15,7 +15,6 @@ router = APIRouter()
 @router.get(
     "/gdp",
     response_model=Dict[str, Any],
-    summary="GDP 데이터 조회",
     description="미국 GDP 데이터를 조회합니다.",
 )
 async def get_gdp_data(
@@ -47,7 +46,6 @@ async def get_gdp_data(
 @router.get(
     "/inflation",
     response_model=Dict[str, Any],
-    summary="인플레이션 데이터 조회",
     description="미국 인플레이션 지표 데이터를 조회합니다.",
 )
 async def get_inflation_data(
@@ -81,7 +79,6 @@ async def get_inflation_data(
 @router.get(
     "/interest-rates",
     response_model=Dict[str, Any],
-    summary="금리 데이터 조회",
     description="미국 기준금리 및 채권 수익률 데이터를 조회합니다.",
 )
 async def get_interest_rates(
@@ -110,7 +107,6 @@ async def get_interest_rates(
 @router.get(
     "/employment",
     response_model=Dict[str, Any],
-    summary="고용 지표 조회",
     description="미국 실업률 및 고용 관련 지표를 조회합니다.",
 )
 async def get_employment_data():
@@ -131,7 +127,6 @@ async def get_employment_data():
 @router.get(
     "/consumer-sentiment",
     response_model=Dict[str, Any],
-    summary="소비자 심리 지수 조회",
     description="미국 소비자 심리 지수를 조회합니다.",
 )
 async def get_consumer_sentiment():

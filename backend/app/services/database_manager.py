@@ -447,6 +447,146 @@ class DatabaseManager:
         logger.info(f"백테스트 결과 저장됨: {result_id}")
         return result_id
 
+    # ===== 캐시 관련 메서드들 =====
+
+    def store_cache_data(
+        self, cache_key: str, data: list[dict], table_name: str = "cache_data"
+    ) -> bool:
+        """DuckDB 캐시에 데이터 저장"""
+        self._ensure_connected()
+        if not self.connection:
+            raise RuntimeError("데이터베이스에 연결되지 않음")
+
+        try:
+            # 캐시 테이블이 없으면 생성
+            self._create_cache_table(table_name)
+
+            # 기존 캐시 데이터 삭제
+            self.connection.execute(
+                f"DELETE FROM {table_name} WHERE cache_key = ?", [cache_key]
+            )
+
+            # 새 데이터 삽입
+            if data:
+                import json
+                from datetime import datetime
+
+                for item in data:
+                    self.connection.execute(
+                        f"""
+                        INSERT INTO {table_name}
+                        (cache_key, data_json, created_at, updated_at)
+                        VALUES (?, ?, ?, ?)
+                    """,
+                        [
+                            cache_key,
+                            json.dumps(item),
+                            datetime.utcnow(),
+                            datetime.utcnow(),
+                        ],
+                    )
+
+                logger.info(f"DuckDB 캐시 저장 완료: {cache_key} ({len(data)} 항목)")
+                return True
+            return True
+
+        except Exception as e:
+            logger.error(f"DuckDB 캐시 저장 실패: {e}")
+            return False
+
+    def get_cache_data(
+        self, cache_key: str, table_name: str = "cache_data", ttl_hours: int = 24
+    ) -> list[dict] | None:
+        """DuckDB 캐시에서 데이터 조회"""
+        self._ensure_connected()
+        if not self.connection:
+            raise RuntimeError("데이터베이스에 연결되지 않음")
+
+        try:
+            from datetime import datetime, timedelta
+
+            # TTL 체크
+            ttl_threshold = datetime.utcnow() - timedelta(hours=ttl_hours)
+
+            results = self.connection.execute(
+                f"""
+                SELECT data_json FROM {table_name}
+                WHERE cache_key = ? AND updated_at > ?
+                ORDER BY created_at
+            """,
+                [cache_key, ttl_threshold],
+            ).fetchall()
+
+            if results:
+                import json
+
+                data = [json.loads(row[0]) for row in results]
+                logger.info(f"DuckDB 캐시 조회 성공: {cache_key} ({len(data)} 항목)")
+                return data
+            else:
+                logger.debug(f"DuckDB 캐시 미스: {cache_key}")
+                return None
+
+        except Exception as e:
+            logger.error(f"DuckDB 캐시 조회 실패: {e}")
+            return None
+
+    def clear_cache(
+        self, cache_key: str | None = None, table_name: str = "cache_data"
+    ) -> bool:
+        """DuckDB 캐시 삭제"""
+        self._ensure_connected()
+        if not self.connection:
+            raise RuntimeError("데이터베이스에 연결되지 않음")
+
+        try:
+            if cache_key:
+                self.connection.execute(
+                    f"DELETE FROM {table_name} WHERE cache_key = ?", [cache_key]
+                )
+                logger.info(f"DuckDB 캐시 삭제: {cache_key}")
+            else:
+                self.connection.execute(f"DELETE FROM {table_name}")
+                logger.info(f"DuckDB 캐시 전체 삭제: {table_name}")
+            return True
+
+        except Exception as e:
+            logger.error(f"DuckDB 캐시 삭제 실패: {e}")
+            return False
+
+    def _create_cache_table(self, table_name: str) -> None:
+        """캐시 테이블 생성"""
+        self._ensure_connected()
+        if not self.connection:
+            raise RuntimeError("데이터베이스에 연결되지 않음")
+
+        self.connection.execute(
+            f"""
+            CREATE TABLE IF NOT EXISTS {table_name} (
+                id INTEGER PRIMARY KEY,
+                cache_key VARCHAR NOT NULL,
+                data_json TEXT NOT NULL,
+                created_at TIMESTAMP NOT NULL,
+                updated_at TIMESTAMP NOT NULL
+            )
+        """
+        )
+
+        # 인덱스 생성
+        self.connection.execute(
+            f"""
+            CREATE INDEX IF NOT EXISTS idx_{table_name}_cache_key
+            ON {table_name}(cache_key)
+        """
+        )
+
+        self.connection.execute(
+            f"""
+            CREATE INDEX IF NOT EXISTS idx_{table_name}_updated_at
+            ON {table_name}(updated_at)
+        """
+        )
+
 
 def get_database() -> DatabaseManager:
     """데이터베이스 매니저 인스턴스 생성"""

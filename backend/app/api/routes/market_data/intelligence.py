@@ -15,7 +15,6 @@ router = APIRouter()
 @router.get(
     "/news/{symbol}",
     response_model=Dict[str, Any],
-    summary="종목 뉴스 조회",
     description="지정된 종목 관련 뉴스를 조회합니다.",
 )
 async def get_news(
@@ -71,7 +70,6 @@ async def get_news(
 @router.get(
     "/sentiment/{symbol}",
     response_model=Dict[str, Any],
-    summary="감정 분석 조회",
     description="지정된 종목의 감정 분석 결과를 조회합니다.",
 )
 async def get_sentiment_analysis(
@@ -113,7 +111,6 @@ async def get_sentiment_analysis(
 @router.get(
     "/analyst-recommendations/{symbol}",
     response_model=Dict[str, Any],
-    summary="분석가 추천 조회",
     description="지정된 종목의 분석가 추천 정보를 조회합니다.",
 )
 async def get_analyst_recommendations(
@@ -155,7 +152,6 @@ async def get_analyst_recommendations(
 @router.get(
     "/social-sentiment/{symbol}",
     response_model=Dict[str, Any],
-    summary="소셜 미디어 감정 분석 조회",
     description="지정된 종목의 소셜 미디어 감정 분석을 조회합니다.",
 )
 async def get_social_sentiment(

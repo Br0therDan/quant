@@ -40,7 +40,6 @@ class HistoricalDataResponse(BaseModel):
 @router.get(
     "/daily/{symbol}",
     response_model=Dict[str, Any],  # 임시로 Dict 사용
-    summary="일일 주가 데이터 조회",
     description="지정된 종목의 일일 주가 데이터(OHLCV)를 조회합니다.",
 )
 async def get_daily_prices(
@@ -122,7 +121,6 @@ async def get_daily_prices(
 @router.get(
     "/quote/{symbol}",
     response_model=Dict[str, Any],
-    summary="실시간 주식 호가 조회",
     description="지정된 종목의 실시간 호가 정보를 조회합니다.",
 )
 async def get_quote(symbol: str = Path(..., description="종목 심볼 (예: AAPL, TSLA)")):
@@ -147,7 +145,6 @@ async def get_quote(symbol: str = Path(..., description="종목 심볼 (예: AAP
 @router.get(
     "/intraday/{symbol}",
     response_model=Dict[str, Any],
-    summary="실시간/인트라데이 데이터 조회",
     description="지정된 종목의 실시간 또는 분봉 데이터를 조회합니다.",
 )
 async def get_intraday_data(
@@ -179,7 +176,6 @@ async def get_intraday_data(
 @router.get(
     "/historical/{symbol}",
     response_model=HistoricalDataResponse,
-    summary="장기 히스토리 데이터 조회",
     description="지정된 종목의 장기 히스토리 데이터를 조회합니다.",
 )
 async def get_historical_data(

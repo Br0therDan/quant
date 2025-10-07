@@ -2,7 +2,7 @@
 
 import { type Client, type Options as Options2, type TDataShape, urlSearchParamsBodySerializer } from './client';
 import { client } from './client.gen';
-import type { AuthForgotPasswordData, AuthForgotPasswordErrors, AuthForgotPasswordResponses, AuthLoginData, AuthLoginErrors, AuthLoginResponses, AuthLogoutData, AuthLogoutErrors, AuthLogoutResponses, AuthRefreshTokenData, AuthRefreshTokenErrors, AuthRefreshTokenResponses, AuthRegisterData, AuthRegisterErrors, AuthRegisterResponses, AuthRequestVerifyTokenData, AuthRequestVerifyTokenErrors, AuthRequestVerifyTokenResponses, AuthResetPasswordData, AuthResetPasswordErrors, AuthResetPasswordResponses, AuthVerifyData, AuthVerifyErrors, AuthVerifyResponses, AuthVerifyTokenData, AuthVerifyTokenErrors, AuthVerifyTokenResponses, BacktestsCreateAndRunIntegratedBacktestData, BacktestsCreateAndRunIntegratedBacktestErrors, BacktestsCreateAndRunIntegratedBacktestResponses, BacktestsCreateBacktestData, BacktestsCreateBacktestErrors, BacktestsCreateBacktestResponses, BacktestsDeleteBacktestData, BacktestsDeleteBacktestErrors, BacktestsDeleteBacktestResponses, BacktestsExecuteBacktestData, BacktestsExecuteBacktestErrors, BacktestsExecuteBacktestResponses, BacktestsGetBacktestData, BacktestsGetBacktestErrors, BacktestsGetBacktestExecutionsData, BacktestsGetBacktestExecutionsErrors, BacktestsGetBacktestExecutionsResponses, BacktestsGetBacktestResponses, BacktestsGetBacktestResultsData, BacktestsGetBacktestResultsErrors, BacktestsGetBacktestResultsResponses, BacktestsGetBacktestsData, BacktestsGetBacktestsErrors, BacktestsGetBacktestsResponses, BacktestsGetBacktestSummaryAnalyticsData, BacktestsGetBacktestSummaryAnalyticsErrors, BacktestsGetBacktestSummaryAnalyticsResponses, BacktestsGetPerformanceAnalyticsData, BacktestsGetPerformanceAnalyticsErrors, BacktestsGetPerformanceAnalyticsResponses, BacktestsGetTradesAnalyticsData, BacktestsGetTradesAnalyticsErrors, BacktestsGetTradesAnalyticsResponses, BacktestsHealthCheckData, BacktestsHealthCheckErrors, BacktestsHealthCheckResponses, BacktestsUpdateBacktestData, BacktestsUpdateBacktestErrors, BacktestsUpdateBacktestResponses, HealthHealthCheckData, HealthHealthCheckResponses, HealthLivenessProbeData, HealthLivenessProbeResponses, HealthReadinessProbeData, HealthReadinessProbeResponses, MarketDataV2GetAnalystRecommendationsData, MarketDataV2GetAnalystRecommendationsErrors, MarketDataV2GetAnalystRecommendationsResponses, MarketDataV2GetAvailableSymbolsData, MarketDataV2GetAvailableSymbolsErrors, MarketDataV2GetAvailableSymbolsResponses, MarketDataV2GetBalanceSheetData, MarketDataV2GetBalanceSheetErrors, MarketDataV2GetBalanceSheetResponses, MarketDataV2GetCashFlowData, MarketDataV2GetCashFlowErrors, MarketDataV2GetCashFlowResponses, MarketDataV2GetCompanyOverviewData, MarketDataV2GetCompanyOverviewErrors, MarketDataV2GetCompanyOverviewResponses, MarketDataV2GetConsumerSentimentData, MarketDataV2GetConsumerSentimentErrors, MarketDataV2GetConsumerSentimentResponses, MarketDataV2GetDailyPricesData, MarketDataV2GetDailyPricesErrors, MarketDataV2GetDailyPricesResponses, MarketDataV2GetEarningsData, MarketDataV2GetEarningsErrors, MarketDataV2GetEarningsResponses, MarketDataV2GetEmploymentDataData, MarketDataV2GetEmploymentDataErrors, MarketDataV2GetEmploymentDataResponses, MarketDataV2GetGdpDataData, MarketDataV2GetGdpDataErrors, MarketDataV2GetGdpDataResponses, MarketDataV2GetHistoricalDataData, MarketDataV2GetHistoricalDataErrors, MarketDataV2GetHistoricalDataResponses, MarketDataV2GetIncomeStatementData, MarketDataV2GetIncomeStatementErrors, MarketDataV2GetIncomeStatementResponses, MarketDataV2GetInflationDataData, MarketDataV2GetInflationDataErrors, MarketDataV2GetInflationDataResponses, MarketDataV2GetInterestRatesData, MarketDataV2GetInterestRatesErrors, MarketDataV2GetInterestRatesResponses, MarketDataV2GetIntradayDataData, MarketDataV2GetIntradayDataErrors, MarketDataV2GetIntradayDataResponses, MarketDataV2GetMarketDataInfoData, MarketDataV2GetMarketDataInfoErrors, MarketDataV2GetMarketDataInfoResponses, MarketDataV2GetNewsData, MarketDataV2GetNewsErrors, MarketDataV2GetNewsResponses, MarketDataV2GetQuoteData, MarketDataV2GetQuoteErrors, MarketDataV2GetQuoteResponses, MarketDataV2GetSentimentAnalysisData, MarketDataV2GetSentimentAnalysisErrors, MarketDataV2GetSentimentAnalysisResponses, MarketDataV2GetSocialSentimentData, MarketDataV2GetSocialSentimentErrors, MarketDataV2GetSocialSentimentResponses, MarketDataV2HealthCheckData, MarketDataV2HealthCheckErrors, MarketDataV2HealthCheckResponses, OAuth2AuthorizeData, OAuth2AuthorizeErrors, OAuth2AuthorizeResponses, OAuth2CallbackData, OAuth2CallbackErrors, OAuth2CallbackResponses, PipelineCollectDailyDataData, PipelineCollectDailyDataErrors, PipelineCollectDailyDataResponses, PipelineCollectStockInfoData, PipelineCollectStockInfoErrors, PipelineCollectStockInfoResponses, PipelineCreateWatchlistData, PipelineCreateWatchlistErrors, PipelineCreateWatchlistResponses, PipelineDeleteWatchlistData, PipelineDeleteWatchlistErrors, PipelineDeleteWatchlistResponses, PipelineGetCompanyInfoData, PipelineGetCompanyInfoErrors, PipelineGetCompanyInfoResponses, PipelineGetPipelineStatusData, PipelineGetPipelineStatusErrors, PipelineGetPipelineStatusResponses, PipelineGetSymbolCoverageData, PipelineGetSymbolCoverageErrors, PipelineGetSymbolCoverageResponses, PipelineGetWatchlistData, PipelineGetWatchlistErrors, PipelineGetWatchlistResponses, PipelineListCompaniesData, PipelineListCompaniesErrors, PipelineListCompaniesResponses, PipelineListWatchlistsData, PipelineListWatchlistsErrors, PipelineListWatchlistsResponses, PipelineRunPipelineUpdateData, PipelineRunPipelineUpdateErrors, PipelineRunPipelineUpdateResponses, PipelineSetupDefaultSymbolsData, PipelineSetupDefaultSymbolsErrors, PipelineSetupDefaultSymbolsResponses, PipelineUpdateWatchlistByNameData, PipelineUpdateWatchlistByNameErrors, PipelineUpdateWatchlistByNameResponses, PipelineUpdateWatchlistData, PipelineUpdateWatchlistErrors, PipelineUpdateWatchlistResponses, StrategyCreateStrategyData, StrategyCreateStrategyErrors, StrategyCreateStrategyFromTemplateData, StrategyCreateStrategyFromTemplateErrors, StrategyCreateStrategyFromTemplateResponses, StrategyCreateStrategyResponses, StrategyCreateTemplateData, StrategyCreateTemplateErrors, StrategyCreateTemplateResponses, StrategyDeleteStrategyData, StrategyDeleteStrategyErrors, StrategyDeleteStrategyResponses, StrategyDeleteTemplateData, StrategyDeleteTemplateErrors, StrategyDeleteTemplateResponses, StrategyExecuteStrategyData, StrategyExecuteStrategyErrors, StrategyExecuteStrategyResponses, StrategyGetStrategiesData, StrategyGetStrategiesErrors, StrategyGetStrategiesResponses, StrategyGetStrategyData, StrategyGetStrategyErrors, StrategyGetStrategyExecutionsData, StrategyGetStrategyExecutionsErrors, StrategyGetStrategyExecutionsResponses, StrategyGetStrategyPerformanceData, StrategyGetStrategyPerformanceErrors, StrategyGetStrategyPerformanceResponses, StrategyGetStrategyResponses, StrategyGetTemplateData, StrategyGetTemplateErrors, StrategyGetTemplateResponses, StrategyGetTemplatesData, StrategyGetTemplatesErrors, StrategyGetTemplatesResponses, StrategyGetTemplateUsageStatsData, StrategyGetTemplateUsageStatsErrors, StrategyGetTemplateUsageStatsResponses, StrategyUpdateStrategyData, StrategyUpdateStrategyErrors, StrategyUpdateStrategyResponses, StrategyUpdateTemplateData, StrategyUpdateTemplateErrors, StrategyUpdateTemplateResponses, UserDeleteUserData, UserDeleteUserErrors, UserDeleteUserResponses, UserGetMyOauthAccountsData, UserGetMyOauthAccountsErrors, UserGetMyOauthAccountsResponses, UserGetUserData, UserGetUserErrors, UserGetUserMeData, UserGetUserMeErrors, UserGetUserMeResponses, UserGetUserOauthAccountsData, UserGetUserOauthAccountsErrors, UserGetUserOauthAccountsResponses, UserGetUserResponses, UserRemoveOauthAccountData, UserRemoveOauthAccountErrors, UserRemoveOauthAccountResponses, UserUpdateUserData, UserUpdateUserErrors, UserUpdateUserMeData, UserUpdateUserMeErrors, UserUpdateUserMeResponses, UserUpdateUserResponses } from './types.gen';
+import type { AuthForgotPasswordData, AuthForgotPasswordErrors, AuthForgotPasswordResponses, AuthLoginData, AuthLoginErrors, AuthLoginResponses, AuthLogoutData, AuthLogoutErrors, AuthLogoutResponses, AuthRefreshTokenData, AuthRefreshTokenErrors, AuthRefreshTokenResponses, AuthRegisterData, AuthRegisterErrors, AuthRegisterResponses, AuthRequestVerifyTokenData, AuthRequestVerifyTokenErrors, AuthRequestVerifyTokenResponses, AuthResetPasswordData, AuthResetPasswordErrors, AuthResetPasswordResponses, AuthVerifyData, AuthVerifyErrors, AuthVerifyResponses, AuthVerifyTokenData, AuthVerifyTokenErrors, AuthVerifyTokenResponses, BacktestsCreateAndRunIntegratedBacktestData, BacktestsCreateAndRunIntegratedBacktestErrors, BacktestsCreateAndRunIntegratedBacktestResponses, BacktestsCreateBacktestData, BacktestsCreateBacktestErrors, BacktestsCreateBacktestResponses, BacktestsDeleteBacktestData, BacktestsDeleteBacktestErrors, BacktestsDeleteBacktestResponses, BacktestsExecuteBacktestData, BacktestsExecuteBacktestErrors, BacktestsExecuteBacktestResponses, BacktestsGetBacktestData, BacktestsGetBacktestErrors, BacktestsGetBacktestExecutionsData, BacktestsGetBacktestExecutionsErrors, BacktestsGetBacktestExecutionsResponses, BacktestsGetBacktestResponses, BacktestsGetBacktestResultsData, BacktestsGetBacktestResultsErrors, BacktestsGetBacktestResultsResponses, BacktestsGetBacktestsData, BacktestsGetBacktestsErrors, BacktestsGetBacktestsResponses, BacktestsGetBacktestSummaryAnalyticsData, BacktestsGetBacktestSummaryAnalyticsErrors, BacktestsGetBacktestSummaryAnalyticsResponses, BacktestsGetPerformanceAnalyticsData, BacktestsGetPerformanceAnalyticsErrors, BacktestsGetPerformanceAnalyticsResponses, BacktestsGetTradesAnalyticsData, BacktestsGetTradesAnalyticsErrors, BacktestsGetTradesAnalyticsResponses, BacktestsHealthCheckData, BacktestsHealthCheckErrors, BacktestsHealthCheckResponses, BacktestsUpdateBacktestData, BacktestsUpdateBacktestErrors, BacktestsUpdateBacktestResponses, HealthHealthCheckData, HealthHealthCheckResponses, HealthLivenessProbeData, HealthLivenessProbeResponses, HealthReadinessProbeData, HealthReadinessProbeResponses, MarketDataCollectBulkDataData, MarketDataCollectBulkDataErrors, MarketDataCollectBulkDataResponses, MarketDataCollectCompanyInfoData, MarketDataCollectCompanyInfoErrors, MarketDataCollectCompanyInfoResponses, MarketDataCollectMarketDataData, MarketDataCollectMarketDataErrors, MarketDataCollectMarketDataResponses, MarketDataGetAnalystRecommendationsData, MarketDataGetAnalystRecommendationsErrors, MarketDataGetAnalystRecommendationsResponses, MarketDataGetBalanceSheetData, MarketDataGetBalanceSheetErrors, MarketDataGetBalanceSheetResponses, MarketDataGetCashFlowData, MarketDataGetCashFlowErrors, MarketDataGetCashFlowResponses, MarketDataGetCompanyOverviewData, MarketDataGetCompanyOverviewErrors, MarketDataGetCompanyOverviewResponses, MarketDataGetConsumerSentimentData, MarketDataGetConsumerSentimentErrors, MarketDataGetConsumerSentimentResponses, MarketDataGetDailyPricesData, MarketDataGetDailyPricesErrors, MarketDataGetDailyPricesResponses, MarketDataGetDataCoverageData, MarketDataGetDataCoverageErrors, MarketDataGetDataCoverageResponses, MarketDataGetEarningsData, MarketDataGetEarningsErrors, MarketDataGetEarningsResponses, MarketDataGetEmploymentDataData, MarketDataGetEmploymentDataErrors, MarketDataGetEmploymentDataResponses, MarketDataGetGdpDataData, MarketDataGetGdpDataErrors, MarketDataGetGdpDataResponses, MarketDataGetHistoricalDataData, MarketDataGetHistoricalDataErrors, MarketDataGetHistoricalDataResponses, MarketDataGetIncomeStatementData, MarketDataGetIncomeStatementErrors, MarketDataGetIncomeStatementResponses, MarketDataGetInflationDataData, MarketDataGetInflationDataErrors, MarketDataGetInflationDataResponses, MarketDataGetInterestRatesData, MarketDataGetInterestRatesErrors, MarketDataGetInterestRatesResponses, MarketDataGetIntradayDataData, MarketDataGetIntradayDataErrors, MarketDataGetIntradayDataResponses, MarketDataGetMarketDataInfoData, MarketDataGetMarketDataInfoErrors, MarketDataGetMarketDataInfoResponses, MarketDataGetNewsData, MarketDataGetNewsErrors, MarketDataGetNewsResponses, MarketDataGetQuoteData, MarketDataGetQuoteErrors, MarketDataGetQuoteResponses, MarketDataGetSentimentAnalysisData, MarketDataGetSentimentAnalysisErrors, MarketDataGetSentimentAnalysisResponses, MarketDataGetSocialSentimentData, MarketDataGetSocialSentimentErrors, MarketDataGetSocialSentimentResponses, MarketDataGetSystemStatusData, MarketDataGetSystemStatusErrors, MarketDataGetSystemStatusResponses, MarketDataHealthCheckData, MarketDataHealthCheckErrors, MarketDataHealthCheckResponses, OAuth2AuthorizeData, OAuth2AuthorizeErrors, OAuth2AuthorizeResponses, OAuth2CallbackData, OAuth2CallbackErrors, OAuth2CallbackResponses, StrategyCreateStrategyData, StrategyCreateStrategyErrors, StrategyCreateStrategyFromTemplateData, StrategyCreateStrategyFromTemplateErrors, StrategyCreateStrategyFromTemplateResponses, StrategyCreateStrategyResponses, StrategyCreateTemplateData, StrategyCreateTemplateErrors, StrategyCreateTemplateResponses, StrategyDeleteStrategyData, StrategyDeleteStrategyErrors, StrategyDeleteStrategyResponses, StrategyDeleteTemplateData, StrategyDeleteTemplateErrors, StrategyDeleteTemplateResponses, StrategyExecuteStrategyData, StrategyExecuteStrategyErrors, StrategyExecuteStrategyResponses, StrategyGetStrategiesData, StrategyGetStrategiesErrors, StrategyGetStrategiesResponses, StrategyGetStrategyData, StrategyGetStrategyErrors, StrategyGetStrategyExecutionsData, StrategyGetStrategyExecutionsErrors, StrategyGetStrategyExecutionsResponses, StrategyGetStrategyPerformanceData, StrategyGetStrategyPerformanceErrors, StrategyGetStrategyPerformanceResponses, StrategyGetStrategyResponses, StrategyGetTemplateData, StrategyGetTemplateErrors, StrategyGetTemplateResponses, StrategyGetTemplatesData, StrategyGetTemplatesErrors, StrategyGetTemplatesResponses, StrategyGetTemplateUsageStatsData, StrategyGetTemplateUsageStatsErrors, StrategyGetTemplateUsageStatsResponses, StrategyUpdateStrategyData, StrategyUpdateStrategyErrors, StrategyUpdateStrategyResponses, StrategyUpdateTemplateData, StrategyUpdateTemplateErrors, StrategyUpdateTemplateResponses, UserDeleteUserData, UserDeleteUserErrors, UserDeleteUserResponses, UserGetMyOauthAccountsData, UserGetMyOauthAccountsErrors, UserGetMyOauthAccountsResponses, UserGetUserData, UserGetUserErrors, UserGetUserMeData, UserGetUserMeErrors, UserGetUserMeResponses, UserGetUserOauthAccountsData, UserGetUserOauthAccountsErrors, UserGetUserOauthAccountsResponses, UserGetUserResponses, UserRemoveOauthAccountData, UserRemoveOauthAccountErrors, UserRemoveOauthAccountResponses, UserUpdateUserData, UserUpdateUserErrors, UserUpdateUserMeData, UserUpdateUserMeErrors, UserUpdateUserMeResponses, UserUpdateUserResponses, WatchlistsCreateOrUpdateWatchlistData, WatchlistsCreateOrUpdateWatchlistErrors, WatchlistsCreateOrUpdateWatchlistResponses, WatchlistsCreateWatchlistData, WatchlistsCreateWatchlistErrors, WatchlistsCreateWatchlistResponses, WatchlistsDeleteWatchlistData, WatchlistsDeleteWatchlistErrors, WatchlistsDeleteWatchlistResponses, WatchlistsGetWatchlistCoverageData, WatchlistsGetWatchlistCoverageErrors, WatchlistsGetWatchlistCoverageResponses, WatchlistsGetWatchlistData, WatchlistsGetWatchlistErrors, WatchlistsGetWatchlistResponses, WatchlistsListWatchlistsData, WatchlistsListWatchlistsErrors, WatchlistsListWatchlistsResponses, WatchlistsSetupDefaultWatchlistData, WatchlistsSetupDefaultWatchlistErrors, WatchlistsSetupDefaultWatchlistResponses, WatchlistsUpdateWatchlistData, WatchlistsUpdateWatchlistErrors, WatchlistsUpdateWatchlistResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -353,372 +353,13 @@ export class OAuth2Service {
     }
 }
 
-export class MarketDataV2Service {
-    /**
-     * 일일 주가 데이터 조회
-     * 지정된 종목의 일일 주가 데이터(OHLCV)를 조회합니다.
-     */
-    public static 일일주가데이터조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetDailyPricesData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetDailyPricesResponses, MarketDataV2GetDailyPricesErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/stock/daily/{symbol}',
-            ...options
-        });
-    }
-
-    /**
-     * 실시간 주식 호가 조회
-     * 지정된 종목의 실시간 호가 정보를 조회합니다.
-     */
-    public static 실시간주식호가조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetQuoteData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetQuoteResponses, MarketDataV2GetQuoteErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/stock/quote/{symbol}',
-            ...options
-        });
-    }
-
-    /**
-     * 실시간/인트라데이 데이터 조회
-     * 지정된 종목의 실시간 또는 분봉 데이터를 조회합니다.
-     */
-    public static 실시간/인트라데이데이터조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetIntradayDataData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetIntradayDataResponses, MarketDataV2GetIntradayDataErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/stock/intraday/{symbol}',
-            ...options
-        });
-    }
-
-    /**
-     * 장기 히스토리 데이터 조회
-     * 지정된 종목의 장기 히스토리 데이터를 조회합니다.
-     */
-    public static 장기히스토리데이터조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetHistoricalDataData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetHistoricalDataResponses, MarketDataV2GetHistoricalDataErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/stock/historical/{symbol}',
-            ...options
-        });
-    }
-
-    /**
-     * 사용 가능한 종목 심볼 목록 조회
-     * API에서 지원하는 종목 심볼 목록을 조회합니다.
-     */
-    public static 사용가능한종목심볼목록조회<ThrowOnError extends boolean = false>(options?: Options<MarketDataV2GetAvailableSymbolsData, ThrowOnError>) {
-        return (options?.client ?? client).get<MarketDataV2GetAvailableSymbolsResponses, MarketDataV2GetAvailableSymbolsErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/stock/symbols',
-            ...options
-        });
-    }
-
-    /**
-     * 기업 개요 조회
-     * 지정된 종목의 기업 개요 정보를 조회합니다.
-     */
-    public static 기업개요조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetCompanyOverviewData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetCompanyOverviewResponses, MarketDataV2GetCompanyOverviewErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/fundamental/overview/{symbol}',
-            ...options
-        });
-    }
-
-    /**
-     * 손익계산서 조회
-     * 지정된 종목의 손익계산서를 조회합니다.
-     */
-    public static 손익계산서조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetIncomeStatementData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetIncomeStatementResponses, MarketDataV2GetIncomeStatementErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/fundamental/income-statement/{symbol}',
-            ...options
-        });
-    }
-
-    /**
-     * 재무상태표 조회
-     * 지정된 종목의 재무상태표를 조회합니다.
-     */
-    public static 재무상태표조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetBalanceSheetData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetBalanceSheetResponses, MarketDataV2GetBalanceSheetErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/fundamental/balance-sheet/{symbol}',
-            ...options
-        });
-    }
-
-    /**
-     * 현금흐름표 조회
-     * 지정된 종목의 현금흐름표를 조회합니다.
-     */
-    public static 현금흐름표조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetCashFlowData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetCashFlowResponses, MarketDataV2GetCashFlowErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/fundamental/cash-flow/{symbol}',
-            ...options
-        });
-    }
-
-    /**
-     * 실적 데이터 조회
-     * 지정된 종목의 실적 데이터를 조회합니다.
-     */
-    public static 실적데이터조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetEarningsData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetEarningsResponses, MarketDataV2GetEarningsErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/fundamental/earnings/{symbol}',
-            ...options
-        });
-    }
-
-    /**
-     * GDP 데이터 조회
-     * 미국 GDP 데이터를 조회합니다.
-     */
-    public static gdp데이터조회<ThrowOnError extends boolean = false>(options?: Options<MarketDataV2GetGdpDataData, ThrowOnError>) {
-        return (options?.client ?? client).get<MarketDataV2GetGdpDataResponses, MarketDataV2GetGdpDataErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/economic/gdp',
-            ...options
-        });
-    }
-
-    /**
-     * 인플레이션 데이터 조회
-     * 미국 인플레이션 지표 데이터를 조회합니다.
-     */
-    public static 인플레이션데이터조회<ThrowOnError extends boolean = false>(options?: Options<MarketDataV2GetInflationDataData, ThrowOnError>) {
-        return (options?.client ?? client).get<MarketDataV2GetInflationDataResponses, MarketDataV2GetInflationDataErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/economic/inflation',
-            ...options
-        });
-    }
-
-    /**
-     * 금리 데이터 조회
-     * 미국 기준금리 및 채권 수익률 데이터를 조회합니다.
-     */
-    public static 금리데이터조회<ThrowOnError extends boolean = false>(options?: Options<MarketDataV2GetInterestRatesData, ThrowOnError>) {
-        return (options?.client ?? client).get<MarketDataV2GetInterestRatesResponses, MarketDataV2GetInterestRatesErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/economic/interest-rates',
-            ...options
-        });
-    }
-
-    /**
-     * 고용 지표 조회
-     * 미국 실업률 및 고용 관련 지표를 조회합니다.
-     */
-    public static 고용지표조회<ThrowOnError extends boolean = false>(options?: Options<MarketDataV2GetEmploymentDataData, ThrowOnError>) {
-        return (options?.client ?? client).get<MarketDataV2GetEmploymentDataResponses, MarketDataV2GetEmploymentDataErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/economic/employment',
-            ...options
-        });
-    }
-
-    /**
-     * 소비자 심리 지수 조회
-     * 미국 소비자 심리 지수를 조회합니다.
-     */
-    public static 소비자심리지수조회<ThrowOnError extends boolean = false>(options?: Options<MarketDataV2GetConsumerSentimentData, ThrowOnError>) {
-        return (options?.client ?? client).get<MarketDataV2GetConsumerSentimentResponses, MarketDataV2GetConsumerSentimentErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/economic/consumer-sentiment',
-            ...options
-        });
-    }
-
-    /**
-     * 종목 뉴스 조회
-     * 지정된 종목 관련 뉴스를 조회합니다.
-     */
-    public static 종목뉴스조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetNewsData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetNewsResponses, MarketDataV2GetNewsErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/intelligence/news/{symbol}',
-            ...options
-        });
-    }
-
-    /**
-     * 감정 분석 조회
-     * 지정된 종목의 감정 분석 결과를 조회합니다.
-     */
-    public static 감정분석조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetSentimentAnalysisData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetSentimentAnalysisResponses, MarketDataV2GetSentimentAnalysisErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/intelligence/sentiment/{symbol}',
-            ...options
-        });
-    }
-
-    /**
-     * 분석가 추천 조회
-     * 지정된 종목의 분석가 추천 정보를 조회합니다.
-     */
-    public static 분석가추천조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetAnalystRecommendationsData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetAnalystRecommendationsResponses, MarketDataV2GetAnalystRecommendationsErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/intelligence/analyst-recommendations/{symbol}',
-            ...options
-        });
-    }
-
-    /**
-     * 소셜 미디어 감정 분석 조회
-     * 지정된 종목의 소셜 미디어 감정 분석을 조회합니다.
-     */
-    public static 소셜미디어감정분석조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetSocialSentimentData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetSocialSentimentResponses, MarketDataV2GetSocialSentimentErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/intelligence/social-sentiment/{symbol}',
-            ...options
-        });
-    }
-
-    /**
-     * Market Data API 정보
-     * 마켓 데이터 API 정보 및 사용 가능한 엔드포인트 목록
-     */
-    public static marketDataApi정보<ThrowOnError extends boolean = false>(options?: Options<MarketDataV2GetMarketDataInfoData, ThrowOnError>) {
-        return (options?.client ?? client).get<MarketDataV2GetMarketDataInfoResponses, MarketDataV2GetMarketDataInfoErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/',
-            ...options
-        });
-    }
-
-    /**
-     * Market Data 서비스 상태 확인
-     * 마켓 데이터 서비스 상태 확인
-     */
-    public static marketData서비스상태확인<ThrowOnError extends boolean = false>(options?: Options<MarketDataV2HealthCheckData, ThrowOnError>) {
-        return (options?.client ?? client).get<MarketDataV2HealthCheckResponses, MarketDataV2HealthCheckErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/health',
-            ...options
-        });
-    }
-}
-
 export class MarketDataService {
     /**
      * 일일 주가 데이터 조회
      * 지정된 종목의 일일 주가 데이터(OHLCV)를 조회합니다.
      */
-    public static 일일주가데이터조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetDailyPricesData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetDailyPricesResponses, MarketDataV2GetDailyPricesErrors, ThrowOnError>({
+    public static 일일주가데이터조회<ThrowOnError extends boolean = false>(options: Options<MarketDataGetDailyPricesData, ThrowOnError>) {
+        return (options.client ?? client).get<MarketDataGetDailyPricesResponses, MarketDataGetDailyPricesErrors, ThrowOnError>({
             security: [
                 {
                     scheme: 'bearer',
@@ -734,8 +375,8 @@ export class MarketDataService {
      * 실시간 주식 호가 조회
      * 지정된 종목의 실시간 호가 정보를 조회합니다.
      */
-    public static 실시간주식호가조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetQuoteData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetQuoteResponses, MarketDataV2GetQuoteErrors, ThrowOnError>({
+    public static 실시간주식호가조회<ThrowOnError extends boolean = false>(options: Options<MarketDataGetQuoteData, ThrowOnError>) {
+        return (options.client ?? client).get<MarketDataGetQuoteResponses, MarketDataGetQuoteErrors, ThrowOnError>({
             security: [
                 {
                     scheme: 'bearer',
@@ -751,8 +392,8 @@ export class MarketDataService {
      * 실시간/인트라데이 데이터 조회
      * 지정된 종목의 실시간 또는 분봉 데이터를 조회합니다.
      */
-    public static 실시간/인트라데이데이터조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetIntradayDataData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetIntradayDataResponses, MarketDataV2GetIntradayDataErrors, ThrowOnError>({
+    public static 실시간/인트라데이데이터조회<ThrowOnError extends boolean = false>(options: Options<MarketDataGetIntradayDataData, ThrowOnError>) {
+        return (options.client ?? client).get<MarketDataGetIntradayDataResponses, MarketDataGetIntradayDataErrors, ThrowOnError>({
             security: [
                 {
                     scheme: 'bearer',
@@ -768,8 +409,8 @@ export class MarketDataService {
      * 장기 히스토리 데이터 조회
      * 지정된 종목의 장기 히스토리 데이터를 조회합니다.
      */
-    public static 장기히스토리데이터조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetHistoricalDataData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetHistoricalDataResponses, MarketDataV2GetHistoricalDataErrors, ThrowOnError>({
+    public static 장기히스토리데이터조회<ThrowOnError extends boolean = false>(options: Options<MarketDataGetHistoricalDataData, ThrowOnError>) {
+        return (options.client ?? client).get<MarketDataGetHistoricalDataResponses, MarketDataGetHistoricalDataErrors, ThrowOnError>({
             security: [
                 {
                     scheme: 'bearer',
@@ -782,28 +423,11 @@ export class MarketDataService {
     }
 
     /**
-     * 사용 가능한 종목 심볼 목록 조회
-     * API에서 지원하는 종목 심볼 목록을 조회합니다.
-     */
-    public static 사용가능한종목심볼목록조회<ThrowOnError extends boolean = false>(options?: Options<MarketDataV2GetAvailableSymbolsData, ThrowOnError>) {
-        return (options?.client ?? client).get<MarketDataV2GetAvailableSymbolsResponses, MarketDataV2GetAvailableSymbolsErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/stock/symbols',
-            ...options
-        });
-    }
-
-    /**
      * 기업 개요 조회
      * 지정된 종목의 기업 개요 정보를 조회합니다.
      */
-    public static 기업개요조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetCompanyOverviewData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetCompanyOverviewResponses, MarketDataV2GetCompanyOverviewErrors, ThrowOnError>({
+    public static 기업개요조회<ThrowOnError extends boolean = false>(options: Options<MarketDataGetCompanyOverviewData, ThrowOnError>) {
+        return (options.client ?? client).get<MarketDataGetCompanyOverviewResponses, MarketDataGetCompanyOverviewErrors, ThrowOnError>({
             security: [
                 {
                     scheme: 'bearer',
@@ -819,8 +443,8 @@ export class MarketDataService {
      * 손익계산서 조회
      * 지정된 종목의 손익계산서를 조회합니다.
      */
-    public static 손익계산서조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetIncomeStatementData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetIncomeStatementResponses, MarketDataV2GetIncomeStatementErrors, ThrowOnError>({
+    public static 손익계산서조회<ThrowOnError extends boolean = false>(options: Options<MarketDataGetIncomeStatementData, ThrowOnError>) {
+        return (options.client ?? client).get<MarketDataGetIncomeStatementResponses, MarketDataGetIncomeStatementErrors, ThrowOnError>({
             security: [
                 {
                     scheme: 'bearer',
@@ -836,8 +460,8 @@ export class MarketDataService {
      * 재무상태표 조회
      * 지정된 종목의 재무상태표를 조회합니다.
      */
-    public static 재무상태표조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetBalanceSheetData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetBalanceSheetResponses, MarketDataV2GetBalanceSheetErrors, ThrowOnError>({
+    public static 재무상태표조회<ThrowOnError extends boolean = false>(options: Options<MarketDataGetBalanceSheetData, ThrowOnError>) {
+        return (options.client ?? client).get<MarketDataGetBalanceSheetResponses, MarketDataGetBalanceSheetErrors, ThrowOnError>({
             security: [
                 {
                     scheme: 'bearer',
@@ -853,8 +477,8 @@ export class MarketDataService {
      * 현금흐름표 조회
      * 지정된 종목의 현금흐름표를 조회합니다.
      */
-    public static 현금흐름표조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetCashFlowData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetCashFlowResponses, MarketDataV2GetCashFlowErrors, ThrowOnError>({
+    public static 현금흐름표조회<ThrowOnError extends boolean = false>(options: Options<MarketDataGetCashFlowData, ThrowOnError>) {
+        return (options.client ?? client).get<MarketDataGetCashFlowResponses, MarketDataGetCashFlowErrors, ThrowOnError>({
             security: [
                 {
                     scheme: 'bearer',
@@ -870,8 +494,8 @@ export class MarketDataService {
      * 실적 데이터 조회
      * 지정된 종목의 실적 데이터를 조회합니다.
      */
-    public static 실적데이터조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetEarningsData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetEarningsResponses, MarketDataV2GetEarningsErrors, ThrowOnError>({
+    public static 실적데이터조회<ThrowOnError extends boolean = false>(options: Options<MarketDataGetEarningsData, ThrowOnError>) {
+        return (options.client ?? client).get<MarketDataGetEarningsResponses, MarketDataGetEarningsErrors, ThrowOnError>({
             security: [
                 {
                     scheme: 'bearer',
@@ -887,8 +511,8 @@ export class MarketDataService {
      * GDP 데이터 조회
      * 미국 GDP 데이터를 조회합니다.
      */
-    public static gdp데이터조회<ThrowOnError extends boolean = false>(options?: Options<MarketDataV2GetGdpDataData, ThrowOnError>) {
-        return (options?.client ?? client).get<MarketDataV2GetGdpDataResponses, MarketDataV2GetGdpDataErrors, ThrowOnError>({
+    public static gdp데이터조회<ThrowOnError extends boolean = false>(options?: Options<MarketDataGetGdpDataData, ThrowOnError>) {
+        return (options?.client ?? client).get<MarketDataGetGdpDataResponses, MarketDataGetGdpDataErrors, ThrowOnError>({
             security: [
                 {
                     scheme: 'bearer',
@@ -904,8 +528,8 @@ export class MarketDataService {
      * 인플레이션 데이터 조회
      * 미국 인플레이션 지표 데이터를 조회합니다.
      */
-    public static 인플레이션데이터조회<ThrowOnError extends boolean = false>(options?: Options<MarketDataV2GetInflationDataData, ThrowOnError>) {
-        return (options?.client ?? client).get<MarketDataV2GetInflationDataResponses, MarketDataV2GetInflationDataErrors, ThrowOnError>({
+    public static 인플레이션데이터조회<ThrowOnError extends boolean = false>(options?: Options<MarketDataGetInflationDataData, ThrowOnError>) {
+        return (options?.client ?? client).get<MarketDataGetInflationDataResponses, MarketDataGetInflationDataErrors, ThrowOnError>({
             security: [
                 {
                     scheme: 'bearer',
@@ -921,8 +545,8 @@ export class MarketDataService {
      * 금리 데이터 조회
      * 미국 기준금리 및 채권 수익률 데이터를 조회합니다.
      */
-    public static 금리데이터조회<ThrowOnError extends boolean = false>(options?: Options<MarketDataV2GetInterestRatesData, ThrowOnError>) {
-        return (options?.client ?? client).get<MarketDataV2GetInterestRatesResponses, MarketDataV2GetInterestRatesErrors, ThrowOnError>({
+    public static 금리데이터조회<ThrowOnError extends boolean = false>(options?: Options<MarketDataGetInterestRatesData, ThrowOnError>) {
+        return (options?.client ?? client).get<MarketDataGetInterestRatesResponses, MarketDataGetInterestRatesErrors, ThrowOnError>({
             security: [
                 {
                     scheme: 'bearer',
@@ -938,8 +562,8 @@ export class MarketDataService {
      * 고용 지표 조회
      * 미국 실업률 및 고용 관련 지표를 조회합니다.
      */
-    public static 고용지표조회<ThrowOnError extends boolean = false>(options?: Options<MarketDataV2GetEmploymentDataData, ThrowOnError>) {
-        return (options?.client ?? client).get<MarketDataV2GetEmploymentDataResponses, MarketDataV2GetEmploymentDataErrors, ThrowOnError>({
+    public static 고용지표조회<ThrowOnError extends boolean = false>(options?: Options<MarketDataGetEmploymentDataData, ThrowOnError>) {
+        return (options?.client ?? client).get<MarketDataGetEmploymentDataResponses, MarketDataGetEmploymentDataErrors, ThrowOnError>({
             security: [
                 {
                     scheme: 'bearer',
@@ -955,8 +579,8 @@ export class MarketDataService {
      * 소비자 심리 지수 조회
      * 미국 소비자 심리 지수를 조회합니다.
      */
-    public static 소비자심리지수조회<ThrowOnError extends boolean = false>(options?: Options<MarketDataV2GetConsumerSentimentData, ThrowOnError>) {
-        return (options?.client ?? client).get<MarketDataV2GetConsumerSentimentResponses, MarketDataV2GetConsumerSentimentErrors, ThrowOnError>({
+    public static 소비자심리지수조회<ThrowOnError extends boolean = false>(options?: Options<MarketDataGetConsumerSentimentData, ThrowOnError>) {
+        return (options?.client ?? client).get<MarketDataGetConsumerSentimentResponses, MarketDataGetConsumerSentimentErrors, ThrowOnError>({
             security: [
                 {
                     scheme: 'bearer',
@@ -972,8 +596,8 @@ export class MarketDataService {
      * 종목 뉴스 조회
      * 지정된 종목 관련 뉴스를 조회합니다.
      */
-    public static 종목뉴스조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetNewsData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetNewsResponses, MarketDataV2GetNewsErrors, ThrowOnError>({
+    public static 종목뉴스조회<ThrowOnError extends boolean = false>(options: Options<MarketDataGetNewsData, ThrowOnError>) {
+        return (options.client ?? client).get<MarketDataGetNewsResponses, MarketDataGetNewsErrors, ThrowOnError>({
             security: [
                 {
                     scheme: 'bearer',
@@ -989,8 +613,8 @@ export class MarketDataService {
      * 감정 분석 조회
      * 지정된 종목의 감정 분석 결과를 조회합니다.
      */
-    public static 감정분석조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetSentimentAnalysisData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetSentimentAnalysisResponses, MarketDataV2GetSentimentAnalysisErrors, ThrowOnError>({
+    public static 감정분석조회<ThrowOnError extends boolean = false>(options: Options<MarketDataGetSentimentAnalysisData, ThrowOnError>) {
+        return (options.client ?? client).get<MarketDataGetSentimentAnalysisResponses, MarketDataGetSentimentAnalysisErrors, ThrowOnError>({
             security: [
                 {
                     scheme: 'bearer',
@@ -1006,8 +630,8 @@ export class MarketDataService {
      * 분석가 추천 조회
      * 지정된 종목의 분석가 추천 정보를 조회합니다.
      */
-    public static 분석가추천조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetAnalystRecommendationsData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetAnalystRecommendationsResponses, MarketDataV2GetAnalystRecommendationsErrors, ThrowOnError>({
+    public static 분석가추천조회<ThrowOnError extends boolean = false>(options: Options<MarketDataGetAnalystRecommendationsData, ThrowOnError>) {
+        return (options.client ?? client).get<MarketDataGetAnalystRecommendationsResponses, MarketDataGetAnalystRecommendationsErrors, ThrowOnError>({
             security: [
                 {
                     scheme: 'bearer',
@@ -1023,8 +647,8 @@ export class MarketDataService {
      * 소셜 미디어 감정 분석 조회
      * 지정된 종목의 소셜 미디어 감정 분석을 조회합니다.
      */
-    public static 소셜미디어감정분석조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetSocialSentimentData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetSocialSentimentResponses, MarketDataV2GetSocialSentimentErrors, ThrowOnError>({
+    public static 소셜미디어감정분석조회<ThrowOnError extends boolean = false>(options: Options<MarketDataGetSocialSentimentData, ThrowOnError>) {
+        return (options.client ?? client).get<MarketDataGetSocialSentimentResponses, MarketDataGetSocialSentimentErrors, ThrowOnError>({
             security: [
                 {
                     scheme: 'bearer',
@@ -1037,11 +661,109 @@ export class MarketDataService {
     }
 
     /**
+     * 기업 정보 수집
+     * 지정된 심볼의 기업 정보를 수집하여 저장
+     *
+     * Alpha Vantage API를 통해 기업의 기본 정보, 재무 지표,
+     * 업종 분류 등을 수집하고 데이터베이스에 저장합니다.
+     */
+    public static 기업정보수집<ThrowOnError extends boolean = false>(options: Options<MarketDataCollectCompanyInfoData, ThrowOnError>) {
+        return (options.client ?? client).post<MarketDataCollectCompanyInfoResponses, MarketDataCollectCompanyInfoErrors, ThrowOnError>({
+            security: [
+                {
+                    scheme: 'bearer',
+                    type: 'http'
+                }
+            ],
+            url: '/api/v1/market-data/management/collect/company-info/{symbol}',
+            ...options
+        });
+    }
+
+    /**
+     * 주가 데이터 수집
+     * 지정된 심볼의 주가 데이터를 수집하여 저장
+     *
+     * Alpha Vantage API를 통해 일일 OHLCV 데이터를 수집하고
+     * DuckDB 캐시 및 MongoDB에 저장합니다.
+     */
+    public static 주가데이터수집<ThrowOnError extends boolean = false>(options: Options<MarketDataCollectMarketDataData, ThrowOnError>) {
+        return (options.client ?? client).post<MarketDataCollectMarketDataResponses, MarketDataCollectMarketDataErrors, ThrowOnError>({
+            security: [
+                {
+                    scheme: 'bearer',
+                    type: 'http'
+                }
+            ],
+            url: '/api/v1/market-data/management/collect/market-data/{symbol}',
+            ...options
+        });
+    }
+
+    /**
+     * 대량 데이터 수집
+     * 여러 심볼의 데이터를 일괄 수집
+     *
+     * 백그라운드 작업으로 처리되며, 대량의 심볼에 대해
+     * 기업 정보와 주가 데이터를 순차적으로 수집합니다.
+     */
+    public static 대량데이터수집<ThrowOnError extends boolean = false>(options: Options<MarketDataCollectBulkDataData, ThrowOnError>) {
+        return (options.client ?? client).post<MarketDataCollectBulkDataResponses, MarketDataCollectBulkDataErrors, ThrowOnError>({
+            security: [
+                {
+                    scheme: 'bearer',
+                    type: 'http'
+                }
+            ],
+            url: '/api/v1/market-data/management/collect/bulk',
+            ...options
+        });
+    }
+
+    /**
+     * 데이터 커버리지 확인
+     * 지정된 심볼의 데이터 커버리지 정보 조회
+     *
+     * 기업 정보, 주가 데이터의 수집 상태와 품질을 확인합니다.
+     */
+    public static 데이터커버리지확인<ThrowOnError extends boolean = false>(options: Options<MarketDataGetDataCoverageData, ThrowOnError>) {
+        return (options.client ?? client).get<MarketDataGetDataCoverageResponses, MarketDataGetDataCoverageErrors, ThrowOnError>({
+            security: [
+                {
+                    scheme: 'bearer',
+                    type: 'http'
+                }
+            ],
+            url: '/api/v1/market-data/management/coverage/{symbol}',
+            ...options
+        });
+    }
+
+    /**
+     * 시스템 상태 조회
+     * 시장 데이터 시스템의 전반적인 상태 조회
+     *
+     * API 연결 상태, 캐시 성능, 수집 통계 등을 확인합니다.
+     */
+    public static 시스템상태조회<ThrowOnError extends boolean = false>(options?: Options<MarketDataGetSystemStatusData, ThrowOnError>) {
+        return (options?.client ?? client).get<MarketDataGetSystemStatusResponses, MarketDataGetSystemStatusErrors, ThrowOnError>({
+            security: [
+                {
+                    scheme: 'bearer',
+                    type: 'http'
+                }
+            ],
+            url: '/api/v1/market-data/management/status',
+            ...options
+        });
+    }
+
+    /**
      * Market Data API 정보
      * 마켓 데이터 API 정보 및 사용 가능한 엔드포인트 목록
      */
-    public static marketDataApi정보<ThrowOnError extends boolean = false>(options?: Options<MarketDataV2GetMarketDataInfoData, ThrowOnError>) {
-        return (options?.client ?? client).get<MarketDataV2GetMarketDataInfoResponses, MarketDataV2GetMarketDataInfoErrors, ThrowOnError>({
+    public static marketDataApi정보<ThrowOnError extends boolean = false>(options?: Options<MarketDataGetMarketDataInfoData, ThrowOnError>) {
+        return (options?.client ?? client).get<MarketDataGetMarketDataInfoResponses, MarketDataGetMarketDataInfoErrors, ThrowOnError>({
             security: [
                 {
                     scheme: 'bearer',
@@ -1057,8 +779,8 @@ export class MarketDataService {
      * Market Data 서비스 상태 확인
      * 마켓 데이터 서비스 상태 확인
      */
-    public static marketData서비스상태확인<ThrowOnError extends boolean = false>(options?: Options<MarketDataV2HealthCheckData, ThrowOnError>) {
-        return (options?.client ?? client).get<MarketDataV2HealthCheckResponses, MarketDataV2HealthCheckErrors, ThrowOnError>({
+    public static marketData서비스상태확인<ThrowOnError extends boolean = false>(options?: Options<MarketDataHealthCheckData, ThrowOnError>) {
+        return (options?.client ?? client).get<MarketDataHealthCheckResponses, MarketDataHealthCheckErrors, ThrowOnError>({
             security: [
                 {
                     scheme: 'bearer',
@@ -1067,909 +789,6 @@ export class MarketDataService {
             ],
             url: '/api/v1/market-data/health',
             ...options
-        });
-    }
-}
-
-export class StockService {
-    /**
-     * 일일 주가 데이터 조회
-     * 지정된 종목의 일일 주가 데이터(OHLCV)를 조회합니다.
-     */
-    public static 일일주가데이터조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetDailyPricesData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetDailyPricesResponses, MarketDataV2GetDailyPricesErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/stock/daily/{symbol}',
-            ...options
-        });
-    }
-
-    /**
-     * 실시간 주식 호가 조회
-     * 지정된 종목의 실시간 호가 정보를 조회합니다.
-     */
-    public static 실시간주식호가조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetQuoteData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetQuoteResponses, MarketDataV2GetQuoteErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/stock/quote/{symbol}',
-            ...options
-        });
-    }
-
-    /**
-     * 실시간/인트라데이 데이터 조회
-     * 지정된 종목의 실시간 또는 분봉 데이터를 조회합니다.
-     */
-    public static 실시간/인트라데이데이터조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetIntradayDataData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetIntradayDataResponses, MarketDataV2GetIntradayDataErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/stock/intraday/{symbol}',
-            ...options
-        });
-    }
-
-    /**
-     * 장기 히스토리 데이터 조회
-     * 지정된 종목의 장기 히스토리 데이터를 조회합니다.
-     */
-    public static 장기히스토리데이터조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetHistoricalDataData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetHistoricalDataResponses, MarketDataV2GetHistoricalDataErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/stock/historical/{symbol}',
-            ...options
-        });
-    }
-
-    /**
-     * 사용 가능한 종목 심볼 목록 조회
-     * API에서 지원하는 종목 심볼 목록을 조회합니다.
-     */
-    public static 사용가능한종목심볼목록조회<ThrowOnError extends boolean = false>(options?: Options<MarketDataV2GetAvailableSymbolsData, ThrowOnError>) {
-        return (options?.client ?? client).get<MarketDataV2GetAvailableSymbolsResponses, MarketDataV2GetAvailableSymbolsErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/stock/symbols',
-            ...options
-        });
-    }
-}
-
-export class FundamentalService {
-    /**
-     * 기업 개요 조회
-     * 지정된 종목의 기업 개요 정보를 조회합니다.
-     */
-    public static 기업개요조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetCompanyOverviewData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetCompanyOverviewResponses, MarketDataV2GetCompanyOverviewErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/fundamental/overview/{symbol}',
-            ...options
-        });
-    }
-
-    /**
-     * 손익계산서 조회
-     * 지정된 종목의 손익계산서를 조회합니다.
-     */
-    public static 손익계산서조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetIncomeStatementData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetIncomeStatementResponses, MarketDataV2GetIncomeStatementErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/fundamental/income-statement/{symbol}',
-            ...options
-        });
-    }
-
-    /**
-     * 재무상태표 조회
-     * 지정된 종목의 재무상태표를 조회합니다.
-     */
-    public static 재무상태표조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetBalanceSheetData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetBalanceSheetResponses, MarketDataV2GetBalanceSheetErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/fundamental/balance-sheet/{symbol}',
-            ...options
-        });
-    }
-
-    /**
-     * 현금흐름표 조회
-     * 지정된 종목의 현금흐름표를 조회합니다.
-     */
-    public static 현금흐름표조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetCashFlowData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetCashFlowResponses, MarketDataV2GetCashFlowErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/fundamental/cash-flow/{symbol}',
-            ...options
-        });
-    }
-
-    /**
-     * 실적 데이터 조회
-     * 지정된 종목의 실적 데이터를 조회합니다.
-     */
-    public static 실적데이터조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetEarningsData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetEarningsResponses, MarketDataV2GetEarningsErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/fundamental/earnings/{symbol}',
-            ...options
-        });
-    }
-}
-
-export class EconomicService {
-    /**
-     * GDP 데이터 조회
-     * 미국 GDP 데이터를 조회합니다.
-     */
-    public static gdp데이터조회<ThrowOnError extends boolean = false>(options?: Options<MarketDataV2GetGdpDataData, ThrowOnError>) {
-        return (options?.client ?? client).get<MarketDataV2GetGdpDataResponses, MarketDataV2GetGdpDataErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/economic/gdp',
-            ...options
-        });
-    }
-
-    /**
-     * 인플레이션 데이터 조회
-     * 미국 인플레이션 지표 데이터를 조회합니다.
-     */
-    public static 인플레이션데이터조회<ThrowOnError extends boolean = false>(options?: Options<MarketDataV2GetInflationDataData, ThrowOnError>) {
-        return (options?.client ?? client).get<MarketDataV2GetInflationDataResponses, MarketDataV2GetInflationDataErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/economic/inflation',
-            ...options
-        });
-    }
-
-    /**
-     * 금리 데이터 조회
-     * 미국 기준금리 및 채권 수익률 데이터를 조회합니다.
-     */
-    public static 금리데이터조회<ThrowOnError extends boolean = false>(options?: Options<MarketDataV2GetInterestRatesData, ThrowOnError>) {
-        return (options?.client ?? client).get<MarketDataV2GetInterestRatesResponses, MarketDataV2GetInterestRatesErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/economic/interest-rates',
-            ...options
-        });
-    }
-
-    /**
-     * 고용 지표 조회
-     * 미국 실업률 및 고용 관련 지표를 조회합니다.
-     */
-    public static 고용지표조회<ThrowOnError extends boolean = false>(options?: Options<MarketDataV2GetEmploymentDataData, ThrowOnError>) {
-        return (options?.client ?? client).get<MarketDataV2GetEmploymentDataResponses, MarketDataV2GetEmploymentDataErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/economic/employment',
-            ...options
-        });
-    }
-
-    /**
-     * 소비자 심리 지수 조회
-     * 미국 소비자 심리 지수를 조회합니다.
-     */
-    public static 소비자심리지수조회<ThrowOnError extends boolean = false>(options?: Options<MarketDataV2GetConsumerSentimentData, ThrowOnError>) {
-        return (options?.client ?? client).get<MarketDataV2GetConsumerSentimentResponses, MarketDataV2GetConsumerSentimentErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/economic/consumer-sentiment',
-            ...options
-        });
-    }
-}
-
-export class IntelligenceService {
-    /**
-     * 종목 뉴스 조회
-     * 지정된 종목 관련 뉴스를 조회합니다.
-     */
-    public static 종목뉴스조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetNewsData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetNewsResponses, MarketDataV2GetNewsErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/intelligence/news/{symbol}',
-            ...options
-        });
-    }
-
-    /**
-     * 감정 분석 조회
-     * 지정된 종목의 감정 분석 결과를 조회합니다.
-     */
-    public static 감정분석조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetSentimentAnalysisData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetSentimentAnalysisResponses, MarketDataV2GetSentimentAnalysisErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/intelligence/sentiment/{symbol}',
-            ...options
-        });
-    }
-
-    /**
-     * 분석가 추천 조회
-     * 지정된 종목의 분석가 추천 정보를 조회합니다.
-     */
-    public static 분석가추천조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetAnalystRecommendationsData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetAnalystRecommendationsResponses, MarketDataV2GetAnalystRecommendationsErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/intelligence/analyst-recommendations/{symbol}',
-            ...options
-        });
-    }
-
-    /**
-     * 소셜 미디어 감정 분석 조회
-     * 지정된 종목의 소셜 미디어 감정 분석을 조회합니다.
-     */
-    public static 소셜미디어감정분석조회<ThrowOnError extends boolean = false>(options: Options<MarketDataV2GetSocialSentimentData, ThrowOnError>) {
-        return (options.client ?? client).get<MarketDataV2GetSocialSentimentResponses, MarketDataV2GetSocialSentimentErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/market-data/intelligence/social-sentiment/{symbol}',
-            ...options
-        });
-    }
-}
-
-export class PipelineService {
-    /**
-     * Update Watchlist
-     * Create or update a watchlist with flexible naming support.
-     *
-     * This endpoint provides a convenient way to create new watchlists or update
-     * existing ones. If no name is provided, it defaults to the 'default' watchlist
-     * which is used by the pipeline for automated updates. This endpoint combines
-     * creation and update functionality for ease of use.
-     *
-     * Args:
-     * request: Watchlist configuration containing:
-     * - symbols: List of stock symbols to include
-     * - name: Optional watchlist name (defaults to 'default')
-     * - description: Optional description of the watchlist
-     *
-     * Returns:
-     * dict: Operation result containing:
-     * - message: Success message indicating action taken
-     * - name: Watchlist name that was processed
-     * - symbols: List of symbols in the watchlist
-     * - count: Number of symbols in the watchlist
-     * - action: Either 'created' or 'updated'
-     *
-     * Raises:
-     * HTTPException: 400 if watchlist creation fails
-     * HTTPException: 500 if operation fails
-     *
-     * Note:
-     * Updates to the 'default' watchlist automatically update pipeline symbols.
-     * This affects which symbols are processed during automated updates.
-     */
-    public static updateWatchlist<ThrowOnError extends boolean = false>(options: Options<PipelineUpdateWatchlistData, ThrowOnError>) {
-        return (options.client ?? client).post<PipelineUpdateWatchlistResponses, PipelineUpdateWatchlistErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/pipeline/watchlists/watchlist',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json',
-                ...options.headers
-            }
-        });
-    }
-
-    /**
-     * List Watchlists
-     * Retrieve a comprehensive list of all watchlists.
-     *
-     * Returns summary information for all watchlists in the system, including
-     * metadata like symbol counts, update settings, and timestamps. This is
-     * useful for dashboard displays and watchlist management interfaces.
-     *
-     * Returns:
-     * dict: All watchlists summary containing:
-     * - watchlists: List of watchlist summaries with:
-     * - name: Watchlist name
-     * - description: Watchlist description
-     * - symbol_count: Number of symbols in the watchlist
-     * - auto_update: Whether automatic updates are enabled
-     * - last_updated: Timestamp of last modification
-     * - created_at: Timestamp of creation
-     * - total_count: Total number of watchlists in the system
-     *
-     * Raises:
-     * HTTPException: 500 if retrieval fails
-     *
-     * Note:
-     * This endpoint returns summary data only. Use GET /watchlists/{name}
-     * for detailed information including full symbol lists.
-     */
-    public static listWatchlists<ThrowOnError extends boolean = false>(options?: Options<PipelineListWatchlistsData, ThrowOnError>) {
-        return (options?.client ?? client).get<PipelineListWatchlistsResponses, PipelineListWatchlistsErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/pipeline/watchlists/watchlists',
-            ...options
-        });
-    }
-
-    /**
-     * Create Watchlist
-     * Create a new named watchlist with validation.
-     *
-     * This endpoint is specifically for creating new watchlists with explicit
-     * naming requirements. Unlike the /watchlist endpoint, this requires a name
-     * and will fail if a watchlist with the same name already exists.
-     *
-     * Args:
-     * request: Watchlist creation parameters containing:
-     * - name: Required unique name for the watchlist
-     * - symbols: List of stock symbols to include
-     * - description: Optional description of the watchlist purpose
-     *
-     * Returns:
-     * dict: Creation result containing:
-     * - message: Success confirmation message
-     * - name: Name of the created watchlist
-     * - symbols: List of symbols in the watchlist
-     * - description: Watchlist description
-     * - created_at: UTC timestamp of creation
-     *
-     * Raises:
-     * HTTPException: 400 if watchlist creation fails or name conflicts
-     * HTTPException: 500 if database operation fails
-     *
-     * Note:
-     * Watchlist names must be unique. Use PUT /watchlists/{name} to update existing ones.
-     */
-    public static createWatchlist<ThrowOnError extends boolean = false>(options: Options<PipelineCreateWatchlistData, ThrowOnError>) {
-        return (options.client ?? client).post<PipelineCreateWatchlistResponses, PipelineCreateWatchlistErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/pipeline/watchlists/watchlists',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json',
-                ...options.headers
-            }
-        });
-    }
-
-    /**
-     * Delete Watchlist
-     * Delete a named watchlist from the system.
-     *
-     * Permanently removes a watchlist and all associated metadata. This action
-     * cannot be undone. The 'default' watchlist cannot be deleted as it is
-     * required for pipeline operations.
-     *
-     * Args:
-     * name: Name of the watchlist to delete
-     *
-     * Returns:
-     * dict: Deletion confirmation containing:
-     * - message: Success confirmation message
-     * - name: Name of the deleted watchlist
-     *
-     * Raises:
-     * HTTPException: 400 if attempting to delete the 'default' watchlist
-     * HTTPException: 404 if watchlist with specified name not found
-     * HTTPException: 500 if deletion operation fails
-     *
-     * Note:
-     * Deletion is permanent and cannot be undone. Consider backing up
-     * important watchlists before deletion.
-     */
-    public static deleteWatchlist<ThrowOnError extends boolean = false>(options: Options<PipelineDeleteWatchlistData, ThrowOnError>) {
-        return (options.client ?? client).delete<PipelineDeleteWatchlistResponses, PipelineDeleteWatchlistErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/pipeline/watchlists/{name}',
-            ...options
-        });
-    }
-
-    /**
-     * Get Watchlist
-     * Retrieve complete information for a specific watchlist.
-     *
-     * Returns detailed information about a named watchlist including the full
-     * list of symbols, configuration settings, and all metadata. This provides
-     * all information needed to display or modify a specific watchlist.
-     *
-     * Args:
-     * name: Name of the watchlist to retrieve (case-sensitive)
-     *
-     * Returns:
-     * dict: Complete watchlist information containing:
-     * - name: Watchlist name
-     * - description: Detailed description
-     * - symbols: Complete list of stock symbols
-     * - auto_update: Automatic update configuration
-     * - update_interval: Update frequency in seconds
-     * - last_updated: Timestamp of last symbol update
-     * - created_at: Timestamp of watchlist creation
-     *
-     * Raises:
-     * HTTPException: 404 if watchlist with specified name not found
-     * HTTPException: 500 if retrieval operation fails
-     *
-     * Note:
-     * Watchlist names are case-sensitive. Use GET /watchlists to see all available names.
-     */
-    public static getWatchlist<ThrowOnError extends boolean = false>(options: Options<PipelineGetWatchlistData, ThrowOnError>) {
-        return (options.client ?? client).get<PipelineGetWatchlistResponses, PipelineGetWatchlistErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/pipeline/watchlists/{name}',
-            ...options
-        });
-    }
-
-    /**
-     * Update Watchlist By Name
-     * Update an existing watchlist with new symbols and settings.
-     *
-     * Modifies the symbols and metadata of an existing watchlist. This endpoint
-     * requires the watchlist to exist and will fail if the specified name is
-     * not found. Use POST /watchlists to create new watchlists.
-     *
-     * Args:
-     * name: Name of the existing watchlist to update
-     * request: Update parameters containing:
-     * - symbols: New list of symbols (replaces current list)
-     * - description: Optional new description (if provided)
-     *
-     * Returns:
-     * dict: Update confirmation containing:
-     * - message: Success confirmation message
-     * - name: Name of the updated watchlist
-     * - symbols: New symbols list
-     * - description: Current description (updated if provided)
-     * - count: Number of symbols in updated watchlist
-     * - updated_at: Timestamp of the update
-     *
-     * Raises:
-     * HTTPException: 404 if watchlist with specified name not found
-     * HTTPException: 500 if update operation fails
-     *
-     * Note:
-     * Updates to the 'default' watchlist automatically update pipeline symbols.
-     * Symbol list is completely replaced, not merged with existing symbols.
-     */
-    public static updateWatchlistByName<ThrowOnError extends boolean = false>(options: Options<PipelineUpdateWatchlistByNameData, ThrowOnError>) {
-        return (options.client ?? client).put<PipelineUpdateWatchlistByNameResponses, PipelineUpdateWatchlistByNameErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/pipeline/watchlists/{name}',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json',
-                ...options.headers
-            }
-        });
-    }
-
-    /**
-     * Collect Stock Info
-     * Collect and store basic company information for a specific symbol.
-     *
-     * Retrieves fundamental company data from external APIs (Alpha Vantage)
-     * including company name, sector, industry, market cap, and key financial
-     * ratios. This information is stored in the database for future reference
-     * and analysis.
-     *
-     * Args:
-     * symbol: Stock symbol (e.g., 'AAPL', 'MSFT') - automatically converted to uppercase
-     *
-     * Returns:
-     * dict: Collection result containing:
-     * - message: Success/failure message
-     * - symbol: Processed symbol (uppercase)
-     * - success: Boolean indicating operation success
-     *
-     * Raises:
-     * HTTPException: 500 if data collection fails
-     *
-     * Note:
-     * Respects Alpha Vantage API rate limits (5 calls/min, 500 calls/day).
-     * Duplicate requests for same symbol within 24 hours may return cached data.
-     */
-    public static collectStockInfo<ThrowOnError extends boolean = false>(options: Options<PipelineCollectStockInfoData, ThrowOnError>) {
-        return (options.client ?? client).post<PipelineCollectStockInfoResponses, PipelineCollectStockInfoErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/pipeline/companies/collect-info/{symbol}',
-            ...options
-        });
-    }
-
-    /**
-     * Collect Daily Data
-     * Collect historical daily price data for a specific symbol.
-     *
-     * Retrieves OHLCV (Open, High, Low, Close, Volume) daily price data
-     * for the specified symbol and date range. If no dates are provided,
-     * collects maximum available historical data. Data is validated,
-     * adjusted for splits/dividends, and stored in DuckDB for fast access.
-     *
-     * Args:
-     * symbol: Stock symbol (e.g., 'AAPL') - automatically converted to uppercase
-     * start_date: Optional start date for data collection (defaults to earliest available)
-     * end_date: Optional end date for data collection (defaults to latest available)
-     *
-     * Returns:
-     * dict: Collection result containing:
-     * - message: Detailed success/failure message
-     * - symbol: Processed symbol (uppercase)
-     * - start_date: Actual start date used
-     * - end_date: Actual end date used
-     * - success: Boolean indicating operation success
-     *
-     * Raises:
-     * HTTPException: 500 if data collection fails
-     *
-     * Note:
-     * Large date ranges may take several minutes to complete.
-     * Data is automatically cached to minimize API calls.
-     */
-    public static collectDailyData<ThrowOnError extends boolean = false>(options: Options<PipelineCollectDailyDataData, ThrowOnError>) {
-        return (options.client ?? client).post<PipelineCollectDailyDataResponses, PipelineCollectDailyDataErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/pipeline/companies/collect-data/{symbol}',
-            ...options
-        });
-    }
-
-    /**
-     * Get Symbol Coverage
-     * Get detailed data coverage information for a specific symbol.
-     *
-     * Returns comprehensive information about the availability and quality
-     * of data for the specified symbol, including date ranges, data gaps,
-     * last update timestamps, and data quality metrics.
-     *
-     * Args:
-     * symbol: Stock symbol to check coverage for (automatically converted to uppercase)
-     *
-     * Returns:
-     * dict: Coverage information containing:
-     * - symbol: Processed symbol
-     * - date_range: Start and end dates of available data
-     * - total_records: Number of data points available
-     * - gaps: List of date ranges with missing data
-     * - last_updated: Timestamp of most recent data update
-     * - data_quality: Quality metrics (completeness, accuracy scores)
-     *
-     * Raises:
-     * HTTPException: 500 if coverage check fails
-     * HTTPException: 404 if symbol not found in database
-     */
-    public static getSymbolCoverage<ThrowOnError extends boolean = false>(options: Options<PipelineGetSymbolCoverageData, ThrowOnError>) {
-        return (options.client ?? client).get<PipelineGetSymbolCoverageResponses, PipelineGetSymbolCoverageErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/pipeline/companies/coverage/{symbol}',
-            ...options
-        });
-    }
-
-    /**
-     * Get Company Info
-     * Retrieve stored company information for a specific symbol.
-     *
-     * Returns comprehensive company fundamentals and metadata previously
-     * collected and stored in the database. This includes financial ratios,
-     * company description, sector classification, and market data.
-     *
-     * Args:
-     * symbol: Stock symbol (automatically converted to uppercase)
-     *
-     * Returns:
-     * dict: Company information containing:
-     * - symbol: Stock symbol
-     * - name: Company name
-     * - description: Business description
-     * - sector: Industry sector classification
-     * - industry: Specific industry classification
-     * - country: Country of incorporation
-     * - currency: Reporting currency
-     * - market_cap: Market capitalization (if available)
-     * - pe_ratio: Price-to-earnings ratio (if available)
-     * - dividend_yield: Annual dividend yield (if available)
-     * - updated_at: Last information update timestamp
-     *
-     * Raises:
-     * HTTPException: 404 if company information not found
-     * HTTPException: 500 if retrieval fails
-     *
-     * Note:
-     * If company info not found, use POST /collect-info/{symbol} first.
-     */
-    public static getCompanyInfo<ThrowOnError extends boolean = false>(options: Options<PipelineGetCompanyInfoData, ThrowOnError>) {
-        return (options.client ?? client).get<PipelineGetCompanyInfoResponses, PipelineGetCompanyInfoErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/pipeline/companies/company/{symbol}',
-            ...options
-        });
-    }
-
-    /**
-     * List Companies
-     * Retrieve information for all companies in the database.
-     *
-     * Returns a comprehensive list of all companies for which information
-     * has been collected and stored. Useful for portfolio analysis,
-     * screening, and getting an overview of available data.
-     *
-     * Returns:
-     * dict: All companies data containing:
-     * - companies: List of company objects with key information:
-     * - symbol: Stock symbol
-     * - name: Company name
-     * - sector: Industry sector
-     * - industry: Specific industry
-     * - market_cap: Market capitalization
-     * - updated_at: Last update timestamp
-     * - total_count: Total number of companies in database
-     *
-     * Raises:
-     * HTTPException: 500 if retrieval fails
-     *
-     * Note:
-     * Large datasets may take time to load. Consider pagination for production use.
-     */
-    public static listCompanies<ThrowOnError extends boolean = false>(options?: Options<PipelineListCompaniesData, ThrowOnError>) {
-        return (options?.client ?? client).get<PipelineListCompaniesResponses, PipelineListCompaniesErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/pipeline/companies/',
-            ...options
-        });
-    }
-
-    /**
-     * Get Pipeline Status
-     * Get comprehensive pipeline status and health information.
-     *
-     * Returns detailed information about the current state of the data pipeline,
-     * including data coverage statistics, update timestamps, and system health metrics.
-     * This endpoint is essential for monitoring the overall health of the data
-     * collection and processing system.
-     *
-     * Returns:
-     * dict: Pipeline status containing:
-     * - overall_status: Current pipeline health status
-     * - last_update: Timestamp of last successful update
-     * - coverage_stats: Data coverage statistics per symbol
-     * - active_symbols: Currently monitored symbols count
-     * - error_count: Number of recent errors
-     *
-     * Raises:
-     * HTTPException: 500 if status retrieval fails
-     */
-    public static getPipelineStatus<ThrowOnError extends boolean = false>(options?: Options<PipelineGetPipelineStatusData, ThrowOnError>) {
-        return (options?.client ?? client).get<PipelineGetPipelineStatusResponses, PipelineGetPipelineStatusErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/pipeline/status/',
-            ...options
-        });
-    }
-
-    /**
-     * Setup Default Symbols
-     * Initialize default watchlist with standard symbols.
-     *
-     * Sets up the pipeline with a predefined set of popular stock symbols
-     * for immediate use. This is typically called during initial system setup
-     * or when resetting the pipeline to defaults. Creates the 'default' watchlist
-     * if it doesn't exist.
-     *
-     * Default symbols include major tech stocks: AAPL, MSFT, GOOGL, AMZN, etc.
-     *
-     * Returns:
-     * dict: Setup confirmation containing:
-     * - message: Success confirmation message
-     * - symbols: List of symbols that were set up
-     *
-     * Raises:
-     * HTTPException: 500 if default setup fails
-     */
-    public static setupDefaultSymbols<ThrowOnError extends boolean = false>(options?: Options<PipelineSetupDefaultSymbolsData, ThrowOnError>) {
-        return (options?.client ?? client).post<PipelineSetupDefaultSymbolsResponses, PipelineSetupDefaultSymbolsErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/pipeline/status/setup-defaults',
-            ...options
-        });
-    }
-
-    /**
-     * Run Pipeline Update
-     * Execute comprehensive data pipeline update for specified symbols.
-     *
-     * Initiates a full data collection and update process for the specified
-     * symbols or the default watchlist. The update runs asynchronously in the
-     * background to avoid blocking the API response. Includes company information
-     * retrieval, historical price data collection, and data validation.
-     *
-     * Args:
-     * request: Update configuration containing:
-     * - symbols: Optional list of symbols to update (uses default if None)
-     * - start_date: Optional start date for data collection
-     * - end_date: Optional end date for data collection
-     * background_tasks: FastAPI background task manager
-     *
-     * Returns:
-     * dict: Update initiation confirmation containing:
-     * - message: Update start confirmation
-     * - symbols: Symbols being updated
-     * - started_at: UTC timestamp when update began
-     *
-     * Raises:
-     * HTTPException: 500 if update initiation fails
-     *
-     * Note:
-     * This is an asynchronous operation. Use /status endpoint to monitor progress.
-     */
-    public static runPipelineUpdate<ThrowOnError extends boolean = false>(options: Options<PipelineRunPipelineUpdateData, ThrowOnError>) {
-        return (options.client ?? client).post<PipelineRunPipelineUpdateResponses, PipelineRunPipelineUpdateErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
-            url: '/api/v1/pipeline/status/update',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json',
-                ...options.headers
-            }
         });
     }
 }
@@ -2489,6 +1308,170 @@ export class BacktestsService {
                 }
             ],
             url: '/api/v1/backtests/analytics/summary',
+            ...options
+        });
+    }
+}
+
+export class WatchlistsService {
+    /**
+     * 워치리스트 목록 조회
+     * 사용자의 모든 워치리스트 목록 조회
+     *
+     * 사용자에게 속한 모든 워치리스트의 요약 정보를 반환합니다.
+     */
+    public static 워치리스트목록조회<ThrowOnError extends boolean = false>(options?: Options<WatchlistsListWatchlistsData, ThrowOnError>) {
+        return (options?.client ?? client).get<WatchlistsListWatchlistsResponses, WatchlistsListWatchlistsErrors, ThrowOnError>({
+            security: [
+                {
+                    scheme: 'bearer',
+                    type: 'http'
+                }
+            ],
+            url: '/api/v1/watchlists/',
+            ...options
+        });
+    }
+
+    /**
+     * 워치리스트 생성/업데이트
+     * 워치리스트 생성 또는 업데이트
+     *
+     * 유연한 워치리스트 관리를 위한 엔드포인트입니다.
+     * - 이름이 없으면 'default' 워치리스트로 처리
+     * - 기존 워치리스트가 있으면 업데이트, 없으면 생성
+     * - 심볼 데이터는 백그라운드에서 자동 수집
+     */
+    public static 워치리스트생성/업데이트<ThrowOnError extends boolean = false>(options: Options<WatchlistsCreateOrUpdateWatchlistData, ThrowOnError>) {
+        return (options.client ?? client).post<WatchlistsCreateOrUpdateWatchlistResponses, WatchlistsCreateOrUpdateWatchlistErrors, ThrowOnError>({
+            security: [
+                {
+                    scheme: 'bearer',
+                    type: 'http'
+                }
+            ],
+            url: '/api/v1/watchlists/',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+
+    /**
+     * 새 워치리스트 생성
+     * 새로운 명명된 워치리스트 생성
+     *
+     * 명시적인 이름을 가진 새 워치리스트를 생성합니다.
+     * 동일한 이름의 워치리스트가 이미 있으면 실패합니다.
+     */
+    public static 새워치리스트생성<ThrowOnError extends boolean = false>(options: Options<WatchlistsCreateWatchlistData, ThrowOnError>) {
+        return (options.client ?? client).post<WatchlistsCreateWatchlistResponses, WatchlistsCreateWatchlistErrors, ThrowOnError>({
+            security: [
+                {
+                    scheme: 'bearer',
+                    type: 'http'
+                }
+            ],
+            url: '/api/v1/watchlists/create',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+
+    /**
+     * 워치리스트 삭제
+     * 워치리스트 삭제
+     */
+    public static 워치리스트삭제<ThrowOnError extends boolean = false>(options: Options<WatchlistsDeleteWatchlistData, ThrowOnError>) {
+        return (options.client ?? client).delete<WatchlistsDeleteWatchlistResponses, WatchlistsDeleteWatchlistErrors, ThrowOnError>({
+            security: [
+                {
+                    scheme: 'bearer',
+                    type: 'http'
+                }
+            ],
+            url: '/api/v1/watchlists/{name}',
+            ...options
+        });
+    }
+
+    /**
+     * 특정 워치리스트 조회
+     * 특정 워치리스트의 상세 정보 조회
+     */
+    public static 특정워치리스트조회<ThrowOnError extends boolean = false>(options: Options<WatchlistsGetWatchlistData, ThrowOnError>) {
+        return (options.client ?? client).get<WatchlistsGetWatchlistResponses, WatchlistsGetWatchlistErrors, ThrowOnError>({
+            security: [
+                {
+                    scheme: 'bearer',
+                    type: 'http'
+                }
+            ],
+            url: '/api/v1/watchlists/{name}',
+            ...options
+        });
+    }
+
+    /**
+     * 워치리스트 업데이트
+     * 기존 워치리스트 업데이트
+     */
+    public static 워치리스트업데이트<ThrowOnError extends boolean = false>(options: Options<WatchlistsUpdateWatchlistData, ThrowOnError>) {
+        return (options.client ?? client).put<WatchlistsUpdateWatchlistResponses, WatchlistsUpdateWatchlistErrors, ThrowOnError>({
+            security: [
+                {
+                    scheme: 'bearer',
+                    type: 'http'
+                }
+            ],
+            url: '/api/v1/watchlists/{name}',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+
+    /**
+     * 워치리스트 데이터 커버리지
+     * 워치리스트의 데이터 커버리지 정보 조회
+     *
+     * 각 심볼별로 수집된 데이터의 상태와 품질을 확인합니다.
+     */
+    public static 워치리스트데이터커버리지<ThrowOnError extends boolean = false>(options: Options<WatchlistsGetWatchlistCoverageData, ThrowOnError>) {
+        return (options.client ?? client).get<WatchlistsGetWatchlistCoverageResponses, WatchlistsGetWatchlistCoverageErrors, ThrowOnError>({
+            security: [
+                {
+                    scheme: 'bearer',
+                    type: 'http'
+                }
+            ],
+            url: '/api/v1/watchlists/{name}/coverage',
+            ...options
+        });
+    }
+
+    /**
+     * 기본 워치리스트 설정
+     * 기본 워치리스트 설정
+     *
+     * 인기 주식들로 구성된 기본 워치리스트를 생성합니다.
+     */
+    public static 기본워치리스트설정<ThrowOnError extends boolean = false>(options?: Options<WatchlistsSetupDefaultWatchlistData, ThrowOnError>) {
+        return (options?.client ?? client).post<WatchlistsSetupDefaultWatchlistResponses, WatchlistsSetupDefaultWatchlistErrors, ThrowOnError>({
+            security: [
+                {
+                    scheme: 'bearer',
+                    type: 'http'
+                }
+            ],
+            url: '/api/v1/watchlists/setup-default',
             ...options
         });
     }

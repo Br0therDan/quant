@@ -787,23 +787,92 @@ class IntelligenceService(BaseMarketDataService):
             raise ValueError(f"Unknown intelligence method: {method}")
 
     async def _save_to_cache(self, data: Any, **kwargs) -> bool:
-        """인텔리전스 데이터를 캐시에 저장 (향후 구현 예정)"""
+        """인텔리전스 데이터를 캐시에 저장"""
         try:
             cache_key = kwargs.get("cache_key", "intelligence_data")
-            # TODO: DuckDB 캐시 테이블 구현 후 실제 저장 로직 추가
-            logger.info(f"Intelligence data cached for key: {cache_key}")
+
+            # 데이터를 NewsArticle 모델로 변환
+            if isinstance(data, dict):
+                data = [data]  # 단일 데이터를 리스트로 변환
+
+            if isinstance(data, list) and data:
+                # 데이터를 NewsArticle 객체로 변환
+                news_articles = []
+                for item in data:
+                    if isinstance(item, dict):
+                        # 대부분의 필드를 기본값으로 설정
+                        article_data = {
+                            "symbol": item.get(
+                                "symbol", kwargs.get("symbol", "UNKNOWN")
+                            ),
+                            "title": item.get(
+                                "title", item.get("overall_sentiment_label", "News")
+                            ),
+                            "url": item.get("url", item.get("link", "")),
+                            "published_at": datetime.utcnow(),
+                            "source": item.get("source", "Alpha Vantage Intelligence"),
+                            "summary": str(item),  # 전체 데이터를 요약으로 저장
+                            "sentiment_score": item.get("overall_sentiment_score", 0.0),
+                            "sentiment_label": item.get(
+                                "overall_sentiment_label", "Neutral"
+                            ),
+                            "relevance_score": item.get("relevance_score", 0.0),
+                            "content": str(item),  # 전체 데이터 저장
+                        }
+                        try:
+                            from app.models.market_data.intelligence import NewsArticle
+
+                            article = NewsArticle(**article_data)
+                            news_articles.append(article)
+                        except Exception as model_error:
+                            logger.warning(
+                                f"Failed to create NewsArticle model: {model_error}"
+                            )
+                            continue
+
+                if news_articles:
+                    # DuckDB 캐시에 저장
+                    success = await self._store_to_duckdb_cache(
+                        cache_key=cache_key,
+                        data=news_articles,
+                        table_name="intelligence_cache",
+                    )
+
+                    if success:
+                        logger.info(
+                            f"Intelligence data cached successfully: {cache_key} ({len(news_articles)} items)"
+                        )
+                    return success
+
+            logger.info(f"No valid intelligence data to cache for: {cache_key}")
             return True
+
         except Exception as e:
             logger.error(f"Error saving intelligence data to cache: {e}")
             return False
 
     async def _get_from_cache(self, **kwargs) -> Optional[List[Any]]:
-        """캐시에서 인텔리전스 데이터 조회 (향후 구현 예정)"""
+        """캐시에서 인텔리전스 데이터 조회"""
         try:
             cache_key = kwargs.get("cache_key", "intelligence_data")
-            # TODO: DuckDB 캐시 테이블 구현 후 실제 조회 로직 추가
-            logger.debug(f"Cache lookup for key: {cache_key} (not implemented yet)")
-            return None
+
+            # DuckDB 캐시에서 데이터 조회
+            cached_data = await self._get_from_duckdb_cache(
+                cache_key=cache_key,
+                start_date=kwargs.get("start_date"),
+                end_date=kwargs.get("end_date"),
+                ignore_ttl=kwargs.get("ignore_ttl", False),
+            )
+
+            if cached_data:
+                logger.info(
+                    f"Intelligence cache hit: {cache_key} ({len(cached_data)} items)"
+                )
+                return cached_data
+            else:
+                logger.debug(f"Intelligence cache miss: {cache_key}")
+                return None
+
         except Exception as e:
             logger.error(f"Error getting intelligence data from cache: {e}")
             return None

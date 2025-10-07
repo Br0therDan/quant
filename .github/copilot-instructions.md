@@ -30,7 +30,7 @@ fundamental_service = service_factory.get_fundamental_service()
 intelligence_service = service_factory.get_intelligence_service()
 ```
 
-### 2. 도메인별 마이크로서비스 아키텍처
+### 2. 도메인별 아키텍처
 
 MarketDataService는 도메인별로 분리된 서비스들을 제공합니다:
 
@@ -144,6 +144,21 @@ MONGODB_SERVER=localhost:27019
 DUCKDB_PATH=./app/data/quant.duckdb  # 백엔드 내부 경로
 BACKEND_URL=http://localhost:8500   # 포트 8500!
 ```
+
+## 엔드포인트 코드 패턴 주의사항
+
+-
+
+```python
+@router.get(
+    "/item",
+    response_model=ItemResponse
+)
+async def get_item():
+```
+
+- `summary` 필드는 제거해주세요. summary는 자동으로 생성되며, 이는 hey-api
+  클라이언트생성시 파싱되어 메서드명으로 사용됩니다.
 
 ## 코드 품질 및 테스트
 
