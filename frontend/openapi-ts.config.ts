@@ -33,9 +33,5 @@ export default defineConfig({
 				return name || "defaultMethodName";
 			},
 		},
-		{
-			name: "@tanstack/react-query",
-			exportFromIndex: true,
-		},
 	],
 });

@@ -3,4 +3,3 @@
 export type * from "./types.gen";
 export * from "./client.gen";
 export * from "./sdk.gen";
-export * from "./@tanstack/react-query.gen";
