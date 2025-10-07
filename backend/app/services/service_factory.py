@@ -6,6 +6,10 @@ import logging
 from typing import Optional
 
 from .market_data_service import MarketDataService
+from .market_data_service.stock_service import StockService
+from .market_data_service.fundamental import FundamentalService
+from .market_data_service.economic_indicator import EconomicIndicatorService
+from .market_data_service.intelligence import IntelligenceService
 from .strategy_service import StrategyService
 from .backtest_service import BacktestService
 from .database_manager import DatabaseManager
@@ -18,6 +22,10 @@ class ServiceFactory:
 
     _instance = None
     _market_data_service: Optional[MarketDataService] = None
+    _stock_service: Optional[StockService] = None
+    _fundamental_service: Optional[FundamentalService] = None
+    _economic_indicator_service: Optional[EconomicIndicatorService] = None
+    _intelligence_service: Optional[IntelligenceService] = None
     _strategy_service: Optional[StrategyService] = None
     _backtest_service: Optional[BacktestService] = None
     _database_manager: Optional[DatabaseManager] = None
@@ -45,6 +53,34 @@ class ServiceFactory:
             logger.info("Created MarketDataService instance with DuckDB")
         return self._market_data_service
 
+    def get_stock_service(self) -> StockService:
+        """StockService 인스턴스 반환 (새로운 아키텍처)"""
+        if self._stock_service is None:
+            self._stock_service = StockService()
+            logger.info("Created StockService instance")
+        return self._stock_service
+
+    def get_fundamental_service(self) -> FundamentalService:
+        """FundamentalService 인스턴스 반환"""
+        if self._fundamental_service is None:
+            self._fundamental_service = FundamentalService()
+            logger.info("Created FundamentalService instance")
+        return self._fundamental_service
+
+    def get_economic_indicator_service(self) -> EconomicIndicatorService:
+        """EconomicIndicatorService 인스턴스 반환"""
+        if self._economic_indicator_service is None:
+            self._economic_indicator_service = EconomicIndicatorService()
+            logger.info("Created EconomicIndicatorService instance")
+        return self._economic_indicator_service
+
+    def get_intelligence_service(self) -> IntelligenceService:
+        """IntelligenceService 인스턴스 반환"""
+        if self._intelligence_service is None:
+            self._intelligence_service = IntelligenceService()
+            logger.info("Created IntelligenceService instance")
+        return self._intelligence_service
+
     def get_strategy_service(self) -> StrategyService:
         """StrategyService 인스턴스 반환"""
         if self._strategy_service is None:
@@ -71,6 +107,10 @@ class ServiceFactory:
         """모든 서비스 정리"""
         if self._market_data_service:
             await self._market_data_service.close()
+
+        if self._stock_service:
+            # StockService cleanup if needed
+            pass
 
         if self._database_manager:
             self._database_manager.close()

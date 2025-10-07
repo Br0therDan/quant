@@ -623,209 +623,6 @@ export const Body_Auth_verifySchema = {
 	title: "Body_Auth-verify",
 } as const;
 
-export const BulkDataRequestSchema = {
-	properties: {
-		user_id: {
-			anyOf: [
-				{
-					type: "string",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "User Id",
-		},
-		symbols: {
-			items: {
-				type: "string",
-			},
-			type: "array",
-			title: "Symbols",
-			description: "List of symbols",
-		},
-		start_date: {
-			type: "string",
-			format: "date-time",
-			title: "Start Date",
-			description: "Start date",
-		},
-		end_date: {
-			type: "string",
-			format: "date-time",
-			title: "End Date",
-			description: "End date",
-		},
-		interval: {
-			type: "string",
-			title: "Interval",
-			description: "Data interval",
-			default: "daily",
-		},
-	},
-	type: "object",
-	required: ["symbols", "start_date", "end_date"],
-	title: "BulkDataRequest",
-	description: "Request model for bulk data operations",
-} as const;
-
-export const DataQualityResponseSchema = {
-	properties: {
-		user_id: {
-			anyOf: [
-				{
-					type: "string",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "User Id",
-		},
-		symbol: {
-			type: "string",
-			title: "Symbol",
-		},
-		date_range_start: {
-			type: "string",
-			format: "date-time",
-			title: "Date Range Start",
-		},
-		date_range_end: {
-			type: "string",
-			format: "date-time",
-			title: "Date Range End",
-		},
-		total_records: {
-			type: "integer",
-			title: "Total Records",
-		},
-		missing_days: {
-			type: "integer",
-			title: "Missing Days",
-		},
-		duplicate_records: {
-			type: "integer",
-			title: "Duplicate Records",
-		},
-		price_anomalies: {
-			type: "integer",
-			title: "Price Anomalies",
-		},
-		quality_score: {
-			type: "number",
-			title: "Quality Score",
-		},
-		analyzed_at: {
-			type: "string",
-			format: "date-time",
-			title: "Analyzed At",
-		},
-	},
-	type: "object",
-	required: [
-		"symbol",
-		"date_range_start",
-		"date_range_end",
-		"total_records",
-		"missing_days",
-		"duplicate_records",
-		"price_anomalies",
-		"quality_score",
-		"analyzed_at",
-	],
-	title: "DataQualityResponse",
-	description: "Response model for data quality metrics",
-} as const;
-
-export const DataRequestStatusSchema = {
-	properties: {
-		user_id: {
-			anyOf: [
-				{
-					type: "string",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "User Id",
-		},
-		id: {
-			type: "string",
-			title: "Id",
-		},
-		symbol: {
-			type: "string",
-			title: "Symbol",
-		},
-		start_date: {
-			type: "string",
-			format: "date-time",
-			title: "Start Date",
-		},
-		end_date: {
-			type: "string",
-			format: "date-time",
-			title: "End Date",
-		},
-		status: {
-			type: "string",
-			title: "Status",
-		},
-		error_message: {
-			anyOf: [
-				{
-					type: "string",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "Error Message",
-		},
-		records_count: {
-			anyOf: [
-				{
-					type: "integer",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "Records Count",
-		},
-		requested_at: {
-			type: "string",
-			format: "date-time",
-			title: "Requested At",
-		},
-		completed_at: {
-			anyOf: [
-				{
-					type: "string",
-					format: "date-time",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "Completed At",
-		},
-	},
-	type: "object",
-	required: [
-		"id",
-		"symbol",
-		"start_date",
-		"end_date",
-		"status",
-		"requested_at",
-	],
-	title: "DataRequestStatus",
-	description: "Response model for data request status",
-} as const;
-
 export const ExecutionListResponseSchema = {
 	properties: {
 		user_id: {
@@ -966,65 +763,6 @@ export const HTTPValidationErrorSchema = {
 	title: "HTTPValidationError",
 } as const;
 
-export const HealthCheckResponseSchema = {
-	properties: {
-		user_id: {
-			anyOf: [
-				{
-					type: "string",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "User Id",
-		},
-		status: {
-			type: "string",
-			title: "Status",
-		},
-		timestamp: {
-			type: "string",
-			format: "date-time",
-			title: "Timestamp",
-		},
-		database_connected: {
-			type: "boolean",
-			title: "Database Connected",
-		},
-		alpha_vantage_available: {
-			type: "boolean",
-			title: "Alpha Vantage Available",
-		},
-		total_symbols: {
-			type: "integer",
-			title: "Total Symbols",
-		},
-		last_update: {
-			anyOf: [
-				{
-					type: "string",
-					format: "date-time",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "Last Update",
-		},
-	},
-	type: "object",
-	required: [
-		"status",
-		"timestamp",
-		"database_connected",
-		"alpha_vantage_available",
-		"total_symbols",
-	],
-	title: "HealthCheckResponse",
-	description: "Health check response model",
-} as const;
-
 export const HealthResponseSchema = {
 	properties: {
 		status: {
@@ -1061,6 +799,58 @@ export const HealthResponseSchema = {
 	required: ["status", "timestamp", "service", "version", "uptime", "checks"],
 	title: "HealthResponse",
 	description: "Health check response model.",
+} as const;
+
+export const HistoricalDataResponseSchema = {
+	properties: {
+		symbol: {
+			type: "string",
+			title: "Symbol",
+		},
+		data: {
+			items: {
+				additionalProperties: true,
+				type: "object",
+			},
+			type: "array",
+			title: "Data",
+		},
+		count: {
+			type: "integer",
+			title: "Count",
+		},
+		start_date: {
+			anyOf: [
+				{
+					type: "string",
+					format: "date",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Start Date",
+		},
+		end_date: {
+			anyOf: [
+				{
+					type: "string",
+					format: "date",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "End Date",
+		},
+		frequency: {
+			type: "string",
+			title: "Frequency",
+		},
+	},
+	type: "object",
+	required: ["symbol", "data", "count", "frequency"],
+	title: "HistoricalDataResponse",
 } as const;
 
 export const IntegratedBacktestRequestSchema = {
@@ -1281,88 +1071,6 @@ export const LoginResponseSchema = {
 			is_verified: false,
 		},
 	},
-} as const;
-
-export const MarketDataResponseSchema = {
-	properties: {
-		user_id: {
-			anyOf: [
-				{
-					type: "string",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "User Id",
-		},
-		symbol: {
-			type: "string",
-			title: "Symbol",
-		},
-		date: {
-			type: "string",
-			format: "date-time",
-			title: "Date",
-		},
-		open: {
-			type: "number",
-			title: "Open",
-		},
-		high: {
-			type: "number",
-			title: "High",
-		},
-		low: {
-			type: "number",
-			title: "Low",
-		},
-		close: {
-			type: "number",
-			title: "Close",
-		},
-		volume: {
-			type: "integer",
-			title: "Volume",
-		},
-		adjusted_close: {
-			anyOf: [
-				{
-					type: "number",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "Adjusted Close",
-		},
-		dividend_amount: {
-			anyOf: [
-				{
-					type: "number",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "Dividend Amount",
-		},
-		split_coefficient: {
-			anyOf: [
-				{
-					type: "number",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "Split Coefficient",
-		},
-	},
-	type: "object",
-	required: ["symbol", "date", "open", "high", "low", "close", "volume"],
-	title: "MarketDataResponse",
-	description: "Response model for market data",
 } as const;
 
 export const OAuth2AuthorizeResponseSchema = {
@@ -1793,6 +1501,36 @@ export const SignalTypeSchema = {
 	description: "신호 타입",
 } as const;
 
+export const StockSymbolsResponseSchema = {
+	properties: {
+		symbols: {
+			items: {
+				$ref: "#/components/schemas/SymbolInfo",
+			},
+			type: "array",
+			title: "Symbols",
+		},
+		count: {
+			type: "integer",
+			title: "Count",
+		},
+		search_term: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Search Term",
+		},
+	},
+	type: "object",
+	required: ["symbols", "count"],
+	title: "StockSymbolsResponse",
+} as const;
+
 export const StrategyCreateRequestSchema = {
 	properties: {
 		user_id: {
@@ -2161,6 +1899,30 @@ export const StrategyUpdateRequestSchema = {
 	type: "object",
 	title: "StrategyUpdateRequest",
 	description: "Strategy update request",
+} as const;
+
+export const SymbolInfoSchema = {
+	properties: {
+		symbol: {
+			type: "string",
+			title: "Symbol",
+		},
+		name: {
+			type: "string",
+			title: "Name",
+		},
+		type: {
+			type: "string",
+			title: "Type",
+		},
+		region: {
+			type: "string",
+			title: "Region",
+		},
+	},
+	type: "object",
+	required: ["symbol", "name", "type", "region"],
+	title: "SymbolInfo",
 } as const;
 
 export const TemplateCreateRequestSchema = {
@@ -2660,11 +2422,23 @@ export const UserCreateSchema = {
 			title: "Is Verified",
 			default: false,
 		},
+		avatar_url: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Avatar Url",
+		},
 	},
 	type: "object",
 	required: ["email", "password"],
 	title: "UserCreate",
 	example: {
+		avatar_url: "string",
 		email: "user@example.com",
 		full_name: "string",
 		is_active: true,
@@ -2707,6 +2481,17 @@ export const UserResponseSchema = {
 			title: "Is Verified",
 			default: false,
 		},
+		avatar_url: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Avatar Url",
+		},
 		oauth_accounts: {
 			items: {
 				$ref: "#/components/schemas/OAuthAccount",
@@ -2721,6 +2506,7 @@ export const UserResponseSchema = {
 	description: "Base User model.",
 	example: {
 		_id: "string",
+		avatar_url: "string",
 		email: "user@example.com",
 		full_name: "string",
 		is_active: true,
@@ -2809,10 +2595,22 @@ export const UserUpdateSchema = {
 			],
 			title: "Is Verified",
 		},
+		avatar_url: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Avatar Url",
+		},
 	},
 	type: "object",
 	title: "UserUpdate",
 	example: {
+		avatar_url: "string",
 		email: "user@example.com",
 		full_name: "string",
 		is_active: true,

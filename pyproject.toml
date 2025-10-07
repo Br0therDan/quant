@@ -35,6 +35,8 @@ dependencies = [
     "httpx>=0.25.0",
     "duckdb>=0.6.0",
     "mysingle-quant>=0.1.33",
+    "backend @ file://localhost/${PWD}/backend",
+
 ]
 
 [tool.uv.sources]

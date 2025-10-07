@@ -3,7 +3,6 @@
 import { Box, useTheme } from "@mui/material";
 import {
 	CandlestickSeries,
-	ColorType,
 	CrosshairMode,
 	createChart,
 	HistogramSeries,
@@ -30,7 +29,6 @@ interface CandlestickChartProps {
 
 export default function CandlestickChart({
 	data,
-	symbol,
 	height = 400,
 	showVolume = true,
 }: CandlestickChartProps) {
@@ -46,10 +44,10 @@ export default function CandlestickChart({
 		// 차트 생성
 		const chart = createChart(chartContainerRef.current, {
 			layout: {
-				background: {
-					type: ColorType.Solid,
-					color: theme.palette.background.paper,
-				},
+				// background: {
+				// 	type: ColorType.Solid,
+				// 	color: theme.palette.background.paper,
+				// },
 				textColor: theme.palette.text.primary,
 			},
 			grid: {

@@ -12,6 +12,7 @@ import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import * as React from "react";
 import ThemeSwitcher from "./ThemeSwitcher";
+import UserAvatars from './UserButton';
 
 const AppBar = styled(MuiAppBar)(({ theme }) => ({
 	borderWidth: 0,
@@ -122,6 +123,9 @@ export default function Header({
 					>
 						<Stack direction="row" alignItems="center">
 							<ThemeSwitcher />
+						</Stack>
+						<Stack direction="row" alignItems="center">
+							<UserAvatars />
 						</Stack>
 					</Stack>
 				</Stack>

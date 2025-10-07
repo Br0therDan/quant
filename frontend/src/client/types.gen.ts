@@ -392,131 +392,6 @@ export type BodyAuthVerify = {
 };
 
 /**
- * BulkDataRequest
- * Request model for bulk data operations
- */
-export type BulkDataRequest = {
-	/**
-	 * User Id
-	 */
-	user_id?: string | null;
-	/**
-	 * Symbols
-	 * List of symbols
-	 */
-	symbols: Array<string>;
-	/**
-	 * Start Date
-	 * Start date
-	 */
-	start_date: Date;
-	/**
-	 * End Date
-	 * End date
-	 */
-	end_date: Date;
-	/**
-	 * Interval
-	 * Data interval
-	 */
-	interval?: string;
-};
-
-/**
- * DataQualityResponse
- * Response model for data quality metrics
- */
-export type DataQualityResponse = {
-	/**
-	 * User Id
-	 */
-	user_id?: string | null;
-	/**
-	 * Symbol
-	 */
-	symbol: string;
-	/**
-	 * Date Range Start
-	 */
-	date_range_start: Date;
-	/**
-	 * Date Range End
-	 */
-	date_range_end: Date;
-	/**
-	 * Total Records
-	 */
-	total_records: number;
-	/**
-	 * Missing Days
-	 */
-	missing_days: number;
-	/**
-	 * Duplicate Records
-	 */
-	duplicate_records: number;
-	/**
-	 * Price Anomalies
-	 */
-	price_anomalies: number;
-	/**
-	 * Quality Score
-	 */
-	quality_score: number;
-	/**
-	 * Analyzed At
-	 */
-	analyzed_at: Date;
-};
-
-/**
- * DataRequestStatus
- * Response model for data request status
- */
-export type DataRequestStatus = {
-	/**
-	 * User Id
-	 */
-	user_id?: string | null;
-	/**
-	 * Id
-	 */
-	id: string;
-	/**
-	 * Symbol
-	 */
-	symbol: string;
-	/**
-	 * Start Date
-	 */
-	start_date: Date;
-	/**
-	 * End Date
-	 */
-	end_date: Date;
-	/**
-	 * Status
-	 */
-	status: string;
-	/**
-	 * Error Message
-	 */
-	error_message?: string | null;
-	/**
-	 * Records Count
-	 */
-	records_count?: number | null;
-	/**
-	 * Requested At
-	 */
-	requested_at: Date;
-	/**
-	 * Completed At
-	 */
-	completed_at?: Date | null;
-};
-
-/**
  * ExecutionListResponse
  * Execution list response
  */
@@ -612,41 +487,6 @@ export type HttpValidationError = {
 };
 
 /**
- * HealthCheckResponse
- * Health check response model
- */
-export type HealthCheckResponse = {
-	/**
-	 * User Id
-	 */
-	user_id?: string | null;
-	/**
-	 * Status
-	 */
-	status: string;
-	/**
-	 * Timestamp
-	 */
-	timestamp: Date;
-	/**
-	 * Database Connected
-	 */
-	database_connected: boolean;
-	/**
-	 * Alpha Vantage Available
-	 */
-	alpha_vantage_available: boolean;
-	/**
-	 * Total Symbols
-	 */
-	total_symbols: number;
-	/**
-	 * Last Update
-	 */
-	last_update?: Date | null;
-};
-
-/**
  * HealthResponse
  * Health check response model.
  */
@@ -679,6 +519,38 @@ export type HealthResponse = {
 			[key: string]: unknown;
 		};
 	};
+};
+
+/**
+ * HistoricalDataResponse
+ */
+export type HistoricalDataResponse = {
+	/**
+	 * Symbol
+	 */
+	symbol: string;
+	/**
+	 * Data
+	 */
+	data: Array<{
+		[key: string]: unknown;
+	}>;
+	/**
+	 * Count
+	 */
+	count: number;
+	/**
+	 * Start Date
+	 */
+	start_date?: Date | null;
+	/**
+	 * End Date
+	 */
+	end_date?: Date | null;
+	/**
+	 * Frequency
+	 */
+	frequency: string;
 };
 
 /**
@@ -800,57 +672,6 @@ export type LoginResponse = {
 	 */
 	token_type?: string | null;
 	user_info: UserResponse;
-};
-
-/**
- * MarketDataResponse
- * Response model for market data
- */
-export type MarketDataResponse = {
-	/**
-	 * User Id
-	 */
-	user_id?: string | null;
-	/**
-	 * Symbol
-	 */
-	symbol: string;
-	/**
-	 * Date
-	 */
-	date: Date;
-	/**
-	 * Open
-	 */
-	open: number;
-	/**
-	 * High
-	 */
-	high: number;
-	/**
-	 * Low
-	 */
-	low: number;
-	/**
-	 * Close
-	 */
-	close: number;
-	/**
-	 * Volume
-	 */
-	volume: number;
-	/**
-	 * Adjusted Close
-	 */
-	adjusted_close?: number | null;
-	/**
-	 * Dividend Amount
-	 */
-	dividend_amount?: number | null;
-	/**
-	 * Split Coefficient
-	 */
-	split_coefficient?: number | null;
 };
 
 /**
@@ -1119,6 +940,24 @@ export type PydanticObjectId = string;
 export type SignalType = "BUY" | "SELL" | "HOLD";
 
 /**
+ * StockSymbolsResponse
+ */
+export type StockSymbolsResponse = {
+	/**
+	 * Symbols
+	 */
+	symbols: Array<SymbolInfo>;
+	/**
+	 * Count
+	 */
+	count: number;
+	/**
+	 * Search Term
+	 */
+	search_term?: string | null;
+};
+
+/**
  * StrategyCreateRequest
  * Strategy creation request
  */
@@ -1335,6 +1174,28 @@ export type StrategyUpdateRequest = {
 	 * 태그
 	 */
 	tags?: Array<string | null> | null;
+};
+
+/**
+ * SymbolInfo
+ */
+export type SymbolInfo = {
+	/**
+	 * Symbol
+	 */
+	symbol: string;
+	/**
+	 * Name
+	 */
+	name: string;
+	/**
+	 * Type
+	 */
+	type: string;
+	/**
+	 * Region
+	 */
+	region: string;
 };
 
 /**
@@ -1617,6 +1478,10 @@ export type UserCreate = {
 	 * Is Verified
 	 */
 	is_verified?: boolean | null;
+	/**
+	 * Avatar Url
+	 */
+	avatar_url?: string | null;
 };
 
 /**
@@ -1644,6 +1509,10 @@ export type UserResponse = {
 	 * Is Verified
 	 */
 	is_verified?: boolean;
+	/**
+	 * Avatar Url
+	 */
+	avatar_url?: string | null;
 	/**
 	 * Oauth Accounts
 	 */
@@ -1678,6 +1547,10 @@ export type UserUpdate = {
 	 * Is Verified
 	 */
 	is_verified?: boolean | null;
+	/**
+	 * Avatar Url
+	 */
+	avatar_url?: string | null;
 };
 
 /**
@@ -1827,6 +1700,15 @@ export type AuthLogoutData = {
 	url: "/api/v1/auth/logout";
 };
 
+export type AuthLogoutErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type AuthLogoutError = AuthLogoutErrors[keyof AuthLogoutErrors];
+
 export type AuthLogoutResponses = {
 	/**
 	 * Successful Response
@@ -1875,6 +1757,16 @@ export type AuthVerifyTokenData = {
 	query?: never;
 	url: "/api/v1/auth/token/verify";
 };
+
+export type AuthVerifyTokenErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type AuthVerifyTokenError =
+	AuthVerifyTokenErrors[keyof AuthVerifyTokenErrors];
 
 export type AuthVerifyTokenResponses = {
 	/**
@@ -2019,6 +1911,15 @@ export type UserGetUserMeData = {
 	url: "/api/v1/users/me";
 };
 
+export type UserGetUserMeErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type UserGetUserMeError = UserGetUserMeErrors[keyof UserGetUserMeErrors];
+
 export type UserGetUserMeResponses = {
 	/**
 	 * Successful Response
@@ -2142,12 +2043,100 @@ export type UserUpdateUserResponses = {
 export type UserUpdateUserResponse =
 	UserUpdateUserResponses[keyof UserUpdateUserResponses];
 
+export type OAuth2AuthorizeData = {
+	body?: never;
+	path: {
+		/**
+		 * Provider
+		 */
+		provider: string;
+	};
+	query?: {
+		/**
+		 * Redirect Url
+		 */
+		redirect_url?: string | null;
+		/**
+		 * State
+		 */
+		state?: string | null;
+	};
+	url: "/api/v1/oauth2/{provider}/authorize";
+};
+
+export type OAuth2AuthorizeErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type OAuth2AuthorizeError =
+	OAuth2AuthorizeErrors[keyof OAuth2AuthorizeErrors];
+
+export type OAuth2AuthorizeResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: OAuth2AuthorizeResponse;
+};
+
+export type OAuth2AuthorizeResponse2 =
+	OAuth2AuthorizeResponses[keyof OAuth2AuthorizeResponses];
+
+export type OAuth2CallbackData = {
+	body?: never;
+	path: {
+		/**
+		 * Provider
+		 */
+		provider: string;
+	};
+	query: {
+		/**
+		 * Code
+		 */
+		code: string;
+	};
+	url: "/api/v1/oauth2/{provider}/callback";
+};
+
+export type OAuth2CallbackErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type OAuth2CallbackError =
+	OAuth2CallbackErrors[keyof OAuth2CallbackErrors];
+
+export type OAuth2CallbackResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: UserResponse;
+};
+
+export type OAuth2CallbackResponse =
+	OAuth2CallbackResponses[keyof OAuth2CallbackResponses];
+
 export type UserGetMyOauthAccountsData = {
 	body?: never;
 	path?: never;
 	query?: never;
 	url: "/api/v1/users/me/oauth-accounts";
 };
+
+export type UserGetMyOauthAccountsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type UserGetMyOauthAccountsError =
+	UserGetMyOauthAccountsErrors[keyof UserGetMyOauthAccountsErrors];
 
 export type UserGetMyOauthAccountsResponses = {
 	/**
@@ -2204,7 +2193,7 @@ export type UserGetUserOauthAccountsData = {
 		user_id: PydanticObjectId;
 	};
 	query?: never;
-	url: "/api/v1/users/users/{user_id}/oauth-accounts";
+	url: "/api/v1/users/{user_id}/oauth-accounts";
 };
 
 export type UserGetUserOauthAccountsErrors = {
@@ -2230,290 +2219,829 @@ export type UserGetUserOauthAccountsResponses = {
 export type UserGetUserOauthAccountsResponse =
 	UserGetUserOauthAccountsResponses[keyof UserGetUserOauthAccountsResponses];
 
-export type OAuth2AuthorizeData = {
+export type MarketDataV2GetDailyPricesData = {
 	body?: never;
 	path: {
 		/**
-		 * Provider
+		 * Symbol
+		 * 종목 심볼 (예: AAPL, TSLA)
 		 */
-		provider: string;
+		symbol: string;
 	};
 	query?: {
 		/**
-		 * Redirect Url
+		 * Outputsize
+		 * 데이터 크기 (compact: 최근 100일, full: 전체)
 		 */
-		redirect_url?: string | null;
-		/**
-		 * State
-		 */
-		state?: string | null;
+		outputsize?: string;
 	};
-	url: "/api/v1/oauth2/{provider}/authorize";
+	url: "/api/v1/market-data/stock/daily/{symbol}";
 };
 
-export type OAuth2AuthorizeErrors = {
+export type MarketDataV2GetDailyPricesErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type OAuth2AuthorizeError =
-	OAuth2AuthorizeErrors[keyof OAuth2AuthorizeErrors];
+export type MarketDataV2GetDailyPricesError =
+	MarketDataV2GetDailyPricesErrors[keyof MarketDataV2GetDailyPricesErrors];
 
-export type OAuth2AuthorizeResponses = {
+export type MarketDataV2GetDailyPricesResponses = {
 	/**
+	 * Response Market Data V2-Get Daily Prices
 	 * Successful Response
 	 */
-	200: OAuth2AuthorizeResponse;
-};
-
-export type OAuth2AuthorizeResponse2 =
-	OAuth2AuthorizeResponses[keyof OAuth2AuthorizeResponses];
-
-export type OAuth2CallbackData = {
-	body?: never;
-	path: {
-		/**
-		 * Provider
-		 */
-		provider: string;
+	200: {
+		[key: string]: unknown;
 	};
-	query?: never;
-	url: "/api/v1/oauth2/{provider}/callback";
 };
 
-export type OAuth2CallbackErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
+export type MarketDataV2GetDailyPricesResponse =
+	MarketDataV2GetDailyPricesResponses[keyof MarketDataV2GetDailyPricesResponses];
 
-export type OAuth2CallbackError =
-	OAuth2CallbackErrors[keyof OAuth2CallbackErrors];
-
-export type OAuth2CallbackResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: UserResponse;
-};
-
-export type OAuth2CallbackResponse =
-	OAuth2CallbackResponses[keyof OAuth2CallbackResponses];
-
-export type MarketDataGetAvailableSymbolsData = {
-	body?: never;
-	path?: never;
-	query?: never;
-	url: "/api/v1/market-data/symbols";
-};
-
-export type MarketDataGetAvailableSymbolsResponses = {
-	/**
-	 * Response Market Data-Get Available Symbols
-	 * Successful Response
-	 */
-	200: Array<string>;
-};
-
-export type MarketDataGetAvailableSymbolsResponse =
-	MarketDataGetAvailableSymbolsResponses[keyof MarketDataGetAvailableSymbolsResponses];
-
-export type MarketDataGetMarketDataData = {
+export type MarketDataV2GetQuoteData = {
 	body?: never;
 	path: {
 		/**
 		 * Symbol
+		 * 종목 심볼 (예: AAPL, TSLA)
 		 */
 		symbol: string;
 	};
-	query: {
+	query?: never;
+	url: "/api/v1/market-data/stock/quote/{symbol}";
+};
+
+export type MarketDataV2GetQuoteErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MarketDataV2GetQuoteError =
+	MarketDataV2GetQuoteErrors[keyof MarketDataV2GetQuoteErrors];
+
+export type MarketDataV2GetQuoteResponses = {
+	/**
+	 * Response Market Data V2-Get Quote
+	 * Successful Response
+	 */
+	200: {
+		[key: string]: unknown;
+	};
+};
+
+export type MarketDataV2GetQuoteResponse =
+	MarketDataV2GetQuoteResponses[keyof MarketDataV2GetQuoteResponses];
+
+export type MarketDataV2GetIntradayDataData = {
+	body?: never;
+	path: {
+		/**
+		 * Symbol
+		 * 종목 심볼 (예: AAPL, TSLA)
+		 */
+		symbol: string;
+	};
+	query?: {
+		/**
+		 * Interval
+		 * 데이터 간격 (1min, 5min, 15min, 30min, 60min)
+		 */
+		interval?: string;
+		/**
+		 * Outputsize
+		 * 데이터 크기 (compact/full)
+		 */
+		outputsize?: string;
+	};
+	url: "/api/v1/market-data/stock/intraday/{symbol}";
+};
+
+export type MarketDataV2GetIntradayDataErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MarketDataV2GetIntradayDataError =
+	MarketDataV2GetIntradayDataErrors[keyof MarketDataV2GetIntradayDataErrors];
+
+export type MarketDataV2GetIntradayDataResponses = {
+	/**
+	 * Response Market Data V2-Get Intraday Data
+	 * Successful Response
+	 */
+	200: {
+		[key: string]: unknown;
+	};
+};
+
+export type MarketDataV2GetIntradayDataResponse =
+	MarketDataV2GetIntradayDataResponses[keyof MarketDataV2GetIntradayDataResponses];
+
+export type MarketDataV2GetHistoricalDataData = {
+	body?: never;
+	path: {
+		/**
+		 * Symbol
+		 * 종목 심볼 (예: AAPL, TSLA)
+		 */
+		symbol: string;
+	};
+	query?: {
 		/**
 		 * Start Date
-		 * Start date (YYYY-MM-DD)
+		 * 시작 날짜 (YYYY-MM-DD)
 		 */
-		start_date: Date;
+		start_date?: Date | null;
 		/**
 		 * End Date
-		 * End date (YYYY-MM-DD)
+		 * 종료 날짜 (YYYY-MM-DD)
 		 */
-		end_date: Date;
+		end_date?: Date | null;
 		/**
-		 * Force Refresh
-		 * Force refresh from external API
+		 * Frequency
+		 * 데이터 주기 (daily, weekly, monthly)
 		 */
-		force_refresh?: boolean;
+		frequency?: string;
 	};
-	url: "/api/v1/market-data/data/{symbol}";
+	url: "/api/v1/market-data/stock/historical/{symbol}";
 };
 
-export type MarketDataGetMarketDataErrors = {
+export type MarketDataV2GetHistoricalDataErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type MarketDataGetMarketDataError =
-	MarketDataGetMarketDataErrors[keyof MarketDataGetMarketDataErrors];
+export type MarketDataV2GetHistoricalDataError =
+	MarketDataV2GetHistoricalDataErrors[keyof MarketDataV2GetHistoricalDataErrors];
 
-export type MarketDataGetMarketDataResponses = {
+export type MarketDataV2GetHistoricalDataResponses = {
 	/**
-	 * Response Market Data-Get Market Data
 	 * Successful Response
 	 */
-	200: Array<MarketDataResponse>;
+	200: HistoricalDataResponse;
 };
 
-export type MarketDataGetMarketDataResponse =
-	MarketDataGetMarketDataResponses[keyof MarketDataGetMarketDataResponses];
+export type MarketDataV2GetHistoricalDataResponse =
+	MarketDataV2GetHistoricalDataResponses[keyof MarketDataV2GetHistoricalDataResponses];
 
-export type MarketDataRequestBulkDataData = {
-	body: BulkDataRequest;
+export type MarketDataV2GetAvailableSymbolsData = {
+	body?: never;
 	path?: never;
-	query?: never;
-	url: "/api/v1/market-data/data/bulk";
+	query?: {
+		/**
+		 * Search
+		 * 검색 키워드
+		 */
+		search?: string | null;
+		/**
+		 * Limit
+		 * 결과 개수 제한
+		 */
+		limit?: number;
+	};
+	url: "/api/v1/market-data/stock/symbols";
 };
 
-export type MarketDataRequestBulkDataErrors = {
+export type MarketDataV2GetAvailableSymbolsErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type MarketDataRequestBulkDataError =
-	MarketDataRequestBulkDataErrors[keyof MarketDataRequestBulkDataErrors];
+export type MarketDataV2GetAvailableSymbolsError =
+	MarketDataV2GetAvailableSymbolsErrors[keyof MarketDataV2GetAvailableSymbolsErrors];
 
-export type MarketDataRequestBulkDataResponses = {
+export type MarketDataV2GetAvailableSymbolsResponses = {
 	/**
-	 * Response Market Data-Request Bulk Data
 	 * Successful Response
 	 */
-	200: Array<DataRequestStatus>;
+	200: StockSymbolsResponse;
 };
 
-export type MarketDataRequestBulkDataResponse =
-	MarketDataRequestBulkDataResponses[keyof MarketDataRequestBulkDataResponses];
+export type MarketDataV2GetAvailableSymbolsResponse =
+	MarketDataV2GetAvailableSymbolsResponses[keyof MarketDataV2GetAvailableSymbolsResponses];
 
-export type MarketDataGetDataCoverageData = {
+export type MarketDataV2GetCompanyOverviewData = {
 	body?: never;
 	path: {
 		/**
 		 * Symbol
+		 * 종목 심볼 (예: AAPL, TSLA)
 		 */
 		symbol: string;
 	};
 	query?: never;
-	url: "/api/v1/market-data/coverage/{symbol}";
+	url: "/api/v1/market-data/fundamental/overview/{symbol}";
 };
 
-export type MarketDataGetDataCoverageErrors = {
+export type MarketDataV2GetCompanyOverviewErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type MarketDataGetDataCoverageError =
-	MarketDataGetDataCoverageErrors[keyof MarketDataGetDataCoverageErrors];
+export type MarketDataV2GetCompanyOverviewError =
+	MarketDataV2GetCompanyOverviewErrors[keyof MarketDataV2GetCompanyOverviewErrors];
 
-export type MarketDataGetDataCoverageResponses = {
+export type MarketDataV2GetCompanyOverviewResponses = {
 	/**
+	 * Response Market Data V2-Get Company Overview
 	 * Successful Response
 	 */
-	200: unknown;
+	200: {
+		[key: string]: unknown;
+	};
 };
 
-export type MarketDataAnalyzeDataQualityData = {
+export type MarketDataV2GetCompanyOverviewResponse =
+	MarketDataV2GetCompanyOverviewResponses[keyof MarketDataV2GetCompanyOverviewResponses];
+
+export type MarketDataV2GetIncomeStatementData = {
 	body?: never;
 	path: {
 		/**
 		 * Symbol
+		 * 종목 심볼 (예: AAPL, TSLA)
 		 */
 		symbol: string;
 	};
-	query: {
+	query?: {
 		/**
-		 * Start Date
-		 * Start date (YYYY-MM-DD)
+		 * Period
+		 * 보고 주기 (annual, quarterly)
 		 */
-		start_date: Date;
-		/**
-		 * End Date
-		 * End date (YYYY-MM-DD)
-		 */
-		end_date: Date;
+		period?: string;
 	};
-	url: "/api/v1/market-data/quality/{symbol}";
+	url: "/api/v1/market-data/fundamental/income-statement/{symbol}";
 };
 
-export type MarketDataAnalyzeDataQualityErrors = {
+export type MarketDataV2GetIncomeStatementErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type MarketDataAnalyzeDataQualityError =
-	MarketDataAnalyzeDataQualityErrors[keyof MarketDataAnalyzeDataQualityErrors];
+export type MarketDataV2GetIncomeStatementError =
+	MarketDataV2GetIncomeStatementErrors[keyof MarketDataV2GetIncomeStatementErrors];
 
-export type MarketDataAnalyzeDataQualityResponses = {
+export type MarketDataV2GetIncomeStatementResponses = {
 	/**
+	 * Response Market Data V2-Get Income Statement
 	 * Successful Response
 	 */
-	200: DataQualityResponse;
+	200: {
+		[key: string]: unknown;
+	};
 };
 
-export type MarketDataAnalyzeDataQualityResponse =
-	MarketDataAnalyzeDataQualityResponses[keyof MarketDataAnalyzeDataQualityResponses];
+export type MarketDataV2GetIncomeStatementResponse =
+	MarketDataV2GetIncomeStatementResponses[keyof MarketDataV2GetIncomeStatementResponses];
 
-export type MarketDataGetCachePerformanceStatsData = {
+export type MarketDataV2GetBalanceSheetData = {
+	body?: never;
+	path: {
+		/**
+		 * Symbol
+		 * 종목 심볼 (예: AAPL, TSLA)
+		 */
+		symbol: string;
+	};
+	query?: {
+		/**
+		 * Period
+		 * 보고 주기 (annual, quarterly)
+		 */
+		period?: string;
+	};
+	url: "/api/v1/market-data/fundamental/balance-sheet/{symbol}";
+};
+
+export type MarketDataV2GetBalanceSheetErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MarketDataV2GetBalanceSheetError =
+	MarketDataV2GetBalanceSheetErrors[keyof MarketDataV2GetBalanceSheetErrors];
+
+export type MarketDataV2GetBalanceSheetResponses = {
+	/**
+	 * Response Market Data V2-Get Balance Sheet
+	 * Successful Response
+	 */
+	200: {
+		[key: string]: unknown;
+	};
+};
+
+export type MarketDataV2GetBalanceSheetResponse =
+	MarketDataV2GetBalanceSheetResponses[keyof MarketDataV2GetBalanceSheetResponses];
+
+export type MarketDataV2GetCashFlowData = {
+	body?: never;
+	path: {
+		/**
+		 * Symbol
+		 * 종목 심볼 (예: AAPL, TSLA)
+		 */
+		symbol: string;
+	};
+	query?: {
+		/**
+		 * Period
+		 * 보고 주기 (annual, quarterly)
+		 */
+		period?: string;
+	};
+	url: "/api/v1/market-data/fundamental/cash-flow/{symbol}";
+};
+
+export type MarketDataV2GetCashFlowErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MarketDataV2GetCashFlowError =
+	MarketDataV2GetCashFlowErrors[keyof MarketDataV2GetCashFlowErrors];
+
+export type MarketDataV2GetCashFlowResponses = {
+	/**
+	 * Response Market Data V2-Get Cash Flow
+	 * Successful Response
+	 */
+	200: {
+		[key: string]: unknown;
+	};
+};
+
+export type MarketDataV2GetCashFlowResponse =
+	MarketDataV2GetCashFlowResponses[keyof MarketDataV2GetCashFlowResponses];
+
+export type MarketDataV2GetEarningsData = {
+	body?: never;
+	path: {
+		/**
+		 * Symbol
+		 * 종목 심볼 (예: AAPL, TSLA)
+		 */
+		symbol: string;
+	};
+	query?: never;
+	url: "/api/v1/market-data/fundamental/earnings/{symbol}";
+};
+
+export type MarketDataV2GetEarningsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MarketDataV2GetEarningsError =
+	MarketDataV2GetEarningsErrors[keyof MarketDataV2GetEarningsErrors];
+
+export type MarketDataV2GetEarningsResponses = {
+	/**
+	 * Response Market Data V2-Get Earnings
+	 * Successful Response
+	 */
+	200: {
+		[key: string]: unknown;
+	};
+};
+
+export type MarketDataV2GetEarningsResponse =
+	MarketDataV2GetEarningsResponses[keyof MarketDataV2GetEarningsResponses];
+
+export type MarketDataV2GetGdpDataData = {
+	body?: never;
+	path?: never;
+	query?: {
+		/**
+		 * Interval
+		 * 데이터 간격 (annual, quarterly)
+		 */
+		interval?: string;
+	};
+	url: "/api/v1/market-data/economic/gdp";
+};
+
+export type MarketDataV2GetGdpDataErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MarketDataV2GetGdpDataError =
+	MarketDataV2GetGdpDataErrors[keyof MarketDataV2GetGdpDataErrors];
+
+export type MarketDataV2GetGdpDataResponses = {
+	/**
+	 * Response Market Data V2-Get Gdp Data
+	 * Successful Response
+	 */
+	200: {
+		[key: string]: unknown;
+	};
+};
+
+export type MarketDataV2GetGdpDataResponse =
+	MarketDataV2GetGdpDataResponses[keyof MarketDataV2GetGdpDataResponses];
+
+export type MarketDataV2GetInflationDataData = {
+	body?: never;
+	path?: never;
+	query?: {
+		/**
+		 * Interval
+		 * 데이터 간격 (monthly, annual)
+		 */
+		interval?: string;
+	};
+	url: "/api/v1/market-data/economic/inflation";
+};
+
+export type MarketDataV2GetInflationDataErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MarketDataV2GetInflationDataError =
+	MarketDataV2GetInflationDataErrors[keyof MarketDataV2GetInflationDataErrors];
+
+export type MarketDataV2GetInflationDataResponses = {
+	/**
+	 * Response Market Data V2-Get Inflation Data
+	 * Successful Response
+	 */
+	200: {
+		[key: string]: unknown;
+	};
+};
+
+export type MarketDataV2GetInflationDataResponse =
+	MarketDataV2GetInflationDataResponses[keyof MarketDataV2GetInflationDataResponses];
+
+export type MarketDataV2GetInterestRatesData = {
+	body?: never;
+	path?: never;
+	query?: {
+		/**
+		 * Maturity
+		 * 만기 (3month, 2year, 5year, 10year, 30year)
+		 */
+		maturity?: string;
+	};
+	url: "/api/v1/market-data/economic/interest-rates";
+};
+
+export type MarketDataV2GetInterestRatesErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MarketDataV2GetInterestRatesError =
+	MarketDataV2GetInterestRatesErrors[keyof MarketDataV2GetInterestRatesErrors];
+
+export type MarketDataV2GetInterestRatesResponses = {
+	/**
+	 * Response Market Data V2-Get Interest Rates
+	 * Successful Response
+	 */
+	200: {
+		[key: string]: unknown;
+	};
+};
+
+export type MarketDataV2GetInterestRatesResponse =
+	MarketDataV2GetInterestRatesResponses[keyof MarketDataV2GetInterestRatesResponses];
+
+export type MarketDataV2GetEmploymentDataData = {
 	body?: never;
 	path?: never;
 	query?: never;
-	url: "/api/v1/market-data/analytics/cache-performance";
+	url: "/api/v1/market-data/economic/employment";
 };
 
-export type MarketDataGetCachePerformanceStatsResponses = {
+export type MarketDataV2GetEmploymentDataErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MarketDataV2GetEmploymentDataError =
+	MarketDataV2GetEmploymentDataErrors[keyof MarketDataV2GetEmploymentDataErrors];
+
+export type MarketDataV2GetEmploymentDataResponses = {
+	/**
+	 * Response Market Data V2-Get Employment Data
+	 * Successful Response
+	 */
+	200: {
+		[key: string]: unknown;
+	};
+};
+
+export type MarketDataV2GetEmploymentDataResponse =
+	MarketDataV2GetEmploymentDataResponses[keyof MarketDataV2GetEmploymentDataResponses];
+
+export type MarketDataV2GetConsumerSentimentData = {
+	body?: never;
+	path?: never;
+	query?: never;
+	url: "/api/v1/market-data/economic/consumer-sentiment";
+};
+
+export type MarketDataV2GetConsumerSentimentErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MarketDataV2GetConsumerSentimentError =
+	MarketDataV2GetConsumerSentimentErrors[keyof MarketDataV2GetConsumerSentimentErrors];
+
+export type MarketDataV2GetConsumerSentimentResponses = {
+	/**
+	 * Response Market Data V2-Get Consumer Sentiment
+	 * Successful Response
+	 */
+	200: {
+		[key: string]: unknown;
+	};
+};
+
+export type MarketDataV2GetConsumerSentimentResponse =
+	MarketDataV2GetConsumerSentimentResponses[keyof MarketDataV2GetConsumerSentimentResponses];
+
+export type MarketDataV2GetNewsData = {
+	body?: never;
+	path: {
+		/**
+		 * Symbol
+		 * 종목 심볼 (예: AAPL, TSLA)
+		 */
+		symbol: string;
+	};
+	query?: {
+		/**
+		 * Topics
+		 * 관심 주제 (쉼표로 구분)
+		 */
+		topics?: string | null;
+		/**
+		 * Time From
+		 * 시작 날짜 (YYYY-MM-DD)
+		 */
+		time_from?: Date | null;
+		/**
+		 * Time To
+		 * 종료 날짜 (YYYY-MM-DD)
+		 */
+		time_to?: Date | null;
+		/**
+		 * Limit
+		 * 결과 개수 제한
+		 */
+		limit?: number;
+	};
+	url: "/api/v1/market-data/intelligence/news/{symbol}";
+};
+
+export type MarketDataV2GetNewsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MarketDataV2GetNewsError =
+	MarketDataV2GetNewsErrors[keyof MarketDataV2GetNewsErrors];
+
+export type MarketDataV2GetNewsResponses = {
+	/**
+	 * Response Market Data V2-Get News
+	 * Successful Response
+	 */
+	200: {
+		[key: string]: unknown;
+	};
+};
+
+export type MarketDataV2GetNewsResponse =
+	MarketDataV2GetNewsResponses[keyof MarketDataV2GetNewsResponses];
+
+export type MarketDataV2GetSentimentAnalysisData = {
+	body?: never;
+	path: {
+		/**
+		 * Symbol
+		 * 종목 심볼 (예: AAPL, TSLA)
+		 */
+		symbol: string;
+	};
+	query?: {
+		/**
+		 * Time Range
+		 * 시간 범위 (1week, 1month, 3months, 6months)
+		 */
+		time_range?: string;
+		/**
+		 * Sources
+		 * 분석 소스 (쉼표로 구분)
+		 */
+		sources?: string | null;
+	};
+	url: "/api/v1/market-data/intelligence/sentiment/{symbol}";
+};
+
+export type MarketDataV2GetSentimentAnalysisErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MarketDataV2GetSentimentAnalysisError =
+	MarketDataV2GetSentimentAnalysisErrors[keyof MarketDataV2GetSentimentAnalysisErrors];
+
+export type MarketDataV2GetSentimentAnalysisResponses = {
+	/**
+	 * Response Market Data V2-Get Sentiment Analysis
+	 * Successful Response
+	 */
+	200: {
+		[key: string]: unknown;
+	};
+};
+
+export type MarketDataV2GetSentimentAnalysisResponse =
+	MarketDataV2GetSentimentAnalysisResponses[keyof MarketDataV2GetSentimentAnalysisResponses];
+
+export type MarketDataV2GetAnalystRecommendationsData = {
+	body?: never;
+	path: {
+		/**
+		 * Symbol
+		 * 종목 심볼 (예: AAPL, TSLA)
+		 */
+		symbol: string;
+	};
+	query?: {
+		/**
+		 * Time Range
+		 * 시간 범위 (1month, 3months, 6months, 1year)
+		 */
+		time_range?: string;
+		/**
+		 * Brokers
+		 * 증권사 리스트 (쉼표로 구분)
+		 */
+		brokers?: string | null;
+	};
+	url: "/api/v1/market-data/intelligence/analyst-recommendations/{symbol}";
+};
+
+export type MarketDataV2GetAnalystRecommendationsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MarketDataV2GetAnalystRecommendationsError =
+	MarketDataV2GetAnalystRecommendationsErrors[keyof MarketDataV2GetAnalystRecommendationsErrors];
+
+export type MarketDataV2GetAnalystRecommendationsResponses = {
+	/**
+	 * Response Market Data V2-Get Analyst Recommendations
+	 * Successful Response
+	 */
+	200: {
+		[key: string]: unknown;
+	};
+};
+
+export type MarketDataV2GetAnalystRecommendationsResponse =
+	MarketDataV2GetAnalystRecommendationsResponses[keyof MarketDataV2GetAnalystRecommendationsResponses];
+
+export type MarketDataV2GetSocialSentimentData = {
+	body?: never;
+	path: {
+		/**
+		 * Symbol
+		 * 종목 심볼 (예: AAPL, TSLA)
+		 */
+		symbol: string;
+	};
+	query?: {
+		/**
+		 * Platforms
+		 * 소셜 미디어 플랫폼 (twitter,reddit,stocktwits)
+		 */
+		platforms?: string | null;
+		/**
+		 * Time Range
+		 * 시간 범위 (1day, 1week, 1month)
+		 */
+		time_range?: string;
+	};
+	url: "/api/v1/market-data/intelligence/social-sentiment/{symbol}";
+};
+
+export type MarketDataV2GetSocialSentimentErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MarketDataV2GetSocialSentimentError =
+	MarketDataV2GetSocialSentimentErrors[keyof MarketDataV2GetSocialSentimentErrors];
+
+export type MarketDataV2GetSocialSentimentResponses = {
+	/**
+	 * Response Market Data V2-Get Social Sentiment
+	 * Successful Response
+	 */
+	200: {
+		[key: string]: unknown;
+	};
+};
+
+export type MarketDataV2GetSocialSentimentResponse =
+	MarketDataV2GetSocialSentimentResponses[keyof MarketDataV2GetSocialSentimentResponses];
+
+export type MarketDataV2GetMarketDataInfoData = {
+	body?: never;
+	path?: never;
+	query?: never;
+	url: "/api/v1/market-data/";
+};
+
+export type MarketDataV2GetMarketDataInfoErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MarketDataV2GetMarketDataInfoError =
+	MarketDataV2GetMarketDataInfoErrors[keyof MarketDataV2GetMarketDataInfoErrors];
+
+export type MarketDataV2GetMarketDataInfoResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type MarketDataGetSymbolsCoverageAnalyticsData = {
+export type MarketDataV2HealthCheckData = {
 	body?: never;
 	path?: never;
 	query?: never;
-	url: "/api/v1/market-data/analytics/symbol-coverage";
+	url: "/api/v1/market-data/health";
 };
 
-export type MarketDataGetSymbolsCoverageAnalyticsResponses = {
+export type MarketDataV2HealthCheckErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MarketDataV2HealthCheckError =
+	MarketDataV2HealthCheckErrors[keyof MarketDataV2HealthCheckErrors];
+
+export type MarketDataV2HealthCheckResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
-
-export type MarketDataServiceHealthCheckData = {
-	body?: never;
-	path?: never;
-	query?: never;
-	url: "/api/v1/market-data/health/";
-};
-
-export type MarketDataServiceHealthCheckResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: HealthCheckResponse;
-};
-
-export type MarketDataServiceHealthCheckResponse =
-	MarketDataServiceHealthCheckResponses[keyof MarketDataServiceHealthCheckResponses];
 
 export type PipelineUpdateWatchlistData = {
 	body: WatchlistUpdate;
@@ -2545,6 +3073,16 @@ export type PipelineListWatchlistsData = {
 	query?: never;
 	url: "/api/v1/pipeline/watchlists/watchlists";
 };
+
+export type PipelineListWatchlistsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type PipelineListWatchlistsError =
+	PipelineListWatchlistsErrors[keyof PipelineListWatchlistsErrors];
 
 export type PipelineListWatchlistsResponses = {
 	/**
@@ -2796,6 +3334,16 @@ export type PipelineListCompaniesData = {
 	url: "/api/v1/pipeline/companies/";
 };
 
+export type PipelineListCompaniesErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type PipelineListCompaniesError =
+	PipelineListCompaniesErrors[keyof PipelineListCompaniesErrors];
+
 export type PipelineListCompaniesResponses = {
 	/**
 	 * Successful Response
@@ -2810,6 +3358,16 @@ export type PipelineGetPipelineStatusData = {
 	url: "/api/v1/pipeline/status/";
 };
 
+export type PipelineGetPipelineStatusErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type PipelineGetPipelineStatusError =
+	PipelineGetPipelineStatusErrors[keyof PipelineGetPipelineStatusErrors];
+
 export type PipelineGetPipelineStatusResponses = {
 	/**
 	 * Successful Response
@@ -2823,6 +3381,16 @@ export type PipelineSetupDefaultSymbolsData = {
 	query?: never;
 	url: "/api/v1/pipeline/status/setup-defaults";
 };
+
+export type PipelineSetupDefaultSymbolsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type PipelineSetupDefaultSymbolsError =
+	PipelineSetupDefaultSymbolsErrors[keyof PipelineSetupDefaultSymbolsErrors];
 
 export type PipelineSetupDefaultSymbolsResponses = {
 	/**
@@ -3317,6 +3885,16 @@ export type StrategyGetTemplateUsageStatsData = {
 	url: "/api/v1/strategies/templates/analytics/usage-stats";
 };
 
+export type StrategyGetTemplateUsageStatsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type StrategyGetTemplateUsageStatsError =
+	StrategyGetTemplateUsageStatsErrors[keyof StrategyGetTemplateUsageStatsErrors];
+
 export type StrategyGetTemplateUsageStatsResponses = {
 	/**
 	 * Successful Response
@@ -3647,6 +4225,16 @@ export type BacktestsHealthCheckData = {
 	url: "/api/v1/backtests/health";
 };
 
+export type BacktestsHealthCheckErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type BacktestsHealthCheckError =
+	BacktestsHealthCheckErrors[keyof BacktestsHealthCheckErrors];
+
 export type BacktestsHealthCheckResponses = {
 	/**
 	 * Successful Response
@@ -3660,6 +4248,16 @@ export type BacktestsGetPerformanceAnalyticsData = {
 	query?: never;
 	url: "/api/v1/backtests/analytics/performance-stats";
 };
+
+export type BacktestsGetPerformanceAnalyticsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type BacktestsGetPerformanceAnalyticsError =
+	BacktestsGetPerformanceAnalyticsErrors[keyof BacktestsGetPerformanceAnalyticsErrors];
 
 export type BacktestsGetPerformanceAnalyticsResponses = {
 	/**
@@ -3709,6 +4307,16 @@ export type BacktestsGetBacktestSummaryAnalyticsData = {
 	query?: never;
 	url: "/api/v1/backtests/analytics/summary";
 };
+
+export type BacktestsGetBacktestSummaryAnalyticsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type BacktestsGetBacktestSummaryAnalyticsError =
+	BacktestsGetBacktestSummaryAnalyticsErrors[keyof BacktestsGetBacktestSummaryAnalyticsErrors];
 
 export type BacktestsGetBacktestSummaryAnalyticsResponses = {
 	/**

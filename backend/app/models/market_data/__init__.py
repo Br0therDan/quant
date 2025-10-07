@@ -1,11 +1,37 @@
 """
-Initialize models package
+Market data models package
 """
 
-from .backtest import Backtest, BacktestExecution, BacktestResult
-from .company import Company
-from .watchlist import Watchlist
-from .market_data import (
+from .base import BaseMarketDataDocument, DataQualityMixin
+from .stock import DailyPrice, IntradayPrice, Quote, Dividend, Split
+from .fundamental import (
+    CompanyOverview,
+    IncomeStatement,
+    BalanceSheet,
+    CashFlow,
+    Earnings,
+)
+from .economic_indicator import (
+    EconomicIndicator,
+    GDP,
+    Inflation,
+    InterestRate,
+    Employment,
+    Manufacturing,
+    ConsumerSentiment,
+)
+from .intelligence import (
+    NewsSentiment,
+    NewsArticle,
+    AnalystRating,
+    SocialSentiment,
+    MarketMood,
+    OptionFlow,
+)
+
+# 전체 컬렉션 리스트 (Beanie 초기화용)
+market_data_collections = [
+    # Stock data
     DailyPrice,
     IntradayPrice,
     Quote,
@@ -32,70 +58,25 @@ from .market_data import (
     SocialSentiment,
     MarketMood,
     OptionFlow,
-)
-from .performance import StrategyPerformance
-from .strategy import Strategy, StrategyTemplate, StrategyExecution
-from mysingle_quant.auth.models import User, OAuthAccount
-
-collections = [
-    # 백테스트
-    Backtest,
-    BacktestExecution,
-    BacktestResult,
-    # Company 및 Watchlist
-    Company,
-    Watchlist,
-    # 시장 데이터
-    DailyPrice,
-    IntradayPrice,
-    Quote,
-    Dividend,
-    Split,
-    # 펀더멘털 데이터
-    CompanyOverview,
-    IncomeStatement,
-    BalanceSheet,
-    CashFlow,
-    Earnings,
-    # 경제 지표
-    EconomicIndicator,
-    GDP,
-    Inflation,
-    InterestRate,
-    Employment,
-    Manufacturing,
-    ConsumerSentiment,
-    # 인사이트 데이터
-    NewsSentiment,
-    NewsArticle,
-    AnalystRating,
-    SocialSentiment,
-    MarketMood,
-    OptionFlow,
-    # 전략 및 성과
-    Strategy,
-    StrategyTemplate,
-    StrategyExecution,
-    # 인증
-    User,
-    OAuthAccount,
 ]
 
 __all__ = [
-    # Auth models
-    "User",
-    "OAuthAccount",
-    # Market data models
+    # Base classes
+    "BaseMarketDataDocument",
+    "DataQualityMixin",
+    # Stock models
     "DailyPrice",
     "IntradayPrice",
     "Quote",
     "Dividend",
     "Split",
+    # Fundamental models
     "CompanyOverview",
     "IncomeStatement",
     "BalanceSheet",
     "CashFlow",
     "Earnings",
+    # Economic indicator models
     "EconomicIndicator",
     "GDP",
     "Inflation",
@@ -103,20 +84,13 @@ __all__ = [
     "Employment",
     "Manufacturing",
     "ConsumerSentiment",
+    # Intelligence models
     "NewsSentiment",
     "NewsArticle",
     "AnalystRating",
     "SocialSentiment",
     "MarketMood",
     "OptionFlow",
-    # Other models
-    "Company",
-    "Watchlist",
-    "Backtest",
-    "BacktestExecution",
-    "BacktestResult",
-    "Strategy",
-    "StrategyTemplate",
-    "StrategyExecution",
-    "StrategyPerformance",
+    # Collections list
+    "market_data_collections",
 ]

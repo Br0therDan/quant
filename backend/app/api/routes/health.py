@@ -1,13 +1,14 @@
-"""
-Health Check API Routes
-"""
+"""Health Check API Routes"""
 
 from datetime import datetime, timezone
 from fastapi import APIRouter
+from pydantic import BaseModel
 
-from app.schemas.market_data import HealthCheckResponse
-from app.core.config import get_settings
-from app.models.market_data import MarketData
+
+class HealthCheckResponse(BaseModel):
+    status: str
+    timestamp: datetime
+
 
 router = APIRouter()
 
@@ -15,44 +16,4 @@ router = APIRouter()
 @router.get("/", response_model=HealthCheckResponse)
 async def service_health_check():
     """Health check endpoint"""
-
-    settings = get_settings()
-
-    # Check database connection
-    database_connected = True
-    total_symbols = 0
-    last_update = None
-
-    try:
-        # Simple aggregation to check DB connection and get stats
-        pipeline = [
-            {
-                "$group": {
-                    "_id": None,
-                    "unique_symbols": {"$addToSet": "$symbol"},
-                    "latest_date": {"$max": "$updated_at"},
-                }
-            }
-        ]
-
-        result = await MarketData.aggregate(pipeline).to_list()
-        if result:
-            total_symbols = len(result[0].get("unique_symbols", []))
-            last_update = result[0].get("latest_date")
-
-    except Exception:
-        database_connected = False
-
-    # Check Alpha Vantage API (simple check)
-    alpha_vantage_available = bool(settings.ALPHA_VANTAGE_API_KEY)
-
-    status = "healthy" if database_connected else "unhealthy"
-
-    return HealthCheckResponse(
-        status=status,
-        timestamp=datetime.now(timezone.utc),
-        database_connected=database_connected,
-        alpha_vantage_available=alpha_vantage_available,
-        total_symbols=total_symbols,
-        last_update=last_update,
-    )
+    return HealthCheckResponse(status="healthy", timestamp=datetime.now(timezone.utc))

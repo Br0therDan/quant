@@ -9,10 +9,7 @@ import type {
 	BacktestsGetBacktestsResponse,
 	BacktestsUpdateBacktestResponse,
 	HealthHealthCheckResponse,
-	MarketDataAnalyzeDataQualityResponse,
-	MarketDataGetMarketDataResponse,
-	MarketDataRequestBulkDataResponse,
-	MarketDataServiceHealthCheckResponse,
+	MarketDataV2GetHistoricalDataResponse,
 	StrategyCreateStrategyFromTemplateResponse,
 	StrategyCreateStrategyResponse,
 	StrategyCreateTemplateResponse,
@@ -39,64 +36,19 @@ const healthResponseSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const marketDataGetMarketDataResponseTransformer = async (
+export const marketDataV2GetHistoricalDataResponseTransformer = async (
 	data: any,
-): Promise<MarketDataGetMarketDataResponse> => {
-	data = data.map((item: any) => {
-		return marketDataResponseSchemaResponseTransformer(item);
-	});
+): Promise<MarketDataV2GetHistoricalDataResponse> => {
+	data = historicalDataResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-const marketDataResponseSchemaResponseTransformer = (data: any) => {
-	data.date = new Date(data.date);
-	return data;
-};
-
-export const marketDataRequestBulkDataResponseTransformer = async (
-	data: any,
-): Promise<MarketDataRequestBulkDataResponse> => {
-	data = data.map((item: any) => {
-		return dataRequestStatusSchemaResponseTransformer(item);
-	});
-	return data;
-};
-
-const dataRequestStatusSchemaResponseTransformer = (data: any) => {
-	data.start_date = new Date(data.start_date);
-	data.end_date = new Date(data.end_date);
-	data.requested_at = new Date(data.requested_at);
-	if (data.completed_at) {
-		data.completed_at = new Date(data.completed_at);
+const historicalDataResponseSchemaResponseTransformer = (data: any) => {
+	if (data.start_date) {
+		data.start_date = new Date(data.start_date);
 	}
-	return data;
-};
-
-export const marketDataAnalyzeDataQualityResponseTransformer = async (
-	data: any,
-): Promise<MarketDataAnalyzeDataQualityResponse> => {
-	data = dataQualityResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-const dataQualityResponseSchemaResponseTransformer = (data: any) => {
-	data.date_range_start = new Date(data.date_range_start);
-	data.date_range_end = new Date(data.date_range_end);
-	data.analyzed_at = new Date(data.analyzed_at);
-	return data;
-};
-
-export const marketDataServiceHealthCheckResponseTransformer = async (
-	data: any,
-): Promise<MarketDataServiceHealthCheckResponse> => {
-	data = healthCheckResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-const healthCheckResponseSchemaResponseTransformer = (data: any) => {
-	data.timestamp = new Date(data.timestamp);
-	if (data.last_update) {
-		data.last_update = new Date(data.last_update);
+	if (data.end_date) {
+		data.end_date = new Date(data.end_date);
 	}
 	return data;
 };

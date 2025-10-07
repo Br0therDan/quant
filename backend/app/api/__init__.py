@@ -4,7 +4,7 @@ Initialize API routes package
 
 from fastapi import APIRouter
 from .routes import (
-    market_data_router,
+    market_data_router,  # 새로운 도메인별 구조
     pipeline_router,
     backtests_router,
     strategies_router,

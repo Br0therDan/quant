@@ -84,4 +84,5 @@ app = create_fastapi_app(
 # Include API routes
 app.include_router(api_router, prefix=settings.API_PREFIX)
 
+
 logger.info("🌱 DATABASE_URL: %s", get_mongodb_url(settings.SERVICE_NAME))

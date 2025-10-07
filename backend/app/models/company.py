@@ -47,27 +47,3 @@ class Company(BaseDocument):
             "industry",
             "created_at",
         ]
-
-
-class Watchlist(BaseDocument):
-    """Watchlist for tracking symbols to monitor"""
-
-    name: str = Field(..., description="Watchlist name")
-    description: Optional[str] = Field(None, description="Watchlist description")
-    symbols: list[str] = Field(default=[], description="List of symbols to track")
-
-    # Configuration
-    auto_update: bool = Field(default=True, description="Auto-update data")
-    update_interval: int = Field(default=3600, description="Update interval in seconds")
-
-    # Metadata
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
-    last_updated: Optional[datetime] = Field(None, description="Last data update")
-
-    class Settings:
-        name = "watchlists"
-        indexes = [
-            "name",
-            "created_at",
-        ]

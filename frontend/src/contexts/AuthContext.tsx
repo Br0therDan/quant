@@ -1,6 +1,6 @@
 "use client";
 
-import { AuthService, UserService, type BodyAuthLogin } from "@/client";
+import { UserService, type BodyAuthLogin } from "@/client";
 import type { AuthActions, AuthState } from "@/types/auth";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -33,12 +33,17 @@ async function loginApi(credentials: BodyAuthLogin) {
 }
 
 async function logoutApi() {
-  const response = await AuthService.logout();
+  const response = await fetch("/api/auth/logout", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
-  if (response.error) {
+  if (response.status !== 200) {
     throw new Error("로그아웃에 실패했습니다.");
   }
-  return response.data;
+  return response;
 }
 
 interface AuthProviderProps {

@@ -9,7 +9,7 @@ from datetime import datetime, timedelta, timezone
 from typing import List, Optional, Dict, Any
 
 from app.services.market_data_service import MarketDataService
-from app.models.company import Company, Watchlist
+from app.models import Company, Watchlist
 from app.core.config import get_settings
 
 logger = logging.getLogger(__name__)

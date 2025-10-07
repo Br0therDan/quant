@@ -1,195 +1,196 @@
 "use client";
 
-import { Box, Container, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useQuery } from "@tanstack/react-query";
 import dayjs, { type Dayjs } from "dayjs";
+import "dayjs/locale/ko";
 import React from "react";
+
 import {
-	marketDataGetAvailableSymbolsOptions,
-	marketDataGetMarketDataOptions,
+  marketDataGetAvailableSymbolsOptions,
+  marketDataGetMarketDataOptions,
 } from "@/client/@tanstack/react-query.gen";
-import PageContainer from "@/components/layout/PageContainer";
 import CandlestickChart from "@/components/market-data/CandlestickChart";
-import MarketDataControls from "@/components/market-data/MarketDataControls";
-import MarketDataSummaryCard from "@/components/market-data/MarketDataSummaryCard";
-import TechnicalIndicators from "@/components/market-data/TechnicalIndicators";
+import ChartControls from "@/components/market-data/ChartControls";
+import MarketDataHeader from "@/components/market-data/MarketDataHeader";
+import WatchList from "@/components/market-data/WatchList";
+
+// 한국어 로케일 설정
+dayjs.locale("ko");
 
 interface CandlestickData {
-	time: string;
-	open: number;
-	high: number;
-	low: number;
-	close: number;
-	volume: number;
+  time: string;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
 }
 
 export default function MarketDataChartPage() {
-	const [selectedSymbol, setSelectedSymbol] = React.useState<string>("");
-	const [startDate, setStartDate] = React.useState<Dayjs | null>(
-		dayjs().subtract(3, "month"),
-	);
-	const [endDate, setEndDate] = React.useState<Dayjs | null>(dayjs());
-	const [interval, setInterval] = React.useState<string>("1d");
-	const [forceRefresh, setForceRefresh] = React.useState<boolean>(false);
+  const [selectedSymbol, setSelectedSymbol] = React.useState<string>("");
+  const [startDate, setStartDate] = React.useState<Dayjs | null>(
+    dayjs().subtract(1, "month")
+  );
+  const [endDate, setEndDate] = React.useState<Dayjs | null>(dayjs());
+  const [interval, setInterval] = React.useState<string>("1d");
+  const [chartType, setChartType] = React.useState("candlestick");
+  const [forceRefresh, setForceRefresh] = React.useState<boolean>(false);
 
-	// 사용 가능한 심볼 목록 조회
-	const { data: availableSymbols, isLoading: symbolsLoading } = useQuery(
-		marketDataGetAvailableSymbolsOptions(),
-	);
+  // 사용 가능한 심볼 목록 조회
+  const { data: availableSymbols, isLoading: symbolsLoading } = useQuery(
+    marketDataGetAvailableSymbolsOptions()
+  );
 
-	// 선택된 심볼의 마켓 데이터 조회
-	const {
-		data: marketData,
-		isLoading: dataLoading,
-		refetch: refetchMarketData,
-	} = useQuery({
-		...marketDataGetMarketDataOptions({
-			path: { symbol: selectedSymbol },
-			query: {
-				start_date: startDate?.toDate() || dayjs().toDate(),
-				end_date: endDate?.toDate() || dayjs().toDate(),
-				force_refresh: forceRefresh,
-			},
-		}),
-		enabled: !!selectedSymbol && !!startDate && !!endDate,
-	});
+  // 선택된 심볼의 마켓 데이터 조회
+  const {
+    data: marketData,
+    isLoading: dataLoading,
+    refetch: refetchMarketData,
+  } = useQuery({
+    ...marketDataGetMarketDataOptions({
+      path: { symbol: selectedSymbol },
+      query: {
+        start_date: startDate?.toDate() || dayjs().toDate(),
+        end_date: endDate?.toDate() || dayjs().toDate(),
+        force_refresh: forceRefresh,
+      },
+    }),
+    enabled: !!selectedSymbol && !!startDate && !!endDate,
+  });
 
-	// 첫 번째 심볼 자동 선택
-	React.useEffect(() => {
-		if (availableSymbols && availableSymbols.length > 0 && !selectedSymbol) {
-			setSelectedSymbol(availableSymbols[0]);
-		}
-	}, [availableSymbols, selectedSymbol]);
+  // 첫 번째 심볼 자동 선택
+  React.useEffect(() => {
+    if (availableSymbols && availableSymbols.length > 0 && !selectedSymbol) {
+      setSelectedSymbol(availableSymbols[0]);
+    }
+  }, [availableSymbols, selectedSymbol]);
 
-	const handleRefresh = () => {
-		setForceRefresh(true);
-		refetchMarketData().finally(() => {
-			setForceRefresh(false);
-		});
-	};
+  const handleRefresh = React.useCallback(() => {
+    setForceRefresh(true);
+    refetchMarketData().finally(() => {
+      setForceRefresh(false);
+    });
+  }, [refetchMarketData]);
 
-	// 마켓 데이터를 차트 데이터로 변환
-	const chartData: CandlestickData[] = React.useMemo(() => {
-		if (!marketData || !Array.isArray(marketData)) return [];
+  const handleSymbolChange = React.useCallback((symbol: string) => {
+    setSelectedSymbol(symbol);
+  }, []);
 
-		return (marketData as any[])
-			.map((item) => ({
-				time: dayjs(item.date).format("YYYY-MM-DD"),
-				open: item.open,
-				high: item.high,
-				low: item.low,
-				close: item.close,
-				volume: item.volume || 0,
-			}))
-			.sort((a, b) => a.time.localeCompare(b.time));
-	}, [marketData]);
+  // 마켓 데이터를 차트 데이터로 변환
+  const chartData: CandlestickData[] = React.useMemo(() => {
+    if (!marketData || !Array.isArray(marketData)) return [];
 
-	// 요약 데이터 생성
-	const summaryData = React.useMemo(() => {
-		if (!chartData.length) return null;
+    return (marketData as any[])
+      .map((item) => ({
+        time: dayjs(item.date).format("YYYY-MM-DD"),
+        open: item.open,
+        high: item.high,
+        low: item.low,
+        close: item.close,
+        volume: item.volume || 0,
+      }))
+      .sort((a, b) => a.time.localeCompare(b.time));
+  }, [marketData]);
 
-		const latestData = chartData[chartData.length - 1];
-		const previousData = chartData[chartData.length - 2];
+  // 요약 데이터 생성
+  const summaryData = React.useMemo(() => {
+    if (!chartData.length) return null;
 
-		if (!latestData || !previousData) return null;
+    const latestData = chartData[chartData.length - 1];
+    const previousData = chartData[chartData.length - 2];
 
-		const change = latestData.close - previousData.close;
-		const changePercent = (change / previousData.close) * 100;
+    if (!latestData || !previousData) return null;
 
-		return {
-			symbol: selectedSymbol,
-			currentPrice: latestData.close,
-			change,
-			changePercent,
-			volume: latestData.volume,
-			high: latestData.high,
-			low: latestData.low,
-			open: latestData.open,
-			previousClose: previousData.close,
-		};
-	}, [chartData, selectedSymbol]);
+    const change = latestData.close - previousData.close;
+    const changePercent = (change / previousData.close) * 100;
 
-	const isLoading = symbolsLoading || dataLoading;
+    return {
+      symbol: selectedSymbol,
+      currentPrice: latestData.close,
+      change,
+      changePercent,
+      volume: latestData.volume,
+      high: latestData.high,
+      low: latestData.low,
+      open: latestData.open,
+      previousClose: previousData.close,
+    };
+  }, [chartData, selectedSymbol]);
 
-	return (
-		<LocalizationProvider dateAdapter={AdapterDayjs}>
-			<PageContainer
-				title="마켓 데이터"
-				breadcrumbs={[{ title: "데이터 관리" }, { title: "마켓 데이터" }]}
-			>
-				<Container maxWidth="xl">
-					<Box display="flex" flexDirection="column" gap={3}>
-						{/* 상단 요약 정보 */}
-						<MarketDataSummaryCard data={summaryData} isLoading={isLoading} />
+  const isLoading = symbolsLoading || dataLoading;
 
-						<Box display="flex" gap={3}>
-							{/* 좌측 컨트롤 패널 */}
-							<Box width={300} flexShrink={0}>
-								<MarketDataControls
-									selectedSymbol={selectedSymbol}
-									onSymbolChange={setSelectedSymbol}
-									availableSymbols={(availableSymbols as string[]) || []}
-									startDate={startDate}
-									endDate={endDate}
-									onStartDateChange={setStartDate}
-									onEndDateChange={setEndDate}
-									interval={interval}
-									onIntervalChange={setInterval}
-									onRefresh={handleRefresh}
-									isLoading={isLoading}
-								/>
-							</Box>
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
+      <Box sx={{ height: "100vh", display: "flex", flexDirection: "column" }}>
+        {/* 상단 헤더 - 심볼 정보 및 가격 */}
+        <MarketDataHeader data={summaryData} isLoading={isLoading} />
 
-							{/* 우측 차트 영역 */}
-							<Box flexGrow={1}>
-								{chartData.length > 0 ? (
-									<Box display="flex" flexDirection="column" gap={3}>
-										{/* 메인 차트 */}
-										<Box>
-											<Typography variant="h6" gutterBottom>
-												{selectedSymbol} 주가 차트
-											</Typography>
-											<CandlestickChart
-												data={chartData}
-												symbol={selectedSymbol}
-												height={500}
-												showVolume={true}
-											/>
-										</Box>
+        {/* 메인 컨텐츠 영역 */}
+        <Box sx={{ flexGrow: 1, display: "flex" }}>
+          {/* 왼쪽 - 차트 영역 */}
+          <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
+            {/* 차트 */}
+            <Box sx={{ flexGrow: 1, p: 2 }}>
+              {chartData.length > 0 ? (
+                <CandlestickChart
+                  data={chartData}
+                  symbol={selectedSymbol}
+                  height={
+                    typeof window !== "undefined"
+                      ? window.innerHeight - 300
+                      : 600
+                  }
+                  showVolume={true}
+                />
+              ) : (
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  height="100%"
+                  sx={{
+                    border: 1,
+                    borderColor: "divider",
+                    borderRadius: 1,
+                    backgroundColor: "background.paper",
+                  }}
+                >
+                  <Box textAlign="center">
+                    {isLoading
+                      ? "차트 데이터를 로딩 중입니다..."
+                      : "종목을 선택하면 차트가 표시됩니다"}
+                  </Box>
+                </Box>
+              )}
+            </Box>
 
-										{/* 기술적 지표 */}
-										<Box>
-											<TechnicalIndicators
-												data={chartData}
-												symbol={selectedSymbol}
-												height={300}
-											/>
-										</Box>
-									</Box>
-								) : (
-									<Box
-										display="flex"
-										alignItems="center"
-										justifyContent="center"
-										height={500}
-										border={1}
-										borderColor="divider"
-										borderRadius={1}
-									>
-										<Typography variant="h6" color="text.secondary">
-											{isLoading
-												? "차트 데이터를 로딩 중입니다..."
-												: "종목을 선택하면 차트가 표시됩니다"}
-										</Typography>
-									</Box>
-								)}
-							</Box>
-						</Box>
-					</Box>
-				</Container>
-			</PageContainer>
-		</LocalizationProvider>
-	);
+            {/* 차트 컨트롤 */}
+            <ChartControls
+              startDate={startDate}
+              endDate={endDate}
+              onStartDateChange={setStartDate}
+              onEndDateChange={setEndDate}
+              interval={interval}
+              onIntervalChange={setInterval}
+              onRefresh={handleRefresh}
+              isLoading={isLoading}
+              chartType={chartType}
+              onChartTypeChange={setChartType}
+            />
+          </Box>
+
+          {/* 오른쪽 - 워치리스트 */}
+          <Box sx={{ width: 320, p: 2, borderLeft: 1, borderColor: "divider" }}>
+            <WatchList
+              selectedSymbol={selectedSymbol}
+              onSymbolChange={handleSymbolChange}
+            />
+          </Box>
+        </Box>
+      </Box>
+    </LocalizationProvider>
+  );
 }
