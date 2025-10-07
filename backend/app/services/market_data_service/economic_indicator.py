@@ -13,7 +13,6 @@ from app.models.market_data.economic_indicator import (
     Inflation,
     InterestRate,
     Employment,
-    ConsumerSentiment,
 )
 
 
@@ -29,7 +28,7 @@ class EconomicIndicatorService(BaseMarketDataService):
     async def get_gdp_data(
         self, country: str = "USA", period: str = "quarterly"
     ) -> List[GDP]:
-        """GDP 데이터 조회
+        """경제 성장률 데이터 조회 (Alpha Vantage REAL_GDP API)
 
         Args:
             country: 국가 코드
@@ -37,22 +36,63 @@ class EconomicIndicatorService(BaseMarketDataService):
 
         Returns:
             GDP 데이터 리스트
-
-        TODO: 구현 예정
-        1. 국가별 GDP 데이터 수집
-        2. 실질/명목 GDP 구분
-        3. 성장률 계산
-        4. 계절 조정 여부 처리
         """
-        logger.info(f"Getting GDP data for {country} ({period})")
+        try:
+            logger.info(f"Fetching GDP data for {country} ({period})")
 
-        # TODO: 실제 구현
-        return []
+            # Alpha Vantage REAL_GDP API 호출
+            interval_param = "quarterly" if period == "quarterly" else "annual"
+            response = await self.alpha_vantage.economic_indicators.real_gdp(
+                interval=interval_param  # type: ignore
+            )
+
+            if isinstance(response, list) and len(response) > 0:
+                data = response[0]  # type: ignore
+            elif isinstance(response, dict):
+                data = response
+            else:
+                logger.warning(f"Invalid GDP response for {country}")
+                return []
+
+            if not data:
+                logger.warning(f"Empty GDP response for {country}")
+                return []
+
+            # Alpha Vantage REAL_GDP 응답 처리
+            gdp_data_list = data.get("data", [])
+
+            gdp_records = []
+            for gdp_entry in gdp_data_list:
+                try:
+                    gdp_data = {
+                        "country": country,
+                        "date": gdp_entry.get("date", ""),
+                        "value": float(gdp_entry.get("value", 0) or 0),
+                        "unit": "billions_usd",
+                        "period_type": period,
+                        "adjustment": "real",  # Real GDP
+                        "frequency": period,
+                        "source": "bureau_of_economic_analysis",
+                        "notes": f"Real GDP data from Alpha Vantage ({period})",
+                    }
+
+                    gdp_records.append(GDP(**gdp_data))
+
+                except Exception as e:
+                    logger.warning(f"Failed to parse GDP data: {e}")
+                    continue
+
+            logger.info(f"Fetched {len(gdp_records)} GDP data points")
+            return gdp_records
+
+        except Exception as e:
+            logger.error(f"Failed to get GDP data for {country}: {e}")
+            return []
 
     async def get_inflation_data(
         self, country: str = "USA", indicator_type: str = "CPI"
     ) -> List[Inflation]:
-        """인플레이션 지표 조회
+        """인플레이션 지표 조회 (Alpha Vantage INFLATION API)
 
         Args:
             country: 국가 코드
@@ -60,21 +100,61 @@ class EconomicIndicatorService(BaseMarketDataService):
 
         Returns:
             인플레이션 데이터 리스트
-
-        TODO: 구현 예정
-        1. 다양한 물가 지표 수집
-        2. 전년 동월 대비/전월 대비 계산
-        3. 핵심 인플레이션 분리
         """
-        logger.info(f"Getting inflation data for {country} ({indicator_type})")
+        try:
+            logger.info(f"Fetching inflation data for {country} ({indicator_type})")
 
-        # TODO: 실제 구현
-        return []
+            # Alpha Vantage INFLATION API 호출
+            response = await self.alpha_vantage.economic_indicators.inflation()
+
+            if isinstance(response, list) and len(response) > 0:
+                data = response[0]  # type: ignore
+            elif isinstance(response, dict):
+                data = response
+            else:
+                logger.warning(f"Invalid inflation response for {country}")
+                return []
+
+            if not data:
+                logger.warning(f"Empty inflation response for {country}")
+                return []
+
+            # Alpha Vantage INFLATION 응답 처리
+            inflation_data_list = data.get("data", [])
+
+            inflation_records = []
+            for inflation_entry in inflation_data_list:
+                try:
+                    inflation_data = {
+                        "country": country,
+                        "date": inflation_entry.get("date", ""),
+                        "value": float(inflation_entry.get("value", 0) or 0),
+                        "indicator_type": "Consumer Price Index",
+                        "unit": "percent",
+                        "frequency": "annual",
+                        "base_year": None,  # API에서 제공하지 않음
+                        "seasonal_adjustment": None,  # API에서 제공하지 않음
+                        "source": "bureau_of_labor_statistics",
+                        "notes": "Inflation rate data from Alpha Vantage (consumer price index)",
+                    }
+
+                    inflation_records.append(Inflation(**inflation_data))
+
+                except Exception as e:
+                    logger.warning(f"Failed to parse inflation data: {e}")
+                    continue
+
+            logger.info(f"Fetched {len(inflation_records)} inflation data points")
+            return inflation_records
+
+        except Exception as e:
+            logger.error(f"Failed to get inflation data for {country}: {e}")
+            return []
 
     async def get_interest_rates(
         self, country: str = "USA", rate_type: str = "FEDERAL_FUNDS_RATE"
     ) -> List[InterestRate]:
-        """금리 데이터 조회
+        """금리 데이터 조회 (Alpha Vantage FEDERAL_FUNDS_RATE API)
 
         Args:
             country: 국가 코드
@@ -82,56 +162,111 @@ class EconomicIndicatorService(BaseMarketDataService):
 
         Returns:
             금리 데이터 리스트
-
-        TODO: 구현 예정
-        1. 다양한 금리 지표 수집 (기준금리, 국채수익률 등)
-        2. 만기별 수익률 곡선
-        3. 금리 변화 추세 분석
         """
-        logger.info(f"Getting interest rates for {country} ({rate_type})")
+        try:
+            logger.info(f"Fetching interest rates for {country} ({rate_type})")
 
-        # TODO: 실제 구현
-        return []
+            response = await self.alpha_vantage.economic_indicators.federal_funds_rate()
+
+            if isinstance(response, list) and len(response) > 0:
+                data = response[0]  # type: ignore
+            elif isinstance(response, dict):
+                data = response
+            else:
+                logger.warning(f"Invalid interest rates response for {country}")
+                return []
+
+            if not data:
+                logger.warning(f"Empty interest rates response for {country}")
+                return []
+
+            # Alpha Vantage FEDERAL_FUNDS_RATE 응답 처리
+            rates_data = data.get("data", [])
+
+            interest_rates = []
+            for rate_entry in rates_data:
+                try:
+                    rate_data = {
+                        "country": country,
+                        "rate_type": rate_type,
+                        "date": rate_entry.get("date", ""),
+                        "value": float(rate_entry.get("value", 0) or 0),
+                        "unit": "percent",
+                        "frequency": "monthly",
+                        "source": "federal_reserve",
+                        "notes": "Federal Funds Rate data from Alpha Vantage",
+                    }
+
+                    interest_rates.append(InterestRate(**rate_data))
+
+                except Exception as e:
+                    logger.warning(f"Failed to parse interest rate data: {e}")
+                    continue
+
+            logger.info(f"Fetched {len(interest_rates)} interest rate data points")
+            return interest_rates
+
+        except Exception as e:
+            logger.error(f"Failed to get interest rates for {country}: {e}")
+            return []
 
     async def get_employment_data(self, country: str = "USA") -> List[Employment]:
-        """고용 지표 조회
+        """고용 지표 조회 (Alpha Vantage UNEMPLOYMENT API)
 
         Args:
             country: 국가 코드
 
         Returns:
             고용 데이터 리스트
-
-        TODO: 구현 예정
-        1. 실업률, 고용률 수집
-        2. 비농업 취업자 수 (NFP)
-        3. 부문별 고용 현황
         """
-        logger.info(f"Getting employment data for {country}")
+        try:
+            logger.info(f"Fetching employment data for {country}")
 
-        # TODO: 실제 구현
-        return []
+            response = await self.alpha_vantage.economic_indicators.unemployment()
 
-    async def get_consumer_sentiment(
-        self, country: str = "USA"
-    ) -> List[ConsumerSentiment]:
-        """소비자 심리 지표 조회
+            if isinstance(response, list) and len(response) > 0:
+                data = response[0]  # type: ignore
+            elif isinstance(response, dict):
+                data = response
+            else:
+                logger.warning(f"Invalid employment response for {country}")
+                return []
 
-        Args:
-            country: 국가 코드
+            if not data:
+                logger.warning(f"Empty employment response for {country}")
+                return []
 
-        Returns:
-            소비자 심리 데이터 리스트
+            # Alpha Vantage UNEMPLOYMENT 응답 처리
+            employment_data_list = data.get("data", [])
 
-        TODO: 구현 예정
-        1. 소비자 신뢰지수
-        2. 소비자 기대지수
-        3. 현재 상황 지수
-        """
-        logger.info(f"Getting consumer sentiment for {country}")
+            employment_records = []
+            for emp_entry in employment_data_list:
+                try:
+                    employment_data = {
+                        "country": country,
+                        "date": emp_entry.get("date", ""),
+                        "unemployment_rate": float(emp_entry.get("value", 0) or 0),
+                        "employment_rate": None,  # Not provided by Alpha Vantage
+                        "labor_force_participation_rate": None,  # Not provided by Alpha Vantage
+                        "nonfarm_payrolls": None,  # Not provided by this endpoint
+                        "unit": "percent",
+                        "frequency": "monthly",
+                        "source": "bureau_of_labor_statistics",
+                        "notes": "Unemployment rate data from Alpha Vantage",
+                    }
 
-        # TODO: 실제 구현
-        return []
+                    employment_records.append(Employment(**employment_data))
+
+                except Exception as e:
+                    logger.warning(f"Failed to parse employment data: {e}")
+                    continue
+
+            logger.info(f"Fetched {len(employment_records)} employment data points")
+            return employment_records
+
+        except Exception as e:
+            logger.error(f"Failed to get employment data for {country}: {e}")
+            return []
 
     async def get_economic_calendar(
         self, start_date: datetime, end_date: datetime, importance: str = "high"

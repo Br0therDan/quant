@@ -26,29 +26,89 @@ class FundamentalService(BaseMarketDataService):
     """
 
     async def get_company_overview(self, symbol: str) -> Optional[CompanyOverview]:
-        """기업 개요 정보 조회
+        """기업 개요 정보 조회 (Alpha Vantage OVERVIEW API)
 
         Args:
             symbol: 주식 심볼
 
         Returns:
             기업 개요 정보
-
-        TODO: 구현 예정
-        1. MongoDB 캐시 확인
-        2. AlphaVantage overview API 호출
-        3. 데이터 파싱 및 저장
-        4. 업데이트 주기 관리 (분기별)
         """
-        logger.info(f"Getting company overview for {symbol}")
+        try:
+            logger.info(f"Fetching company overview for {symbol}")
 
-        # TODO: 실제 구현
-        return None
+            response = await self.alpha_vantage.fundamental.overview(symbol=symbol)
+
+            if isinstance(response, list) and len(response) > 0:
+                data = response[0]  # type: ignore
+            elif isinstance(response, dict):
+                data = response
+            else:
+                logger.warning(f"Invalid overview response for {symbol}")
+                return None
+
+            if not data:
+                logger.warning(f"Empty overview response for {symbol}")
+                return None
+
+            # Alpha Vantage OVERVIEW 응답을 CompanyOverview 모델로 변환
+            overview_data = {
+                "symbol": data.get("Symbol", symbol),
+                "name": data.get("Name", ""),
+                "description": data.get("Description", ""),
+                "exchange": data.get("Exchange", ""),
+                "currency": data.get("Currency", "USD"),
+                "country": data.get("Country", ""),
+                "sector": data.get("Sector", ""),
+                "industry": data.get("Industry", ""),
+                "market_cap": int(data.get("MarketCapitalization", 0) or 0),
+                "pe_ratio": float(data.get("PERatio", 0) or 0),
+                "peg_ratio": float(data.get("PEGRatio", 0) or 0),
+                "book_value": float(data.get("BookValue", 0) or 0),
+                "dividend_per_share": float(data.get("DividendPerShare", 0) or 0),
+                "dividend_yield": float(data.get("DividendYield", 0) or 0),
+                "eps": float(data.get("EPS", 0) or 0),
+                "revenue_per_share_ttm": float(data.get("RevenuePerShareTTM", 0) or 0),
+                "profit_margin": float(data.get("ProfitMargin", 0) or 0),
+                "operating_margin_ttm": float(data.get("OperatingMarginTTM", 0) or 0),
+                "return_on_assets_ttm": float(data.get("ReturnOnAssetsTTM", 0) or 0),
+                "return_on_equity_ttm": float(data.get("ReturnOnEquityTTM", 0) or 0),
+                "revenue_ttm": int(data.get("RevenueTTM", 0) or 0),
+                "gross_profit_ttm": int(data.get("GrossProfitTTM", 0) or 0),
+                "ebitda": int(data.get("EBITDA", 0) or 0),
+                "shares_outstanding": int(data.get("SharesOutstanding", 0) or 0),
+                "week_52_high": float(data.get("52WeekHigh", 0) or 0),
+                "week_52_low": float(data.get("52WeekLow", 0) or 0),
+                "week_50_moving_average": float(data.get("50DayMovingAverage", 0) or 0),
+                "week_200_moving_average": float(
+                    data.get("200DayMovingAverage", 0) or 0
+                ),
+                "beta": float(data.get("Beta", 0) or 0),
+                "address": data.get("Address", ""),
+                "latest_quarter": data.get("LatestQuarter", ""),
+                "fiscal_year_end": data.get("FiscalYearEnd", ""),
+                "analyst_target_price": float(data.get("AnalystTargetPrice", 0) or 0),
+                "trailing_pe": float(data.get("TrailingPE", 0) or 0),
+                "forward_pe": float(data.get("ForwardPE", 0) or 0),
+                "price_to_sales_ratio_ttm": float(
+                    data.get("PriceToSalesRatioTTM", 0) or 0
+                ),
+                "price_to_book_ratio": float(data.get("PriceToBookRatio", 0) or 0),
+                "ev_to_revenue": float(data.get("EVToRevenue", 0) or 0),
+                "ev_to_ebitda": float(data.get("EVToEBITDA", 0) or 0),
+            }
+
+            # CompanyOverview 인스턴스 생성
+            return CompanyOverview(**overview_data)
+
+        except Exception as e:
+            logger.error(f"Failed to get company overview for {symbol}: {e}")
+            return None
 
     async def get_income_statement(
         self, symbol: str, period: str = "annual"
     ) -> List[IncomeStatement]:
-        """손익계산서 조회
+        """손익계산서 조회 (Alpha Vantage INCOME_STATEMENT API)
 
         Args:
             symbol: 주식 심볼
@@ -56,21 +116,75 @@ class FundamentalService(BaseMarketDataService):
 
         Returns:
             손익계산서 데이터 리스트
-
-        TODO: 구현 예정
-        1. 기간별 데이터 조회
-        2. 히스토리 관리
-        3. 데이터 검증 (합계 일치성 등)
         """
-        logger.info(f"Getting income statement for {symbol} ({period})")
+        try:
+            logger.info(f"Fetching income statement for {symbol} ({period})")
 
-        # TODO: 실제 구현
-        return []
+            response = await self.alpha_vantage.fundamental.income_statement(
+                symbol=symbol
+            )
+
+            if isinstance(response, list) and len(response) > 0:
+                data = response[0]  # type: ignore
+            elif isinstance(response, dict):
+                data = response
+            else:
+                logger.warning(f"Invalid income statement response for {symbol}")
+                return []
+
+            if not data:
+                logger.warning(f"Empty income statement response for {symbol}")
+                return []
+
+            # Annual 또는 Quarterly 리포트 선택
+            reports_key = "annualReports" if period == "annual" else "quarterlyReports"
+            reports = data.get(reports_key, [])
+
+            income_statements = []
+            for report in reports:
+                income_data = {
+                    "symbol": symbol,
+                    "fiscal_date_ending": report.get("fiscalDateEnding", ""),
+                    "reported_currency": report.get("reportedCurrency", "USD"),
+                    "total_revenue": int(report.get("totalRevenue", 0) or 0),
+                    "cost_of_revenue": int(report.get("costOfRevenue", 0) or 0),
+                    "gross_profit": int(report.get("grossProfit", 0) or 0),
+                    "operating_expenses": int(report.get("operatingExpenses", 0) or 0),
+                    "operating_income": int(report.get("operatingIncome", 0) or 0),
+                    "interest_income": int(report.get("interestIncome", 0) or 0),
+                    "interest_expense": int(report.get("interestExpense", 0) or 0),
+                    "income_before_tax": int(report.get("incomeBeforeTax", 0) or 0),
+                    "income_tax_expense": int(report.get("incomeTaxExpense", 0) or 0),
+                    "net_income": int(report.get("netIncome", 0) or 0),
+                    "ebitda": int(report.get("ebitda", 0) or 0),
+                    "eps": float(report.get("eps", 0) or 0),
+                    "diluted_eps": float(report.get("dilutedEPS", 0) or 0),
+                    "weighted_average_shares_outstanding": int(
+                        report.get("weightedAverageSharesOutstanding", 0) or 0
+                    ),
+                    "weighted_average_shares_outstanding_diluted": int(
+                        report.get("weightedAverageSharesOutstandingDiluted", 0) or 0
+                    ),
+                    "research_and_development": int(
+                        report.get("researchAndDevelopment", 0) or 0
+                    ),
+                }
+
+                income_statements.append(IncomeStatement(**income_data))
+
+            logger.info(
+                f"Fetched {len(income_statements)} income statements for {symbol}"
+            )
+            return income_statements
+
+        except Exception as e:
+            logger.error(f"Failed to get income statement for {symbol}: {e}")
+            return []
 
     async def get_balance_sheet(
         self, symbol: str, period: str = "annual"
     ) -> List[BalanceSheet]:
-        """재무상태표 조회
+        """재무상태표 조회 (Alpha Vantage BALANCE_SHEET API)
 
         Args:
             symbol: 주식 심볼
@@ -78,21 +192,131 @@ class FundamentalService(BaseMarketDataService):
 
         Returns:
             재무상태표 데이터 리스트
-
-        TODO: 구현 예정
-        1. 자산/부채/자본 균형 검증
-        2. 재무 비율 자동 계산
-        3. 연도별 변화 추적
         """
-        logger.info(f"Getting balance sheet for {symbol} ({period})")
+        try:
+            logger.info(f"Fetching balance sheet for {symbol} ({period})")
 
-        # TODO: 실제 구현
-        return []
+            response = await self.alpha_vantage.fundamental.balance_sheet(symbol=symbol)
+
+            if isinstance(response, list) and len(response) > 0:
+                data = response[0]  # type: ignore
+            elif isinstance(response, dict):
+                data = response
+            else:
+                logger.warning(f"Invalid balance sheet response for {symbol}")
+                return []
+
+            if not data:
+                logger.warning(f"Empty balance sheet response for {symbol}")
+                return []
+
+            # Annual 또는 Quarterly 리포트 선택
+            reports_key = "annualReports" if period == "annual" else "quarterlyReports"
+            reports = data.get(reports_key, [])
+
+            balance_sheets = []
+            for report in reports:
+                balance_data = {
+                    "symbol": symbol,
+                    "fiscal_date_ending": report.get("fiscalDateEnding", ""),
+                    "reported_currency": report.get("reportedCurrency", "USD"),
+                    "total_assets": int(report.get("totalAssets", 0) or 0),
+                    "total_current_assets": int(
+                        report.get("totalCurrentAssets", 0) or 0
+                    ),
+                    "cash_and_cash_equivalents": int(
+                        report.get("cashAndCashEquivalentsAtCarryingValue", 0) or 0
+                    ),
+                    "cash_and_short_term_investments": int(
+                        report.get("cashAndShortTermInvestments", 0) or 0
+                    ),
+                    "inventory": int(report.get("inventory", 0) or 0),
+                    "current_net_receivables": int(
+                        report.get("currentNetReceivables", 0) or 0
+                    ),
+                    "total_non_current_assets": int(
+                        report.get("totalNonCurrentAssets", 0) or 0
+                    ),
+                    "property_plant_equipment": int(
+                        report.get("propertyPlantEquipment", 0) or 0
+                    ),
+                    "accumulated_depreciation_amortization_ppe": int(
+                        report.get("accumulatedDepreciationAmortizationPPE", 0) or 0
+                    ),
+                    "intangible_assets": int(report.get("intangibleAssets", 0) or 0),
+                    "intangible_assets_excluding_goodwill": int(
+                        report.get("intangibleAssetsExcludingGoodwill", 0) or 0
+                    ),
+                    "goodwill": int(report.get("goodwill", 0) or 0),
+                    "investments": int(report.get("investments", 0) or 0),
+                    "long_term_investments": int(
+                        report.get("longTermInvestments", 0) or 0
+                    ),
+                    "short_term_investments": int(
+                        report.get("shortTermInvestments", 0) or 0
+                    ),
+                    "other_current_assets": int(
+                        report.get("otherCurrentAssets", 0) or 0
+                    ),
+                    "other_non_current_assets": int(
+                        report.get("otherNonCurrrentAssets", 0) or 0
+                    ),
+                    "total_liabilities": int(report.get("totalLiabilities", 0) or 0),
+                    "total_current_liabilities": int(
+                        report.get("totalCurrentLiabilities", 0) or 0
+                    ),
+                    "current_accounts_payable": int(
+                        report.get("currentAccountsPayable", 0) or 0
+                    ),
+                    "deferred_revenue": int(report.get("deferredRevenue", 0) or 0),
+                    "current_debt": int(report.get("currentDebt", 0) or 0),
+                    "short_term_debt": int(report.get("shortTermDebt", 0) or 0),
+                    "total_non_current_liabilities": int(
+                        report.get("totalNonCurrentLiabilities", 0) or 0
+                    ),
+                    "capital_lease_obligations": int(
+                        report.get("capitalLeaseObligations", 0) or 0
+                    ),
+                    "long_term_debt": int(report.get("longTermDebt", 0) or 0),
+                    "current_long_term_debt": int(
+                        report.get("currentLongTermDebt", 0) or 0
+                    ),
+                    "long_term_debt_noncurrent": int(
+                        report.get("longTermDebtNoncurrent", 0) or 0
+                    ),
+                    "short_long_term_debt_total": int(
+                        report.get("shortLongTermDebtTotal", 0) or 0
+                    ),
+                    "other_current_liabilities": int(
+                        report.get("otherCurrentLiabilities", 0) or 0
+                    ),
+                    "other_non_current_liabilities": int(
+                        report.get("otherNonCurrentLiabilities", 0) or 0
+                    ),
+                    "total_shareholder_equity": int(
+                        report.get("totalShareholderEquity", 0) or 0
+                    ),
+                    "treasury_stock": int(report.get("treasuryStock", 0) or 0),
+                    "retained_earnings": int(report.get("retainedEarnings", 0) or 0),
+                    "common_stock": int(report.get("commonStock", 0) or 0),
+                    "common_stock_shares_outstanding": int(
+                        report.get("commonStockSharesOutstanding", 0) or 0
+                    ),
+                }
+
+                balance_sheets.append(BalanceSheet(**balance_data))
+
+            logger.info(f"Fetched {len(balance_sheets)} balance sheets for {symbol}")
+            return balance_sheets
+
+        except Exception as e:
+            logger.error(f"Failed to get balance sheet for {symbol}: {e}")
+            return []
 
     async def get_cash_flow(
         self, symbol: str, period: str = "annual"
     ) -> List[CashFlow]:
-        """현금흐름표 조회
+        """현금흐름표 조회 (Alpha Vantage CASH_FLOW API)
 
         Args:
             symbol: 주식 심볼
@@ -100,35 +324,185 @@ class FundamentalService(BaseMarketDataService):
 
         Returns:
             현금흐름표 데이터 리스트
-
-        TODO: 구현 예정
-        1. 영업/투자/재무 현금흐름 분석
-        2. 현금 창출 능력 평가
-        3. 자유현금흐름 계산
         """
-        logger.info(f"Getting cash flow for {symbol} ({period})")
+        try:
+            logger.info(f"Fetching cash flow for {symbol} ({period})")
 
-        # TODO: 실제 구현
-        return []
+            response = await self.alpha_vantage.fundamental.cash_flow(symbol=symbol)
+
+            if isinstance(response, list) and len(response) > 0:
+                data = response[0]  # type: ignore
+            elif isinstance(response, dict):
+                data = response
+            else:
+                logger.warning(f"Invalid cash flow response for {symbol}")
+                return []
+
+            if not data:
+                logger.warning(f"Empty cash flow response for {symbol}")
+                return []
+
+            # Annual 또는 Quarterly 리포트 선택
+            reports_key = "annualReports" if period == "annual" else "quarterlyReports"
+            reports = data.get(reports_key, [])
+
+            cash_flows = []
+            for report in reports:
+                cash_flow_data = {
+                    "symbol": symbol,
+                    "fiscal_date_ending": report.get("fiscalDateEnding", ""),
+                    "reported_currency": report.get("reportedCurrency", "USD"),
+                    "operating_cashflow": int(report.get("operatingCashflow", 0) or 0),
+                    "payments_for_operating_activities": int(
+                        report.get("paymentsForOperatingActivities", 0) or 0
+                    ),
+                    "proceeds_from_operating_activities": int(
+                        report.get("proceedsFromOperatingActivities", 0) or 0
+                    ),
+                    "change_in_operating_liabilities": int(
+                        report.get("changeInOperatingLiabilities", 0) or 0
+                    ),
+                    "change_in_operating_assets": int(
+                        report.get("changeInOperatingAssets", 0) or 0
+                    ),
+                    "depreciation_depletion_amortization": int(
+                        report.get("depreciationDepletionAndAmortization", 0) or 0
+                    ),
+                    "capital_expenditures": int(
+                        report.get("capitalExpenditures", 0) or 0
+                    ),
+                    "change_in_receivables": int(
+                        report.get("changeInReceivables", 0) or 0
+                    ),
+                    "change_in_inventory": int(report.get("changeInInventory", 0) or 0),
+                    "profit_loss": int(report.get("profitLoss", 0) or 0),
+                    "cashflow_from_investment": int(
+                        report.get("cashflowFromInvestment", 0) or 0
+                    ),
+                    "cashflow_from_financing": int(
+                        report.get("cashflowFromFinancing", 0) or 0
+                    ),
+                    "proceeds_from_repayments_of_short_term_debt": int(
+                        report.get("proceedsFromRepaymentsOfShortTermDebt", 0) or 0
+                    ),
+                    "payments_for_repurchase_of_common_stock": int(
+                        report.get("paymentsForRepurchaseOfCommonStock", 0) or 0
+                    ),
+                    "payments_for_repurchase_of_equity": int(
+                        report.get("paymentsForRepurchaseOfEquity", 0) or 0
+                    ),
+                    "payments_for_repurchase_of_preferred_stock": int(
+                        report.get("paymentsForRepurchaseOfPreferredStock", 0) or 0
+                    ),
+                    "dividend_payout": int(report.get("dividendPayout", 0) or 0),
+                    "dividend_payout_common_stock": int(
+                        report.get("dividendPayoutCommonStock", 0) or 0
+                    ),
+                    "dividend_payout_preferred_stock": int(
+                        report.get("dividendPayoutPreferredStock", 0) or 0
+                    ),
+                    "proceeds_from_issuance_of_common_stock": int(
+                        report.get("proceedsFromIssuanceOfCommonStock", 0) or 0
+                    ),
+                    "proceeds_from_issuance_of_long_term_debt_and_capital_securities_net": int(
+                        report.get(
+                            "proceedsFromIssuanceOfLongTermDebtAndCapitalSecuritiesNet",
+                            0,
+                        )
+                        or 0
+                    ),
+                    "proceeds_from_issuance_of_preferred_stock": int(
+                        report.get("proceedsFromIssuanceOfPreferredStock", 0) or 0
+                    ),
+                    "proceeds_from_repayments_of_long_term_debt": int(
+                        report.get("proceedsFromRepaymentsOfLongTermDebt", 0) or 0
+                    ),
+                    "proceeds_from_sale_of_treasury_stock": int(
+                        report.get("proceedsFromSaleOfTreasuryStock", 0) or 0
+                    ),
+                    "change_in_cash_and_cash_equivalents": int(
+                        report.get("changeInCashAndCashEquivalents", 0) or 0
+                    ),
+                    "change_in_exchange_rate": int(
+                        report.get("changeInExchangeRate", 0) or 0
+                    ),
+                    "net_income": int(report.get("netIncome", 0) or 0),
+                }
+
+                cash_flows.append(CashFlow(**cash_flow_data))
+
+            logger.info(f"Fetched {len(cash_flows)} cash flows for {symbol}")
+            return cash_flows
+
+        except Exception as e:
+            logger.error(f"Failed to get cash flow for {symbol}: {e}")
+            return []
 
     async def get_earnings(self, symbol: str) -> List[Earnings]:
-        """실적 발표 데이터 조회
+        """실적 발표 데이터 조회 (Alpha Vantage EARNINGS API)
 
         Args:
             symbol: 주식 심볼
 
         Returns:
             실적 발표 데이터 리스트
-
-        TODO: 구현 예정
-        1. 분기별 실적 추적
-        2. 컨센서스 대비 실적 분석
-        3. 가이던스 정보 포함
         """
-        logger.info(f"Getting earnings for {symbol}")
+        try:
+            logger.info(f"Fetching earnings for {symbol}")
 
-        # TODO: 실제 구현
-        return []
+            response = await self.alpha_vantage.fundamental.earnings(symbol=symbol)
+
+            if isinstance(response, list) and len(response) > 0:
+                data = response[0]  # type: ignore
+            elif isinstance(response, dict):
+                data = response
+            else:
+                logger.warning(f"Invalid earnings response for {symbol}")
+                return []
+
+            if not data:
+                logger.warning(f"Empty earnings response for {symbol}")
+                return []
+
+            earnings_list = []
+
+            # Annual earnings
+            annual_earnings = data.get("annualEarnings", [])
+            for earning in annual_earnings:
+                earnings_data = {
+                    "symbol": symbol,
+                    "fiscal_date_ending": earning.get("fiscalDateEnding", ""),
+                    "reported_eps": float(earning.get("reportedEPS", 0) or 0),
+                    "period_type": "annual",
+                    "reported_date": "",  # Annual earnings에는 reported date가 없음
+                    "surprise": None,
+                    "surprise_percentage": None,
+                }
+                earnings_list.append(Earnings(**earnings_data))
+
+            # Quarterly earnings
+            quarterly_earnings = data.get("quarterlyEarnings", [])
+            for earning in quarterly_earnings:
+                earnings_data = {
+                    "symbol": symbol,
+                    "fiscal_date_ending": earning.get("fiscalDateEnding", ""),
+                    "reported_eps": float(earning.get("reportedEPS", 0) or 0),
+                    "period_type": "quarterly",
+                    "reported_date": earning.get("reportedDate", ""),
+                    "estimated_eps": float(earning.get("estimatedEPS", 0) or 0),
+                    "surprise": float(earning.get("surprise", 0) or 0),
+                    "surprise_percentage": float(
+                        earning.get("surprisePercentage", 0) or 0
+                    ),
+                }
+                earnings_list.append(Earnings(**earnings_data))
+
+            logger.info(f"Fetched {len(earnings_list)} earnings records for {symbol}")
+            return earnings_list
+
+        except Exception as e:
+            logger.error(f"Failed to get earnings for {symbol}: {e}")
+            return []
 
     async def calculate_financial_ratios(self, symbol: str) -> Dict[str, float]:
         """재무 비율 계산

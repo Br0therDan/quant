@@ -1,18 +1,9 @@
-from datetime import datetime
 from typing import List, Optional
 from .base_schema import BaseSchema
 
 
-class UpdateRequest(BaseSchema):
-    """Update request model"""
-
-    symbols: Optional[List[str]] = None
-    start_date: Optional[datetime] = None
-    end_date: Optional[datetime] = None
-
-
 class WatchlistUpdate(BaseSchema):
-    """Watchlist update model"""
+    """워치리스트 업데이트 모델"""
 
     symbols: List[str]
     name: Optional[str] = "default"
@@ -20,7 +11,7 @@ class WatchlistUpdate(BaseSchema):
 
 
 class WatchlistCreate(BaseSchema):
-    """Watchlist creation model"""
+    """워치리스트 생성 모델"""
 
     name: str
     symbols: List[str]

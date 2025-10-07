@@ -5,9 +5,9 @@ Initialize API routes package
 from fastapi import APIRouter
 from .routes import (
     market_data_router,  # 새로운 도메인별 구조
-    pipeline_router,
     backtests_router,
     strategies_router,
+    watchlists_router,
 )
 
 # Create main API router
@@ -17,9 +17,9 @@ api_router = APIRouter()
 api_router.include_router(
     market_data_router, prefix="/market-data", tags=["Market Data"]
 )
-api_router.include_router(pipeline_router, prefix="/pipeline", tags=["Pipeline"])
 api_router.include_router(strategies_router, prefix="/strategies", tags=["Strategy"])
 api_router.include_router(backtests_router, prefix="/backtests", tags=["Backtests"])
+api_router.include_router(watchlists_router, prefix="/watchlists", tags=["Watchlists"])
 
 
 __all__ = ["api_router"]

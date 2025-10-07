@@ -1,11 +1,9 @@
 """
-Company Information Models
+Watchlist Models
 """
 
 from datetime import datetime
 from typing import List, Optional
-from beanie import Link
-from app.models.company import Company
 from .base_model import BaseDocument
 from pydantic import Field
 
@@ -15,7 +13,7 @@ class Watchlist(BaseDocument):
 
     name: str = Field(..., description="Watchlist name")
     description: Optional[str] = Field(None, description="Watchlist description")
-    symbols: List[Link[Company]] = Field(..., description="List of company symbols")
+    symbols: List[str] = Field(..., description="List of stock symbols")
 
     # Configuration
     auto_update: bool = Field(default=True, description="Auto-update data")
@@ -24,7 +22,9 @@ class Watchlist(BaseDocument):
     # Metadata
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
-    last_updated: Optional[datetime] = Field(None, description="Last data update")
+    last_updated: Optional[datetime] = Field(
+        default=None, description="Last data update"
+    )
 
     class Settings:
         name = "watchlists"

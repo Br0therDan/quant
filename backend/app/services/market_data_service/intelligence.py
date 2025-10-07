@@ -552,6 +552,220 @@ class IntelligenceService(BaseMarketDataService):
             logger.error(f"Error analyzing news impact for {symbol}: {e}")
             return {}
 
+    async def get_consumer_sentiment(
+        self, timeframe: str = "1month"
+    ) -> Optional[Dict[str, Any]]:
+        """소비자 심리 지수 조회 (뉴스 감정 분석 기반)
+
+        Alpha Vantage에는 직접적인 소비자 심리 API가 없으므로,
+        광범위한 시장 뉴스 감정 분석을 통해 소비자 심리를 추정합니다.
+
+        Args:
+            timeframe: 분석 기간 (1day, 1week, 1month, 3month)
+
+        Returns:
+            소비자 심리 분석 결과
+        """
+        logger.info(f"Getting consumer sentiment for timeframe: {timeframe}")
+
+        try:
+            # 시간 범위에 따른 기간 계산
+            end_date = datetime.now()
+            if timeframe == "1day":
+                start_date = end_date - timedelta(days=1)
+            elif timeframe == "1week":
+                start_date = end_date - timedelta(days=7)
+            elif timeframe == "1month":
+                start_date = end_date - timedelta(days=30)
+            elif timeframe == "3month":
+                start_date = end_date - timedelta(days=90)
+            else:
+                start_date = end_date - timedelta(days=30)
+
+            # 주요 경제/소비 관련 키워드로 뉴스 감정 분석
+            consumer_keywords = [
+                "consumer spending",
+                "retail sales",
+                "consumer confidence",
+                "inflation",
+                "employment",
+                "housing market",
+                "economic outlook",
+            ]
+
+            # 각 키워드별로 뉴스 감정 분석 실행
+            all_sentiment_scores = []
+            all_articles = []
+            total_articles_count = 0
+
+            for keyword in consumer_keywords:
+                try:
+                    response = await self.alpha_vantage.intelligence.news_sentiment(
+                        topics=keyword,
+                        time_from=start_date.strftime("%Y%m%dT%H%M"),
+                        time_to=end_date.strftime("%Y%m%dT%H%M"),
+                        sort="LATEST",
+                        limit=20,  # 키워드당 20개씩
+                    )
+
+                    if isinstance(response, dict) and "feed" in response:
+                        articles = response["feed"]
+                        all_articles.extend(articles)
+                        total_articles_count += len(articles)
+
+                        for article in articles:
+                            sentiment_score = article.get("overall_sentiment_score", 0)
+                            relevance_score = article.get("relevance_score", 0)
+
+                            if sentiment_score and relevance_score:
+                                # 관련성으로 가중치 적용
+                                weighted_score = float(sentiment_score) * float(
+                                    relevance_score
+                                )
+                                all_sentiment_scores.append(weighted_score)
+
+                except Exception as e:
+                    logger.warning(
+                        f"Error getting sentiment for keyword '{keyword}': {e}"
+                    )
+                    continue
+
+            # 감정 분석이 불가능한 경우
+            if not all_sentiment_scores:
+                logger.warning(
+                    "No sentiment data available for consumer sentiment analysis"
+                )
+                return None
+
+            # 전체 소비자 심리 점수 계산
+            avg_sentiment_score = sum(all_sentiment_scores) / len(all_sentiment_scores)
+
+            # 감정 분포 계산
+            positive_scores = [s for s in all_sentiment_scores if s > 0.05]
+            negative_scores = [s for s in all_sentiment_scores if s < -0.05]
+            neutral_scores = [s for s in all_sentiment_scores if -0.05 <= s <= 0.05]
+
+            # 소비자 심리 레벨 결정
+            if avg_sentiment_score > 0.15:
+                sentiment_level = "Very Optimistic"
+                sentiment_index = min(80 + (avg_sentiment_score * 100), 100)
+            elif avg_sentiment_score > 0.05:
+                sentiment_level = "Optimistic"
+                sentiment_index = 60 + (avg_sentiment_score * 100)
+            elif avg_sentiment_score > -0.05:
+                sentiment_level = "Neutral"
+                sentiment_index = 50 + (avg_sentiment_score * 100)
+            elif avg_sentiment_score > -0.15:
+                sentiment_level = "Pessimistic"
+                sentiment_index = 40 + (avg_sentiment_score * 100)
+            else:
+                sentiment_level = "Very Pessimistic"
+                sentiment_index = max(20 + (avg_sentiment_score * 100), 0)
+
+            # 신뢰도 계산 (데이터 양 기반)
+            confidence_score = min(total_articles_count / 50, 1.0)
+
+            # 트렌드 방향 계산
+            recent_articles = [
+                a
+                for a in all_articles
+                if datetime.fromisoformat(
+                    a.get("time_published", "").replace("Z", "+00:00")
+                )
+                > end_date - timedelta(days=3)
+            ]
+
+            if recent_articles:
+                recent_scores = []
+                for article in recent_articles:
+                    score = article.get("overall_sentiment_score", 0)
+                    relevance = article.get("relevance_score", 0)
+                    if score and relevance:
+                        recent_scores.append(float(score) * float(relevance))
+
+                recent_avg = (
+                    sum(recent_scores) / len(recent_scores) if recent_scores else 0
+                )
+                trend_direction = (
+                    "improving" if recent_avg > avg_sentiment_score else "declining"
+                )
+            else:
+                trend_direction = "stable"
+
+            result = {
+                "timeframe": timeframe,
+                "analysis_period": {
+                    "start_date": start_date.isoformat(),
+                    "end_date": end_date.isoformat(),
+                },
+                "consumer_sentiment": {
+                    "sentiment_index": round(sentiment_index, 2),  # 0-100 스케일
+                    "sentiment_level": sentiment_level,
+                    "sentiment_score": round(avg_sentiment_score, 4),
+                    "trend_direction": trend_direction,
+                    "confidence_score": round(confidence_score, 2),
+                },
+                "sentiment_distribution": {
+                    "positive_percentage": round(
+                        (len(positive_scores) / len(all_sentiment_scores)) * 100, 1
+                    ),
+                    "negative_percentage": round(
+                        (len(negative_scores) / len(all_sentiment_scores)) * 100, 1
+                    ),
+                    "neutral_percentage": round(
+                        (len(neutral_scores) / len(all_sentiment_scores)) * 100, 1
+                    ),
+                },
+                "data_metrics": {
+                    "total_articles_analyzed": total_articles_count,
+                    "sentiment_scores_count": len(all_sentiment_scores),
+                    "keywords_analyzed": consumer_keywords,
+                    "data_quality": (
+                        "high"
+                        if confidence_score > 0.7
+                        else "medium"
+                        if confidence_score > 0.4
+                        else "low"
+                    ),
+                },
+                "interpretation": {
+                    "market_outlook": (
+                        "bullish"
+                        if avg_sentiment_score > 0.1
+                        else "bearish"
+                        if avg_sentiment_score < -0.1
+                        else "neutral"
+                    ),
+                    "consumer_behavior": (
+                        "spending_likely"
+                        if sentiment_index > 65
+                        else (
+                            "cautious_spending"
+                            if sentiment_index > 35
+                            else "reduced_spending"
+                        )
+                    ),
+                    "economic_indicator": (
+                        "positive"
+                        if sentiment_index > 55
+                        else "negative"
+                        if sentiment_index < 45
+                        else "mixed"
+                    ),
+                },
+                "last_updated": end_date.isoformat(),
+                "data_source": "alpha_vantage_news_sentiment_analysis",
+            }
+
+            logger.info(
+                f"Consumer sentiment analysis completed: {sentiment_level} ({sentiment_index:.2f}/100)"
+            )
+            return result
+
+        except Exception as e:
+            logger.error(f"Error getting consumer sentiment: {e}")
+            return None
+
     # BaseMarketDataService 추상 메서드 구현
     async def _fetch_from_source(self, **kwargs) -> Any:
         """AlphaVantage에서 인텔리전스 데이터 가져오기"""

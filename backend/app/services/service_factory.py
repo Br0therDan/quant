@@ -13,6 +13,7 @@ from .market_data_service.intelligence import IntelligenceService
 from .strategy_service import StrategyService
 from .backtest_service import BacktestService
 from .database_manager import DatabaseManager
+from .watchlist_service import WatchlistService
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +30,7 @@ class ServiceFactory:
     _strategy_service: Optional[StrategyService] = None
     _backtest_service: Optional[BacktestService] = None
     _database_manager: Optional[DatabaseManager] = None
+    _watchlist_service: Optional[WatchlistService] = None
 
     def __new__(cls):
         if cls._instance is None:
@@ -102,6 +104,13 @@ class ServiceFactory:
             )
             logger.info("Created BacktestService instance with DuckDB integration")
         return self._backtest_service
+
+    def get_watchlist_service(self) -> WatchlistService:
+        """WatchlistService 인스턴스 반환"""
+        if self._watchlist_service is None:
+            self._watchlist_service = WatchlistService()
+            logger.info("Created WatchlistService instance")
+        return self._watchlist_service
 
     async def cleanup(self):
         """모든 서비스 정리"""

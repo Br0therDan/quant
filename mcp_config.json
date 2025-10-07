@@ -1,0 +1,14 @@
+{
+    "mcpServers": {
+        "alphavantage": {
+            "command": "uvx",
+            "args": [
+                "av-mcp",
+                "M9TJCCBXW5PJZ3HF"
+            ],
+            "env": {
+                "ALPHA_VANTAGE_API_KEY": "M9TJCCBXW5PJZ3HF"
+            }
+        }
+    }
+}

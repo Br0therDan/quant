@@ -10,6 +10,7 @@ from .stock import router as stock_router
 from .fundamental import router as fundamental_router
 from .economic_indicator import router as economic_indicator_router
 from .intelligence import router as intelligence_router
+from .management import router as management_router
 
 # 메인 마켓 데이터 라우터
 router = APIRouter(dependencies=[Depends(get_current_active_verified_user)])
@@ -19,6 +20,7 @@ router.include_router(stock_router, prefix="/stock")
 router.include_router(fundamental_router, prefix="/fundamental")
 router.include_router(economic_indicator_router, prefix="/economic")
 router.include_router(intelligence_router, prefix="/intelligence")
+router.include_router(management_router, prefix="/management")
 
 
 @router.get("/", summary="Market Data API 정보")
@@ -55,6 +57,16 @@ async def get_market_data_info():
                     "/news/{symbol}",
                     "/sentiment/{symbol}",
                     "/analyst-recommendations/{symbol}",
+                ],
+            },
+            "management": {
+                "description": "데이터 수집 및 관리 (기업 정보, 주가 데이터 수집)",
+                "endpoints": [
+                    "/collect/company-info/{symbol}",
+                    "/collect/market-data/{symbol}",
+                    "/collect/bulk",
+                    "/coverage/{symbol}",
+                    "/status",
                 ],
             },
         },
