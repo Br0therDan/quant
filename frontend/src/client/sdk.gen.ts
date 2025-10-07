@@ -74,87 +74,108 @@ import type {
 	BacktestsUpdateBacktestData,
 	BacktestsUpdateBacktestErrors,
 	BacktestsUpdateBacktestResponses,
+	DashboardGetDashboardSummaryData,
+	DashboardGetDashboardSummaryErrors,
+	DashboardGetDashboardSummaryResponses,
+	DashboardGetEconomicCalendarData,
+	DashboardGetEconomicCalendarErrors,
+	DashboardGetEconomicCalendarResponses,
+	DashboardGetNewsFeedData,
+	DashboardGetNewsFeedErrors,
+	DashboardGetNewsFeedResponses,
+	DashboardGetPortfolioPerformanceData,
+	DashboardGetPortfolioPerformanceErrors,
+	DashboardGetPortfolioPerformanceResponses,
+	DashboardGetRecentTradesData,
+	DashboardGetRecentTradesErrors,
+	DashboardGetRecentTradesResponses,
+	DashboardGetStrategyComparisonData,
+	DashboardGetStrategyComparisonErrors,
+	DashboardGetStrategyComparisonResponses,
+	DashboardGetWatchlistQuotesData,
+	DashboardGetWatchlistQuotesErrors,
+	DashboardGetWatchlistQuotesResponses,
 	HealthHealthCheckData,
 	HealthHealthCheckResponses,
 	HealthLivenessProbeData,
 	HealthLivenessProbeResponses,
 	HealthReadinessProbeData,
 	HealthReadinessProbeResponses,
-	MarketDataCollectBulkDataData,
-	MarketDataCollectBulkDataErrors,
-	MarketDataCollectBulkDataResponses,
-	MarketDataCollectCompanyInfoData,
-	MarketDataCollectCompanyInfoErrors,
-	MarketDataCollectCompanyInfoResponses,
-	MarketDataCollectMarketDataData,
-	MarketDataCollectMarketDataErrors,
-	MarketDataCollectMarketDataResponses,
-	MarketDataGetAnalystRecommendationsData,
-	MarketDataGetAnalystRecommendationsErrors,
-	MarketDataGetAnalystRecommendationsResponses,
-	MarketDataGetBalanceSheetData,
-	MarketDataGetBalanceSheetErrors,
-	MarketDataGetBalanceSheetResponses,
-	MarketDataGetCashFlowData,
-	MarketDataGetCashFlowErrors,
-	MarketDataGetCashFlowResponses,
-	MarketDataGetCompanyOverviewData,
-	MarketDataGetCompanyOverviewErrors,
-	MarketDataGetCompanyOverviewResponses,
-	MarketDataGetConsumerSentimentData,
-	MarketDataGetConsumerSentimentErrors,
-	MarketDataGetConsumerSentimentResponses,
-	MarketDataGetDailyPricesData,
-	MarketDataGetDailyPricesErrors,
-	MarketDataGetDailyPricesResponses,
-	MarketDataGetDataCoverageData,
-	MarketDataGetDataCoverageErrors,
-	MarketDataGetDataCoverageResponses,
-	MarketDataGetEarningsData,
-	MarketDataGetEarningsErrors,
-	MarketDataGetEarningsResponses,
-	MarketDataGetEmploymentDataData,
-	MarketDataGetEmploymentDataErrors,
-	MarketDataGetEmploymentDataResponses,
-	MarketDataGetGdpDataData,
-	MarketDataGetGdpDataErrors,
-	MarketDataGetGdpDataResponses,
-	MarketDataGetHistoricalDataData,
-	MarketDataGetHistoricalDataErrors,
-	MarketDataGetHistoricalDataResponses,
-	MarketDataGetIncomeStatementData,
-	MarketDataGetIncomeStatementErrors,
-	MarketDataGetIncomeStatementResponses,
-	MarketDataGetInflationDataData,
-	MarketDataGetInflationDataErrors,
-	MarketDataGetInflationDataResponses,
-	MarketDataGetInterestRatesData,
-	MarketDataGetInterestRatesErrors,
-	MarketDataGetInterestRatesResponses,
-	MarketDataGetIntradayDataData,
-	MarketDataGetIntradayDataErrors,
-	MarketDataGetIntradayDataResponses,
+	MarketDataEconomicGetConsumerSentimentData,
+	MarketDataEconomicGetConsumerSentimentErrors,
+	MarketDataEconomicGetConsumerSentimentResponses,
+	MarketDataEconomicGetEmploymentDataData,
+	MarketDataEconomicGetEmploymentDataErrors,
+	MarketDataEconomicGetEmploymentDataResponses,
+	MarketDataEconomicGetGdpDataData,
+	MarketDataEconomicGetGdpDataErrors,
+	MarketDataEconomicGetGdpDataResponses,
+	MarketDataEconomicGetInflationDataData,
+	MarketDataEconomicGetInflationDataErrors,
+	MarketDataEconomicGetInflationDataResponses,
+	MarketDataEconomicGetInterestRatesData,
+	MarketDataEconomicGetInterestRatesErrors,
+	MarketDataEconomicGetInterestRatesResponses,
+	MarketDataFundamentalGetBalanceSheetData,
+	MarketDataFundamentalGetBalanceSheetErrors,
+	MarketDataFundamentalGetBalanceSheetResponses,
+	MarketDataFundamentalGetCashFlowData,
+	MarketDataFundamentalGetCashFlowErrors,
+	MarketDataFundamentalGetCashFlowResponses,
+	MarketDataFundamentalGetCompanyOverviewData,
+	MarketDataFundamentalGetCompanyOverviewErrors,
+	MarketDataFundamentalGetCompanyOverviewResponses,
+	MarketDataFundamentalGetEarningsData,
+	MarketDataFundamentalGetEarningsErrors,
+	MarketDataFundamentalGetEarningsResponses,
+	MarketDataFundamentalGetIncomeStatementData,
+	MarketDataFundamentalGetIncomeStatementErrors,
+	MarketDataFundamentalGetIncomeStatementResponses,
 	MarketDataGetMarketDataInfoData,
 	MarketDataGetMarketDataInfoErrors,
 	MarketDataGetMarketDataInfoResponses,
-	MarketDataGetNewsData,
-	MarketDataGetNewsErrors,
-	MarketDataGetNewsResponses,
-	MarketDataGetQuoteData,
-	MarketDataGetQuoteErrors,
-	MarketDataGetQuoteResponses,
-	MarketDataGetSentimentAnalysisData,
-	MarketDataGetSentimentAnalysisErrors,
-	MarketDataGetSentimentAnalysisResponses,
-	MarketDataGetSocialSentimentData,
-	MarketDataGetSocialSentimentErrors,
-	MarketDataGetSocialSentimentResponses,
-	MarketDataGetSystemStatusData,
-	MarketDataGetSystemStatusErrors,
-	MarketDataGetSystemStatusResponses,
 	MarketDataHealthCheckData,
 	MarketDataHealthCheckErrors,
 	MarketDataHealthCheckResponses,
+	MarketDataIntelligenceGetAnalystRecommendationsData,
+	MarketDataIntelligenceGetAnalystRecommendationsErrors,
+	MarketDataIntelligenceGetAnalystRecommendationsResponses,
+	MarketDataIntelligenceGetNewsData,
+	MarketDataIntelligenceGetNewsErrors,
+	MarketDataIntelligenceGetNewsResponses,
+	MarketDataIntelligenceGetSentimentAnalysisData,
+	MarketDataIntelligenceGetSentimentAnalysisErrors,
+	MarketDataIntelligenceGetSentimentAnalysisResponses,
+	MarketDataIntelligenceGetSocialSentimentData,
+	MarketDataIntelligenceGetSocialSentimentErrors,
+	MarketDataIntelligenceGetSocialSentimentResponses,
+	MarketDataManagementCollectBulkDataData,
+	MarketDataManagementCollectBulkDataErrors,
+	MarketDataManagementCollectBulkDataResponses,
+	MarketDataManagementCollectCompanyInfoData,
+	MarketDataManagementCollectCompanyInfoErrors,
+	MarketDataManagementCollectCompanyInfoResponses,
+	MarketDataManagementCollectMarketDataData,
+	MarketDataManagementCollectMarketDataErrors,
+	MarketDataManagementCollectMarketDataResponses,
+	MarketDataManagementGetDataCoverageData,
+	MarketDataManagementGetDataCoverageErrors,
+	MarketDataManagementGetDataCoverageResponses,
+	MarketDataManagementGetSystemStatusData,
+	MarketDataManagementGetSystemStatusErrors,
+	MarketDataManagementGetSystemStatusResponses,
+	MarketDataStockGetDailyPricesData,
+	MarketDataStockGetDailyPricesErrors,
+	MarketDataStockGetDailyPricesResponses,
+	MarketDataStockGetHistoricalDataData,
+	MarketDataStockGetHistoricalDataErrors,
+	MarketDataStockGetHistoricalDataResponses,
+	MarketDataStockGetIntradayDataData,
+	MarketDataStockGetIntradayDataErrors,
+	MarketDataStockGetIntradayDataResponses,
+	MarketDataStockGetQuoteData,
+	MarketDataStockGetQuoteErrors,
+	MarketDataStockGetQuoteResponses,
 	OAuth2AuthorizeData,
 	OAuth2AuthorizeErrors,
 	OAuth2AuthorizeResponses,
@@ -740,17 +761,17 @@ export class OAuth2Service {
 	}
 }
 
-export class MarketDataService {
+export class MarketDataStockService {
 	/**
 	 * Get Daily Prices
 	 * 지정된 종목의 일일 주가 데이터(OHLCV)를 조회합니다.
 	 */
 	public static getDailyPrices<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataGetDailyPricesData, ThrowOnError>,
+		options: Options<MarketDataStockGetDailyPricesData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataGetDailyPricesResponses,
-			MarketDataGetDailyPricesErrors,
+			MarketDataStockGetDailyPricesResponses,
+			MarketDataStockGetDailyPricesErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -769,11 +790,11 @@ export class MarketDataService {
 	 * 지정된 종목의 실시간 호가 정보를 조회합니다.
 	 */
 	public static getQuote<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataGetQuoteData, ThrowOnError>,
+		options: Options<MarketDataStockGetQuoteData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataGetQuoteResponses,
-			MarketDataGetQuoteErrors,
+			MarketDataStockGetQuoteResponses,
+			MarketDataStockGetQuoteErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -792,11 +813,11 @@ export class MarketDataService {
 	 * 지정된 종목의 실시간 또는 분봉 데이터를 조회합니다.
 	 */
 	public static getIntradayData<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataGetIntradayDataData, ThrowOnError>,
+		options: Options<MarketDataStockGetIntradayDataData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataGetIntradayDataResponses,
-			MarketDataGetIntradayDataErrors,
+			MarketDataStockGetIntradayDataResponses,
+			MarketDataStockGetIntradayDataErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -815,11 +836,11 @@ export class MarketDataService {
 	 * 지정된 종목의 장기 히스토리 데이터를 조회합니다.
 	 */
 	public static getHistoricalData<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataGetHistoricalDataData, ThrowOnError>,
+		options: Options<MarketDataStockGetHistoricalDataData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataGetHistoricalDataResponses,
-			MarketDataGetHistoricalDataErrors,
+			MarketDataStockGetHistoricalDataResponses,
+			MarketDataStockGetHistoricalDataErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -832,17 +853,19 @@ export class MarketDataService {
 			...options,
 		});
 	}
+}
 
+export class MarketDataFundamentalService {
 	/**
 	 * Get Company Overview
 	 * 지정된 종목의 기업 개요 정보를 조회합니다.
 	 */
 	public static getCompanyOverview<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataGetCompanyOverviewData, ThrowOnError>,
+		options: Options<MarketDataFundamentalGetCompanyOverviewData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataGetCompanyOverviewResponses,
-			MarketDataGetCompanyOverviewErrors,
+			MarketDataFundamentalGetCompanyOverviewResponses,
+			MarketDataFundamentalGetCompanyOverviewErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -861,11 +884,11 @@ export class MarketDataService {
 	 * 지정된 종목의 손익계산서를 조회합니다.
 	 */
 	public static getIncomeStatement<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataGetIncomeStatementData, ThrowOnError>,
+		options: Options<MarketDataFundamentalGetIncomeStatementData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataGetIncomeStatementResponses,
-			MarketDataGetIncomeStatementErrors,
+			MarketDataFundamentalGetIncomeStatementResponses,
+			MarketDataFundamentalGetIncomeStatementErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -884,11 +907,11 @@ export class MarketDataService {
 	 * 지정된 종목의 재무상태표를 조회합니다.
 	 */
 	public static getBalanceSheet<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataGetBalanceSheetData, ThrowOnError>,
+		options: Options<MarketDataFundamentalGetBalanceSheetData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataGetBalanceSheetResponses,
-			MarketDataGetBalanceSheetErrors,
+			MarketDataFundamentalGetBalanceSheetResponses,
+			MarketDataFundamentalGetBalanceSheetErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -907,11 +930,11 @@ export class MarketDataService {
 	 * 지정된 종목의 현금흐름표를 조회합니다.
 	 */
 	public static getCashFlow<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataGetCashFlowData, ThrowOnError>,
+		options: Options<MarketDataFundamentalGetCashFlowData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataGetCashFlowResponses,
-			MarketDataGetCashFlowErrors,
+			MarketDataFundamentalGetCashFlowResponses,
+			MarketDataFundamentalGetCashFlowErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -930,11 +953,11 @@ export class MarketDataService {
 	 * 지정된 종목의 실적 데이터를 조회합니다.
 	 */
 	public static getEarnings<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataGetEarningsData, ThrowOnError>,
+		options: Options<MarketDataFundamentalGetEarningsData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataGetEarningsResponses,
-			MarketDataGetEarningsErrors,
+			MarketDataFundamentalGetEarningsResponses,
+			MarketDataFundamentalGetEarningsErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -947,17 +970,19 @@ export class MarketDataService {
 			...options,
 		});
 	}
+}
 
+export class MarketDataEconomicService {
 	/**
 	 * Get Gdp Data
 	 * 미국 GDP 데이터를 조회합니다.
 	 */
 	public static getGdpData<ThrowOnError extends boolean = false>(
-		options?: Options<MarketDataGetGdpDataData, ThrowOnError>,
+		options?: Options<MarketDataEconomicGetGdpDataData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
-			MarketDataGetGdpDataResponses,
-			MarketDataGetGdpDataErrors,
+			MarketDataEconomicGetGdpDataResponses,
+			MarketDataEconomicGetGdpDataErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -976,11 +1001,11 @@ export class MarketDataService {
 	 * 미국 인플레이션 지표 데이터를 조회합니다.
 	 */
 	public static getInflationData<ThrowOnError extends boolean = false>(
-		options?: Options<MarketDataGetInflationDataData, ThrowOnError>,
+		options?: Options<MarketDataEconomicGetInflationDataData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
-			MarketDataGetInflationDataResponses,
-			MarketDataGetInflationDataErrors,
+			MarketDataEconomicGetInflationDataResponses,
+			MarketDataEconomicGetInflationDataErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -999,11 +1024,11 @@ export class MarketDataService {
 	 * 미국 기준금리 및 채권 수익률 데이터를 조회합니다.
 	 */
 	public static getInterestRates<ThrowOnError extends boolean = false>(
-		options?: Options<MarketDataGetInterestRatesData, ThrowOnError>,
+		options?: Options<MarketDataEconomicGetInterestRatesData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
-			MarketDataGetInterestRatesResponses,
-			MarketDataGetInterestRatesErrors,
+			MarketDataEconomicGetInterestRatesResponses,
+			MarketDataEconomicGetInterestRatesErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1022,11 +1047,11 @@ export class MarketDataService {
 	 * 미국 실업률 및 고용 관련 지표를 조회합니다.
 	 */
 	public static getEmploymentData<ThrowOnError extends boolean = false>(
-		options?: Options<MarketDataGetEmploymentDataData, ThrowOnError>,
+		options?: Options<MarketDataEconomicGetEmploymentDataData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
-			MarketDataGetEmploymentDataResponses,
-			MarketDataGetEmploymentDataErrors,
+			MarketDataEconomicGetEmploymentDataResponses,
+			MarketDataEconomicGetEmploymentDataErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1045,11 +1070,11 @@ export class MarketDataService {
 	 * 미국 소비자 심리 지수를 조회합니다.
 	 */
 	public static getConsumerSentiment<ThrowOnError extends boolean = false>(
-		options?: Options<MarketDataGetConsumerSentimentData, ThrowOnError>,
+		options?: Options<MarketDataEconomicGetConsumerSentimentData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
-			MarketDataGetConsumerSentimentResponses,
-			MarketDataGetConsumerSentimentErrors,
+			MarketDataEconomicGetConsumerSentimentResponses,
+			MarketDataEconomicGetConsumerSentimentErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1062,17 +1087,19 @@ export class MarketDataService {
 			...options,
 		});
 	}
+}
 
+export class MarketDataIntelligenceService {
 	/**
 	 * Get News
 	 * 지정된 종목 관련 뉴스를 조회합니다.
 	 */
 	public static getNews<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataGetNewsData, ThrowOnError>,
+		options: Options<MarketDataIntelligenceGetNewsData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataGetNewsResponses,
-			MarketDataGetNewsErrors,
+			MarketDataIntelligenceGetNewsResponses,
+			MarketDataIntelligenceGetNewsErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1091,11 +1118,14 @@ export class MarketDataService {
 	 * 지정된 종목의 감정 분석 결과를 조회합니다.
 	 */
 	public static getSentimentAnalysis<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataGetSentimentAnalysisData, ThrowOnError>,
+		options: Options<
+			MarketDataIntelligenceGetSentimentAnalysisData,
+			ThrowOnError
+		>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataGetSentimentAnalysisResponses,
-			MarketDataGetSentimentAnalysisErrors,
+			MarketDataIntelligenceGetSentimentAnalysisResponses,
+			MarketDataIntelligenceGetSentimentAnalysisErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1114,11 +1144,14 @@ export class MarketDataService {
 	 * 지정된 종목의 분석가 추천 정보를 조회합니다.
 	 */
 	public static getAnalystRecommendations<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataGetAnalystRecommendationsData, ThrowOnError>,
+		options: Options<
+			MarketDataIntelligenceGetAnalystRecommendationsData,
+			ThrowOnError
+		>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataGetAnalystRecommendationsResponses,
-			MarketDataGetAnalystRecommendationsErrors,
+			MarketDataIntelligenceGetAnalystRecommendationsResponses,
+			MarketDataIntelligenceGetAnalystRecommendationsErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1137,11 +1170,14 @@ export class MarketDataService {
 	 * 지정된 종목의 소셜 미디어 감정 분석을 조회합니다.
 	 */
 	public static getSocialSentiment<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataGetSocialSentimentData, ThrowOnError>,
+		options: Options<
+			MarketDataIntelligenceGetSocialSentimentData,
+			ThrowOnError
+		>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataGetSocialSentimentResponses,
-			MarketDataGetSocialSentimentErrors,
+			MarketDataIntelligenceGetSocialSentimentResponses,
+			MarketDataIntelligenceGetSocialSentimentErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1154,7 +1190,9 @@ export class MarketDataService {
 			...options,
 		});
 	}
+}
 
+export class MarketDataManagementService {
 	/**
 	 * Collect Company Info
 	 * 지정된 심볼의 기업 정보를 수집하여 저장
@@ -1163,11 +1201,11 @@ export class MarketDataService {
 	 * 업종 분류 등을 수집하고 데이터베이스에 저장합니다.
 	 */
 	public static collectCompanyInfo<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataCollectCompanyInfoData, ThrowOnError>,
+		options: Options<MarketDataManagementCollectCompanyInfoData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			MarketDataCollectCompanyInfoResponses,
-			MarketDataCollectCompanyInfoErrors,
+			MarketDataManagementCollectCompanyInfoResponses,
+			MarketDataManagementCollectCompanyInfoErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1189,11 +1227,11 @@ export class MarketDataService {
 	 * DuckDB 캐시 및 MongoDB에 저장합니다.
 	 */
 	public static collectMarketData<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataCollectMarketDataData, ThrowOnError>,
+		options: Options<MarketDataManagementCollectMarketDataData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			MarketDataCollectMarketDataResponses,
-			MarketDataCollectMarketDataErrors,
+			MarketDataManagementCollectMarketDataResponses,
+			MarketDataManagementCollectMarketDataErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1215,11 +1253,11 @@ export class MarketDataService {
 	 * 기업 정보와 주가 데이터를 순차적으로 수집합니다.
 	 */
 	public static collectBulkData<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataCollectBulkDataData, ThrowOnError>,
+		options: Options<MarketDataManagementCollectBulkDataData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			MarketDataCollectBulkDataResponses,
-			MarketDataCollectBulkDataErrors,
+			MarketDataManagementCollectBulkDataResponses,
+			MarketDataManagementCollectBulkDataErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1240,11 +1278,11 @@ export class MarketDataService {
 	 * 기업 정보, 주가 데이터의 수집 상태와 품질을 확인합니다.
 	 */
 	public static getDataCoverage<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataGetDataCoverageData, ThrowOnError>,
+		options: Options<MarketDataManagementGetDataCoverageData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataGetDataCoverageResponses,
-			MarketDataGetDataCoverageErrors,
+			MarketDataManagementGetDataCoverageResponses,
+			MarketDataManagementGetDataCoverageErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1265,11 +1303,11 @@ export class MarketDataService {
 	 * API 연결 상태, 캐시 성능, 수집 통계 등을 확인합니다.
 	 */
 	public static getSystemStatus<ThrowOnError extends boolean = false>(
-		options?: Options<MarketDataGetSystemStatusData, ThrowOnError>,
+		options?: Options<MarketDataManagementGetSystemStatusData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
-			MarketDataGetSystemStatusResponses,
-			MarketDataGetSystemStatusErrors,
+			MarketDataManagementGetSystemStatusResponses,
+			MarketDataManagementGetSystemStatusErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1282,7 +1320,9 @@ export class MarketDataService {
 			...options,
 		});
 	}
+}
 
+export class MarketDataService {
 	/**
 	 * Get Market Data Info
 	 * 마켓 데이터 API 정보 및 사용 가능한 엔드포인트 목록
@@ -1527,6 +1567,181 @@ export class StrategyService {
 		});
 	}
 
+	/**
+	 * Get Templates
+	 * Get list of strategy templates
+	 */
+	public static getTemplates<ThrowOnError extends boolean = false>(
+		options?: Options<StrategyGetTemplatesData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			StrategyGetTemplatesResponses,
+			StrategyGetTemplatesErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/templates/",
+			...options,
+		});
+	}
+
+	/**
+	 * Create Template
+	 * Create a new strategy template (Superuser only)
+	 */
+	public static createTemplate<ThrowOnError extends boolean = false>(
+		options: Options<StrategyCreateTemplateData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			StrategyCreateTemplateResponses,
+			StrategyCreateTemplateErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/templates/",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Delete Template
+	 * Delete template by ID (Superuser only)
+	 */
+	public static deleteTemplate<ThrowOnError extends boolean = false>(
+		options: Options<StrategyDeleteTemplateData, ThrowOnError>,
+	) {
+		return (options.client ?? client).delete<
+			StrategyDeleteTemplateResponses,
+			StrategyDeleteTemplateErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/templates/{template_id}",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Template
+	 * Get template by ID
+	 */
+	public static getTemplate<ThrowOnError extends boolean = false>(
+		options: Options<StrategyGetTemplateData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			StrategyGetTemplateResponses,
+			StrategyGetTemplateErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/templates/{template_id}",
+			...options,
+		});
+	}
+
+	/**
+	 * Update Template
+	 * Update template by ID (Superuser only)
+	 */
+	public static updateTemplate<ThrowOnError extends boolean = false>(
+		options: Options<StrategyUpdateTemplateData, ThrowOnError>,
+	) {
+		return (options.client ?? client).patch<
+			StrategyUpdateTemplateResponses,
+			StrategyUpdateTemplateErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/templates/{template_id}",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Create Strategy From Template
+	 * Create a strategy instance from template
+	 */
+	public static createStrategyFromTemplate<
+		ThrowOnError extends boolean = false,
+	>(options: Options<StrategyCreateStrategyFromTemplateData, ThrowOnError>) {
+		return (options.client ?? client).post<
+			StrategyCreateStrategyFromTemplateResponses,
+			StrategyCreateStrategyFromTemplateErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/templates/{template_id}/create-strategy",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Get Template Usage Stats
+	 * Get template usage statistics
+	 */
+	public static getTemplateUsageStats<ThrowOnError extends boolean = false>(
+		options?: Options<StrategyGetTemplateUsageStatsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			StrategyGetTemplateUsageStatsResponses,
+			StrategyGetTemplateUsageStatsErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/templates/analytics/usage-stats",
+			...options,
+		});
+	}
+}
+
+export class StrategyTemplateService {
 	/**
 	 * Get Templates
 	 * Get list of strategy templates
@@ -2227,6 +2442,183 @@ export class WatchlistsService {
 				},
 			],
 			url: "/api/v1/watchlists/setup-default",
+			...options,
+		});
+	}
+}
+
+export class DashboardService {
+	/**
+	 * Get Dashboard Summary
+	 * 대시보드 요약 데이터를 조회합니다.
+	 *
+	 * 사용자의 포트폴리오, 전략, 최근 활동 요약 정보를 반환합니다.
+	 */
+	public static getDashboardSummary<ThrowOnError extends boolean = false>(
+		options?: Options<DashboardGetDashboardSummaryData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			DashboardGetDashboardSummaryResponses,
+			DashboardGetDashboardSummaryErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/dashboard/dashboard/summary",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Portfolio Performance
+	 * 포트폴리오 성과 차트 데이터를 조회합니다.
+	 *
+	 * 지정된 기간의 포트폴리오 성과 데이터와 요약 지표를 반환합니다.
+	 */
+	public static getPortfolioPerformance<ThrowOnError extends boolean = false>(
+		options?: Options<DashboardGetPortfolioPerformanceData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			DashboardGetPortfolioPerformanceResponses,
+			DashboardGetPortfolioPerformanceErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/dashboard/dashboard/portfolio/performance",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Strategy Comparison
+	 * 전략 성과 비교 데이터를 조회합니다.
+	 *
+	 * 사용자의 전략들을 성과별로 비교한 데이터를 반환합니다.
+	 */
+	public static getStrategyComparison<ThrowOnError extends boolean = false>(
+		options?: Options<DashboardGetStrategyComparisonData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			DashboardGetStrategyComparisonResponses,
+			DashboardGetStrategyComparisonErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/dashboard/dashboard/strategies/comparison",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Recent Trades
+	 * 최근 거래 내역을 조회합니다.
+	 *
+	 * 지정된 기간의 최근 거래 내역과 요약 정보를 반환합니다.
+	 */
+	public static getRecentTrades<ThrowOnError extends boolean = false>(
+		options?: Options<DashboardGetRecentTradesData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			DashboardGetRecentTradesResponses,
+			DashboardGetRecentTradesErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/dashboard/dashboard/trades/recent",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Watchlist Quotes
+	 * 관심종목 현재가를 조회합니다.
+	 *
+	 * 사용자의 관심종목의 현재 주가 정보를 반환합니다.
+	 */
+	public static getWatchlistQuotes<ThrowOnError extends boolean = false>(
+		options?: Options<DashboardGetWatchlistQuotesData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			DashboardGetWatchlistQuotesResponses,
+			DashboardGetWatchlistQuotesErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/dashboard/dashboard/watchlist/quotes",
+			...options,
+		});
+	}
+
+	/**
+	 * Get News Feed
+	 * 뉴스 피드를 조회합니다.
+	 *
+	 * 사용자와 관련된 뉴스 피드를 반환합니다.
+	 */
+	public static getNewsFeed<ThrowOnError extends boolean = false>(
+		options?: Options<DashboardGetNewsFeedData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			DashboardGetNewsFeedResponses,
+			DashboardGetNewsFeedErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/dashboard/dashboard/news/feed",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Economic Calendar
+	 * 경제 캘린더를 조회합니다.
+	 *
+	 * 예정된 경제 지표 발표 일정을 반환합니다.
+	 */
+	public static getEconomicCalendar<ThrowOnError extends boolean = false>(
+		options?: Options<DashboardGetEconomicCalendarData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			DashboardGetEconomicCalendarResponses,
+			DashboardGetEconomicCalendarErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/dashboard/dashboard/economic/calendar",
 			...options,
 		});
 	}

@@ -1551,6 +1551,51 @@ export const CompanyOverviewResponseSchema = {
 	description: "기업 개요 조회 응답 스키마",
 } as const;
 
+export const DashboardSummarySchema = {
+	properties: {
+		user_id: {
+			type: "string",
+			title: "User Id",
+			description: "사용자 ID",
+		},
+		portfolio: {
+			$ref: "#/components/schemas/PortfolioSummary",
+			description: "포트폴리오 정보",
+		},
+		strategies: {
+			$ref: "#/components/schemas/StrategySummary",
+			description: "전략 정보",
+		},
+		recent_activity: {
+			$ref: "#/components/schemas/RecentActivity",
+			description: "최근 활동",
+		},
+	},
+	type: "object",
+	required: ["user_id", "portfolio", "strategies", "recent_activity"],
+	title: "DashboardSummary",
+	description: "대시보드 요약 데이터.",
+} as const;
+
+export const DashboardSummaryResponseSchema = {
+	properties: {
+		data: {
+			$ref: "#/components/schemas/DashboardSummary",
+			description: "대시보드 데이터",
+		},
+		message: {
+			type: "string",
+			title: "Message",
+			description: "응답 메시지",
+			default: "대시보드 요약 조회 성공",
+		},
+	},
+	type: "object",
+	required: ["data"],
+	title: "DashboardSummaryResponse",
+	description: "대시보드 요약 응답.",
+} as const;
+
 export const DataQualityInfoSchema = {
 	properties: {
 		quality_score: {
@@ -1710,6 +1755,112 @@ export const EarningsResponseSchema = {
 	required: ["data", "metadata", "count"],
 	title: "EarningsResponse",
 	description: "실적 데이터 조회 응답 스키마",
+} as const;
+
+export const EconomicCalendarSchema = {
+	properties: {
+		events: {
+			items: {
+				$ref: "#/components/schemas/EconomicEvent",
+			},
+			type: "array",
+			title: "Events",
+			description: "이벤트 목록",
+		},
+	},
+	type: "object",
+	required: ["events"],
+	title: "EconomicCalendar",
+	description: "경제 캘린더.",
+} as const;
+
+export const EconomicCalendarResponseSchema = {
+	properties: {
+		data: {
+			$ref: "#/components/schemas/EconomicCalendar",
+			description: "경제 캘린더",
+		},
+		message: {
+			type: "string",
+			title: "Message",
+			description: "응답 메시지",
+			default: "경제 캘린더 조회 성공",
+		},
+	},
+	type: "object",
+	required: ["data"],
+	title: "EconomicCalendarResponse",
+	description: "경제 캘린더 응답.",
+} as const;
+
+export const EconomicEventSchema = {
+	properties: {
+		event_name: {
+			type: "string",
+			title: "Event Name",
+			description: "이벤트명",
+		},
+		country: {
+			type: "string",
+			title: "Country",
+			description: "국가",
+		},
+		importance: {
+			$ref: "#/components/schemas/ImportanceLevel",
+			description: "중요도",
+		},
+		actual: {
+			anyOf: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Actual",
+			description: "실제값",
+		},
+		forecast: {
+			anyOf: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Forecast",
+			description: "예상값",
+		},
+		previous: {
+			anyOf: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Previous",
+			description: "이전값",
+		},
+		release_time: {
+			type: "string",
+			format: "date-time",
+			title: "Release Time",
+			description: "발표 시간",
+		},
+		currency: {
+			type: "string",
+			title: "Currency",
+			description: "통화",
+		},
+	},
+	type: "object",
+	required: ["event_name", "country", "importance", "release_time", "currency"],
+	title: "EconomicEvent",
+	description: "경제 이벤트.",
 } as const;
 
 export const ExecutionListResponseSchema = {
@@ -1940,6 +2091,13 @@ export const HistoricalDataResponseSchema = {
 	type: "object",
 	required: ["symbol", "data", "count", "frequency"],
 	title: "HistoricalDataResponse",
+} as const;
+
+export const ImportanceLevelSchema = {
+	type: "string",
+	enum: ["high", "medium", "low"],
+	title: "ImportanceLevel",
+	description: "중요도 레벨.",
 } as const;
 
 export const IncomeStatementDataSchema = {
@@ -2457,6 +2615,103 @@ export const MetadataInfoSchema = {
 	description: "메타데이터 정보",
 } as const;
 
+export const NewsArticleSchema = {
+	properties: {
+		title: {
+			type: "string",
+			title: "Title",
+			description: "제목",
+		},
+		summary: {
+			type: "string",
+			title: "Summary",
+			description: "요약",
+		},
+		source: {
+			type: "string",
+			title: "Source",
+			description: "출처",
+		},
+		url: {
+			type: "string",
+			title: "Url",
+			description: "URL",
+		},
+		published_at: {
+			type: "string",
+			format: "date-time",
+			title: "Published At",
+			description: "발행 시간",
+		},
+		sentiment: {
+			$ref: "#/components/schemas/SentimentType",
+			description: "감정",
+		},
+		relevance_score: {
+			type: "number",
+			title: "Relevance Score",
+			description: "관련도 점수",
+		},
+		symbols: {
+			items: {
+				type: "string",
+			},
+			type: "array",
+			title: "Symbols",
+			description: "관련 심볼들",
+		},
+	},
+	type: "object",
+	required: [
+		"title",
+		"summary",
+		"source",
+		"url",
+		"published_at",
+		"sentiment",
+		"relevance_score",
+		"symbols",
+	],
+	title: "NewsArticle",
+	description: "뉴스 기사.",
+} as const;
+
+export const NewsFeedSchema = {
+	properties: {
+		articles: {
+			items: {
+				$ref: "#/components/schemas/NewsArticle",
+			},
+			type: "array",
+			title: "Articles",
+			description: "기사 목록",
+		},
+	},
+	type: "object",
+	required: ["articles"],
+	title: "NewsFeed",
+	description: "뉴스 피드.",
+} as const;
+
+export const NewsFeedResponseSchema = {
+	properties: {
+		data: {
+			$ref: "#/components/schemas/NewsFeed",
+			description: "뉴스 피드",
+		},
+		message: {
+			type: "string",
+			title: "Message",
+			description: "응답 메시지",
+			default: "뉴스 피드 조회 성공",
+		},
+	},
+	type: "object",
+	required: ["data"],
+	title: "NewsFeedResponse",
+	description: "뉴스 피드 응답.",
+} as const;
+
 export const OAuth2AuthorizeResponseSchema = {
 	properties: {
 		authorization_url: {
@@ -2811,6 +3066,162 @@ export const PerformanceResponseSchema = {
 	description: "Performance response",
 } as const;
 
+export const PortfolioDataPointSchema = {
+	properties: {
+		timestamp: {
+			type: "string",
+			format: "date-time",
+			title: "Timestamp",
+			description: "시간",
+		},
+		portfolio_value: {
+			type: "number",
+			title: "Portfolio Value",
+			description: "포트폴리오 가치",
+		},
+		pnl: {
+			type: "number",
+			title: "Pnl",
+			description: "손익",
+		},
+		pnl_percentage: {
+			type: "number",
+			title: "Pnl Percentage",
+			description: "손익률",
+		},
+		benchmark_value: {
+			anyOf: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Benchmark Value",
+			description: "벤치마크 가치",
+		},
+	},
+	type: "object",
+	required: ["timestamp", "portfolio_value", "pnl", "pnl_percentage"],
+	title: "PortfolioDataPoint",
+	description: "포트폴리오 데이터 포인트.",
+} as const;
+
+export const PortfolioPerformanceSchema = {
+	properties: {
+		period: {
+			type: "string",
+			title: "Period",
+			description: "기간",
+		},
+		data_points: {
+			items: {
+				$ref: "#/components/schemas/PortfolioDataPoint",
+			},
+			type: "array",
+			title: "Data Points",
+			description: "데이터 포인트들",
+		},
+		summary: {
+			$ref: "#/components/schemas/PortfolioPerformanceSummary",
+			description: "성과 요약",
+		},
+	},
+	type: "object",
+	required: ["period", "data_points", "summary"],
+	title: "PortfolioPerformance",
+	description: "포트폴리오 성과 데이터.",
+} as const;
+
+export const PortfolioPerformanceResponseSchema = {
+	properties: {
+		data: {
+			$ref: "#/components/schemas/PortfolioPerformance",
+			description: "포트폴리오 성과",
+		},
+		message: {
+			type: "string",
+			title: "Message",
+			description: "응답 메시지",
+			default: "포트폴리오 성과 조회 성공",
+		},
+	},
+	type: "object",
+	required: ["data"],
+	title: "PortfolioPerformanceResponse",
+	description: "포트폴리오 성과 응답.",
+} as const;
+
+export const PortfolioPerformanceSummarySchema = {
+	properties: {
+		total_return: {
+			type: "number",
+			title: "Total Return",
+			description: "총 수익률",
+		},
+		volatility: {
+			type: "number",
+			title: "Volatility",
+			description: "변동성",
+		},
+		sharpe_ratio: {
+			type: "number",
+			title: "Sharpe Ratio",
+			description: "샤프 비율",
+		},
+		max_drawdown: {
+			type: "number",
+			title: "Max Drawdown",
+			description: "최대 낙폭",
+		},
+	},
+	type: "object",
+	required: ["total_return", "volatility", "sharpe_ratio", "max_drawdown"],
+	title: "PortfolioPerformanceSummary",
+	description: "포트폴리오 성과 요약.",
+} as const;
+
+export const PortfolioSummarySchema = {
+	properties: {
+		total_value: {
+			type: "number",
+			title: "Total Value",
+			description: "총 포트폴리오 가치",
+		},
+		total_pnl: {
+			type: "number",
+			title: "Total Pnl",
+			description: "총 손익",
+		},
+		total_pnl_percentage: {
+			type: "number",
+			title: "Total Pnl Percentage",
+			description: "총 손익률",
+		},
+		daily_pnl: {
+			type: "number",
+			title: "Daily Pnl",
+			description: "일일 손익",
+		},
+		daily_pnl_percentage: {
+			type: "number",
+			title: "Daily Pnl Percentage",
+			description: "일일 손익률",
+		},
+	},
+	type: "object",
+	required: [
+		"total_value",
+		"total_pnl",
+		"total_pnl_percentage",
+		"daily_pnl",
+		"daily_pnl_percentage",
+	],
+	title: "PortfolioSummary",
+	description: "포트폴리오 요약 정보.",
+} as const;
+
 export const PositionSchema = {
 	properties: {
 		symbol: {
@@ -2878,11 +3289,126 @@ export const PydanticObjectIdSchema = {
 	example: "5eb7cf5a86d9755df3a6c593",
 } as const;
 
+export const RecentActivitySchema = {
+	properties: {
+		trades_count_today: {
+			type: "integer",
+			title: "Trades Count Today",
+			description: "오늘 거래 수",
+		},
+		backtests_count_week: {
+			type: "integer",
+			title: "Backtests Count Week",
+			description: "이번 주 백테스트 수",
+		},
+		last_login: {
+			anyOf: [
+				{
+					type: "string",
+					format: "date-time",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Last Login",
+			description: "마지막 로그인",
+		},
+	},
+	type: "object",
+	required: ["trades_count_today", "backtests_count_week"],
+	title: "RecentActivity",
+	description: "최근 활동 정보.",
+} as const;
+
+export const RecentTradesSchema = {
+	properties: {
+		trades: {
+			items: {
+				$ref: "#/components/schemas/TradeItem",
+			},
+			type: "array",
+			title: "Trades",
+			description: "거래 목록",
+		},
+		summary: {
+			$ref: "#/components/schemas/TradesSummary",
+			description: "거래 요약",
+		},
+	},
+	type: "object",
+	required: ["trades", "summary"],
+	title: "RecentTrades",
+	description: "최근 거래 데이터.",
+} as const;
+
+export const RecentTradesResponseSchema = {
+	properties: {
+		data: {
+			$ref: "#/components/schemas/RecentTrades",
+			description: "최근 거래 데이터",
+		},
+		message: {
+			type: "string",
+			title: "Message",
+			description: "응답 메시지",
+			default: "최근 거래 조회 성공",
+		},
+	},
+	type: "object",
+	required: ["data"],
+	title: "RecentTradesResponse",
+	description: "최근 거래 응답.",
+} as const;
+
+export const SentimentTypeSchema = {
+	type: "string",
+	enum: ["positive", "neutral", "negative"],
+	title: "SentimentType",
+	description: "감정 분석 유형.",
+} as const;
+
 export const SignalTypeSchema = {
 	type: "string",
 	enum: ["BUY", "SELL", "HOLD"],
 	title: "SignalType",
 	description: "신호 타입",
+} as const;
+
+export const StrategyComparisonSchema = {
+	properties: {
+		strategies: {
+			items: {
+				$ref: "#/components/schemas/StrategyPerformanceItem",
+			},
+			type: "array",
+			title: "Strategies",
+			description: "전략 목록",
+		},
+	},
+	type: "object",
+	required: ["strategies"],
+	title: "StrategyComparison",
+	description: "전략 비교 데이터.",
+} as const;
+
+export const StrategyComparisonResponseSchema = {
+	properties: {
+		data: {
+			$ref: "#/components/schemas/StrategyComparison",
+			description: "전략 비교 데이터",
+		},
+		message: {
+			type: "string",
+			title: "Message",
+			description: "응답 메시지",
+			default: "전략 비교 조회 성공",
+		},
+	},
+	type: "object",
+	required: ["data"],
+	title: "StrategyComparisonResponse",
+	description: "전략 비교 응답.",
 } as const;
 
 export const StrategyCreateRequestSchema = {
@@ -3049,6 +3575,76 @@ export const StrategyListResponseSchema = {
 	description: "Strategy list response",
 } as const;
 
+export const StrategyPerformanceItemSchema = {
+	properties: {
+		strategy_id: {
+			type: "string",
+			title: "Strategy Id",
+			description: "전략 ID",
+		},
+		name: {
+			type: "string",
+			title: "Name",
+			description: "전략 이름",
+		},
+		type: {
+			type: "string",
+			title: "Type",
+			description: "전략 타입",
+		},
+		total_return: {
+			type: "number",
+			title: "Total Return",
+			description: "총 수익률",
+		},
+		win_rate: {
+			type: "number",
+			title: "Win Rate",
+			description: "승률",
+		},
+		sharpe_ratio: {
+			type: "number",
+			title: "Sharpe Ratio",
+			description: "샤프 비율",
+		},
+		trades_count: {
+			type: "integer",
+			title: "Trades Count",
+			description: "거래 수",
+		},
+		last_execution: {
+			anyOf: [
+				{
+					type: "string",
+					format: "date-time",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Last Execution",
+			description: "마지막 실행",
+		},
+		status: {
+			$ref: "#/components/schemas/StrategyStatus",
+			description: "상태",
+		},
+	},
+	type: "object",
+	required: [
+		"strategy_id",
+		"name",
+		"type",
+		"total_return",
+		"win_rate",
+		"sharpe_ratio",
+		"trades_count",
+		"status",
+	],
+	title: "StrategyPerformanceItem",
+	description: "전략 성과 항목.",
+} as const;
+
 export const StrategyResponseSchema = {
 	properties: {
 		user_id: {
@@ -3149,6 +3745,49 @@ export const StrategyResponseSchema = {
 	],
 	title: "StrategyResponse",
 	description: "Strategy response",
+} as const;
+
+export const StrategyStatusSchema = {
+	type: "string",
+	enum: ["active", "paused", "stopped"],
+	title: "StrategyStatus",
+	description: "전략 상태.",
+} as const;
+
+export const StrategySummarySchema = {
+	properties: {
+		active_count: {
+			type: "integer",
+			title: "Active Count",
+			description: "활성 전략 수",
+		},
+		total_count: {
+			type: "integer",
+			title: "Total Count",
+			description: "총 전략 수",
+		},
+		avg_success_rate: {
+			type: "number",
+			title: "Avg Success Rate",
+			description: "평균 성공률",
+		},
+		best_performing: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Best Performing",
+			description: "최고 성과 전략 ID",
+		},
+	},
+	type: "object",
+	required: ["active_count", "total_count", "avg_success_rate"],
+	title: "StrategySummary",
+	description: "전략 요약 정보.",
 } as const;
 
 export const StrategyTypeSchema = {
@@ -3630,11 +4269,106 @@ export const TradeSchema = {
 	description: "거래 기록 내장 모델",
 } as const;
 
+export const TradeItemSchema = {
+	properties: {
+		trade_id: {
+			type: "string",
+			title: "Trade Id",
+			description: "거래 ID",
+		},
+		symbol: {
+			type: "string",
+			title: "Symbol",
+			description: "심볼",
+		},
+		side: {
+			$ref: "#/components/schemas/TradeSide",
+			description: "거래 방향",
+		},
+		quantity: {
+			type: "integer",
+			title: "Quantity",
+			description: "수량",
+		},
+		price: {
+			type: "number",
+			title: "Price",
+			description: "가격",
+		},
+		value: {
+			type: "number",
+			title: "Value",
+			description: "거래 금액",
+		},
+		pnl: {
+			type: "number",
+			title: "Pnl",
+			description: "손익",
+		},
+		strategy_name: {
+			type: "string",
+			title: "Strategy Name",
+			description: "전략 이름",
+		},
+		timestamp: {
+			type: "string",
+			format: "date-time",
+			title: "Timestamp",
+			description: "거래 시간",
+		},
+	},
+	type: "object",
+	required: [
+		"trade_id",
+		"symbol",
+		"side",
+		"quantity",
+		"price",
+		"value",
+		"pnl",
+		"strategy_name",
+		"timestamp",
+	],
+	title: "TradeItem",
+	description: "거래 항목.",
+} as const;
+
+export const TradeSideSchema = {
+	type: "string",
+	enum: ["buy", "sell"],
+	title: "TradeSide",
+	description: "거래 방향.",
+} as const;
+
 export const TradeTypeSchema = {
 	type: "string",
 	enum: ["BUY", "SELL"],
 	title: "TradeType",
 	description: "거래 타입",
+} as const;
+
+export const TradesSummarySchema = {
+	properties: {
+		total_trades: {
+			type: "integer",
+			title: "Total Trades",
+			description: "총 거래 수",
+		},
+		winning_trades: {
+			type: "integer",
+			title: "Winning Trades",
+			description: "수익 거래 수",
+		},
+		total_pnl: {
+			type: "number",
+			title: "Total Pnl",
+			description: "총 손익",
+		},
+	},
+	type: "object",
+	required: ["total_trades", "winning_trades", "total_pnl"],
+	title: "TradesSummary",
+	description: "거래 요약.",
 } as const;
 
 export const UserCreateSchema = {
@@ -3957,6 +4691,106 @@ export const WatchlistCreateSchema = {
 	required: ["name", "symbols"],
 	title: "WatchlistCreate",
 	description: "워치리스트 생성 모델",
+} as const;
+
+export const WatchlistQuoteItemSchema = {
+	properties: {
+		symbol: {
+			type: "string",
+			title: "Symbol",
+			description: "심볼",
+		},
+		name: {
+			type: "string",
+			title: "Name",
+			description: "회사명",
+		},
+		current_price: {
+			type: "number",
+			title: "Current Price",
+			description: "현재가",
+		},
+		change: {
+			type: "number",
+			title: "Change",
+			description: "변화량",
+		},
+		change_percentage: {
+			type: "number",
+			title: "Change Percentage",
+			description: "변화율",
+		},
+		volume: {
+			type: "integer",
+			title: "Volume",
+			description: "거래량",
+		},
+		market_cap: {
+			anyOf: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Market Cap",
+			description: "시가총액",
+		},
+	},
+	type: "object",
+	required: [
+		"symbol",
+		"name",
+		"current_price",
+		"change",
+		"change_percentage",
+		"volume",
+	],
+	title: "WatchlistQuoteItem",
+	description: "관심종목 시세 항목.",
+} as const;
+
+export const WatchlistQuotesSchema = {
+	properties: {
+		symbols: {
+			items: {
+				$ref: "#/components/schemas/WatchlistQuoteItem",
+			},
+			type: "array",
+			title: "Symbols",
+			description: "심볼 목록",
+		},
+		last_updated: {
+			type: "string",
+			format: "date-time",
+			title: "Last Updated",
+			description: "마지막 업데이트",
+		},
+	},
+	type: "object",
+	required: ["symbols", "last_updated"],
+	title: "WatchlistQuotes",
+	description: "관심종목 시세 데이터.",
+} as const;
+
+export const WatchlistQuotesResponseSchema = {
+	properties: {
+		data: {
+			$ref: "#/components/schemas/WatchlistQuotes",
+			description: "관심종목 시세",
+		},
+		message: {
+			type: "string",
+			title: "Message",
+			description: "응답 메시지",
+			default: "관심종목 시세 조회 성공",
+		},
+	},
+	type: "object",
+	required: ["data"],
+	title: "WatchlistQuotesResponse",
+	description: "관심종목 시세 응답.",
 } as const;
 
 export const WatchlistUpdateSchema = {

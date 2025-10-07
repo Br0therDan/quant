@@ -15,10 +15,8 @@ from .routes import (
 api_router = APIRouter()
 
 # Include sub-routers
-api_router.include_router(
-    market_data_router, prefix="/market-data", tags=["Market Data"]
-)
-api_router.include_router(strategies_router, prefix="/strategies", tags=["Strategy"])
+api_router.include_router(market_data_router, prefix="/market-data")
+api_router.include_router(strategies_router, prefix="/strategies")
 api_router.include_router(backtests_router, prefix="/backtests", tags=["Backtests"])
 api_router.include_router(watchlists_router, prefix="/watchlists", tags=["Watchlists"])
 api_router.include_router(dashboard_router, prefix="/dashboard", tags=["Dashboard"])

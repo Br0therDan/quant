@@ -1102,11 +1102,11 @@
     "/api/v1/market-data/stock/daily/{symbol}": {
       "get": {
         "tags": [
-          "Market Data"
+          "MarketData Stock"
         ],
         "summary": "Get Daily Prices",
         "description": "지정된 종목의 일일 주가 데이터(OHLCV)를 조회합니다.",
-        "operationId": "Market Data-get_daily_prices",
+        "operationId": "MarketData Stock-get_daily_prices",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1161,7 +1161,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Market Data-Get Daily Prices"
+                  "title": "Response Marketdata Stock-Get Daily Prices"
                 }
               }
             }
@@ -1182,11 +1182,11 @@
     "/api/v1/market-data/stock/quote/{symbol}": {
       "get": {
         "tags": [
-          "Market Data"
+          "MarketData Stock"
         ],
         "summary": "Get Quote",
         "description": "지정된 종목의 실시간 호가 정보를 조회합니다.",
-        "operationId": "Market Data-get_quote",
+        "operationId": "MarketData Stock-get_quote",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1229,7 +1229,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Market Data-Get Quote"
+                  "title": "Response Marketdata Stock-Get Quote"
                 }
               }
             }
@@ -1250,11 +1250,11 @@
     "/api/v1/market-data/stock/intraday/{symbol}": {
       "get": {
         "tags": [
-          "Market Data"
+          "MarketData Stock"
         ],
         "summary": "Get Intraday Data",
         "description": "지정된 종목의 실시간 또는 분봉 데이터를 조회합니다.",
-        "operationId": "Market Data-get_intraday_data",
+        "operationId": "MarketData Stock-get_intraday_data",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1321,7 +1321,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Market Data-Get Intraday Data"
+                  "title": "Response Marketdata Stock-Get Intraday Data"
                 }
               }
             }
@@ -1342,11 +1342,11 @@
     "/api/v1/market-data/stock/historical/{symbol}": {
       "get": {
         "tags": [
-          "Market Data"
+          "MarketData Stock"
         ],
         "summary": "Get Historical Data",
         "description": "지정된 종목의 장기 히스토리 데이터를 조회합니다.",
-        "operationId": "Market Data-get_historical_data",
+        "operationId": "MarketData Stock-get_historical_data",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1458,11 +1458,11 @@
     "/api/v1/market-data/fundamental/overview/{symbol}": {
       "get": {
         "tags": [
-          "Market Data"
+          "MarketData Fundamental"
         ],
         "summary": "Get Company Overview",
         "description": "지정된 종목의 기업 개요 정보를 조회합니다.",
-        "operationId": "Market Data-get_company_overview",
+        "operationId": "MarketData Fundamental-get_company_overview",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1524,11 +1524,11 @@
     "/api/v1/market-data/fundamental/income-statement/{symbol}": {
       "get": {
         "tags": [
-          "Market Data"
+          "MarketData Fundamental"
         ],
         "summary": "Get Income Statement",
         "description": "지정된 종목의 손익계산서를 조회합니다.",
-        "operationId": "Market Data-get_income_statement",
+        "operationId": "MarketData Fundamental-get_income_statement",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1602,11 +1602,11 @@
     "/api/v1/market-data/fundamental/balance-sheet/{symbol}": {
       "get": {
         "tags": [
-          "Market Data"
+          "MarketData Fundamental"
         ],
         "summary": "Get Balance Sheet",
         "description": "지정된 종목의 재무상태표를 조회합니다.",
-        "operationId": "Market Data-get_balance_sheet",
+        "operationId": "MarketData Fundamental-get_balance_sheet",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1680,11 +1680,11 @@
     "/api/v1/market-data/fundamental/cash-flow/{symbol}": {
       "get": {
         "tags": [
-          "Market Data"
+          "MarketData Fundamental"
         ],
         "summary": "Get Cash Flow",
         "description": "지정된 종목의 현금흐름표를 조회합니다.",
-        "operationId": "Market Data-get_cash_flow",
+        "operationId": "MarketData Fundamental-get_cash_flow",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1758,11 +1758,11 @@
     "/api/v1/market-data/fundamental/earnings/{symbol}": {
       "get": {
         "tags": [
-          "Market Data"
+          "MarketData Fundamental"
         ],
         "summary": "Get Earnings",
         "description": "지정된 종목의 실적 데이터를 조회합니다.",
-        "operationId": "Market Data-get_earnings",
+        "operationId": "MarketData Fundamental-get_earnings",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1824,11 +1824,11 @@
     "/api/v1/market-data/economic/gdp": {
       "get": {
         "tags": [
-          "Market Data"
+          "MarketData Economic"
         ],
         "summary": "Get Gdp Data",
         "description": "미국 GDP 데이터를 조회합니다.",
-        "operationId": "Market Data-get_gdp_data",
+        "operationId": "MarketData Economic-get_gdp_data",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1872,7 +1872,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Market Data-Get Gdp Data"
+                  "title": "Response Marketdata Economic-Get Gdp Data"
                 }
               }
             }
@@ -1893,11 +1893,11 @@
     "/api/v1/market-data/economic/inflation": {
       "get": {
         "tags": [
-          "Market Data"
+          "MarketData Economic"
         ],
         "summary": "Get Inflation Data",
         "description": "미국 인플레이션 지표 데이터를 조회합니다.",
-        "operationId": "Market Data-get_inflation_data",
+        "operationId": "MarketData Economic-get_inflation_data",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1941,7 +1941,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Market Data-Get Inflation Data"
+                  "title": "Response Marketdata Economic-Get Inflation Data"
                 }
               }
             }
@@ -1962,11 +1962,11 @@
     "/api/v1/market-data/economic/interest-rates": {
       "get": {
         "tags": [
-          "Market Data"
+          "MarketData Economic"
         ],
         "summary": "Get Interest Rates",
         "description": "미국 기준금리 및 채권 수익률 데이터를 조회합니다.",
-        "operationId": "Market Data-get_interest_rates",
+        "operationId": "MarketData Economic-get_interest_rates",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2010,7 +2010,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Market Data-Get Interest Rates"
+                  "title": "Response Marketdata Economic-Get Interest Rates"
                 }
               }
             }
@@ -2031,11 +2031,11 @@
     "/api/v1/market-data/economic/employment": {
       "get": {
         "tags": [
-          "Market Data"
+          "MarketData Economic"
         ],
         "summary": "Get Employment Data",
         "description": "미국 실업률 및 고용 관련 지표를 조회합니다.",
-        "operationId": "Market Data-get_employment_data",
+        "operationId": "MarketData Economic-get_employment_data",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2067,7 +2067,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Market Data-Get Employment Data"
+                  "title": "Response Marketdata Economic-Get Employment Data"
                 }
               }
             }
@@ -2088,11 +2088,11 @@
     "/api/v1/market-data/economic/consumer-sentiment": {
       "get": {
         "tags": [
-          "Market Data"
+          "MarketData Economic"
         ],
         "summary": "Get Consumer Sentiment",
         "description": "미국 소비자 심리 지수를 조회합니다.",
-        "operationId": "Market Data-get_consumer_sentiment",
+        "operationId": "MarketData Economic-get_consumer_sentiment",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2124,7 +2124,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Market Data-Get Consumer Sentiment"
+                  "title": "Response Marketdata Economic-Get Consumer Sentiment"
                 }
               }
             }
@@ -2145,11 +2145,11 @@
     "/api/v1/market-data/intelligence/news/{symbol}": {
       "get": {
         "tags": [
-          "Market Data"
+          "MarketData Intelligence"
         ],
         "summary": "Get News",
         "description": "지정된 종목 관련 뉴스를 조회합니다.",
-        "operationId": "Market Data-get_news",
+        "operationId": "MarketData Intelligence-get_news",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2262,7 +2262,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Market Data-Get News"
+                  "title": "Response Marketdata Intelligence-Get News"
                 }
               }
             }
@@ -2283,11 +2283,11 @@
     "/api/v1/market-data/intelligence/sentiment/{symbol}": {
       "get": {
         "tags": [
-          "Market Data"
+          "MarketData Intelligence"
         ],
         "summary": "Get Sentiment Analysis",
         "description": "지정된 종목의 감정 분석 결과를 조회합니다.",
-        "operationId": "Market Data-get_sentiment_analysis",
+        "operationId": "MarketData Intelligence-get_sentiment_analysis",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2360,7 +2360,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Market Data-Get Sentiment Analysis"
+                  "title": "Response Marketdata Intelligence-Get Sentiment Analysis"
                 }
               }
             }
@@ -2381,11 +2381,11 @@
     "/api/v1/market-data/intelligence/analyst-recommendations/{symbol}": {
       "get": {
         "tags": [
-          "Market Data"
+          "MarketData Intelligence"
         ],
         "summary": "Get Analyst Recommendations",
         "description": "지정된 종목의 분석가 추천 정보를 조회합니다.",
-        "operationId": "Market Data-get_analyst_recommendations",
+        "operationId": "MarketData Intelligence-get_analyst_recommendations",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2458,7 +2458,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Market Data-Get Analyst Recommendations"
+                  "title": "Response Marketdata Intelligence-Get Analyst Recommendations"
                 }
               }
             }
@@ -2479,11 +2479,11 @@
     "/api/v1/market-data/intelligence/social-sentiment/{symbol}": {
       "get": {
         "tags": [
-          "Market Data"
+          "MarketData Intelligence"
         ],
         "summary": "Get Social Sentiment",
         "description": "지정된 종목의 소셜 미디어 감정 분석을 조회합니다.",
-        "operationId": "Market Data-get_social_sentiment",
+        "operationId": "MarketData Intelligence-get_social_sentiment",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2556,7 +2556,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Market Data-Get Social Sentiment"
+                  "title": "Response Marketdata Intelligence-Get Social Sentiment"
                 }
               }
             }
@@ -2577,11 +2577,11 @@
     "/api/v1/market-data/management/collect/company-info/{symbol}": {
       "post": {
         "tags": [
-          "Market Data"
+          "MarketData Management"
         ],
         "summary": "Collect Company Info",
         "description": "지정된 심볼의 기업 정보를 수집하여 저장\n\nAlpha Vantage API를 통해 기업의 기본 정보, 재무 지표,\n업종 분류 등을 수집하고 데이터베이스에 저장합니다.",
-        "operationId": "Market Data-collect_company_info",
+        "operationId": "MarketData Management-collect_company_info",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2641,11 +2641,11 @@
     "/api/v1/market-data/management/collect/market-data/{symbol}": {
       "post": {
         "tags": [
-          "Market Data"
+          "MarketData Management"
         ],
         "summary": "Collect Market Data",
         "description": "지정된 심볼의 주가 데이터를 수집하여 저장\n\nAlpha Vantage API를 통해 일일 OHLCV 데이터를 수집하고\nDuckDB 캐시 및 MongoDB에 저장합니다.",
-        "operationId": "Market Data-collect_market_data",
+        "operationId": "MarketData Management-collect_market_data",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2755,11 +2755,11 @@
     "/api/v1/market-data/management/collect/bulk": {
       "post": {
         "tags": [
-          "Market Data"
+          "MarketData Management"
         ],
         "summary": "Collect Bulk Data",
         "description": "여러 심볼의 데이터를 일괄 수집\n\n백그라운드 작업으로 처리되며, 대량의 심볼에 대해\n기업 정보와 주가 데이터를 순차적으로 수집합니다.",
-        "operationId": "Market Data-collect_bulk_data",
+        "operationId": "MarketData Management-collect_bulk_data",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2846,11 +2846,11 @@
     "/api/v1/market-data/management/coverage/{symbol}": {
       "get": {
         "tags": [
-          "Market Data"
+          "MarketData Management"
         ],
         "summary": "Get Data Coverage",
         "description": "지정된 심볼의 데이터 커버리지 정보 조회\n\n기업 정보, 주가 데이터의 수집 상태와 품질을 확인합니다.",
-        "operationId": "Market Data-get_data_coverage",
+        "operationId": "MarketData Management-get_data_coverage",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2910,11 +2910,11 @@
     "/api/v1/market-data/management/status": {
       "get": {
         "tags": [
-          "Market Data"
+          "MarketData Management"
         ],
         "summary": "Get System Status",
         "description": "시장 데이터 시스템의 전반적인 상태 조회\n\nAPI 연결 상태, 캐시 성능, 수집 통계 등을 확인합니다.",
-        "operationId": "Market Data-get_system_status",
+        "operationId": "MarketData Management-get_system_status",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2963,11 +2963,11 @@
     "/api/v1/market-data/": {
       "get": {
         "tags": [
-          "Market Data"
+          "MarketData"
         ],
         "summary": "Get Market Data Info",
         "description": "마켓 데이터 API 정보 및 사용 가능한 엔드포인트 목록",
-        "operationId": "Market Data-get_market_data_info",
+        "operationId": "MarketData-get_market_data_info",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -3016,11 +3016,11 @@
     "/api/v1/market-data/health": {
       "get": {
         "tags": [
-          "Market Data"
+          "MarketData"
         ],
         "summary": "Health Check",
         "description": "마켓 데이터 서비스 상태 확인",
-        "operationId": "Market Data-health_check",
+        "operationId": "MarketData-health_check",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -3667,7 +3667,8 @@
     "/api/v1/strategies/templates/": {
       "post": {
         "tags": [
-          "Strategy"
+          "Strategy",
+          "Strategy Template"
         ],
         "summary": "Create Template",
         "description": "Create a new strategy template (Superuser only)",
@@ -3730,7 +3731,8 @@
       },
       "get": {
         "tags": [
-          "Strategy"
+          "Strategy",
+          "Strategy Template"
         ],
         "summary": "Get Templates",
         "description": "Get list of strategy templates",
@@ -3803,7 +3805,8 @@
     "/api/v1/strategies/templates/{template_id}": {
       "get": {
         "tags": [
-          "Strategy"
+          "Strategy",
+          "Strategy Template"
         ],
         "summary": "Get Template",
         "description": "Get template by ID",
@@ -3865,7 +3868,8 @@
       },
       "patch": {
         "tags": [
-          "Strategy"
+          "Strategy",
+          "Strategy Template"
         ],
         "summary": "Update Template",
         "description": "Update template by ID (Superuser only)",
@@ -3937,7 +3941,8 @@
       },
       "delete": {
         "tags": [
-          "Strategy"
+          "Strategy",
+          "Strategy Template"
         ],
         "summary": "Delete Template",
         "description": "Delete template by ID (Superuser only)",
@@ -3999,7 +4004,8 @@
     "/api/v1/strategies/templates/{template_id}/create-strategy": {
       "post": {
         "tags": [
-          "Strategy"
+          "Strategy",
+          "Strategy Template"
         ],
         "summary": "Create Strategy From Template",
         "description": "Create a strategy instance from template",
@@ -4073,7 +4079,8 @@
     "/api/v1/strategies/templates/analytics/usage-stats": {
       "get": {
         "tags": [
-          "Strategy"
+          "Strategy",
+          "Strategy Template"
         ],
         "summary": "Get Template Usage Stats",
         "description": "Get template usage statistics",
@@ -5556,6 +5563,557 @@
             "content": {
               "application/json": {
                 "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/dashboard/dashboard/summary": {
+      "get": {
+        "tags": [
+          "Dashboard",
+          "dashboard"
+        ],
+        "summary": "Get Dashboard Summary",
+        "description": "대시보드 요약 데이터를 조회합니다.\n\n사용자의 포트폴리오, 전략, 최근 활동 요약 정보를 반환합니다.",
+        "operationId": "Dashboard-get_dashboard_summary",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardSummaryResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/dashboard/dashboard/portfolio/performance": {
+      "get": {
+        "tags": [
+          "Dashboard",
+          "dashboard"
+        ],
+        "summary": "Get Portfolio Performance",
+        "description": "포트폴리오 성과 차트 데이터를 조회합니다.\n\n지정된 기간의 포트폴리오 성과 데이터와 요약 지표를 반환합니다.",
+        "operationId": "Dashboard-get_portfolio_performance",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "period",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "조회 기간 (1D, 1W, 1M, 3M, 6M, 1Y)",
+              "default": "1M",
+              "title": "Period"
+            },
+            "description": "조회 기간 (1D, 1W, 1M, 3M, 6M, 1Y)"
+          },
+          {
+            "name": "granularity",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "데이터 간격 (hour, day, week)",
+              "default": "day",
+              "title": "Granularity"
+            },
+            "description": "데이터 간격 (hour, day, week)"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PortfolioPerformanceResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/dashboard/dashboard/strategies/comparison": {
+      "get": {
+        "tags": [
+          "Dashboard",
+          "dashboard"
+        ],
+        "summary": "Get Strategy Comparison",
+        "description": "전략 성과 비교 데이터를 조회합니다.\n\n사용자의 전략들을 성과별로 비교한 데이터를 반환합니다.",
+        "operationId": "Dashboard-get_strategy_comparison",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "description": "조회할 전략 수",
+              "default": 10,
+              "title": "Limit"
+            },
+            "description": "조회할 전략 수"
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "정렬 기준 (return, sharpe, win_rate)",
+              "default": "return",
+              "title": "Sort By"
+            },
+            "description": "정렬 기준 (return, sharpe, win_rate)"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StrategyComparisonResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/dashboard/dashboard/trades/recent": {
+      "get": {
+        "tags": [
+          "Dashboard",
+          "dashboard"
+        ],
+        "summary": "Get Recent Trades",
+        "description": "최근 거래 내역을 조회합니다.\n\n지정된 기간의 최근 거래 내역과 요약 정보를 반환합니다.",
+        "operationId": "Dashboard-get_recent_trades",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "description": "조회할 거래 수",
+              "default": 20,
+              "title": "Limit"
+            },
+            "description": "조회할 거래 수"
+          },
+          {
+            "name": "days",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "description": "조회할 일수",
+              "default": 7,
+              "title": "Days"
+            },
+            "description": "조회할 일수"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecentTradesResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/dashboard/dashboard/watchlist/quotes": {
+      "get": {
+        "tags": [
+          "Dashboard",
+          "dashboard"
+        ],
+        "summary": "Get Watchlist Quotes",
+        "description": "관심종목 현재가를 조회합니다.\n\n사용자의 관심종목의 현재 주가 정보를 반환합니다.",
+        "operationId": "Dashboard-get_watchlist_quotes",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WatchlistQuotesResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/dashboard/dashboard/news/feed": {
+      "get": {
+        "tags": [
+          "Dashboard",
+          "dashboard"
+        ],
+        "summary": "Get News Feed",
+        "description": "뉴스 피드를 조회합니다.\n\n사용자와 관련된 뉴스 피드를 반환합니다.",
+        "operationId": "Dashboard-get_news_feed",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "description": "조회할 뉴스 수",
+              "default": 10,
+              "title": "Limit"
+            },
+            "description": "조회할 뉴스 수"
+          },
+          {
+            "name": "symbols",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "관련 심볼 필터",
+              "title": "Symbols"
+            },
+            "description": "관련 심볼 필터"
+          },
+          {
+            "name": "categories",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "카테고리 필터",
+              "title": "Categories"
+            },
+            "description": "카테고리 필터"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewsFeedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/dashboard/dashboard/economic/calendar": {
+      "get": {
+        "tags": [
+          "Dashboard",
+          "dashboard"
+        ],
+        "summary": "Get Economic Calendar",
+        "description": "경제 캘린더를 조회합니다.\n\n예정된 경제 지표 발표 일정을 반환합니다.",
+        "operationId": "Dashboard-get_economic_calendar",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "days",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "description": "조회할 일수",
+              "default": 7,
+              "title": "Days"
+            },
+            "description": "조회할 일수"
+          },
+          {
+            "name": "importance",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "중요도 필터 (high, medium, low)",
+              "title": "Importance"
+            },
+            "description": "중요도 필터 (high, medium, low)"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EconomicCalendarResponse"
+                }
               }
             }
           },
@@ -7170,6 +7728,56 @@
         "title": "CompanyOverviewResponse",
         "description": "기업 개요 조회 응답 스키마"
       },
+      "DashboardSummary": {
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "title": "User Id",
+            "description": "사용자 ID"
+          },
+          "portfolio": {
+            "$ref": "#/components/schemas/PortfolioSummary",
+            "description": "포트폴리오 정보"
+          },
+          "strategies": {
+            "$ref": "#/components/schemas/StrategySummary",
+            "description": "전략 정보"
+          },
+          "recent_activity": {
+            "$ref": "#/components/schemas/RecentActivity",
+            "description": "최근 활동"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id",
+          "portfolio",
+          "strategies",
+          "recent_activity"
+        ],
+        "title": "DashboardSummary",
+        "description": "대시보드 요약 데이터."
+      },
+      "DashboardSummaryResponse": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/DashboardSummary",
+            "description": "대시보드 데이터"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "description": "응답 메시지",
+            "default": "대시보드 요약 조회 성공"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "DashboardSummaryResponse",
+        "description": "대시보드 요약 응답."
+      },
       "DataQualityInfo": {
         "properties": {
           "quality_score": {
@@ -7339,6 +7947,119 @@
         ],
         "title": "EarningsResponse",
         "description": "실적 데이터 조회 응답 스키마"
+      },
+      "EconomicCalendar": {
+        "properties": {
+          "events": {
+            "items": {
+              "$ref": "#/components/schemas/EconomicEvent"
+            },
+            "type": "array",
+            "title": "Events",
+            "description": "이벤트 목록"
+          }
+        },
+        "type": "object",
+        "required": [
+          "events"
+        ],
+        "title": "EconomicCalendar",
+        "description": "경제 캘린더."
+      },
+      "EconomicCalendarResponse": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/EconomicCalendar",
+            "description": "경제 캘린더"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "description": "응답 메시지",
+            "default": "경제 캘린더 조회 성공"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "EconomicCalendarResponse",
+        "description": "경제 캘린더 응답."
+      },
+      "EconomicEvent": {
+        "properties": {
+          "event_name": {
+            "type": "string",
+            "title": "Event Name",
+            "description": "이벤트명"
+          },
+          "country": {
+            "type": "string",
+            "title": "Country",
+            "description": "국가"
+          },
+          "importance": {
+            "$ref": "#/components/schemas/ImportanceLevel",
+            "description": "중요도"
+          },
+          "actual": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actual",
+            "description": "실제값"
+          },
+          "forecast": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Forecast",
+            "description": "예상값"
+          },
+          "previous": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Previous",
+            "description": "이전값"
+          },
+          "release_time": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Release Time",
+            "description": "발표 시간"
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency",
+            "description": "통화"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_name",
+          "country",
+          "importance",
+          "release_time",
+          "currency"
+        ],
+        "title": "EconomicEvent",
+        "description": "경제 이벤트."
       },
       "ExecutionListResponse": {
         "properties": {
@@ -7579,6 +8300,16 @@
           "frequency"
         ],
         "title": "HistoricalDataResponse"
+      },
+      "ImportanceLevel": {
+        "type": "string",
+        "enum": [
+          "high",
+          "medium",
+          "low"
+        ],
+        "title": "ImportanceLevel",
+        "description": "중요도 레벨."
       },
       "IncomeStatementData": {
         "properties": {
@@ -8111,6 +8842,104 @@
         "title": "MetadataInfo",
         "description": "메타데이터 정보"
       },
+      "NewsArticle": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "description": "제목"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary",
+            "description": "요약"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "description": "출처"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url",
+            "description": "URL"
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Published At",
+            "description": "발행 시간"
+          },
+          "sentiment": {
+            "$ref": "#/components/schemas/SentimentType",
+            "description": "감정"
+          },
+          "relevance_score": {
+            "type": "number",
+            "title": "Relevance Score",
+            "description": "관련도 점수"
+          },
+          "symbols": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Symbols",
+            "description": "관련 심볼들"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "summary",
+          "source",
+          "url",
+          "published_at",
+          "sentiment",
+          "relevance_score",
+          "symbols"
+        ],
+        "title": "NewsArticle",
+        "description": "뉴스 기사."
+      },
+      "NewsFeed": {
+        "properties": {
+          "articles": {
+            "items": {
+              "$ref": "#/components/schemas/NewsArticle"
+            },
+            "type": "array",
+            "title": "Articles",
+            "description": "기사 목록"
+          }
+        },
+        "type": "object",
+        "required": [
+          "articles"
+        ],
+        "title": "NewsFeed",
+        "description": "뉴스 피드."
+      },
+      "NewsFeedResponse": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/NewsFeed",
+            "description": "뉴스 피드"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "description": "응답 메시지",
+            "default": "뉴스 피드 조회 성공"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "NewsFeedResponse",
+        "description": "뉴스 피드 응답."
+      },
       "OAuth2AuthorizeResponse": {
         "properties": {
           "authorization_url": {
@@ -8471,6 +9300,173 @@
         "title": "PerformanceResponse",
         "description": "Performance response"
       },
+      "PortfolioDataPoint": {
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp",
+            "description": "시간"
+          },
+          "portfolio_value": {
+            "type": "number",
+            "title": "Portfolio Value",
+            "description": "포트폴리오 가치"
+          },
+          "pnl": {
+            "type": "number",
+            "title": "Pnl",
+            "description": "손익"
+          },
+          "pnl_percentage": {
+            "type": "number",
+            "title": "Pnl Percentage",
+            "description": "손익률"
+          },
+          "benchmark_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Benchmark Value",
+            "description": "벤치마크 가치"
+          }
+        },
+        "type": "object",
+        "required": [
+          "timestamp",
+          "portfolio_value",
+          "pnl",
+          "pnl_percentage"
+        ],
+        "title": "PortfolioDataPoint",
+        "description": "포트폴리오 데이터 포인트."
+      },
+      "PortfolioPerformance": {
+        "properties": {
+          "period": {
+            "type": "string",
+            "title": "Period",
+            "description": "기간"
+          },
+          "data_points": {
+            "items": {
+              "$ref": "#/components/schemas/PortfolioDataPoint"
+            },
+            "type": "array",
+            "title": "Data Points",
+            "description": "데이터 포인트들"
+          },
+          "summary": {
+            "$ref": "#/components/schemas/PortfolioPerformanceSummary",
+            "description": "성과 요약"
+          }
+        },
+        "type": "object",
+        "required": [
+          "period",
+          "data_points",
+          "summary"
+        ],
+        "title": "PortfolioPerformance",
+        "description": "포트폴리오 성과 데이터."
+      },
+      "PortfolioPerformanceResponse": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/PortfolioPerformance",
+            "description": "포트폴리오 성과"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "description": "응답 메시지",
+            "default": "포트폴리오 성과 조회 성공"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "PortfolioPerformanceResponse",
+        "description": "포트폴리오 성과 응답."
+      },
+      "PortfolioPerformanceSummary": {
+        "properties": {
+          "total_return": {
+            "type": "number",
+            "title": "Total Return",
+            "description": "총 수익률"
+          },
+          "volatility": {
+            "type": "number",
+            "title": "Volatility",
+            "description": "변동성"
+          },
+          "sharpe_ratio": {
+            "type": "number",
+            "title": "Sharpe Ratio",
+            "description": "샤프 비율"
+          },
+          "max_drawdown": {
+            "type": "number",
+            "title": "Max Drawdown",
+            "description": "최대 낙폭"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total_return",
+          "volatility",
+          "sharpe_ratio",
+          "max_drawdown"
+        ],
+        "title": "PortfolioPerformanceSummary",
+        "description": "포트폴리오 성과 요약."
+      },
+      "PortfolioSummary": {
+        "properties": {
+          "total_value": {
+            "type": "number",
+            "title": "Total Value",
+            "description": "총 포트폴리오 가치"
+          },
+          "total_pnl": {
+            "type": "number",
+            "title": "Total Pnl",
+            "description": "총 손익"
+          },
+          "total_pnl_percentage": {
+            "type": "number",
+            "title": "Total Pnl Percentage",
+            "description": "총 손익률"
+          },
+          "daily_pnl": {
+            "type": "number",
+            "title": "Daily Pnl",
+            "description": "일일 손익"
+          },
+          "daily_pnl_percentage": {
+            "type": "number",
+            "title": "Daily Pnl Percentage",
+            "description": "일일 손익률"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total_value",
+          "total_pnl",
+          "total_pnl_percentage",
+          "daily_pnl",
+          "daily_pnl_percentage"
+        ],
+        "title": "PortfolioSummary",
+        "description": "포트폴리오 요약 정보."
+      },
       "Position": {
         "properties": {
           "symbol": {
@@ -8536,6 +9532,93 @@
         "pattern": "^[0-9a-f]{24}$",
         "example": "5eb7cf5a86d9755df3a6c593"
       },
+      "RecentActivity": {
+        "properties": {
+          "trades_count_today": {
+            "type": "integer",
+            "title": "Trades Count Today",
+            "description": "오늘 거래 수"
+          },
+          "backtests_count_week": {
+            "type": "integer",
+            "title": "Backtests Count Week",
+            "description": "이번 주 백테스트 수"
+          },
+          "last_login": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Login",
+            "description": "마지막 로그인"
+          }
+        },
+        "type": "object",
+        "required": [
+          "trades_count_today",
+          "backtests_count_week"
+        ],
+        "title": "RecentActivity",
+        "description": "최근 활동 정보."
+      },
+      "RecentTrades": {
+        "properties": {
+          "trades": {
+            "items": {
+              "$ref": "#/components/schemas/TradeItem"
+            },
+            "type": "array",
+            "title": "Trades",
+            "description": "거래 목록"
+          },
+          "summary": {
+            "$ref": "#/components/schemas/TradesSummary",
+            "description": "거래 요약"
+          }
+        },
+        "type": "object",
+        "required": [
+          "trades",
+          "summary"
+        ],
+        "title": "RecentTrades",
+        "description": "최근 거래 데이터."
+      },
+      "RecentTradesResponse": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/RecentTrades",
+            "description": "최근 거래 데이터"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "description": "응답 메시지",
+            "default": "최근 거래 조회 성공"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "RecentTradesResponse",
+        "description": "최근 거래 응답."
+      },
+      "SentimentType": {
+        "type": "string",
+        "enum": [
+          "positive",
+          "neutral",
+          "negative"
+        ],
+        "title": "SentimentType",
+        "description": "감정 분석 유형."
+      },
       "SignalType": {
         "type": "string",
         "enum": [
@@ -8545,6 +9628,44 @@
         ],
         "title": "SignalType",
         "description": "신호 타입"
+      },
+      "StrategyComparison": {
+        "properties": {
+          "strategies": {
+            "items": {
+              "$ref": "#/components/schemas/StrategyPerformanceItem"
+            },
+            "type": "array",
+            "title": "Strategies",
+            "description": "전략 목록"
+          }
+        },
+        "type": "object",
+        "required": [
+          "strategies"
+        ],
+        "title": "StrategyComparison",
+        "description": "전략 비교 데이터."
+      },
+      "StrategyComparisonResponse": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/StrategyComparison",
+            "description": "전략 비교 데이터"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "description": "응답 메시지",
+            "default": "전략 비교 조회 성공"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "StrategyComparisonResponse",
+        "description": "전략 비교 응답."
       },
       "StrategyCreateRequest": {
         "properties": {
@@ -8717,6 +9838,75 @@
         "title": "StrategyListResponse",
         "description": "Strategy list response"
       },
+      "StrategyPerformanceItem": {
+        "properties": {
+          "strategy_id": {
+            "type": "string",
+            "title": "Strategy Id",
+            "description": "전략 ID"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "전략 이름"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type",
+            "description": "전략 타입"
+          },
+          "total_return": {
+            "type": "number",
+            "title": "Total Return",
+            "description": "총 수익률"
+          },
+          "win_rate": {
+            "type": "number",
+            "title": "Win Rate",
+            "description": "승률"
+          },
+          "sharpe_ratio": {
+            "type": "number",
+            "title": "Sharpe Ratio",
+            "description": "샤프 비율"
+          },
+          "trades_count": {
+            "type": "integer",
+            "title": "Trades Count",
+            "description": "거래 수"
+          },
+          "last_execution": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Execution",
+            "description": "마지막 실행"
+          },
+          "status": {
+            "$ref": "#/components/schemas/StrategyStatus",
+            "description": "상태"
+          }
+        },
+        "type": "object",
+        "required": [
+          "strategy_id",
+          "name",
+          "type",
+          "total_return",
+          "win_rate",
+          "sharpe_ratio",
+          "trades_count",
+          "status"
+        ],
+        "title": "StrategyPerformanceItem",
+        "description": "전략 성과 항목."
+      },
       "StrategyResponse": {
         "properties": {
           "user_id": {
@@ -8817,6 +10007,55 @@
         ],
         "title": "StrategyResponse",
         "description": "Strategy response"
+      },
+      "StrategyStatus": {
+        "type": "string",
+        "enum": [
+          "active",
+          "paused",
+          "stopped"
+        ],
+        "title": "StrategyStatus",
+        "description": "전략 상태."
+      },
+      "StrategySummary": {
+        "properties": {
+          "active_count": {
+            "type": "integer",
+            "title": "Active Count",
+            "description": "활성 전략 수"
+          },
+          "total_count": {
+            "type": "integer",
+            "title": "Total Count",
+            "description": "총 전략 수"
+          },
+          "avg_success_rate": {
+            "type": "number",
+            "title": "Avg Success Rate",
+            "description": "평균 성공률"
+          },
+          "best_performing": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Best Performing",
+            "description": "최고 성과 전략 ID"
+          }
+        },
+        "type": "object",
+        "required": [
+          "active_count",
+          "total_count",
+          "avg_success_rate"
+        ],
+        "title": "StrategySummary",
+        "description": "전략 요약 정보."
       },
       "StrategyType": {
         "type": "string",
@@ -9302,6 +10541,78 @@
         "title": "Trade",
         "description": "거래 기록 내장 모델"
       },
+      "TradeItem": {
+        "properties": {
+          "trade_id": {
+            "type": "string",
+            "title": "Trade Id",
+            "description": "거래 ID"
+          },
+          "symbol": {
+            "type": "string",
+            "title": "Symbol",
+            "description": "심볼"
+          },
+          "side": {
+            "$ref": "#/components/schemas/TradeSide",
+            "description": "거래 방향"
+          },
+          "quantity": {
+            "type": "integer",
+            "title": "Quantity",
+            "description": "수량"
+          },
+          "price": {
+            "type": "number",
+            "title": "Price",
+            "description": "가격"
+          },
+          "value": {
+            "type": "number",
+            "title": "Value",
+            "description": "거래 금액"
+          },
+          "pnl": {
+            "type": "number",
+            "title": "Pnl",
+            "description": "손익"
+          },
+          "strategy_name": {
+            "type": "string",
+            "title": "Strategy Name",
+            "description": "전략 이름"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp",
+            "description": "거래 시간"
+          }
+        },
+        "type": "object",
+        "required": [
+          "trade_id",
+          "symbol",
+          "side",
+          "quantity",
+          "price",
+          "value",
+          "pnl",
+          "strategy_name",
+          "timestamp"
+        ],
+        "title": "TradeItem",
+        "description": "거래 항목."
+      },
+      "TradeSide": {
+        "type": "string",
+        "enum": [
+          "buy",
+          "sell"
+        ],
+        "title": "TradeSide",
+        "description": "거래 방향."
+      },
       "TradeType": {
         "type": "string",
         "enum": [
@@ -9310,6 +10621,33 @@
         ],
         "title": "TradeType",
         "description": "거래 타입"
+      },
+      "TradesSummary": {
+        "properties": {
+          "total_trades": {
+            "type": "integer",
+            "title": "Total Trades",
+            "description": "총 거래 수"
+          },
+          "winning_trades": {
+            "type": "integer",
+            "title": "Winning Trades",
+            "description": "수익 거래 수"
+          },
+          "total_pnl": {
+            "type": "number",
+            "title": "Total Pnl",
+            "description": "총 손익"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total_trades",
+          "winning_trades",
+          "total_pnl"
+        ],
+        "title": "TradesSummary",
+        "description": "거래 요약."
       },
       "UserCreate": {
         "properties": {
@@ -9639,6 +10977,108 @@
         ],
         "title": "WatchlistCreate",
         "description": "워치리스트 생성 모델"
+      },
+      "WatchlistQuoteItem": {
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "title": "Symbol",
+            "description": "심볼"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "회사명"
+          },
+          "current_price": {
+            "type": "number",
+            "title": "Current Price",
+            "description": "현재가"
+          },
+          "change": {
+            "type": "number",
+            "title": "Change",
+            "description": "변화량"
+          },
+          "change_percentage": {
+            "type": "number",
+            "title": "Change Percentage",
+            "description": "변화율"
+          },
+          "volume": {
+            "type": "integer",
+            "title": "Volume",
+            "description": "거래량"
+          },
+          "market_cap": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Market Cap",
+            "description": "시가총액"
+          }
+        },
+        "type": "object",
+        "required": [
+          "symbol",
+          "name",
+          "current_price",
+          "change",
+          "change_percentage",
+          "volume"
+        ],
+        "title": "WatchlistQuoteItem",
+        "description": "관심종목 시세 항목."
+      },
+      "WatchlistQuotes": {
+        "properties": {
+          "symbols": {
+            "items": {
+              "$ref": "#/components/schemas/WatchlistQuoteItem"
+            },
+            "type": "array",
+            "title": "Symbols",
+            "description": "심볼 목록"
+          },
+          "last_updated": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Last Updated",
+            "description": "마지막 업데이트"
+          }
+        },
+        "type": "object",
+        "required": [
+          "symbols",
+          "last_updated"
+        ],
+        "title": "WatchlistQuotes",
+        "description": "관심종목 시세 데이터."
+      },
+      "WatchlistQuotesResponse": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/WatchlistQuotes",
+            "description": "관심종목 시세"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "description": "응답 메시지",
+            "default": "관심종목 시세 조회 성공"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "WatchlistQuotesResponse",
+        "description": "관심종목 시세 응답."
       },
       "WatchlistUpdate": {
         "properties": {

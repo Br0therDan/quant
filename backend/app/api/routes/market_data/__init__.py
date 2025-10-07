@@ -16,14 +16,22 @@ from .management import router as management_router
 router = APIRouter(dependencies=[Depends(get_current_active_verified_user)])
 
 # 도메인별 라우터 포함
-router.include_router(stock_router, prefix="/stock")
-router.include_router(fundamental_router, prefix="/fundamental")
-router.include_router(economic_indicator_router, prefix="/economic")
-router.include_router(intelligence_router, prefix="/intelligence")
-router.include_router(management_router, prefix="/management")
+router.include_router(stock_router, prefix="/stock", tags=["MarketData Stock"])
+router.include_router(
+    fundamental_router, prefix="/fundamental", tags=["MarketData Fundamental"]
+)
+router.include_router(
+    economic_indicator_router, prefix="/economic", tags=["MarketData Economic"]
+)
+router.include_router(
+    intelligence_router, prefix="/intelligence", tags=["MarketData Intelligence"]
+)
+router.include_router(
+    management_router, prefix="/management", tags=["MarketData Management"]
+)
 
 
-@router.get("/")
+@router.get("/", tags=["MarketData"])
 async def get_market_data_info():
     """마켓 데이터 API 정보 및 사용 가능한 엔드포인트 목록"""
     return {
@@ -73,7 +81,7 @@ async def get_market_data_info():
     }
 
 
-@router.get("/health")
+@router.get("/health", tags=["MarketData"])
 async def health_check():
     """마켓 데이터 서비스 상태 확인"""
     return {

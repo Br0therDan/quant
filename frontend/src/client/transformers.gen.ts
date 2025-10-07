@@ -8,13 +8,20 @@ import type {
 	BacktestsGetBacktestResponse,
 	BacktestsGetBacktestsResponse,
 	BacktestsUpdateBacktestResponse,
+	DashboardGetDashboardSummaryResponse,
+	DashboardGetEconomicCalendarResponse,
+	DashboardGetNewsFeedResponse,
+	DashboardGetPortfolioPerformanceResponse,
+	DashboardGetRecentTradesResponse,
+	DashboardGetStrategyComparisonResponse,
+	DashboardGetWatchlistQuotesResponse,
 	HealthHealthCheckResponse,
-	MarketDataGetBalanceSheetResponse,
-	MarketDataGetCashFlowResponse,
-	MarketDataGetCompanyOverviewResponse,
-	MarketDataGetEarningsResponse,
-	MarketDataGetHistoricalDataResponse,
-	MarketDataGetIncomeStatementResponse,
+	MarketDataFundamentalGetBalanceSheetResponse,
+	MarketDataFundamentalGetCashFlowResponse,
+	MarketDataFundamentalGetCompanyOverviewResponse,
+	MarketDataFundamentalGetEarningsResponse,
+	MarketDataFundamentalGetIncomeStatementResponse,
+	MarketDataStockGetHistoricalDataResponse,
 	StrategyCreateStrategyFromTemplateResponse,
 	StrategyCreateStrategyResponse,
 	StrategyCreateTemplateResponse,
@@ -41,9 +48,9 @@ const healthResponseSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const marketDataGetHistoricalDataResponseTransformer = async (
+export const marketDataStockGetHistoricalDataResponseTransformer = async (
 	data: any,
-): Promise<MarketDataGetHistoricalDataResponse> => {
+): Promise<MarketDataStockGetHistoricalDataResponse> => {
 	data = historicalDataResponseSchemaResponseTransformer(data);
 	return data;
 };
@@ -58,12 +65,13 @@ const historicalDataResponseSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const marketDataGetCompanyOverviewResponseTransformer = async (
-	data: any,
-): Promise<MarketDataGetCompanyOverviewResponse> => {
-	data = companyOverviewResponseSchemaResponseTransformer(data);
-	return data;
-};
+export const marketDataFundamentalGetCompanyOverviewResponseTransformer =
+	async (
+		data: any,
+	): Promise<MarketDataFundamentalGetCompanyOverviewResponse> => {
+		data = companyOverviewResponseSchemaResponseTransformer(data);
+		return data;
+	};
 
 const companyOverviewResponseSchemaResponseTransformer = (data: any) => {
 	if (data.timestamp) {
@@ -101,12 +109,13 @@ const cacheInfoSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const marketDataGetIncomeStatementResponseTransformer = async (
-	data: any,
-): Promise<MarketDataGetIncomeStatementResponse> => {
-	data = incomeStatementResponseSchemaResponseTransformer(data);
-	return data;
-};
+export const marketDataFundamentalGetIncomeStatementResponseTransformer =
+	async (
+		data: any,
+	): Promise<MarketDataFundamentalGetIncomeStatementResponse> => {
+		data = incomeStatementResponseSchemaResponseTransformer(data);
+		return data;
+	};
 
 const incomeStatementResponseSchemaResponseTransformer = (data: any) => {
 	if (data.timestamp) {
@@ -124,9 +133,9 @@ const incomeStatementDataSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const marketDataGetBalanceSheetResponseTransformer = async (
+export const marketDataFundamentalGetBalanceSheetResponseTransformer = async (
 	data: any,
-): Promise<MarketDataGetBalanceSheetResponse> => {
+): Promise<MarketDataFundamentalGetBalanceSheetResponse> => {
 	data = balanceSheetResponseSchemaResponseTransformer(data);
 	return data;
 };
@@ -147,9 +156,9 @@ const balanceSheetDataSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const marketDataGetCashFlowResponseTransformer = async (
+export const marketDataFundamentalGetCashFlowResponseTransformer = async (
 	data: any,
-): Promise<MarketDataGetCashFlowResponse> => {
+): Promise<MarketDataFundamentalGetCashFlowResponse> => {
 	data = cashFlowResponseSchemaResponseTransformer(data);
 	return data;
 };
@@ -170,9 +179,9 @@ const cashFlowDataSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const marketDataGetEarningsResponseTransformer = async (
+export const marketDataFundamentalGetEarningsResponseTransformer = async (
 	data: any,
-): Promise<MarketDataGetEarningsResponse> => {
+): Promise<MarketDataFundamentalGetEarningsResponse> => {
 	data = earningsResponseSchemaResponseTransformer(data);
 	return data;
 };
@@ -438,5 +447,170 @@ const integratedBacktestResponseSchemaResponseTransformer = (data: any) => {
 	if (data.end_time) {
 		data.end_time = new Date(data.end_time);
 	}
+	return data;
+};
+
+export const dashboardGetDashboardSummaryResponseTransformer = async (
+	data: any,
+): Promise<DashboardGetDashboardSummaryResponse> => {
+	data = dashboardSummaryResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const dashboardSummaryResponseSchemaResponseTransformer = (data: any) => {
+	data.data = dashboardSummarySchemaResponseTransformer(data.data);
+	return data;
+};
+
+const dashboardSummarySchemaResponseTransformer = (data: any) => {
+	data.recent_activity = recentActivitySchemaResponseTransformer(
+		data.recent_activity,
+	);
+	return data;
+};
+
+const recentActivitySchemaResponseTransformer = (data: any) => {
+	if (data.last_login) {
+		data.last_login = new Date(data.last_login);
+	}
+	return data;
+};
+
+export const dashboardGetPortfolioPerformanceResponseTransformer = async (
+	data: any,
+): Promise<DashboardGetPortfolioPerformanceResponse> => {
+	data = portfolioPerformanceResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const portfolioPerformanceResponseSchemaResponseTransformer = (data: any) => {
+	data.data = portfolioPerformanceSchemaResponseTransformer(data.data);
+	return data;
+};
+
+const portfolioPerformanceSchemaResponseTransformer = (data: any) => {
+	data.data_points = data.data_points.map((item: any) => {
+		return portfolioDataPointSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+const portfolioDataPointSchemaResponseTransformer = (data: any) => {
+	data.timestamp = new Date(data.timestamp);
+	return data;
+};
+
+export const dashboardGetStrategyComparisonResponseTransformer = async (
+	data: any,
+): Promise<DashboardGetStrategyComparisonResponse> => {
+	data = strategyComparisonResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const strategyComparisonResponseSchemaResponseTransformer = (data: any) => {
+	data.data = strategyComparisonSchemaResponseTransformer(data.data);
+	return data;
+};
+
+const strategyComparisonSchemaResponseTransformer = (data: any) => {
+	data.strategies = data.strategies.map((item: any) => {
+		return strategyPerformanceItemSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+const strategyPerformanceItemSchemaResponseTransformer = (data: any) => {
+	if (data.last_execution) {
+		data.last_execution = new Date(data.last_execution);
+	}
+	return data;
+};
+
+export const dashboardGetRecentTradesResponseTransformer = async (
+	data: any,
+): Promise<DashboardGetRecentTradesResponse> => {
+	data = recentTradesResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const recentTradesResponseSchemaResponseTransformer = (data: any) => {
+	data.data = recentTradesSchemaResponseTransformer(data.data);
+	return data;
+};
+
+const recentTradesSchemaResponseTransformer = (data: any) => {
+	data.trades = data.trades.map((item: any) => {
+		return tradeItemSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+const tradeItemSchemaResponseTransformer = (data: any) => {
+	data.timestamp = new Date(data.timestamp);
+	return data;
+};
+
+export const dashboardGetWatchlistQuotesResponseTransformer = async (
+	data: any,
+): Promise<DashboardGetWatchlistQuotesResponse> => {
+	data = watchlistQuotesResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const watchlistQuotesResponseSchemaResponseTransformer = (data: any) => {
+	data.data = watchlistQuotesSchemaResponseTransformer(data.data);
+	return data;
+};
+
+const watchlistQuotesSchemaResponseTransformer = (data: any) => {
+	data.last_updated = new Date(data.last_updated);
+	return data;
+};
+
+export const dashboardGetNewsFeedResponseTransformer = async (
+	data: any,
+): Promise<DashboardGetNewsFeedResponse> => {
+	data = newsFeedResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const newsFeedResponseSchemaResponseTransformer = (data: any) => {
+	data.data = newsFeedSchemaResponseTransformer(data.data);
+	return data;
+};
+
+const newsFeedSchemaResponseTransformer = (data: any) => {
+	data.articles = data.articles.map((item: any) => {
+		return newsArticleSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+const newsArticleSchemaResponseTransformer = (data: any) => {
+	data.published_at = new Date(data.published_at);
+	return data;
+};
+
+export const dashboardGetEconomicCalendarResponseTransformer = async (
+	data: any,
+): Promise<DashboardGetEconomicCalendarResponse> => {
+	data = economicCalendarResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const economicCalendarResponseSchemaResponseTransformer = (data: any) => {
+	data.data = economicCalendarSchemaResponseTransformer(data.data);
+	return data;
+};
+
+const economicCalendarSchemaResponseTransformer = (data: any) => {
+	data.events = data.events.map((item: any) => {
+		return economicEventSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+const economicEventSchemaResponseTransformer = (data: any) => {
+	data.release_time = new Date(data.release_time);
 	return data;
 };
