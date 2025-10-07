@@ -5599,7 +5599,7 @@ export type DashboardGetDashboardSummaryData = {
 	body?: never;
 	path?: never;
 	query?: never;
-	url: "/api/v1/dashboard/dashboard/summary";
+	url: "/api/v1/dashboard/summary";
 };
 
 export type DashboardGetDashboardSummaryErrors = {
@@ -5637,7 +5637,7 @@ export type DashboardGetPortfolioPerformanceData = {
 		 */
 		granularity?: string;
 	};
-	url: "/api/v1/dashboard/dashboard/portfolio/performance";
+	url: "/api/v1/dashboard/portfolio/performance";
 };
 
 export type DashboardGetPortfolioPerformanceErrors = {
@@ -5675,7 +5675,7 @@ export type DashboardGetStrategyComparisonData = {
 		 */
 		sort_by?: string;
 	};
-	url: "/api/v1/dashboard/dashboard/strategies/comparison";
+	url: "/api/v1/dashboard/strategies/comparison";
 };
 
 export type DashboardGetStrategyComparisonErrors = {
@@ -5713,7 +5713,7 @@ export type DashboardGetRecentTradesData = {
 		 */
 		days?: number;
 	};
-	url: "/api/v1/dashboard/dashboard/trades/recent";
+	url: "/api/v1/dashboard/trades/recent";
 };
 
 export type DashboardGetRecentTradesErrors = {
@@ -5740,7 +5740,7 @@ export type DashboardGetWatchlistQuotesData = {
 	body?: never;
 	path?: never;
 	query?: never;
-	url: "/api/v1/dashboard/dashboard/watchlist/quotes";
+	url: "/api/v1/dashboard/watchlist/quotes";
 };
 
 export type DashboardGetWatchlistQuotesErrors = {
@@ -5783,7 +5783,7 @@ export type DashboardGetNewsFeedData = {
 		 */
 		categories?: Array<string> | null;
 	};
-	url: "/api/v1/dashboard/dashboard/news/feed";
+	url: "/api/v1/dashboard/news/feed";
 };
 
 export type DashboardGetNewsFeedErrors = {
@@ -5821,7 +5821,7 @@ export type DashboardGetEconomicCalendarData = {
 		 */
 		importance?: Array<string> | null;
 	};
-	url: "/api/v1/dashboard/dashboard/economic/calendar";
+	url: "/api/v1/dashboard/economic/calendar";
 };
 
 export type DashboardGetEconomicCalendarErrors = {

@@ -5587,11 +5587,10 @@
         }
       }
     },
-    "/api/v1/dashboard/dashboard/summary": {
+    "/api/v1/dashboard/summary": {
       "get": {
         "tags": [
-          "Dashboard",
-          "dashboard"
+          "Dashboard"
         ],
         "summary": "Get Dashboard Summary",
         "description": "대시보드 요약 데이터를 조회합니다.\n\n사용자의 포트폴리오, 전략, 최근 활동 요약 정보를 반환합니다.",
@@ -5643,11 +5642,10 @@
         }
       }
     },
-    "/api/v1/dashboard/dashboard/portfolio/performance": {
+    "/api/v1/dashboard/portfolio/performance": {
       "get": {
         "tags": [
-          "Dashboard",
-          "dashboard"
+          "Dashboard"
         ],
         "summary": "Get Portfolio Performance",
         "description": "포트폴리오 성과 차트 데이터를 조회합니다.\n\n지정된 기간의 포트폴리오 성과 데이터와 요약 지표를 반환합니다.",
@@ -5723,11 +5721,10 @@
         }
       }
     },
-    "/api/v1/dashboard/dashboard/strategies/comparison": {
+    "/api/v1/dashboard/strategies/comparison": {
       "get": {
         "tags": [
-          "Dashboard",
-          "dashboard"
+          "Dashboard"
         ],
         "summary": "Get Strategy Comparison",
         "description": "전략 성과 비교 데이터를 조회합니다.\n\n사용자의 전략들을 성과별로 비교한 데이터를 반환합니다.",
@@ -5803,11 +5800,10 @@
         }
       }
     },
-    "/api/v1/dashboard/dashboard/trades/recent": {
+    "/api/v1/dashboard/trades/recent": {
       "get": {
         "tags": [
-          "Dashboard",
-          "dashboard"
+          "Dashboard"
         ],
         "summary": "Get Recent Trades",
         "description": "최근 거래 내역을 조회합니다.\n\n지정된 기간의 최근 거래 내역과 요약 정보를 반환합니다.",
@@ -5883,11 +5879,10 @@
         }
       }
     },
-    "/api/v1/dashboard/dashboard/watchlist/quotes": {
+    "/api/v1/dashboard/watchlist/quotes": {
       "get": {
         "tags": [
-          "Dashboard",
-          "dashboard"
+          "Dashboard"
         ],
         "summary": "Get Watchlist Quotes",
         "description": "관심종목 현재가를 조회합니다.\n\n사용자의 관심종목의 현재 주가 정보를 반환합니다.",
@@ -5939,11 +5934,10 @@
         }
       }
     },
-    "/api/v1/dashboard/dashboard/news/feed": {
+    "/api/v1/dashboard/news/feed": {
       "get": {
         "tags": [
-          "Dashboard",
-          "dashboard"
+          "Dashboard"
         ],
         "summary": "Get News Feed",
         "description": "뉴스 피드를 조회합니다.\n\n사용자와 관련된 뉴스 피드를 반환합니다.",
@@ -6049,11 +6043,10 @@
         }
       }
     },
-    "/api/v1/dashboard/dashboard/economic/calendar": {
+    "/api/v1/dashboard/economic/calendar": {
       "get": {
         "tags": [
-          "Dashboard",
-          "dashboard"
+          "Dashboard"
         ],
         "summary": "Get Economic Calendar",
         "description": "경제 캘린더를 조회합니다.\n\n예정된 경제 지표 발표 일정을 반환합니다.",

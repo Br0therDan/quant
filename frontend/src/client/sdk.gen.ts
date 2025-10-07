@@ -2300,7 +2300,7 @@ export class DashboardService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/dashboard/dashboard/summary",
+			url: "/api/v1/dashboard/summary",
 			...options,
 		});
 	}
@@ -2325,7 +2325,7 @@ export class DashboardService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/dashboard/dashboard/portfolio/performance",
+			url: "/api/v1/dashboard/portfolio/performance",
 			...options,
 		});
 	}
@@ -2350,7 +2350,7 @@ export class DashboardService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/dashboard/dashboard/strategies/comparison",
+			url: "/api/v1/dashboard/strategies/comparison",
 			...options,
 		});
 	}
@@ -2375,7 +2375,7 @@ export class DashboardService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/dashboard/dashboard/trades/recent",
+			url: "/api/v1/dashboard/trades/recent",
 			...options,
 		});
 	}
@@ -2400,7 +2400,7 @@ export class DashboardService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/dashboard/dashboard/watchlist/quotes",
+			url: "/api/v1/dashboard/watchlist/quotes",
 			...options,
 		});
 	}
@@ -2425,7 +2425,7 @@ export class DashboardService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/dashboard/dashboard/news/feed",
+			url: "/api/v1/dashboard/news/feed",
 			...options,
 		});
 	}
@@ -2450,7 +2450,7 @@ export class DashboardService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/dashboard/dashboard/economic/calendar",
+			url: "/api/v1/dashboard/economic/calendar",
 			...options,
 		});
 	}
