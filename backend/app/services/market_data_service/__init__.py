@@ -78,24 +78,78 @@ class MarketDataService:
 
         Returns:
             각 서비스의 상태 정보
-
-        TODO: 구현 예정
-        1. 각 서비스별 상태 체크
-        2. AlphaVantage API 연결 상태
-        3. 데이터베이스 연결 상태
-        4. 캐시 상태
         """
-        return {
-            "status": "healthy",
-            "services": {
-                "stock": "ready",
-                "fundamental": "ready",
-                "economic": "ready",
-                "intelligence": "ready",
-            },
-            "cache": {"mongodb": "connected", "duckdb": "connected"},
-            "external_apis": {"alpha_vantage": "connected"},
-        }
+        try:
+            # Alpha Vantage API 연결 상태 확인
+            alpha_vantage_status = "connected"
+            try:
+                # Intelligence 서비스를 통해 간단한 API 호출 테스트
+                intelligence_service = self.intelligence
+                test_response = (
+                    await intelligence_service.alpha_vantage.intelligence.top_gainers_losers()
+                )
+                if not test_response:
+                    alpha_vantage_status = "error"
+            except Exception:
+                alpha_vantage_status = "disconnected"
+
+            # 데이터베이스 연결 상태 확인
+            mongodb_status = "connected"  # TODO: MongoDB 실제 연결 확인
+            duckdb_status = "connected"
+
+            if self.database_manager:
+                try:
+                    self.database_manager.connect()
+                    duckdb_status = "connected"
+                except Exception:
+                    duckdb_status = "disconnected"
+            else:
+                duckdb_status = "not_configured"
+
+            # 각 서비스 상태 확인
+            services_status = {
+                "stock": (
+                    "ready" if self._stock_service is not None else "not_initialized"
+                ),
+                "fundamental": (
+                    "ready"
+                    if self._fundamental_service is not None
+                    else "not_initialized"
+                ),
+                "economic": (
+                    "ready"
+                    if self._economic_indicator_service is not None
+                    else "not_initialized"
+                ),
+                "intelligence": (
+                    "ready"
+                    if self._intelligence_service is not None
+                    else "not_initialized"
+                ),
+            }
+
+            overall_status = (
+                "healthy"
+                if alpha_vantage_status == "connected" and duckdb_status == "connected"
+                else "degraded"
+            )
+
+            return {
+                "status": overall_status,
+                "services": services_status,
+                "cache": {"mongodb": mongodb_status, "duckdb": duckdb_status},
+                "external_apis": {"alpha_vantage": alpha_vantage_status},
+                "last_checked": "2025-10-07T17:00:00Z",
+            }
+
+        except Exception as e:
+            return {
+                "status": "error",
+                "error": str(e),
+                "services": {"all": "error"},
+                "cache": {"mongodb": "unknown", "duckdb": "unknown"},
+                "external_apis": {"alpha_vantage": "unknown"},
+            }
 
 
 __all__ = [

@@ -520,19 +520,24 @@ class IntelligenceService(BaseMarketDataService):
                 "impact_analysis": {
                     "overall_impact_score": round(impact_score, 2),
                     "impact_level": impact_level,
-                    "sentiment_direction": "positive"
-                    if sum(
-                        [float(a.get("overall_sentiment_score", 0)) for a in articles]
-                    )
-                    > 0
-                    else "negative",
+                    "sentiment_direction": (
+                        "positive"
+                        if sum(
+                            [
+                                float(a.get("overall_sentiment_score", 0))
+                                for a in articles
+                            ]
+                        )
+                        > 0
+                        else "negative"
+                    ),
                     "confidence_level": min(total_articles / 20, 1.0),  # 신뢰도 (뉴스 개수 기반)
                 },
                 "recommendations": {
                     "monitor_closely": impact_level in ["High", "Medium"],
-                    "sentiment_trend": "bullish"
-                    if avg_sentiment_impact > 0
-                    else "bearish",
+                    "sentiment_trend": (
+                        "bullish" if avg_sentiment_impact > 0 else "bearish"
+                    ),
                     "news_coverage": "high" if total_articles > 10 else "low",
                 },
                 "last_updated": datetime.now().isoformat(),

@@ -108,9 +108,9 @@ class DataQualityValidator:
 class BaseMarketDataService(ABC):
     """시장 데이터 서비스 베이스 클래스"""
 
-    def __init__(self):
+    def __init__(self, database_manager: Optional[DatabaseManager] = None):
         self._alpha_vantage_client: Optional[AlphaVantageClient] = None
-        self._db_manager: Optional[DatabaseManager] = None
+        self._db_manager: Optional[DatabaseManager] = database_manager
         self.cache_strategy = CacheStrategy()
         self.quality_validator = DataQualityValidator()
 
@@ -370,3 +370,21 @@ class BaseMarketDataService(ABC):
             if stale_data:
                 return [model_class(**item) for item in stale_data]
             return []
+
+    async def close(self) -> None:
+        """서비스 종료 및 리소스 정리"""
+        try:
+            # Alpha Vantage 클라이언트 세션 종료
+            if self._alpha_vantage_client and hasattr(
+                self._alpha_vantage_client, "close"
+            ):
+                await self._alpha_vantage_client.close()
+
+            # 데이터베이스 연결 종료
+            if self._db_manager and hasattr(self._db_manager, "close"):
+                self._db_manager.close()
+
+            logger.info(f"{self.__class__.__name__} service closed successfully")
+
+        except Exception as e:
+            logger.error(f"Error closing {self.__class__.__name__} service: {e}")
