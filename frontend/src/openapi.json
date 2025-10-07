@@ -1102,11 +1102,11 @@
     "/api/v1/market-data/stock/daily/{symbol}": {
       "get": {
         "tags": [
-          "MarketData Stock"
+          "Stock"
         ],
         "summary": "Get Daily Prices",
         "description": "지정된 종목의 일일 주가 데이터(OHLCV)를 조회합니다.",
-        "operationId": "MarketData Stock-get_daily_prices",
+        "operationId": "Stock-get_daily_prices",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1161,7 +1161,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Marketdata Stock-Get Daily Prices"
+                  "title": "Response Stock-Get Daily Prices"
                 }
               }
             }
@@ -1182,11 +1182,11 @@
     "/api/v1/market-data/stock/quote/{symbol}": {
       "get": {
         "tags": [
-          "MarketData Stock"
+          "Stock"
         ],
         "summary": "Get Quote",
         "description": "지정된 종목의 실시간 호가 정보를 조회합니다.",
-        "operationId": "MarketData Stock-get_quote",
+        "operationId": "Stock-get_quote",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1229,7 +1229,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Marketdata Stock-Get Quote"
+                  "title": "Response Stock-Get Quote"
                 }
               }
             }
@@ -1250,11 +1250,11 @@
     "/api/v1/market-data/stock/intraday/{symbol}": {
       "get": {
         "tags": [
-          "MarketData Stock"
+          "Stock"
         ],
         "summary": "Get Intraday Data",
         "description": "지정된 종목의 실시간 또는 분봉 데이터를 조회합니다.",
-        "operationId": "MarketData Stock-get_intraday_data",
+        "operationId": "Stock-get_intraday_data",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1321,7 +1321,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Marketdata Stock-Get Intraday Data"
+                  "title": "Response Stock-Get Intraday Data"
                 }
               }
             }
@@ -1342,11 +1342,11 @@
     "/api/v1/market-data/stock/historical/{symbol}": {
       "get": {
         "tags": [
-          "MarketData Stock"
+          "Stock"
         ],
         "summary": "Get Historical Data",
         "description": "지정된 종목의 장기 히스토리 데이터를 조회합니다.",
-        "operationId": "MarketData Stock-get_historical_data",
+        "operationId": "Stock-get_historical_data",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1458,11 +1458,11 @@
     "/api/v1/market-data/fundamental/overview/{symbol}": {
       "get": {
         "tags": [
-          "MarketData Fundamental"
+          "Fundamental"
         ],
         "summary": "Get Company Overview",
         "description": "지정된 종목의 기업 개요 정보를 조회합니다.",
-        "operationId": "MarketData Fundamental-get_company_overview",
+        "operationId": "Fundamental-get_company_overview",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1524,11 +1524,11 @@
     "/api/v1/market-data/fundamental/income-statement/{symbol}": {
       "get": {
         "tags": [
-          "MarketData Fundamental"
+          "Fundamental"
         ],
         "summary": "Get Income Statement",
         "description": "지정된 종목의 손익계산서를 조회합니다.",
-        "operationId": "MarketData Fundamental-get_income_statement",
+        "operationId": "Fundamental-get_income_statement",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1602,11 +1602,11 @@
     "/api/v1/market-data/fundamental/balance-sheet/{symbol}": {
       "get": {
         "tags": [
-          "MarketData Fundamental"
+          "Fundamental"
         ],
         "summary": "Get Balance Sheet",
         "description": "지정된 종목의 재무상태표를 조회합니다.",
-        "operationId": "MarketData Fundamental-get_balance_sheet",
+        "operationId": "Fundamental-get_balance_sheet",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1680,11 +1680,11 @@
     "/api/v1/market-data/fundamental/cash-flow/{symbol}": {
       "get": {
         "tags": [
-          "MarketData Fundamental"
+          "Fundamental"
         ],
         "summary": "Get Cash Flow",
         "description": "지정된 종목의 현금흐름표를 조회합니다.",
-        "operationId": "MarketData Fundamental-get_cash_flow",
+        "operationId": "Fundamental-get_cash_flow",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1758,11 +1758,11 @@
     "/api/v1/market-data/fundamental/earnings/{symbol}": {
       "get": {
         "tags": [
-          "MarketData Fundamental"
+          "Fundamental"
         ],
         "summary": "Get Earnings",
         "description": "지정된 종목의 실적 데이터를 조회합니다.",
-        "operationId": "MarketData Fundamental-get_earnings",
+        "operationId": "Fundamental-get_earnings",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1824,11 +1824,11 @@
     "/api/v1/market-data/economic/gdp": {
       "get": {
         "tags": [
-          "MarketData Economic"
+          "Economic"
         ],
         "summary": "Get Gdp Data",
         "description": "미국 GDP 데이터를 조회합니다.",
-        "operationId": "MarketData Economic-get_gdp_data",
+        "operationId": "Economic-get_gdp_data",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1872,7 +1872,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Marketdata Economic-Get Gdp Data"
+                  "title": "Response Economic-Get Gdp Data"
                 }
               }
             }
@@ -1893,11 +1893,11 @@
     "/api/v1/market-data/economic/inflation": {
       "get": {
         "tags": [
-          "MarketData Economic"
+          "Economic"
         ],
         "summary": "Get Inflation Data",
         "description": "미국 인플레이션 지표 데이터를 조회합니다.",
-        "operationId": "MarketData Economic-get_inflation_data",
+        "operationId": "Economic-get_inflation_data",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1941,7 +1941,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Marketdata Economic-Get Inflation Data"
+                  "title": "Response Economic-Get Inflation Data"
                 }
               }
             }
@@ -1962,11 +1962,11 @@
     "/api/v1/market-data/economic/interest-rates": {
       "get": {
         "tags": [
-          "MarketData Economic"
+          "Economic"
         ],
         "summary": "Get Interest Rates",
         "description": "미국 기준금리 및 채권 수익률 데이터를 조회합니다.",
-        "operationId": "MarketData Economic-get_interest_rates",
+        "operationId": "Economic-get_interest_rates",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2010,7 +2010,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Marketdata Economic-Get Interest Rates"
+                  "title": "Response Economic-Get Interest Rates"
                 }
               }
             }
@@ -2031,11 +2031,11 @@
     "/api/v1/market-data/economic/employment": {
       "get": {
         "tags": [
-          "MarketData Economic"
+          "Economic"
         ],
         "summary": "Get Employment Data",
         "description": "미국 실업률 및 고용 관련 지표를 조회합니다.",
-        "operationId": "MarketData Economic-get_employment_data",
+        "operationId": "Economic-get_employment_data",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2067,7 +2067,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Marketdata Economic-Get Employment Data"
+                  "title": "Response Economic-Get Employment Data"
                 }
               }
             }
@@ -2088,11 +2088,11 @@
     "/api/v1/market-data/economic/consumer-sentiment": {
       "get": {
         "tags": [
-          "MarketData Economic"
+          "Economic"
         ],
         "summary": "Get Consumer Sentiment",
         "description": "미국 소비자 심리 지수를 조회합니다.",
-        "operationId": "MarketData Economic-get_consumer_sentiment",
+        "operationId": "Economic-get_consumer_sentiment",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2124,7 +2124,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Marketdata Economic-Get Consumer Sentiment"
+                  "title": "Response Economic-Get Consumer Sentiment"
                 }
               }
             }
@@ -2145,11 +2145,11 @@
     "/api/v1/market-data/intelligence/news/{symbol}": {
       "get": {
         "tags": [
-          "MarketData Intelligence"
+          "Intelligence"
         ],
         "summary": "Get News",
         "description": "지정된 종목 관련 뉴스를 조회합니다.",
-        "operationId": "MarketData Intelligence-get_news",
+        "operationId": "Intelligence-get_news",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2262,7 +2262,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Marketdata Intelligence-Get News"
+                  "title": "Response Intelligence-Get News"
                 }
               }
             }
@@ -2283,11 +2283,11 @@
     "/api/v1/market-data/intelligence/sentiment/{symbol}": {
       "get": {
         "tags": [
-          "MarketData Intelligence"
+          "Intelligence"
         ],
         "summary": "Get Sentiment Analysis",
         "description": "지정된 종목의 감정 분석 결과를 조회합니다.",
-        "operationId": "MarketData Intelligence-get_sentiment_analysis",
+        "operationId": "Intelligence-get_sentiment_analysis",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2360,7 +2360,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Marketdata Intelligence-Get Sentiment Analysis"
+                  "title": "Response Intelligence-Get Sentiment Analysis"
                 }
               }
             }
@@ -2381,11 +2381,11 @@
     "/api/v1/market-data/intelligence/analyst-recommendations/{symbol}": {
       "get": {
         "tags": [
-          "MarketData Intelligence"
+          "Intelligence"
         ],
         "summary": "Get Analyst Recommendations",
         "description": "지정된 종목의 분석가 추천 정보를 조회합니다.",
-        "operationId": "MarketData Intelligence-get_analyst_recommendations",
+        "operationId": "Intelligence-get_analyst_recommendations",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2458,7 +2458,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Marketdata Intelligence-Get Analyst Recommendations"
+                  "title": "Response Intelligence-Get Analyst Recommendations"
                 }
               }
             }
@@ -2479,11 +2479,11 @@
     "/api/v1/market-data/intelligence/social-sentiment/{symbol}": {
       "get": {
         "tags": [
-          "MarketData Intelligence"
+          "Intelligence"
         ],
         "summary": "Get Social Sentiment",
         "description": "지정된 종목의 소셜 미디어 감정 분석을 조회합니다.",
-        "operationId": "MarketData Intelligence-get_social_sentiment",
+        "operationId": "Intelligence-get_social_sentiment",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2556,7 +2556,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Marketdata Intelligence-Get Social Sentiment"
+                  "title": "Response Intelligence-Get Social Sentiment"
                 }
               }
             }
@@ -2577,11 +2577,11 @@
     "/api/v1/market-data/management/collect/company-info/{symbol}": {
       "post": {
         "tags": [
-          "MarketData Management"
+          "Market Data"
         ],
         "summary": "Collect Company Info",
         "description": "지정된 심볼의 기업 정보를 수집하여 저장\n\nAlpha Vantage API를 통해 기업의 기본 정보, 재무 지표,\n업종 분류 등을 수집하고 데이터베이스에 저장합니다.",
-        "operationId": "MarketData Management-collect_company_info",
+        "operationId": "Market Data-collect_company_info",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2641,11 +2641,11 @@
     "/api/v1/market-data/management/collect/market-data/{symbol}": {
       "post": {
         "tags": [
-          "MarketData Management"
+          "Market Data"
         ],
         "summary": "Collect Market Data",
         "description": "지정된 심볼의 주가 데이터를 수집하여 저장\n\nAlpha Vantage API를 통해 일일 OHLCV 데이터를 수집하고\nDuckDB 캐시 및 MongoDB에 저장합니다.",
-        "operationId": "MarketData Management-collect_market_data",
+        "operationId": "Market Data-collect_market_data",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2755,11 +2755,11 @@
     "/api/v1/market-data/management/collect/bulk": {
       "post": {
         "tags": [
-          "MarketData Management"
+          "Market Data"
         ],
         "summary": "Collect Bulk Data",
         "description": "여러 심볼의 데이터를 일괄 수집\n\n백그라운드 작업으로 처리되며, 대량의 심볼에 대해\n기업 정보와 주가 데이터를 순차적으로 수집합니다.",
-        "operationId": "MarketData Management-collect_bulk_data",
+        "operationId": "Market Data-collect_bulk_data",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2846,11 +2846,11 @@
     "/api/v1/market-data/management/coverage/{symbol}": {
       "get": {
         "tags": [
-          "MarketData Management"
+          "Market Data"
         ],
         "summary": "Get Data Coverage",
         "description": "지정된 심볼의 데이터 커버리지 정보 조회\n\n기업 정보, 주가 데이터의 수집 상태와 품질을 확인합니다.",
-        "operationId": "MarketData Management-get_data_coverage",
+        "operationId": "Market Data-get_data_coverage",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2910,11 +2910,11 @@
     "/api/v1/market-data/management/status": {
       "get": {
         "tags": [
-          "MarketData Management"
+          "Market Data"
         ],
         "summary": "Get System Status",
         "description": "시장 데이터 시스템의 전반적인 상태 조회\n\nAPI 연결 상태, 캐시 성능, 수집 통계 등을 확인합니다.",
-        "operationId": "MarketData Management-get_system_status",
+        "operationId": "Market Data-get_system_status",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2963,11 +2963,11 @@
     "/api/v1/market-data/": {
       "get": {
         "tags": [
-          "MarketData"
+          "Market Data"
         ],
         "summary": "Get Market Data Info",
         "description": "마켓 데이터 API 정보 및 사용 가능한 엔드포인트 목록",
-        "operationId": "MarketData-get_market_data_info",
+        "operationId": "Market Data-get_market_data_info",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -3016,11 +3016,11 @@
     "/api/v1/market-data/health": {
       "get": {
         "tags": [
-          "MarketData"
+          "Market Data"
         ],
         "summary": "Health Check",
         "description": "마켓 데이터 서비스 상태 확인",
-        "operationId": "MarketData-health_check",
+        "operationId": "Market Data-health_check",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -3066,10 +3066,9 @@
         }
       }
     },
-    "/api/v1/strategies/strategies/": {
+    "/api/v1/strategies/": {
       "post": {
         "tags": [
-          "Strategy",
           "Strategy"
         ],
         "summary": "Create Strategy",
@@ -3133,7 +3132,6 @@
       },
       "get": {
         "tags": [
-          "Strategy",
           "Strategy"
         ],
         "summary": "Get Strategies",
@@ -3254,10 +3252,9 @@
         }
       }
     },
-    "/api/v1/strategies/strategies/{strategy_id}": {
+    "/api/v1/strategies/{strategy_id}": {
       "get": {
         "tags": [
-          "Strategy",
           "Strategy"
         ],
         "summary": "Get Strategy",
@@ -3320,7 +3317,6 @@
       },
       "put": {
         "tags": [
-          "Strategy",
           "Strategy"
         ],
         "summary": "Update Strategy",
@@ -3393,7 +3389,6 @@
       },
       "delete": {
         "tags": [
-          "Strategy",
           "Strategy"
         ],
         "summary": "Delete Strategy",
@@ -3453,10 +3448,9 @@
         }
       }
     },
-    "/api/v1/strategies/strategies/{strategy_id}/execute": {
+    "/api/v1/strategies/{strategy_id}/execute": {
       "post": {
         "tags": [
-          "Strategy",
           "Strategy"
         ],
         "summary": "Execute Strategy",
@@ -3528,10 +3522,9 @@
         }
       }
     },
-    "/api/v1/strategies/strategies/{strategy_id}/executions": {
+    "/api/v1/strategies/{strategy_id}/executions": {
       "get": {
         "tags": [
-          "Strategy",
           "Strategy"
         ],
         "summary": "Get Strategy Executions",
@@ -3607,10 +3600,9 @@
         }
       }
     },
-    "/api/v1/strategies/strategies/{strategy_id}/performance": {
+    "/api/v1/strategies/{strategy_id}/performance": {
       "get": {
         "tags": [
-          "Strategy",
           "Strategy"
         ],
         "summary": "Get Strategy Performance",
@@ -3672,15 +3664,14 @@
         }
       }
     },
-    "/api/v1/strategies/strategies/templates/": {
+    "/api/v1/strategies/templates/": {
       "post": {
         "tags": [
-          "StrategyTemplate",
-          "Strategy Template"
+          "Template"
         ],
         "summary": "Create Template",
         "description": "Create a new strategy template (Superuser only)",
-        "operationId": "StrategyTemplate-create_template",
+        "operationId": "Template-create_template",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -3739,12 +3730,11 @@
       },
       "get": {
         "tags": [
-          "StrategyTemplate",
-          "Strategy Template"
+          "Template"
         ],
         "summary": "Get Templates",
         "description": "Get list of strategy templates",
-        "operationId": "StrategyTemplate-get_templates",
+        "operationId": "Template-get_templates",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -3810,15 +3800,14 @@
         }
       }
     },
-    "/api/v1/strategies/strategies/templates/{template_id}": {
+    "/api/v1/strategies/templates/{template_id}": {
       "get": {
         "tags": [
-          "StrategyTemplate",
-          "Strategy Template"
+          "Template"
         ],
         "summary": "Get Template",
         "description": "Get template by ID",
-        "operationId": "StrategyTemplate-get_template",
+        "operationId": "Template-get_template",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -3876,12 +3865,11 @@
       },
       "patch": {
         "tags": [
-          "StrategyTemplate",
-          "Strategy Template"
+          "Template"
         ],
         "summary": "Update Template",
         "description": "Update template by ID (Superuser only)",
-        "operationId": "StrategyTemplate-update_template",
+        "operationId": "Template-update_template",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -3949,12 +3937,11 @@
       },
       "delete": {
         "tags": [
-          "StrategyTemplate",
-          "Strategy Template"
+          "Template"
         ],
         "summary": "Delete Template",
         "description": "Delete template by ID (Superuser only)",
-        "operationId": "StrategyTemplate-delete_template",
+        "operationId": "Template-delete_template",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -4009,15 +3996,14 @@
         }
       }
     },
-    "/api/v1/strategies/strategies/templates/{template_id}/create-strategy": {
+    "/api/v1/strategies/templates/{template_id}/create-strategy": {
       "post": {
         "tags": [
-          "StrategyTemplate",
-          "Strategy Template"
+          "Template"
         ],
         "summary": "Create Strategy From Template",
         "description": "Create a strategy instance from template",
-        "operationId": "StrategyTemplate-create_strategy_from_template",
+        "operationId": "Template-create_strategy_from_template",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -4084,15 +4070,14 @@
         }
       }
     },
-    "/api/v1/strategies/strategies/templates/analytics/usage-stats": {
+    "/api/v1/strategies/templates/analytics/usage-stats": {
       "get": {
         "tags": [
-          "StrategyTemplate",
-          "Strategy Template"
+          "Template"
         ],
         "summary": "Get Template Usage Stats",
         "description": "Get template usage statistics",
-        "operationId": "StrategyTemplate-get_template_usage_stats",
+        "operationId": "Template-get_template_usage_stats",
         "security": [
           {
             "OAuth2PasswordBearer": []

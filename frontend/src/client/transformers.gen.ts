@@ -15,25 +15,25 @@ import type {
 	DashboardGetRecentTradesResponse,
 	DashboardGetStrategyComparisonResponse,
 	DashboardGetWatchlistQuotesResponse,
+	FundamentalGetBalanceSheetResponse,
+	FundamentalGetCashFlowResponse,
+	FundamentalGetCompanyOverviewResponse,
+	FundamentalGetEarningsResponse,
+	FundamentalGetIncomeStatementResponse,
 	HealthHealthCheckResponse,
-	MarketDataFundamentalGetBalanceSheetResponse,
-	MarketDataFundamentalGetCashFlowResponse,
-	MarketDataFundamentalGetCompanyOverviewResponse,
-	MarketDataFundamentalGetEarningsResponse,
-	MarketDataFundamentalGetIncomeStatementResponse,
-	MarketDataStockGetHistoricalDataResponse,
+	StockGetHistoricalDataResponse,
 	StrategyCreateStrategyResponse,
 	StrategyExecuteStrategyResponse,
 	StrategyGetStrategiesResponse,
 	StrategyGetStrategyExecutionsResponse,
 	StrategyGetStrategyPerformanceResponse,
 	StrategyGetStrategyResponse,
-	StrategyTemplateCreateStrategyFromTemplateResponse,
-	StrategyTemplateCreateTemplateResponse,
-	StrategyTemplateGetTemplateResponse,
-	StrategyTemplateGetTemplatesResponse,
-	StrategyTemplateUpdateTemplateResponse,
 	StrategyUpdateStrategyResponse,
+	TemplateCreateStrategyFromTemplateResponse,
+	TemplateCreateTemplateResponse,
+	TemplateGetTemplateResponse,
+	TemplateGetTemplatesResponse,
+	TemplateUpdateTemplateResponse,
 } from "./types.gen";
 
 export const healthHealthCheckResponseTransformer = async (
@@ -48,9 +48,9 @@ const healthResponseSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const marketDataStockGetHistoricalDataResponseTransformer = async (
+export const stockGetHistoricalDataResponseTransformer = async (
 	data: any,
-): Promise<MarketDataStockGetHistoricalDataResponse> => {
+): Promise<StockGetHistoricalDataResponse> => {
 	data = historicalDataResponseSchemaResponseTransformer(data);
 	return data;
 };
@@ -65,13 +65,12 @@ const historicalDataResponseSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const marketDataFundamentalGetCompanyOverviewResponseTransformer =
-	async (
-		data: any,
-	): Promise<MarketDataFundamentalGetCompanyOverviewResponse> => {
-		data = companyOverviewResponseSchemaResponseTransformer(data);
-		return data;
-	};
+export const fundamentalGetCompanyOverviewResponseTransformer = async (
+	data: any,
+): Promise<FundamentalGetCompanyOverviewResponse> => {
+	data = companyOverviewResponseSchemaResponseTransformer(data);
+	return data;
+};
 
 const companyOverviewResponseSchemaResponseTransformer = (data: any) => {
 	if (data.timestamp) {
@@ -109,13 +108,12 @@ const cacheInfoSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const marketDataFundamentalGetIncomeStatementResponseTransformer =
-	async (
-		data: any,
-	): Promise<MarketDataFundamentalGetIncomeStatementResponse> => {
-		data = incomeStatementResponseSchemaResponseTransformer(data);
-		return data;
-	};
+export const fundamentalGetIncomeStatementResponseTransformer = async (
+	data: any,
+): Promise<FundamentalGetIncomeStatementResponse> => {
+	data = incomeStatementResponseSchemaResponseTransformer(data);
+	return data;
+};
 
 const incomeStatementResponseSchemaResponseTransformer = (data: any) => {
 	if (data.timestamp) {
@@ -133,9 +131,9 @@ const incomeStatementDataSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const marketDataFundamentalGetBalanceSheetResponseTransformer = async (
+export const fundamentalGetBalanceSheetResponseTransformer = async (
 	data: any,
-): Promise<MarketDataFundamentalGetBalanceSheetResponse> => {
+): Promise<FundamentalGetBalanceSheetResponse> => {
 	data = balanceSheetResponseSchemaResponseTransformer(data);
 	return data;
 };
@@ -156,9 +154,9 @@ const balanceSheetDataSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const marketDataFundamentalGetCashFlowResponseTransformer = async (
+export const fundamentalGetCashFlowResponseTransformer = async (
 	data: any,
-): Promise<MarketDataFundamentalGetCashFlowResponse> => {
+): Promise<FundamentalGetCashFlowResponse> => {
 	data = cashFlowResponseSchemaResponseTransformer(data);
 	return data;
 };
@@ -179,9 +177,9 @@ const cashFlowDataSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const marketDataFundamentalGetEarningsResponseTransformer = async (
+export const fundamentalGetEarningsResponseTransformer = async (
 	data: any,
-): Promise<MarketDataFundamentalGetEarningsResponse> => {
+): Promise<FundamentalGetEarningsResponse> => {
 	data = earningsResponseSchemaResponseTransformer(data);
 	return data;
 };
@@ -290,9 +288,9 @@ const performanceResponseSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const strategyTemplateGetTemplatesResponseTransformer = async (
+export const templateGetTemplatesResponseTransformer = async (
 	data: any,
-): Promise<StrategyTemplateGetTemplatesResponse> => {
+): Promise<TemplateGetTemplatesResponse> => {
 	data = templateListResponseSchemaResponseTransformer(data);
 	return data;
 };
@@ -310,34 +308,33 @@ const templateResponseSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const strategyTemplateCreateTemplateResponseTransformer = async (
+export const templateCreateTemplateResponseTransformer = async (
 	data: any,
-): Promise<StrategyTemplateCreateTemplateResponse> => {
+): Promise<TemplateCreateTemplateResponse> => {
 	data = templateResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const strategyTemplateGetTemplateResponseTransformer = async (
+export const templateGetTemplateResponseTransformer = async (
 	data: any,
-): Promise<StrategyTemplateGetTemplateResponse> => {
+): Promise<TemplateGetTemplateResponse> => {
 	data = templateResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const strategyTemplateUpdateTemplateResponseTransformer = async (
+export const templateUpdateTemplateResponseTransformer = async (
 	data: any,
-): Promise<StrategyTemplateUpdateTemplateResponse> => {
+): Promise<TemplateUpdateTemplateResponse> => {
 	data = templateResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const strategyTemplateCreateStrategyFromTemplateResponseTransformer =
-	async (
-		data: any,
-	): Promise<StrategyTemplateCreateStrategyFromTemplateResponse> => {
-		data = strategyResponseSchemaResponseTransformer(data);
-		return data;
-	};
+export const templateCreateStrategyFromTemplateResponseTransformer = async (
+	data: any,
+): Promise<TemplateCreateStrategyFromTemplateResponse> => {
+	data = strategyResponseSchemaResponseTransformer(data);
+	return data;
+};
 
 export const backtestGetBacktestsResponseTransformer = async (
 	data: any,
