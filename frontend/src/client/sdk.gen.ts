@@ -35,45 +35,45 @@ import type {
 	AuthVerifyTokenData,
 	AuthVerifyTokenErrors,
 	AuthVerifyTokenResponses,
-	BacktestsCreateAndRunIntegratedBacktestData,
-	BacktestsCreateAndRunIntegratedBacktestErrors,
-	BacktestsCreateAndRunIntegratedBacktestResponses,
-	BacktestsCreateBacktestData,
-	BacktestsCreateBacktestErrors,
-	BacktestsCreateBacktestResponses,
-	BacktestsDeleteBacktestData,
-	BacktestsDeleteBacktestErrors,
-	BacktestsDeleteBacktestResponses,
-	BacktestsExecuteBacktestData,
-	BacktestsExecuteBacktestErrors,
-	BacktestsExecuteBacktestResponses,
-	BacktestsGetBacktestData,
-	BacktestsGetBacktestErrors,
-	BacktestsGetBacktestExecutionsData,
-	BacktestsGetBacktestExecutionsErrors,
-	BacktestsGetBacktestExecutionsResponses,
-	BacktestsGetBacktestResponses,
-	BacktestsGetBacktestResultsData,
-	BacktestsGetBacktestResultsErrors,
-	BacktestsGetBacktestResultsResponses,
-	BacktestsGetBacktestsData,
-	BacktestsGetBacktestsErrors,
-	BacktestsGetBacktestsResponses,
-	BacktestsGetBacktestSummaryAnalyticsData,
-	BacktestsGetBacktestSummaryAnalyticsErrors,
-	BacktestsGetBacktestSummaryAnalyticsResponses,
-	BacktestsGetPerformanceAnalyticsData,
-	BacktestsGetPerformanceAnalyticsErrors,
-	BacktestsGetPerformanceAnalyticsResponses,
-	BacktestsGetTradesAnalyticsData,
-	BacktestsGetTradesAnalyticsErrors,
-	BacktestsGetTradesAnalyticsResponses,
-	BacktestsHealthCheckData,
-	BacktestsHealthCheckErrors,
-	BacktestsHealthCheckResponses,
-	BacktestsUpdateBacktestData,
-	BacktestsUpdateBacktestErrors,
-	BacktestsUpdateBacktestResponses,
+	BacktestCreateAndRunIntegratedBacktestData,
+	BacktestCreateAndRunIntegratedBacktestErrors,
+	BacktestCreateAndRunIntegratedBacktestResponses,
+	BacktestCreateBacktestData,
+	BacktestCreateBacktestErrors,
+	BacktestCreateBacktestResponses,
+	BacktestDeleteBacktestData,
+	BacktestDeleteBacktestErrors,
+	BacktestDeleteBacktestResponses,
+	BacktestExecuteBacktestData,
+	BacktestExecuteBacktestErrors,
+	BacktestExecuteBacktestResponses,
+	BacktestGetBacktestData,
+	BacktestGetBacktestErrors,
+	BacktestGetBacktestExecutionsData,
+	BacktestGetBacktestExecutionsErrors,
+	BacktestGetBacktestExecutionsResponses,
+	BacktestGetBacktestResponses,
+	BacktestGetBacktestResultsData,
+	BacktestGetBacktestResultsErrors,
+	BacktestGetBacktestResultsResponses,
+	BacktestGetBacktestsData,
+	BacktestGetBacktestsErrors,
+	BacktestGetBacktestsResponses,
+	BacktestGetBacktestSummaryAnalyticsData,
+	BacktestGetBacktestSummaryAnalyticsErrors,
+	BacktestGetBacktestSummaryAnalyticsResponses,
+	BacktestGetPerformanceAnalyticsData,
+	BacktestGetPerformanceAnalyticsErrors,
+	BacktestGetPerformanceAnalyticsResponses,
+	BacktestGetTradesAnalyticsData,
+	BacktestGetTradesAnalyticsErrors,
+	BacktestGetTradesAnalyticsResponses,
+	BacktestHealthCheckData,
+	BacktestHealthCheckErrors,
+	BacktestHealthCheckResponses,
+	BacktestUpdateBacktestData,
+	BacktestUpdateBacktestErrors,
+	BacktestUpdateBacktestResponses,
 	DashboardGetDashboardSummaryData,
 	DashboardGetDashboardSummaryErrors,
 	DashboardGetDashboardSummaryResponses,
@@ -251,30 +251,30 @@ import type {
 	UserUpdateUserMeErrors,
 	UserUpdateUserMeResponses,
 	UserUpdateUserResponses,
-	WatchlistsCreateOrUpdateWatchlistData,
-	WatchlistsCreateOrUpdateWatchlistErrors,
-	WatchlistsCreateOrUpdateWatchlistResponses,
-	WatchlistsCreateWatchlistData,
-	WatchlistsCreateWatchlistErrors,
-	WatchlistsCreateWatchlistResponses,
-	WatchlistsDeleteWatchlistData,
-	WatchlistsDeleteWatchlistErrors,
-	WatchlistsDeleteWatchlistResponses,
-	WatchlistsGetWatchlistCoverageData,
-	WatchlistsGetWatchlistCoverageErrors,
-	WatchlistsGetWatchlistCoverageResponses,
-	WatchlistsGetWatchlistData,
-	WatchlistsGetWatchlistErrors,
-	WatchlistsGetWatchlistResponses,
-	WatchlistsListWatchlistsData,
-	WatchlistsListWatchlistsErrors,
-	WatchlistsListWatchlistsResponses,
-	WatchlistsSetupDefaultWatchlistData,
-	WatchlistsSetupDefaultWatchlistErrors,
-	WatchlistsSetupDefaultWatchlistResponses,
-	WatchlistsUpdateWatchlistData,
-	WatchlistsUpdateWatchlistErrors,
-	WatchlistsUpdateWatchlistResponses,
+	WatchlistCreateOrUpdateWatchlistData,
+	WatchlistCreateOrUpdateWatchlistErrors,
+	WatchlistCreateOrUpdateWatchlistResponses,
+	WatchlistCreateWatchlistData,
+	WatchlistCreateWatchlistErrors,
+	WatchlistCreateWatchlistResponses,
+	WatchlistDeleteWatchlistData,
+	WatchlistDeleteWatchlistErrors,
+	WatchlistDeleteWatchlistResponses,
+	WatchlistGetWatchlistCoverageData,
+	WatchlistGetWatchlistCoverageErrors,
+	WatchlistGetWatchlistCoverageResponses,
+	WatchlistGetWatchlistData,
+	WatchlistGetWatchlistErrors,
+	WatchlistGetWatchlistResponses,
+	WatchlistListWatchlistsData,
+	WatchlistListWatchlistsErrors,
+	WatchlistListWatchlistsResponses,
+	WatchlistSetupDefaultWatchlistData,
+	WatchlistSetupDefaultWatchlistErrors,
+	WatchlistSetupDefaultWatchlistResponses,
+	WatchlistUpdateWatchlistData,
+	WatchlistUpdateWatchlistErrors,
+	WatchlistUpdateWatchlistResponses,
 } from "./types.gen";
 
 export type Options<
@@ -1748,17 +1748,17 @@ export class StrategyTemplateService {
 	}
 }
 
-export class BacktestsService {
+export class BacktestService {
 	/**
 	 * Get Backtests
 	 * Get list of backtests
 	 */
 	public static getBacktests<ThrowOnError extends boolean = false>(
-		options?: Options<BacktestsGetBacktestsData, ThrowOnError>,
+		options?: Options<BacktestGetBacktestsData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
-			BacktestsGetBacktestsResponses,
-			BacktestsGetBacktestsErrors,
+			BacktestGetBacktestsResponses,
+			BacktestGetBacktestsErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1777,11 +1777,11 @@ export class BacktestsService {
 	 * Create a new backtest
 	 */
 	public static createBacktest<ThrowOnError extends boolean = false>(
-		options: Options<BacktestsCreateBacktestData, ThrowOnError>,
+		options: Options<BacktestCreateBacktestData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			BacktestsCreateBacktestResponses,
-			BacktestsCreateBacktestErrors,
+			BacktestCreateBacktestResponses,
+			BacktestCreateBacktestErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1804,11 +1804,11 @@ export class BacktestsService {
 	 * Delete backtest
 	 */
 	public static deleteBacktest<ThrowOnError extends boolean = false>(
-		options: Options<BacktestsDeleteBacktestData, ThrowOnError>,
+		options: Options<BacktestDeleteBacktestData, ThrowOnError>,
 	) {
 		return (options.client ?? client).delete<
-			BacktestsDeleteBacktestResponses,
-			BacktestsDeleteBacktestErrors,
+			BacktestDeleteBacktestResponses,
+			BacktestDeleteBacktestErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1827,11 +1827,11 @@ export class BacktestsService {
 	 * Get backtest by ID
 	 */
 	public static getBacktest<ThrowOnError extends boolean = false>(
-		options: Options<BacktestsGetBacktestData, ThrowOnError>,
+		options: Options<BacktestGetBacktestData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			BacktestsGetBacktestResponses,
-			BacktestsGetBacktestErrors,
+			BacktestGetBacktestResponses,
+			BacktestGetBacktestErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1850,11 +1850,11 @@ export class BacktestsService {
 	 * Update backtest
 	 */
 	public static updateBacktest<ThrowOnError extends boolean = false>(
-		options: Options<BacktestsUpdateBacktestData, ThrowOnError>,
+		options: Options<BacktestUpdateBacktestData, ThrowOnError>,
 	) {
 		return (options.client ?? client).put<
-			BacktestsUpdateBacktestResponses,
-			BacktestsUpdateBacktestErrors,
+			BacktestUpdateBacktestResponses,
+			BacktestUpdateBacktestErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1877,11 +1877,11 @@ export class BacktestsService {
 	 * Execute backtest with trading signals
 	 */
 	public static executeBacktest<ThrowOnError extends boolean = false>(
-		options: Options<BacktestsExecuteBacktestData, ThrowOnError>,
+		options: Options<BacktestExecuteBacktestData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			BacktestsExecuteBacktestResponses,
-			BacktestsExecuteBacktestErrors,
+			BacktestExecuteBacktestResponses,
+			BacktestExecuteBacktestErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1904,11 +1904,11 @@ export class BacktestsService {
 	 * Get execution history for a backtest
 	 */
 	public static getBacktestExecutions<ThrowOnError extends boolean = false>(
-		options: Options<BacktestsGetBacktestExecutionsData, ThrowOnError>,
+		options: Options<BacktestGetBacktestExecutionsData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			BacktestsGetBacktestExecutionsResponses,
-			BacktestsGetBacktestExecutionsErrors,
+			BacktestGetBacktestExecutionsResponses,
+			BacktestGetBacktestExecutionsErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1927,11 +1927,11 @@ export class BacktestsService {
 	 * Get backtest results from DuckDB (고성능 분석용)
 	 */
 	public static getBacktestResults<ThrowOnError extends boolean = false>(
-		options?: Options<BacktestsGetBacktestResultsData, ThrowOnError>,
+		options?: Options<BacktestGetBacktestResultsData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
-			BacktestsGetBacktestResultsResponses,
-			BacktestsGetBacktestResultsErrors,
+			BacktestGetBacktestResultsResponses,
+			BacktestGetBacktestResultsErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1952,11 +1952,11 @@ export class BacktestsService {
 	public static createAndRunIntegratedBacktest<
 		ThrowOnError extends boolean = false,
 	>(
-		options: Options<BacktestsCreateAndRunIntegratedBacktestData, ThrowOnError>,
+		options: Options<BacktestCreateAndRunIntegratedBacktestData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			BacktestsCreateAndRunIntegratedBacktestResponses,
-			BacktestsCreateAndRunIntegratedBacktestErrors,
+			BacktestCreateAndRunIntegratedBacktestResponses,
+			BacktestCreateAndRunIntegratedBacktestErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1979,11 +1979,11 @@ export class BacktestsService {
 	 * 백테스트 시스템 상태 확인 (DuckDB + MongoDB 통합 상태)
 	 */
 	public static healthCheck<ThrowOnError extends boolean = false>(
-		options?: Options<BacktestsHealthCheckData, ThrowOnError>,
+		options?: Options<BacktestHealthCheckData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
-			BacktestsHealthCheckResponses,
-			BacktestsHealthCheckErrors,
+			BacktestHealthCheckResponses,
+			BacktestHealthCheckErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -2002,11 +2002,11 @@ export class BacktestsService {
 	 * 백테스트 성과 분석 (DuckDB 고성능 분석)
 	 */
 	public static getPerformanceAnalytics<ThrowOnError extends boolean = false>(
-		options?: Options<BacktestsGetPerformanceAnalyticsData, ThrowOnError>,
+		options?: Options<BacktestGetPerformanceAnalyticsData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
-			BacktestsGetPerformanceAnalyticsResponses,
-			BacktestsGetPerformanceAnalyticsErrors,
+			BacktestGetPerformanceAnalyticsResponses,
+			BacktestGetPerformanceAnalyticsErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -2025,11 +2025,11 @@ export class BacktestsService {
 	 * 거래 기록 분석 (DuckDB 고성능 쿼리)
 	 */
 	public static getTradesAnalytics<ThrowOnError extends boolean = false>(
-		options?: Options<BacktestsGetTradesAnalyticsData, ThrowOnError>,
+		options?: Options<BacktestGetTradesAnalyticsData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
-			BacktestsGetTradesAnalyticsResponses,
-			BacktestsGetTradesAnalyticsErrors,
+			BacktestGetTradesAnalyticsResponses,
+			BacktestGetTradesAnalyticsErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -2049,10 +2049,10 @@ export class BacktestsService {
 	 */
 	public static getBacktestSummaryAnalytics<
 		ThrowOnError extends boolean = false,
-	>(options?: Options<BacktestsGetBacktestSummaryAnalyticsData, ThrowOnError>) {
+	>(options?: Options<BacktestGetBacktestSummaryAnalyticsData, ThrowOnError>) {
 		return (options?.client ?? client).get<
-			BacktestsGetBacktestSummaryAnalyticsResponses,
-			BacktestsGetBacktestSummaryAnalyticsErrors,
+			BacktestGetBacktestSummaryAnalyticsResponses,
+			BacktestGetBacktestSummaryAnalyticsErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -2067,7 +2067,7 @@ export class BacktestsService {
 	}
 }
 
-export class WatchlistsService {
+export class WatchlistService {
 	/**
 	 * List Watchlists
 	 * 사용자의 모든 워치리스트 목록 조회
@@ -2075,11 +2075,11 @@ export class WatchlistsService {
 	 * 사용자에게 속한 모든 워치리스트의 요약 정보를 반환합니다.
 	 */
 	public static listWatchlists<ThrowOnError extends boolean = false>(
-		options?: Options<WatchlistsListWatchlistsData, ThrowOnError>,
+		options?: Options<WatchlistListWatchlistsData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
-			WatchlistsListWatchlistsResponses,
-			WatchlistsListWatchlistsErrors,
+			WatchlistListWatchlistsResponses,
+			WatchlistListWatchlistsErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -2103,11 +2103,11 @@ export class WatchlistsService {
 	 * - 심볼 데이터는 백그라운드에서 자동 수집
 	 */
 	public static createOrUpdateWatchlist<ThrowOnError extends boolean = false>(
-		options: Options<WatchlistsCreateOrUpdateWatchlistData, ThrowOnError>,
+		options: Options<WatchlistCreateOrUpdateWatchlistData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			WatchlistsCreateOrUpdateWatchlistResponses,
-			WatchlistsCreateOrUpdateWatchlistErrors,
+			WatchlistCreateOrUpdateWatchlistResponses,
+			WatchlistCreateOrUpdateWatchlistErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -2133,11 +2133,11 @@ export class WatchlistsService {
 	 * 동일한 이름의 워치리스트가 이미 있으면 실패합니다.
 	 */
 	public static createWatchlist<ThrowOnError extends boolean = false>(
-		options: Options<WatchlistsCreateWatchlistData, ThrowOnError>,
+		options: Options<WatchlistCreateWatchlistData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			WatchlistsCreateWatchlistResponses,
-			WatchlistsCreateWatchlistErrors,
+			WatchlistCreateWatchlistResponses,
+			WatchlistCreateWatchlistErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -2160,11 +2160,11 @@ export class WatchlistsService {
 	 * 워치리스트 삭제
 	 */
 	public static deleteWatchlist<ThrowOnError extends boolean = false>(
-		options: Options<WatchlistsDeleteWatchlistData, ThrowOnError>,
+		options: Options<WatchlistDeleteWatchlistData, ThrowOnError>,
 	) {
 		return (options.client ?? client).delete<
-			WatchlistsDeleteWatchlistResponses,
-			WatchlistsDeleteWatchlistErrors,
+			WatchlistDeleteWatchlistResponses,
+			WatchlistDeleteWatchlistErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -2183,11 +2183,11 @@ export class WatchlistsService {
 	 * 특정 워치리스트의 상세 정보 조회
 	 */
 	public static getWatchlist<ThrowOnError extends boolean = false>(
-		options: Options<WatchlistsGetWatchlistData, ThrowOnError>,
+		options: Options<WatchlistGetWatchlistData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			WatchlistsGetWatchlistResponses,
-			WatchlistsGetWatchlistErrors,
+			WatchlistGetWatchlistResponses,
+			WatchlistGetWatchlistErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -2206,11 +2206,11 @@ export class WatchlistsService {
 	 * 기존 워치리스트 업데이트
 	 */
 	public static updateWatchlist<ThrowOnError extends boolean = false>(
-		options: Options<WatchlistsUpdateWatchlistData, ThrowOnError>,
+		options: Options<WatchlistUpdateWatchlistData, ThrowOnError>,
 	) {
 		return (options.client ?? client).put<
-			WatchlistsUpdateWatchlistResponses,
-			WatchlistsUpdateWatchlistErrors,
+			WatchlistUpdateWatchlistResponses,
+			WatchlistUpdateWatchlistErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -2235,11 +2235,11 @@ export class WatchlistsService {
 	 * 각 심볼별로 수집된 데이터의 상태와 품질을 확인합니다.
 	 */
 	public static getWatchlistCoverage<ThrowOnError extends boolean = false>(
-		options: Options<WatchlistsGetWatchlistCoverageData, ThrowOnError>,
+		options: Options<WatchlistGetWatchlistCoverageData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			WatchlistsGetWatchlistCoverageResponses,
-			WatchlistsGetWatchlistCoverageErrors,
+			WatchlistGetWatchlistCoverageResponses,
+			WatchlistGetWatchlistCoverageErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -2260,11 +2260,11 @@ export class WatchlistsService {
 	 * 인기 주식들로 구성된 기본 워치리스트를 생성합니다.
 	 */
 	public static setupDefaultWatchlist<ThrowOnError extends boolean = false>(
-		options?: Options<WatchlistsSetupDefaultWatchlistData, ThrowOnError>,
+		options?: Options<WatchlistSetupDefaultWatchlistData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).post<
-			WatchlistsSetupDefaultWatchlistResponses,
-			WatchlistsSetupDefaultWatchlistErrors,
+			WatchlistSetupDefaultWatchlistResponses,
+			WatchlistSetupDefaultWatchlistErrors,
 			ThrowOnError
 		>({
 			security: [

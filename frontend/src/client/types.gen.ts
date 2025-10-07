@@ -4956,7 +4956,7 @@ export type StrategyTemplateGetTemplateUsageStatsResponses = {
 	200: unknown;
 };
 
-export type BacktestsGetBacktestsData = {
+export type BacktestGetBacktestsData = {
 	body?: never;
 	path?: never;
 	query?: {
@@ -4979,54 +4979,54 @@ export type BacktestsGetBacktestsData = {
 	url: "/api/v1/backtests/";
 };
 
-export type BacktestsGetBacktestsErrors = {
+export type BacktestGetBacktestsErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type BacktestsGetBacktestsError =
-	BacktestsGetBacktestsErrors[keyof BacktestsGetBacktestsErrors];
+export type BacktestGetBacktestsError =
+	BacktestGetBacktestsErrors[keyof BacktestGetBacktestsErrors];
 
-export type BacktestsGetBacktestsResponses = {
+export type BacktestGetBacktestsResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: BacktestListResponse;
 };
 
-export type BacktestsGetBacktestsResponse =
-	BacktestsGetBacktestsResponses[keyof BacktestsGetBacktestsResponses];
+export type BacktestGetBacktestsResponse =
+	BacktestGetBacktestsResponses[keyof BacktestGetBacktestsResponses];
 
-export type BacktestsCreateBacktestData = {
+export type BacktestCreateBacktestData = {
 	body: BacktestCreateRequest;
 	path?: never;
 	query?: never;
 	url: "/api/v1/backtests/";
 };
 
-export type BacktestsCreateBacktestErrors = {
+export type BacktestCreateBacktestErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type BacktestsCreateBacktestError =
-	BacktestsCreateBacktestErrors[keyof BacktestsCreateBacktestErrors];
+export type BacktestCreateBacktestError =
+	BacktestCreateBacktestErrors[keyof BacktestCreateBacktestErrors];
 
-export type BacktestsCreateBacktestResponses = {
+export type BacktestCreateBacktestResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: BacktestResponse;
 };
 
-export type BacktestsCreateBacktestResponse =
-	BacktestsCreateBacktestResponses[keyof BacktestsCreateBacktestResponses];
+export type BacktestCreateBacktestResponse =
+	BacktestCreateBacktestResponses[keyof BacktestCreateBacktestResponses];
 
-export type BacktestsDeleteBacktestData = {
+export type BacktestDeleteBacktestData = {
 	body?: never;
 	path: {
 		/**
@@ -5038,24 +5038,24 @@ export type BacktestsDeleteBacktestData = {
 	url: "/api/v1/backtests/{backtest_id}";
 };
 
-export type BacktestsDeleteBacktestErrors = {
+export type BacktestDeleteBacktestErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type BacktestsDeleteBacktestError =
-	BacktestsDeleteBacktestErrors[keyof BacktestsDeleteBacktestErrors];
+export type BacktestDeleteBacktestError =
+	BacktestDeleteBacktestErrors[keyof BacktestDeleteBacktestErrors];
 
-export type BacktestsDeleteBacktestResponses = {
+export type BacktestDeleteBacktestResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type BacktestsGetBacktestData = {
+export type BacktestGetBacktestData = {
 	body?: never;
 	path: {
 		/**
@@ -5067,27 +5067,27 @@ export type BacktestsGetBacktestData = {
 	url: "/api/v1/backtests/{backtest_id}";
 };
 
-export type BacktestsGetBacktestErrors = {
+export type BacktestGetBacktestErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type BacktestsGetBacktestError =
-	BacktestsGetBacktestErrors[keyof BacktestsGetBacktestErrors];
+export type BacktestGetBacktestError =
+	BacktestGetBacktestErrors[keyof BacktestGetBacktestErrors];
 
-export type BacktestsGetBacktestResponses = {
+export type BacktestGetBacktestResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: BacktestResponse;
 };
 
-export type BacktestsGetBacktestResponse =
-	BacktestsGetBacktestResponses[keyof BacktestsGetBacktestResponses];
+export type BacktestGetBacktestResponse =
+	BacktestGetBacktestResponses[keyof BacktestGetBacktestResponses];
 
-export type BacktestsUpdateBacktestData = {
+export type BacktestUpdateBacktestData = {
 	body: BacktestUpdateRequest;
 	path: {
 		/**
@@ -5099,27 +5099,27 @@ export type BacktestsUpdateBacktestData = {
 	url: "/api/v1/backtests/{backtest_id}";
 };
 
-export type BacktestsUpdateBacktestErrors = {
+export type BacktestUpdateBacktestErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type BacktestsUpdateBacktestError =
-	BacktestsUpdateBacktestErrors[keyof BacktestsUpdateBacktestErrors];
+export type BacktestUpdateBacktestError =
+	BacktestUpdateBacktestErrors[keyof BacktestUpdateBacktestErrors];
 
-export type BacktestsUpdateBacktestResponses = {
+export type BacktestUpdateBacktestResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: BacktestResponse;
 };
 
-export type BacktestsUpdateBacktestResponse =
-	BacktestsUpdateBacktestResponses[keyof BacktestsUpdateBacktestResponses];
+export type BacktestUpdateBacktestResponse =
+	BacktestUpdateBacktestResponses[keyof BacktestUpdateBacktestResponses];
 
-export type BacktestsExecuteBacktestData = {
+export type BacktestExecuteBacktestData = {
 	body: BacktestExecutionRequest;
 	path: {
 		/**
@@ -5131,27 +5131,27 @@ export type BacktestsExecuteBacktestData = {
 	url: "/api/v1/backtests/{backtest_id}/execute";
 };
 
-export type BacktestsExecuteBacktestErrors = {
+export type BacktestExecuteBacktestErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type BacktestsExecuteBacktestError =
-	BacktestsExecuteBacktestErrors[keyof BacktestsExecuteBacktestErrors];
+export type BacktestExecuteBacktestError =
+	BacktestExecuteBacktestErrors[keyof BacktestExecuteBacktestErrors];
 
-export type BacktestsExecuteBacktestResponses = {
+export type BacktestExecuteBacktestResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: BacktestExecutionResponse;
 };
 
-export type BacktestsExecuteBacktestResponse =
-	BacktestsExecuteBacktestResponses[keyof BacktestsExecuteBacktestResponses];
+export type BacktestExecuteBacktestResponse =
+	BacktestExecuteBacktestResponses[keyof BacktestExecuteBacktestResponses];
 
-export type BacktestsGetBacktestExecutionsData = {
+export type BacktestGetBacktestExecutionsData = {
 	body?: never;
 	path: {
 		/**
@@ -5174,27 +5174,27 @@ export type BacktestsGetBacktestExecutionsData = {
 	url: "/api/v1/backtests/{backtest_id}/executions";
 };
 
-export type BacktestsGetBacktestExecutionsErrors = {
+export type BacktestGetBacktestExecutionsErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type BacktestsGetBacktestExecutionsError =
-	BacktestsGetBacktestExecutionsErrors[keyof BacktestsGetBacktestExecutionsErrors];
+export type BacktestGetBacktestExecutionsError =
+	BacktestGetBacktestExecutionsErrors[keyof BacktestGetBacktestExecutionsErrors];
 
-export type BacktestsGetBacktestExecutionsResponses = {
+export type BacktestGetBacktestExecutionsResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: BacktestExecutionListResponse;
 };
 
-export type BacktestsGetBacktestExecutionsResponse =
-	BacktestsGetBacktestExecutionsResponses[keyof BacktestsGetBacktestExecutionsResponses];
+export type BacktestGetBacktestExecutionsResponse =
+	BacktestGetBacktestExecutionsResponses[keyof BacktestGetBacktestExecutionsResponses];
 
-export type BacktestsGetBacktestResultsData = {
+export type BacktestGetBacktestResultsData = {
 	body?: never;
 	path?: never;
 	query?: {
@@ -5222,19 +5222,19 @@ export type BacktestsGetBacktestResultsData = {
 	url: "/api/v1/backtests/results/";
 };
 
-export type BacktestsGetBacktestResultsErrors = {
+export type BacktestGetBacktestResultsErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type BacktestsGetBacktestResultsError =
-	BacktestsGetBacktestResultsErrors[keyof BacktestsGetBacktestResultsErrors];
+export type BacktestGetBacktestResultsError =
+	BacktestGetBacktestResultsErrors[keyof BacktestGetBacktestResultsErrors];
 
-export type BacktestsGetBacktestResultsResponses = {
+export type BacktestGetBacktestResultsResponses = {
 	/**
-	 * Response Backtests-Get Backtest Results
+	 * Response Backtest-Get Backtest Results
 	 * Successful Response
 	 */
 	200: {
@@ -5242,85 +5242,85 @@ export type BacktestsGetBacktestResultsResponses = {
 	};
 };
 
-export type BacktestsGetBacktestResultsResponse =
-	BacktestsGetBacktestResultsResponses[keyof BacktestsGetBacktestResultsResponses];
+export type BacktestGetBacktestResultsResponse =
+	BacktestGetBacktestResultsResponses[keyof BacktestGetBacktestResultsResponses];
 
-export type BacktestsCreateAndRunIntegratedBacktestData = {
+export type BacktestCreateAndRunIntegratedBacktestData = {
 	body: IntegratedBacktestRequest;
 	path?: never;
 	query?: never;
 	url: "/api/v1/backtests/integrated";
 };
 
-export type BacktestsCreateAndRunIntegratedBacktestErrors = {
+export type BacktestCreateAndRunIntegratedBacktestErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type BacktestsCreateAndRunIntegratedBacktestError =
-	BacktestsCreateAndRunIntegratedBacktestErrors[keyof BacktestsCreateAndRunIntegratedBacktestErrors];
+export type BacktestCreateAndRunIntegratedBacktestError =
+	BacktestCreateAndRunIntegratedBacktestErrors[keyof BacktestCreateAndRunIntegratedBacktestErrors];
 
-export type BacktestsCreateAndRunIntegratedBacktestResponses = {
+export type BacktestCreateAndRunIntegratedBacktestResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: IntegratedBacktestResponse;
 };
 
-export type BacktestsCreateAndRunIntegratedBacktestResponse =
-	BacktestsCreateAndRunIntegratedBacktestResponses[keyof BacktestsCreateAndRunIntegratedBacktestResponses];
+export type BacktestCreateAndRunIntegratedBacktestResponse =
+	BacktestCreateAndRunIntegratedBacktestResponses[keyof BacktestCreateAndRunIntegratedBacktestResponses];
 
-export type BacktestsHealthCheckData = {
+export type BacktestHealthCheckData = {
 	body?: never;
 	path?: never;
 	query?: never;
 	url: "/api/v1/backtests/health";
 };
 
-export type BacktestsHealthCheckErrors = {
+export type BacktestHealthCheckErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type BacktestsHealthCheckError =
-	BacktestsHealthCheckErrors[keyof BacktestsHealthCheckErrors];
+export type BacktestHealthCheckError =
+	BacktestHealthCheckErrors[keyof BacktestHealthCheckErrors];
 
-export type BacktestsHealthCheckResponses = {
+export type BacktestHealthCheckResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type BacktestsGetPerformanceAnalyticsData = {
+export type BacktestGetPerformanceAnalyticsData = {
 	body?: never;
 	path?: never;
 	query?: never;
 	url: "/api/v1/backtests/analytics/performance-stats";
 };
 
-export type BacktestsGetPerformanceAnalyticsErrors = {
+export type BacktestGetPerformanceAnalyticsErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type BacktestsGetPerformanceAnalyticsError =
-	BacktestsGetPerformanceAnalyticsErrors[keyof BacktestsGetPerformanceAnalyticsErrors];
+export type BacktestGetPerformanceAnalyticsError =
+	BacktestGetPerformanceAnalyticsErrors[keyof BacktestGetPerformanceAnalyticsErrors];
 
-export type BacktestsGetPerformanceAnalyticsResponses = {
+export type BacktestGetPerformanceAnalyticsResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type BacktestsGetTradesAnalyticsData = {
+export type BacktestGetTradesAnalyticsData = {
 	body?: never;
 	path?: never;
 	query?: {
@@ -5338,120 +5338,120 @@ export type BacktestsGetTradesAnalyticsData = {
 	url: "/api/v1/backtests/analytics/trades";
 };
 
-export type BacktestsGetTradesAnalyticsErrors = {
+export type BacktestGetTradesAnalyticsErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type BacktestsGetTradesAnalyticsError =
-	BacktestsGetTradesAnalyticsErrors[keyof BacktestsGetTradesAnalyticsErrors];
+export type BacktestGetTradesAnalyticsError =
+	BacktestGetTradesAnalyticsErrors[keyof BacktestGetTradesAnalyticsErrors];
 
-export type BacktestsGetTradesAnalyticsResponses = {
+export type BacktestGetTradesAnalyticsResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type BacktestsGetBacktestSummaryAnalyticsData = {
+export type BacktestGetBacktestSummaryAnalyticsData = {
 	body?: never;
 	path?: never;
 	query?: never;
 	url: "/api/v1/backtests/analytics/summary";
 };
 
-export type BacktestsGetBacktestSummaryAnalyticsErrors = {
+export type BacktestGetBacktestSummaryAnalyticsErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type BacktestsGetBacktestSummaryAnalyticsError =
-	BacktestsGetBacktestSummaryAnalyticsErrors[keyof BacktestsGetBacktestSummaryAnalyticsErrors];
+export type BacktestGetBacktestSummaryAnalyticsError =
+	BacktestGetBacktestSummaryAnalyticsErrors[keyof BacktestGetBacktestSummaryAnalyticsErrors];
 
-export type BacktestsGetBacktestSummaryAnalyticsResponses = {
+export type BacktestGetBacktestSummaryAnalyticsResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type WatchlistsListWatchlistsData = {
+export type WatchlistListWatchlistsData = {
 	body?: never;
 	path?: never;
 	query?: never;
 	url: "/api/v1/watchlists/";
 };
 
-export type WatchlistsListWatchlistsErrors = {
+export type WatchlistListWatchlistsErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type WatchlistsListWatchlistsError =
-	WatchlistsListWatchlistsErrors[keyof WatchlistsListWatchlistsErrors];
+export type WatchlistListWatchlistsError =
+	WatchlistListWatchlistsErrors[keyof WatchlistListWatchlistsErrors];
 
-export type WatchlistsListWatchlistsResponses = {
+export type WatchlistListWatchlistsResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type WatchlistsCreateOrUpdateWatchlistData = {
+export type WatchlistCreateOrUpdateWatchlistData = {
 	body: WatchlistUpdate;
 	path?: never;
 	query?: never;
 	url: "/api/v1/watchlists/";
 };
 
-export type WatchlistsCreateOrUpdateWatchlistErrors = {
+export type WatchlistCreateOrUpdateWatchlistErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type WatchlistsCreateOrUpdateWatchlistError =
-	WatchlistsCreateOrUpdateWatchlistErrors[keyof WatchlistsCreateOrUpdateWatchlistErrors];
+export type WatchlistCreateOrUpdateWatchlistError =
+	WatchlistCreateOrUpdateWatchlistErrors[keyof WatchlistCreateOrUpdateWatchlistErrors];
 
-export type WatchlistsCreateOrUpdateWatchlistResponses = {
+export type WatchlistCreateOrUpdateWatchlistResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type WatchlistsCreateWatchlistData = {
+export type WatchlistCreateWatchlistData = {
 	body: WatchlistCreate;
 	path?: never;
 	query?: never;
 	url: "/api/v1/watchlists/create";
 };
 
-export type WatchlistsCreateWatchlistErrors = {
+export type WatchlistCreateWatchlistErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type WatchlistsCreateWatchlistError =
-	WatchlistsCreateWatchlistErrors[keyof WatchlistsCreateWatchlistErrors];
+export type WatchlistCreateWatchlistError =
+	WatchlistCreateWatchlistErrors[keyof WatchlistCreateWatchlistErrors];
 
-export type WatchlistsCreateWatchlistResponses = {
+export type WatchlistCreateWatchlistResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type WatchlistsDeleteWatchlistData = {
+export type WatchlistDeleteWatchlistData = {
 	body?: never;
 	path: {
 		/**
@@ -5464,24 +5464,24 @@ export type WatchlistsDeleteWatchlistData = {
 	url: "/api/v1/watchlists/{name}";
 };
 
-export type WatchlistsDeleteWatchlistErrors = {
+export type WatchlistDeleteWatchlistErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type WatchlistsDeleteWatchlistError =
-	WatchlistsDeleteWatchlistErrors[keyof WatchlistsDeleteWatchlistErrors];
+export type WatchlistDeleteWatchlistError =
+	WatchlistDeleteWatchlistErrors[keyof WatchlistDeleteWatchlistErrors];
 
-export type WatchlistsDeleteWatchlistResponses = {
+export type WatchlistDeleteWatchlistResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type WatchlistsGetWatchlistData = {
+export type WatchlistGetWatchlistData = {
 	body?: never;
 	path: {
 		/**
@@ -5494,24 +5494,24 @@ export type WatchlistsGetWatchlistData = {
 	url: "/api/v1/watchlists/{name}";
 };
 
-export type WatchlistsGetWatchlistErrors = {
+export type WatchlistGetWatchlistErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type WatchlistsGetWatchlistError =
-	WatchlistsGetWatchlistErrors[keyof WatchlistsGetWatchlistErrors];
+export type WatchlistGetWatchlistError =
+	WatchlistGetWatchlistErrors[keyof WatchlistGetWatchlistErrors];
 
-export type WatchlistsGetWatchlistResponses = {
+export type WatchlistGetWatchlistResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type WatchlistsUpdateWatchlistData = {
+export type WatchlistUpdateWatchlistData = {
 	body: WatchlistUpdate;
 	path: {
 		/**
@@ -5524,24 +5524,24 @@ export type WatchlistsUpdateWatchlistData = {
 	url: "/api/v1/watchlists/{name}";
 };
 
-export type WatchlistsUpdateWatchlistErrors = {
+export type WatchlistUpdateWatchlistErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type WatchlistsUpdateWatchlistError =
-	WatchlistsUpdateWatchlistErrors[keyof WatchlistsUpdateWatchlistErrors];
+export type WatchlistUpdateWatchlistError =
+	WatchlistUpdateWatchlistErrors[keyof WatchlistUpdateWatchlistErrors];
 
-export type WatchlistsUpdateWatchlistResponses = {
+export type WatchlistUpdateWatchlistResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type WatchlistsGetWatchlistCoverageData = {
+export type WatchlistGetWatchlistCoverageData = {
 	body?: never;
 	path: {
 		/**
@@ -5554,41 +5554,41 @@ export type WatchlistsGetWatchlistCoverageData = {
 	url: "/api/v1/watchlists/{name}/coverage";
 };
 
-export type WatchlistsGetWatchlistCoverageErrors = {
+export type WatchlistGetWatchlistCoverageErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type WatchlistsGetWatchlistCoverageError =
-	WatchlistsGetWatchlistCoverageErrors[keyof WatchlistsGetWatchlistCoverageErrors];
+export type WatchlistGetWatchlistCoverageError =
+	WatchlistGetWatchlistCoverageErrors[keyof WatchlistGetWatchlistCoverageErrors];
 
-export type WatchlistsGetWatchlistCoverageResponses = {
+export type WatchlistGetWatchlistCoverageResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: unknown;
 };
 
-export type WatchlistsSetupDefaultWatchlistData = {
+export type WatchlistSetupDefaultWatchlistData = {
 	body?: never;
 	path?: never;
 	query?: never;
 	url: "/api/v1/watchlists/setup-default";
 };
 
-export type WatchlistsSetupDefaultWatchlistErrors = {
+export type WatchlistSetupDefaultWatchlistErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type WatchlistsSetupDefaultWatchlistError =
-	WatchlistsSetupDefaultWatchlistErrors[keyof WatchlistsSetupDefaultWatchlistErrors];
+export type WatchlistSetupDefaultWatchlistError =
+	WatchlistSetupDefaultWatchlistErrors[keyof WatchlistSetupDefaultWatchlistErrors];
 
-export type WatchlistsSetupDefaultWatchlistResponses = {
+export type WatchlistSetupDefaultWatchlistResponses = {
 	/**
 	 * Successful Response
 	 */
