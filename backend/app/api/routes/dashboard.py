@@ -15,7 +15,7 @@ from app.schemas.dashboard import (
 )
 
 
-router = APIRouter(prefix="/dashboard", tags=["dashboard"])
+router = APIRouter()
 
 
 @router.get("/summary", response_model=DashboardSummaryResponse)
