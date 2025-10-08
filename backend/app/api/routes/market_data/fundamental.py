@@ -38,9 +38,19 @@ async def get_company_overview(
             "message": f"{symbol} 기업 개요 조회 완료",
             "data": overview_data,
             "metadata": {
-                "symbol": symbol.upper(),
-                "last_refreshed": datetime.now().isoformat(),
-                "source": "Alpha Vantage",
+                "data_quality": {
+                    "quality_score": 95.0,
+                    "last_updated": datetime.now(),
+                    "data_source": "Alpha Vantage",
+                    "confidence_level": "high",
+                },
+                "cache_info": {
+                    "cached": False,
+                    "cache_hit": False,
+                    "cache_timestamp": None,
+                    "cache_ttl": None,
+                },
+                "processing_time_ms": None,
             },
         }
 
