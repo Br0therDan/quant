@@ -166,7 +166,7 @@ export default function StrategyTemplatesPage() {
 				</>
 			)}
 
-			{isMutating && (
+			{isMutating.createStrategyFromTemplate && (
 				<Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
 					<CircularProgress size={24} />
 					<Typography variant="body2" sx={{ ml: 1 }}>

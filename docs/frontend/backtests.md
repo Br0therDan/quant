@@ -694,7 +694,7 @@ const useBacktestList = (filters: BacktestFilters) => {
       backtestService.getBacktests({ ...filters, page: pageParam }),
     getNextPageParam: (lastPage) =>
       lastPage.hasNext ? lastPage.page + 1 : undefined,
-    staleTime: 5 * 60 * 1000, // 5분
+    staleTime: 60 * 60 * 1000, // 5분
   });
 };
 

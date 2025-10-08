@@ -7,16 +7,21 @@ from fastapi import APIRouter, HTTPException, Depends, Path
 
 from mysingle_quant.auth import get_current_active_verified_user, User
 from app.services.service_factory import service_factory
-from app.schemas.watchlist import WatchlistCreate, WatchlistUpdate
+from app.schemas.watchlist import (
+    WatchlistCreate,
+    WatchlistListResponse,
+    WatchlistResponse,
+    WatchlistUpdate,
+)
 
 router = APIRouter()
 
 
-@router.post("/")
+@router.post("/", response_model=WatchlistResponse)
 async def create_or_update_watchlist(
     request: WatchlistUpdate,
     current_user: User = Depends(get_current_active_verified_user),
-):
+) -> WatchlistResponse:
     """
     워치리스트 생성 또는 업데이트
 
@@ -46,13 +51,9 @@ async def create_or_update_watchlist(
             )
 
             if updated_watchlist:
-                return {
-                    "message": f"워치리스트 '{watchlist_name}' 업데이트 완료",
-                    "name": watchlist_name,
-                    "symbols": request.symbols,
-                    "count": len(request.symbols),
-                    "action": "updated",
-                }
+                return WatchlistResponse.model_validate(
+                    updated_watchlist, from_attributes=True
+                )
         else:
             # Create new watchlist
             new_watchlist = await watchlist_service.create_watchlist(
@@ -63,13 +64,9 @@ async def create_or_update_watchlist(
             )
 
             if new_watchlist:
-                return {
-                    "message": f"워치리스트 '{watchlist_name}' 생성 완료",
-                    "name": watchlist_name,
-                    "symbols": request.symbols,
-                    "count": len(request.symbols),
-                    "action": "created",
-                }
+                return WatchlistResponse.model_validate(
+                    new_watchlist, from_attributes=True
+                )
 
         raise HTTPException(status_code=400, detail=f"워치리스트 '{watchlist_name}' 처리 실패")
 
@@ -77,7 +74,7 @@ async def create_or_update_watchlist(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.post("/create")
+@router.post("/create", response_model=WatchlistResponse)
 async def create_watchlist(
     request: WatchlistCreate,
     current_user: User = Depends(get_current_active_verified_user),
@@ -99,13 +96,7 @@ async def create_watchlist(
         )
 
         if watchlist:
-            return {
-                "message": f"워치리스트 '{request.name}' 생성 완료",
-                "name": watchlist.name,
-                "symbols": watchlist.symbols,
-                "description": watchlist.description,
-                "created_at": watchlist.created_at,
-            }
+            return WatchlistResponse.model_validate(watchlist, from_attributes=True)
         else:
             raise HTTPException(
                 status_code=400,
@@ -116,10 +107,10 @@ async def create_watchlist(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/")
+@router.get("/", response_model=WatchlistListResponse)
 async def list_watchlists(
     current_user: User = Depends(get_current_active_verified_user),
-):
+) -> WatchlistListResponse:
     """
     사용자의 모든 워치리스트 목록 조회
 
@@ -133,33 +124,23 @@ async def list_watchlists(
         watchlists_summary = []
         for watchlist in watchlists:
             watchlists_summary.append(
-                {
-                    "name": watchlist.name,
-                    "description": watchlist.description,
-                    "symbol_count": len(watchlist.symbols),
-                    "symbols": watchlist.symbols,
-                    "auto_update": watchlist.auto_update,
-                    "created_at": watchlist.created_at,
-                    "updated_at": watchlist.updated_at,
-                    "last_updated": watchlist.last_updated,
-                }
+                WatchlistResponse.model_validate(watchlist, from_attributes=True)
             )
-
-        return {
-            "watchlists": watchlists_summary,
-            "total_count": len(watchlists),
-            "user_id": str(current_user.id),
-        }
+        return WatchlistListResponse(
+            watchlists=watchlists_summary,
+            total_count=len(watchlists),
+            user_id=str(current_user.id),
+        )
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/{name}")
+@router.get("/{name}", response_model=WatchlistResponse)
 async def get_watchlist(
     name: str = Path(..., description="워치리스트 이름"),
     current_user: User = Depends(get_current_active_verified_user),
-):
+) -> WatchlistResponse:
     """
     특정 워치리스트의 상세 정보 조회
     """
@@ -171,17 +152,7 @@ async def get_watchlist(
         if not watchlist:
             raise HTTPException(status_code=404, detail=f"워치리스트 '{name}'을 찾을 수 없습니다")
 
-        return {
-            "name": watchlist.name,
-            "description": watchlist.description,
-            "symbols": watchlist.symbols,
-            "symbol_count": len(watchlist.symbols),
-            "auto_update": watchlist.auto_update,
-            "update_interval": watchlist.update_interval,
-            "created_at": watchlist.created_at,
-            "updated_at": watchlist.updated_at,
-            "last_updated": watchlist.last_updated,
-        }
+        return WatchlistResponse.model_validate(watchlist, from_attributes=True)
 
     except HTTPException:
         raise
@@ -189,12 +160,12 @@ async def get_watchlist(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.put("/{name}")
+@router.put("/{name}", response_model=WatchlistResponse)
 async def update_watchlist(
     request: WatchlistUpdate,
     name: str = Path(..., description="워치리스트 이름"),
     current_user: User = Depends(get_current_active_verified_user),
-):
+) -> WatchlistResponse:
     """
     기존 워치리스트 업데이트
     """
@@ -210,14 +181,7 @@ async def update_watchlist(
 
         if not updated_watchlist:
             raise HTTPException(status_code=404, detail=f"워치리스트 '{name}'을 찾을 수 없습니다")
-
-        return {
-            "message": f"워치리스트 '{name}' 업데이트 완료",
-            "name": updated_watchlist.name,
-            "symbols": updated_watchlist.symbols,
-            "description": updated_watchlist.description,
-            "updated_at": updated_watchlist.updated_at,
-        }
+        return WatchlistResponse.model_validate(updated_watchlist, from_attributes=True)
 
     except HTTPException:
         raise

@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List, Optional
 from .base_schema import BaseSchema
 
@@ -24,5 +25,18 @@ class WatchlistResponse(BaseSchema):
     name: str
     symbols: List[str]
     description: Optional[str] = ""
-    created_at: Optional[str] = None
-    updated_at: Optional[str] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+
+
+class WatchlistListResponse(BaseSchema):
+    """워치리스트 목록 응답 모델"""
+
+    watchlists: List[WatchlistResponse] = []
+    total_count: int = 0
+
+    class Config:
+        from_attributes = True

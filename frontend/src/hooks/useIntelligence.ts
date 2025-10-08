@@ -53,7 +53,7 @@ export const useIntelligenceSentiment = (symbol: string) => {
         },
         enabled: !!symbol,
         staleTime: 1000 * 60 * 15, // 15 minutes
-        gcTime: 60 * 60 * 1000, // 1 hour
+        gcTime: 15 * 60 * 1000, // 1 hour
     });
 };
 

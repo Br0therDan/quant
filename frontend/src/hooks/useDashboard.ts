@@ -95,7 +95,7 @@ export function useDashboard() {
             return response.data;
         },
         staleTime: 1000 * 60 * 30, // 30 minutes
-        gcTime: 60 * 60 * 1000, // 1 hour
+        gcTime: 15 * 60 * 1000, // 1 hour
     });
 
     return useMemo(() => ({
@@ -127,15 +127,6 @@ export function useDashboard() {
             watchlistQuotes: watchlistQuotesQuery.isLoading,
             newsFeed: newsFeedQuery.isLoading,
             economicCalendar: economicCalendarQuery.isLoading,
-        },
-        isPending: {
-            dashboardSummary: dashboardSummaryQuery.isPending,
-            portfolioPerformance: portfolioPerformanceQuery.isPending,
-            strategyComparison: strategyComparisonQuery.isPending,
-            recentTrades: recentTradesQuery.isPending,
-            watchlistQuotes: watchlistQuotesQuery.isPending,
-            newsFeed: newsFeedQuery.isPending,
-            economicCalendar: economicCalendarQuery.isPending,
         },
         error: {
             dashboardSummary: dashboardSummaryQuery.error,

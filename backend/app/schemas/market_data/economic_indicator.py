@@ -163,7 +163,38 @@ class ConsumerSentimentData(BaseModel):
     personal_saving_rate: Optional[Decimal] = Field(None, description="개인저축률 (%)")
 
 
-# Response Schemas
+# Individual Response Schemas
+class GDPResponse(DataResponse[GDPData]):
+    """GDP 지표 응답 스키마"""
+
+    pass
+
+
+class InflationResponse(DataResponse[InflationData]):
+    """인플레이션 지표 응답 스키마"""
+
+    pass
+
+
+class InterestRateResponse(BulkDataResponse[InterestRateData]):
+    """금리 지표 응답 스키마"""
+
+    pass
+
+
+class EmploymentResponse(BulkDataResponse[EmploymentData]):
+    """고용 지표 응답 스키마"""
+
+    pass
+
+
+class ConsumerSentimentResponse(BulkDataResponse[ConsumerSentimentData]):
+    """소비자 심리 지표 응답 스키마"""
+
+    pass
+
+
+# List Response Schemas
 class EconomicIndicatorListResponse(PaginatedResponse[EconomicIndicatorData]):
     """경제 지표 목록 응답 스키마"""
 

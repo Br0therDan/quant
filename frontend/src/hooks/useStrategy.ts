@@ -5,7 +5,7 @@
 // Hey-API 기반: @/client/sdk.gen.ts 의 각 엔드포인트별 서비스클래스 및 @/client/types.gen.ts 의 타입정의 활용(엔드포인트의 스키마명칭과 호환)
 
 import { StrategyService } from "@/client";
-import type { StrategyCreateRequest } from "@/client/types.gen";
+import type { StrategyCreateRequest, StrategyExecuteRequest } from "@/client/types.gen";
 import { useSnackbar } from "@/contexts/SnackbarContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
@@ -92,10 +92,10 @@ export function useStrategy() {
     });
 
     const executeStrategyMutation = useMutation({
-        mutationFn: async (data: { id: string; executeData?: any }) => {
+        mutationFn: async ({id, data}: { id: string; data: StrategyExecuteRequest }) => {
             const response = await StrategyService.executeStrategy({
-                path: { strategy_id: data.id },
-                body: data.executeData
+                path: { strategy_id: id },
+                body: data
             });
             return response.data;
         },
@@ -138,6 +138,12 @@ export function useStrategy() {
         },
         error: {
             strategyList: strategyListQuery.error,
+        },
+        isMutating: {
+            createStrategy: createStrategyMutation.isPending,
+            updateStrategy: updateStrategyMutation.isPending,
+            deleteStrategy: deleteStrategyMutation.isPending,
+            executeStrategy: executeStrategyMutation.isPending,
         },
 
     }), [

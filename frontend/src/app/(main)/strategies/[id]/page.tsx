@@ -24,61 +24,47 @@ import {
   MenuItem,
   Typography,
 } from "@mui/material";
-import { useQueryClient } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 import type React from "react";
 import { useState } from "react";
-
 import PageContainer from "@/components/layout/PageContainer";
 import StrategyParameters from "@/components/strategies/StrategyParameters";
 import StrategyPerformanceSummary from "@/components/strategies/StrategyPerformanceSummary";
-
 import { useStrategy, useStrategyDetail } from "@/hooks/useStrategy";
-
+import type { StrategyExecuteRequest } from '@/client';
+import { useWatchlist } from '@/hooks/useWatchList';
 // Strategy utilities 임시 정의
 const strategyUtils = {
   formatStrategyType: (type: string) => type.replace("_", " ").toUpperCase(),
-  getStrategyTypeColor: (type: string) => "primary" as const,
+  getStrategyTypeColor: (type: string) => type === "primary" ? "primary" as const : "secondary" as const,
 };
 
 export default function StrategyDetailPage() {
   const router = useRouter();
   const params = useParams();
-  const queryClient = useQueryClient();
   const strategyId = params.id as string;
+  const { watchlistList } = useWatchlist();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [ data, setData ] = useState<StrategyExecuteRequest>({
+    symbol: "AAPL",
+    market_data: {
+      start_date: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString(),
+      end_date: new Date().toISOString(),
+    },
+  });
 
   // 전략 데이터 조회
   const { data: strategy, isLoading, error } = useStrategyDetail(strategyId);
 
   // 전략 관리 액션들
   const {
-    deleteStrategy: deleteStrategyFn,
-    executeStrategy: executeStrategyFn,
-    isDeleting,
-    isExecuting,
+    deleteStrategy,
+    executeStrategy,
+    isMutating
   } = useStrategy();
 
-  const deleteStrategy = {
-    mutate: (params: { path: { strategy_id: string } }) => {
-      deleteStrategyFn(params.path.strategy_id);
-      queryClient.invalidateQueries({ queryKey: ["strategy", "list"] });
-      router.push("/strategies/my-strategies");
-    },
-    isPending: isDeleting,
-  };
-
-  const executeStrategy = {
-    mutate: (params: any) => {
-      executeStrategyFn({
-        id: strategyId,
-        executeData: params.body,
-      });
-      router.push(`/backtests/${strategyId}`);
-    },
-    isPending: isExecuting,
-  };
+  const handleWatch
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -100,26 +86,13 @@ export default function StrategyDetailPage() {
 
   const handleDelete = () => {
     if (confirm("정말로 이 전략을 삭제하시겠습니까?")) {
-      deleteStrategy.mutate({
-        path: { strategy_id: strategyId },
-      });
+      deleteStrategy(strategyId);
     }
     handleMenuClose();
   };
 
-  const handleExecute = () => {
-    executeStrategy.mutate({
-      path: { strategy_id: strategyId },
-      body: {
-        symbol: "AAPL",
-        market_data: {
-          start_date: new Date(
-            Date.now() - 365 * 24 * 60 * 60 * 1000
-          ).toISOString(),
-          end_date: new Date().toISOString(),
-        },
-      },
-    });
+  const handleExecute = (id: string, data: StrategyExecuteRequest) => {
+    executeStrategy({id, data})
   };
 
   const handleViewPerformance = () => {
@@ -173,10 +146,18 @@ export default function StrategyDetailPage() {
           key="execute"
           variant="contained"
           startIcon={<PlayArrow />}
-          onClick={handleExecute}
-          disabled={executeStrategy.isPending}
+          onClick={() => handleExecute(strategyId, {
+            symbol: "AAPL",
+            market_data: {
+              start_date: new Date(
+                Date.now() - 365 * 24 * 60 * 60 * 1000
+              ).toISOString(),
+              end_date: new Date().toISOString(),
+            },
+          })}
+          disabled={isMutating.executeStrategy}
         >
-          {executeStrategy.isPending ? "실행 중..." : "백테스트 실행"}
+          {isMutating.executeStrategy ? "실행 중..." : "백테스트 실행"}
         </Button>,
         <IconButton key="menu" onClick={handleMenuClick}>
           <MoreVert />

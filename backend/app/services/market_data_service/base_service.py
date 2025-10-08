@@ -7,7 +7,7 @@ import logging
 from dataclasses import dataclass
 from enum import Enum
 
-from mysingle_quant import AlphaVantageClient
+from app.alpha_vantage import AlphaVantageClient
 from app.services.database_manager import DatabaseManager
 from app.models.market_data.base import BaseMarketDataDocument, DataQualityScore
 

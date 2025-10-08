@@ -14,12 +14,12 @@ from mysingle_quant.auth import (
 )
 from app.models.strategy import StrategyType
 from app.schemas.strategy import (
-    StrategyFromTemplateRequest,
+    StrategyCreateFromTemplate,
     StrategyResponse,
-    TemplateCreateRequest,
+    TemplateCreate,
     TemplateListResponse,
     TemplateResponse,
-    TemplateUpdateRequest,
+    TemplateUpdate,
 )
 from app.services.service_factory import service_factory
 from app.services.strategy_service import StrategyService
@@ -42,7 +42,7 @@ async def get_strategy_service() -> AsyncGenerator[StrategyService, None]:
     dependencies=[Depends(get_current_active_superuser)],
 )
 async def create_template(
-    request: TemplateCreateRequest,
+    request: TemplateCreate,
     service: StrategyService = Depends(get_strategy_service),
 ):
     """Create a new strategy template (Superuser only)"""
@@ -146,7 +146,7 @@ async def get_template(
 )
 async def update_template(
     template_id: str,
-    request: TemplateUpdateRequest,
+    request: TemplateUpdate,
     service: StrategyService = Depends(get_strategy_service),
 ):
     """Update template by ID (Superuser only)"""
@@ -209,7 +209,7 @@ async def delete_template(
 @router.post("/{template_id}/create-strategy", response_model=StrategyResponse)
 async def create_strategy_from_template(
     template_id: str,
-    request: StrategyFromTemplateRequest,
+    request: StrategyCreateFromTemplate,
     current_user: User = Depends(get_current_active_verified_user),
     service: StrategyService = Depends(get_strategy_service),
 ):

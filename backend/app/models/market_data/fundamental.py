@@ -7,32 +7,7 @@ from datetime import datetime
 from typing import Optional, Any
 from pydantic import Field, field_validator
 from decimal import Decimal
-from bson import Decimal128
-
 from .base import BaseMarketDataDocument, DataQualityMixin
-
-
-def safe_decimal_converter(value: Any) -> Optional[Decimal]:
-    """MongoDB Decimal128과 다양한 타입을 안전하게 Decimal로 변환"""
-    if value is None:
-        return None
-
-    if isinstance(value, Decimal128):
-        return value.to_decimal()
-
-    if isinstance(value, Decimal):
-        return value
-
-    if isinstance(value, (int, float)):
-        return Decimal(str(value))
-
-    if isinstance(value, str):
-        try:
-            return Decimal(value) if value and value != "None" else None
-        except Exception:
-            return None
-
-    return None
 
 
 class CompanyOverview(BaseMarketDataDocument, DataQualityMixin):
@@ -129,8 +104,8 @@ class CompanyOverview(BaseMarketDataDocument, DataQualityMixin):
     )
     @classmethod
     def convert_decimal_fields(cls, value: Any) -> Optional[Decimal]:
-        """MongoDB Decimal128을 Decimal로 변환"""
-        return safe_decimal_converter(value)
+        """Pydantic이 자동으로 Decimal 변환 처리"""
+        return value
 
     class Settings:
         name = "company_overviews"
@@ -218,8 +193,8 @@ class IncomeStatement(BaseMarketDataDocument, DataQualityMixin):
     )
     @classmethod
     def convert_decimal_fields(cls, value: Any) -> Optional[Decimal]:
-        """MongoDB Decimal128을 Decimal로 변환"""
-        return safe_decimal_converter(value)
+        """Pydantic이 자동으로 Decimal 변환 처리"""
+        return value
 
     class Settings:
         name = "income_statements"
@@ -322,8 +297,8 @@ class BalanceSheet(BaseMarketDataDocument, DataQualityMixin):
     )
     @classmethod
     def convert_decimal_fields(cls, value: Any) -> Optional[Decimal]:
-        """MongoDB Decimal128을 Decimal로 변환"""
-        return safe_decimal_converter(value)
+        """Pydantic이 자동으로 Decimal 변환 처리"""
+        return value
 
     class Settings:
         name = "balance_sheets"
@@ -423,8 +398,8 @@ class CashFlow(BaseMarketDataDocument, DataQualityMixin):
     )
     @classmethod
     def convert_decimal_fields(cls, value: Any) -> Optional[Decimal]:
-        """MongoDB Decimal128을 Decimal로 변환"""
-        return safe_decimal_converter(value)
+        """Pydantic이 자동으로 Decimal 변환 처리"""
+        return value
 
     class Settings:
         name = "cash_flows"
@@ -493,8 +468,8 @@ class Earnings(BaseMarketDataDocument, DataQualityMixin):
     )
     @classmethod
     def convert_decimal_fields(cls, value: Any) -> Optional[Decimal]:
-        """MongoDB Decimal128을 Decimal로 변환"""
-        return safe_decimal_converter(value)
+        """Pydantic이 자동으로 Decimal 변환 처리"""
+        return value
 
     class Settings:
         name = "earnings"

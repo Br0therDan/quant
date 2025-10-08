@@ -4,7 +4,7 @@ Stock API Routes
 """
 
 from datetime import datetime, date
-from typing import List, Optional, Dict, Any
+from typing import List, Literal, Optional, Dict, Any
 from fastapi import APIRouter, HTTPException, Query, Path
 from pydantic import BaseModel
 
@@ -20,6 +20,11 @@ class SymbolInfo(BaseModel):
     name: str
     type: str
     region: str
+    market_open: Optional[str] = None
+    market_close: Optional[str] = None
+    timezone: Optional[str] = None
+    currency: Optional[str] = None
+    match_score: Optional[float] = None
 
 
 class StockSymbolsResponse(BaseModel):
@@ -65,36 +70,12 @@ async def get_daily_prices(
         for price in daily_prices:
             price_data.append(
                 {
-                    "date": (
-                        price.date.isoformat()
-                        if hasattr(price, "date") and price.date
-                        else None
-                    ),
-                    "open": (
-                        float(price.open)
-                        if hasattr(price, "open") and price.open is not None
-                        else None
-                    ),
-                    "high": (
-                        float(price.high)
-                        if hasattr(price, "high") and price.high is not None
-                        else None
-                    ),
-                    "low": (
-                        float(price.low)
-                        if hasattr(price, "low") and price.low is not None
-                        else None
-                    ),
-                    "close": (
-                        float(price.close)
-                        if hasattr(price, "close") and price.close is not None
-                        else None
-                    ),
-                    "volume": (
-                        int(price.volume)
-                        if hasattr(price, "volume") and price.volume is not None
-                        else None
-                    ),
+                    "date": price.date.isoformat() if price.date else None,
+                    "open": float(price.open) if price.open else None,
+                    "high": float(price.high) if price.high else None,
+                    "low": float(price.low) if price.low else None,
+                    "close": float(price.close) if price.close else None,
+                    "volume": int(price.volume) if price.volume else None,
                 }
             )
 
@@ -126,54 +107,12 @@ async def get_daily_prices(
 async def get_quote(symbol: str = Path(..., description="종목 심볼 (예: AAPL, TSLA)")):
     """실시간 주식 호가 조회"""
     try:
-        # Note: Alpha Vantage GLOBAL_QUOTE API는 더 이상 사용되지 않음
-        # Daily 데이터의 최신 데이터를 활용하여 유사한 기능 제공
-        market_service = service_factory.get_market_data_service()
-        daily_prices = await market_service.stock.get_daily_prices(
-            symbol=symbol.upper(), outputsize="compact"
-        )
+        stock_service = service_factory.get_market_data_service().stock
+        global_quote = await stock_service.get_real_time_quote(symbol=symbol.upper())
 
-        if not daily_prices:
-            return {
-                "success": False,
-                "message": f"{symbol.upper()}의 호가 데이터를 찾을 수 없습니다.",
-                "data": None,
-                "metadata": {"symbol": symbol.upper(), "status": "no_data"},
-            }
-
-        # 최신 데이터 (첫 번째 요소)
-        latest_price = daily_prices[0]
-        quote_data = {
-            "symbol": symbol.upper(),
-            "price": float(latest_price.close) if latest_price.close else None,
-            "open": float(latest_price.open) if latest_price.open else None,
-            "high": float(latest_price.high) if latest_price.high else None,
-            "low": float(latest_price.low) if latest_price.low else None,
-            "volume": int(latest_price.volume) if latest_price.volume else None,
-            "date": latest_price.date.isoformat() if latest_price.date else None,
-            "change": None,  # 전일 대비 변동
-            "change_percent": None,  # 전일 대비 변동률
-        }
-
-        # 전일 대비 변동 계산 (데이터가 2개 이상 있을 때)
-        if len(daily_prices) >= 2:
-            prev_price = daily_prices[1]
-            if latest_price.close and prev_price.close:
-                change = float(latest_price.close) - float(prev_price.close)
-                change_percent = (change / float(prev_price.close)) * 100
-                quote_data["change"] = round(change, 2)
-                quote_data["change_percent"] = round(change_percent, 2)
-
-        return {
-            "success": True,
-            "message": f"{symbol.upper()}의 호가 데이터 조회 완료",
-            "data": quote_data,
-            "metadata": {
-                "symbol": symbol.upper(),
-                "source": "Alpha Vantage Daily Data",
-                "note": "실시간 데이터가 아닌 일일 데이터의 최신 정보입니다.",
-            },
-        }
+        if not global_quote:
+            raise HTTPException(status_code=404, detail=f"호가 데이터를 찾을 수 없습니다: {symbol}")
+        return global_quote
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"호가 데이터 조회 중 오류 발생: {str(e)}")
@@ -186,55 +125,40 @@ async def get_quote(symbol: str = Path(..., description="종목 심볼 (예: AAP
 )
 async def get_intraday_data(
     symbol: str = Path(..., description="종목 심볼 (예: AAPL, TSLA)"),
-    interval: str = Query(
-        default="1min", description="데이터 간격 (1min, 5min, 15min, 30min, 60min)"
+    interval: Literal["1min", "5min", "15min", "30min", "60min"] = Query(
+        default="15min", description="데이터 간격 (1min, 5min, 15min, 30min, 60min)"
     ),
-    outputsize: str = Query(default="compact", description="데이터 크기 (compact/full)"),
+    extended_hours: bool = Query(default=False, description="연장 거래 시간 포함 여부"),
+    adjusted: bool = Query(default=True, description="조정 가격 여부"),
+    start_date: Optional[date] = Query(
+        default=date.today(), description="시작 날짜 (YYYY-MM-DD)"
+    ),
+    end_date: Optional[date] = Query(
+        default=date.today(), description="종료 날짜 (YYYY-MM-DD)"
+    ),
+    outputsize: Literal["compact", "full"]
+    | None = Query(default="compact", description="데이터 크기 (compact/full)"),
 ):
-    """실시간/인트라데이 데이터 조회"""
+    """실시간/분봉 주가 데이터 조회"""
     try:
-        # Note: Alpha Vantage Intraday API는 제한이 있음 (Premium 요구)
-        # 기본적인 샘플 데이터 제공
-        sample_data = {
-            "symbol": symbol.upper(),
-            "interval": interval,
-            "last_refreshed": "2024-12-07 16:00:00",
-            "time_zone": "US/Eastern",
-            "data": [
-                {
-                    "time": "2024-12-07 16:00:00",
-                    "open": 150.25,
-                    "high": 151.00,
-                    "low": 149.80,
-                    "close": 150.75,
-                    "volume": 125000,
-                },
-                {
-                    "time": "2024-12-07 15:59:00",
-                    "open": 150.10,
-                    "high": 150.30,
-                    "low": 149.95,
-                    "close": 150.25,
-                    "volume": 98000,
-                },
-            ],
-        }
+        stock_service = service_factory.get_stock_service()
 
-        return {
-            "success": True,
-            "message": f"{symbol.upper()}의 인트라데이 데이터 조회 완료 (샘플 데이터)",
-            "data": sample_data,
-            "metadata": {
-                "symbol": symbol.upper(),
-                "interval": interval,
-                "outputsize": outputsize,
-                "status": "sample_data",
-                "note": "Alpha Vantage Intraday API는 Premium 요구사항입니다.",
-            },
-        }
+        # StockService의 get_intraday_data 메서드 호출
+        intraday_data = await stock_service.get_intraday_data(
+            symbol=symbol.upper(),
+            interval=interval,
+            adjusted=adjusted,
+            extended_hours=extended_hours,
+            outputsize=outputsize,
+        )
+
+        if not intraday_data:
+            raise HTTPException(status_code=404, detail=f"주식 데이터를 찾을 수 없습니다: {symbol}")
+
+        return intraday_data
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"인트라데이 데이터 조회 중 오류 발생: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"주식 데이터 조회 중 오류 발생: {str(e)}")
 
 
 @router.get(
@@ -303,3 +227,44 @@ async def get_historical_data(
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"히스토리 데이터 조회 중 오류 발생: {str(e)}")
+
+
+@router.get(
+    "/search",
+    response_model=StockSymbolsResponse,
+    description="종목 심볼 검색 (Alpha Vantage SYMBOL_SEARCH)",
+)
+async def search_symbols(
+    keywords: str = Query(..., description="검색 키워드 (예: Apple, Tesla)"),
+):
+    """종목 심볼 검색"""
+    try:
+        stock_service = service_factory.get_market_data_service().stock
+        search_results = await stock_service.search_symbols(keywords=keywords)
+
+        # Alpha Vantage API 응답 처리 - bestMatches 키를 가진 딕셔너리
+        best_matches = search_results.get("bestMatches", [])
+
+        symbols_list = []
+        for item in best_matches:
+            symbol_info = SymbolInfo(
+                symbol=item.get("1. symbol", ""),
+                name=item.get("2. name", ""),
+                type=item.get("3. type", ""),
+                region=item.get("4. region", ""),
+                market_open=item.get("5. marketOpen"),
+                market_close=item.get("6. marketClose"),
+                timezone=item.get("7. timezone"),
+                currency=item.get("8. currency"),
+                match_score=float(item.get("9. matchScore", 0)),
+            )
+            symbols_list.append(symbol_info)
+
+        return StockSymbolsResponse(
+            symbols=symbols_list,
+            count=len(symbols_list),
+            search_term=keywords,
+        )
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"심볼 검색 중 오류 발생: {str(e)}")

@@ -156,9 +156,9 @@ export function useBacktest() {
         },
 
         // Mutations
-        createBacktest: createBacktestMutation.mutateAsync,
-        updateBacktest: updateBacktestMutation.mutateAsync,
-        deleteBacktest: deleteBacktestMutation.mutateAsync,
+        createBacktest: createBacktestMutation.mutate,
+        updateBacktest: updateBacktestMutation.mutate,
+        deleteBacktest: deleteBacktestMutation.mutate,
 
 
         // Loading States

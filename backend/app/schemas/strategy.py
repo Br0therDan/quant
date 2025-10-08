@@ -11,7 +11,7 @@ from app.models.strategy import SignalType, StrategyType
 
 
 # Request Schemas
-class StrategyCreateRequest(BaseSchema):
+class StrategyCreate(BaseSchema):
     """Strategy creation request"""
 
     name: str = Field(..., description="전략 이름")
@@ -21,7 +21,7 @@ class StrategyCreateRequest(BaseSchema):
     tags: list[str] = Field(default_factory=list, description="태그")
 
 
-class StrategyUpdateRequest(BaseSchema):
+class StrategyUpdate(BaseSchema):
     """Strategy update request"""
 
     name: str | None = Field(None, description="전략 이름")
@@ -31,14 +31,14 @@ class StrategyUpdateRequest(BaseSchema):
     tags: list[str | None] | None = Field(None, description="태그")
 
 
-class StrategyExecuteRequest(BaseSchema):
+class StrategyExecute(BaseSchema):
     """Strategy execution request"""
 
     symbol: str = Field(..., description="대상 심볼")
     market_data: dict[str, Any] = Field(..., description="시장 데이터")
 
 
-class TemplateCreateRequest(BaseSchema):
+class TemplateCreate(BaseSchema):
     """Template creation request"""
 
     name: str = Field(..., description="템플릿 이름")
@@ -51,7 +51,7 @@ class TemplateCreateRequest(BaseSchema):
     tags: list[str] = Field(default_factory=list, description="태그")
 
 
-class TemplateUpdateRequest(BaseSchema):
+class TemplateUpdate(BaseSchema):
     """Template update request"""
 
     name: str | None = Field(None, description="템플릿 이름")
@@ -61,7 +61,7 @@ class TemplateUpdateRequest(BaseSchema):
     tags: list[str] | None = Field(None, description="태그")
 
 
-class StrategyFromTemplateRequest(BaseSchema):
+class StrategyCreateFromTemplate(BaseSchema):
     """Create strategy from template request"""
 
     name: str = Field(..., description="전략 이름")

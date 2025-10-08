@@ -5,6 +5,7 @@
 // Hey-API 기반: @/client/sdk.gen.ts 의 각 엔드포인트별 서비스클래스 및 @/client/types.gen.ts 의 타입정의 활용(엔드포인트의 스키마명칭과 호환)
 
 import { WatchlistService } from "@/client";
+import type { WatchlistCreate, WatchlistUpdate } from "@/client";
 import { useSnackbar } from "@/contexts/SnackbarContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
@@ -52,7 +53,7 @@ export function useWatchlist() {
     });
 
     const createOrUpdateWatchlistMutation = useMutation({
-        mutationFn: async (data: any) => {
+        mutationFn: async (data: WatchlistCreate) => {
             const response = await WatchlistService.createOrUpdateWatchlist({
                 body: data
             });
@@ -72,10 +73,10 @@ export function useWatchlist() {
     });
 
     const updateWatchlistMutation = useMutation({
-        mutationFn: async (data: { name: string; updateData: any }) => {
+        mutationFn: async ({name, updateData}: { name: string; updateData: WatchlistUpdate }) => {
             const response = await WatchlistService.updateWatchlist({
-                path: { name: data.name },
-                body: data.updateData
+                path: { name },
+                body: updateData
             });
             return response.data;
         },
@@ -156,11 +157,13 @@ export function useWatchlist() {
         setupDefaultWatchlist: setupDefaultWatchlistMutation.mutate,
 
         // Mutation Status
-        isCreating: createWatchlistMutation.isPending,
-        isCreatingOrUpdating: createOrUpdateWatchlistMutation.isPending,
-        isUpdating: updateWatchlistMutation.isPending,
-        isDeleting: deleteWatchlistMutation.isPending,
-        isSettingDefault: setupDefaultWatchlistMutation.isPending,
+        isMutating: {
+            createWatchlist: createWatchlistMutation.isPending,
+            createOrUpdateWatchlist: createOrUpdateWatchlistMutation.isPending,
+            updateWatchlist: updateWatchlistMutation.isPending,
+            deleteWatchlist: deleteWatchlistMutation.isPending,
+            setupDefaultWatchlist: setupDefaultWatchlistMutation.isPending,
+        },
 
         // Query Objects (if needed for advanced usage)
         queries: {

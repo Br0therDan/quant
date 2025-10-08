@@ -13,11 +13,11 @@ from app.schemas.strategy import (
     ExecutionListResponse,
     ExecutionResponse,
     PerformanceResponse,
-    StrategyCreateRequest,
-    StrategyExecuteRequest,
+    StrategyCreate,
+    StrategyExecute,
     StrategyListResponse,
     StrategyResponse,
-    StrategyUpdateRequest,
+    StrategyUpdate,
 )
 from app.services.service_factory import service_factory
 from app.services.strategy_service import StrategyService
@@ -36,7 +36,7 @@ async def get_strategy_service() -> AsyncGenerator[StrategyService, None]:
 
 @router.post("/", response_model=StrategyResponse)
 async def create_strategy(
-    request: StrategyCreateRequest,
+    request: StrategyCreate,
     current_user: User = Depends(get_current_active_verified_user),
     service: StrategyService = Depends(get_strategy_service),
 ):
@@ -160,7 +160,7 @@ async def get_strategy(
 @router.put("/{strategy_id}", response_model=StrategyResponse)
 async def update_strategy(
     strategy_id: str,
-    request: StrategyUpdateRequest,
+    request: StrategyUpdate,
     current_user: User = Depends(get_current_active_verified_user),
     service: StrategyService = Depends(get_strategy_service),
 ):
@@ -248,7 +248,7 @@ async def delete_strategy(
 @router.post("/{strategy_id}/execute", response_model=ExecutionResponse)
 async def execute_strategy(
     strategy_id: str,
-    request: StrategyExecuteRequest,
+    request: StrategyExecute,
     current_user: User = Depends(get_current_active_verified_user),
     service: StrategyService = Depends(get_strategy_service),
 ):

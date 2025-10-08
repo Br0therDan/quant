@@ -77,11 +77,10 @@ class IntegratedBacktestExecutor:
             market_data_dict = {}
             for symbol in symbols:
                 try:
-                    data = await self.market_data_service.get_market_data(
+                    data = await self.market_data_service.stock.get_historical_data(
                         symbol=symbol,
                         start_date=start_date,
                         end_date=end_date,
-                        force_refresh=False,
                     )
                     if data:
                         market_data_dict[symbol] = data

@@ -9,13 +9,13 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 
 from app.models.backtest import BacktestStatus
 from app.schemas.backtest import (
-    BacktestCreateRequest,
+    BacktestCreate,
     BacktestExecutionListResponse,
     BacktestExecutionRequest,
     BacktestExecutionResponse,
     BacktestListResponse,
     BacktestResponse,
-    BacktestUpdateRequest,
+    BacktestUpdate,
     IntegratedBacktestRequest,
     IntegratedBacktestResponse,
 )
@@ -50,10 +50,10 @@ async def get_integrated_executor() -> IntegratedBacktestExecutor:
 
 @router.post("/", response_model=BacktestResponse)
 async def create_backtest(
-    request: BacktestCreateRequest,
+    request: BacktestCreate,
     current_user: User = Depends(get_current_active_verified_user),
     service: BacktestService = Depends(get_backtest_service),
-):
+) -> BacktestResponse:
     """Create a new backtest"""
     try:
         backtest = await service.create_backtest(
@@ -154,7 +154,7 @@ async def get_backtest(
 @router.put("/{backtest_id}", response_model=BacktestResponse)
 async def update_backtest(
     backtest_id: str,
-    request: BacktestUpdateRequest,
+    request: BacktestUpdate,
     current_user: User = Depends(get_current_active_verified_user),
     service: BacktestService = Depends(get_backtest_service),
 ):
@@ -465,7 +465,7 @@ async def health_check():
         duckdb_symbols = (
             database_manager.get_available_symbols() if duckdb_connected else []
         )
-        mongodb_symbols = await market_data_service.get_available_symbols()
+        mongodb_symbols = await market_data_service.stock.get_available_symbols()
 
         # DuckDB 백테스트 결과 통계
         results_count = len(backtest_service.get_duckdb_results_summary())

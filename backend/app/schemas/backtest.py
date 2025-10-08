@@ -17,7 +17,7 @@ from app.models.backtest import (
 
 
 # Request Schemas
-class BacktestCreateRequest(BaseSchema):
+class BacktestCreate(BaseSchema):
     """백테스트 생성 요청"""
 
     name: str = Field(..., description="백테스트 이름")
@@ -25,7 +25,7 @@ class BacktestCreateRequest(BaseSchema):
     config: BacktestConfig = Field(..., description="백테스트 설정")
 
 
-class BacktestUpdateRequest(BaseSchema):
+class BacktestUpdate(BaseSchema):
     """백테스트 수정 요청"""
 
     name: str | None = Field(None, description="백테스트 이름")

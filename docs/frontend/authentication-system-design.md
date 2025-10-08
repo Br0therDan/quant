@@ -240,7 +240,7 @@ const useAuthStatus = () => {
       return response.json();
     },
     retry: false,
-    staleTime: 5 * 60 * 1000, // 5분
+    staleTime: 60 * 60 * 1000, // 5분
     refetchOnWindowFocus: true,
   });
 };
@@ -1089,7 +1089,7 @@ const queryKeys = {
 
 // 쿠키 기반 API 요청 설정
 const defaultQueryOptions = {
-  staleTime: 5 * 60 * 1000, // 5분
+  staleTime: 60 * 60 * 1000, // 5분
   cacheTime: 10 * 60 * 1000, // 10분
   retry: (failureCount: number, error: any) => {
     // 401/403 에러는 재시도하지 않음 (인증 문제)

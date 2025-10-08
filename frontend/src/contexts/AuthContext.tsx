@@ -81,7 +81,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }
       return failureCount < 1; // 재시도 횟수 감소
     },
-    staleTime: 5 * 60 * 1000, // 5분
+    staleTime: 60 * 60 * 1000, // 5분
     gcTime: 10 * 60 * 1000, // 10분
     // 클라이언트에서만 활성화 (서버 사이드는 비활성화)
     enabled: typeof window !== "undefined",

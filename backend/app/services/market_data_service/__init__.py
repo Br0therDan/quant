@@ -8,7 +8,7 @@ Market Data Service Package
 import logging
 from typing import Optional
 from .base_service import BaseMarketDataService, CacheResult, DataCoverage
-from .stock_service import StockService
+from .stock import StockService
 from .fundamental import FundamentalService
 from .economic_indicator import EconomicIndicatorService
 from .intelligence import IntelligenceService

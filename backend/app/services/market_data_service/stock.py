@@ -3,7 +3,7 @@ Stock data service implementation
 주식 데이터 서비스 구현
 """
 
-from typing import List, Optional, cast
+from typing import List, Literal, Optional, cast
 from datetime import datetime
 from decimal import Decimal
 import logging
@@ -16,33 +16,6 @@ from app.models.market_data.stock import DailyPrice
 
 
 logger = logging.getLogger(__name__)
-
-
-def safe_decimal(value) -> Decimal:
-    """안전하게 Decimal로 변환하는 유틸리티 함수"""
-    if value is None:
-        return Decimal("0.0")
-
-    # Decimal128 타입 처리 (MongoDB)
-    if hasattr(value, "to_decimal"):
-        return value.to_decimal()
-
-    # MongoDB Decimal128 타입명 체크
-    if type(value).__name__ == "Decimal128":
-        return Decimal(str(value))
-
-    # 이미 Decimal인 경우
-    if isinstance(value, Decimal):
-        return value
-
-    # 문자열 또는 숫자인 경우
-    try:
-        return Decimal(str(value))
-    except (ValueError, TypeError):
-        logger.warning(
-            f"Failed to convert {value} ({type(value)}) to Decimal, using 0.0"
-        )
-        return Decimal("0.0")
 
 
 class StockService(BaseMarketDataService):
@@ -123,24 +96,24 @@ class StockService(BaseMarketDataService):
                         daily_price = DailyPrice(
                             symbol=symbol,
                             date=date_obj,
-                            open=safe_decimal(item["open"]),
-                            high=safe_decimal(item["high"]),
-                            low=safe_decimal(item["low"]),
-                            close=safe_decimal(item["close"]),
+                            open=Decimal(str(item["open"])),
+                            high=Decimal(str(item["high"])),
+                            low=Decimal(str(item["low"])),
+                            close=Decimal(str(item["close"])),
                             volume=int(item["volume"]),
-                            adjusted_close=safe_decimal(
-                                item.get("adjusted_close", item["close"])
+                            adjusted_close=Decimal(
+                                str(item.get("adjusted_close", item["close"]))
                             ),
-                            dividend_amount=safe_decimal(
-                                item.get("dividend_amount", 0)
+                            dividend_amount=Decimal(
+                                str(item.get("dividend_amount", 0))
                             ),
-                            split_coefficient=safe_decimal(
-                                item.get("split_coefficient", 1)
+                            split_coefficient=Decimal(
+                                str(item.get("split_coefficient", 1))
                             ),
-                            data_quality_score=95.0,  # 기본 품질 점수
+                            data_quality_score=95.0,
                             source="alpha_vantage",
-                            price_change=safe_decimal("0.0"),
-                            price_change_percent=safe_decimal("0.0"),
+                            price_change=Decimal("0.0"),
+                            price_change_percent=Decimal("0.0"),
                         )
                         daily_prices.append(daily_price)
 
@@ -193,24 +166,24 @@ class StockService(BaseMarketDataService):
                         daily_price = DailyPrice(
                             symbol=symbol,
                             date=date_obj,
-                            open=safe_decimal(price_data["1. open"]),
-                            high=safe_decimal(price_data["2. high"]),
-                            low=safe_decimal(price_data["3. low"]),
-                            close=safe_decimal(price_data["4. close"]),
+                            open=Decimal(str(price_data["1. open"])),
+                            high=Decimal(str(price_data["2. high"])),
+                            low=Decimal(str(price_data["3. low"])),
+                            close=Decimal(str(price_data["4. close"])),
                             volume=int(price_data["6. volume"]),
-                            adjusted_close=safe_decimal(
-                                price_data["5. adjusted close"]
+                            adjusted_close=Decimal(
+                                str(price_data["5. adjusted close"])
                             ),
-                            dividend_amount=safe_decimal(
-                                price_data.get("7. dividend amount", 0)
+                            dividend_amount=Decimal(
+                                str(price_data.get("7. dividend amount", 0))
                             ),
-                            split_coefficient=safe_decimal(
-                                price_data.get("8. split coefficient", 1)
+                            split_coefficient=Decimal(
+                                str(price_data.get("8. split coefficient", 1))
                             ),
                             data_quality_score=quality_score.overall_score,
                             source="alpha_vantage",
-                            price_change=safe_decimal("0.0"),
-                            price_change_percent=safe_decimal("0.0"),
+                            price_change=Decimal("0.0"),
+                            price_change_percent=Decimal("0.0"),
                         )
                         daily_prices.append(daily_price)
                     except (ValueError, KeyError) as e:
@@ -292,24 +265,24 @@ class StockService(BaseMarketDataService):
                             daily_price = DailyPrice(
                                 symbol=symbol,
                                 date=date_obj,
-                                open=safe_decimal(price_data["1. open"]),
-                                high=safe_decimal(price_data["2. high"]),
-                                low=safe_decimal(price_data["3. low"]),
-                                close=safe_decimal(price_data["4. close"]),
+                                open=Decimal(str(price_data["1. open"])),
+                                high=Decimal(str(price_data["2. high"])),
+                                low=Decimal(str(price_data["3. low"])),
+                                close=Decimal(str(price_data["4. close"])),
                                 volume=int(price_data["6. volume"]),
-                                adjusted_close=safe_decimal(
-                                    price_data["5. adjusted close"]
+                                adjusted_close=Decimal(
+                                    str(price_data["5. adjusted close"])
                                 ),
-                                dividend_amount=safe_decimal(
-                                    price_data.get("7. dividend amount", 0)
+                                dividend_amount=Decimal(
+                                    str(price_data.get("7. dividend amount", 0))
                                 ),
-                                split_coefficient=safe_decimal(
-                                    price_data.get("8. split coefficient", 1)
+                                split_coefficient=Decimal(
+                                    str(price_data.get("8. split coefficient", 1))
                                 ),
                                 data_quality_score=95.0,  # 기본 품질 점수
                                 source="alpha_vantage",
-                                price_change=safe_decimal("0.0"),
-                                price_change_percent=safe_decimal("0.0"),
+                                price_change=Decimal("0.0"),
+                                price_change_percent=Decimal("0.0"),
                             )
                             daily_prices.append(daily_price)
                         except (ValueError, KeyError) as parse_error:
@@ -373,91 +346,43 @@ class StockService(BaseMarketDataService):
 
     async def get_real_time_quote(self, symbol: str) -> dict:
         """실시간 주식 호가 조회 (Alpha Vantage GLOBAL_QUOTE)"""
-        try:
-            logger.info(f"Fetching real-time quote for {symbol}")
 
-            response = await self.alpha_vantage.stock.quote(symbol=symbol)
-
-            if isinstance(response, list) and len(response) > 0:
-                response = response[0]  # type: ignore
-
-            if not isinstance(response, dict) or "Global Quote" not in response:
-                logger.warning(f"Invalid quote response for {symbol}")
-                return {}
-
-            quote_data = response["Global Quote"]
-
-            # Alpha Vantage GLOBAL_QUOTE 응답을 표준 포맷으로 변환
-            return {
-                "symbol": quote_data.get("01. symbol", symbol),
-                "price": float(quote_data.get("05. price", 0)),
-                "change": float(quote_data.get("09. change", 0)),
-                "change_percent": quote_data.get("10. change percent", "0%").replace(
-                    "%", ""
-                ),
-                "volume": int(quote_data.get("06. volume", 0)),
-                "latest_trading_day": quote_data.get("07. latest trading day"),
-                "previous_close": float(quote_data.get("08. previous close", 0)),
-                "open": float(quote_data.get("02. open", 0)),
-                "high": float(quote_data.get("03. high", 0)),
-                "low": float(quote_data.get("04. low", 0)),
-                "timestamp": datetime.now().isoformat(),
-                "source": "alpha_vantage",
-            }
-
-        except Exception as e:
-            logger.error(f"Failed to fetch real-time quote for {symbol}: {e}")
-            return {}
+        response = await self.alpha_vantage.stock.quote(symbol=symbol)
+        """
+        TODO: Duckdb 캐싱적용
+        응답예시
+        {
+            "symbol": "IBM",
+            "open": 295.55,
+            "high": 301.0425,
+            "low": 293.285,
+            "price": 293.87,
+            "volume": 7190126,
+            "latest_trading_day": "2025-10-07",
+            "previous_close": 289.42,
+            "change": 4.45,
+            "change_percent": "1.5376%"
+        }
+        """
+        return response
 
     async def get_intraday_data(
-        self, symbol: str, interval: str = "5min", outputsize: str = "compact"
-    ) -> dict:
+        self,
+        symbol: str,
+        interval: Literal["1min", "5min", "15min", "30min", "60min"] = "15min",
+        adjusted: bool = False,
+        extended_hours: bool = False,
+        outputsize: Literal["compact", "full"] | None = "full",
+    ):
         """실시간/인트라데이 데이터 조회 (Alpha Vantage TIME_SERIES_INTRADAY)"""
-        try:
-            logger.info(f"Fetching intraday data for {symbol} with {interval} interval")
-
-            # type: ignore를 사용하여 타입 체크 우회
-            response = await self.alpha_vantage.stock.intraday(  # type: ignore
-                symbol=symbol,
-                interval=interval,  # type: ignore
-                outputsize=outputsize,  # type: ignore
-            )
-
-            if isinstance(response, list) and len(response) > 0:
-                response = response[0]  # type: ignore
-
-            if not isinstance(response, dict):
-                logger.warning(f"Invalid intraday response for {symbol}")
-                return {}
-
-            # 메타데이터와 시계열 데이터 추출
-            meta_data = response.get("Meta Data", {})
-            time_series_key = f"Time Series ({interval})"
-            time_series = response.get(time_series_key, {})
-
-            # 최근 20개 데이터 포인트만 반환 (performance)
-            recent_data = dict(list(time_series.items())[:20])
-
-            return {
-                "symbol": symbol,
-                "interval": interval,
-                "meta_data": {
-                    "information": meta_data.get("1. Information"),
-                    "symbol": meta_data.get("2. Symbol"),
-                    "last_refreshed": meta_data.get("3. Last Refreshed"),
-                    "interval": meta_data.get("4. Interval"),
-                    "output_size": meta_data.get("5. Output Size"),
-                    "time_zone": meta_data.get("6. Time Zone"),
-                },
-                "time_series": recent_data,
-                "data_points": len(recent_data),
-                "timestamp": datetime.now().isoformat(),
-                "source": "alpha_vantage",
-            }
-
-        except Exception as e:
-            logger.error(f"Failed to fetch intraday data for {symbol}: {e}")
-            return {}
+        response = await self.alpha_vantage.stock.intraday(
+            symbol=symbol,
+            interval=interval,
+            adjusted=adjusted,
+            extended_hours=extended_hours,
+            outputsize=outputsize,
+        )
+        return response
 
     async def get_historical_data(
         self,
@@ -522,95 +447,34 @@ class StockService(BaseMarketDataService):
             logger.error(f"Failed to fetch historical data for {symbol}: {e}")
             return {}
 
-    async def search_symbols(self, keywords: str) -> dict:
-        """심볼 검색 (간단한 검색 기능 제공)"""
+    async def search_symbols(self, keywords: str):
+        """심볼 검색 (Alpha Vantage SYMBOL_SEARCH API 호출)"""
         try:
             logger.info(f"Searching symbols for keywords: {keywords}")
 
-            # Alpha Vantage search endpoint가 없는 경우 간단한 매칭 검색
-            # 실제 구현에서는 데이터베이스나 캐시된 심볼 리스트 검색
-            popular_symbols = [
-                {
-                    "symbol": "AAPL",
-                    "name": "Apple Inc.",
-                    "type": "Equity",
-                    "region": "United States",
-                },
-                {
-                    "symbol": "MSFT",
-                    "name": "Microsoft Corporation",
-                    "type": "Equity",
-                    "region": "United States",
-                },
-                {
-                    "symbol": "GOOGL",
-                    "name": "Alphabet Inc.",
-                    "type": "Equity",
-                    "region": "United States",
-                },
-                {
-                    "symbol": "AMZN",
-                    "name": "Amazon.com Inc.",
-                    "type": "Equity",
-                    "region": "United States",
-                },
-                {
-                    "symbol": "TSLA",
-                    "name": "Tesla Inc.",
-                    "type": "Equity",
-                    "region": "United States",
-                },
-                {
-                    "symbol": "META",
-                    "name": "Meta Platforms Inc.",
-                    "type": "Equity",
-                    "region": "United States",
-                },
-                {
-                    "symbol": "NVDA",
-                    "name": "NVIDIA Corporation",
-                    "type": "Equity",
-                    "region": "United States",
-                },
-                {
-                    "symbol": "JPM",
-                    "name": "JPMorgan Chase & Co.",
-                    "type": "Equity",
-                    "region": "United States",
-                },
-                {
-                    "symbol": "JNJ",
-                    "name": "Johnson & Johnson",
-                    "type": "Equity",
-                    "region": "United States",
-                },
-                {
-                    "symbol": "V",
-                    "name": "Visa Inc.",
-                    "type": "Equity",
-                    "region": "United States",
-                },
-            ]
+            # Alpha Vantage SYMBOL_SEARCH API 호출
+            response = await self.alpha_vantage.stock.search(keywords=keywords)
 
-            # 키워드로 필터링
-            keywords_lower = keywords.lower()
-            matching_symbols = [
-                symbol
-                for symbol in popular_symbols
-                if (
-                    keywords_lower in symbol["symbol"].lower()
-                    or keywords_lower in symbol["name"].lower()
-                )
-            ]
+            # 응답 데이터 로깅
+            logger.info(f"Search response type: {type(response)}")
 
-            return {
-                "keywords": keywords,
-                "symbols": matching_symbols,
-                "count": len(matching_symbols),
-                "timestamp": datetime.now().isoformat(),
-                "source": "static_database",
-            }
+            # Alpha Vantage 응답은 {"bestMatches": [...]} 형태
+            if isinstance(response, dict) and "bestMatches" in response:
+                best_matches = response.get("bestMatches", [])
+                logger.info(f"Found {len(best_matches)} search results")
+                return response
+            else:
+                logger.warning(f"Unexpected response format: {response}")
+                return {"bestMatches": []}
 
         except Exception as e:
             logger.error(f"Failed to search symbols for {keywords}: {e}")
-            return {"symbols": [], "count": 0}
+            return {"bestMatches": []}
+
+    # async def get_available_symbols(self) -> List[str]:
+    #     try:
+    #         response = self.db_manager.get_available_symbols()
+    #         return response
+    #     except Exception as e:
+    #         logger.error(f"Failed to get available symbols: {e}")
+    #         return []

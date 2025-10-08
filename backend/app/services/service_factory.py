@@ -6,7 +6,7 @@ import logging
 from typing import Optional
 
 from .market_data_service import MarketDataService
-from .market_data_service.stock_service import StockService
+from .market_data_service.stock import StockService
 from .market_data_service.fundamental import FundamentalService
 from .market_data_service.economic_indicator import EconomicIndicatorService
 from .market_data_service.intelligence import IntelligenceService
