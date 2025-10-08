@@ -68,11 +68,21 @@ async def get_income_statement(
             "success": True,
             "message": f"{symbol.upper()}의 손익계산서를 성공적으로 조회했습니다.",
             "data": [stmt.model_dump() for stmt in income_statements],
+            "count": len(income_statements),
             "metadata": {
-                "symbol": symbol.upper(),
-                "period": period,
-                "count": len(income_statements),
-                "status": "success",
+                "data_quality": {
+                    "quality_score": 95.0,
+                    "last_updated": datetime.now(),
+                    "data_source": "Alpha Vantage",
+                    "confidence_level": "high",
+                },
+                "cache_info": {
+                    "cached": False,
+                    "cache_hit": False,
+                    "cache_timestamp": None,
+                    "cache_ttl": None,
+                },
+                "processing_time_ms": None,
             },
         }
 
@@ -100,11 +110,21 @@ async def get_balance_sheet(
             "success": True,
             "message": f"{symbol.upper()}의 재무상태표를 성공적으로 조회했습니다.",
             "data": [sheet.model_dump() for sheet in balance_sheets],
+            "count": len(balance_sheets),
             "metadata": {
-                "symbol": symbol.upper(),
-                "period": period,
-                "count": len(balance_sheets),
-                "status": "success",
+                "data_quality": {
+                    "quality_score": 95.0,
+                    "last_updated": datetime.now(),
+                    "data_source": "Alpha Vantage",
+                    "confidence_level": "high",
+                },
+                "cache_info": {
+                    "cached": False,
+                    "cache_hit": False,
+                    "cache_timestamp": None,
+                    "cache_ttl": None,
+                },
+                "processing_time_ms": None,
             },
         }
 
@@ -132,11 +152,21 @@ async def get_cash_flow(
             "success": True,
             "message": f"{symbol.upper()}의 현금흐름표를 성공적으로 조회했습니다.",
             "data": [flow.model_dump() for flow in cash_flows],
+            "count": len(cash_flows),
             "metadata": {
-                "symbol": symbol.upper(),
-                "period": period,
-                "count": len(cash_flows),
-                "status": "success",
+                "data_quality": {
+                    "quality_score": 95.0,
+                    "last_updated": datetime.now(),
+                    "data_source": "Alpha Vantage",
+                    "confidence_level": "high",
+                },
+                "cache_info": {
+                    "cached": False,
+                    "cache_hit": False,
+                    "cache_timestamp": None,
+                    "cache_ttl": None,
+                },
+                "processing_time_ms": None,
             },
         }
 
@@ -159,10 +189,21 @@ async def get_earnings(symbol: str = Path(..., description="종목 심볼 (예: 
             "success": True,
             "message": f"{symbol.upper()}의 실적 발표 데이터를 성공적으로 조회했습니다.",
             "data": [earning.model_dump() for earning in earnings],
+            "count": len(earnings),
             "metadata": {
-                "symbol": symbol.upper(),
-                "count": len(earnings),
-                "status": "success",
+                "data_quality": {
+                    "quality_score": 95.0,
+                    "last_updated": datetime.now(),
+                    "data_source": "Alpha Vantage",
+                    "confidence_level": "high",
+                },
+                "cache_info": {
+                    "cached": False,
+                    "cache_hit": False,
+                    "cache_timestamp": None,
+                    "cache_ttl": None,
+                },
+                "processing_time_ms": None,
             },
         }
 

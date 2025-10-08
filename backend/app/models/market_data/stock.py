@@ -11,6 +11,30 @@ from decimal import Decimal
 from .base import BaseMarketDataDocument, DataQualityMixin
 
 
+def safe_decimal_converter(value):
+    """Decimal128을 Decimal로 안전하게 변환"""
+    if value is None:
+        return Decimal("0.0")
+
+    # Decimal128 타입 처리 (MongoDB)
+    if hasattr(value, "to_decimal"):
+        return value.to_decimal()
+
+    # MongoDB Decimal128 타입명 체크
+    if type(value).__name__ == "Decimal128":
+        return Decimal(str(value))
+
+    # 이미 Decimal인 경우
+    if isinstance(value, Decimal):
+        return value
+
+    # 문자열 또는 숫자인 경우
+    try:
+        return Decimal(str(value))
+    except (ValueError, TypeError):
+        return Decimal("0.0")
+
+
 class DailyPrice(BaseMarketDataDocument, DataQualityMixin):
     """일일 주가 데이터 모델"""
 
@@ -18,10 +42,10 @@ class DailyPrice(BaseMarketDataDocument, DataQualityMixin):
     date: datetime = Field(..., description="날짜")
 
     # OHLCV 데이터
-    open_price: Decimal = Field(..., alias="open", description="시가", gt=0)
-    high_price: Decimal = Field(..., alias="high", description="고가", gt=0)
-    low_price: Decimal = Field(..., alias="low", description="저가", gt=0)
-    close_price: Decimal = Field(..., alias="close", description="종가", gt=0)
+    open: Decimal = Field(..., description="시가", gt=0)
+    high: Decimal = Field(..., description="고가", gt=0)
+    low: Decimal = Field(..., description="저가", gt=0)
+    close: Decimal = Field(..., description="종가", gt=0)
     volume: int = Field(..., description="거래량", ge=0)
 
     # 추가 데이터
@@ -43,13 +67,31 @@ class DailyPrice(BaseMarketDataDocument, DataQualityMixin):
             "created_at",
         ]
 
-    @field_validator("high_price", "low_price", "close_price")
-    def validate_prices(cls, v, values):
+    @field_validator(
+        "open",
+        "high",
+        "low",
+        "close",
+        "adjusted_close",
+        "dividend_amount",
+        "split_coefficient",
+        "price_change",
+        "price_change_percent",
+        mode="before",
+    )
+    @classmethod
+    def convert_decimal128(cls, v):
+        """Decimal128을 Decimal로 변환"""
+        return safe_decimal_converter(v)
+
+    @field_validator("high", "low", "close")
+    @classmethod
+    def validate_prices(cls, v, info):
         """가격 데이터 검증"""
-        if "open_price" in values:
-            open_price = values["open_price"]
+        if info.data and "open" in info.data:
+            open_price = info.data["open"]
             # 고가는 시가보다 크거나 같아야 함
-            if v < open_price and cls.__name__ == "high_price":
+            if info.field_name == "high" and v < open_price:
                 raise ValueError("고가는 시가보다 작을 수 없습니다")
         return v
 
@@ -58,9 +100,9 @@ class DailyPrice(BaseMarketDataDocument, DataQualityMixin):
         score = 100.0
 
         # 가격 일관성 검증
-        if self.high_price < max(self.open_price, self.close_price):
+        if self.high < max(self.open, self.close):
             score -= 20
-        if self.low_price > min(self.open_price, self.close_price):
+        if self.low > min(self.open, self.close):
             score -= 20
         if self.volume == 0:
             score -= 10
@@ -76,11 +118,17 @@ class IntradayPrice(BaseMarketDataDocument, DataQualityMixin):
     interval: str = Field(..., description="시간 간격 (1min, 5min, 15min, 30min, 60min)")
 
     # OHLCV 데이터
-    open_price: Decimal = Field(..., alias="open", description="시가", gt=0)
-    high_price: Decimal = Field(..., alias="high", description="고가", gt=0)
-    low_price: Decimal = Field(..., alias="low", description="저가", gt=0)
-    close_price: Decimal = Field(..., alias="close", description="종가", gt=0)
+    open: Decimal = Field(..., description="시가", gt=0)
+    high: Decimal = Field(..., description="고가", gt=0)
+    low: Decimal = Field(..., description="저가", gt=0)
+    close: Decimal = Field(..., description="종가", gt=0)
     volume: int = Field(..., description="거래량", ge=0)
+
+    @field_validator("open", "high", "low", "close", mode="before")
+    @classmethod
+    def convert_decimal128_intraday(cls, v):
+        """Decimal128을 Decimal로 변환"""
+        return safe_decimal_converter(v)
 
     class Settings:
         name = "intraday_prices"
@@ -105,9 +153,9 @@ class Quote(BaseMarketDataDocument, DataQualityMixin):
 
     # 일일 통계
     previous_close: Optional[Decimal] = Field(None, description="전일 종가")
-    open_price: Optional[Decimal] = Field(None, description="당일 시가")
-    high_price: Optional[Decimal] = Field(None, description="당일 고가")
-    low_price: Optional[Decimal] = Field(None, description="당일 저가")
+    open: Optional[Decimal] = Field(None, description="당일 시가")
+    high: Optional[Decimal] = Field(None, description="당일 고가")
+    low: Optional[Decimal] = Field(None, description="당일 저가")
     volume: Optional[int] = Field(None, description="당일 누적 거래량")
 
     # 호가 정보
@@ -115,6 +163,25 @@ class Quote(BaseMarketDataDocument, DataQualityMixin):
     ask_price: Optional[Decimal] = Field(None, description="매도 호가")
     bid_size: Optional[int] = Field(None, description="매수 호가 수량")
     ask_size: Optional[int] = Field(None, description="매도 호가 수량")
+
+    @field_validator(
+        "price",
+        "change",
+        "change_percent",
+        "previous_close",
+        "open",
+        "high",
+        "low",
+        "bid_price",
+        "ask_price",
+        mode="before",
+    )
+    @classmethod
+    def convert_decimal128_quote(cls, v):
+        """Decimal128을 Decimal로 변환"""
+        if v is None:
+            return v
+        return safe_decimal_converter(v)
 
     class Settings:
         name = "quotes"

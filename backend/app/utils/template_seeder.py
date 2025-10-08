@@ -33,6 +33,13 @@ class TemplateSeeder:
             logger.warning(f"Templates directory not found: {self.templates_dir}")
             return
 
+        # 기존 템플릿들 삭제 (스키마 변경으로 인한 호환성 문제 해결)
+        try:
+            deleted_count = await StrategyTemplate.delete_all()
+            logger.info(f"Deleted {deleted_count} existing templates for fresh seeding")
+        except Exception as e:
+            logger.warning(f"Failed to delete existing templates: {e}")
+
         seeded_count = 0
         for template_file, strategy_type in self.template_files.items():
             try:
@@ -59,16 +66,12 @@ class TemplateSeeder:
             with open(template_path, "r", encoding="utf-8") as f:
                 template_data = json.load(f)
 
-            # Check if template already exists
-            existing_template = await StrategyTemplate.find_one(
-                {"name": template_data["name"], "strategy_type": strategy_type}
+            # 디버깅: JSON 데이터 구조 확인
+            logger.info(f"Template data keys: {list(template_data.keys())}")
+            logger.info(f"Category value: {template_data.get('category', 'NOT_FOUND')}")
+            logger.info(
+                f"Difficulty value: {template_data.get('difficulty', 'NOT_FOUND')}"
             )
-
-            if existing_template:
-                logger.info(
-                    f"Template '{template_data['name']}' already exists, skipping"
-                )
-                return
 
             # Create new template
             template = StrategyTemplate(
@@ -77,6 +80,8 @@ class TemplateSeeder:
                 description=template_data["description"],
                 default_parameters=template_data["parameters"],
                 tags=template_data.get("tags", []),
+                category=template_data.get("category", "trading"),  # 기본 카테고리 추가
+                difficulty=template_data.get("difficulty", "intermediate"),  # 기본 난이도 추가
                 parameter_schema=self._generate_parameter_schema(
                     strategy_type, template_data["parameters"]
                 ),

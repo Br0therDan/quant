@@ -332,11 +332,24 @@ class BaseMarketDataService(ABC):
             # 데이터 변환
             records = []
             for item in data:
-                record = item.dict()
+                # Pydantic v2 compatible dump
+                record = (
+                    item.model_dump() if hasattr(item, "model_dump") else item.dict()
+                )
+
+                # ID가 없으면 생성 (DuckDB 테이블 NOT NULL 제약조건 때문)
+                if "id" not in record or record["id"] is None:
+                    import uuid
+
+                    record["id"] = str(uuid.uuid4())
+
                 # 날짜 필드가 datetime 객체면 ISO 문자열로 변환
+                # Decimal 필드는 float로 변환 (JSON 직렬화 가능)
                 for key, value in record.items():
                     if isinstance(value, datetime):
                         record[key] = value.isoformat()
+                    elif isinstance(value, Decimal):
+                        record[key] = float(value)
                 records.append(record)
 
             # DuckDB에 저장

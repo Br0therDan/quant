@@ -5,3 +5,84 @@
 // Hey-API 기반: @/client/sdk.gen.ts 의 각 엔드포인트별 서비스클래스 및 @/client/types.gen.ts 의 타입정의 활용(엔드포인트의 스키마명칭과 호환)
 
 import { IntelligenceService } from "@/client";
+import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
+
+export const intelligenceQueryKeys = {
+    all: ["intelligence"] as const,
+    news: () => [...intelligenceQueryKeys.all, "news"] as const,
+    newsSymbol: (symbol: string) => [...intelligenceQueryKeys.news(), symbol] as const,
+    sentiment: () => [...intelligenceQueryKeys.all, "sentiment"] as const,
+    sentimentSymbol: (symbol: string) => [...intelligenceQueryKeys.sentiment(), symbol] as const,
+    analyst: () => [...intelligenceQueryKeys.all, "analyst"] as const,
+    analystRecommendations: (symbol: string) => [...intelligenceQueryKeys.analyst(), "recommendations", symbol] as const,
+    social: () => [...intelligenceQueryKeys.all, "social"] as const,
+    socialSentiment: (symbol: string) => [...intelligenceQueryKeys.social(), "sentiment", symbol] as const,
+};
+
+export function useIntelligence() {
+    return useMemo(() => ({
+        queryKeys: intelligenceQueryKeys,
+    }), []);
+}
+
+// Individual hook functions for specific symbols
+export const useIntelligenceNews = (symbol: string) => {
+    return useQuery({
+        queryKey: intelligenceQueryKeys.newsSymbol(symbol),
+        queryFn: async () => {
+            const response = await IntelligenceService.getNews({
+                path: { symbol }
+            });
+            return response.data;
+        },
+        enabled: !!symbol,
+        staleTime: 1000 * 60 * 10, // 10 minutes
+        gcTime: 30 * 60 * 1000, // 30 minutes
+    });
+};
+
+export const useIntelligenceSentiment = (symbol: string) => {
+    return useQuery({
+        queryKey: intelligenceQueryKeys.sentimentSymbol(symbol),
+        queryFn: async () => {
+            const response = await IntelligenceService.getSentimentAnalysis({
+                path: { symbol }
+            });
+            return response.data;
+        },
+        enabled: !!symbol,
+        staleTime: 1000 * 60 * 15, // 15 minutes
+        gcTime: 60 * 60 * 1000, // 1 hour
+    });
+};
+
+export const useIntelligenceAnalyst = (symbol: string) => {
+    return useQuery({
+        queryKey: intelligenceQueryKeys.analystRecommendations(symbol),
+        queryFn: async () => {
+            const response = await IntelligenceService.getAnalystRecommendations({
+                path: { symbol }
+            });
+            return response.data;
+        },
+        enabled: !!symbol,
+        staleTime: 1000 * 60 * 60, // 1 hour
+        gcTime: 4 * 60 * 60 * 1000, // 4 hours
+    });
+};
+
+export const useIntelligenceSocial = (symbol: string) => {
+    return useQuery({
+        queryKey: intelligenceQueryKeys.socialSentiment(symbol),
+        queryFn: async () => {
+            const response = await IntelligenceService.getSocialSentiment({
+                path: { symbol }
+            });
+            return response.data;
+        },
+        enabled: !!symbol,
+        staleTime: 1000 * 60 * 5, // 5 minutes
+        gcTime: 15 * 60 * 1000, // 15 minutes
+    });
+};

@@ -3,19 +3,20 @@
 import { Box } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { useQuery } from "@tanstack/react-query";
 import dayjs, { type Dayjs } from "dayjs";
 import "dayjs/locale/ko";
 import React from "react";
 
-import {
-  marketDataGetAvailableSymbolsOptions,
-  marketDataGetMarketDataOptions,
-} from "@/client/@tanstack/react-query.gen";
 import CandlestickChart from "@/components/market-data/CandlestickChart";
 import ChartControls from "@/components/market-data/ChartControls";
 import MarketDataHeader from "@/components/market-data/MarketDataHeader";
 import WatchList from "@/components/market-data/WatchList";
+import {
+  useStockDailyPrices,
+  useStockHistorical,
+  useStockQuote,
+} from "@/hooks/useStocks";
+import { useWatchlist, useWatchlistDetail } from "@/hooks/useWatchList";
 
 // 한국어 로케일 설정
 dayjs.locale("ko");
@@ -30,97 +31,144 @@ interface CandlestickData {
 }
 
 export default function MarketDataChartPage() {
-  const [selectedSymbol, setSelectedSymbol] = React.useState<string>("");
+  const [selectedSymbol, setSelectedSymbol] = React.useState<string>("AAPL");
   const [startDate, setStartDate] = React.useState<Dayjs | null>(
     dayjs().subtract(1, "month")
   );
   const [endDate, setEndDate] = React.useState<Dayjs | null>(dayjs());
   const [interval, setInterval] = React.useState<string>("1d");
   const [chartType, setChartType] = React.useState("candlestick");
-  const [forceRefresh, setForceRefresh] = React.useState<boolean>(false);
 
-  // 사용 가능한 심볼 목록 조회
-  const { data: availableSymbols, isLoading: symbolsLoading } = useQuery(
-    marketDataGetAvailableSymbolsOptions()
-  );
-
-  // 선택된 심볼의 마켓 데이터 조회
+  // 새로운 훅들 사용
   const {
-    data: marketData,
-    isLoading: dataLoading,
-    refetch: refetchMarketData,
-  } = useQuery({
-    ...marketDataGetMarketDataOptions({
-      path: { symbol: selectedSymbol },
-      query: {
-        start_date: startDate?.toDate() || dayjs().toDate(),
-        end_date: endDate?.toDate() || dayjs().toDate(),
-        force_refresh: forceRefresh,
-      },
-    }),
-    enabled: !!selectedSymbol && !!startDate && !!endDate,
+    isLoading: { watchlistList: watchlistLoading },
+  } = useWatchlist();
+  const { data: watchlistDetail } = useWatchlistDetail("default");
+
+  // 선택된 심볼의 데이터 조회
+  const {
+    data: dailyPrices,
+    isLoading: dailyLoading,
+    refetch: refetchDaily,
+  } = useStockDailyPrices(selectedSymbol);
+  const { data: currentQuote, isLoading: quoteLoading } =
+    useStockQuote(selectedSymbol);
+  const {
+    data: historicalData,
+    isLoading: historicalLoading,
+    refetch: refetchHistorical,
+  } = useStockHistorical(selectedSymbol, {
+    startDate: startDate?.format("YYYY-MM-DD"),
+    endDate: endDate?.format("YYYY-MM-DD"),
+    frequency: interval === "1d" ? "daily" : interval,
   });
+
+  // 사용 가능한 심볼들 (워치리스트에서 가져오기)
+  const availableSymbols = React.useMemo(() => {
+    const watchlistSymbols = (watchlistDetail as any)?.symbols || [];
+    const defaultSymbols = ["AAPL", "GOOGL", "MSFT", "TSLA", "AMZN", "NVDA"];
+    return watchlistSymbols.length > 0 ? watchlistSymbols : defaultSymbols;
+  }, [watchlistDetail]);
 
   // 첫 번째 심볼 자동 선택
   React.useEffect(() => {
-    if (availableSymbols && availableSymbols.length > 0 && !selectedSymbol) {
+    if (
+      availableSymbols &&
+      availableSymbols.length > 0 &&
+      !availableSymbols.includes(selectedSymbol)
+    ) {
       setSelectedSymbol(availableSymbols[0]);
     }
   }, [availableSymbols, selectedSymbol]);
 
   const handleRefresh = React.useCallback(() => {
-    setForceRefresh(true);
-    refetchMarketData().finally(() => {
-      setForceRefresh(false);
-    });
-  }, [refetchMarketData]);
+    refetchDaily();
+    refetchHistorical();
+  }, [refetchDaily, refetchHistorical]);
 
   const handleSymbolChange = React.useCallback((symbol: string) => {
     setSelectedSymbol(symbol);
   }, []);
 
+  // 차트 데이터 결정 (히스토리컬 데이터 우선, 없으면 일일 데이터)
+  const rawData = historicalData || dailyPrices;
+
   // 마켓 데이터를 차트 데이터로 변환
   const chartData: CandlestickData[] = React.useMemo(() => {
-    if (!marketData || !Array.isArray(marketData)) return [];
+    if (!rawData || !Array.isArray(rawData)) return [];
 
-    return (marketData as any[])
+    return (rawData as any[])
       .map((item) => ({
-        time: dayjs(item.date).format("YYYY-MM-DD"),
-        open: item.open,
-        high: item.high,
-        low: item.low,
-        close: item.close,
-        volume: item.volume || 0,
+        time: dayjs(item.date || item.timestamp).format("YYYY-MM-DD"),
+        open: Number(item.open) || 0,
+        high: Number(item.high) || 0,
+        low: Number(item.low) || 0,
+        close: Number(item.close) || 0,
+        volume: Number(item.volume) || 0,
       }))
+      .filter(
+        (item) =>
+          item.open > 0 && item.high > 0 && item.low > 0 && item.close > 0
+      )
       .sort((a, b) => a.time.localeCompare(b.time));
-  }, [marketData]);
+  }, [rawData]);
 
-  // 요약 데이터 생성
+  // 요약 데이터 생성 (실시간 호가 + 차트 데이터 조합)
   const summaryData = React.useMemo(() => {
-    if (!chartData.length) return null;
+    if (!chartData.length && !currentQuote) return null;
 
-    const latestData = chartData[chartData.length - 1];
-    const previousData = chartData[chartData.length - 2];
+    const latestChartData = chartData[chartData.length - 1];
+    const previousChartData = chartData[chartData.length - 2];
 
-    if (!latestData || !previousData) return null;
+    // 실시간 호가 정보가 있으면 우선 사용
+    if (currentQuote) {
+      const currentPrice =
+        Number((currentQuote as any)?.price) || latestChartData?.close || 0;
+      const previousClose =
+        Number((currentQuote as any)?.previous_close) ||
+        previousChartData?.close ||
+        0;
+      const change = currentPrice - previousClose;
+      const changePercent =
+        previousClose > 0 ? (change / previousClose) * 100 : 0;
 
-    const change = latestData.close - previousData.close;
-    const changePercent = (change / previousData.close) * 100;
+      return {
+        symbol: selectedSymbol,
+        currentPrice,
+        change,
+        changePercent,
+        volume:
+          Number((currentQuote as any)?.volume) || latestChartData?.volume || 0,
+        high: Number((currentQuote as any)?.high) || latestChartData?.high || 0,
+        low: Number((currentQuote as any)?.low) || latestChartData?.low || 0,
+        open: Number((currentQuote as any)?.open) || latestChartData?.open || 0,
+        previousClose,
+        marketCap: (currentQuote as any)?.market_cap,
+        peRatio: (currentQuote as any)?.pe_ratio,
+      };
+    } // 차트 데이터만 있는 경우
+    if (latestChartData && previousChartData) {
+      const change = latestChartData.close - previousChartData.close;
+      const changePercent = (change / previousChartData.close) * 100;
 
-    return {
-      symbol: selectedSymbol,
-      currentPrice: latestData.close,
-      change,
-      changePercent,
-      volume: latestData.volume,
-      high: latestData.high,
-      low: latestData.low,
-      open: latestData.open,
-      previousClose: previousData.close,
-    };
-  }, [chartData, selectedSymbol]);
+      return {
+        symbol: selectedSymbol,
+        currentPrice: latestChartData.close,
+        change,
+        changePercent,
+        volume: latestChartData.volume,
+        high: latestChartData.high,
+        low: latestChartData.low,
+        open: latestChartData.open,
+        previousClose: previousChartData.close,
+      };
+    }
 
-  const isLoading = symbolsLoading || dataLoading;
+    return null;
+  }, [chartData, currentQuote, selectedSymbol]);
+
+  const isLoading =
+    watchlistLoading || dailyLoading || quoteLoading || historicalLoading;
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">

@@ -5,6 +5,7 @@ Fundamental Data Service
 
 from typing import List, Optional, Dict, Any
 import logging
+from decimal import Decimal
 
 from .base_service import BaseMarketDataService
 from app.models.market_data.fundamental import (
@@ -14,6 +15,37 @@ from app.models.market_data.fundamental import (
     CashFlow,
     Earnings,
 )
+
+
+logger = logging.getLogger(__name__)
+
+
+def safe_decimal(value: Any) -> Optional[Decimal]:
+    """Alpha Vantage API 응답을 안전하게 Decimal로 변환"""
+    if value is None or value == "" or value == "None":
+        return None
+
+    # Decimal128 처리 (MongoDB)
+    if hasattr(value, "__class__") and "Decimal128" in str(type(value)):
+        return value.to_decimal()
+
+    # 이미 Decimal인 경우
+    if isinstance(value, Decimal):
+        return value
+
+    try:
+        if isinstance(value, str):
+            # 빈 문자열이나 'None' 처리
+            if not value.strip() or value.strip().lower() == "none":
+                return None
+            return Decimal(value)
+        elif isinstance(value, (int, float)):
+            return Decimal(str(value))
+        else:
+            # 기타 타입 시도
+            return Decimal(str(value))
+    except Exception:
+        return None
 
 
 logger = logging.getLogger(__name__)
@@ -61,41 +93,33 @@ class FundamentalService(BaseMarketDataService):
                 "country": data.get("Country", ""),
                 "sector": data.get("Sector", ""),
                 "industry": data.get("Industry", ""),
-                "market_cap": int(data.get("MarketCapitalization", 0) or 0),
-                "pe_ratio": float(data.get("PERatio", 0) or 0),
-                "peg_ratio": float(data.get("PEGRatio", 0) or 0),
-                "book_value": float(data.get("BookValue", 0) or 0),
-                "dividend_per_share": float(data.get("DividendPerShare", 0) or 0),
-                "dividend_yield": float(data.get("DividendYield", 0) or 0),
-                "eps": float(data.get("EPS", 0) or 0),
-                "revenue_per_share_ttm": float(data.get("RevenuePerShareTTM", 0) or 0),
-                "profit_margin": float(data.get("ProfitMargin", 0) or 0),
-                "operating_margin_ttm": float(data.get("OperatingMarginTTM", 0) or 0),
-                "return_on_assets_ttm": float(data.get("ReturnOnAssetsTTM", 0) or 0),
-                "return_on_equity_ttm": float(data.get("ReturnOnEquityTTM", 0) or 0),
-                "revenue_ttm": int(data.get("RevenueTTM", 0) or 0),
-                "gross_profit_ttm": int(data.get("GrossProfitTTM", 0) or 0),
-                "ebitda": int(data.get("EBITDA", 0) or 0),
+                "market_capitalization": safe_decimal(data.get("MarketCapitalization")),
+                "pe_ratio": safe_decimal(data.get("PERatio")),
+                "peg_ratio": safe_decimal(data.get("PEGRatio")),
+                "book_value": safe_decimal(data.get("BookValue")),
+                "dividend_per_share": safe_decimal(data.get("DividendPerShare")),
+                "dividend_yield": safe_decimal(data.get("DividendYield")),
+                "eps": safe_decimal(data.get("EPS")),
+                "revenue_per_share_ttm": safe_decimal(data.get("RevenuePerShareTTM")),
+                "profit_margin": safe_decimal(data.get("ProfitMargin")),
+                "operating_margin_ttm": safe_decimal(data.get("OperatingMarginTTM")),
+                "return_on_assets_ttm": safe_decimal(data.get("ReturnOnAssetsTTM")),
+                "return_on_equity_ttm": safe_decimal(data.get("ReturnOnEquityTTM")),
+                "revenue_ttm": safe_decimal(data.get("RevenueTTM")),
+                "gross_profit_ttm": safe_decimal(data.get("GrossProfitTTM")),
+                "ebitda": safe_decimal(data.get("EBITDA")),
                 "shares_outstanding": int(data.get("SharesOutstanding", 0) or 0),
-                "week_52_high": float(data.get("52WeekHigh", 0) or 0),
-                "week_52_low": float(data.get("52WeekLow", 0) or 0),
-                "week_50_moving_average": float(data.get("50DayMovingAverage", 0) or 0),
-                "week_200_moving_average": float(
-                    data.get("200DayMovingAverage", 0) or 0
+                "fifty_two_week_high": safe_decimal(data.get("52WeekHigh")),
+                "fifty_two_week_low": safe_decimal(data.get("52WeekLow")),
+                "fifty_day_moving_average": safe_decimal(
+                    data.get("50DayMovingAverage")
                 ),
-                "beta": float(data.get("Beta", 0) or 0),
-                "address": data.get("Address", ""),
-                "latest_quarter": data.get("LatestQuarter", ""),
+                "two_hundred_day_moving_average": safe_decimal(
+                    data.get("200DayMovingAverage")
+                ),
+                "beta": safe_decimal(data.get("Beta")),
                 "fiscal_year_end": data.get("FiscalYearEnd", ""),
-                "analyst_target_price": float(data.get("AnalystTargetPrice", 0) or 0),
-                "trailing_pe": float(data.get("TrailingPE", 0) or 0),
-                "forward_pe": float(data.get("ForwardPE", 0) or 0),
-                "price_to_sales_ratio_ttm": float(
-                    data.get("PriceToSalesRatioTTM", 0) or 0
-                ),
-                "price_to_book_ratio": float(data.get("PriceToBookRatio", 0) or 0),
-                "ev_to_revenue": float(data.get("EVToRevenue", 0) or 0),
-                "ev_to_ebitda": float(data.get("EVToEBITDA", 0) or 0),
+                "analyst_target_price": safe_decimal(data.get("AnalystTargetPrice")),
             }
 
             # CompanyOverview 인스턴스 생성
@@ -137,7 +161,9 @@ class FundamentalService(BaseMarketDataService):
                 return []
 
             # Annual 또는 Quarterly 리포트 선택
-            reports_key = "annualReports" if period == "annual" else "quarterlyReports"
+            reports_key = (
+                "annual_reports" if period == "annual" else "quarterly_reports"
+            )
             reports = data.get(reports_key, [])
 
             income_statements = []
@@ -146,27 +172,20 @@ class FundamentalService(BaseMarketDataService):
                     "symbol": symbol,
                     "fiscal_date_ending": report.get("fiscalDateEnding", ""),
                     "reported_currency": report.get("reportedCurrency", "USD"),
-                    "total_revenue": int(report.get("totalRevenue", 0) or 0),
-                    "cost_of_revenue": int(report.get("costOfRevenue", 0) or 0),
-                    "gross_profit": int(report.get("grossProfit", 0) or 0),
-                    "operating_expenses": int(report.get("operatingExpenses", 0) or 0),
-                    "operating_income": int(report.get("operatingIncome", 0) or 0),
-                    "interest_income": int(report.get("interestIncome", 0) or 0),
-                    "interest_expense": int(report.get("interestExpense", 0) or 0),
-                    "income_before_tax": int(report.get("incomeBeforeTax", 0) or 0),
-                    "income_tax_expense": int(report.get("incomeTaxExpense", 0) or 0),
-                    "net_income": int(report.get("netIncome", 0) or 0),
-                    "ebitda": int(report.get("ebitda", 0) or 0),
-                    "eps": float(report.get("eps", 0) or 0),
-                    "diluted_eps": float(report.get("dilutedEPS", 0) or 0),
-                    "weighted_average_shares_outstanding": int(
-                        report.get("weightedAverageSharesOutstanding", 0) or 0
-                    ),
-                    "weighted_average_shares_outstanding_diluted": int(
-                        report.get("weightedAverageSharesOutstandingDiluted", 0) or 0
-                    ),
-                    "research_and_development": int(
-                        report.get("researchAndDevelopment", 0) or 0
+                    "total_revenue": safe_decimal(report.get("totalRevenue")),
+                    "cost_of_revenue": safe_decimal(report.get("costOfRevenue")),
+                    "gross_profit": safe_decimal(report.get("grossProfit")),
+                    "operating_expenses": safe_decimal(report.get("operatingExpenses")),
+                    "operating_income": safe_decimal(report.get("operatingIncome")),
+                    "interest_income": safe_decimal(report.get("interestIncome")),
+                    "interest_expense": safe_decimal(report.get("interestExpense")),
+                    "income_before_tax": safe_decimal(report.get("incomeBeforeTax")),
+                    "income_tax_expense": safe_decimal(report.get("incomeTaxExpense")),
+                    "net_income": safe_decimal(report.get("netIncome")),
+                    "basic_eps": safe_decimal(report.get("eps")),
+                    "diluted_eps": safe_decimal(report.get("dilutedEPS")),
+                    "research_and_development": safe_decimal(
+                        report.get("researchAndDevelopment")
                     ),
                 }
 
@@ -211,7 +230,9 @@ class FundamentalService(BaseMarketDataService):
                 return []
 
             # Annual 또는 Quarterly 리포트 선택
-            reports_key = "annualReports" if period == "annual" else "quarterlyReports"
+            reports_key = (
+                "annual_reports" if period == "annual" else "quarterly_reports"
+            )
             reports = data.get(reports_key, [])
 
             balance_sheets = []
@@ -220,85 +241,41 @@ class FundamentalService(BaseMarketDataService):
                     "symbol": symbol,
                     "fiscal_date_ending": report.get("fiscalDateEnding", ""),
                     "reported_currency": report.get("reportedCurrency", "USD"),
-                    "total_assets": int(report.get("totalAssets", 0) or 0),
-                    "total_current_assets": int(
-                        report.get("totalCurrentAssets", 0) or 0
+                    "total_assets": safe_decimal(report.get("totalAssets")),
+                    "total_current_assets": safe_decimal(
+                        report.get("totalCurrentAssets")
                     ),
-                    "cash_and_cash_equivalents": int(
-                        report.get("cashAndCashEquivalentsAtCarryingValue", 0) or 0
+                    "cash_and_cash_equivalents": safe_decimal(
+                        report.get("cashAndCashEquivalentsAtCarryingValue")
                     ),
-                    "cash_and_short_term_investments": int(
-                        report.get("cashAndShortTermInvestments", 0) or 0
+                    "cash_and_short_term_investments": safe_decimal(
+                        report.get("cashAndShortTermInvestments")
                     ),
-                    "inventory": int(report.get("inventory", 0) or 0),
-                    "current_net_receivables": int(
-                        report.get("currentNetReceivables", 0) or 0
+                    "inventory": safe_decimal(report.get("inventory")),
+                    "current_net_receivables": safe_decimal(
+                        report.get("currentNetReceivables")
                     ),
-                    "total_non_current_assets": int(
-                        report.get("totalNonCurrentAssets", 0) or 0
+                    "property_plant_equipment": safe_decimal(
+                        report.get("propertyPlantEquipment")
                     ),
-                    "property_plant_equipment": int(
-                        report.get("propertyPlantEquipment", 0) or 0
+                    "goodwill": safe_decimal(report.get("goodwill")),
+                    "intangible_assets": safe_decimal(report.get("intangibleAssets")),
+                    "total_liabilities": safe_decimal(report.get("totalLiabilities")),
+                    "total_current_liabilities": safe_decimal(
+                        report.get("totalCurrentLiabilities")
                     ),
-                    "accumulated_depreciation_amortization_ppe": int(
-                        report.get("accumulatedDepreciationAmortizationPPE", 0) or 0
+                    "current_accounts_payable": safe_decimal(
+                        report.get("currentAccountsPayable")
                     ),
-                    "intangible_assets": int(report.get("intangibleAssets", 0) or 0),
-                    "intangible_assets_excluding_goodwill": int(
-                        report.get("intangibleAssetsExcludingGoodwill", 0) or 0
+                    "deferred_revenue": safe_decimal(report.get("deferredRevenue")),
+                    "current_debt": safe_decimal(report.get("currentDebt")),
+                    "long_term_debt": safe_decimal(report.get("longTermDebt")),
+                    "total_shareholder_equity": safe_decimal(
+                        report.get("totalShareholderEquity")
                     ),
-                    "goodwill": int(report.get("goodwill", 0) or 0),
-                    "investments": int(report.get("investments", 0) or 0),
-                    "long_term_investments": int(
-                        report.get("longTermInvestments", 0) or 0
-                    ),
-                    "short_term_investments": int(
-                        report.get("shortTermInvestments", 0) or 0
-                    ),
-                    "other_current_assets": int(
-                        report.get("otherCurrentAssets", 0) or 0
-                    ),
-                    "other_non_current_assets": int(
-                        report.get("otherNonCurrrentAssets", 0) or 0
-                    ),
-                    "total_liabilities": int(report.get("totalLiabilities", 0) or 0),
-                    "total_current_liabilities": int(
-                        report.get("totalCurrentLiabilities", 0) or 0
-                    ),
-                    "current_accounts_payable": int(
-                        report.get("currentAccountsPayable", 0) or 0
-                    ),
-                    "deferred_revenue": int(report.get("deferredRevenue", 0) or 0),
-                    "current_debt": int(report.get("currentDebt", 0) or 0),
-                    "short_term_debt": int(report.get("shortTermDebt", 0) or 0),
-                    "total_non_current_liabilities": int(
-                        report.get("totalNonCurrentLiabilities", 0) or 0
-                    ),
-                    "capital_lease_obligations": int(
-                        report.get("capitalLeaseObligations", 0) or 0
-                    ),
-                    "long_term_debt": int(report.get("longTermDebt", 0) or 0),
-                    "current_long_term_debt": int(
-                        report.get("currentLongTermDebt", 0) or 0
-                    ),
-                    "long_term_debt_noncurrent": int(
-                        report.get("longTermDebtNoncurrent", 0) or 0
-                    ),
-                    "short_long_term_debt_total": int(
-                        report.get("shortLongTermDebtTotal", 0) or 0
-                    ),
-                    "other_current_liabilities": int(
-                        report.get("otherCurrentLiabilities", 0) or 0
-                    ),
-                    "other_non_current_liabilities": int(
-                        report.get("otherNonCurrentLiabilities", 0) or 0
-                    ),
-                    "total_shareholder_equity": int(
-                        report.get("totalShareholderEquity", 0) or 0
-                    ),
-                    "treasury_stock": int(report.get("treasuryStock", 0) or 0),
-                    "retained_earnings": int(report.get("retainedEarnings", 0) or 0),
-                    "common_stock": int(report.get("commonStock", 0) or 0),
+                    "treasury_stock": safe_decimal(report.get("treasuryStock")),
+                    "retained_earnings": safe_decimal(report.get("retainedEarnings")),
+                    "common_stock": safe_decimal(report.get("commonStock")),
                     "common_stock_shares_outstanding": int(
                         report.get("commonStockSharesOutstanding", 0) or 0
                     ),
@@ -343,7 +320,9 @@ class FundamentalService(BaseMarketDataService):
                 return []
 
             # Annual 또는 Quarterly 리포트 선택
-            reports_key = "annualReports" if period == "annual" else "quarterlyReports"
+            reports_key = (
+                "annual_reports" if period == "annual" else "quarterly_reports"
+            )
             reports = data.get(reports_key, [])
 
             cash_flows = []
@@ -352,81 +331,32 @@ class FundamentalService(BaseMarketDataService):
                     "symbol": symbol,
                     "fiscal_date_ending": report.get("fiscalDateEnding", ""),
                     "reported_currency": report.get("reportedCurrency", "USD"),
-                    "operating_cashflow": int(report.get("operatingCashflow", 0) or 0),
-                    "payments_for_operating_activities": int(
-                        report.get("paymentsForOperatingActivities", 0) or 0
+                    "operating_cashflow": safe_decimal(report.get("operatingCashflow")),
+                    "payments_for_operating_activities": safe_decimal(
+                        report.get("paymentsForOperatingActivities")
                     ),
-                    "proceeds_from_operating_activities": int(
-                        report.get("proceedsFromOperatingActivities", 0) or 0
+                    "proceeds_from_operating_activities": safe_decimal(
+                        report.get("proceedsFromOperatingActivities")
                     ),
-                    "change_in_operating_liabilities": int(
-                        report.get("changeInOperatingLiabilities", 0) or 0
+                    "capital_expenditures": safe_decimal(
+                        report.get("capitalExpenditures")
                     ),
-                    "change_in_operating_assets": int(
-                        report.get("changeInOperatingAssets", 0) or 0
+                    "cashflow_from_investment": safe_decimal(
+                        report.get("cashflowFromInvestment")
                     ),
-                    "depreciation_depletion_amortization": int(
-                        report.get("depreciationDepletionAndAmortization", 0) or 0
+                    "cashflow_from_financing": safe_decimal(
+                        report.get("cashflowFromFinancing")
                     ),
-                    "capital_expenditures": int(
-                        report.get("capitalExpenditures", 0) or 0
+                    "dividend_payments": safe_decimal(report.get("dividendPayout")),
+                    "payments_for_repurchase_of_common_stock": safe_decimal(
+                        report.get("paymentsForRepurchaseOfCommonStock")
                     ),
-                    "change_in_receivables": int(
-                        report.get("changeInReceivables", 0) or 0
+                    "payments_for_repurchase_of_equity": safe_decimal(
+                        report.get("paymentsForRepurchaseOfEquity")
                     ),
-                    "change_in_inventory": int(report.get("changeInInventory", 0) or 0),
-                    "profit_loss": int(report.get("profitLoss", 0) or 0),
-                    "cashflow_from_investment": int(
-                        report.get("cashflowFromInvestment", 0) or 0
+                    "change_in_cash_and_cash_equivalents": safe_decimal(
+                        report.get("changeInCashAndCashEquivalents")
                     ),
-                    "cashflow_from_financing": int(
-                        report.get("cashflowFromFinancing", 0) or 0
-                    ),
-                    "proceeds_from_repayments_of_short_term_debt": int(
-                        report.get("proceedsFromRepaymentsOfShortTermDebt", 0) or 0
-                    ),
-                    "payments_for_repurchase_of_common_stock": int(
-                        report.get("paymentsForRepurchaseOfCommonStock", 0) or 0
-                    ),
-                    "payments_for_repurchase_of_equity": int(
-                        report.get("paymentsForRepurchaseOfEquity", 0) or 0
-                    ),
-                    "payments_for_repurchase_of_preferred_stock": int(
-                        report.get("paymentsForRepurchaseOfPreferredStock", 0) or 0
-                    ),
-                    "dividend_payout": int(report.get("dividendPayout", 0) or 0),
-                    "dividend_payout_common_stock": int(
-                        report.get("dividendPayoutCommonStock", 0) or 0
-                    ),
-                    "dividend_payout_preferred_stock": int(
-                        report.get("dividendPayoutPreferredStock", 0) or 0
-                    ),
-                    "proceeds_from_issuance_of_common_stock": int(
-                        report.get("proceedsFromIssuanceOfCommonStock", 0) or 0
-                    ),
-                    "proceeds_from_issuance_of_long_term_debt_and_capital_securities_net": int(
-                        report.get(
-                            "proceedsFromIssuanceOfLongTermDebtAndCapitalSecuritiesNet",
-                            0,
-                        )
-                        or 0
-                    ),
-                    "proceeds_from_issuance_of_preferred_stock": int(
-                        report.get("proceedsFromIssuanceOfPreferredStock", 0) or 0
-                    ),
-                    "proceeds_from_repayments_of_long_term_debt": int(
-                        report.get("proceedsFromRepaymentsOfLongTermDebt", 0) or 0
-                    ),
-                    "proceeds_from_sale_of_treasury_stock": int(
-                        report.get("proceedsFromSaleOfTreasuryStock", 0) or 0
-                    ),
-                    "change_in_cash_and_cash_equivalents": int(
-                        report.get("changeInCashAndCashEquivalents", 0) or 0
-                    ),
-                    "change_in_exchange_rate": int(
-                        report.get("changeInExchangeRate", 0) or 0
-                    ),
-                    "net_income": int(report.get("netIncome", 0) or 0),
                 }
 
                 cash_flows.append(CashFlow(**cash_flow_data))
@@ -467,32 +397,31 @@ class FundamentalService(BaseMarketDataService):
             earnings_list = []
 
             # Annual earnings
-            annual_earnings = data.get("annualEarnings", [])
+            annual_earnings = data.get("annual_earnings", [])
             for earning in annual_earnings:
                 earnings_data = {
                     "symbol": symbol,
                     "fiscal_date_ending": earning.get("fiscalDateEnding", ""),
-                    "reported_eps": float(earning.get("reportedEPS", 0) or 0),
-                    "period_type": "annual",
-                    "reported_date": "",  # Annual earnings에는 reported date가 없음
+                    "reported_eps": safe_decimal(earning.get("reportedEPS")),
+                    "reported_date": earning.get("reportedDate", ""),
+                    "estimated_eps": None,
                     "surprise": None,
                     "surprise_percentage": None,
                 }
                 earnings_list.append(Earnings(**earnings_data))
 
             # Quarterly earnings
-            quarterly_earnings = data.get("quarterlyEarnings", [])
+            quarterly_earnings = data.get("quarterly_earnings", [])
             for earning in quarterly_earnings:
                 earnings_data = {
                     "symbol": symbol,
                     "fiscal_date_ending": earning.get("fiscalDateEnding", ""),
-                    "reported_eps": float(earning.get("reportedEPS", 0) or 0),
-                    "period_type": "quarterly",
+                    "reported_eps": safe_decimal(earning.get("reportedEPS")),
                     "reported_date": earning.get("reportedDate", ""),
-                    "estimated_eps": float(earning.get("estimatedEPS", 0) or 0),
-                    "surprise": float(earning.get("surprise", 0) or 0),
-                    "surprise_percentage": float(
-                        earning.get("surprisePercentage", 0) or 0
+                    "estimated_eps": safe_decimal(earning.get("estimatedEPS")),
+                    "surprise": safe_decimal(earning.get("surprise")),
+                    "surprise_percentage": safe_decimal(
+                        earning.get("surprisePercentage")
                     ),
                 }
                 earnings_list.append(Earnings(**earnings_data))

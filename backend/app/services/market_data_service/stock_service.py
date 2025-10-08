@@ -18,6 +18,33 @@ from app.models.market_data.stock import DailyPrice
 logger = logging.getLogger(__name__)
 
 
+def safe_decimal(value) -> Decimal:
+    """안전하게 Decimal로 변환하는 유틸리티 함수"""
+    if value is None:
+        return Decimal("0.0")
+
+    # Decimal128 타입 처리 (MongoDB)
+    if hasattr(value, "to_decimal"):
+        return value.to_decimal()
+
+    # MongoDB Decimal128 타입명 체크
+    if type(value).__name__ == "Decimal128":
+        return Decimal(str(value))
+
+    # 이미 Decimal인 경우
+    if isinstance(value, Decimal):
+        return value
+
+    # 문자열 또는 숫자인 경우
+    try:
+        return Decimal(str(value))
+    except (ValueError, TypeError):
+        logger.warning(
+            f"Failed to convert {value} ({type(value)}) to Decimal, using 0.0"
+        )
+        return Decimal("0.0")
+
+
 class StockService(BaseMarketDataService):
     """주식 데이터 서비스"""
 
@@ -55,54 +82,151 @@ class StockService(BaseMarketDataService):
                 symbol=symbol, outputsize=outputsize  # type: ignore
             )
 
-            if isinstance(response, list) and len(response) > 0:
-                response = response[0]
+            # 응답 데이터 구조 로깅
+            logger.info(f"Alpha Vantage response type: {type(response)}")
 
-            if not isinstance(response, dict) or "Time Series (Daily)" not in response:
-                logger.warning(f"Invalid daily price response for {symbol}")
-                return []
+            # mysingle_quant 클라이언트가 이미 파싱된 리스트를 반환하는 경우
+            if isinstance(response, list):
+                logger.info(f"Response is list with {len(response)} items")
+                daily_prices = []
 
-            time_series = response["Time Series (Daily)"]
-            daily_prices = []
+                for item in response:
+                    if not isinstance(item, dict):
+                        continue
 
-            for date_str, price_data in time_series.items():
-                try:
-                    # 데이터 품질 확인
-                    quality_score = DataQualityValidator.validate_price_data(price_data)
+                    try:
+                        # 데이터 품질 확인 (간단한 검증)
+                        required_fields = [
+                            "date",
+                            "open",
+                            "high",
+                            "low",
+                            "close",
+                            "volume",
+                        ]
+                        if not all(field in item for field in required_fields):
+                            logger.warning(
+                                f"Missing required fields in item: {item.keys()}"
+                            )
+                            continue
 
-                    # date 객체를 datetime으로 변환
-                    date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+                        # date 처리 - 문자열 또는 datetime 객체 모두 처리
+                        date_value = item["date"]
+                        if isinstance(date_value, str):
+                            date_obj = datetime.strptime(date_value, "%Y-%m-%d")
+                        elif isinstance(date_value, datetime):
+                            date_obj = date_value
+                        else:
+                            logger.warning(f"Unexpected date type: {type(date_value)}")
+                            continue
 
-                    daily_price = DailyPrice(
-                        symbol=symbol,
-                        date=date_obj,  # datetime 객체로 변경
-                        open=Decimal(str(price_data["1. open"])),
-                        high=Decimal(str(price_data["2. high"])),
-                        low=Decimal(str(price_data["3. low"])),
-                        close=Decimal(str(price_data["4. close"])),
-                        volume=int(price_data["6. volume"]),
-                        adjusted_close=Decimal(str(price_data["5. adjusted close"])),
-                        dividend_amount=Decimal(
-                            str(price_data.get("7. dividend amount", 0))
-                        ),
-                        split_coefficient=Decimal(
-                            str(price_data.get("8. split coefficient", 1))
-                        ),
-                        data_quality_score=quality_score.overall_score,
-                        source="alpha_vantage",
-                        # 가격 변동은 나중에 계산하거나 기본값 설정
-                        price_change=Decimal("0.0"),
-                        price_change_percent=Decimal("0.0"),
-                    )
-                    daily_prices.append(daily_price)
-                except (ValueError, KeyError) as e:
+                        daily_price = DailyPrice(
+                            symbol=symbol,
+                            date=date_obj,
+                            open=safe_decimal(item["open"]),
+                            high=safe_decimal(item["high"]),
+                            low=safe_decimal(item["low"]),
+                            close=safe_decimal(item["close"]),
+                            volume=int(item["volume"]),
+                            adjusted_close=safe_decimal(
+                                item.get("adjusted_close", item["close"])
+                            ),
+                            dividend_amount=safe_decimal(
+                                item.get("dividend_amount", 0)
+                            ),
+                            split_coefficient=safe_decimal(
+                                item.get("split_coefficient", 1)
+                            ),
+                            data_quality_score=95.0,  # 기본 품질 점수
+                            source="alpha_vantage",
+                            price_change=safe_decimal("0.0"),
+                            price_change_percent=safe_decimal("0.0"),
+                        )
+                        daily_prices.append(daily_price)
+
+                    except (ValueError, KeyError) as e:
+                        logger.warning(f"Failed to parse daily price data: {e}")
+                        continue
+
+                logger.info(f"Fetched {len(daily_prices)} daily prices for {symbol}")
+                return daily_prices
+
+            # 기존 딕셔너리 구조 처리 (fallback)
+            elif isinstance(response, dict):
+                logger.info(f"Response is dict with keys: {list(response.keys())}")
+
+                # Time Series 키를 확인
+                available_keys = list(response.keys())
+                time_series_key = None
+                for key in available_keys:
+                    if "time series" in key.lower() or "daily" in key.lower():
+                        time_series_key = key
+                        break
+
+                if not time_series_key:
                     logger.warning(
-                        f"Failed to parse daily price data for {date_str}: {e}"
+                        f"No time series data found for {symbol}. Available keys: {available_keys}"
                     )
-                    continue
+                    return []
 
-            logger.info(f"Fetched {len(daily_prices)} daily prices for {symbol}")
-            return daily_prices
+                time_series = response.get(time_series_key, {})
+                if not isinstance(time_series, dict):
+                    logger.warning(
+                        f"Invalid time series data type: {type(time_series)}"
+                    )
+                    return []
+
+                daily_prices = []
+
+                # 타입 캐스팅을 통해 타입 체크 우회
+                time_series_dict = cast(dict, time_series)
+                for date_str, price_data in time_series_dict.items():
+                    try:
+                        # 데이터 품질 확인
+                        quality_score = DataQualityValidator.validate_price_data(
+                            price_data
+                        )
+
+                        # date 객체를 datetime으로 변환
+                        date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+
+                        daily_price = DailyPrice(
+                            symbol=symbol,
+                            date=date_obj,
+                            open=safe_decimal(price_data["1. open"]),
+                            high=safe_decimal(price_data["2. high"]),
+                            low=safe_decimal(price_data["3. low"]),
+                            close=safe_decimal(price_data["4. close"]),
+                            volume=int(price_data["6. volume"]),
+                            adjusted_close=safe_decimal(
+                                price_data["5. adjusted close"]
+                            ),
+                            dividend_amount=safe_decimal(
+                                price_data.get("7. dividend amount", 0)
+                            ),
+                            split_coefficient=safe_decimal(
+                                price_data.get("8. split coefficient", 1)
+                            ),
+                            data_quality_score=quality_score.overall_score,
+                            source="alpha_vantage",
+                            price_change=safe_decimal("0.0"),
+                            price_change_percent=safe_decimal("0.0"),
+                        )
+                        daily_prices.append(daily_price)
+                    except (ValueError, KeyError) as e:
+                        logger.warning(
+                            f"Failed to parse daily price data for {date_str}: {e}"
+                        )
+                        continue
+
+                logger.info(f"Fetched {len(daily_prices)} daily prices for {symbol}")
+                return daily_prices
+
+            else:
+                logger.warning(
+                    f"Unexpected response type for {symbol}: {type(response)}"
+                )
+                return []
 
         except Exception as e:
             logger.error(f"Failed to fetch daily prices from Alpha Vantage: {e}")
@@ -168,24 +292,24 @@ class StockService(BaseMarketDataService):
                             daily_price = DailyPrice(
                                 symbol=symbol,
                                 date=date_obj,
-                                open=Decimal(str(price_data["1. open"])),
-                                high=Decimal(str(price_data["2. high"])),
-                                low=Decimal(str(price_data["3. low"])),
-                                close=Decimal(str(price_data["4. close"])),
+                                open=safe_decimal(price_data["1. open"]),
+                                high=safe_decimal(price_data["2. high"]),
+                                low=safe_decimal(price_data["3. low"]),
+                                close=safe_decimal(price_data["4. close"]),
                                 volume=int(price_data["6. volume"]),
-                                adjusted_close=Decimal(
-                                    str(price_data["5. adjusted close"])
+                                adjusted_close=safe_decimal(
+                                    price_data["5. adjusted close"]
                                 ),
-                                dividend_amount=Decimal(
-                                    str(price_data.get("7. dividend amount", 0))
+                                dividend_amount=safe_decimal(
+                                    price_data.get("7. dividend amount", 0)
                                 ),
-                                split_coefficient=Decimal(
-                                    str(price_data.get("8. split coefficient", 1))
+                                split_coefficient=safe_decimal(
+                                    price_data.get("8. split coefficient", 1)
                                 ),
                                 data_quality_score=95.0,  # 기본 품질 점수
                                 source="alpha_vantage",
-                                price_change=Decimal("0.0"),
-                                price_change_percent=Decimal("0.0"),
+                                price_change=safe_decimal("0.0"),
+                                price_change_percent=safe_decimal("0.0"),
                             )
                             daily_prices.append(daily_price)
                         except (ValueError, KeyError) as parse_error:

@@ -1,21 +1,16 @@
 "use client";
 
 import { Alert, Box, CircularProgress, Grid, Typography } from "@mui/material";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import type { StrategyType } from "@/client/types.gen";
+import type { StrategyType, TemplateResponse } from "@/client/types.gen";
 import PageContainer from "@/components/layout/PageContainer";
 import StrategyCard from "@/components/strategies/StrategyCard";
 import StrategyFilters from "@/components/strategies/StrategyFilters";
-import {
-	templatesCreateStrategyFromTemplateMutation,
-	useTemplatesQuery,
-} from "@/services/strategiesQuery";
+import { useTemplates } from "@/hooks/useTemplates";
 
 export default function StrategyTemplatesPage() {
 	const router = useRouter();
-	const queryClient = useQueryClient();
 
 	// 필터 상태
 	const [searchQuery, setSearchQuery] = useState("");
@@ -25,24 +20,15 @@ export default function StrategyTemplatesPage() {
 
 	// 템플릿 데이터 조회
 	const {
-		data: templatesData,
+		templates,
 		isLoading,
 		error,
-	} = useQuery(useTemplatesQuery({}));
-
-	// 템플릿에서 전략 생성 뮤테이션
-	const createStrategyFromTemplate = useMutation({
-		...templatesCreateStrategyFromTemplateMutation(),
-		onSuccess: (data: any) => {
-			queryClient.invalidateQueries({ queryKey: ["strategiesGetStrategies"] });
-			router.push(`/strategies/${data.id}`);
-		},
-	});
-
-	const templates = templatesData?.templates || [];
+		createStrategyFromTemplate,
+		isMutating,
+	} = useTemplates();
 
 	// 필터링된 템플릿
-	const filteredTemplates = templates.filter((template: any) => {
+	const filteredTemplates = templates?.filter((template: TemplateResponse) => {
 		// 검색어 필터
 		if (
 			searchQuery &&
@@ -70,17 +56,15 @@ export default function StrategyTemplatesPage() {
 
 	// 모든 태그 수집
 	const allTags = Array.from(
-		new Set(templates.flatMap((template: any) => template.tags || [])),
+		new Set(templates?.flatMap((template: any) => template.tags || [])),
 	);
 
 	const handleCreateFromTemplate = (template: any) => {
 		const strategyName = `${template.name} (사본)`;
 
-		createStrategyFromTemplate.mutate({
-			path: { template_id: template.id },
-			body: {
-				name: strategyName,
-			},
+		createStrategyFromTemplate({
+			templateId: template.id,
+			strategyData: { name: strategyName },
 		});
 	};
 
@@ -149,17 +133,17 @@ export default function StrategyTemplatesPage() {
 						}}
 					>
 						<Typography variant="h6">
-							템플릿 목록 ({filteredTemplates.length}개)
+							템플릿 목록 ({filteredTemplates?.length}개)
 						</Typography>
 					</Box>
 
-					{filteredTemplates.length === 0 ? (
+					{filteredTemplates?.length === 0 ? (
 						<Alert severity="info">
 							조건에 맞는 템플릿이 없습니다. 필터 조건을 변경해보세요.
 						</Alert>
 					) : (
 						<Grid container spacing={3}>
-							{filteredTemplates.map((template: any) => (
+							{filteredTemplates?.map((template: any) => (
 								<Grid key={template.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
 									<StrategyCard
 										strategy={{
@@ -182,7 +166,7 @@ export default function StrategyTemplatesPage() {
 				</>
 			)}
 
-			{createStrategyFromTemplate.isPending && (
+			{isMutating && (
 				<Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
 					<CircularProgress size={24} />
 					<Typography variant="body2" sx={{ ml: 1 }}>

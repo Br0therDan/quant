@@ -22,13 +22,9 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
 import React from "react";
 
-import {
-  marketDataGetAvailableSymbolsOptions,
-  pipelineListWatchlistsOptions,
-} from "@/client/@tanstack/react-query.gen";
+import { useWatchlist, useWatchlistDetail } from "@/hooks/useWatchList";
 
 interface WatchListItem {
   symbol: string;
@@ -127,7 +123,9 @@ function WatchListItemComponent({
                   {isPositive ? (
                     <TrendingUpIcon sx={{ fontSize: 12, color: changeColor }} />
                   ) : (
-                    <TrendingDownIcon sx={{ fontSize: 12, color: changeColor }} />
+                    <TrendingDownIcon
+                      sx={{ fontSize: 12, color: changeColor }}
+                    />
                   )}
                   <Typography variant="caption" sx={{ color: changeColor }}>
                     {isPositive ? "+" : ""}
@@ -155,25 +153,44 @@ export default function WatchList({
   const [searchTerm, setSearchTerm] = React.useState("");
   const [favorites, setFavorites] = React.useState<Set<string>>(new Set());
 
-  // 사용 가능한 심볼 목록 조회
-  const { data: availableSymbols, isLoading: symbolsLoading } = useQuery(
-    marketDataGetAvailableSymbolsOptions()
-  );
+  // 새로운 훅들 사용
+  const {
+    watchlistList,
+    isLoading: { watchlistList: watchlistsLoading },
+  } = useWatchlist();
+  const { data: defaultWatchlist } = useWatchlistDetail("default");
 
-  // 워치리스트 목록 조회
-  const { data: watchlists, isLoading: watchlistsLoading } = useQuery(
-    pipelineListWatchlistsOptions()
-  );
+  // 기본 심볼 리스트 (API에서 가져올 수 없는 경우 사용)
+  const defaultSymbols = [
+    "AAPL",
+    "GOOGL",
+    "MSFT",
+    "TSLA",
+    "AMZN",
+    "NVDA",
+    "META",
+    "NFLX",
+  ];
+  const availableSymbols = defaultSymbols;
+  const symbolsLoading = false;
 
-  // 첫 번째 워치리스트의 심볼들을 즐겨찾기로 설정
+  // 워치리스트에서 즐겨찾기 심볼 설정
   React.useEffect(() => {
-    if (watchlists && Array.isArray(watchlists) && watchlists.length > 0) {
-      const firstWatchlist = watchlists[0] as any;
-      if (firstWatchlist.symbols && Array.isArray(firstWatchlist.symbols)) {
-        setFavorites(new Set(firstWatchlist.symbols));
-      }
+    // 우선순위: defaultWatchlist > watchlistList 첫번째 아이템
+    const targetWatchlist =
+      defaultWatchlist ||
+      (Array.isArray(watchlistList) && watchlistList.length > 0
+        ? watchlistList[0]
+        : null);
+
+    if (
+      targetWatchlist &&
+      (targetWatchlist as any)?.symbols &&
+      Array.isArray((targetWatchlist as any).symbols)
+    ) {
+      setFavorites(new Set((targetWatchlist as any).symbols));
     }
-  }, [watchlists]);
+  }, [watchlistList, defaultWatchlist]);
 
   const toggleFavorite = (symbol: string) => {
     setFavorites((prev) => {
@@ -189,9 +206,18 @@ export default function WatchList({
 
   // 사용 가능한 심볼을 WatchListItem 형태로 변환
   const watchListItems: WatchListItem[] = React.useMemo(() => {
-    if (!availableSymbols || !Array.isArray(availableSymbols)) return [];
+    const symbols = availableSymbols || [
+      "AAPL",
+      "GOOGL",
+      "MSFT",
+      "TSLA",
+      "AMZN",
+      "NVDA",
+    ];
 
-    return availableSymbols.map((symbol: string) => ({
+    if (!Array.isArray(symbols)) return [];
+
+    return symbols.map((symbol: string) => ({
       symbol,
       price: undefined, // 실제 가격 데이터는 별도 API 호출 필요
       change: undefined,
@@ -270,48 +296,48 @@ export default function WatchList({
                       즐겨찾기
                     </Typography>
                   </ListItem>
-              {favoriteItems.map((item) => (
-                <WatchListItemComponent
-                  key={item.symbol}
-                  item={item}
-                  selectedSymbol={selectedSymbol}
-                  onSymbolChange={onSymbolChange}
-                  favorites={favorites}
-                  toggleFavorite={toggleFavorite}
-                  theme={theme}
-                />
-              ))}
-              {otherItems.length > 0 && <Divider sx={{ my: 1 }} />}
-            </>
-          )}
-
-          {/* 기타 종목 섹션 */}
-          {otherItems.length > 0 && (
-            <>
-              {favoriteItems.length > 0 && (
-                <ListItem>
-                  <Typography
-                    variant="caption"
-                    color="text.secondary"
-                    fontWeight="medium"
-                  >
-                    전체
-                  </Typography>
-                </ListItem>
+                  {favoriteItems.map((item) => (
+                    <WatchListItemComponent
+                      key={item.symbol}
+                      item={item}
+                      selectedSymbol={selectedSymbol}
+                      onSymbolChange={onSymbolChange}
+                      favorites={favorites}
+                      toggleFavorite={toggleFavorite}
+                      theme={theme}
+                    />
+                  ))}
+                  {otherItems.length > 0 && <Divider sx={{ my: 1 }} />}
+                </>
               )}
-              {otherItems.map((item) => (
-                <WatchListItemComponent
-                  key={item.symbol}
-                  item={item}
-                  selectedSymbol={selectedSymbol}
-                  onSymbolChange={onSymbolChange}
-                  favorites={favorites}
-                  toggleFavorite={toggleFavorite}
-                  theme={theme}
-                />
-              ))}
-            </>
-          )}
+
+              {/* 기타 종목 섹션 */}
+              {otherItems.length > 0 && (
+                <>
+                  {favoriteItems.length > 0 && (
+                    <ListItem>
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        fontWeight="medium"
+                      >
+                        전체
+                      </Typography>
+                    </ListItem>
+                  )}
+                  {otherItems.map((item) => (
+                    <WatchListItemComponent
+                      key={item.symbol}
+                      item={item}
+                      selectedSymbol={selectedSymbol}
+                      onSymbolChange={onSymbolChange}
+                      favorites={favorites}
+                      toggleFavorite={toggleFavorite}
+                      theme={theme}
+                    />
+                  ))}
+                </>
+              )}
 
               {filteredItems.length === 0 && (
                 <ListItem>

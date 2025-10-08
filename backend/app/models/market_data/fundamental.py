@@ -4,11 +4,35 @@ Fundamental analysis data models
 """
 
 from datetime import datetime
-from typing import Optional
-from pydantic import Field
+from typing import Optional, Any
+from pydantic import Field, field_validator
 from decimal import Decimal
+from bson import Decimal128
 
 from .base import BaseMarketDataDocument, DataQualityMixin
+
+
+def safe_decimal_converter(value: Any) -> Optional[Decimal]:
+    """MongoDB Decimal128과 다양한 타입을 안전하게 Decimal로 변환"""
+    if value is None:
+        return None
+
+    if isinstance(value, Decimal128):
+        return value.to_decimal()
+
+    if isinstance(value, Decimal):
+        return value
+
+    if isinstance(value, (int, float)):
+        return Decimal(str(value))
+
+    if isinstance(value, str):
+        try:
+            return Decimal(value) if value and value != "None" else None
+        except Exception:
+            return None
+
+    return None
 
 
 class CompanyOverview(BaseMarketDataDocument, DataQualityMixin):
@@ -75,6 +99,39 @@ class CompanyOverview(BaseMarketDataDocument, DataQualityMixin):
     beta: Optional[Decimal] = Field(None, description="베타")
     analyst_target_price: Optional[Decimal] = Field(None, description="목표 주가", gt=0)
 
+    # Decimal field validators for MongoDB Decimal128 compatibility
+    @field_validator(
+        "market_capitalization",
+        "ebitda",
+        "pe_ratio",
+        "peg_ratio",
+        "book_value",
+        "dividend_per_share",
+        "dividend_yield",
+        "eps",
+        "revenue_per_share_ttm",
+        "profit_margin",
+        "operating_margin_ttm",
+        "return_on_assets_ttm",
+        "return_on_equity_ttm",
+        "revenue_ttm",
+        "gross_profit_ttm",
+        "fifty_two_week_high",
+        "fifty_two_week_low",
+        "fifty_day_moving_average",
+        "two_hundred_day_moving_average",
+        "short_ratio",
+        "short_percent_outstanding",
+        "short_percent_float",
+        "beta",
+        "analyst_target_price",
+        mode="before",
+    )
+    @classmethod
+    def convert_decimal_fields(cls, value: Any) -> Optional[Decimal]:
+        """MongoDB Decimal128을 Decimal로 변환"""
+        return safe_decimal_converter(value)
+
     class Settings:
         name = "company_overviews"
         indexes = [
@@ -139,6 +196,30 @@ class IncomeStatement(BaseMarketDataDocument, DataQualityMixin):
     diluted_shares_outstanding: Optional[int] = Field(None, description="희석 주식수", ge=0)
     basic_eps: Optional[Decimal] = Field(None, description="기본 주당순이익")
     diluted_eps: Optional[Decimal] = Field(None, description="희석 주당순이익")
+
+    # Decimal field validators for MongoDB Decimal128 compatibility
+    @field_validator(
+        "total_revenue",
+        "cost_of_revenue",
+        "gross_profit",
+        "research_and_development",
+        "selling_general_administrative",
+        "operating_expenses",
+        "operating_income",
+        "interest_income",
+        "interest_expense",
+        "total_other_income_expense_net",
+        "income_before_tax",
+        "income_tax_expense",
+        "net_income",
+        "basic_eps",
+        "diluted_eps",
+        mode="before",
+    )
+    @classmethod
+    def convert_decimal_fields(cls, value: Any) -> Optional[Decimal]:
+        """MongoDB Decimal128을 Decimal로 변환"""
+        return safe_decimal_converter(value)
 
     class Settings:
         name = "income_statements"
@@ -213,6 +294,36 @@ class BalanceSheet(BaseMarketDataDocument, DataQualityMixin):
     common_stock_shares_outstanding: Optional[int] = Field(
         None, description="보통주 발행주식수", ge=0
     )
+
+    # Decimal field validators for MongoDB Decimal128 compatibility
+    @field_validator(
+        "total_current_assets",
+        "cash_and_cash_equivalents",
+        "cash_and_short_term_investments",
+        "inventory",
+        "current_net_receivables",
+        "total_assets",
+        "property_plant_equipment",
+        "goodwill",
+        "intangible_assets",
+        "total_current_liabilities",
+        "current_accounts_payable",
+        "deferred_revenue",
+        "current_debt",
+        "total_liabilities",
+        "total_non_current_liabilities",
+        "capital_lease_obligations",
+        "long_term_debt",
+        "total_shareholder_equity",
+        "treasury_stock",
+        "retained_earnings",
+        "common_stock",
+        mode="before",
+    )
+    @classmethod
+    def convert_decimal_fields(cls, value: Any) -> Optional[Decimal]:
+        """MongoDB Decimal128을 Decimal로 변환"""
+        return safe_decimal_converter(value)
 
     class Settings:
         name = "balance_sheets"
@@ -293,6 +404,28 @@ class CashFlow(BaseMarketDataDocument, DataQualityMixin):
         None, description="현금 및 현금성자산 변동"
     )
 
+    # Decimal field validators for MongoDB Decimal128 compatibility
+    @field_validator(
+        "operating_cashflow",
+        "payments_for_operating_activities",
+        "proceeds_from_operating_activities",
+        "capital_expenditures",
+        "proceeds_from_investment_activities",
+        "payments_for_investment_activities",
+        "cashflow_from_investment",
+        "cashflow_from_financing",
+        "proceeds_from_repayments_of_short_term_debt",
+        "payments_for_repurchase_of_common_stock",
+        "payments_for_repurchase_of_equity",
+        "dividend_payments",
+        "change_in_cash_and_cash_equivalents",
+        mode="before",
+    )
+    @classmethod
+    def convert_decimal_fields(cls, value: Any) -> Optional[Decimal]:
+        """MongoDB Decimal128을 Decimal로 변환"""
+        return safe_decimal_converter(value)
+
     class Settings:
         name = "cash_flows"
         indexes = [
@@ -349,6 +482,19 @@ class Earnings(BaseMarketDataDocument, DataQualityMixin):
     estimated_eps: Optional[Decimal] = Field(None, description="예상 EPS")
     surprise: Optional[Decimal] = Field(None, description="서프라이즈")
     surprise_percentage: Optional[Decimal] = Field(None, description="서프라이즈 비율 (%)")
+
+    # Decimal field validators for MongoDB Decimal128 compatibility
+    @field_validator(
+        "reported_eps",
+        "estimated_eps",
+        "surprise",
+        "surprise_percentage",
+        mode="before",
+    )
+    @classmethod
+    def convert_decimal_fields(cls, value: Any) -> Optional[Decimal]:
+        """MongoDB Decimal128을 Decimal로 변환"""
+        return safe_decimal_converter(value)
 
     class Settings:
         name = "earnings"

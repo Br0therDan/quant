@@ -174,6 +174,10 @@ class DatabaseManager:
 
         # 인덱스 생성
         self._create_indexes()
+
+        # 캐시 테이블 생성
+        self._create_cache_table("market_data_cache")
+
         logger.info("데이터베이스 테이블 생성 완료")
 
     def _create_indexes(self) -> None:
