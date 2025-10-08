@@ -60,15 +60,6 @@ export function useEconomic() {
         gcTime: 4 * 60 * 60 * 1000, // 4 hours
     });
 
-    const consumerSentimentQuery = useQuery({
-        queryKey: economicQueryKeys.consumerSentiment(),
-        queryFn: async () => {
-            const response = await EconomicService.getConsumerSentiment();
-            return response.data;
-        },
-        staleTime: 1000 * 60 * 60, // 1 hour
-        gcTime: 4 * 60 * 60 * 1000, // 4 hours
-    });
 
     return useMemo(() => ({
 
@@ -77,7 +68,6 @@ export function useEconomic() {
         inflationData: inflationDataQuery.data,
         interestRates: interestRatesQuery.data,
         employmentData: employmentDataQuery.data,
-        consumerSentiment: consumerSentimentQuery.data,
 
         // Status
         isError: {
@@ -85,28 +75,24 @@ export function useEconomic() {
             inflationData: inflationDataQuery.isError,
             interestRates: interestRatesQuery.isError,
             employmentData: employmentDataQuery.isError,
-            consumerSentiment: consumerSentimentQuery.isError,
         },
         isLoading: {
             gdpData: gdpDataQuery.isLoading,
             inflationData: inflationDataQuery.isLoading,
             interestRates: interestRatesQuery.isLoading,
             employmentData: employmentDataQuery.isLoading,
-            consumerSentiment: consumerSentimentQuery.isLoading,
         },
         isPending: {
             gdpData: gdpDataQuery.isPending,
             inflationData: inflationDataQuery.isPending,
             interestRates: interestRatesQuery.isPending,
             employmentData: employmentDataQuery.isPending,
-            consumerSentiment: consumerSentimentQuery.isPending,
         },
         error: {
             gdpData: gdpDataQuery.error,
             inflationData: inflationDataQuery.error,
             interestRates: interestRatesQuery.error,
             employmentData: employmentDataQuery.error,
-            consumerSentiment: consumerSentimentQuery.error,
         },
 
         // Actions
@@ -115,7 +101,6 @@ export function useEconomic() {
             inflationData: inflationDataQuery.refetch,
             interestRates: interestRatesQuery.refetch,
             employmentData: employmentDataQuery.refetch,
-            consumerSentiment: consumerSentimentQuery.refetch,
         },
 
         // Query Objects (if needed for advanced usage)
@@ -124,7 +109,6 @@ export function useEconomic() {
             inflationDataQuery,
             interestRatesQuery,
             employmentDataQuery,
-            consumerSentimentQuery,
         },
 
     }), [
@@ -132,6 +116,5 @@ export function useEconomic() {
         inflationDataQuery,
         interestRatesQuery,
         employmentDataQuery,
-        consumerSentimentQuery,
     ]);
 }

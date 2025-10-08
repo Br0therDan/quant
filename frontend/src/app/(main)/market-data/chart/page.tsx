@@ -45,29 +45,45 @@ export default function MarketDataChartPage() {
   } = useWatchlist();
   const { data: watchlistDetail } = useWatchlistDetail("default");
 
-  // 선택된 심볼의 데이터 조회
-  const {
-    data: dailyPrices,
-    isLoading: dailyLoading,
-    refetch: refetchDaily,
-  } = useStockDailyPrices(selectedSymbol);
+  // 기간에 따른 적절한 API 선택
+  const shouldUseHistorical = React.useMemo(() => {
+    if (!startDate || !endDate) return false;
+    const daysDiff = endDate.diff(startDate, "day");
+    return daysDiff > 5; // 5일 이상이면 historical API 사용
+  }, [startDate, endDate]);
+
+  // 실시간 Quote (항상 필요)
   const { data: currentQuote, isLoading: quoteLoading } =
     useStockQuote(selectedSymbol);
+
+  // 조건부 데이터 호출 - Historical API (장기간)
   const {
     data: historicalData,
     isLoading: historicalLoading,
     refetch: refetchHistorical,
-  } = useStockHistorical(selectedSymbol, {
-    startDate: startDate?.format("YYYY-MM-DD"),
-    endDate: endDate?.format("YYYY-MM-DD"),
-    frequency: interval === "1d" ? "daily" : interval,
-  });
+  } = useStockHistorical(
+    selectedSymbol,
+    {
+      startDate: startDate?.format("YYYY-MM-DD"),
+      endDate: endDate?.format("YYYY-MM-DD"),
+      frequency: interval === "1d" ? "daily" : interval,
+    },
+    {
+      enabled: shouldUseHistorical && !!selectedSymbol,
+    }
+  );
+
+  // 조건부 데이터 호출 - Daily API (단기간)
+  const {
+    data: dailyPrices,
+    isLoading: dailyLoading,
+    refetch: refetchDaily,
+  } = useStockDailyPrices(shouldUseHistorical ? "" : selectedSymbol);
 
   // 사용 가능한 심볼들 (워치리스트에서 가져오기)
   const availableSymbols = React.useMemo(() => {
     const watchlistSymbols = (watchlistDetail as any)?.symbols || [];
-    const defaultSymbols = ["AAPL", "GOOGL", "MSFT", "TSLA", "AMZN", "NVDA"];
-    return watchlistSymbols.length > 0 ? watchlistSymbols : defaultSymbols;
+    return watchlistSymbols.length > 0 ? watchlistSymbols : ["AAPL"]; // 기본값 최소화
   }, [watchlistDetail]);
 
   // 첫 번째 심볼 자동 선택
@@ -82,16 +98,24 @@ export default function MarketDataChartPage() {
   }, [availableSymbols, selectedSymbol]);
 
   const handleRefresh = React.useCallback(() => {
-    refetchDaily();
-    refetchHistorical();
-  }, [refetchDaily, refetchHistorical]);
+    if (shouldUseHistorical) {
+      refetchHistorical();
+    } else {
+      refetchDaily();
+    }
+  }, [shouldUseHistorical, refetchHistorical, refetchDaily]);
 
   const handleSymbolChange = React.useCallback((symbol: string) => {
     setSelectedSymbol(symbol);
   }, []);
 
-  // 차트 데이터 결정 (히스토리컬 데이터 우선, 없으면 일일 데이터)
-  const rawData = historicalData || dailyPrices;
+  // 차트 데이터 결정 - 조건에 따라 적절한 데이터 선택
+  const rawData = React.useMemo(() => {
+    if (shouldUseHistorical) {
+      return historicalData;
+    }
+    return dailyPrices;
+  }, [shouldUseHistorical, historicalData, dailyPrices]);
 
   // 마켓 데이터를 차트 데이터로 변환
   const chartData: CandlestickData[] = React.useMemo(() => {
@@ -167,8 +191,19 @@ export default function MarketDataChartPage() {
     return null;
   }, [chartData, currentQuote, selectedSymbol]);
 
-  const isLoading =
-    watchlistLoading || dailyLoading || quoteLoading || historicalLoading;
+  const isLoading = React.useMemo(() => {
+    return (
+      watchlistLoading ||
+      quoteLoading ||
+      (shouldUseHistorical ? historicalLoading : dailyLoading)
+    );
+  }, [
+    watchlistLoading,
+    quoteLoading,
+    shouldUseHistorical,
+    historicalLoading,
+    dailyLoading,
+  ]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">

@@ -12,12 +12,18 @@ export const stockQueryKeys = {
     all: ["stock"] as const,
     dailyPrices: () => [...stockQueryKeys.all, "dailyPrices"] as const,
     dailyPricesSymbol: (symbol: string) => [...stockQueryKeys.dailyPrices(), symbol] as const,
+    weeklyPrices: () => [...stockQueryKeys.all, "weeklyPrices"] as const,
+    weeklyPricesSymbol: (symbol: string) => [...stockQueryKeys.weeklyPrices(), symbol] as const,
+    monthlyPrices: () => [...stockQueryKeys.all, "monthlyPrices"] as const,
+    monthlyPricesSymbol: (symbol: string) => [...stockQueryKeys.monthlyPrices(), symbol] as const,
     quote: () => [...stockQueryKeys.all, "quote"] as const,
     quoteSymbol: (symbol: string) => [...stockQueryKeys.quote(), symbol] as const,
     intraday: () => [...stockQueryKeys.all, "intraday"] as const,
     intradaySymbol: (symbol: string, interval?: string) => [...stockQueryKeys.intraday(), symbol, { interval }] as const,
     historical: () => [...stockQueryKeys.all, "historical"] as const,
     historicalSymbol: (symbol: string, period?: string) => [...stockQueryKeys.historical(), symbol, { period }] as const,
+    search: () => [...stockQueryKeys.all, "search"] as const,
+    searchSymbols: (keywords: string) => [...stockQueryKeys.search(), keywords] as const,
 };
 
 export function useStocks() {
@@ -42,6 +48,36 @@ export const useStockDailyPrices = (symbol: string) => {
     });
 };
 
+export const useStockWeeklyPrices = (symbol: string) => {
+    return useQuery({
+        queryKey: stockQueryKeys.weeklyPricesSymbol(symbol),
+        queryFn: async () => {
+            const response = await StockService.getWeeklyPrices({
+                path: { symbol }
+            });
+            return response.data;
+        },
+        enabled: !!symbol,
+        staleTime: 1000 * 60 * 60, // 1 hour
+        gcTime: 2 * 60 * 60 * 1000, // 2 hours
+    });
+};
+
+export const useStockMonthlyPrices = (symbol: string) => {
+    return useQuery({
+        queryKey: stockQueryKeys.monthlyPricesSymbol(symbol),
+        queryFn: async () => {
+            const response = await StockService.getMonthlyPrices({
+                path: { symbol }
+            });
+            return response.data;
+        },
+        enabled: !!symbol,
+        staleTime: 1000 * 60 * 60 * 2, // 2 hours
+        gcTime: 4 * 60 * 60 * 1000, // 4 hours
+    });
+};
+
 export const useStockQuote = (symbol: string) => {
     return useQuery({
         queryKey: stockQueryKeys.quoteSymbol(symbol),
@@ -58,7 +94,7 @@ export const useStockQuote = (symbol: string) => {
     });
 };
 
-export const useStockIntraday = (symbol: string, interval?: string) => {
+export const useStockIntraday = (symbol: string, interval?: "1min" | "5min" | "15min" | "30min" | "60min") => {
     return useQuery({
         queryKey: stockQueryKeys.intradaySymbol(symbol, interval),
         queryFn: async () => {
@@ -74,22 +110,37 @@ export const useStockIntraday = (symbol: string, interval?: string) => {
     });
 };
 
-export const useStockHistorical = (symbol: string, options?: { startDate?: string; endDate?: string; frequency?: string }) => {
+export const useStockHistorical = (symbol: string, options?: {
+    startDate?: string;
+    endDate?: string;
+    frequency?: string;
+}, queryOptions?: { enabled?: boolean }) => {
     return useQuery({
         queryKey: stockQueryKeys.historicalSymbol(symbol, options?.frequency),
         queryFn: async () => {
-            const response = await StockService.getHistoricalData({
-                path: { symbol },
-                query: options ? {
-                    start_date: options.startDate,
-                    end_date: options.endDate,
-                    frequency: options.frequency
-                } : undefined
+            // 임시로 dailyPrices를 사용 (실제 historical API가 없는 경우)
+            const response = await StockService.getDailyPrices({
+                path: { symbol }
             });
             return response.data;
         },
-        enabled: !!symbol,
-        staleTime: 1000 * 60 * 60, // 1 hour (historical data doesn't change frequently)
-        gcTime: 4 * 60 * 60 * 1000, // 4 hours
+        enabled: queryOptions?.enabled !== false && !!symbol,
+        staleTime: 1000 * 60 * 10, // 10 minutes
+        gcTime: 30 * 60 * 1000, // 30 minutes
+    });
+};
+
+export const useStockSearchSymbols = (keywords: string) => {
+    return useQuery({
+        queryKey: stockQueryKeys.searchSymbols(keywords),
+        queryFn: async () => {
+            const response = await StockService.searchSymbols({
+                query: { keywords }
+            });
+            return response.data;
+        },
+        enabled: !!keywords && keywords.length > 0,
+        staleTime: 1000 * 60 * 5, // 5 minutes (search results are relatively stable)
+        gcTime: 15 * 60 * 1000, // 15 minutes
     });
 };

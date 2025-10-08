@@ -31,7 +31,7 @@ import PageContainer from "@/components/layout/PageContainer";
 import StrategyParameters from "@/components/strategies/StrategyParameters";
 import StrategyPerformanceSummary from "@/components/strategies/StrategyPerformanceSummary";
 import { useStrategy, useStrategyDetail } from "@/hooks/useStrategy";
-import type { StrategyExecuteRequest } from '@/client';
+import type { StrategyExecute } from '@/client';
 import { useWatchlist } from '@/hooks/useWatchList';
 // Strategy utilities 임시 정의
 const strategyUtils = {
@@ -46,7 +46,7 @@ export default function StrategyDetailPage() {
   const { watchlistList } = useWatchlist();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [ data, setData ] = useState<StrategyExecuteRequest>({
+  const [ data, setData ] = useState<StrategyExecute>({
     symbol: "AAPL",
     market_data: {
       start_date: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString(),

@@ -6,6 +6,9 @@ import {
   Star as StarIcon,
   TrendingDown as TrendingDownIcon,
   TrendingUp as TrendingUpIcon,
+  ExpandLess as ExpandLessIcon,
+  ExpandMore as ExpandMoreIcon,
+  List as ListIcon,
 } from "@mui/icons-material";
 import {
   Box,
@@ -21,10 +24,13 @@ import {
   TextField,
   Typography,
   useTheme,
+  Collapse,
+  Chip,
 } from "@mui/material";
 import React from "react";
 
 import { useWatchlist, useWatchlistDetail } from "@/hooks/useWatchList";
+import { useStockQuote } from "@/hooks/useStocks";
 
 interface WatchListItem {
   symbol: string;
@@ -160,19 +166,28 @@ export default function WatchList({
   } = useWatchlist();
   const { data: defaultWatchlist } = useWatchlistDetail("default");
 
-  // 기본 심볼 리스트 (API에서 가져올 수 없는 경우 사용)
-  const defaultSymbols = [
-    "AAPL",
-    "GOOGL",
-    "MSFT",
-    "TSLA",
-    "AMZN",
-    "NVDA",
-    "META",
-    "NFLX",
-  ];
-  const availableSymbols = defaultSymbols;
-  const symbolsLoading = false;
+  // 워치리스트에서 사용 가능한 심볼들 가져오기
+  const availableSymbols = React.useMemo(() => {
+    // 우선순위: defaultWatchlist > watchlistList 첫번째 아이템
+    const targetWatchlist =
+      defaultWatchlist ||
+      (Array.isArray(watchlistList) && watchlistList.length > 0
+        ? watchlistList[0]
+        : null);
+
+    if (
+      targetWatchlist &&
+      (targetWatchlist as any)?.symbols &&
+      Array.isArray((targetWatchlist as any).symbols)
+    ) {
+      return (targetWatchlist as any).symbols;
+    }
+
+    // 기본 인기 심볼 리스트 (워치리스트가 없는 경우)
+    return ["AAPL", "GOOGL", "MSFT", "TSLA", "AMZN", "NVDA", "META", "NFLX"];
+  }, [defaultWatchlist, watchlistList]);
+
+  const symbolsLoading = watchlistsLoading;
 
   // 워치리스트에서 즐겨찾기 심볼 설정
   React.useEffect(() => {
@@ -206,18 +221,9 @@ export default function WatchList({
 
   // 사용 가능한 심볼을 WatchListItem 형태로 변환
   const watchListItems: WatchListItem[] = React.useMemo(() => {
-    const symbols = availableSymbols || [
-      "AAPL",
-      "GOOGL",
-      "MSFT",
-      "TSLA",
-      "AMZN",
-      "NVDA",
-    ];
+    if (!Array.isArray(availableSymbols)) return [];
 
-    if (!Array.isArray(symbols)) return [];
-
-    return symbols.map((symbol: string) => ({
+    return availableSymbols.map((symbol: string) => ({
       symbol,
       price: undefined, // 실제 가격 데이터는 별도 API 호출 필요
       change: undefined,

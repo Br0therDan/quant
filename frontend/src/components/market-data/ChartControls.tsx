@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  BarChart as BarIcon,
   CandlestickChart as CandlestickIcon,
   ShowChart as LineIcon,
   Refresh as RefreshIcon,
@@ -33,18 +32,15 @@ interface ChartControlsProps {
 
 const TIME_PERIODS = [
   { label: "1D", value: "1d" },
-  { label: "5D", value: "5d" },
+  { label: "1W", value: "1w" },
   { label: "1M", value: "1m" },
   { label: "3M", value: "3m" },
-  { label: "6M", value: "6m" },
   { label: "1Y", value: "1y" },
-  { label: "5Y", value: "5y" },
 ];
 
 const CHART_TYPES = [
   { icon: CandlestickIcon, label: "캔들스틱", value: "candlestick" },
   { icon: LineIcon, label: "라인", value: "line" },
-  { icon: BarIcon, label: "바", value: "bar" },
 ];
 
 export default function ChartControls({
@@ -69,8 +65,8 @@ export default function ChartControls({
       case "1d":
         start = end.subtract(1, "day");
         break;
-      case "5d":
-        start = end.subtract(5, "day");
+      case "1w":
+        start = end.subtract(1, "week");
         break;
       case "1m":
         start = end.subtract(1, "month");
@@ -78,14 +74,8 @@ export default function ChartControls({
       case "3m":
         start = end.subtract(3, "month");
         break;
-      case "6m":
-        start = end.subtract(6, "month");
-        break;
       case "1y":
         start = end.subtract(1, "year");
-        break;
-      case "5y":
-        start = end.subtract(5, "year");
         break;
       default:
         start = end.subtract(1, "month");

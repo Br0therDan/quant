@@ -1,5 +1,6 @@
 "use client";
 
+import { useStockSearchSymbols } from "@/hooks/useStocks";
 import { Add as AddIcon } from "@mui/icons-material";
 import {
   Autocomplete,
@@ -15,6 +16,13 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
+
+interface SymbolOption {
+  symbol: string;
+  name: string;
+  currency: string;
+  matchScore: string;
+}
 
 interface WatchlistFormData {
   name: string;
@@ -37,34 +45,6 @@ interface CreateWatchlistDialogProps {
   loading?: boolean;
 }
 
-// 임시 종목 리스트 (나중에 API에서 가져올 예정)
-const AVAILABLE_SYMBOLS = [
-  "AAPL",
-  "GOOGL",
-  "MSFT",
-  "AMZN",
-  "TSLA",
-  "NVDA",
-  "META",
-  "NFLX",
-  "AMD",
-  "INTC",
-  "ORCL",
-  "IBM",
-  "CRM",
-  "ADBE",
-  "PYPL",
-  "DIS",
-  "JPM",
-  "BAC",
-  "WFC",
-  "GS",
-  "V",
-  "MA",
-  "BRK.B",
-  "JNJ",
-];
-
 export default function CreateWatchlistDialog({
   open,
   onClose,
@@ -80,6 +60,81 @@ export default function CreateWatchlistDialog({
     ...initialData,
   });
   const [errors, setErrors] = React.useState<WatchlistFormErrors>({});
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = React.useState("");
+
+  // 디바운싱: 500ms 지연 후 검색
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  // 심볼 검색 훅 사용 (디바운싱된 검색어 사용)
+  const { data: searchResults, isLoading: isSearching } =
+    useStockSearchSymbols(debouncedSearchTerm);
+
+  // 검색 결과에서 심볼 정보 추출 (표시용)
+  const symbolDetails = React.useMemo(() => {
+    if (!searchResults) return new Map<string, SymbolOption>();
+
+    const detailsMap = new Map<string, SymbolOption>();
+
+    const processItem = (item: any) => {
+      if (typeof item === "string") {
+        detailsMap.set(item, {
+          symbol: item,
+          name: item,
+          currency: "USD",
+          matchScore: "1.0000",
+        });
+        return;
+      }
+
+      const symbol =
+        item?.symbol || item?.Symbol || item?.ticker || item?.code || "";
+      if (!symbol) return;
+
+      detailsMap.set(symbol, {
+        symbol,
+        name: item?.name || item?.Name || item?.description || symbol,
+        currency: item?.currency || item?.Currency || "USD",
+        matchScore: item?.matchScore || item?.match_score || "1.0000",
+      });
+    };
+
+    if (Array.isArray(searchResults)) {
+      searchResults.slice(0, 20).forEach(processItem);
+    } else if (searchResults && typeof searchResults === "object") {
+      const searchObj = searchResults as any;
+      const matches =
+        searchObj.bestMatches ||
+        searchObj.results ||
+        searchObj.data ||
+        searchObj.symbols ||
+        [];
+
+      if (Array.isArray(matches)) {
+        matches.slice(0, 20).forEach(processItem);
+      }
+    }
+
+    return detailsMap;
+  }, [searchResults]);
+
+  // 검색 결과에서 심볼 배열 추출
+  const availableSymbols = React.useMemo(() => {
+    return Array.from(symbolDetails.keys());
+  }, [symbolDetails]); // 최종 옵션 리스트 - 검색 결과만 표시
+  const symbolOptions = React.useMemo(() => {
+    if (debouncedSearchTerm.length > 1) {
+      // 최소 2글자 이상
+      return availableSymbols.length > 0 ? availableSymbols : [];
+    }
+    return []; // 검색어가 없으면 빈 배열
+  }, [debouncedSearchTerm, availableSymbols]);
 
   React.useEffect(() => {
     if (open) {
@@ -90,6 +145,8 @@ export default function CreateWatchlistDialog({
         ...initialData,
       });
       setErrors({});
+      setSearchTerm(""); // 검색어 초기화
+      setDebouncedSearchTerm(""); // 디바운싱된 검색어도 초기화
     }
   }, [open, initialData]);
 
@@ -172,27 +229,127 @@ export default function CreateWatchlistDialog({
             </Typography>
             <Autocomplete
               multiple
-              options={AVAILABLE_SYMBOLS}
+              options={symbolOptions}
               value={formData.symbols}
               onChange={handleSymbolChange}
+              onInputChange={(_, newInputValue) => {
+                setSearchTerm(newInputValue);
+              }}
+              renderOption={(props, option) => {
+                const details = symbolDetails.get(option);
+
+                if (!details) {
+                  return (
+                    <Box component="li" {...props}>
+                      <Typography variant="body2">{option}</Typography>
+                    </Box>
+                  );
+                }
+
+                // 상세 정보 표시
+                return (
+                  <Box
+                    component="li"
+                    {...props}
+                    sx={{
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      py: 1,
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        width: "100%",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Box sx={{ flex: 1 }}>
+                        <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+                          {details.symbol}
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          color="text.secondary"
+                          sx={{ display: "block", lineHeight: 1.2 }}
+                        >
+                          {details.name}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ textAlign: "right", ml: 1 }}>
+                        <Typography
+                          variant="caption"
+                          color="primary"
+                          sx={{ fontWeight: "medium" }}
+                        >
+                          {details.currency}
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          color="text.secondary"
+                          sx={{ display: "block", lineHeight: 1.2 }}
+                        >
+                          매치:{" "}
+                          {(parseFloat(details.matchScore) * 100).toFixed(1)}%
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+                );
+              }}
               filterSelectedOptions
+              loading={isSearching && debouncedSearchTerm.length > 1}
+              freeSolo={false}
               renderTags={(value, getTagProps) =>
-                value.map((option, index) => (
-                  <Chip
-                    variant="outlined"
-                    label={option}
-                    {...getTagProps({ index })}
-                    key={option}
-                  />
-                ))
+                value.map((option, index) => {
+                  const details = symbolDetails.get(option);
+                  const chipLabel = details
+                    ? `${details.symbol} (${details.currency})`
+                    : option;
+
+                  return (
+                    <Chip
+                      variant="outlined"
+                      label={chipLabel}
+                      {...getTagProps({ index })}
+                      key={option}
+                      sx={{
+                        "& .MuiChip-label": {
+                          fontSize: "0.875rem",
+                        },
+                      }}
+                    />
+                  );
+                })
               }
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  placeholder="종목 검색 및 선택"
+                  placeholder={
+                    isSearching && searchTerm.length > 1
+                      ? "검색 중..."
+                      : "종목 검색 (예: AAPL, Apple, 애플)"
+                  }
                   error={!!errors.symbols}
+                  helperText={
+                    debouncedSearchTerm.length === 0
+                      ? "종목을 검색하여 선택하세요 (최소 2글자 이상)"
+                      : debouncedSearchTerm.length > 1 &&
+                        availableSymbols.length === 0 &&
+                        !isSearching
+                      ? "검색 결과가 없습니다. 다른 키워드를 시도해보세요."
+                      : undefined
+                  }
                 />
               )}
+              noOptionsText={
+                debouncedSearchTerm.length > 1
+                  ? isSearching
+                    ? "검색 중..."
+                    : "검색 결과가 없습니다"
+                  : "최소 2글자 이상 입력하여 검색하세요"
+              }
             />
             {errors.symbols && (
               <FormHelperText error>{errors.symbols}</FormHelperText>
