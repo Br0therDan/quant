@@ -6,6 +6,7 @@ Intelligence Service
 from typing import List, Optional, Dict, Any
 from datetime import datetime, timedelta, UTC
 import logging
+from decimal import Decimal
 
 from .base_service import BaseMarketDataService
 
@@ -19,6 +20,18 @@ class IntelligenceService(BaseMarketDataService):
     뉴스, 감정 분석, 분석가 추천 등의 정성적 데이터를 처리합니다.
     """
 
+    @staticmethod
+    def _safe_decimal(value):
+        """API 응답값을 Decimal로 안전하게 변환"""
+        if not value or value in ("", "None", "N/A"):
+            return None
+        try:
+            # Decimal128 타입도 str로 변환하여 처리
+            return Decimal(str(value))
+        except Exception as e:
+            logger.warning(f"Error converting to Decimal: {e}")
+            return None
+
     async def get_news(
         self,
         symbol: Optional[str] = None,
@@ -27,7 +40,7 @@ class IntelligenceService(BaseMarketDataService):
         end_date: Optional[datetime] = None,
         limit: int = 50,
     ) -> List[Dict[str, Any]]:
-        """뉴스 데이터 조회
+        """뉴스 데이터 조회 (캐시 우선, Alpha Vantage fallback)
 
         Args:
             symbol: 특정 종목 (None이면 전체 시장)
@@ -42,6 +55,73 @@ class IntelligenceService(BaseMarketDataService):
         logger.info(f"Getting news for symbol={symbol}, topics={topics}")
 
         try:
+            from app.models.market_data.intelligence import NewsArticle
+
+            # 캐시 키 생성
+            cache_key = (
+                f"news_{symbol or 'market'}_{','.join(topics) if topics else 'all'}"
+            )
+
+            # refresh_callback 함수 정의
+            async def refresh_news_data(
+                symbol=symbol,
+                topics=topics,
+                start_date=start_date,
+                end_date=end_date,
+                limit=limit,
+            ):
+                news_data = await self._fetch_news_from_alpha_vantage(
+                    symbol=symbol,
+                    topics=topics,
+                    start_date=start_date,
+                    end_date=end_date,
+                    limit=limit,
+                )
+                return news_data if isinstance(news_data, list) else []
+
+            # 캐시 우선 조회 패턴 적용 (통합 캐시 사용)
+            data = await self.get_data_with_unified_cache(
+                cache_key=cache_key,
+                data_type="news",
+                model_class=NewsArticle,
+                refresh_callback=refresh_news_data,
+                symbol=symbol,
+                ttl_hours=4,  # 뉴스는 4시간 TTL
+                topics=topics,
+                start_date=start_date,
+                end_date=end_date,
+                limit=limit,
+            )
+
+            # 데이터를 Dict 형태로 변환하여 반환 (기존 API와 호환)
+            if isinstance(data, list):
+                result = []
+                for item in data[:limit]:
+                    if hasattr(item, "model_dump"):
+                        result.append(item.model_dump())
+                    elif isinstance(item, dict):
+                        result.append(item)
+                return result
+            else:
+                logger.warning(f"Unexpected data type for {symbol}")
+                return []
+
+        except Exception as e:
+            logger.error(f"Error getting news for {symbol}: {e}")
+            return []
+
+    async def _fetch_news_from_alpha_vantage(
+        self,
+        symbol: Optional[str] = None,
+        topics: Optional[List[str]] = None,
+        start_date: Optional[datetime] = None,
+        end_date: Optional[datetime] = None,
+        limit: int = 50,
+    ) -> List:
+        """Alpha Vantage에서 뉴스 데이터를 가져와서 NewsArticle 객체 리스트로 변환"""
+        try:
+            from app.models.market_data.intelligence import NewsArticle
+
             # Alpha Vantage NEWS_SENTIMENT API 호출
             tickers = symbol if symbol else None
             topics_str = ",".join(topics) if topics else None
@@ -57,36 +137,87 @@ class IntelligenceService(BaseMarketDataService):
                 limit=min(limit, 1000),  # Alpha Vantage 최대값 적용
             )
 
-            news_items = []
+            news_articles = []
             if isinstance(response, dict) and "feed" in response:
                 for item in response["feed"][:limit]:
-                    news_item = {
-                        "title": item.get("title", ""),
-                        "url": item.get("url", ""),
-                        "time_published": item.get("time_published", ""),
-                        "source": item.get("source", ""),
-                        "source_domain": item.get("source_domain", ""),
-                        "summary": item.get("summary", ""),
-                        "banner_image": item.get("banner_image"),
-                        "overall_sentiment_score": item.get("overall_sentiment_score"),
-                        "overall_sentiment_label": item.get("overall_sentiment_label"),
-                        "ticker_sentiment": item.get("ticker_sentiment", []),
-                        "topics": item.get("topics", []),
-                        "relevance_score": item.get("relevance_score"),
-                    }
-                    news_items.append(news_item)
+                    try:
+                        # topics 필드 변환 (객체 배열을 문자열 배열로)
+                        topics_list = []
+                        if item.get("topics"):
+                            for topic_item in item["topics"]:
+                                if (
+                                    isinstance(topic_item, dict)
+                                    and "topic" in topic_item
+                                ):
+                                    topics_list.append(topic_item["topic"])
+                                elif isinstance(topic_item, str):
+                                    topics_list.append(topic_item)
 
-            logger.info(f"Retrieved {len(news_items)} news items for {symbol}")
-            return news_items
+                        # time_published 파싱
+                        time_published_str = item.get("time_published", "")
+                        if time_published_str:
+                            try:
+                                # Alpha Vantage 시간 형식: "20231208T120000"
+                                time_published = datetime.strptime(
+                                    time_published_str, "%Y%m%dT%H%M%S"
+                                )
+                                time_published = time_published.replace(tzinfo=UTC)
+                            except ValueError:
+                                logger.warning(
+                                    f"Invalid time format: {time_published_str}"
+                                )
+                                time_published = datetime.now(UTC)
+                        else:
+                            time_published = datetime.now(UTC)
+
+                        # NewsArticle 객체 생성 (data_quality_score 자동 계산됨)
+                        news_article = NewsArticle(
+                            symbol=symbol or "MARKET",
+                            title=item.get("title", ""),
+                            url=item.get("url", ""),
+                            time_published=time_published,
+                            news_source=item.get("source", ""),
+                            source_domain=item.get("source_domain", ""),
+                            authors=item.get("authors", []),
+                            summary=item.get("summary", ""),
+                            banner_image=item.get("banner_image"),
+                            overall_sentiment_score=self._safe_decimal(
+                                item.get("overall_sentiment_score")
+                            ),
+                            overall_sentiment_label=item.get("overall_sentiment_label"),
+                            relevance_score=self._safe_decimal(
+                                item.get("relevance_score")
+                            ),
+                            topics=topics_list,
+                            category_within_source=item.get("category_within_source"),
+                            data_quality_score=85.0,  # Default value for data quality score
+                        )
+
+                        news_articles.append(news_article)
+
+                    except Exception as item_error:
+                        logger.warning(
+                            f"Failed to create NewsArticle from item: {item_error}"
+                        )
+                        logger.warning(f"Item data: {item}")
+                        import traceback
+
+                        logger.warning(f"Full traceback: {traceback.format_exc()}")
+                        continue
+
+            logger.info(
+                f"Retrieved {len(news_articles)} news articles from Alpha Vantage for {symbol}"
+            )
+            return news_articles
 
         except Exception as e:
-            logger.error(f"Error fetching news for {symbol}: {e}")
+            logger.error(f"Failed to fetch news from Alpha Vantage for {symbol}: {e}")
             return []
 
     async def get_sentiment_analysis(
         self, symbol: str, timeframe: str = "1day"
     ) -> Optional[Dict[str, Any]]:
-        """감정 분석 데이터 조회
+        """감정 분석 데이터 조회 (캐시 우선, Alpha Vantage fallback)
 
         Args:
             symbol: 주식 심볼
@@ -98,6 +229,46 @@ class IntelligenceService(BaseMarketDataService):
         logger.info(f"Getting sentiment analysis for {symbol} ({timeframe})")
 
         try:
+            from app.models.market_data.intelligence import SentimentAnalysis
+
+            # 캐시 키 생성
+            cache_key = f"sentiment_{symbol}_{timeframe}"
+
+            # refresh_callback 함수 정의
+            async def refresh_sentiment_data():
+                return await self._fetch_sentiment_from_alpha_vantage(symbol, timeframe)
+
+            # 캐시 우선 조회 패턴 적용 (통합 캐시 사용)
+            data = await self.get_data_with_unified_cache(
+                cache_key=cache_key,
+                data_type="sentiment",
+                model_class=SentimentAnalysis,
+                refresh_callback=refresh_sentiment_data,
+                symbol=symbol,
+                ttl_hours=6,  # 감정 분석은 6시간 TTL
+            )
+
+            # 첫 번째 결과를 Dict 형태로 반환 (기존 API와 호환)
+            if isinstance(data, list) and data:
+                result = data[0]
+                if hasattr(result, "model_dump"):
+                    return result.model_dump()
+                elif isinstance(result, dict):
+                    return result
+
+            return None
+
+        except Exception as e:
+            logger.error(f"Error getting sentiment analysis for {symbol}: {e}")
+            return None
+
+    async def _fetch_sentiment_from_alpha_vantage(
+        self, symbol: str, timeframe: str = "1day"
+    ) -> List:
+        """Alpha Vantage에서 감정 분석 데이터를 가져와서 SentimentAnalysis 객체로 변환"""
+        try:
+            from app.models.market_data.intelligence import SentimentAnalysis
+
             # 시간 범위에 따른 기간 계산
             end_date = datetime.now()
             if timeframe == "1day":
@@ -119,12 +290,12 @@ class IntelligenceService(BaseMarketDataService):
             )
 
             if not isinstance(response, dict) or "feed" not in response:
-                return None
+                return []
 
             # 감정 점수 집계
             total_articles = len(response["feed"])
             if total_articles == 0:
-                return None
+                return []
 
             sentiment_scores = []
             positive_count = 0
@@ -168,29 +339,32 @@ class IntelligenceService(BaseMarketDataService):
             else:
                 overall_sentiment_label = "Neutral"
 
-            result = {
-                "symbol": symbol,
-                "timeframe": timeframe,
-                "time_from": start_date.isoformat(),
-                "time_to": end_date.isoformat(),
-                "overall_sentiment_score": round(overall_sentiment_score, 4),
-                "overall_sentiment_label": overall_sentiment_label,
-                "article_count": total_articles,
-                "positive_count": positive_count,
-                "negative_count": negative_count,
-                "neutral_count": neutral_count,
-                "sentiment_score_definition": "x <= -0.35: Bearish; -0.35 < x <= -0.15: Somewhat-Bearish; -0.15 < x < 0.15: Neutral; 0.15 <= x < 0.35: Somewhat-Bullish; x >= 0.35: Bullish",
-                "relevance_score_definition": "0 < x <= 1, with a higher score indicating higher relevance.",
-            }
+            # SentimentAnalysis 객체 생성
+            sentiment_analysis = SentimentAnalysis(
+                symbol=symbol,
+                timeframe=timeframe,
+                time_from=start_date.isoformat(),
+                time_to=end_date.isoformat(),
+                overall_sentiment_score=round(overall_sentiment_score, 4),
+                overall_sentiment_label=overall_sentiment_label,
+                article_count=total_articles,
+                positive_count=positive_count,
+                negative_count=negative_count,
+                neutral_count=neutral_count,
+                sentiment_score_definition="x <= -0.35: Bearish; -0.35 < x <= -0.15: Somewhat-Bearish; -0.15 < x < 0.15: Neutral; 0.15 <= x < 0.35: Somewhat-Bullish; x >= 0.35: Bullish",
+                relevance_score_definition="0 < x <= 1, with a higher score indicating higher relevance.",
+            )
 
             logger.info(
                 f"Sentiment analysis completed for {symbol}: {overall_sentiment_label} ({overall_sentiment_score})"
             )
-            return result
+            return [sentiment_analysis]
 
         except Exception as e:
-            logger.error(f"Error getting sentiment analysis for {symbol}: {e}")
-            return None
+            logger.error(
+                f"Failed to fetch sentiment from Alpha Vantage for {symbol}: {e}"
+            )
+            return []
 
     async def get_analyst_recommendations(self, symbol: str) -> List[Dict[str, Any]]:
         """분석가 추천 의견 조회 (내부자 거래 정보 포함)
@@ -800,7 +974,7 @@ class IntelligenceService(BaseMarketDataService):
                 news_articles = []
                 for item in data:
                     if isinstance(item, dict):
-                        # 대부분의 필드를 기본값으로 설정
+                        # NewsArticle 모델에 맞는 필드로 매핑
                         article_data = {
                             "symbol": item.get(
                                 "symbol", kwargs.get("symbol", "UNKNOWN")
@@ -809,15 +983,33 @@ class IntelligenceService(BaseMarketDataService):
                                 "title", item.get("overall_sentiment_label", "News")
                             ),
                             "url": item.get("url", item.get("link", "")),
-                            "published_at": datetime.now(UTC),
-                            "source": item.get("source", "Alpha Vantage Intelligence"),
-                            "summary": str(item),  # 전체 데이터를 요약으로 저장
-                            "sentiment_score": item.get("overall_sentiment_score", 0.0),
-                            "sentiment_label": item.get(
+                            "time_published": datetime.now(
+                                UTC
+                            ),  # NewsArticle 모델 필드명에 맞춤
+                            "news_source": item.get(
+                                "source", "Alpha Vantage Intelligence"
+                            ),
+                            "source_domain": item.get("source_domain", ""),
+                            "summary": item.get(
+                                "summary", str(item)[:500]
+                            ),  # 요약 또는 전체 데이터 일부
+                            "banner_image": item.get("banner_image"),
+                            "overall_sentiment_score": item.get(
+                                "overall_sentiment_score", 0.0
+                            ),
+                            "overall_sentiment_label": item.get(
                                 "overall_sentiment_label", "Neutral"
                             ),
                             "relevance_score": item.get("relevance_score", 0.0),
-                            "content": str(item),  # 전체 데이터 저장
+                            # topics를 문자열 배열로 변환
+                            "topics": [
+                                (
+                                    topic.get("topic", str(topic))
+                                    if isinstance(topic, dict)
+                                    else str(topic)
+                                )
+                                for topic in item.get("topics", [])
+                            ],
                         }
                         try:
                             from app.models.market_data.intelligence import NewsArticle
@@ -831,18 +1023,19 @@ class IntelligenceService(BaseMarketDataService):
                             continue
 
                 if news_articles:
-                    # DuckDB 캐시에 저장
-                    success = await self._store_to_duckdb_cache(
-                        cache_key=cache_key,
-                        data=news_articles,
-                        table_name="intelligence_cache",
-                    )
-
-                    if success:
-                        logger.info(
-                            f"Intelligence data cached successfully: {cache_key} ({len(news_articles)} items)"
+                    # DuckDB 뉴스 캐시에 직접 저장
+                    try:
+                        success = await self._save_news_to_duckdb(
+                            news_articles, cache_key
                         )
-                    return success
+                        if success:
+                            logger.info(
+                                f"Intelligence data cached successfully: {cache_key} ({len(news_articles)} items)"
+                            )
+                        return success
+                    except Exception as save_error:
+                        logger.error(f"Failed to save news to DuckDB: {save_error}")
+                        return False
 
             logger.info(f"No valid intelligence data to cache for: {cache_key}")
             return True
@@ -876,6 +1069,93 @@ class IntelligenceService(BaseMarketDataService):
         except Exception as e:
             logger.error(f"Error getting intelligence data from cache: {e}")
             return None
+
+    async def _save_news_to_duckdb(self, news_articles: List, cache_key: str) -> bool:
+        """뉴스 데이터를 DuckDB news_cache 테이블에 저장"""
+        try:
+            if not self._db_manager or not news_articles:
+                logger.warning("No database manager or no news articles to save")
+                return True
+
+            # DuckDB 연결
+            self._db_manager.connect()
+            conn = self._db_manager.connection
+
+            if not conn:
+                logger.error("DuckDB connection failed")
+                return False
+
+            logger.info(
+                f"Attempting to save {len(news_articles)} news articles to DuckDB"
+            )
+
+            # 뉴스 데이터 저장
+            saved_count = 0
+            for article in news_articles:
+                try:
+                    # NewsArticle 모델에서 필드 추출
+                    if hasattr(article, "model_dump"):
+                        data = article.model_dump()
+                    elif hasattr(article, "dict"):
+                        data = article.dict()
+                    else:
+                        logger.warning(
+                            f"Article has no model_dump or dict method: {type(article)}"
+                        )
+                        continue
+
+                    logger.debug(
+                        f"Saving article: {data.get('title', 'Unknown')[:50]}..."
+                    )
+
+                    conn.execute(
+                        """
+                        INSERT OR REPLACE INTO news_cache (
+                            symbol, title, url, time_published, authors, summary,
+                            banner_image, source, category_within_source, source_domain,
+                            topics, overall_sentiment_score, overall_sentiment_label,
+                            ticker_sentiment, created_at
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        """,
+                        [
+                            data.get("symbol", "UNKNOWN"),
+                            data.get("title", ""),
+                            data.get("url", ""),
+                            data.get("time_published", ""),
+                            data.get("authors", []),
+                            data.get("summary", ""),
+                            data.get("banner_image", ""),
+                            data.get("news_source", data.get("source", "")),
+                            data.get("category_within_source", ""),
+                            data.get("source_domain", ""),
+                            data.get("topics", []),
+                            float(data.get("overall_sentiment_score", 0.0)),
+                            data.get("overall_sentiment_label", "Neutral"),
+                            str(data.get("ticker_sentiment", {})),
+                            datetime.now(UTC).isoformat(),
+                        ],
+                    )
+                    saved_count += 1
+                except Exception as insert_error:
+                    logger.error(f"Failed to insert news article: {insert_error}")
+                    logger.error(
+                        f"Article data: {data if 'data' in locals() else 'No data'}"
+                    )
+                    continue
+
+            if saved_count > 0:
+                logger.info(
+                    f"Successfully saved {saved_count}/{len(news_articles)} news articles to DuckDB cache"
+                )
+            else:
+                logger.warning("No articles were saved to DuckDB cache")
+
+            return saved_count > 0
+
+        except Exception as e:
+            logger.error(f"Error saving news to DuckDB: {e}")
+            logger.error(f"Exception details: {type(e).__name__}: {str(e)}")
+            return False
 
     async def refresh_data_from_source(self, **kwargs) -> List[Dict[str, Any]]:
         """베이스 클래스의 추상 메서드 구현"""

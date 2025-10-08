@@ -108,7 +108,7 @@ class CompanyOverview(BaseMarketDataDocument, DataQualityMixin):
         return value
 
     class Settings:
-        name = "company_overviews"
+        name = "fundamental_overviews"
         indexes = [
             "symbol",
             "exchange",
@@ -197,7 +197,7 @@ class IncomeStatement(BaseMarketDataDocument, DataQualityMixin):
         return value
 
     class Settings:
-        name = "income_statements"
+        name = "fundamental_income_statements"
         indexes = [
             [("symbol", 1), ("fiscal_date_ending", -1)],
             "symbol",
@@ -301,7 +301,7 @@ class BalanceSheet(BaseMarketDataDocument, DataQualityMixin):
         return value
 
     class Settings:
-        name = "balance_sheets"
+        name = "fundamental_balance_sheets"
         indexes = [
             [("symbol", 1), ("fiscal_date_ending", -1)],
             "symbol",
@@ -402,7 +402,7 @@ class CashFlow(BaseMarketDataDocument, DataQualityMixin):
         return value
 
     class Settings:
-        name = "cash_flows"
+        name = "fundamental_cash_flows"
         indexes = [
             [("symbol", 1), ("fiscal_date_ending", -1)],
             "symbol",
@@ -472,7 +472,7 @@ class Earnings(BaseMarketDataDocument, DataQualityMixin):
         return value
 
     class Settings:
-        name = "earnings"
+        name = "fundamental_earnings"
         indexes = [
             [("symbol", 1), ("fiscal_date_ending", -1)],
             [("symbol", 1), ("reported_date", -1)],

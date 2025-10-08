@@ -135,46 +135,46 @@ async def get_employment_data():
         raise HTTPException(status_code=500, detail=f"고용 지표 조회 중 오류 발생: {str(e)}")
 
 
-@router.get(
-    "/consumer-sentiment",
-    response_model=Dict[str, Any],
-    description="미국 소비자 심리 지수를 조회합니다.",
-)
-async def get_consumer_sentiment():
-    """소비자 심리 지수 조회"""
-    try:
-        # Note: Alpha Vantage에서 소비자 심리 지수를 직접 제공하지 않음
-        # 기본적인 소비자 심리 데이터 샘플 반환
-        sample_data = [
-            {
-                "date": "2024-12-01",
-                "index_value": 75.2,
-                "change_monthly": 1.5,
-                "change_yearly": -2.3,
-                "category": "Michigan Consumer Sentiment Index",
-                "note": "샘플 데이터 - 실제 API 연동 필요",
-            },
-            {
-                "date": "2024-11-01",
-                "index_value": 74.1,
-                "change_monthly": -0.8,
-                "change_yearly": -1.9,
-                "category": "Michigan Consumer Sentiment Index",
-                "note": "샘플 데이터 - 실제 API 연동 필요",
-            },
-        ]
+# @router.get(
+#     "/consumer-sentiment",
+#     response_model=Dict[str, Any],
+#     description="미국 소비자 심리 지수를 조회합니다.",
+# )
+# async def get_consumer_sentiment():
+#     """소비자 심리 지수 조회"""
+#     try:
+#         # Note: Alpha Vantage에서 소비자 심리 지수를 직접 제공하지 않음
+#         # 기본적인 소비자 심리 데이터 샘플 반환
+#         sample_data = [
+#             {
+#                 "date": "2024-12-01",
+#                 "index_value": 75.2,
+#                 "change_monthly": 1.5,
+#                 "change_yearly": -2.3,
+#                 "category": "Michigan Consumer Sentiment Index",
+#                 "note": "샘플 데이터 - 실제 API 연동 필요",
+#             },
+#             {
+#                 "date": "2024-11-01",
+#                 "index_value": 74.1,
+#                 "change_monthly": -0.8,
+#                 "change_yearly": -1.9,
+#                 "category": "Michigan Consumer Sentiment Index",
+#                 "note": "샘플 데이터 - 실제 API 연동 필요",
+#             },
+#         ]
 
-        return {
-            "success": True,
-            "message": "소비자 심리 지수 조회 완료 (샘플 데이터)",
-            "data": sample_data,
-            "metadata": {
-                "indicator": "Consumer Sentiment",
-                "count": len(sample_data),
-                "status": "sample_data",
-                "note": "Alpha Vantage에서 소비자 심리 지수를 직접 제공하지 않음",
-            },
-        }
+#         return {
+#             "success": True,
+#             "message": "소비자 심리 지수 조회 완료 (샘플 데이터)",
+#             "data": sample_data,
+#             "metadata": {
+#                 "indicator": "Consumer Sentiment",
+#                 "count": len(sample_data),
+#                 "status": "sample_data",
+#                 "note": "Alpha Vantage에서 소비자 심리 지수를 직접 제공하지 않음",
+#             },
+#         }
 
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"소비자 심리 지수 조회 중 오류 발생: {str(e)}")
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"소비자 심리 지수 조회 중 오류 발생: {str(e)}")

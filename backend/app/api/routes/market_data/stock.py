@@ -3,7 +3,7 @@ Stock API Routes
 주식 데이터 관련 API 엔드포인트
 """
 
-from datetime import datetime, date
+from datetime import date
 from typing import List, Literal, Optional, Dict, Any
 from fastapi import APIRouter, HTTPException, Query, Path
 from pydantic import BaseModel
@@ -44,7 +44,7 @@ class HistoricalDataResponse(BaseModel):
 
 @router.get(
     "/daily/{symbol}",
-    response_model=Dict[str, Any],  # 임시로 Dict 사용
+    response_model=HistoricalDataResponse,
     description="지정된 종목의 일일 주가 데이터(OHLCV)를 조회합니다.",
 )
 async def get_daily_prices(
@@ -52,51 +52,246 @@ async def get_daily_prices(
     outputsize: str = Query(
         default="compact", description="데이터 크기 (compact: 최근 100일, full: 전체)"
     ),
+    start_date: Optional[date] = Query(default=None, description="시작 날짜 (YYYY-MM-DD)"),
+    end_date: Optional[date] = Query(default=None, description="종료 날짜 (YYYY-MM-DD)"),
 ):
     """일일 주가 데이터 조회"""
     try:
-        stock_service = service_factory.get_stock_service()
+        # 심볼 유효성 검사
+        if not symbol or len(symbol.strip()) == 0:
+            raise HTTPException(status_code=400, detail="유효한 종목 심볼을 입력해주세요")
 
-        # StockService의 get_daily_prices 메서드 호출
-        daily_prices = await stock_service.get_daily_prices(
-            symbol=symbol.upper(), outputsize=outputsize
+        symbol = symbol.upper().strip()
+
+        # 기본적인 심볼 포맷 검사 (1-5자의 영문 대문자)
+        import re
+
+        if not re.match(r"^[A-Z]{1,5}$", symbol):
+            raise HTTPException(
+                status_code=400,
+                detail=f"잘못된 심볼 형식입니다: {symbol}. 1-5자의 영문 대문자만 허용됩니다 (예: AAPL, TSLA)",
+            )
+
+        market_service = service_factory.get_market_data_service()
+        daily_prices = await market_service.stock.get_daily_prices(
+            symbol=symbol, outputsize=outputsize
         )
 
         if not daily_prices:
             raise HTTPException(status_code=404, detail=f"주식 데이터를 찾을 수 없습니다: {symbol}")
 
-        # 모델 데이터를 딕셔너리로 변환
-        price_data = []
+        # 날짜 필터링 및 데이터 변환
+        filtered_prices = []
         for price in daily_prices:
-            price_data.append(
-                {
-                    "date": price.date.isoformat() if price.date else None,
-                    "open": float(price.open) if price.open else None,
-                    "high": float(price.high) if price.high else None,
-                    "low": float(price.low) if price.low else None,
-                    "close": float(price.close) if price.close else None,
-                    "volume": int(price.volume) if price.volume else None,
-                }
-            )
+            if price.date:
+                price_date = (
+                    price.date.date() if hasattr(price.date, "date") else price.date
+                )
+                if start_date and price_date < start_date:
+                    continue
+                if end_date and price_date > end_date:
+                    continue
 
-        return {
-            "success": True,
-            "message": f"{symbol} 일일 주가 데이터 조회 완료",
-            "data": {
-                "symbol": symbol.upper(),
-                "prices": price_data,
-                "count": len(price_data),
-                "outputsize": outputsize,
-            },
-            "metadata": {
-                "last_refreshed": datetime.now().isoformat(),
-                "time_zone": "US/Eastern",
-                "source": "Alpha Vantage",
-            },
-        }
+                filtered_prices.append(
+                    {
+                        "date": price_date.isoformat(),
+                        "open": float(price.open) if price.open else None,
+                        "high": float(price.high) if price.high else None,
+                        "low": float(price.low) if price.low else None,
+                        "close": float(price.close) if price.close else None,
+                        "volume": int(price.volume) if price.volume else None,
+                    }
+                )
+
+        return HistoricalDataResponse(
+            symbol=symbol.upper(),
+            data=filtered_prices,
+            count=len(filtered_prices),
+            start_date=start_date,
+            end_date=end_date,
+            frequency="daily",
+        )
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"주식 데이터 조회 중 오류 발생: {str(e)}")
+
+
+@router.get(
+    "/weekly/{symbol}",
+    response_model=HistoricalDataResponse,
+    description="지정된 종목의 주간 주가 데이터(OHLCV)를 조회합니다.",
+)
+async def get_weekly_prices(
+    symbol: str = Path(..., description="종목 심볼 (예: AAPL, TSLA)"),
+    start_date: Optional[date] = Query(default=None, description="시작 날짜 (YYYY-MM-DD)"),
+    end_date: Optional[date] = Query(default=None, description="종료 날짜 (YYYY-MM-DD)"),
+    outputsize: str = Query(
+        "compact", description="데이터 크기 (compact: 최근 100개, full: 전체)"
+    ),
+):
+    """주간 주가 데이터 조회"""
+    try:
+        # 심볼 유효성 검사
+        if not symbol or len(symbol.strip()) == 0:
+            raise HTTPException(status_code=400, detail="유효한 종목 심볼을 입력해주세요")
+
+        symbol = symbol.upper().strip()
+
+        # 기본적인 심볼 포맷 검사 (1-5자의 영문 대문자)
+        import re
+
+        if not re.match(r"^[A-Z]{1,5}$", symbol):
+            raise HTTPException(
+                status_code=400,
+                detail=f"잘못된 심볼 형식입니다: {symbol}. 1-5자의 영문 대문자만 허용됩니다 (예: AAPL, TSLA)",
+            )
+
+        market_service = service_factory.get_market_data_service()
+        weekly_prices = await market_service.stock.get_weekly_prices(
+            symbol=symbol, outputsize=outputsize
+        )
+
+        if not weekly_prices:
+            raise HTTPException(status_code=404, detail=f"주식 데이터를 찾을 수 없습니다: {symbol}")
+
+        # 날짜 필터링 및 데이터 변환
+        filtered_prices = []
+        for price in weekly_prices:
+            if price.date:
+                price_date = (
+                    price.date.date() if hasattr(price.date, "date") else price.date
+                )
+                if start_date and price_date < start_date:
+                    continue
+                if end_date and price_date > end_date:
+                    continue
+
+                filtered_prices.append(
+                    {
+                        "date": price_date.isoformat(),
+                        "open": float(price.open) if price.open else None,
+                        "high": float(price.high) if price.high else None,
+                        "low": float(price.low) if price.low else None,
+                        "close": float(price.close) if price.close else None,
+                        "volume": price.volume,
+                        "adjusted_close": (
+                            float(price.adjusted_close)
+                            if price.adjusted_close
+                            else None
+                        ),
+                        "dividend_amount": (
+                            float(price.dividend_amount)
+                            if price.dividend_amount
+                            else None
+                        ),
+                        "split_coefficient": (
+                            float(price.split_coefficient)
+                            if price.split_coefficient
+                            else None
+                        ),
+                    }
+                )
+
+        return HistoricalDataResponse(
+            symbol=symbol.upper(),
+            data=filtered_prices,
+            count=len(filtered_prices),
+            start_date=filtered_prices[-1]["date"] if filtered_prices else None,
+            end_date=filtered_prices[0]["date"] if filtered_prices else None,
+            frequency="weekly",
+        )
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"주간 데이터 조회 중 오류 발생: {str(e)}")
+
+
+@router.get(
+    "/monthly/{symbol}",
+    response_model=HistoricalDataResponse,
+    description="지정된 종목의 월간 주가 데이터(OHLCV)를 조회합니다.",
+)
+async def get_monthly_prices(
+    symbol: str = Path(..., description="종목 심볼 (예: AAPL, TSLA)"),
+    start_date: Optional[date] = Query(default=None, description="시작 날짜 (YYYY-MM-DD)"),
+    end_date: Optional[date] = Query(default=None, description="종료 날짜 (YYYY-MM-DD)"),
+    outputsize: str = Query(
+        "compact", description="데이터 크기 (compact: 최근 100개, full: 전체)"
+    ),
+):
+    """월간 주가 데이터 조회"""
+    try:
+        # 심볼 유효성 검사
+        if not symbol or len(symbol.strip()) == 0:
+            raise HTTPException(status_code=400, detail="유효한 종목 심볼을 입력해주세요")
+
+        symbol = symbol.upper().strip()
+
+        # 기본적인 심볼 포맷 검사 (1-5자의 영문 대문자)
+        import re
+
+        if not re.match(r"^[A-Z]{1,5}$", symbol):
+            raise HTTPException(
+                status_code=400,
+                detail=f"잘못된 심볼 형식입니다: {symbol}. 1-5자의 영문 대문자만 허용됩니다 (예: AAPL, TSLA)",
+            )
+
+        market_service = service_factory.get_market_data_service()
+        monthly_prices = await market_service.stock.get_monthly_prices(
+            symbol=symbol, outputsize=outputsize
+        )
+
+        if not monthly_prices:
+            raise HTTPException(status_code=404, detail=f"주식 데이터를 찾을 수 없습니다: {symbol}")
+
+        # 날짜 필터링 및 데이터 변환
+        filtered_prices = []
+        for price in monthly_prices:
+            if price.date:
+                price_date = (
+                    price.date.date() if hasattr(price.date, "date") else price.date
+                )
+                if start_date and price_date < start_date:
+                    continue
+                if end_date and price_date > end_date:
+                    continue
+
+                filtered_prices.append(
+                    {
+                        "date": price_date.isoformat(),
+                        "open": float(price.open) if price.open else None,
+                        "high": float(price.high) if price.high else None,
+                        "low": float(price.low) if price.low else None,
+                        "close": float(price.close) if price.close else None,
+                        "volume": price.volume,
+                        "adjusted_close": (
+                            float(price.adjusted_close)
+                            if price.adjusted_close
+                            else None
+                        ),
+                        "dividend_amount": (
+                            float(price.dividend_amount)
+                            if price.dividend_amount
+                            else None
+                        ),
+                        "split_coefficient": (
+                            float(price.split_coefficient)
+                            if price.split_coefficient
+                            else None
+                        ),
+                    }
+                )
+
+        return HistoricalDataResponse(
+            symbol=symbol.upper(),
+            data=filtered_prices,
+            count=len(filtered_prices),
+            start_date=filtered_prices[-1]["date"] if filtered_prices else None,
+            end_date=filtered_prices[0]["date"] if filtered_prices else None,
+            frequency="monthly",
+        )
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"월간 데이터 조회 중 오류 발생: {str(e)}")
 
 
 @router.get(
@@ -159,74 +354,6 @@ async def get_intraday_data(
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"주식 데이터 조회 중 오류 발생: {str(e)}")
-
-
-@router.get(
-    "/historical/{symbol}",
-    response_model=HistoricalDataResponse,
-    description="지정된 종목의 장기 히스토리 데이터를 조회합니다.",
-)
-async def get_historical_data(
-    symbol: str = Path(..., description="종목 심볼 (예: AAPL, TSLA)"),
-    start_date: Optional[date] = Query(default=None, description="시작 날짜 (YYYY-MM-DD)"),
-    end_date: Optional[date] = Query(default=None, description="종료 날짜 (YYYY-MM-DD)"),
-    frequency: str = Query(
-        default="daily", description="데이터 주기 (daily, weekly, monthly)"
-    ),
-):
-    """장기 히스토리 데이터 조회"""
-    try:
-        market_service = service_factory.get_market_data_service()
-
-        # 기본적으로 daily 데이터 사용 (weekly, monthly는 Alpha Vantage에서 별도 API)
-        if frequency == "daily":
-            daily_prices = await market_service.stock.get_daily_prices(
-                symbol=symbol.upper(), outputsize="full"
-            )
-
-            # 날짜 필터링
-            filtered_prices = []
-            for price in daily_prices:
-                if price.date:
-                    price_date = (
-                        price.date.date() if hasattr(price.date, "date") else price.date
-                    )
-                    if start_date and price_date < start_date:
-                        continue
-                    if end_date and price_date > end_date:
-                        continue
-                    filtered_prices.append(
-                        {
-                            "date": price_date.isoformat(),
-                            "open": float(price.open) if price.open else None,
-                            "high": float(price.high) if price.high else None,
-                            "low": float(price.low) if price.low else None,
-                            "close": float(price.close) if price.close else None,
-                            "volume": int(price.volume) if price.volume else None,
-                        }
-                    )
-
-            return HistoricalDataResponse(
-                symbol=symbol.upper(),
-                data=filtered_prices,
-                count=len(filtered_prices),
-                start_date=start_date,
-                end_date=end_date,
-                frequency=frequency,
-            )
-        else:
-            # weekly, monthly는 샘플 데이터 반환
-            return HistoricalDataResponse(
-                symbol=symbol.upper(),
-                data=[],
-                count=0,
-                start_date=start_date,
-                end_date=end_date,
-                frequency=frequency,
-            )
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"히스토리 데이터 조회 중 오류 발생: {str(e)}")
 
 
 @router.get(

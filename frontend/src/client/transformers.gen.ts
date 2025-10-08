@@ -21,7 +21,9 @@ import type {
 	FundamentalGetEarningsResponse,
 	FundamentalGetIncomeStatementResponse,
 	HealthHealthCheckResponse,
-	StockGetHistoricalDataResponse,
+	StockGetDailyPricesResponse,
+	StockGetMonthlyPricesResponse,
+	StockGetWeeklyPricesResponse,
 	StrategyCreateStrategyResponse,
 	StrategyExecuteStrategyResponse,
 	StrategyGetStrategiesResponse,
@@ -34,6 +36,11 @@ import type {
 	TemplateGetTemplateResponse,
 	TemplateGetTemplatesResponse,
 	TemplateUpdateTemplateResponse,
+	WatchlistCreateOrUpdateWatchlistResponse,
+	WatchlistCreateWatchlistResponse,
+	WatchlistGetWatchlistResponse,
+	WatchlistListWatchlistsResponse,
+	WatchlistUpdateWatchlistResponse,
 } from "./types.gen";
 
 export const healthHealthCheckResponseTransformer = async (
@@ -48,9 +55,9 @@ const healthResponseSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const stockGetHistoricalDataResponseTransformer = async (
+export const stockGetDailyPricesResponseTransformer = async (
 	data: any,
-): Promise<StockGetHistoricalDataResponse> => {
+): Promise<StockGetDailyPricesResponse> => {
 	data = historicalDataResponseSchemaResponseTransformer(data);
 	return data;
 };
@@ -62,6 +69,20 @@ const historicalDataResponseSchemaResponseTransformer = (data: any) => {
 	if (data.end_date) {
 		data.end_date = new Date(data.end_date);
 	}
+	return data;
+};
+
+export const stockGetWeeklyPricesResponseTransformer = async (
+	data: any,
+): Promise<StockGetWeeklyPricesResponse> => {
+	data = historicalDataResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const stockGetMonthlyPricesResponseTransformer = async (
+	data: any,
+): Promise<StockGetMonthlyPricesResponse> => {
+	data = historicalDataResponseSchemaResponseTransformer(data);
 	return data;
 };
 
@@ -444,6 +465,60 @@ const integratedBacktestResponseSchemaResponseTransformer = (data: any) => {
 	if (data.end_time) {
 		data.end_time = new Date(data.end_time);
 	}
+	return data;
+};
+
+export const watchlistListWatchlistsResponseTransformer = async (
+	data: any,
+): Promise<WatchlistListWatchlistsResponse> => {
+	data = watchlistListResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const watchlistListResponseSchemaResponseTransformer = (data: any) => {
+	if (data.watchlists) {
+		data.watchlists = data.watchlists.map((item: any) => {
+			return watchlistResponseSchemaResponseTransformer(item);
+		});
+	}
+	return data;
+};
+
+const watchlistResponseSchemaResponseTransformer = (data: any) => {
+	if (data.created_at) {
+		data.created_at = new Date(data.created_at);
+	}
+	if (data.updated_at) {
+		data.updated_at = new Date(data.updated_at);
+	}
+	return data;
+};
+
+export const watchlistCreateOrUpdateWatchlistResponseTransformer = async (
+	data: any,
+): Promise<WatchlistCreateOrUpdateWatchlistResponse> => {
+	data = watchlistResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const watchlistCreateWatchlistResponseTransformer = async (
+	data: any,
+): Promise<WatchlistCreateWatchlistResponse> => {
+	data = watchlistResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const watchlistGetWatchlistResponseTransformer = async (
+	data: any,
+): Promise<WatchlistGetWatchlistResponse> => {
+	data = watchlistResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const watchlistUpdateWatchlistResponseTransformer = async (
+	data: any,
+): Promise<WatchlistUpdateWatchlistResponse> => {
+	data = watchlistResponseSchemaResponseTransformer(data);
 	return data;
 };
 

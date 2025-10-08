@@ -3,6 +3,7 @@
 주식 시계열 데이터와 메타데이터를 저장하기 위한 DuckDB 스키마
 """
 
+from typing import Any
 import logging
 from pathlib import Path
 from datetime import UTC
@@ -52,11 +53,9 @@ class DatabaseManager:
                     logger.warning("🔄 Falling back to in-memory database")
                     self.connection = duckdb.connect(":memory:")
                     self._create_tables()
+                    logger.info("✅ DuckDB connected to in-memory database")
                 else:
                     raise
-            self.connection = duckdb.connect(self.db_path)
-            self._create_tables()
-            logger.info(f"데이터베이스 연결됨: {self.db_path}")
 
     def close(self) -> None:
         """데이터베이스 연결 종료"""
@@ -97,6 +96,46 @@ class DatabaseManager:
         self.connection.execute(
             """
             CREATE TABLE IF NOT EXISTS daily_prices (
+                symbol VARCHAR,
+                date DATE,
+                open DECIMAL(12, 4),
+                high DECIMAL(12, 4),
+                low DECIMAL(12, 4),
+                close DECIMAL(12, 4),
+                adjusted_close DECIMAL(12, 4),
+                volume BIGINT,
+                dividend_amount DECIMAL(8, 4) DEFAULT 0,
+                split_coefficient DECIMAL(8, 4) DEFAULT 1,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (symbol, date)
+            )
+        """
+        )
+
+        # 주간 주가 데이터 테이블
+        self.connection.execute(
+            """
+            CREATE TABLE IF NOT EXISTS weekly_prices (
+                symbol VARCHAR,
+                date DATE,
+                open DECIMAL(12, 4),
+                high DECIMAL(12, 4),
+                low DECIMAL(12, 4),
+                close DECIMAL(12, 4),
+                adjusted_close DECIMAL(12, 4),
+                volume BIGINT,
+                dividend_amount DECIMAL(8, 4) DEFAULT 0,
+                split_coefficient DECIMAL(8, 4) DEFAULT 1,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (symbol, date)
+            )
+        """
+        )
+
+        # 월간 주가 데이터 테이블
+        self.connection.execute(
+            """
+            CREATE TABLE IF NOT EXISTS monthly_prices (
                 symbol VARCHAR,
                 date DATE,
                 open DECIMAL(12, 4),
@@ -172,11 +211,11 @@ class DatabaseManager:
         """
         )
 
-        # 인덱스 생성
-        self._create_indexes()
+        # 통합 캐시 테이블 생성
+        self._create_unified_cache_table()
 
-        # 캐시 테이블 생성
-        self._create_cache_table("market_data_cache")
+        # 인덱스 생성 (모든 테이블 생성 후)
+        self._create_indexes()
 
         logger.info("데이터베이스 테이블 생성 완료")
 
@@ -194,6 +233,11 @@ class DatabaseManager:
             "CREATE INDEX IF NOT EXISTS idx_trades_backtest_id ON trades(backtest_id)",
             "CREATE INDEX IF NOT EXISTS idx_trades_symbol ON trades(symbol)",
             "CREATE INDEX IF NOT EXISTS idx_trades_datetime ON trades(datetime)",
+            # 통합 캐시 테이블 인덱스
+            "CREATE INDEX IF NOT EXISTS idx_unified_cache_key ON unified_cache(cache_key)",
+            "CREATE INDEX IF NOT EXISTS idx_unified_cache_data_type ON unified_cache(data_type)",
+            "CREATE INDEX IF NOT EXISTS idx_unified_cache_symbol ON unified_cache(symbol)",
+            "CREATE INDEX IF NOT EXISTS idx_unified_cache_updated_at ON unified_cache(updated_at)",
         ]
 
         for index_sql in indexes:
@@ -474,16 +518,18 @@ class DatabaseManager:
             # 새 데이터 삽입
             if data:
                 import json
+                import uuid
                 from datetime import datetime
 
                 for item in data:
                     self.connection.execute(
                         f"""
                         INSERT INTO {table_name}
-                        (cache_key, data_json, created_at, updated_at)
-                        VALUES (?, ?, ?, ?)
+                        (id, cache_key, data_json, created_at, updated_at)
+                        VALUES (?, ?, ?, ?, ?)
                     """,
                         [
+                            str(uuid.uuid4()),
                             cache_key,
                             json.dumps(item),
                             datetime.now(UTC),
@@ -565,10 +611,11 @@ class DatabaseManager:
         if not self.connection:
             raise RuntimeError("데이터베이스에 연결되지 않음")
 
+        # CREATE TABLE IF NOT EXISTS를 사용하여 기존 데이터 보존
         self.connection.execute(
             f"""
             CREATE TABLE IF NOT EXISTS {table_name} (
-                id INTEGER PRIMARY KEY,
+                id VARCHAR PRIMARY KEY,
                 cache_key VARCHAR NOT NULL,
                 data_json TEXT NOT NULL,
                 created_at TIMESTAMP NOT NULL,
@@ -591,6 +638,183 @@ class DatabaseManager:
             ON {table_name}(updated_at)
         """
         )
+
+    def _create_unified_cache_table(self) -> None:
+        """통합 캐시 테이블 생성 - 모든 마켓 데이터 타입을 지원"""
+        self._ensure_connected()
+        if not self.connection:
+            raise RuntimeError("데이터베이스에 연결되지 않음")
+
+        self.connection.execute(
+            """
+            CREATE TABLE IF NOT EXISTS unified_cache (
+                id VARCHAR PRIMARY KEY,
+                cache_key VARCHAR NOT NULL,
+                data_type VARCHAR NOT NULL,  -- 'stock', 'fundamental', 'news', 'economic_indicator' 등
+                symbol VARCHAR,              -- 심볼 (있는 경우)
+                data_json TEXT NOT NULL,     -- JSON 직렬화된 데이터
+                metadata JSON,               -- 추가 메타데이터 (검색 조건, 필터 등)
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                expires_at TIMESTAMP,        -- TTL 관리
+
+                -- 복합 유니크 키로 중복 방지
+                UNIQUE(cache_key, data_type, symbol)
+            )
+        """
+        )
+
+        # 기존 cache 테이블들도 유지 (하위 호환성)
+        self._create_cache_table("market_data_cache")
+
+        logger.info("통합 캐시 테이블 생성 완료")
+
+    # ===== 통합 캐시 관리 메서드들 =====
+
+    def store_unified_cache(
+        self,
+        cache_key: str,
+        data: list[dict] | dict,
+        data_type: str,
+        symbol: str | None = None,
+        ttl_hours: int = 24,
+        metadata: dict | None = None,
+    ) -> bool:
+        """통합 캐시에 데이터 저장
+
+        Args:
+            cache_key: 캐시 키
+            data: 저장할 데이터 (단일 dict 또는 list[dict])
+            data_type: 데이터 타입 ('stock', 'fundamental', 'news', 'economic_indicator' 등)
+            symbol: 심볼 (옵션)
+            ttl_hours: TTL (시간 단위)
+            metadata: 추가 메타데이터
+        """
+        self._ensure_connected()
+        if not self.connection:
+            raise RuntimeError("데이터베이스에 연결되지 않음")
+
+        try:
+            import json
+            import uuid
+            from datetime import datetime, timedelta
+
+            # 단일 데이터를 리스트로 변환
+            if isinstance(data, dict):
+                data = [data]
+
+            # 기존 캐시 삭제
+            self.connection.execute(
+                """
+                DELETE FROM unified_cache
+                WHERE cache_key = ? AND data_type = ? AND (symbol = ? OR symbol IS NULL)
+                """,
+                [cache_key, data_type, symbol],
+            )
+
+            # 새 데이터 삽입
+            expires_at = datetime.now(UTC) + timedelta(hours=ttl_hours)
+
+            for item in data:
+                # Decimal, datetime 등을 JSON 직렬화 가능하도록 변환
+                serializable_item = self._make_json_serializable(item)
+
+                self.connection.execute(
+                    """
+                    INSERT INTO unified_cache
+                    (id, cache_key, data_type, symbol, data_json, metadata, expires_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    [
+                        str(uuid.uuid4()),
+                        cache_key,
+                        data_type,
+                        symbol,
+                        json.dumps(serializable_item),
+                        json.dumps(metadata) if metadata else None,
+                        expires_at,
+                    ],
+                )
+
+            logger.info(f"통합 캐시 저장: {data_type}.{cache_key} ({len(data)} 항목)")
+            return True
+
+        except Exception as e:
+            logger.error(f"통합 캐시 저장 실패: {e}")
+            return False
+
+    def get_unified_cache(
+        self,
+        cache_key: str,
+        data_type: str,
+        symbol: str | None = None,
+        ignore_ttl: bool = False,
+    ) -> list[dict] | None:
+        """통합 캐시에서 데이터 조회"""
+        self._ensure_connected()
+        if not self.connection:
+            raise RuntimeError("데이터베이스에 연결되지 않음")
+
+        try:
+            import json
+            from datetime import datetime
+
+            # TTL 체크 조건
+            ttl_condition = (
+                "" if ignore_ttl else "AND (expires_at IS NULL OR expires_at > ?)"
+            )
+            params = [cache_key, data_type, symbol]
+            if not ignore_ttl:
+                params.append(datetime.now(UTC))
+
+            query = f"""
+                SELECT data_json FROM unified_cache
+                WHERE cache_key = ? AND data_type = ? AND (symbol = ? OR symbol IS NULL)
+                {ttl_condition}
+                ORDER BY created_at
+            """
+
+            results = self.connection.execute(query, params).fetchall()
+
+            if results:
+                data = [json.loads(row[0]) for row in results]
+                logger.info(f"통합 캐시 HIT: {data_type}.{cache_key} ({len(data)} 항목)")
+                return data
+            else:
+                logger.debug(f"통합 캐시 MISS: {data_type}.{cache_key}")
+                return None
+
+        except Exception as e:
+            logger.error(f"통합 캐시 조회 실패: {e}")
+            return None
+
+    def _make_json_serializable(self, obj) -> Any:
+        """객체를 JSON 직렬화 가능하도록 변환"""
+        import json
+        from datetime import datetime
+        from decimal import Decimal
+
+        if isinstance(obj, dict):
+            return {
+                key: self._make_json_serializable(value) for key, value in obj.items()
+            }
+        elif isinstance(obj, list):
+            return [self._make_json_serializable(item) for item in obj]
+        elif isinstance(obj, datetime):
+            return obj.isoformat()
+        elif isinstance(obj, Decimal):
+            return float(obj)
+        elif hasattr(obj, "model_dump"):  # Pydantic 모델
+            return self._make_json_serializable(obj.model_dump())
+        elif hasattr(obj, "dict"):  # Pydantic v1 스타일
+            return self._make_json_serializable(obj.dict())
+        else:
+            # 기본 JSON 직렬화 시도
+            try:
+                json.dumps(obj)
+                return obj
+            except (TypeError, ValueError):
+                return str(obj)
 
 
 def get_database() -> DatabaseManager:

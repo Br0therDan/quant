@@ -95,9 +95,6 @@ import type {
 	DashboardGetWatchlistQuotesData,
 	DashboardGetWatchlistQuotesErrors,
 	DashboardGetWatchlistQuotesResponses,
-	EconomicGetConsumerSentimentData,
-	EconomicGetConsumerSentimentErrors,
-	EconomicGetConsumerSentimentResponses,
 	EconomicGetEmploymentDataData,
 	EconomicGetEmploymentDataErrors,
 	EconomicGetEmploymentDataResponses,
@@ -173,15 +170,21 @@ import type {
 	StockGetDailyPricesData,
 	StockGetDailyPricesErrors,
 	StockGetDailyPricesResponses,
-	StockGetHistoricalDataData,
-	StockGetHistoricalDataErrors,
-	StockGetHistoricalDataResponses,
 	StockGetIntradayDataData,
 	StockGetIntradayDataErrors,
 	StockGetIntradayDataResponses,
+	StockGetMonthlyPricesData,
+	StockGetMonthlyPricesErrors,
+	StockGetMonthlyPricesResponses,
 	StockGetQuoteData,
 	StockGetQuoteErrors,
 	StockGetQuoteResponses,
+	StockGetWeeklyPricesData,
+	StockGetWeeklyPricesErrors,
+	StockGetWeeklyPricesResponses,
+	StockSearchSymbolsData,
+	StockSearchSymbolsErrors,
+	StockSearchSymbolsResponses,
 	StrategyCreateStrategyData,
 	StrategyCreateStrategyErrors,
 	StrategyCreateStrategyResponses,
@@ -786,6 +789,52 @@ export class StockService {
 	}
 
 	/**
+	 * Get Weekly Prices
+	 * 지정된 종목의 주간 주가 데이터(OHLCV)를 조회합니다.
+	 */
+	public static getWeeklyPrices<ThrowOnError extends boolean = false>(
+		options: Options<StockGetWeeklyPricesData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			StockGetWeeklyPricesResponses,
+			StockGetWeeklyPricesErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/stock/weekly/{symbol}",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Monthly Prices
+	 * 지정된 종목의 월간 주가 데이터(OHLCV)를 조회합니다.
+	 */
+	public static getMonthlyPrices<ThrowOnError extends boolean = false>(
+		options: Options<StockGetMonthlyPricesData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			StockGetMonthlyPricesResponses,
+			StockGetMonthlyPricesErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/stock/monthly/{symbol}",
+			...options,
+		});
+	}
+
+	/**
 	 * Get Quote
 	 * 지정된 종목의 실시간 호가 정보를 조회합니다.
 	 */
@@ -832,15 +881,15 @@ export class StockService {
 	}
 
 	/**
-	 * Get Historical Data
-	 * 지정된 종목의 장기 히스토리 데이터를 조회합니다.
+	 * Search Symbols
+	 * 종목 심볼 검색 (Alpha Vantage SYMBOL_SEARCH)
 	 */
-	public static getHistoricalData<ThrowOnError extends boolean = false>(
-		options: Options<StockGetHistoricalDataData, ThrowOnError>,
+	public static searchSymbols<ThrowOnError extends boolean = false>(
+		options: Options<StockSearchSymbolsData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			StockGetHistoricalDataResponses,
-			StockGetHistoricalDataErrors,
+			StockSearchSymbolsResponses,
+			StockSearchSymbolsErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -849,7 +898,7 @@ export class StockService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/market-data/stock/historical/{symbol}",
+			url: "/api/v1/market-data/stock/search",
 			...options,
 		});
 	}
@@ -1061,29 +1110,6 @@ export class EconomicService {
 				},
 			],
 			url: "/api/v1/market-data/economic/employment",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Consumer Sentiment
-	 * 미국 소비자 심리 지수를 조회합니다.
-	 */
-	public static getConsumerSentiment<ThrowOnError extends boolean = false>(
-		options?: Options<EconomicGetConsumerSentimentData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			EconomicGetConsumerSentimentResponses,
-			EconomicGetConsumerSentimentErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/market-data/economic/consumer-sentiment",
 			...options,
 		});
 	}

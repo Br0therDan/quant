@@ -154,7 +154,14 @@ class BaseMarketDataService(ABC):
             )
             if duckdb_data:
                 logger.info(f"Cache HIT (DuckDB): {cache_key}")
-                return [model_class(**item) for item in duckdb_data]
+                # DuckDB 데이터를 모델로 변환할 때 ID 필드 제거 (UUID와 ObjectId 충돌 방지)
+                processed_data = []
+                for item in duckdb_data:
+                    # ID 필드 제거하여 새로운 ObjectId가 생성되도록 함
+                    item_copy = item.copy()
+                    item_copy.pop("id", None)  # DuckDB UUID ID 제거
+                    processed_data.append(model_class(**item_copy))
+                return processed_data
 
             # 2. MongoDB 캐시 확인 (보조)
             mongodb_data = await self._get_from_mongodb_cache(
@@ -177,7 +184,7 @@ class BaseMarketDataService(ABC):
         self,
         cache_key: str,
         data: List[BaseMarketDataDocument],
-        table_name: str = "market_data",
+        table_name: str = "market_data_cache",
     ) -> bool:
         """
         데이터를 캐시에 저장 (DuckDB + MongoDB)
@@ -337,8 +344,12 @@ class BaseMarketDataService(ABC):
                     item.model_dump() if hasattr(item, "model_dump") else item.dict()
                 )
 
-                # ID가 없으면 생성 (DuckDB 테이블 NOT NULL 제약조건 때문)
-                if "id" not in record or record["id"] is None:
+                # ObjectId를 문자열로 변환하거나 새 UUID 생성
+                if "id" in record and record["id"] is not None:
+                    # ObjectId를 문자열로 변환
+                    record["id"] = str(record["id"])
+                else:
+                    # ID가 없으면 새 UUID 생성
                     import uuid
 
                     record["id"] = str(uuid.uuid4())
@@ -376,16 +387,32 @@ class BaseMarketDataService(ABC):
             if not data:
                 return True
 
+            logger.info(f"Attempting to store {len(data)} records to MongoDB")
+            logger.info(
+                f"Data type: {type(data[0])}, Collection: {data[0].__class__.__name__}"
+            )
+
             # 타임스탬프 업데이트
             for item in data:
                 item.updated_at = datetime.now(UTC)
 
             # MongoDB에 저장 (upsert 사용)
-            for item in data:
-                await item.save()
+            saved_count = 0
+            for i, item in enumerate(data):
+                try:
+                    await item.save()
+                    saved_count += 1
+                except Exception as item_error:
+                    logger.error(f"Failed to save item {i}: {item_error}")
+                    logger.error(
+                        f"Item data: {item.model_dump() if hasattr(item, 'model_dump') else item.dict()}"
+                    )
+                    # 첫 번째 오류만 상세히 로깅
+                    if i == 0:
+                        raise
 
-            logger.info(f"Stored {len(data)} records to MongoDB cache")
-            return True
+            logger.info(f"Stored {saved_count}/{len(data)} records to MongoDB cache")
+            return saved_count > 0
 
         except Exception as e:
             logger.error(f"MongoDB cache storage error: {e}")
@@ -400,6 +427,159 @@ class BaseMarketDataService(ABC):
             갱신된 데이터 리스트
         """
         pass
+
+    async def get_data_with_unified_cache(
+        self,
+        cache_key: str,
+        data_type: str,
+        model_class: Type[Any],  # BaseMarketDataDocument 또는 Pydantic BaseModel
+        refresh_callback,
+        symbol: str | None = None,
+        ttl_hours: int = 24,
+        **refresh_kwargs,
+    ) -> List[Any]:  # BaseMarketDataDocument 또는 Pydantic 모델 리스트
+        """
+        통합 캐시를 사용한 데이터 조회 (캐시 미스 시 자동 갱신)
+
+        Args:
+            cache_key: 캐시 키
+            data_type: 데이터 타입 ('stock', 'fundamental', 'news', 'economic_indicator')
+            model_class: 데이터 모델 클래스
+            refresh_callback: 데이터 갱신 콜백 함수
+            symbol: 심볼 (옵션)
+            ttl_hours: TTL (시간 단위)
+            **refresh_kwargs: 갱신 함수에 전달할 인자들
+
+        Returns:
+            데이터 리스트
+        """
+        try:
+            # 1. 통합 캐시 확인
+            if not self._db_manager:
+                self._db_manager = DatabaseManager()
+            self._db_manager.connect()
+
+            cached_data = self._db_manager.get_unified_cache(
+                cache_key=cache_key,
+                data_type=data_type,
+                symbol=symbol,
+                ignore_ttl=False,
+            )
+
+            if cached_data:
+                logger.info(f"통합 캐시 HIT: {data_type}.{cache_key}")
+                # JSON 데이터를 모델 객체로 변환
+                result = []
+                for item in cached_data:
+                    try:
+                        # ID 필드 제거 (새로운 ObjectId 생성을 위해)
+                        item_copy = item.copy()
+                        item_copy.pop("id", None)
+
+                        # Decimal 필드 안전 변환
+                        item_copy = self._restore_decimal_fields(item_copy)
+
+                        model_instance = model_class(**item_copy)
+                        result.append(model_instance)
+                    except Exception as model_error:
+                        logger.warning(
+                            f"Failed to create model from cached data: {model_error}"
+                        )
+                        continue
+                return result
+
+            # 2. 캐시 미스 시 외부 소스에서 갱신
+            logger.info(f"통합 캐시 MISS: {data_type}.{cache_key}")
+            fresh_data = await refresh_callback(**refresh_kwargs)
+
+            if fresh_data:
+                # 통합 캐시에 저장
+                success = self._db_manager.store_unified_cache(
+                    cache_key=cache_key,
+                    data=fresh_data,
+                    data_type=data_type,
+                    symbol=symbol,
+                    ttl_hours=ttl_hours,
+                    metadata={"refresh_kwargs": refresh_kwargs},
+                )
+
+                if success:
+                    logger.info(f"통합 캐시 저장 완료: {data_type}.{cache_key}")
+                else:
+                    logger.warning(f"통합 캐시 저장 실패: {data_type}.{cache_key}")
+
+                return fresh_data
+            else:
+                logger.warning(
+                    f"No data received from source for {data_type}.{cache_key}"
+                )
+                return []
+
+        except Exception as e:
+            logger.error(f"통합 캐시 데이터 조회 실패 ({data_type}.{cache_key}): {e}")
+            # 최후의 수단으로 만료된 캐시라도 반환
+            try:
+                if not self._db_manager:
+                    self._db_manager = DatabaseManager()
+                self._db_manager.connect()
+
+                stale_data = self._db_manager.get_unified_cache(
+                    cache_key=cache_key,
+                    data_type=data_type,
+                    symbol=symbol,
+                    ignore_ttl=True,
+                )
+                if stale_data:
+                    logger.info(
+                        f"Returning stale cache data for {data_type}.{cache_key}"
+                    )
+                    result = []
+                    for item in stale_data:
+                        try:
+                            item_copy = item.copy()
+                            item_copy.pop("id", None)
+                            item_copy = self._restore_decimal_fields(item_copy)
+                            result.append(model_class(**item_copy))
+                        except Exception:
+                            continue
+                    return result
+            except Exception:
+                pass
+            return []
+
+    def _restore_decimal_fields(self, data: dict) -> dict:
+        """JSON에서 복원된 데이터의 Decimal 필드를 복구"""
+        from decimal import Decimal
+
+        # 일반적인 Decimal 필드명들
+        decimal_fields = [
+            "overall_sentiment_score",
+            "relevance_score",
+            "open",
+            "high",
+            "low",
+            "close",
+            "adjusted_close",
+            "volume",
+            "dividend_amount",
+            "split_coefficient",
+            "market_capitalization",
+            "book_value",
+            "dividend_per_share",
+            "eps",
+            "price_to_earnings_ratio",
+            "peg_ratio",
+            "price_to_book_ratio",
+        ]
+
+        for field in decimal_fields:
+            if field in data and data[field] is not None:
+                try:
+                    data[field] = Decimal(str(data[field]))
+                except (ValueError, TypeError, KeyError):
+                    pass  # 변환 실패 시 원본 값 유지
+
+        return data
 
     async def get_data_with_fallback(
         self,
@@ -429,9 +609,8 @@ class BaseMarketDataService(ABC):
         try:
             fresh_data = await refresh_callback(**refresh_kwargs)
             if fresh_data:
-                # 캐시에 저장
-                table_name = getattr(model_class, "__tablename__", "market_data")
-                await self.store_data(cache_key, fresh_data, table_name)
+                # 캐시에 저장 (기본 캐시 테이블 사용)
+                await self.store_data(cache_key, fresh_data, "market_data_cache")
                 return fresh_data
             else:
                 logger.warning(f"No data received from source for {cache_key}")

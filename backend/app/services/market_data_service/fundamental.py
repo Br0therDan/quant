@@ -38,7 +38,7 @@ class FundamentalService(BaseMarketDataService):
             return None
 
     async def get_company_overview(self, symbol: str) -> Optional[CompanyOverview]:
-        """기업 개요 정보 조회 (Alpha Vantage OVERVIEW API)
+        """기업 개요 정보 조회 (통합 캐시 우선, Alpha Vantage fallback)
 
         Args:
             symbol: 주식 심볼
@@ -49,6 +49,43 @@ class FundamentalService(BaseMarketDataService):
         try:
             logger.info(f"Fetching company overview for {symbol}")
 
+            cache_key = f"company_overview_{symbol.upper()}"
+
+            async def refresh_overview_data():
+                overview_data = await self._fetch_overview_from_alpha_vantage(symbol)
+                return [overview_data] if overview_data else []
+
+            data = await self.get_data_with_unified_cache(
+                cache_key=cache_key,
+                model_class=CompanyOverview,
+                data_type="fundamental_overview",
+                symbol=symbol.upper(),
+                refresh_callback=refresh_overview_data,
+                ttl_hours=24,  # 기업 개요는 24시간 TTL
+            )
+
+            if isinstance(data, list) and len(data) > 0:
+                first_item = data[0]
+                if isinstance(first_item, CompanyOverview):
+                    return first_item
+                else:
+                    logger.warning(f"Invalid data type in cache for {symbol}")
+                    return None
+            elif isinstance(data, CompanyOverview):
+                return data
+            else:
+                logger.warning(f"No valid company overview data found for {symbol}")
+                return None
+
+        except Exception as e:
+            logger.error(f"Failed to get company overview for {symbol}: {e}")
+            return None
+
+    async def _fetch_overview_from_alpha_vantage(
+        self, symbol: str
+    ) -> Optional[CompanyOverview]:
+        """Alpha Vantage에서 기업 개요 데이터를 가져와서 CompanyOverview 모델로 변환"""
+        try:
             response = await self.alpha_vantage.fundamental.overview(symbol=symbol)
 
             if isinstance(response, list) and len(response) > 0:
@@ -63,50 +100,55 @@ class FundamentalService(BaseMarketDataService):
                 logger.warning(f"Empty overview response for {symbol}")
                 return None
 
-            # Alpha Vantage OVERVIEW 응답을 CompanyOverview 모델로 변환
+            # Alpha Vantage 클라이언트에서 이미 파싱된 응답을 CompanyOverview 모델로 변환
+            # 클라이언트에서 이미 필드명이 변환되어 있음
             overview_data = {
-                "symbol": data.get("Symbol", symbol),
-                "name": data.get("Name", ""),
-                "description": data.get("Description", ""),
-                "exchange": data.get("Exchange", ""),
-                "currency": data.get("Currency", "USD"),
-                "country": data.get("Country", ""),
-                "sector": data.get("Sector", ""),
-                "industry": data.get("Industry", ""),
+                "symbol": data.get("symbol", symbol),
+                "name": data.get("name", ""),
+                "description": data.get("description", ""),
+                "exchange": data.get("exchange", ""),
+                "currency": data.get("currency", "USD"),
+                "country": data.get("country", ""),
+                "sector": data.get("sector", ""),
+                "industry": data.get("industry", ""),
                 "market_capitalization": self._to_decimal(
-                    data.get("MarketCapitalization")
+                    data.get("market_capitalization")
                 ),
-                "pe_ratio": self._to_decimal(data.get("PERatio")),
-                "peg_ratio": self._to_decimal(data.get("PEGRatio")),
-                "book_value": self._to_decimal(data.get("BookValue")),
-                "dividend_per_share": self._to_decimal(data.get("DividendPerShare")),
-                "dividend_yield": self._to_decimal(data.get("DividendYield")),
-                "eps": self._to_decimal(data.get("EPS")),
+                "pe_ratio": self._to_decimal(data.get("pe_ratio")),
+                "peg_ratio": self._to_decimal(data.get("peg_ratio")),
+                "book_value": self._to_decimal(data.get("book_value")),
+                "dividend_per_share": self._to_decimal(data.get("dividend_per_share")),
+                "dividend_yield": self._to_decimal(data.get("dividend_yield")),
+                "eps": self._to_decimal(data.get("eps")),
                 "revenue_per_share_ttm": self._to_decimal(
-                    data.get("RevenuePerShareTTM")
+                    data.get("revenue_per_share_ttm")
                 ),
-                "profit_margin": self._to_decimal(data.get("ProfitMargin")),
+                "profit_margin": self._to_decimal(data.get("profit_margin")),
                 "operating_margin_ttm": self._to_decimal(
-                    data.get("OperatingMarginTTM")
+                    data.get("operating_margin_ttm")
                 ),
-                "return_on_assets_ttm": self._to_decimal(data.get("ReturnOnAssetsTTM")),
-                "return_on_equity_ttm": self._to_decimal(data.get("ReturnOnEquityTTM")),
-                "revenue_ttm": self._to_decimal(data.get("RevenueTTM")),
-                "gross_profit_ttm": self._to_decimal(data.get("GrossProfitTTM")),
-                "ebitda": self._to_decimal(data.get("EBITDA")),
-                "shares_outstanding": int(data.get("SharesOutstanding", 0) or 0),
-                "fifty_two_week_high": self._to_decimal(data.get("52WeekHigh")),
-                "fifty_two_week_low": self._to_decimal(data.get("52WeekLow")),
+                "return_on_assets_ttm": self._to_decimal(
+                    data.get("return_on_assets_ttm")
+                ),
+                "return_on_equity_ttm": self._to_decimal(
+                    data.get("return_on_equity_ttm")
+                ),
+                "revenue_ttm": self._to_decimal(data.get("revenue_ttm")),
+                "gross_profit_ttm": self._to_decimal(data.get("gross_profit_ttm")),
+                "ebitda": self._to_decimal(data.get("ebitda")),
+                "shares_outstanding": int(data.get("shares_outstanding", 0) or 0),
+                "fifty_two_week_high": self._to_decimal(data.get("52_week_high")),
+                "fifty_two_week_low": self._to_decimal(data.get("52_week_low")),
                 "fifty_day_moving_average": self._to_decimal(
-                    data.get("50DayMovingAverage")
+                    data.get("50_day_moving_average")
                 ),
                 "two_hundred_day_moving_average": self._to_decimal(
-                    data.get("200DayMovingAverage")
+                    data.get("200_day_moving_average")
                 ),
-                "beta": self._to_decimal(data.get("Beta")),
-                "fiscal_year_end": data.get("FiscalYearEnd", ""),
+                "beta": self._to_decimal(data.get("beta")),
+                "fiscal_year_end": data.get("fiscal_year_end", ""),
                 "analyst_target_price": self._to_decimal(
-                    data.get("AnalystTargetPrice")
+                    data.get("analyst_target_price")
                 ),
             }
 
@@ -114,13 +156,15 @@ class FundamentalService(BaseMarketDataService):
             return CompanyOverview(**overview_data)
 
         except Exception as e:
-            logger.error(f"Failed to get company overview for {symbol}: {e}")
+            logger.error(
+                f"Failed to fetch overview from Alpha Vantage for {symbol}: {e}"
+            )
             return None
 
     async def get_income_statement(
         self, symbol: str, period: str = "annual"
     ) -> List[IncomeStatement]:
-        """손익계산서 조회 (Alpha Vantage INCOME_STATEMENT API)
+        """손익계산서 조회 (통합 캐시 우선, Alpha Vantage fallback)
 
         Args:
             symbol: 주식 심볼
@@ -129,6 +173,26 @@ class FundamentalService(BaseMarketDataService):
         Returns:
             손익계산서 데이터 리스트
         """
+        cache_key = f"income_statement_{symbol.upper()}_{period}"
+
+        async def refresh_callback():
+            return await self._fetch_income_statement_from_alpha_vantage(symbol, period)
+
+        data = await self.get_data_with_unified_cache(
+            cache_key=cache_key,
+            model_class=IncomeStatement,
+            data_type="fundamental_income",
+            symbol=symbol.upper(),
+            refresh_callback=refresh_callback,
+            ttl_hours=72,  # 재무제표는 72시간 TTL
+        )
+
+        return data if isinstance(data, list) else []
+
+    async def _fetch_income_statement_from_alpha_vantage(
+        self, symbol: str, period: str = "annual"
+    ) -> List[IncomeStatement]:
+        """Alpha Vantage에서 손익계산서 데이터를 가져와서 IncomeStatement 모델로 변환"""
         try:
             logger.info(f"Fetching income statement for {symbol} ({period})")
 
@@ -197,7 +261,7 @@ class FundamentalService(BaseMarketDataService):
     async def get_balance_sheet(
         self, symbol: str, period: str = "annual"
     ) -> List[BalanceSheet]:
-        """재무상태표 조회 (Alpha Vantage BALANCE_SHEET API)
+        """재무상태표 조회 (통합 캐시 우선, Alpha Vantage fallback)
 
         Args:
             symbol: 주식 심볼
@@ -206,6 +270,26 @@ class FundamentalService(BaseMarketDataService):
         Returns:
             재무상태표 데이터 리스트
         """
+        cache_key = f"balance_sheet_{symbol.upper()}_{period}"
+
+        async def refresh_callback():
+            return await self._fetch_balance_sheet_from_alpha_vantage(symbol, period)
+
+        data = await self.get_data_with_unified_cache(
+            cache_key=cache_key,
+            model_class=BalanceSheet,
+            data_type="fundamental_balance",
+            symbol=symbol.upper(),
+            refresh_callback=refresh_callback,
+            ttl_hours=72,  # 재무제표는 72시간 TTL
+        )
+
+        return data if isinstance(data, list) else []
+
+    async def _fetch_balance_sheet_from_alpha_vantage(
+        self, symbol: str, period: str = "annual"
+    ) -> List[BalanceSheet]:
+        """Alpha Vantage에서 재무상태표 데이터를 가져와서 BalanceSheet 모델로 변환"""
         try:
             logger.info(f"Fetching balance sheet for {symbol} ({period})")
 
@@ -293,7 +377,7 @@ class FundamentalService(BaseMarketDataService):
     async def get_cash_flow(
         self, symbol: str, period: str = "annual"
     ) -> List[CashFlow]:
-        """현금흐름표 조회 (Alpha Vantage CASH_FLOW API)
+        """현금흐름표 조회 (통합 캐시 우선, Alpha Vantage fallback)
 
         Args:
             symbol: 주식 심볼
@@ -302,6 +386,26 @@ class FundamentalService(BaseMarketDataService):
         Returns:
             현금흐름표 데이터 리스트
         """
+        cache_key = f"cash_flow_{symbol.upper()}_{period}"
+
+        async def refresh_callback():
+            return await self._fetch_cash_flow_from_alpha_vantage(symbol, period)
+
+        data = await self.get_data_with_unified_cache(
+            cache_key=cache_key,
+            model_class=CashFlow,
+            data_type="fundamental_cashflow",
+            symbol=symbol.upper(),
+            refresh_callback=refresh_callback,
+            ttl_hours=72,  # 재무제표는 72시간 TTL
+        )
+
+        return data if isinstance(data, list) else []
+
+    async def _fetch_cash_flow_from_alpha_vantage(
+        self, symbol: str, period: str = "annual"
+    ) -> List[CashFlow]:
+        """Alpha Vantage에서 현금흐름표 데이터를 가져와서 CashFlow 모델로 변환"""
         try:
             logger.info(f"Fetching cash flow for {symbol} ({period})")
 
@@ -371,7 +475,7 @@ class FundamentalService(BaseMarketDataService):
             return []
 
     async def get_earnings(self, symbol: str) -> List[Earnings]:
-        """실적 발표 데이터 조회 (Alpha Vantage EARNINGS API)
+        """실적 발표 데이터 조회 (통합 캐시 우선, Alpha Vantage fallback)
 
         Args:
             symbol: 주식 심볼
@@ -379,6 +483,24 @@ class FundamentalService(BaseMarketDataService):
         Returns:
             실적 발표 데이터 리스트
         """
+        cache_key = f"earnings_{symbol.upper()}"
+
+        async def refresh_callback():
+            return await self._fetch_earnings_from_alpha_vantage(symbol)
+
+        data = await self.get_data_with_unified_cache(
+            cache_key=cache_key,
+            model_class=Earnings,
+            data_type="fundamental_earnings",
+            symbol=symbol.upper(),
+            refresh_callback=refresh_callback,
+            ttl_hours=24,  # 실적 데이터는 24시간 TTL
+        )
+
+        return data if isinstance(data, list) else []
+
+    async def _fetch_earnings_from_alpha_vantage(self, symbol: str) -> List[Earnings]:
+        """Alpha Vantage에서 실적 발표 데이터를 가져와서 Earnings 모델로 변환"""
         try:
             logger.info(f"Fetching earnings for {symbol}")
 

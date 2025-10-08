@@ -64,7 +64,7 @@ class GDP(BaseMarketDataDocument, DataQualityMixin):
     frequency: str = Field(default="quarterly", description="발표 주기")
 
     class Settings:
-        name = "gdp_indicators"
+        name = "economic_indicators_gdp"
         indexes = [
             [("country", 1), ("date", -1)],
             "country",
@@ -101,7 +101,7 @@ class Inflation(BaseMarketDataDocument, DataQualityMixin):
     ppi_change: Optional[Decimal] = Field(None, description="PPI 변화율 (%)")
 
     class Settings:
-        name = "inflation_indicators"
+        name = "economic_indicators_inflation"
         indexes = [
             [("country", 1), ("date", -1)],
             "country",
@@ -147,7 +147,7 @@ class InterestRate(BaseMarketDataDocument, DataQualityMixin):
     )
 
     class Settings:
-        name = "interest_rate_indicators"
+        name = "economic_indicators_interest_rate"
         indexes = [
             [("country", 1), ("date", -1)],
             "country",
@@ -206,7 +206,7 @@ class Employment(BaseMarketDataDocument, DataQualityMixin):
     unemployed_persons: Optional[int] = Field(None, description="실업자 수")
 
     class Settings:
-        name = "employment_indicators"
+        name = "economic_indicators_employment"
         indexes = [
             [("country", 1), ("date", -1)],
             "country",
@@ -246,7 +246,7 @@ class Manufacturing(BaseMarketDataDocument, DataQualityMixin):
     durable_goods_orders: Optional[Decimal] = Field(None, description="내구재 수주")
 
     class Settings:
-        name = "manufacturing_indicators"
+        name = "fundamental_manufacturing_indicators"
         indexes = [
             [("country", 1), ("date", -1)],
             "country",
@@ -270,40 +270,40 @@ class Manufacturing(BaseMarketDataDocument, DataQualityMixin):
         return max(score, 0.0)
 
 
-class ConsumerSentiment(BaseMarketDataDocument, DataQualityMixin):
-    """소비자 심리 지표 모델"""
+# class ConsumerSentiment(BaseMarketDataDocument, DataQualityMixin):
+#     """소비자 심리 지표 모델"""
 
-    date: datetime = Field(..., description="기준일")
-    country: str = Field(default="US", description="국가코드")
+#     date: datetime = Field(..., description="기준일")
+#     country: str = Field(default="US", description="국가코드")
 
-    # 소비자 심리 지표들
-    consumer_confidence: Optional[Decimal] = Field(None, description="소비자 신뢰지수")
-    consumer_sentiment: Optional[Decimal] = Field(None, description="소비자 심리지수")
-    retail_sales: Optional[Decimal] = Field(None, description="소매판매 변화율 (%)")
-    personal_consumption: Optional[Decimal] = Field(None, description="개인소비지출")
-    personal_income: Optional[Decimal] = Field(None, description="개인소득")
-    personal_saving_rate: Optional[Decimal] = Field(None, description="개인저축률 (%)")
+#     # 소비자 심리 지표들
+#     consumer_confidence: Optional[Decimal] = Field(None, description="소비자 신뢰지수")
+#     consumer_sentiment: Optional[Decimal] = Field(None, description="소비자 심리지수")
+#     retail_sales: Optional[Decimal] = Field(None, description="소매판매 변화율 (%)")
+#     personal_consumption: Optional[Decimal] = Field(None, description="개인소비지출")
+#     personal_income: Optional[Decimal] = Field(None, description="개인소득")
+#     personal_saving_rate: Optional[Decimal] = Field(None, description="개인저축률 (%)")
 
-    class Settings:
-        name = "consumer_sentiment_indicators"
-        indexes = [
-            [("country", 1), ("date", -1)],
-            "country",
-            "date",
-            "consumer_confidence",
-            "retail_sales",
-            "created_at",
-        ]
+#     class Settings:
+#         name = "fundamental_consumer_sentiment_indicators"
+#         indexes = [
+#             [("country", 1), ("date", -1)],
+#             "country",
+#             "date",
+#             "consumer_confidence",
+#             "retail_sales",
+#             "created_at",
+#         ]
 
-    def calculate_quality_score(self) -> float:
-        """데이터 품질 점수 계산"""
-        score = 100.0
+#     def calculate_quality_score(self) -> float:
+#         """데이터 품질 점수 계산"""
+#         score = 100.0
 
-        if not self.consumer_confidence and not self.consumer_sentiment:
-            score -= 30
-        if not self.retail_sales:
-            score -= 25
-        if not self.personal_consumption:
-            score -= 20
+#         if not self.consumer_confidence and not self.consumer_sentiment:
+#             score -= 30
+#         if not self.retail_sales:
+#             score -= 25
+#         if not self.personal_consumption:
+#             score -= 20
 
-        return max(score, 0.0)
+#         return max(score, 0.0)

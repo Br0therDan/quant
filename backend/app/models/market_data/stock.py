@@ -6,7 +6,7 @@ Stock-related data models
 from datetime import datetime
 from typing import Optional
 from pydantic import Field, field_validator
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 
 from .base import BaseMarketDataDocument, DataQualityMixin
 
@@ -26,7 +26,7 @@ class IntradayPrice(BaseMarketDataDocument, DataQualityMixin):
     volume: int = Field(..., description="거래량", ge=0)
 
     class Settings:
-        name = "intraday_prices"
+        name = "stock_price_intraday"
         indexes = [
             [("symbol", 1), ("timestamp", 1), ("interval", 1)],
             "symbol",
@@ -57,8 +57,44 @@ class DailyPrice(BaseMarketDataDocument, DataQualityMixin):
     price_change: Optional[Decimal] = Field(None, description="전일 대비 변동")
     price_change_percent: Optional[Decimal] = Field(None, description="전일 대비 변동률 (%)")
 
+    @field_validator(
+        "open",
+        "high",
+        "low",
+        "close",
+        "adjusted_close",
+        "dividend_amount",
+        "split_coefficient",
+        "price_change",
+        "price_change_percent",
+        mode="before",
+    )
+    @classmethod
+    def convert_decimal128(cls, v):
+        """다양한 숫자 타입을 Decimal로 변환"""
+        if v is None:
+            return v
+        # Import here to avoid circular imports
+        try:
+            from bson import Decimal128
+
+            if isinstance(v, Decimal128):
+                return Decimal(str(v))
+        except ImportError:
+            pass
+
+        # 다른 숫자 타입들도 처리
+        if isinstance(v, (int, float)):
+            return Decimal(str(v))
+        elif isinstance(v, str):
+            try:
+                return Decimal(v)
+            except (ValueError, TypeError, InvalidOperation):
+                return v
+        return v
+
     class Settings:
-        name = "daily_prices"
+        name = "stock_price_daily"
         indexes = [
             [("symbol", 1), ("date", 1)],  # 복합 인덱스 (고유성 보장)
             "symbol",
@@ -97,7 +133,7 @@ class WeeklyPrice(BaseMarketDataDocument, DataQualityMixin):
     """주간 주가 데이터 모델"""
 
     symbol: str = Field(..., description="주식 심볼")
-    date: datetime = Field(..., description="주간 시작 날짜")
+    date: datetime = Field(..., description="주간 마지막 날짜")
 
     # OHLCV 데이터
     open: Decimal = Field(..., description="시가", gt=0)
@@ -106,8 +142,54 @@ class WeeklyPrice(BaseMarketDataDocument, DataQualityMixin):
     close: Decimal = Field(..., description="종가", gt=0)
     volume: int = Field(..., description="거래량", ge=0)
 
+    # 조정 데이터
+    adjusted_close: Optional[Decimal] = Field(None, description="조정 종가")
+    dividend_amount: Optional[Decimal] = Field(
+        default=Decimal("0.0"), description="배당금 (해당 주 지급분)"
+    )
+    split_coefficient: Optional[Decimal] = Field(
+        default=Decimal("1.0"), description="주식분할 계수"
+    )
+
+    # 메타데이터
+    source: str = Field(default="alpha_vantage", description="데이터 출처")
+
+    @field_validator(
+        "open",
+        "high",
+        "low",
+        "close",
+        "adjusted_close",
+        "dividend_amount",
+        "split_coefficient",
+        mode="before",
+    )
+    @classmethod
+    def convert_decimal128(cls, v):
+        """다양한 숫자 타입을 Decimal로 변환"""
+        if v is None:
+            return v
+        # Import here to avoid circular imports
+        try:
+            from bson import Decimal128
+
+            if isinstance(v, Decimal128):
+                return Decimal(str(v))
+        except ImportError:
+            pass
+
+        # 다른 숫자 타입들도 처리
+        if isinstance(v, (int, float)):
+            return Decimal(str(v))
+        elif isinstance(v, str):
+            try:
+                return Decimal(v)
+            except (ValueError, TypeError, InvalidOperation):
+                return v
+        return v
+
     class Settings:
-        name = "weekly_prices"
+        name = "stock_price_weekly"
         indexes = [
             [("symbol", 1), ("date", 1)],  # 복합 인덱스 (고유성 보장)
             "symbol",
@@ -121,7 +203,7 @@ class MonthlyPrice(BaseMarketDataDocument, DataQualityMixin):
     """월간 주가 데이터 모델"""
 
     symbol: str = Field(..., description="주식 심볼")
-    date: datetime = Field(..., description="월간 시작 날짜")
+    date: datetime = Field(..., description="월간 마지막 날짜")
 
     # OHLCV 데이터
     open: Decimal = Field(..., description="시가", gt=0)
@@ -130,8 +212,54 @@ class MonthlyPrice(BaseMarketDataDocument, DataQualityMixin):
     close: Decimal = Field(..., description="종가", gt=0)
     volume: int = Field(..., description="거래량", ge=0)
 
+    # 조정 데이터
+    adjusted_close: Optional[Decimal] = Field(None, description="조정 종가")
+    dividend_amount: Optional[Decimal] = Field(
+        default=Decimal("0.0"), description="배당금 (해당 월 지급분)"
+    )
+    split_coefficient: Optional[Decimal] = Field(
+        default=Decimal("1.0"), description="주식분할 계수"
+    )
+
+    # 메타데이터
+    source: str = Field(default="alpha_vantage", description="데이터 출처")
+
+    @field_validator(
+        "open",
+        "high",
+        "low",
+        "close",
+        "adjusted_close",
+        "dividend_amount",
+        "split_coefficient",
+        mode="before",
+    )
+    @classmethod
+    def convert_decimal128(cls, v):
+        """다양한 숫자 타입을 Decimal로 변환"""
+        if v is None:
+            return v
+        # Import here to avoid circular imports
+        try:
+            from bson import Decimal128
+
+            if isinstance(v, Decimal128):
+                return Decimal(str(v))
+        except ImportError:
+            pass
+
+        # 다른 숫자 타입들도 처리
+        if isinstance(v, (int, float)):
+            return Decimal(str(v))
+        elif isinstance(v, str):
+            try:
+                return Decimal(v)
+            except (ValueError, TypeError, InvalidOperation):
+                return v
+        return v
+
     class Settings:
-        name = "monthly_prices"
+        name = "stock_price_monthly"
         indexes = [
             [("symbol", 1), ("date", 1)],  # 복합 인덱스 (고유성 보장)
             "symbol",
@@ -166,7 +294,7 @@ class Quote(BaseMarketDataDocument, DataQualityMixin):
     ask_size: Optional[int] = Field(None, description="매도 호가 수량")
 
     class Settings:
-        name = "quotes"
+        name = "stock_quotes"
         indexes = [
             [("symbol", 1), ("timestamp", -1)],  # 최신 순 정렬
             "symbol",
@@ -190,7 +318,7 @@ class Dividend(BaseMarketDataDocument):
     dividend_type: str = Field(default="cash", description="배당 유형 (cash, stock)")
 
     class Settings:
-        name = "dividends"
+        name = "stock_dividends"
         indexes = [[("symbol", 1), ("ex_date", 1)], "symbol", "ex_date"]
 
 
@@ -204,5 +332,5 @@ class Split(BaseMarketDataDocument):
     to_factor: int = Field(..., description="분할 후 주식 수", gt=0)
 
     class Settings:
-        name = "splits"
+        name = "stock_splits"
         indexes = [[("symbol", 1), ("date", 1)], "symbol", "date"]

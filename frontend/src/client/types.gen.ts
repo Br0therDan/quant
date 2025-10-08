@@ -67,10 +67,10 @@ export type BacktestConfig = {
 };
 
 /**
- * BacktestCreateRequest
+ * BacktestCreate
  * 백테스트 생성 요청
  */
-export type BacktestCreateRequest = {
+export type BacktestCreate = {
 	/**
 	 * User Id
 	 */
@@ -293,10 +293,10 @@ export type BacktestStatus =
 	| "cancelled";
 
 /**
- * BacktestUpdateRequest
+ * BacktestUpdate
  * 백테스트 수정 요청
  */
-export type BacktestUpdateRequest = {
+export type BacktestUpdate = {
 	/**
 	 * User Id
 	 */
@@ -2054,6 +2054,24 @@ export type SentimentType = "positive" | "neutral" | "negative";
 export type SignalType = "BUY" | "SELL" | "HOLD";
 
 /**
+ * StockSymbolsResponse
+ */
+export type StockSymbolsResponse = {
+	/**
+	 * Symbols
+	 */
+	symbols: Array<SymbolInfo>;
+	/**
+	 * Count
+	 */
+	count: number;
+	/**
+	 * Search Term
+	 */
+	search_term?: string | null;
+};
+
+/**
  * StrategyComparison
  * 전략 비교 데이터.
  */
@@ -2082,10 +2100,10 @@ export type StrategyComparisonResponse = {
 };
 
 /**
- * StrategyCreateRequest
+ * StrategyCreate
  * Strategy creation request
  */
-export type StrategyCreateRequest = {
+export type StrategyCreate = {
 	/**
 	 * User Id
 	 */
@@ -2119,33 +2137,10 @@ export type StrategyCreateRequest = {
 };
 
 /**
- * StrategyExecuteRequest
- * Strategy execution request
- */
-export type StrategyExecuteRequest = {
-	/**
-	 * User Id
-	 */
-	user_id?: string | null;
-	/**
-	 * Symbol
-	 * 대상 심볼
-	 */
-	symbol: string;
-	/**
-	 * Market Data
-	 * 시장 데이터
-	 */
-	market_data: {
-		[key: string]: unknown;
-	};
-};
-
-/**
- * StrategyFromTemplateRequest
+ * StrategyCreateFromTemplate
  * Create strategy from template request
  */
-export type StrategyFromTemplateRequest = {
+export type StrategyCreateFromTemplate = {
 	/**
 	 * User Id
 	 */
@@ -2162,6 +2157,29 @@ export type StrategyFromTemplateRequest = {
 	parameter_overrides?: {
 		[key: string]: unknown | null;
 	} | null;
+};
+
+/**
+ * StrategyExecute
+ * Strategy execution request
+ */
+export type StrategyExecute = {
+	/**
+	 * User Id
+	 */
+	user_id?: string | null;
+	/**
+	 * Symbol
+	 * 대상 심볼
+	 */
+	symbol: string;
+	/**
+	 * Market Data
+	 * 시장 데이터
+	 */
+	market_data: {
+		[key: string]: unknown;
+	};
 };
 
 /**
@@ -2347,10 +2365,10 @@ export type StrategyType =
 	| "buy_and_hold";
 
 /**
- * StrategyUpdateRequest
+ * StrategyUpdate
  * Strategy update request
  */
-export type StrategyUpdateRequest = {
+export type StrategyUpdate = {
 	/**
 	 * User Id
 	 */
@@ -2385,10 +2403,52 @@ export type StrategyUpdateRequest = {
 };
 
 /**
- * TemplateCreateRequest
+ * SymbolInfo
+ */
+export type SymbolInfo = {
+	/**
+	 * Symbol
+	 */
+	symbol: string;
+	/**
+	 * Name
+	 */
+	name: string;
+	/**
+	 * Type
+	 */
+	type: string;
+	/**
+	 * Region
+	 */
+	region: string;
+	/**
+	 * Market Open
+	 */
+	market_open?: string | null;
+	/**
+	 * Market Close
+	 */
+	market_close?: string | null;
+	/**
+	 * Timezone
+	 */
+	timezone?: string | null;
+	/**
+	 * Currency
+	 */
+	currency?: string | null;
+	/**
+	 * Match Score
+	 */
+	match_score?: number | null;
+};
+
+/**
+ * TemplateCreate
  * Template creation request
  */
-export type TemplateCreateRequest = {
+export type TemplateCreate = {
 	/**
 	 * User Id
 	 */
@@ -2514,10 +2574,10 @@ export type TemplateResponse = {
 };
 
 /**
- * TemplateUpdateRequest
+ * TemplateUpdate
  * Template update request
  */
-export type TemplateUpdateRequest = {
+export type TemplateUpdate = {
 	/**
 	 * User Id
 	 */
@@ -2837,6 +2897,25 @@ export type WatchlistCreate = {
 };
 
 /**
+ * WatchlistListResponse
+ * 워치리스트 목록 응답 모델
+ */
+export type WatchlistListResponse = {
+	/**
+	 * User Id
+	 */
+	user_id?: string | null;
+	/**
+	 * Watchlists
+	 */
+	watchlists?: Array<WatchlistResponse>;
+	/**
+	 * Total Count
+	 */
+	total_count?: number;
+};
+
+/**
  * WatchlistQuoteItem
  * 관심종목 시세 항목.
  */
@@ -2909,6 +2988,37 @@ export type WatchlistQuotesResponse = {
 	 * 응답 메시지
 	 */
 	message?: string;
+};
+
+/**
+ * WatchlistResponse
+ * 워치리스트 응답 모델
+ */
+export type WatchlistResponse = {
+	/**
+	 * User Id
+	 */
+	user_id?: string | null;
+	/**
+	 * Name
+	 */
+	name: string;
+	/**
+	 * Symbols
+	 */
+	symbols: Array<string>;
+	/**
+	 * Description
+	 */
+	description?: string | null;
+	/**
+	 * Created At
+	 */
+	created_at?: Date | null;
+	/**
+	 * Updated At
+	 */
+	updated_at?: Date | null;
 };
 
 /**
@@ -3551,6 +3661,16 @@ export type StockGetDailyPricesData = {
 		 * 데이터 크기 (compact: 최근 100일, full: 전체)
 		 */
 		outputsize?: string;
+		/**
+		 * Start Date
+		 * 시작 날짜 (YYYY-MM-DD)
+		 */
+		start_date?: Date | null;
+		/**
+		 * End Date
+		 * 종료 날짜 (YYYY-MM-DD)
+		 */
+		end_date?: Date | null;
 	};
 	url: "/api/v1/market-data/stock/daily/{symbol}";
 };
@@ -3567,16 +3687,111 @@ export type StockGetDailyPricesError =
 
 export type StockGetDailyPricesResponses = {
 	/**
-	 * Response Stock-Get Daily Prices
 	 * Successful Response
 	 */
-	200: {
-		[key: string]: unknown;
-	};
+	200: HistoricalDataResponse;
 };
 
 export type StockGetDailyPricesResponse =
 	StockGetDailyPricesResponses[keyof StockGetDailyPricesResponses];
+
+export type StockGetWeeklyPricesData = {
+	body?: never;
+	path: {
+		/**
+		 * Symbol
+		 * 종목 심볼 (예: AAPL, TSLA)
+		 */
+		symbol: string;
+	};
+	query?: {
+		/**
+		 * Start Date
+		 * 시작 날짜 (YYYY-MM-DD)
+		 */
+		start_date?: Date | null;
+		/**
+		 * End Date
+		 * 종료 날짜 (YYYY-MM-DD)
+		 */
+		end_date?: Date | null;
+		/**
+		 * Outputsize
+		 * 데이터 크기 (compact: 최근 100개, full: 전체)
+		 */
+		outputsize?: string;
+	};
+	url: "/api/v1/market-data/stock/weekly/{symbol}";
+};
+
+export type StockGetWeeklyPricesErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type StockGetWeeklyPricesError =
+	StockGetWeeklyPricesErrors[keyof StockGetWeeklyPricesErrors];
+
+export type StockGetWeeklyPricesResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: HistoricalDataResponse;
+};
+
+export type StockGetWeeklyPricesResponse =
+	StockGetWeeklyPricesResponses[keyof StockGetWeeklyPricesResponses];
+
+export type StockGetMonthlyPricesData = {
+	body?: never;
+	path: {
+		/**
+		 * Symbol
+		 * 종목 심볼 (예: AAPL, TSLA)
+		 */
+		symbol: string;
+	};
+	query?: {
+		/**
+		 * Start Date
+		 * 시작 날짜 (YYYY-MM-DD)
+		 */
+		start_date?: Date | null;
+		/**
+		 * End Date
+		 * 종료 날짜 (YYYY-MM-DD)
+		 */
+		end_date?: Date | null;
+		/**
+		 * Outputsize
+		 * 데이터 크기 (compact: 최근 100개, full: 전체)
+		 */
+		outputsize?: string;
+	};
+	url: "/api/v1/market-data/stock/monthly/{symbol}";
+};
+
+export type StockGetMonthlyPricesErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type StockGetMonthlyPricesError =
+	StockGetMonthlyPricesErrors[keyof StockGetMonthlyPricesErrors];
+
+export type StockGetMonthlyPricesResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: HistoricalDataResponse;
+};
+
+export type StockGetMonthlyPricesResponse =
+	StockGetMonthlyPricesResponses[keyof StockGetMonthlyPricesResponses];
 
 export type StockGetQuoteData = {
 	body?: never;
@@ -3627,12 +3842,32 @@ export type StockGetIntradayDataData = {
 		 * Interval
 		 * 데이터 간격 (1min, 5min, 15min, 30min, 60min)
 		 */
-		interval?: string;
+		interval?: "1min" | "5min" | "15min" | "30min" | "60min";
+		/**
+		 * Extended Hours
+		 * 연장 거래 시간 포함 여부
+		 */
+		extended_hours?: boolean;
+		/**
+		 * Adjusted
+		 * 조정 가격 여부
+		 */
+		adjusted?: boolean;
+		/**
+		 * Start Date
+		 * 시작 날짜 (YYYY-MM-DD)
+		 */
+		start_date?: Date | null;
+		/**
+		 * End Date
+		 * 종료 날짜 (YYYY-MM-DD)
+		 */
+		end_date?: Date | null;
 		/**
 		 * Outputsize
 		 * 데이터 크기 (compact/full)
 		 */
-		outputsize?: string;
+		outputsize?: "compact" | "full" | null;
 	};
 	url: "/api/v1/market-data/stock/intraday/{symbol}";
 };
@@ -3660,54 +3895,38 @@ export type StockGetIntradayDataResponses = {
 export type StockGetIntradayDataResponse =
 	StockGetIntradayDataResponses[keyof StockGetIntradayDataResponses];
 
-export type StockGetHistoricalDataData = {
+export type StockSearchSymbolsData = {
 	body?: never;
-	path: {
+	path?: never;
+	query: {
 		/**
-		 * Symbol
-		 * 종목 심볼 (예: AAPL, TSLA)
+		 * Keywords
+		 * 검색 키워드 (예: Apple, Tesla)
 		 */
-		symbol: string;
+		keywords: string;
 	};
-	query?: {
-		/**
-		 * Start Date
-		 * 시작 날짜 (YYYY-MM-DD)
-		 */
-		start_date?: Date | null;
-		/**
-		 * End Date
-		 * 종료 날짜 (YYYY-MM-DD)
-		 */
-		end_date?: Date | null;
-		/**
-		 * Frequency
-		 * 데이터 주기 (daily, weekly, monthly)
-		 */
-		frequency?: string;
-	};
-	url: "/api/v1/market-data/stock/historical/{symbol}";
+	url: "/api/v1/market-data/stock/search";
 };
 
-export type StockGetHistoricalDataErrors = {
+export type StockSearchSymbolsErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type StockGetHistoricalDataError =
-	StockGetHistoricalDataErrors[keyof StockGetHistoricalDataErrors];
+export type StockSearchSymbolsError =
+	StockSearchSymbolsErrors[keyof StockSearchSymbolsErrors];
 
-export type StockGetHistoricalDataResponses = {
+export type StockSearchSymbolsResponses = {
 	/**
 	 * Successful Response
 	 */
-	200: HistoricalDataResponse;
+	200: StockSymbolsResponse;
 };
 
-export type StockGetHistoricalDataResponse =
-	StockGetHistoricalDataResponses[keyof StockGetHistoricalDataResponses];
+export type StockSearchSymbolsResponse =
+	StockSearchSymbolsResponses[keyof StockSearchSymbolsResponses];
 
 export type FundamentalGetCompanyOverviewData = {
 	body?: never;
@@ -4029,36 +4248,6 @@ export type EconomicGetEmploymentDataResponses = {
 
 export type EconomicGetEmploymentDataResponse =
 	EconomicGetEmploymentDataResponses[keyof EconomicGetEmploymentDataResponses];
-
-export type EconomicGetConsumerSentimentData = {
-	body?: never;
-	path?: never;
-	query?: never;
-	url: "/api/v1/market-data/economic/consumer-sentiment";
-};
-
-export type EconomicGetConsumerSentimentErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type EconomicGetConsumerSentimentError =
-	EconomicGetConsumerSentimentErrors[keyof EconomicGetConsumerSentimentErrors];
-
-export type EconomicGetConsumerSentimentResponses = {
-	/**
-	 * Response Economic-Get Consumer Sentiment
-	 * Successful Response
-	 */
-	200: {
-		[key: string]: unknown;
-	};
-};
-
-export type EconomicGetConsumerSentimentResponse =
-	EconomicGetConsumerSentimentResponses[keyof EconomicGetConsumerSentimentResponses];
 
 export type IntelligenceGetNewsData = {
 	body?: never;
@@ -4525,7 +4714,7 @@ export type StrategyGetStrategiesResponse =
 	StrategyGetStrategiesResponses[keyof StrategyGetStrategiesResponses];
 
 export type StrategyCreateStrategyData = {
-	body: StrategyCreateRequest;
+	body: StrategyCreate;
 	path?: never;
 	query?: never;
 	url: "/api/v1/strategies/";
@@ -4613,7 +4802,7 @@ export type StrategyGetStrategyResponse =
 	StrategyGetStrategyResponses[keyof StrategyGetStrategyResponses];
 
 export type StrategyUpdateStrategyData = {
-	body: StrategyUpdateRequest;
+	body: StrategyUpdate;
 	path: {
 		/**
 		 * Strategy Id
@@ -4645,7 +4834,7 @@ export type StrategyUpdateStrategyResponse =
 	StrategyUpdateStrategyResponses[keyof StrategyUpdateStrategyResponses];
 
 export type StrategyExecuteStrategyData = {
-	body: StrategyExecuteRequest;
+	body: StrategyExecute;
 	path: {
 		/**
 		 * Strategy Id
@@ -4780,7 +4969,7 @@ export type TemplateGetTemplatesResponse =
 	TemplateGetTemplatesResponses[keyof TemplateGetTemplatesResponses];
 
 export type TemplateCreateTemplateData = {
-	body: TemplateCreateRequest;
+	body: TemplateCreate;
 	path?: never;
 	query?: never;
 	url: "/api/v1/strategies/templates/";
@@ -4868,7 +5057,7 @@ export type TemplateGetTemplateResponse =
 	TemplateGetTemplateResponses[keyof TemplateGetTemplateResponses];
 
 export type TemplateUpdateTemplateData = {
-	body: TemplateUpdateRequest;
+	body: TemplateUpdate;
 	path: {
 		/**
 		 * Template Id
@@ -4900,7 +5089,7 @@ export type TemplateUpdateTemplateResponse =
 	TemplateUpdateTemplateResponses[keyof TemplateUpdateTemplateResponses];
 
 export type TemplateCreateStrategyFromTemplateData = {
-	body: StrategyFromTemplateRequest;
+	body: StrategyCreateFromTemplate;
 	path: {
 		/**
 		 * Template Id
@@ -4999,7 +5188,7 @@ export type BacktestGetBacktestsResponse =
 	BacktestGetBacktestsResponses[keyof BacktestGetBacktestsResponses];
 
 export type BacktestCreateBacktestData = {
-	body: BacktestCreateRequest;
+	body: BacktestCreate;
 	path?: never;
 	query?: never;
 	url: "/api/v1/backtests/";
@@ -5087,7 +5276,7 @@ export type BacktestGetBacktestResponse =
 	BacktestGetBacktestResponses[keyof BacktestGetBacktestResponses];
 
 export type BacktestUpdateBacktestData = {
-	body: BacktestUpdateRequest;
+	body: BacktestUpdate;
 	path: {
 		/**
 		 * Backtest Id
@@ -5399,8 +5588,11 @@ export type WatchlistListWatchlistsResponses = {
 	/**
 	 * Successful Response
 	 */
-	200: unknown;
+	200: WatchlistListResponse;
 };
+
+export type WatchlistListWatchlistsResponse =
+	WatchlistListWatchlistsResponses[keyof WatchlistListWatchlistsResponses];
 
 export type WatchlistCreateOrUpdateWatchlistData = {
 	body: WatchlistUpdate;
@@ -5423,8 +5615,11 @@ export type WatchlistCreateOrUpdateWatchlistResponses = {
 	/**
 	 * Successful Response
 	 */
-	200: unknown;
+	200: WatchlistResponse;
 };
+
+export type WatchlistCreateOrUpdateWatchlistResponse =
+	WatchlistCreateOrUpdateWatchlistResponses[keyof WatchlistCreateOrUpdateWatchlistResponses];
 
 export type WatchlistCreateWatchlistData = {
 	body: WatchlistCreate;
@@ -5447,8 +5642,11 @@ export type WatchlistCreateWatchlistResponses = {
 	/**
 	 * Successful Response
 	 */
-	200: unknown;
+	200: WatchlistResponse;
 };
+
+export type WatchlistCreateWatchlistResponse =
+	WatchlistCreateWatchlistResponses[keyof WatchlistCreateWatchlistResponses];
 
 export type WatchlistDeleteWatchlistData = {
 	body?: never;
@@ -5507,8 +5705,11 @@ export type WatchlistGetWatchlistResponses = {
 	/**
 	 * Successful Response
 	 */
-	200: unknown;
+	200: WatchlistResponse;
 };
+
+export type WatchlistGetWatchlistResponse =
+	WatchlistGetWatchlistResponses[keyof WatchlistGetWatchlistResponses];
 
 export type WatchlistUpdateWatchlistData = {
 	body: WatchlistUpdate;
@@ -5537,8 +5738,11 @@ export type WatchlistUpdateWatchlistResponses = {
 	/**
 	 * Successful Response
 	 */
-	200: unknown;
+	200: WatchlistResponse;
 };
+
+export type WatchlistUpdateWatchlistResponse =
+	WatchlistUpdateWatchlistResponses[keyof WatchlistUpdateWatchlistResponses];
 
 export type WatchlistGetWatchlistCoverageData = {
 	body?: never;

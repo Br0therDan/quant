@@ -84,7 +84,7 @@ export const BacktestConfigSchema = {
 	description: "백테스트 설정 내장 모델",
 } as const;
 
-export const BacktestCreateRequestSchema = {
+export const BacktestCreateSchema = {
 	properties: {
 		user_id: {
 			anyOf: [
@@ -115,7 +115,7 @@ export const BacktestCreateRequestSchema = {
 	},
 	type: "object",
 	required: ["name", "config"],
-	title: "BacktestCreateRequest",
+	title: "BacktestCreate",
 	description: "백테스트 생성 요청",
 } as const;
 
@@ -458,7 +458,7 @@ export const BacktestStatusSchema = {
 	description: "백테스트 상태",
 } as const;
 
-export const BacktestUpdateRequestSchema = {
+export const BacktestUpdateSchema = {
 	properties: {
 		user_id: {
 			anyOf: [
@@ -508,7 +508,7 @@ export const BacktestUpdateRequestSchema = {
 		},
 	},
 	type: "object",
-	title: "BacktestUpdateRequest",
+	title: "BacktestUpdate",
 	description: "백테스트 수정 요청",
 } as const;
 
@@ -3375,6 +3375,36 @@ export const SignalTypeSchema = {
 	description: "신호 타입",
 } as const;
 
+export const StockSymbolsResponseSchema = {
+	properties: {
+		symbols: {
+			items: {
+				$ref: "#/components/schemas/SymbolInfo",
+			},
+			type: "array",
+			title: "Symbols",
+		},
+		count: {
+			type: "integer",
+			title: "Count",
+		},
+		search_term: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Search Term",
+		},
+	},
+	type: "object",
+	required: ["symbols", "count"],
+	title: "StockSymbolsResponse",
+} as const;
+
 export const StrategyComparisonSchema = {
 	properties: {
 		strategies: {
@@ -3411,7 +3441,7 @@ export const StrategyComparisonResponseSchema = {
 	description: "전략 비교 응답.",
 } as const;
 
-export const StrategyCreateRequestSchema = {
+export const StrategyCreateSchema = {
 	properties: {
 		user_id: {
 			anyOf: [
@@ -3462,42 +3492,11 @@ export const StrategyCreateRequestSchema = {
 	},
 	type: "object",
 	required: ["name", "strategy_type"],
-	title: "StrategyCreateRequest",
+	title: "StrategyCreate",
 	description: "Strategy creation request",
 } as const;
 
-export const StrategyExecuteRequestSchema = {
-	properties: {
-		user_id: {
-			anyOf: [
-				{
-					type: "string",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "User Id",
-		},
-		symbol: {
-			type: "string",
-			title: "Symbol",
-			description: "대상 심볼",
-		},
-		market_data: {
-			additionalProperties: true,
-			type: "object",
-			title: "Market Data",
-			description: "시장 데이터",
-		},
-	},
-	type: "object",
-	required: ["symbol", "market_data"],
-	title: "StrategyExecuteRequest",
-	description: "Strategy execution request",
-} as const;
-
-export const StrategyFromTemplateRequestSchema = {
+export const StrategyCreateFromTemplateSchema = {
 	properties: {
 		user_id: {
 			anyOf: [
@@ -3538,8 +3537,39 @@ export const StrategyFromTemplateRequestSchema = {
 	},
 	type: "object",
 	required: ["name"],
-	title: "StrategyFromTemplateRequest",
+	title: "StrategyCreateFromTemplate",
 	description: "Create strategy from template request",
+} as const;
+
+export const StrategyExecuteSchema = {
+	properties: {
+		user_id: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "User Id",
+		},
+		symbol: {
+			type: "string",
+			title: "Symbol",
+			description: "대상 심볼",
+		},
+		market_data: {
+			additionalProperties: true,
+			type: "object",
+			title: "Market Data",
+			description: "시장 데이터",
+		},
+	},
+	type: "object",
+	required: ["symbol", "market_data"],
+	title: "StrategyExecute",
+	description: "Strategy execution request",
 } as const;
 
 export const StrategyListResponseSchema = {
@@ -3797,7 +3827,7 @@ export const StrategyTypeSchema = {
 	description: "지원되는 전략 타입",
 } as const;
 
-export const StrategyUpdateRequestSchema = {
+export const StrategyUpdateSchema = {
 	properties: {
 		user_id: {
 			anyOf: [
@@ -3890,11 +3920,90 @@ export const StrategyUpdateRequestSchema = {
 		},
 	},
 	type: "object",
-	title: "StrategyUpdateRequest",
+	title: "StrategyUpdate",
 	description: "Strategy update request",
 } as const;
 
-export const TemplateCreateRequestSchema = {
+export const SymbolInfoSchema = {
+	properties: {
+		symbol: {
+			type: "string",
+			title: "Symbol",
+		},
+		name: {
+			type: "string",
+			title: "Name",
+		},
+		type: {
+			type: "string",
+			title: "Type",
+		},
+		region: {
+			type: "string",
+			title: "Region",
+		},
+		market_open: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Market Open",
+		},
+		market_close: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Market Close",
+		},
+		timezone: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Timezone",
+		},
+		currency: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Currency",
+		},
+		match_score: {
+			anyOf: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Match Score",
+		},
+	},
+	type: "object",
+	required: ["symbol", "name", "type", "region"],
+	title: "SymbolInfo",
+} as const;
+
+export const TemplateCreateSchema = {
 	properties: {
 		user_id: {
 			anyOf: [
@@ -3958,7 +4067,7 @@ export const TemplateCreateRequestSchema = {
 	},
 	type: "object",
 	required: ["name", "strategy_type", "description"],
-	title: "TemplateCreateRequest",
+	title: "TemplateCreate",
 	description: "Template creation request",
 } as const;
 
@@ -4093,7 +4202,7 @@ export const TemplateResponseSchema = {
 	description: "Template response",
 } as const;
 
-export const TemplateUpdateRequestSchema = {
+export const TemplateUpdateSchema = {
 	properties: {
 		user_id: {
 			anyOf: [
@@ -4180,7 +4289,7 @@ export const TemplateUpdateRequestSchema = {
 		},
 	},
 	type: "object",
-	title: "TemplateUpdateRequest",
+	title: "TemplateUpdate",
 	description: "Template update request",
 } as const;
 
@@ -4693,6 +4802,38 @@ export const WatchlistCreateSchema = {
 	description: "워치리스트 생성 모델",
 } as const;
 
+export const WatchlistListResponseSchema = {
+	properties: {
+		user_id: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "User Id",
+		},
+		watchlists: {
+			items: {
+				$ref: "#/components/schemas/WatchlistResponse",
+			},
+			type: "array",
+			title: "Watchlists",
+			default: [],
+		},
+		total_count: {
+			type: "integer",
+			title: "Total Count",
+			default: 0,
+		},
+	},
+	type: "object",
+	title: "WatchlistListResponse",
+	description: "워치리스트 목록 응답 모델",
+} as const;
+
 export const WatchlistQuoteItemSchema = {
 	properties: {
 		symbol: {
@@ -4791,6 +4932,73 @@ export const WatchlistQuotesResponseSchema = {
 	required: ["data"],
 	title: "WatchlistQuotesResponse",
 	description: "관심종목 시세 응답.",
+} as const;
+
+export const WatchlistResponseSchema = {
+	properties: {
+		user_id: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "User Id",
+		},
+		name: {
+			type: "string",
+			title: "Name",
+		},
+		symbols: {
+			items: {
+				type: "string",
+			},
+			type: "array",
+			title: "Symbols",
+		},
+		description: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Description",
+			default: "",
+		},
+		created_at: {
+			anyOf: [
+				{
+					type: "string",
+					format: "date-time",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Created At",
+		},
+		updated_at: {
+			anyOf: [
+				{
+					type: "string",
+					format: "date-time",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Updated At",
+		},
+	},
+	type: "object",
+	required: ["name", "symbols"],
+	title: "WatchlistResponse",
+	description: "워치리스트 응답 모델",
 } as const;
 
 export const WatchlistUpdateSchema = {

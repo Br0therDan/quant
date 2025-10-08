@@ -68,18 +68,33 @@ class BaseAPIHandler:
         session = await self._get_session()
 
         try:
+            logger.info(
+                f"Making Alpha Vantage API request: {params.get('function', 'unknown')} for symbol {params.get('symbol', 'unknown')}"
+            )
+
             async with session.get(self.base_url, params=params) as response:
                 response.raise_for_status()
                 data = await response.json()
 
                 # Check for API errors
                 if "Error Message" in data:
-                    raise ValueError(
-                        f"Alpha Vantage API Error: {data['Error Message']}"
-                    )
+                    error_msg = data["Error Message"]
+                    if "Invalid API call" in error_msg:
+                        raise ValueError(
+                            f"Alpha Vantage API Error: {error_msg}. "
+                            f"함수: {params.get('function', 'unknown')}, "
+                            f"심볼: {params.get('symbol', 'unknown')}. "
+                            f"심볼이 올바른지 확인하고 유효한 주식 심볼을 사용해주세요."
+                        )
+                    else:
+                        raise ValueError(f"Alpha Vantage API Error: {error_msg}")
+
                 if "Note" in data:
                     raise ValueError(f"Alpha Vantage API Limit: {data['Note']}")
 
+                logger.info(
+                    f"API request successful: {params.get('function', 'unknown')}"
+                )
                 return data
 
         except aiohttp.ClientError as e:

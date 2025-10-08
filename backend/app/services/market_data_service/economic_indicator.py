@@ -3,8 +3,8 @@ Economic Indicator Service
 경제 지표 데이터를 처리하는 서비스
 """
 
-from typing import List, Optional, Dict, Any
-from datetime import datetime, UTC
+from typing import List, Dict, Any, cast
+from datetime import datetime
 import logging
 
 from .base_service import BaseMarketDataService
@@ -37,6 +37,26 @@ class EconomicIndicatorService(BaseMarketDataService):
         Returns:
             GDP 데이터 리스트
         """
+        cache_key = f"gdp_data_{country}_{period}"
+
+        async def refresh_callback():
+            return await self._fetch_gdp_from_alpha_vantage(country, period)
+
+        results = await self.get_data_with_unified_cache(
+            cache_key=cache_key,
+            model_class=GDP,
+            data_type="gdp",
+            symbol=country,
+            refresh_callback=refresh_callback,
+            ttl_hours=168,  # GDP 데이터는 1주일 TTL (분기/연간 데이터)
+        )
+
+        return cast(List[GDP], results)
+
+    async def _fetch_gdp_from_alpha_vantage(
+        self, country: str, period: str
+    ) -> List[GDP]:
+        """Alpha Vantage에서 GDP 데이터 가져오기"""
         try:
             logger.info(f"Fetching GDP data for {country} ({period})")
 
@@ -101,6 +121,28 @@ class EconomicIndicatorService(BaseMarketDataService):
         Returns:
             인플레이션 데이터 리스트
         """
+        cache_key = f"inflation_data_{country}_{indicator_type}"
+
+        async def refresh_callback():
+            return await self._fetch_inflation_from_alpha_vantage(
+                country, indicator_type
+            )
+
+        results = await self.get_data_with_unified_cache(
+            cache_key=cache_key,
+            model_class=Inflation,
+            data_type="inflation",
+            symbol=country,
+            refresh_callback=refresh_callback,
+            ttl_hours=48,  # 인플레이션 데이터는 2일 TTL (월간 데이터)
+        )
+
+        return cast(List[Inflation], results)
+
+    async def _fetch_inflation_from_alpha_vantage(
+        self, country: str, indicator_type: str
+    ) -> List[Inflation]:
+        """Alpha Vantage에서 인플레이션 데이터 가져오기"""
         try:
             logger.info(f"Fetching inflation data for {country} ({indicator_type})")
 
@@ -163,6 +205,28 @@ class EconomicIndicatorService(BaseMarketDataService):
         Returns:
             금리 데이터 리스트
         """
+        cache_key = f"interest_rates_{country}_{rate_type}"
+
+        async def refresh_callback():
+            return await self._fetch_interest_rates_from_alpha_vantage(
+                country, rate_type
+            )
+
+        results = await self.get_data_with_unified_cache(
+            cache_key=cache_key,
+            model_class=InterestRate,
+            data_type="interest_rate",
+            symbol=country,
+            refresh_callback=refresh_callback,
+            ttl_hours=24,  # 금리 데이터는 1일 TTL (일간 변동 가능)
+        )
+
+        return cast(List[InterestRate], results)
+
+    async def _fetch_interest_rates_from_alpha_vantage(
+        self, country: str, rate_type: str
+    ) -> List[InterestRate]:
+        """Alpha Vantage에서 금리 데이터 가져오기"""
         try:
             logger.info(f"Fetching interest rates for {country} ({rate_type})")
 
@@ -219,6 +283,26 @@ class EconomicIndicatorService(BaseMarketDataService):
         Returns:
             고용 데이터 리스트
         """
+        cache_key = f"employment_data_{country}"
+
+        async def refresh_callback():
+            return await self._fetch_employment_from_alpha_vantage(country)
+
+        results = await self.get_data_with_unified_cache(
+            cache_key=cache_key,
+            model_class=Employment,
+            data_type="employment",
+            symbol=country,
+            refresh_callback=refresh_callback,
+            ttl_hours=48,  # 고용 데이터는 2일 TTL (월간 데이터)
+        )
+
+        return cast(List[Employment], results)
+
+    async def _fetch_employment_from_alpha_vantage(
+        self, country: str
+    ) -> List[Employment]:
+        """Alpha Vantage에서 고용 데이터 가져오기"""
         try:
             logger.info(f"Fetching employment data for {country}")
 
@@ -341,122 +425,20 @@ class EconomicIndicatorService(BaseMarketDataService):
                 return await self.alpha_vantage.economic_indicators.real_gdp(
                     interval=interval
                 )
-            elif method == "real_gdp_per_capita":
-                return (
-                    await self.alpha_vantage.economic_indicators.real_gdp_per_capita()
-                )
-            elif method == "treasury_yield":
-                interval = kwargs.get("interval", "monthly")
-                maturity = kwargs.get("maturity", "10year")
-                return await self.alpha_vantage.economic_indicators.treasury_yield(
-                    interval=interval, maturity=maturity
-                )
+            elif method == "inflation":
+                return await self.alpha_vantage.economic_indicators.inflation()
             elif method == "federal_funds_rate":
                 return await self.alpha_vantage.economic_indicators.federal_funds_rate(
                     interval=interval
                 )
-            elif method == "cpi":
-                return await self.alpha_vantage.economic_indicators.cpi(
-                    interval=interval
-                )
-            elif method == "inflation":
-                return await self.alpha_vantage.economic_indicators.inflation()
-            elif method == "retail_sales":
-                return await self.alpha_vantage.economic_indicators.retail_sales()
-            elif method == "durables":
-                return await self.alpha_vantage.economic_indicators.durables()
             elif method == "unemployment":
                 return await self.alpha_vantage.economic_indicators.unemployment()
-            elif method == "nonfarm_payroll":
-                return await self.alpha_vantage.economic_indicators.nonfarm_payroll()
             else:
                 raise ValueError(f"Unknown economic indicator method: {method}")
 
         except Exception as e:
             logger.error(f"Error fetching economic indicator data from source: {e}")
             raise
-
-    async def _save_to_cache(self, data: Any, **kwargs) -> bool:
-        """경제 지표 데이터를 캐시에 저장"""
-        try:
-            cache_key = kwargs.get("cache_key", "economic_data")
-            method = kwargs.get("method", "real_gdp")
-
-            # 데이터를 GDP 모델로 변환 (또는 원본 데이터 저장)
-            if isinstance(data, dict) and "data" in data:
-                try:
-                    # GDP 모델 대신 원본 데이터를 직접 저장
-                    records = []
-                    for item in data["data"]:
-                        record = {
-                            "indicator_type": method,
-                            "date": item.get("date", ""),
-                            "value": item.get("value", 0),
-                            "unit": data.get("unit", ""),
-                            "source": "Alpha Vantage Economic Indicators",
-                            "created_at": datetime.now(UTC).isoformat(),
-                            "updated_at": datetime.now(UTC).isoformat(),
-                        }
-                        records.append(record)
-
-                    # DuckDB 캐시에 직접 저장
-                    if self._db_manager and records:
-                        success = self._db_manager.store_cache_data(
-                            cache_key=cache_key,
-                            data=records,
-                            table_name="economic_indicator_cache",
-                        )
-
-                        if success:
-                            logger.info(
-                                f"Economic indicator data cached successfully: {cache_key} ({len(records)} items)"
-                            )
-                        return success
-
-                except Exception as model_error:
-                    logger.warning(
-                        f"Failed to process economic indicator data: {model_error}"
-                    )
-                    # 원본 데이터를 딕셔너리로 저장
-                    if self._db_manager:
-                        return self._db_manager.store_cache_data(
-                            cache_key=cache_key,
-                            data=[data],
-                            table_name="economic_indicator_cache",
-                        )
-
-            logger.info(f"No valid economic indicator data to cache for: {cache_key}")
-            return True
-
-        except Exception as e:
-            logger.error(f"Error saving economic indicator data to cache: {e}")
-            return False
-
-    async def _get_from_cache(self, **kwargs) -> Optional[List[Any]]:
-        """캐시에서 경제 지표 데이터 조회"""
-        try:
-            cache_key = kwargs.get("cache_key", "economic_data")
-
-            # DuckDB 캐시에서 데이터 조회
-            cached_data = await self._get_from_duckdb_cache(
-                cache_key=cache_key,
-                start_date=kwargs.get("start_date"),
-                end_date=kwargs.get("end_date"),
-                ignore_ttl=kwargs.get("ignore_ttl", False),
-            )
-
-            if cached_data:
-                logger.info(
-                    f"Economic indicator cache hit: {cache_key} ({len(cached_data)} items)"
-                )
-                return cached_data
-            else:
-                logger.debug(f"Economic indicator cache miss: {cache_key}")
-                return None
-
-        except Exception as e:
-            logger.error(f"Error getting economic indicator data from cache: {e}")
-            return None
 
     async def refresh_data_from_source(self, **kwargs) -> List[GDP]:
         """베이스 클래스의 추상 메서드 구현"""

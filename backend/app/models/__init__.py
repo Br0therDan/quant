@@ -6,6 +6,8 @@ from .backtest import Backtest, BacktestExecution, BacktestResult
 from .watchlist import Watchlist
 from .market_data import (
     DailyPrice,
+    WeeklyPrice,
+    MonthlyPrice,
     IntradayPrice,
     Quote,
     Dividend,
@@ -23,7 +25,6 @@ from .market_data import (
     InterestRate,
     Employment,
     Manufacturing,
-    ConsumerSentiment,
     # Intelligence data
     NewsSentiment,
     NewsArticle,
@@ -45,6 +46,8 @@ collections = [
     Watchlist,
     # 시장 데이터
     DailyPrice,
+    WeeklyPrice,
+    MonthlyPrice,
     IntradayPrice,
     Quote,
     Dividend,
@@ -62,10 +65,9 @@ collections = [
     InterestRate,
     Employment,
     Manufacturing,
-    ConsumerSentiment,
-    # 인사이트 데이터
+    # 인사이트 데이터 (Beanie ODM 모델만)
     NewsSentiment,
-    NewsArticle,
+    # NewsArticle,  # Pydantic 모델이므로 컬렉션에서 제외
     AnalystRating,
     SocialSentiment,
     MarketMood,
@@ -85,6 +87,8 @@ __all__ = [
     "OAuthAccount",
     # Market data models
     "DailyPrice",
+    "WeeklyPrice",
+    "MonthlyPrice",
     "IntradayPrice",
     "Quote",
     "Dividend",
@@ -100,7 +104,6 @@ __all__ = [
     "InterestRate",
     "Employment",
     "Manufacturing",
-    "ConsumerSentiment",
     "NewsSentiment",
     "NewsArticle",
     "AnalystRating",

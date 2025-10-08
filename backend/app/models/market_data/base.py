@@ -31,6 +31,14 @@ class BaseMarketDataDocument(Document):
         if hasattr(self, "id") and self.id:
             self.updated_at = datetime.now(UTC)
 
+        # data_quality_score가 없으면 자동 계산 (DataQualityMixin이 있는 경우)
+        if self.data_quality_score is None and hasattr(self, "calculate_quality_score"):
+            try:
+                self.data_quality_score = self.calculate_quality_score()
+            except Exception:
+                # 계산 실패 시 기본값 유지 (None)
+                pass
+
 
 class DataQualityMixin:
     """데이터 품질 관련 메서드를 제공하는 Mixin"""

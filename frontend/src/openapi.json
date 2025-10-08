@@ -1137,6 +1137,44 @@
             "description": "데이터 크기 (compact: 최근 100일, full: 전체)"
           },
           {
+            "name": "start_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "시작 날짜 (YYYY-MM-DD)",
+              "title": "Start Date"
+            },
+            "description": "시작 날짜 (YYYY-MM-DD)"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "종료 날짜 (YYYY-MM-DD)",
+              "title": "End Date"
+            },
+            "description": "종료 날짜 (YYYY-MM-DD)"
+          },
+          {
             "name": "access_token",
             "in": "cookie",
             "required": false,
@@ -1159,9 +1197,239 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "title": "Response Stock-Get Daily Prices"
+                  "$ref": "#/components/schemas/HistoricalDataResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/market-data/stock/weekly/{symbol}": {
+      "get": {
+        "tags": [
+          "Stock"
+        ],
+        "summary": "Get Weekly Prices",
+        "description": "지정된 종목의 주간 주가 데이터(OHLCV)를 조회합니다.",
+        "operationId": "Stock-get_weekly_prices",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "종목 심볼 (예: AAPL, TSLA)",
+              "title": "Symbol"
+            },
+            "description": "종목 심볼 (예: AAPL, TSLA)"
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "시작 날짜 (YYYY-MM-DD)",
+              "title": "Start Date"
+            },
+            "description": "시작 날짜 (YYYY-MM-DD)"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "종료 날짜 (YYYY-MM-DD)",
+              "title": "End Date"
+            },
+            "description": "종료 날짜 (YYYY-MM-DD)"
+          },
+          {
+            "name": "outputsize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "데이터 크기 (compact: 최근 100개, full: 전체)",
+              "default": "compact",
+              "title": "Outputsize"
+            },
+            "description": "데이터 크기 (compact: 최근 100개, full: 전체)"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HistoricalDataResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/market-data/stock/monthly/{symbol}": {
+      "get": {
+        "tags": [
+          "Stock"
+        ],
+        "summary": "Get Monthly Prices",
+        "description": "지정된 종목의 월간 주가 데이터(OHLCV)를 조회합니다.",
+        "operationId": "Stock-get_monthly_prices",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "종목 심볼 (예: AAPL, TSLA)",
+              "title": "Symbol"
+            },
+            "description": "종목 심볼 (예: AAPL, TSLA)"
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "시작 날짜 (YYYY-MM-DD)",
+              "title": "Start Date"
+            },
+            "description": "시작 날짜 (YYYY-MM-DD)"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "종료 날짜 (YYYY-MM-DD)",
+              "title": "End Date"
+            },
+            "description": "종료 날짜 (YYYY-MM-DD)"
+          },
+          {
+            "name": "outputsize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "데이터 크기 (compact: 최근 100개, full: 전체)",
+              "default": "compact",
+              "title": "Outputsize"
+            },
+            "description": "데이터 크기 (compact: 최근 100개, full: 전체)"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HistoricalDataResponse"
                 }
               }
             }
@@ -1277,19 +1545,101 @@
             "in": "query",
             "required": false,
             "schema": {
+              "enum": [
+                "1min",
+                "5min",
+                "15min",
+                "30min",
+                "60min"
+              ],
               "type": "string",
               "description": "데이터 간격 (1min, 5min, 15min, 30min, 60min)",
-              "default": "1min",
+              "default": "15min",
               "title": "Interval"
             },
             "description": "데이터 간격 (1min, 5min, 15min, 30min, 60min)"
+          },
+          {
+            "name": "extended_hours",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "description": "연장 거래 시간 포함 여부",
+              "default": false,
+              "title": "Extended Hours"
+            },
+            "description": "연장 거래 시간 포함 여부"
+          },
+          {
+            "name": "adjusted",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "description": "조정 가격 여부",
+              "default": true,
+              "title": "Adjusted"
+            },
+            "description": "조정 가격 여부"
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "시작 날짜 (YYYY-MM-DD)",
+              "default": "2025-10-09",
+              "title": "Start Date"
+            },
+            "description": "시작 날짜 (YYYY-MM-DD)"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "종료 날짜 (YYYY-MM-DD)",
+              "default": "2025-10-09",
+              "title": "End Date"
+            },
+            "description": "종료 날짜 (YYYY-MM-DD)"
           },
           {
             "name": "outputsize",
             "in": "query",
             "required": false,
             "schema": {
-              "type": "string",
+              "anyOf": [
+                {
+                  "enum": [
+                    "compact",
+                    "full"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "description": "데이터 크기 (compact/full)",
               "default": "compact",
               "title": "Outputsize"
@@ -1339,14 +1689,14 @@
         }
       }
     },
-    "/api/v1/market-data/stock/historical/{symbol}": {
+    "/api/v1/market-data/stock/search": {
       "get": {
         "tags": [
           "Stock"
         ],
-        "summary": "Get Historical Data",
-        "description": "지정된 종목의 장기 히스토리 데이터를 조회합니다.",
-        "operationId": "Stock-get_historical_data",
+        "summary": "Search Symbols",
+        "description": "종목 심볼 검색 (Alpha Vantage SYMBOL_SEARCH)",
+        "operationId": "Stock-search_symbols",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1354,65 +1704,15 @@
         ],
         "parameters": [
           {
-            "name": "symbol",
-            "in": "path",
+            "name": "keywords",
+            "in": "query",
             "required": true,
             "schema": {
               "type": "string",
-              "description": "종목 심볼 (예: AAPL, TSLA)",
-              "title": "Symbol"
+              "description": "검색 키워드 (예: Apple, Tesla)",
+              "title": "Keywords"
             },
-            "description": "종목 심볼 (예: AAPL, TSLA)"
-          },
-          {
-            "name": "start_date",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "format": "date"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "description": "시작 날짜 (YYYY-MM-DD)",
-              "title": "Start Date"
-            },
-            "description": "시작 날짜 (YYYY-MM-DD)"
-          },
-          {
-            "name": "end_date",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "format": "date"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "description": "종료 날짜 (YYYY-MM-DD)",
-              "title": "End Date"
-            },
-            "description": "종료 날짜 (YYYY-MM-DD)"
-          },
-          {
-            "name": "frequency",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "description": "데이터 주기 (daily, weekly, monthly)",
-              "default": "daily",
-              "title": "Frequency"
-            },
-            "description": "데이터 주기 (daily, weekly, monthly)"
+            "description": "검색 키워드 (예: Apple, Tesla)"
           },
           {
             "name": "access_token",
@@ -1437,7 +1737,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HistoricalDataResponse"
+                  "$ref": "#/components/schemas/StockSymbolsResponse"
                 }
               }
             }
@@ -2068,63 +2368,6 @@
                   "type": "object",
                   "additionalProperties": true,
                   "title": "Response Economic-Get Employment Data"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/market-data/economic/consumer-sentiment": {
-      "get": {
-        "tags": [
-          "Economic"
-        ],
-        "summary": "Get Consumer Sentiment",
-        "description": "미국 소비자 심리 지수를 조회합니다.",
-        "operationId": "Economic-get_consumer_sentiment",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "access_token",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Access Token"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "title": "Response Economic-Get Consumer Sentiment"
                 }
               }
             }
@@ -3102,7 +3345,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/StrategyCreateRequest"
+                "$ref": "#/components/schemas/StrategyCreate"
               }
             }
           }
@@ -3359,7 +3602,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/StrategyUpdateRequest"
+                "$ref": "#/components/schemas/StrategyUpdate"
               }
             }
           }
@@ -3493,7 +3736,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/StrategyExecuteRequest"
+                "$ref": "#/components/schemas/StrategyExecute"
               }
             }
           }
@@ -3700,7 +3943,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/TemplateCreateRequest"
+                "$ref": "#/components/schemas/TemplateCreate"
               }
             }
           }
@@ -3907,7 +4150,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/TemplateUpdateRequest"
+                "$ref": "#/components/schemas/TemplateUpdate"
               }
             }
           }
@@ -4041,7 +4284,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/StrategyFromTemplateRequest"
+                "$ref": "#/components/schemas/StrategyCreateFromTemplate"
               }
             }
           }
@@ -4159,7 +4402,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/BacktestCreateRequest"
+                "$ref": "#/components/schemas/BacktestCreate"
               }
             }
           }
@@ -4393,7 +4636,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/BacktestUpdateRequest"
+                "$ref": "#/components/schemas/BacktestUpdate"
               }
             }
           }
@@ -5126,7 +5369,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/WatchlistResponse"
+                }
               }
             }
           },
@@ -5177,7 +5422,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/WatchlistListResponse"
+                }
               }
             }
           },
@@ -5240,7 +5487,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/WatchlistResponse"
+                }
               }
             }
           },
@@ -5304,7 +5553,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/WatchlistResponse"
+                }
               }
             }
           },
@@ -5376,7 +5627,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/WatchlistResponse"
+                }
               }
             }
           },
@@ -6207,7 +6460,7 @@
         "title": "BacktestConfig",
         "description": "백테스트 설정 내장 모델"
       },
-      "BacktestCreateRequest": {
+      "BacktestCreate": {
         "properties": {
           "user_id": {
             "anyOf": [
@@ -6241,7 +6494,7 @@
           "name",
           "config"
         ],
-        "title": "BacktestCreateRequest",
+        "title": "BacktestCreate",
         "description": "백테스트 생성 요청"
       },
       "BacktestExecutionListResponse": {
@@ -6598,7 +6851,7 @@
         "title": "BacktestStatus",
         "description": "백테스트 상태"
       },
-      "BacktestUpdateRequest": {
+      "BacktestUpdate": {
         "properties": {
           "user_id": {
             "anyOf": [
@@ -6648,7 +6901,7 @@
           }
         },
         "type": "object",
-        "title": "BacktestUpdateRequest",
+        "title": "BacktestUpdate",
         "description": "백테스트 수정 요청"
       },
       "BalanceSheetData": {
@@ -9615,6 +9868,38 @@
         "title": "SignalType",
         "description": "신호 타입"
       },
+      "StockSymbolsResponse": {
+        "properties": {
+          "symbols": {
+            "items": {
+              "$ref": "#/components/schemas/SymbolInfo"
+            },
+            "type": "array",
+            "title": "Symbols"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          },
+          "search_term": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Search Term"
+          }
+        },
+        "type": "object",
+        "required": [
+          "symbols",
+          "count"
+        ],
+        "title": "StockSymbolsResponse"
+      },
       "StrategyComparison": {
         "properties": {
           "strategies": {
@@ -9653,7 +9938,7 @@
         "title": "StrategyComparisonResponse",
         "description": "전략 비교 응답."
       },
-      "StrategyCreateRequest": {
+      "StrategyCreate": {
         "properties": {
           "user_id": {
             "anyOf": [
@@ -9707,43 +9992,10 @@
           "name",
           "strategy_type"
         ],
-        "title": "StrategyCreateRequest",
+        "title": "StrategyCreate",
         "description": "Strategy creation request"
       },
-      "StrategyExecuteRequest": {
-        "properties": {
-          "user_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "User Id"
-          },
-          "symbol": {
-            "type": "string",
-            "title": "Symbol",
-            "description": "대상 심볼"
-          },
-          "market_data": {
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Market Data",
-            "description": "시장 데이터"
-          }
-        },
-        "type": "object",
-        "required": [
-          "symbol",
-          "market_data"
-        ],
-        "title": "StrategyExecuteRequest",
-        "description": "Strategy execution request"
-      },
-      "StrategyFromTemplateRequest": {
+      "StrategyCreateFromTemplate": {
         "properties": {
           "user_id": {
             "anyOf": [
@@ -9786,8 +10038,41 @@
         "required": [
           "name"
         ],
-        "title": "StrategyFromTemplateRequest",
+        "title": "StrategyCreateFromTemplate",
         "description": "Create strategy from template request"
+      },
+      "StrategyExecute": {
+        "properties": {
+          "user_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Id"
+          },
+          "symbol": {
+            "type": "string",
+            "title": "Symbol",
+            "description": "대상 심볼"
+          },
+          "market_data": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Market Data",
+            "description": "시장 데이터"
+          }
+        },
+        "type": "object",
+        "required": [
+          "symbol",
+          "market_data"
+        ],
+        "title": "StrategyExecute",
+        "description": "Strategy execution request"
       },
       "StrategyListResponse": {
         "properties": {
@@ -10054,7 +10339,7 @@
         "title": "StrategyType",
         "description": "지원되는 전략 타입"
       },
-      "StrategyUpdateRequest": {
+      "StrategyUpdate": {
         "properties": {
           "user_id": {
             "anyOf": [
@@ -10147,10 +10432,93 @@
           }
         },
         "type": "object",
-        "title": "StrategyUpdateRequest",
+        "title": "StrategyUpdate",
         "description": "Strategy update request"
       },
-      "TemplateCreateRequest": {
+      "SymbolInfo": {
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "title": "Symbol"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type"
+          },
+          "region": {
+            "type": "string",
+            "title": "Region"
+          },
+          "market_open": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Market Open"
+          },
+          "market_close": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Market Close"
+          },
+          "timezone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timezone"
+          },
+          "currency": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Currency"
+          },
+          "match_score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Match Score"
+          }
+        },
+        "type": "object",
+        "required": [
+          "symbol",
+          "name",
+          "type",
+          "region"
+        ],
+        "title": "SymbolInfo"
+      },
+      "TemplateCreate": {
         "properties": {
           "user_id": {
             "anyOf": [
@@ -10218,7 +10586,7 @@
           "strategy_type",
           "description"
         ],
-        "title": "TemplateCreateRequest",
+        "title": "TemplateCreate",
         "description": "Template creation request"
       },
       "TemplateListResponse": {
@@ -10353,7 +10721,7 @@
         "title": "TemplateResponse",
         "description": "Template response"
       },
-      "TemplateUpdateRequest": {
+      "TemplateUpdate": {
         "properties": {
           "user_id": {
             "anyOf": [
@@ -10440,7 +10808,7 @@
           }
         },
         "type": "object",
-        "title": "TemplateUpdateRequest",
+        "title": "TemplateUpdate",
         "description": "Template update request"
       },
       "Trade": {
@@ -10964,6 +11332,37 @@
         "title": "WatchlistCreate",
         "description": "워치리스트 생성 모델"
       },
+      "WatchlistListResponse": {
+        "properties": {
+          "user_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Id"
+          },
+          "watchlists": {
+            "items": {
+              "$ref": "#/components/schemas/WatchlistResponse"
+            },
+            "type": "array",
+            "title": "Watchlists",
+            "default": []
+          },
+          "total_count": {
+            "type": "integer",
+            "title": "Total Count",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "title": "WatchlistListResponse",
+        "description": "워치리스트 목록 응답 모델"
+      },
       "WatchlistQuoteItem": {
         "properties": {
           "symbol": {
@@ -11065,6 +11464,75 @@
         ],
         "title": "WatchlistQuotesResponse",
         "description": "관심종목 시세 응답."
+      },
+      "WatchlistResponse": {
+        "properties": {
+          "user_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "symbols": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Symbols"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "default": ""
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "symbols"
+        ],
+        "title": "WatchlistResponse",
+        "description": "워치리스트 응답 모델"
       },
       "WatchlistUpdate": {
         "properties": {

@@ -5,7 +5,7 @@ Market intelligence and sentiment data models
 
 from datetime import datetime
 from typing import Optional, List
-from pydantic import Field
+from pydantic import BaseModel, Field
 from decimal import Decimal
 
 from .base import BaseMarketDataDocument, DataQualityMixin
@@ -27,7 +27,7 @@ class NewsSentiment(BaseMarketDataDocument, DataQualityMixin):
     overall_sentiment_label: Optional[str] = Field(None, description="전체 감정 라벨")
 
     class Settings:
-        name = "news_sentiments"
+        name = "intelligence_news_sentiments"
         indexes = [
             [("symbol", 1), ("time_from", -1)],
             "symbol",
@@ -50,8 +50,8 @@ class NewsSentiment(BaseMarketDataDocument, DataQualityMixin):
         return max(score, 0.0)
 
 
-class NewsArticle(BaseMarketDataDocument, DataQualityMixin):
-    """개별 뉴스 기사 모델"""
+class NewsArticle(BaseModel):
+    """개별 뉴스 기사 모델 (Pydantic)"""
 
     symbol: str = Field(..., description="주식 심볼")
     title: str = Field(..., description="기사 제목")
@@ -74,17 +74,13 @@ class NewsArticle(BaseMarketDataDocument, DataQualityMixin):
     topics: Optional[List[str]] = Field(None, description="주제 태그")
     category_within_source: Optional[str] = Field(None, description="출처 내 카테고리")
 
-    class Settings:
-        name = "news_articles"
-        indexes = [
-            [("symbol", 1), ("time_published", -1)],
-            [("url", 1)],  # 중복 방지
-            "symbol",
-            "time_published",
-            "overall_sentiment_score",
-            "relevance_score",
-            "created_at",
-        ]
+    # 품질 점수 (자동 계산)
+    data_quality_score: Optional[float] = Field(None, description="데이터 품질 점수 (0-100)")
+
+    def model_post_init(self, __context) -> None:
+        """모델 생성 후 품질 점수 자동 계산"""
+        if self.data_quality_score is None:
+            self.data_quality_score = self.calculate_quality_score()
 
     def calculate_quality_score(self) -> float:
         """데이터 품질 점수 계산"""
@@ -98,6 +94,50 @@ class NewsArticle(BaseMarketDataDocument, DataQualityMixin):
             score -= 20
         if not self.relevance_score:
             score -= 15
+
+        return max(score, 0.0)
+
+
+class SentimentAnalysis(BaseModel):
+    """감정 분석 결과 모델 (Pydantic)"""
+
+    symbol: str = Field(..., description="주식 심볼")
+    timeframe: str = Field(..., description="분석 기간")
+    time_from: str = Field(..., description="분석 시작 시간")
+    time_to: str = Field(..., description="분석 종료 시간")
+    overall_sentiment_score: float = Field(..., description="전체 감정 점수")
+    overall_sentiment_label: str = Field(..., description="전체 감정 라벨")
+    article_count: int = Field(..., description="분석된 기사 수")
+    positive_count: int = Field(..., description="긍정 기사 수")
+    negative_count: int = Field(..., description="부정 기사 수")
+    neutral_count: int = Field(..., description="중립 기사 수")
+    sentiment_score_definition: str = Field(..., description="감정 점수 정의")
+    relevance_score_definition: str = Field(..., description="관련성 점수 정의")
+
+    # 품질 점수 (자동 계산)
+    data_quality_score: Optional[float] = Field(
+        default=None, description="데이터 품질 점수 (0-100)"
+    )
+
+    def model_post_init(self, __context) -> None:
+        """모델 생성 후 품질 점수 자동 계산"""
+        if self.data_quality_score is None:
+            self.data_quality_score = self.calculate_quality_score()
+
+    def calculate_quality_score(self) -> float:
+        """데이터 품질 점수 계산"""
+        score = 100.0
+
+        if self.article_count < 5:
+            score -= 30  # 분석 기사가 너무 적음
+        elif self.article_count < 20:
+            score -= 15
+
+        if abs(self.overall_sentiment_score) < 0.01:
+            score -= 20  # 감정 점수가 너무 중립적
+
+        if not self.overall_sentiment_label:
+            score -= 25
 
         return max(score, 0.0)
 
@@ -129,7 +169,7 @@ class AnalystRating(BaseMarketDataDocument, DataQualityMixin):
     notes: Optional[str] = Field(None, description="평가 노트")
 
     class Settings:
-        name = "analyst_ratings"
+        name = "intelligence_analyst_ratings"
         indexes = [
             [("symbol", 1), ("date", -1)],
             [("symbol", 1), ("firm_name", 1), ("date", -1)],
@@ -178,7 +218,7 @@ class SocialSentiment(BaseMarketDataDocument, DataQualityMixin):
     influence_score: Optional[Decimal] = Field(None, description="영향력 점수")
 
     class Settings:
-        name = "social_sentiments"
+        name = "intelligence_social_sentiments"
         indexes = [
             [("symbol", 1), ("platform", 1), ("date", -1)],
             "symbol",
@@ -250,7 +290,7 @@ class MarketMood(BaseMarketDataDocument, DataQualityMixin):
     institutional_flow: Optional[Decimal] = Field(None, description="기관 자금 흐름")
 
     class Settings:
-        name = "market_moods"
+        name = "intelligence_market_moods"
         indexes = [
             [("market", 1), ("date", -1)],
             "market",
@@ -315,7 +355,7 @@ class OptionFlow(BaseMarketDataDocument, DataQualityMixin):
     flow_score: Optional[Decimal] = Field(None, description="플로우 점수 (-1 ~ 1)")
 
     class Settings:
-        name = "option_flows"
+        name = "intelligence_option_flows"
         indexes = [
             [("symbol", 1), ("date", -1)],
             "symbol",
