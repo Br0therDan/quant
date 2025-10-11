@@ -111,8 +111,9 @@ class CoreStock(BaseAPIHandler):
         if outputsize:
             params["outputsize"] = outputsize
 
-        # Add any additional parameters
-        params.update(kwargs)
+        # Add any additional parameters (None 값 필터링)
+        filtered_kwargs = {k: v for k, v in kwargs.items() if v is not None}
+        params.update(filtered_kwargs)
 
         data = await self._make_request(params)
 

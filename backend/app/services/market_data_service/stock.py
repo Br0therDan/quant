@@ -656,8 +656,7 @@ class StockService(BaseMarketDataService):
         adjusted: bool = False,
         extended_hours: bool = False,
         outputsize: Literal["compact", "full"] | None = "full",
-        force_refresh: bool = False,
-    ):
+    ) -> List[DailyPrice]:
         """실시간/인트라데이 데이터 조회 (Alpha Vantage TIME_SERIES_INTRADAY)
 
         Args:
@@ -666,14 +665,10 @@ class StockService(BaseMarketDataService):
             adjusted: 조정된 가격 사용 여부
             extended_hours: 장외 시간 포함 여부
             outputsize: 출력 크기 (compact, full)
-            force_refresh: 캐시 무시하고 강제 새로고침
-        """
-        if force_refresh:
-            logger.info(f"Force refresh requested for {symbol} intraday data")
-            return await self._fetch_intraday_from_alpha_vantage(
-                symbol, interval, adjusted, extended_hours, outputsize
-            )
 
+        Returns:
+            인트라데이  가격 데이터 리스트
+        """
         # 인터벌에 따른 적절한 TTL 설정
         interval_ttl_mapping = {
             "1min": 1,  # 1분 데이터는 1시간 TTL
@@ -689,33 +684,22 @@ class StockService(BaseMarketDataService):
         )
 
         async def refresh_callback():
-            data = await self._fetch_intraday_from_alpha_vantage(
-                symbol, interval, adjusted, extended_hours, outputsize
-            )
-            return [data]  # 리스트 형태로 반환
-
-        try:
-            results = await self.get_data_with_unified_cache(
-                cache_key=cache_key,
-                model_class=dict,
-                data_type="intraday",
-                symbol=symbol,
-                refresh_callback=refresh_callback,
-                ttl_hours=ttl_hours,
-            )
-
-            if results and len(results) > 0:
-                return results[0]
-            else:
-                return await self._fetch_intraday_from_alpha_vantage(
-                    symbol, interval, adjusted, extended_hours, outputsize
-                )
-
-        except Exception as e:
-            logger.warning(f"Error with cached intraday data for {symbol}: {e}")
+            """Alpha Vantage에서 인트라데이 데이터를 가져옵니다"""
             return await self._fetch_intraday_from_alpha_vantage(
                 symbol, interval, adjusted, extended_hours, outputsize
             )
+
+        results = await self.get_data_with_unified_cache(
+            cache_key=cache_key,
+            model_class=DailyPrice,  # DailyPrice 모델 재사용 (datetime 필드 포함)
+            data_type="stock_intraday",
+            symbol=symbol,
+            refresh_callback=refresh_callback,
+            ttl_hours=ttl_hours,
+        )
+
+        # 타입 캐스팅 (실제로는 DailyPrice 객체들이 반환됨)
+        return cast(List[DailyPrice], results)
 
     async def _fetch_intraday_from_alpha_vantage(
         self,
@@ -724,12 +708,14 @@ class StockService(BaseMarketDataService):
         adjusted: bool = False,
         extended_hours: bool = False,
         outputsize: Literal["compact", "full"] | None = "full",
-    ):
+    ) -> List[DailyPrice]:
         """Alpha Vantage에서 인트라데이 데이터 가져오기"""
         try:
             logger.info(
-                f"Fetching intraday data for {symbol} ({interval}) from Alpha Vantage"
+                f"📊 Fetching intraday data for {symbol} ({interval}) from Alpha Vantage"
             )
+
+            # Alpha Vantage API 호출 (리스트 반환)
             response = await self.alpha_vantage.stock.intraday(
                 symbol=symbol,
                 interval=interval,
@@ -738,26 +724,83 @@ class StockService(BaseMarketDataService):
                 outputsize=outputsize,
             )
 
-            if isinstance(response, dict):
-                # 응답에 메타데이터 추가 (타입 안전성을 위해 Any 타입으로 캐스팅)
-                enhanced_response = cast(dict, response.copy())
-                enhanced_response["fetched_at"] = datetime.now().isoformat()
-                enhanced_response["cache_interval"] = interval
-                logger.info(
-                    f"Successfully fetched intraday data for {symbol} ({interval})"
-                )
-                return enhanced_response
-            else:
+            if not isinstance(response, list):
                 logger.warning(
-                    f"Unexpected intraday response type for {symbol}: {type(response)}"
+                    f"⚠️ Unexpected intraday response type for {symbol}: {type(response)}"
                 )
-                return {}
+                return []
+
+            if not response:
+                logger.warning(f"⚠️ No intraday data returned for {symbol}")
+                return []
+
+            logger.info(f"✅ Fetched {len(response)} intraday records for {symbol}")
+
+            # DailyPrice 모델로 변환 (datetime 필드 포함)
+            intraday_prices = []
+            for item in response:
+                try:
+                    # datetime 또는 date 필드 확인
+                    date_value = item.get("datetime") or item.get("date")
+                    if not date_value:
+                        logger.warning(
+                            f"⚠️ Missing datetime/date field in item: {item}"
+                        )
+                        continue
+
+                    # datetime 객체로 변환
+                    if isinstance(date_value, str):
+                        # "2025-01-11 09:30:00" 형식 파싱
+                        try:
+                            date_obj = datetime.strptime(
+                                date_value, "%Y-%m-%d %H:%M:%S"
+                            )
+                        except ValueError:
+                            # "2025-01-11" 형식 폴백
+                            date_obj = datetime.strptime(date_value, "%Y-%m-%d")
+                    elif isinstance(date_value, datetime):
+                        date_obj = date_value
+                    else:
+                        logger.warning(f"⚠️ Unexpected date type: {type(date_value)}")
+                        continue
+
+                    # DailyPrice 모델로 변환 (dict 형태)
+                    price_dict = {
+                        "symbol": symbol.upper(),
+                        "date": date_obj,
+                        "open": Decimal(str(item.get("open", 0))),
+                        "high": Decimal(str(item.get("high", 0))),
+                        "low": Decimal(str(item.get("low", 0))),
+                        "close": Decimal(str(item.get("close", 0))),
+                        "volume": int(item.get("volume", 0)),
+                        "adjusted_close": Decimal(
+                            str(item.get("adjusted_close", item.get("close", 0)))
+                        ),
+                        "dividend_amount": Decimal(str(item.get("dividend_amount", 0))),
+                        "split_coefficient": Decimal(
+                            str(item.get("split_coefficient", 1))
+                        ),
+                        "data_quality_score": 95.0,
+                        "source": "alpha_vantage",
+                        "price_change": Decimal("0.0"),
+                        "price_change_percent": Decimal("0.0"),
+                    }
+
+                    intraday_prices.append(price_dict)
+
+                except (ValueError, KeyError) as e:
+                    logger.warning(f"⚠️ Failed to parse intraday data: {e}")
+                    continue
+
+            logger.info(f"✅ Parsed {len(intraday_prices)} intraday prices for {symbol}")
+            return intraday_prices
 
         except Exception as e:
             logger.error(
-                f"Failed to fetch intraday data from Alpha Vantage for {symbol}: {e}"
+                f"❌ Failed to fetch intraday data from Alpha Vantage for {symbol}: {e}",
+                exc_info=True,
             )
-            return {}
+            return []
 
     async def get_historical_data(
         self,
