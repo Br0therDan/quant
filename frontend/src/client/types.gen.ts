@@ -1988,6 +1988,113 @@ export type Position = {
 export type PydanticObjectId = string;
 
 /**
+ * QuoteData
+ * 실시간 호가 응답 모델
+ */
+export type QuoteData = {
+	/**
+	 * Symbol
+	 * 주식 심볼
+	 */
+	symbol: string;
+	/**
+	 * Timestamp
+	 * 시각
+	 */
+	timestamp: Date;
+	/**
+	 * Price
+	 * 현재가
+	 */
+	price: string;
+	/**
+	 * Change
+	 * 전일 대비 변동
+	 */
+	change?: string | null;
+	/**
+	 * Change Percent
+	 * 변동률 (%)
+	 */
+	change_percent?: string | null;
+	/**
+	 * Previous Close
+	 * 전일 종가
+	 */
+	previous_close?: string | null;
+	/**
+	 * Open Price
+	 * 당일 시가
+	 */
+	open_price?: string | null;
+	/**
+	 * High Price
+	 * 당일 고가
+	 */
+	high_price?: string | null;
+	/**
+	 * Low Price
+	 * 당일 저가
+	 */
+	low_price?: string | null;
+	/**
+	 * Volume
+	 * 당일 누적 거래량
+	 */
+	volume?: number | null;
+	/**
+	 * Bid Price
+	 * 매수 호가
+	 */
+	bid_price?: string | null;
+	/**
+	 * Ask Price
+	 * 매도 호가
+	 */
+	ask_price?: string | null;
+	/**
+	 * Bid Size
+	 * 매수 호가 수량
+	 */
+	bid_size?: number | null;
+	/**
+	 * Ask Size
+	 * 매도 호가 수량
+	 */
+	ask_size?: number | null;
+};
+
+/**
+ * QuoteResponse
+ * 실시간 호가 응답 스키마
+ */
+export type QuoteResponse = {
+	/**
+	 * Success
+	 * 요청 성공 여부
+	 */
+	success?: boolean;
+	/**
+	 * Message
+	 * 응답 메시지
+	 */
+	message?: string | null;
+	/**
+	 * Timestamp
+	 * 응답 시간
+	 */
+	timestamp?: Date;
+	/**
+	 * 데이터
+	 */
+	data: QuoteData;
+	/**
+	 * 메타데이터
+	 */
+	metadata: MetadataInfo;
+};
+
+/**
  * RecentActivity
  * 최근 활동 정보.
  */
@@ -3817,12 +3924,9 @@ export type StockGetQuoteError = StockGetQuoteErrors[keyof StockGetQuoteErrors];
 
 export type StockGetQuoteResponses = {
 	/**
-	 * Response Stock-Get Quote
 	 * Successful Response
 	 */
-	200: {
-		[key: string]: unknown;
-	};
+	200: QuoteResponse;
 };
 
 export type StockGetQuoteResponse =
@@ -3867,7 +3971,7 @@ export type StockGetIntradayDataData = {
 		 * Outputsize
 		 * 데이터 크기 (compact/full)
 		 */
-		outputsize?: "compact" | "full" | null;
+		outputsize?: "compact" | "full";
 	};
 	url: "/api/v1/market-data/stock/intraday/{symbol}";
 };
@@ -3884,18 +3988,15 @@ export type StockGetIntradayDataError =
 
 export type StockGetIntradayDataResponses = {
 	/**
-	 * Response Stock-Get Intraday Data
 	 * Successful Response
 	 */
-	200: {
-		[key: string]: unknown;
-	};
+	200: HistoricalDataResponse;
 };
 
 export type StockGetIntradayDataResponse =
 	StockGetIntradayDataResponses[keyof StockGetIntradayDataResponses];
 
-export type StockSearchSymbolsData = {
+export type StockSearchStockSymbolsData = {
 	body?: never;
 	path?: never;
 	query: {
@@ -3908,25 +4009,25 @@ export type StockSearchSymbolsData = {
 	url: "/api/v1/market-data/stock/search";
 };
 
-export type StockSearchSymbolsErrors = {
+export type StockSearchStockSymbolsErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type StockSearchSymbolsError =
-	StockSearchSymbolsErrors[keyof StockSearchSymbolsErrors];
+export type StockSearchStockSymbolsError =
+	StockSearchStockSymbolsErrors[keyof StockSearchStockSymbolsErrors];
 
-export type StockSearchSymbolsResponses = {
+export type StockSearchStockSymbolsResponses = {
 	/**
 	 * Successful Response
 	 */
 	200: StockSymbolsResponse;
 };
 
-export type StockSearchSymbolsResponse =
-	StockSearchSymbolsResponses[keyof StockSearchSymbolsResponses];
+export type StockSearchStockSymbolsResponse =
+	StockSearchStockSymbolsResponses[keyof StockSearchStockSymbolsResponses];
 
 export type FundamentalGetCompanyOverviewData = {
 	body?: never;

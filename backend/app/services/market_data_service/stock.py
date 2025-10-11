@@ -13,6 +13,7 @@ from app.services.market_data_service.base_service import (
     DataQualityValidator,
 )
 from app.models.market_data.stock import DailyPrice, WeeklyPrice, MonthlyPrice
+from app.schemas.market_data.stock import QuoteData
 
 
 logger = logging.getLogger(__name__)
@@ -570,7 +571,7 @@ class StockService(BaseMarketDataService):
 
     async def get_real_time_quote(
         self, symbol: str, force_refresh: bool = False
-    ) -> dict:
+    ) -> QuoteData:
         """실시간 주식 호가 조회 (Alpha Vantage GLOBAL_QUOTE)
 
         Args:
@@ -578,19 +579,7 @@ class StockService(BaseMarketDataService):
             force_refresh: True인 경우 캐시 무시하고 실시간 데이터 조회
 
         Returns:
-            실시간 호가 정보
-            {
-                "symbol": "IBM",
-                "open": 295.55,
-                "high": 301.0425,
-                "low": 293.285,
-                "price": 293.87,
-                "volume": 7190126,
-                "latest_trading_day": "2025-10-07",
-                "previous_close": 289.42,
-                "change": 4.45,
-                "change_percent": "1.5376%"
-            }
+            QuoteData: 실시간 호가 정보 객체
         """
         if force_refresh:
             # 실시간 데이터가 필요한 경우 캐시 무시
@@ -616,7 +605,9 @@ class StockService(BaseMarketDataService):
 
             # 첫 번째 요소 반환 (단일 호가 데이터)
             if results and len(results) > 0:
-                return results[0]
+                quote_dict = results[0]
+                # dict를 QuoteData로 변환
+                return self._dict_to_quote_data(quote_dict)
             else:
                 # 캐시에서 가져오지 못한 경우 직접 API 호출
                 return await self._fetch_quote_from_alpha_vantage(symbol)
@@ -626,28 +617,83 @@ class StockService(BaseMarketDataService):
             # 캐시 오류 시 직접 API 호출로 fallback
             return await self._fetch_quote_from_alpha_vantage(symbol)
 
-    async def _fetch_quote_from_alpha_vantage(self, symbol: str) -> dict:
+    async def _fetch_quote_from_alpha_vantage(self, symbol: str) -> QuoteData:
         """Alpha Vantage에서 실시간 호가 데이터 가져오기"""
         try:
             logger.info(f"Fetching real-time quote for {symbol} from Alpha Vantage")
             response = await self.alpha_vantage.stock.quote(symbol=symbol)
 
             if isinstance(response, dict):
-                # 응답에 타임스탬프 추가 (캐시 관리용)
-                response["fetched_at"] = datetime.now().isoformat()
                 logger.info(
                     f"Successfully fetched quote for {symbol}: price={response.get('price', 'N/A')}"
                 )
-                return response
+                return self._dict_to_quote_data(response)
             else:
                 logger.warning(
                     f"Unexpected quote response type for {symbol}: {type(response)}"
                 )
-                return {}
+                raise ValueError(f"Invalid quote response for {symbol}")
 
         except Exception as e:
             logger.error(f"Failed to fetch quote from Alpha Vantage for {symbol}: {e}")
-            return {}
+            raise
+
+    def _dict_to_quote_data(self, quote_dict: dict) -> QuoteData:
+        """딕셔너리를 QuoteData 객체로 변환"""
+        change_percent_str = str(quote_dict.get("change_percent", "0"))
+        change_percent_value = change_percent_str.rstrip("%")
+
+        # 타임스탬프 처리
+        timestamp = datetime.now()
+        if "latest_trading_day" in quote_dict:
+            try:
+                timestamp = datetime.fromisoformat(
+                    str(quote_dict["latest_trading_day"])
+                )
+            except (ValueError, TypeError):
+                pass
+
+        return QuoteData(
+            symbol=str(quote_dict.get("symbol", "")).upper(),
+            timestamp=timestamp,
+            price=Decimal(str(quote_dict.get("price", 0))),
+            change=(
+                Decimal(str(quote_dict.get("change", 0)))
+                if quote_dict.get("change")
+                else None
+            ),
+            change_percent=(
+                Decimal(str(change_percent_value)) if change_percent_value else None
+            ),
+            previous_close=(
+                Decimal(str(quote_dict.get("previous_close", 0)))
+                if quote_dict.get("previous_close")
+                else None
+            ),
+            open_price=(
+                Decimal(str(quote_dict.get("open", 0)))
+                if quote_dict.get("open")
+                else None
+            ),
+            high_price=(
+                Decimal(str(quote_dict.get("high", 0)))
+                if quote_dict.get("high")
+                else None
+            ),
+            low_price=(
+                Decimal(str(quote_dict.get("low", 0)))
+                if quote_dict.get("low")
+                else None
+            ),
+            volume=(
+                int(quote_dict.get("volume", 0)) if quote_dict.get("volume") else None
+            ),
+            # Alpha Vantage GLOBAL_QUOTE는 호가 정보를 제공하지 않으므로 None으로 설정
+            bid_price=None,
+            ask_price=None,
+            bid_size=None,
+            ask_size=None,
+        )
 
     async def get_intraday_data(
         self,

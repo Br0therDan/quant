@@ -22,7 +22,9 @@ import type {
 	FundamentalGetIncomeStatementResponse,
 	HealthHealthCheckResponse,
 	StockGetDailyPricesResponse,
+	StockGetIntradayDataResponse,
 	StockGetMonthlyPricesResponse,
+	StockGetQuoteResponse,
 	StockGetWeeklyPricesResponse,
 	StrategyCreateStrategyResponse,
 	StrategyExecuteStrategyResponse,
@@ -86,26 +88,24 @@ export const stockGetMonthlyPricesResponseTransformer = async (
 	return data;
 };
 
-export const fundamentalGetCompanyOverviewResponseTransformer = async (
+export const stockGetQuoteResponseTransformer = async (
 	data: any,
-): Promise<FundamentalGetCompanyOverviewResponse> => {
-	data = companyOverviewResponseSchemaResponseTransformer(data);
+): Promise<StockGetQuoteResponse> => {
+	data = quoteResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-const companyOverviewResponseSchemaResponseTransformer = (data: any) => {
+const quoteResponseSchemaResponseTransformer = (data: any) => {
 	if (data.timestamp) {
 		data.timestamp = new Date(data.timestamp);
 	}
-	data.data = companyOverviewDataSchemaResponseTransformer(data.data);
+	data.data = quoteDataSchemaResponseTransformer(data.data);
 	data.metadata = metadataInfoSchemaResponseTransformer(data.metadata);
 	return data;
 };
 
-const companyOverviewDataSchemaResponseTransformer = (data: any) => {
-	if (data.latest_quarter) {
-		data.latest_quarter = new Date(data.latest_quarter);
-	}
+const quoteDataSchemaResponseTransformer = (data: any) => {
+	data.timestamp = new Date(data.timestamp);
 	return data;
 };
 
@@ -125,6 +125,36 @@ const dataQualityInfoSchemaResponseTransformer = (data: any) => {
 const cacheInfoSchemaResponseTransformer = (data: any) => {
 	if (data.cache_timestamp) {
 		data.cache_timestamp = new Date(data.cache_timestamp);
+	}
+	return data;
+};
+
+export const stockGetIntradayDataResponseTransformer = async (
+	data: any,
+): Promise<StockGetIntradayDataResponse> => {
+	data = historicalDataResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const fundamentalGetCompanyOverviewResponseTransformer = async (
+	data: any,
+): Promise<FundamentalGetCompanyOverviewResponse> => {
+	data = companyOverviewResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const companyOverviewResponseSchemaResponseTransformer = (data: any) => {
+	if (data.timestamp) {
+		data.timestamp = new Date(data.timestamp);
+	}
+	data.data = companyOverviewDataSchemaResponseTransformer(data.data);
+	data.metadata = metadataInfoSchemaResponseTransformer(data.metadata);
+	return data;
+};
+
+const companyOverviewDataSchemaResponseTransformer = (data: any) => {
+	if (data.latest_quarter) {
+		data.latest_quarter = new Date(data.latest_quarter);
 	}
 	return data;
 };

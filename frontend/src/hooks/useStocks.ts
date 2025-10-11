@@ -204,7 +204,7 @@ export const useStockQuote = (symbol: string) => {
             const response = await StockService.getQuote({
                 path: { symbol }
             });
-            return response.data;
+            return response.data?.data;
         },
         enabled: !!symbol,
         staleTime: 1000 * 15, // 15 seconds (real-time quotes)
@@ -271,7 +271,7 @@ export const useStockSearchSymbols = (keywords: string) => {
     return useQuery({
         queryKey: stockQueryKeys.searchSymbols(keywords),
         queryFn: async () => {
-            const response = await StockService.searchSymbols({
+            const response = await StockService.searchStockSymbols({
                 query: { keywords }
             });
             return response.data;

@@ -4,11 +4,14 @@ Stock API Routes
 """
 
 import logging
-from datetime import date
+from datetime import date, datetime
 from typing import List, Literal, Optional, Dict, Any
+from decimal import Decimal
 from fastapi import APIRouter, HTTPException, Query, Path
 from pydantic import BaseModel
 
+from app.schemas.market_data.stock import QuoteResponse
+from app.schemas.market_data.base import MetadataInfo, DataQualityInfo, CacheInfo
 from app.services.service_factory import service_factory
 
 
@@ -56,7 +59,7 @@ async def get_daily_prices(
     ),
     start_date: Optional[date] = Query(default=None, description="시작 날짜 (YYYY-MM-DD)"),
     end_date: Optional[date] = Query(default=None, description="종료 날짜 (YYYY-MM-DD)"),
-):
+) -> HistoricalDataResponse:
     """일일 주가 데이터 조회"""
     try:
         # 심볼 유효성 검사
@@ -148,7 +151,7 @@ async def get_weekly_prices(
     outputsize: str = Query(
         "compact", description="데이터 크기 (compact: 최근 100개, full: 전체)"
     ),
-):
+) -> HistoricalDataResponse:
     """주간 주가 데이터 조회"""
     try:
         # 심볼 유효성 검사
@@ -237,7 +240,7 @@ async def get_monthly_prices(
     outputsize: str = Query(
         "compact", description="데이터 크기 (compact: 최근 100개, full: 전체)"
     ),
-):
+) -> HistoricalDataResponse:
     """월간 주가 데이터 조회"""
     try:
         # 심볼 유효성 검사
@@ -316,20 +319,46 @@ async def get_monthly_prices(
 
 @router.get(
     "/quote/{symbol}",
-    response_model=Dict[str, Any],
+    response_model=QuoteResponse,
     description="지정된 종목의 실시간 호가 정보를 조회합니다.",
 )
-async def get_quote(symbol: str = Path(..., description="종목 심볼 (예: AAPL, TSLA)")):
+async def get_quote(
+    symbol: str = Path(..., description="종목 심볼 (예: AAPL, TSLA)")
+) -> QuoteResponse:
     """실시간 주식 호가 조회"""
     try:
         stock_service = service_factory.get_market_data_service().stock
-        global_quote = await stock_service.get_real_time_quote(symbol=symbol.upper())
+        quote_data = await stock_service.get_real_time_quote(symbol=symbol.upper())
 
-        if not global_quote:
+        if not quote_data:
             raise HTTPException(status_code=404, detail=f"호가 데이터를 찾을 수 없습니다: {symbol}")
-        return global_quote
 
+        # QuoteResponse 생성 (DataResponse[QuoteData] 구조)
+        return QuoteResponse(
+            success=True,
+            message=f"{symbol} 실시간 호가 조회 완료",
+            data=quote_data,
+            metadata=MetadataInfo(
+                data_quality=DataQualityInfo(
+                    quality_score=Decimal("95.0"),
+                    last_updated=quote_data.timestamp,
+                    data_source="alpha_vantage",
+                    confidence_level="high",
+                ),
+                cache_info=CacheInfo(
+                    cached=True,
+                    cache_hit=True,
+                    cache_timestamp=datetime.now(),
+                    cache_ttl=3600,  # 1시간
+                ),
+                processing_time_ms=None,
+            ),
+        )
+
+    except HTTPException:
+        raise
     except Exception as e:
+        logger.error(f"❌ 호가 데이터 조회 실패: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"호가 데이터 조회 중 오류 발생: {str(e)}")
 
 
@@ -433,3 +462,51 @@ async def get_intraday_data(
     except Exception as e:
         logger.error(f"❌ Intraday 데이터 조회 실패: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"주식 데이터 조회 중 오류 발생: {str(e)}")
+
+
+@router.get(
+    "/search",
+    response_model=StockSymbolsResponse,
+    description="주식 심볼 검색 (Alpha Vantage의 심볼 서치 기능 활용)",
+)
+async def search_stock_symbols(
+    keywords: str = Query(..., description="검색 키워드 (예: Apple, Tesla)"),
+) -> StockSymbolsResponse:
+    """주식 심볼 검색"""
+    try:
+        if not keywords or len(keywords.strip()) == 0:
+            raise HTTPException(status_code=400, detail="유효한 검색 키워드를 입력해주세요")
+
+        market_service = service_factory.get_market_data_service()
+        response = await market_service.stock.search_symbols(keywords=keywords.strip())
+
+        # Alpha Vantage 응답을 SymbolInfo 리스트로 변환
+        symbols = []
+        if isinstance(response, dict) and "bestMatches" in response:
+            for match in response.get("bestMatches", []):
+                try:
+                    symbol_info = SymbolInfo(
+                        symbol=match.get("1. symbol", ""),
+                        name=match.get("2. name", ""),
+                        type=match.get("3. type", ""),
+                        region=match.get("4. region", ""),
+                        market_open=match.get("5. marketOpen"),
+                        market_close=match.get("6. marketClose"),
+                        timezone=match.get("7. timezone"),
+                        currency=match.get("8. currency"),
+                        match_score=float(match.get("9. matchScore", 0.0)),
+                    )
+                    symbols.append(symbol_info)
+                except Exception as e:
+                    logger.warning(f"⚠️ Failed to parse symbol info: {e}")
+                    continue
+
+        return StockSymbolsResponse(
+            symbols=symbols, count=len(symbols), search_term=keywords
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"❌ 심볼 검색 실패: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"심볼 검색 중 오류 발생: {str(e)}")

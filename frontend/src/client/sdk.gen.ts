@@ -182,9 +182,9 @@ import type {
 	StockGetWeeklyPricesData,
 	StockGetWeeklyPricesErrors,
 	StockGetWeeklyPricesResponses,
-	StockSearchSymbolsData,
-	StockSearchSymbolsErrors,
-	StockSearchSymbolsResponses,
+	StockSearchStockSymbolsData,
+	StockSearchStockSymbolsErrors,
+	StockSearchStockSymbolsResponses,
 	StrategyCreateStrategyData,
 	StrategyCreateStrategyErrors,
 	StrategyCreateStrategyResponses,
@@ -881,15 +881,15 @@ export class StockService {
 	}
 
 	/**
-	 * Search Symbols
-	 * 종목 심볼 검색 (Alpha Vantage SYMBOL_SEARCH)
+	 * Search Stock Symbols
+	 * 주식 심볼 검색 (Alpha Vantage의 심볼 서치 기능 활용)
 	 */
-	public static searchSymbols<ThrowOnError extends boolean = false>(
-		options: Options<StockSearchSymbolsData, ThrowOnError>,
+	public static searchStockSymbols<ThrowOnError extends boolean = false>(
+		options: Options<StockSearchStockSymbolsData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			StockSearchSymbolsResponses,
-			StockSearchSymbolsErrors,
+			StockSearchStockSymbolsResponses,
+			StockSearchStockSymbolsErrors,
 			ThrowOnError
 		>({
 			security: [

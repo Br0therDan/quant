@@ -3289,6 +3289,204 @@ export const PydanticObjectIdSchema = {
 	example: "5eb7cf5a86d9755df3a6c593",
 } as const;
 
+export const QuoteDataSchema = {
+	properties: {
+		symbol: {
+			type: "string",
+			title: "Symbol",
+			description: "주식 심볼",
+		},
+		timestamp: {
+			type: "string",
+			format: "date-time",
+			title: "Timestamp",
+			description: "시각",
+		},
+		price: {
+			type: "string",
+			title: "Price",
+			description: "현재가",
+		},
+		change: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Change",
+			description: "전일 대비 변동",
+		},
+		change_percent: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Change Percent",
+			description: "변동률 (%)",
+		},
+		previous_close: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Previous Close",
+			description: "전일 종가",
+		},
+		open_price: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Open Price",
+			description: "당일 시가",
+		},
+		high_price: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "High Price",
+			description: "당일 고가",
+		},
+		low_price: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Low Price",
+			description: "당일 저가",
+		},
+		volume: {
+			anyOf: [
+				{
+					type: "integer",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Volume",
+			description: "당일 누적 거래량",
+		},
+		bid_price: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Bid Price",
+			description: "매수 호가",
+		},
+		ask_price: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Ask Price",
+			description: "매도 호가",
+		},
+		bid_size: {
+			anyOf: [
+				{
+					type: "integer",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Bid Size",
+			description: "매수 호가 수량",
+		},
+		ask_size: {
+			anyOf: [
+				{
+					type: "integer",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Ask Size",
+			description: "매도 호가 수량",
+		},
+	},
+	type: "object",
+	required: ["symbol", "timestamp", "price"],
+	title: "QuoteData",
+	description: "실시간 호가 응답 모델",
+} as const;
+
+export const QuoteResponseSchema = {
+	properties: {
+		success: {
+			type: "boolean",
+			title: "Success",
+			description: "요청 성공 여부",
+			default: true,
+		},
+		message: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Message",
+			description: "응답 메시지",
+		},
+		timestamp: {
+			type: "string",
+			format: "date-time",
+			title: "Timestamp",
+			description: "응답 시간",
+		},
+		data: {
+			$ref: "#/components/schemas/QuoteData",
+			description: "데이터",
+		},
+		metadata: {
+			$ref: "#/components/schemas/MetadataInfo",
+			description: "메타데이터",
+		},
+	},
+	type: "object",
+	required: ["data", "metadata"],
+	title: "QuoteResponse",
+	description: "실시간 호가 응답 스키마",
+} as const;
+
 export const RecentActivitySchema = {
 	properties: {
 		trades_count_today: {
