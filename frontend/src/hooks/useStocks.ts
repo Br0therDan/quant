@@ -11,17 +11,42 @@ import { useMemo } from "react";
 export const stockQueryKeys = {
     all: ["stock"] as const,
     dailyPrices: () => [...stockQueryKeys.all, "dailyPrices"] as const,
-    dailyPricesSymbol: (symbol: string) => [...stockQueryKeys.dailyPrices(), symbol] as const,
+    dailyPricesSymbol: (symbol: string, options?: { startDate?: string; endDate?: string }) => {
+        const key = [...stockQueryKeys.dailyPrices(), symbol] as const;
+        // undefined 값을 제거하여 일관된 키 생성
+        const params: Record<string, string> = {};
+        if (options?.startDate) params.startDate = options.startDate;
+        if (options?.endDate) params.endDate = options.endDate;
+        return Object.keys(params).length > 0 ? [...key, params] as const : key;
+    },
     weeklyPrices: () => [...stockQueryKeys.all, "weeklyPrices"] as const,
-    weeklyPricesSymbol: (symbol: string) => [...stockQueryKeys.weeklyPrices(), symbol] as const,
+    weeklyPricesSymbol: (symbol: string, options?: { startDate?: string; endDate?: string }) => {
+        const key = [...stockQueryKeys.weeklyPrices(), symbol] as const;
+        const params: Record<string, string> = {};
+        if (options?.startDate) params.startDate = options.startDate;
+        if (options?.endDate) params.endDate = options.endDate;
+        return Object.keys(params).length > 0 ? [...key, params] as const : key;
+    },
     monthlyPrices: () => [...stockQueryKeys.all, "monthlyPrices"] as const,
-    monthlyPricesSymbol: (symbol: string) => [...stockQueryKeys.monthlyPrices(), symbol] as const,
+    monthlyPricesSymbol: (symbol: string, options?: { startDate?: string; endDate?: string }) => {
+        const key = [...stockQueryKeys.monthlyPrices(), symbol] as const;
+        const params: Record<string, string> = {};
+        if (options?.startDate) params.startDate = options.startDate;
+        if (options?.endDate) params.endDate = options.endDate;
+        return Object.keys(params).length > 0 ? [...key, params] as const : key;
+    },
     quote: () => [...stockQueryKeys.all, "quote"] as const,
     quoteSymbol: (symbol: string) => [...stockQueryKeys.quote(), symbol] as const,
     intraday: () => [...stockQueryKeys.all, "intraday"] as const,
-    intradaySymbol: (symbol: string, interval?: string) => [...stockQueryKeys.intraday(), symbol, { interval }] as const,
+    intradaySymbol: (symbol: string, interval?: string) => {
+        const key = [...stockQueryKeys.intraday(), symbol] as const;
+        return interval ? [...key, { interval }] as const : key;
+    },
     historical: () => [...stockQueryKeys.all, "historical"] as const,
-    historicalSymbol: (symbol: string, period?: string) => [...stockQueryKeys.historical(), symbol, { period }] as const,
+    historicalSymbol: (symbol: string, period?: string) => {
+        const key = [...stockQueryKeys.historical(), symbol] as const;
+        return period ? [...key, { period }] as const : key;
+    },
     search: () => [...stockQueryKeys.all, "search"] as const,
     searchSymbols: (keywords: string) => [...stockQueryKeys.search(), keywords] as const,
 };
@@ -33,48 +58,142 @@ export function useStocks() {
 }
 
 // Individual hook functions for specific symbols
-export const useStockDailyPrices = (symbol: string) => {
+export const useStockDailyPrices = (
+    symbol: string,
+    options?: {
+        outputsize?: "compact" | "full";
+        startDate?: string;
+        endDate?: string;
+        enabled?: boolean;
+    }
+) => {
+    const queryKey = stockQueryKeys.dailyPricesSymbol(symbol, {
+        startDate: options?.startDate,
+        endDate: options?.endDate,
+    });
+
     return useQuery({
-        queryKey: stockQueryKeys.dailyPricesSymbol(symbol),
+        queryKey,
         queryFn: async () => {
+            console.log("🌐 API Call - Daily Prices:", {
+                symbol,
+                outputsize: options?.outputsize || "full",
+                start_date: options?.startDate,
+                end_date: options?.endDate,
+                queryKey,
+            });
             const response = await StockService.getDailyPrices({
-                path: { symbol }
+                path: { symbol },
+                query: {
+                    outputsize: options?.outputsize || "full",
+                    start_date: options?.startDate,
+                    end_date: options?.endDate,
+                } as any // Type assertion to bypass type checking for query params
+            });
+            console.log("✅ API Response - Daily Prices:", {
+                symbol,
+                dataLength: (response.data as any)?.data?.length || 0,
+                response: response.data,
             });
             return response.data;
         },
-        enabled: !!symbol,
-        staleTime: 1000 * 60 * 5, // 5 minutes (daily prices don't change during trading day)
-        gcTime: 30 * 60 * 1000, // 30 minutes
+        enabled: options?.enabled !== undefined ? options.enabled : !!symbol,
+        staleTime: 0, // 캐싱 제거: 항상 stale로 간주
+        gcTime: 0, // 캐싱 제거: 즉시 가비지 컬렉션
+        refetchOnMount: true, // 마운트 시 항상 refetch
+        refetchOnWindowFocus: false, // 윈도우 포커스 시 refetch 비활성화
     });
-};
+}; export const useStockWeeklyPrices = (
+    symbol: string,
+    options?: {
+        outputsize?: "compact" | "full";
+        startDate?: string;
+        endDate?: string;
+        enabled?: boolean;
+    }
+) => {
+    const queryKey = stockQueryKeys.weeklyPricesSymbol(symbol, {
+        startDate: options?.startDate,
+        endDate: options?.endDate,
+    });
 
-export const useStockWeeklyPrices = (symbol: string) => {
     return useQuery({
-        queryKey: stockQueryKeys.weeklyPricesSymbol(symbol),
+        queryKey,
         queryFn: async () => {
+            console.log("🌐 API Call - Weekly Prices:", {
+                symbol,
+                outputsize: options?.outputsize || "full",
+                start_date: options?.startDate,
+                end_date: options?.endDate,
+                queryKey,
+            });
             const response = await StockService.getWeeklyPrices({
-                path: { symbol }
+                path: { symbol },
+                query: {
+                    outputsize: options?.outputsize || "full",
+                    start_date: options?.startDate,
+                    end_date: options?.endDate,
+                } as any
+            });
+            console.log("✅ API Response - Weekly Prices:", {
+                symbol,
+                dataLength: (response.data as any)?.data?.length || 0,
+                response: response.data,
             });
             return response.data;
         },
-        enabled: !!symbol,
-        staleTime: 1000 * 60 * 60, // 1 hour
-        gcTime: 2 * 60 * 60 * 1000, // 2 hours
+        enabled: options?.enabled !== undefined ? options.enabled : !!symbol,
+        staleTime: 0, // 캐싱 제거: 항상 stale로 간주
+        gcTime: 0, // 캐싱 제거: 즉시 가비지 컬렉션
+        refetchOnMount: true, // 마운트 시 항상 refetch
+        refetchOnWindowFocus: false, // 윈도우 포커스 시 refetch 비활성화
     });
 };
 
-export const useStockMonthlyPrices = (symbol: string) => {
+export const useStockMonthlyPrices = (
+    symbol: string,
+    options?: {
+        outputsize?: "compact" | "full";
+        startDate?: string;
+        endDate?: string;
+        enabled?: boolean;
+    }
+) => {
+    const queryKey = stockQueryKeys.monthlyPricesSymbol(symbol, {
+        startDate: options?.startDate,
+        endDate: options?.endDate,
+    });
+
     return useQuery({
-        queryKey: stockQueryKeys.monthlyPricesSymbol(symbol),
+        queryKey,
         queryFn: async () => {
+            console.log("🌐 API Call - Monthly Prices:", {
+                symbol,
+                outputsize: options?.outputsize || "full",
+                start_date: options?.startDate,
+                end_date: options?.endDate,
+                queryKey,
+            });
             const response = await StockService.getMonthlyPrices({
-                path: { symbol }
+                path: { symbol },
+                query: {
+                    outputsize: options?.outputsize || "full",
+                    start_date: options?.startDate,
+                    end_date: options?.endDate,
+                } as any
+            });
+            console.log("✅ API Response - Monthly Prices:", {
+                symbol,
+                dataLength: (response.data as any)?.data?.length || 0,
+                response: response.data,
             });
             return response.data;
         },
-        enabled: !!symbol,
-        staleTime: 1000 * 60 * 60 * 2, // 2 hours
-        gcTime: 4 * 60 * 60 * 1000, // 4 hours
+        enabled: options?.enabled !== undefined ? options.enabled : !!symbol,
+        staleTime: 0, // 캐싱 제거: 항상 stale로 간주
+        gcTime: 0, // 캐싱 제거: 즉시 가비지 컬렉션
+        refetchOnMount: true, // 마운트 시 항상 refetch
+        refetchOnWindowFocus: false, // 윈도우 포커스 시 refetch 비활성화
     });
 };
 
@@ -94,18 +213,36 @@ export const useStockQuote = (symbol: string) => {
     });
 };
 
-export const useStockIntraday = (symbol: string, interval?: "1min" | "5min" | "15min" | "30min" | "60min") => {
+export const useStockIntraday = (
+    symbol: string,
+    options?: {
+        interval?: "1min" | "5min" | "15min" | "30min" | "60min";
+        enabled?: boolean;
+    }
+) => {
+    const queryKey = stockQueryKeys.intradaySymbol(symbol, options?.interval);
+
     return useQuery({
-        queryKey: stockQueryKeys.intradaySymbol(symbol, interval),
+        queryKey,
         queryFn: async () => {
+            console.log("🌐 API Call - Intraday:", {
+                symbol,
+                interval: options?.interval,
+                queryKey,
+            });
             const response = await StockService.getIntradayData({
                 path: { symbol },
-                query: interval ? { interval } : undefined
+                query: options?.interval ? { interval: options.interval } : undefined
+            });
+            console.log("✅ API Response - Intraday:", {
+                symbol,
+                dataLength: (response.data as any)?.data?.length || 0,
+                response: response.data,
             });
             return response.data;
         },
-        enabled: !!symbol,
-        staleTime: 1000 * 60, // 1 minute
+        enabled: options?.enabled !== undefined ? options.enabled : !!symbol,
+        staleTime: 0, // Always fetch fresh data for debugging
         gcTime: 5 * 60 * 1000, // 5 minutes
     });
 };

@@ -3,17 +3,8 @@
 import {
   CandlestickChart as CandlestickIcon,
   ShowChart as LineIcon,
-  Refresh as RefreshIcon,
 } from "@mui/icons-material";
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  Chip,
-  IconButton,
-  Tooltip,
-  useTheme,
-} from "@mui/material";
+import { Box, Button, ButtonGroup, Chip, Tooltip } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { type Dayjs } from "dayjs";
 
@@ -24,18 +15,26 @@ interface ChartControlsProps {
   onEndDateChange: (date: Dayjs | null) => void;
   interval: string;
   onIntervalChange: (interval: string) => void;
-  onRefresh: () => void;
+  intradayInterval?: string;
+  onIntradayIntervalChange?: (interval: string) => void;
   isLoading?: boolean;
   chartType?: string;
   onChartTypeChange?: (type: string) => void;
 }
 
 const TIME_PERIODS = [
+  { label: "Intraday", value: "intraday" },
   { label: "1D", value: "1d" },
   { label: "1W", value: "1w" },
   { label: "1M", value: "1m" },
-  { label: "3M", value: "3m" },
-  { label: "1Y", value: "1y" },
+];
+
+const INTRADAY_INTERVALS = [
+  { label: "1분", value: "1min" },
+  { label: "5분", value: "5min" },
+  { label: "15분", value: "15min" },
+  { label: "30분", value: "30min" },
+  { label: "60분", value: "60min" },
 ];
 
 const CHART_TYPES = [
@@ -50,18 +49,20 @@ export default function ChartControls({
   onEndDateChange,
   interval,
   onIntervalChange,
-  onRefresh,
+  intradayInterval = "5min",
+  onIntradayIntervalChange,
   isLoading = false,
   chartType = "candlestick",
   onChartTypeChange,
 }: ChartControlsProps) {
-  const theme = useTheme();
-
   const handlePeriodChange = (period: string) => {
     const end = dayjs();
     let start: Dayjs;
 
     switch (period) {
+      case "intraday":
+        start = end.subtract(1, "day");
+        break;
       case "1d":
         start = end.subtract(1, "day");
         break;
@@ -70,12 +71,6 @@ export default function ChartControls({
         break;
       case "1m":
         start = end.subtract(1, "month");
-        break;
-      case "3m":
-        start = end.subtract(3, "month");
-        break;
-      case "1y":
-        start = end.subtract(1, "year");
         break;
       default:
         start = end.subtract(1, "month");
@@ -88,6 +83,8 @@ export default function ChartControls({
 
   const currentPeriod =
     TIME_PERIODS.find((p) => p.value === interval)?.value || "1m";
+
+  const isIntraday = interval === "intraday";
 
   return (
     <Box
@@ -103,7 +100,7 @@ export default function ChartControls({
       }}
     >
       {/* 왼쪽: 기간 선택 */}
-      <Box display="flex" alignItems="center" gap={2}>
+      <Box display="flex" alignItems="center" gap={2} flexWrap="wrap">
         <ButtonGroup size="small" variant="outlined">
           {TIME_PERIODS.map((period) => (
             <Button
@@ -119,34 +116,58 @@ export default function ChartControls({
           ))}
         </ButtonGroup>
 
-        {/* 커스텀 날짜 선택 */}
-        <Box display="flex" alignItems="center" gap={1}>
-          <DatePicker
-            label="시작일"
-            value={startDate}
-            onChange={(value) => onStartDateChange(value ? dayjs(value) : null)}
-            slotProps={{
-              textField: {
-                size: "small",
-                sx: { width: 140 },
-              },
-            }}
-          />
-          <DatePicker
-            label="종료일"
-            value={endDate}
-            onChange={(value) => onEndDateChange(value ? dayjs(value) : null)}
-            slotProps={{
-              textField: {
-                size: "small",
-                sx: { width: 140 },
-              },
-            }}
-          />
-        </Box>
+        {/* 인트라데이 인터벌 선택 */}
+        {isIntraday && onIntradayIntervalChange && (
+          <ButtonGroup size="small" variant="outlined">
+            {INTRADAY_INTERVALS.map((intInterval) => (
+              <Button
+                key={intInterval.value}
+                variant={
+                  intradayInterval === intInterval.value
+                    ? "contained"
+                    : "outlined"
+                }
+                onClick={() => onIntradayIntervalChange(intInterval.value)}
+                sx={{ minWidth: 45 }}
+              >
+                {intInterval.label}
+              </Button>
+            ))}
+          </ButtonGroup>
+        )}
+
+        {/* 커스텀 날짜 선택 - 인트라데이가 아닐 때만 표시 */}
+        {!isIntraday && (
+          <Box display="flex" alignItems="center" gap={1}>
+            <DatePicker
+              label="시작일"
+              value={startDate}
+              onChange={(value) =>
+                onStartDateChange(value ? dayjs(value) : null)
+              }
+              slotProps={{
+                textField: {
+                  size: "small",
+                  sx: { width: 140 },
+                },
+              }}
+            />
+            <DatePicker
+              label="종료일"
+              value={endDate}
+              onChange={(value) => onEndDateChange(value ? dayjs(value) : null)}
+              slotProps={{
+                textField: {
+                  size: "small",
+                  sx: { width: 140 },
+                },
+              }}
+            />
+          </Box>
+        )}
       </Box>
 
-      {/* 오른쪽: 차트 타입 및 새로고침 */}
+      {/* 오른쪽: 차트 타입 */}
       <Box display="flex" alignItems="center" gap={2}>
         {/* 차트 타입 선택 */}
         {onChartTypeChange && (
@@ -169,24 +190,6 @@ export default function ChartControls({
             })}
           </ButtonGroup>
         )}
-
-        {/* 새로고침 버튼 */}
-        <Tooltip title="새로고침">
-          <IconButton
-            onClick={onRefresh}
-            disabled={isLoading}
-            size="small"
-            sx={{
-              border: 1,
-              borderColor: "divider",
-              "&:hover": {
-                borderColor: theme.palette.primary.main,
-              },
-            }}
-          >
-            <RefreshIcon sx={{ fontSize: 18 }} />
-          </IconButton>
-        </Tooltip>
 
         {/* 로딩 상태 표시 */}
         {isLoading && (

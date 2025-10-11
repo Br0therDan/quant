@@ -10,13 +10,16 @@ import React from "react";
 import CandlestickChart from "@/components/market-data/CandlestickChart";
 import ChartControls from "@/components/market-data/ChartControls";
 import MarketDataHeader from "@/components/market-data/MarketDataHeader";
-import WatchList from "@/components/market-data/WatchList";
+import WatchlistBar from "@/components/market-data/WatchlistBar";
 import {
   useStockDailyPrices,
   useStockHistorical,
+  useStockIntraday,
+  useStockMonthlyPrices,
   useStockQuote,
+  useStockWeeklyPrices,
 } from "@/hooks/useStocks";
-import { useWatchlist, useWatchlistDetail } from "@/hooks/useWatchList";
+import { useWatchlist } from "@/hooks/useWatchList";
 
 // 한국어 로케일 설정
 dayjs.locale("ko");
@@ -31,99 +34,272 @@ interface CandlestickData {
 }
 
 export default function MarketDataChartPage() {
-  const [selectedSymbol, setSelectedSymbol] = React.useState<string>("AAPL");
+  const [selectedSymbol, setSelectedSymbol] = React.useState<string>("");
   const [startDate, setStartDate] = React.useState<Dayjs | null>(
     dayjs().subtract(1, "month")
   );
   const [endDate, setEndDate] = React.useState<Dayjs | null>(dayjs());
   const [interval, setInterval] = React.useState<string>("1d");
+  const [intradayInterval, setIntradayInterval] =
+    React.useState<string>("5min");
   const [chartType, setChartType] = React.useState("candlestick");
 
-  // 새로운 훅들 사용
+  // 워치리스트 데이터 가져오기
   const {
+    watchlistList,
     isLoading: { watchlistList: watchlistLoading },
   } = useWatchlist();
-  const { data: watchlistDetail } = useWatchlistDetail("default");
+
+  // API 응답 구조 처리: { user_id, watchlists: [...] }
+  const watchlists = React.useMemo(() => {
+    if (!watchlistList) return [];
+
+    if (Array.isArray(watchlistList)) {
+      return watchlistList;
+    }
+
+    if (typeof watchlistList === "object" && "watchlists" in watchlistList) {
+      return Array.isArray((watchlistList as any).watchlists)
+        ? (watchlistList as any).watchlists
+        : [];
+    }
+
+    return [];
+  }, [watchlistList]);
+
+  // 첫 번째 워치리스트의 첫 번째 심볼을 기본값으로 설정
+  React.useEffect(() => {
+    if (watchlists.length > 0 && !selectedSymbol) {
+      const firstWatchlist = watchlists[0];
+      const firstSymbol = firstWatchlist?.symbols?.[0];
+      if (firstSymbol) {
+        setSelectedSymbol(firstSymbol);
+      }
+    }
+  }, [watchlists, selectedSymbol]);
 
   // 기간에 따른 적절한 API 선택
-  const shouldUseHistorical = React.useMemo(() => {
-    if (!startDate || !endDate) return false;
-    const daysDiff = endDate.diff(startDate, "day");
-    return daysDiff > 5; // 5일 이상이면 historical API 사용
-  }, [startDate, endDate]);
+  const apiType = React.useMemo(() => {
+    // interval에 따라 API 결정
+    if (interval === "intraday") return "intraday";
+    if (interval === "1w") return "weekly";
+    if (interval === "1m") return "monthly";
+    if (interval === "1d") return "daily";
+    return "historical"; // 그 외는 historical
+  }, [interval]);
 
   // 실시간 Quote (항상 필요)
   const { data: currentQuote, isLoading: quoteLoading } =
     useStockQuote(selectedSymbol);
 
-  // 조건부 데이터 호출 - Historical API (장기간)
-  const {
-    data: historicalData,
-    isLoading: historicalLoading,
-    refetch: refetchHistorical,
-  } = useStockHistorical(
+  // Intraday API
+  const { data: intradayData, isLoading: intradayLoading } = useStockIntraday(
     selectedSymbol,
     {
-      startDate: startDate?.format("YYYY-MM-DD"),
-      endDate: endDate?.format("YYYY-MM-DD"),
-      frequency: interval === "1d" ? "daily" : interval,
-    },
-    {
-      enabled: shouldUseHistorical && !!selectedSymbol,
+      interval: intradayInterval as
+        | "1min"
+        | "5min"
+        | "15min"
+        | "30min"
+        | "60min",
+      enabled: apiType === "intraday" && !!selectedSymbol,
     }
   );
 
-  // 조건부 데이터 호출 - Daily API (단기간)
-  const {
-    data: dailyPrices,
-    isLoading: dailyLoading,
-    refetch: refetchDaily,
-  } = useStockDailyPrices(shouldUseHistorical ? "" : selectedSymbol);
+  // Daily API
+  const { data: dailyPrices, isLoading: dailyLoading } = useStockDailyPrices(
+    selectedSymbol,
+    {
+      outputsize: "full",
+      startDate: startDate?.format("YYYY-MM-DD"),
+      endDate: endDate?.format("YYYY-MM-DD"),
+      enabled: apiType === "daily" && !!selectedSymbol,
+    }
+  );
 
-  // 사용 가능한 심볼들 (워치리스트에서 가져오기)
-  const availableSymbols = React.useMemo(() => {
-    const watchlistSymbols = (watchlistDetail as any)?.symbols || [];
-    return watchlistSymbols.length > 0 ? watchlistSymbols : ["AAPL"]; // 기본값 최소화
-  }, [watchlistDetail]);
+  // Weekly API
+  const { data: weeklyPrices, isLoading: weeklyLoading } = useStockWeeklyPrices(
+    selectedSymbol,
+    {
+      outputsize: "full",
+      startDate: startDate?.format("YYYY-MM-DD"),
+      endDate: endDate?.format("YYYY-MM-DD"),
+      enabled: apiType === "weekly" && !!selectedSymbol,
+    }
+  );
 
-  // 첫 번째 심볼 자동 선택
+  // Monthly API
+  const { data: monthlyPrices, isLoading: monthlyLoading } =
+    useStockMonthlyPrices(selectedSymbol, {
+      outputsize: "full",
+      startDate: startDate?.format("YYYY-MM-DD"),
+      endDate: endDate?.format("YYYY-MM-DD"),
+      enabled: apiType === "monthly" && !!selectedSymbol,
+    });
+
+  // Historical API (기타 interval용)
+  const { data: historicalData, isLoading: historicalLoading } =
+    useStockHistorical(
+      selectedSymbol,
+      {
+        startDate: startDate?.format("YYYY-MM-DD"),
+        endDate: endDate?.format("YYYY-MM-DD"),
+        frequency: interval,
+      },
+      {
+        enabled: apiType === "historical" && !!selectedSymbol,
+      }
+    );
+
+  // 디버깅: API 호출 조건 확인
   React.useEffect(() => {
-    if (
-      availableSymbols &&
-      availableSymbols.length > 0 &&
-      !availableSymbols.includes(selectedSymbol)
-    ) {
-      setSelectedSymbol(availableSymbols[0]);
-    }
-  }, [availableSymbols, selectedSymbol]);
-
-  const handleRefresh = React.useCallback(() => {
-    if (shouldUseHistorical) {
-      refetchHistorical();
-    } else {
-      refetchDaily();
-    }
-  }, [shouldUseHistorical, refetchHistorical, refetchDaily]);
+    console.log("🔍 API Call Conditions:", {
+      selectedSymbol,
+      interval,
+      apiType,
+      startDate: startDate?.format("YYYY-MM-DD"),
+      endDate: endDate?.format("YYYY-MM-DD"),
+      enabledConditions: {
+        intraday: apiType === "intraday" && !!selectedSymbol,
+        daily: apiType === "daily" && !!selectedSymbol,
+        weekly: apiType === "weekly" && !!selectedSymbol,
+        monthly: apiType === "monthly" && !!selectedSymbol,
+        historical: apiType === "historical" && !!selectedSymbol,
+      },
+    });
+  }, [selectedSymbol, apiType, interval, startDate, endDate]);
 
   const handleSymbolChange = React.useCallback((symbol: string) => {
     setSelectedSymbol(symbol);
   }, []);
 
-  // 차트 데이터 결정 - 조건에 따라 적절한 데이터 선택
+  // 디버깅: 데이터 상태 확인
+  React.useEffect(() => {
+    console.log("📊 Chart Data Debug:", {
+      selectedSymbol,
+      apiType,
+      interval,
+      intradayData: intradayData
+        ? Array.isArray(intradayData)
+          ? `Array[${intradayData.length}]`
+          : "Object"
+        : "null",
+      dailyPrices: dailyPrices
+        ? Array.isArray(dailyPrices)
+          ? `Array[${dailyPrices.length}]`
+          : "Object"
+        : "null",
+      weeklyPrices: weeklyPrices
+        ? Array.isArray(weeklyPrices)
+          ? `Array[${weeklyPrices.length}]`
+          : "Object"
+        : "null",
+      monthlyPrices: monthlyPrices
+        ? Array.isArray(monthlyPrices)
+          ? `Array[${monthlyPrices.length}]`
+          : "Object"
+        : "null",
+      historicalData: historicalData
+        ? Array.isArray(historicalData)
+          ? `Array[${historicalData.length}]`
+          : "Object"
+        : "null",
+      isLoading: {
+        intradayLoading,
+        dailyLoading,
+        weeklyLoading,
+        monthlyLoading,
+        historicalLoading,
+      },
+    });
+  }, [
+    selectedSymbol,
+    apiType,
+    interval,
+    intradayData,
+    dailyPrices,
+    weeklyPrices,
+    monthlyPrices,
+    historicalData,
+    intradayLoading,
+    dailyLoading,
+    weeklyLoading,
+    monthlyLoading,
+    historicalLoading,
+  ]);
+
+  // 차트 데이터 결정 - apiType에 따라 적절한 데이터 선택
   const rawData = React.useMemo(() => {
-    if (shouldUseHistorical) {
-      return historicalData;
-    }
-    return dailyPrices;
-  }, [shouldUseHistorical, historicalData, dailyPrices]);
+    if (apiType === "intraday") return intradayData;
+    if (apiType === "daily") return dailyPrices;
+    if (apiType === "weekly") return weeklyPrices;
+    if (apiType === "monthly") return monthlyPrices;
+    if (apiType === "historical") return historicalData;
+    return null;
+  }, [
+    apiType,
+    intradayData,
+    dailyPrices,
+    weeklyPrices,
+    monthlyPrices,
+    historicalData,
+  ]);
 
   // 마켓 데이터를 차트 데이터로 변환
   const chartData: CandlestickData[] = React.useMemo(() => {
-    if (!rawData || !Array.isArray(rawData)) return [];
+    if (!rawData) {
+      console.log("📈 No rawData");
+      return [];
+    }
 
-    return (rawData as any[])
+    console.log("📈 Raw data structure:", rawData);
+
+    // rawData가 배열인지 확인
+    let dataArray: any[] = [];
+
+    if (Array.isArray(rawData)) {
+      dataArray = rawData;
+    } else if (typeof rawData === "object") {
+      // 백엔드 응답 구조: { symbol, data: [...], count, start_date, end_date, frequency }
+      if ("data" in rawData && Array.isArray((rawData as any).data)) {
+        dataArray = (rawData as any).data;
+        console.log("📈 Extracted data array from response:", {
+          symbol: (rawData as any).symbol,
+          count: (rawData as any).count,
+          dataLength: dataArray.length,
+        });
+      } else if (
+        "prices" in rawData &&
+        Array.isArray((rawData as any).prices)
+      ) {
+        dataArray = (rawData as any).prices;
+      } else if (
+        "time_series" in rawData &&
+        Array.isArray((rawData as any).time_series)
+      ) {
+        dataArray = (rawData as any).time_series;
+      } else {
+        console.warn("❌ Unknown data structure:", rawData);
+        return [];
+      }
+    }
+
+    if (dataArray.length === 0) {
+      console.log("⚠️ Data array is empty");
+      return [];
+    }
+
+    console.log("📈 Processing chart data:", {
+      dataArrayLength: dataArray.length,
+      firstItem: dataArray[0],
+      lastItem: dataArray[dataArray.length - 1],
+    });
+
+    const processed = dataArray
       .map((item) => ({
-        time: dayjs(item.date || item.timestamp).format("YYYY-MM-DD"),
+        time: dayjs(item.date || item.timestamp || item.time).format(
+          "YYYY-MM-DD"
+        ),
         open: Number(item.open) || 0,
         high: Number(item.high) || 0,
         low: Number(item.low) || 0,
@@ -135,7 +311,25 @@ export default function MarketDataChartPage() {
           item.open > 0 && item.high > 0 && item.low > 0 && item.close > 0
       )
       .sort((a, b) => a.time.localeCompare(b.time));
+
+    console.log("✅ Processed chart data:", {
+      count: processed.length,
+      firstItem: processed[0],
+      lastItem: processed[processed.length - 1],
+    });
+
+    return processed;
   }, [rawData]);
+
+  // chartData 변경 감지
+  React.useEffect(() => {
+    console.log("📊 ChartData Changed:", {
+      chartDataLength: chartData.length,
+      hasData: chartData.length > 0,
+      firstItem: chartData[0],
+      lastItem: chartData[chartData.length - 1],
+    });
+  }, [chartData]);
 
   // 요약 데이터 생성 (실시간 호가 + 차트 데이터 조합)
   const summaryData = React.useMemo(() => {
@@ -192,17 +386,21 @@ export default function MarketDataChartPage() {
   }, [chartData, currentQuote, selectedSymbol]);
 
   const isLoading = React.useMemo(() => {
-    return (
-      watchlistLoading ||
-      quoteLoading ||
-      (shouldUseHistorical ? historicalLoading : dailyLoading)
-    );
+    let dataLoading = false;
+    if (apiType === "daily") dataLoading = dailyLoading;
+    else if (apiType === "weekly") dataLoading = weeklyLoading;
+    else if (apiType === "monthly") dataLoading = monthlyLoading;
+    else if (apiType === "historical") dataLoading = historicalLoading;
+
+    return watchlistLoading || quoteLoading || dataLoading;
   }, [
     watchlistLoading,
     quoteLoading,
-    shouldUseHistorical,
-    historicalLoading,
+    apiType,
     dailyLoading,
+    weeklyLoading,
+    monthlyLoading,
+    historicalLoading,
   ]);
 
   return (
@@ -217,7 +415,24 @@ export default function MarketDataChartPage() {
           <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
             {/* 차트 */}
             <Box sx={{ flexGrow: 1, p: 2 }}>
-              {chartData.length > 0 ? (
+              {!selectedSymbol ? (
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  height="100%"
+                  sx={{
+                    border: 1,
+                    borderColor: "divider",
+                    borderRadius: 1,
+                    backgroundColor: "background.paper",
+                  }}
+                >
+                  <Box textAlign="center">
+                    워치리스트에서 종목을 선택해주세요
+                  </Box>
+                </Box>
+              ) : chartData.length > 0 ? (
                 <CandlestickChart
                   data={chartData}
                   symbol={selectedSymbol}
@@ -244,7 +459,7 @@ export default function MarketDataChartPage() {
                   <Box textAlign="center">
                     {isLoading
                       ? "차트 데이터를 로딩 중입니다..."
-                      : "종목을 선택하면 차트가 표시됩니다"}
+                      : "차트 데이터가 없습니다"}
                   </Box>
                 </Box>
               )}
@@ -258,7 +473,8 @@ export default function MarketDataChartPage() {
               onEndDateChange={setEndDate}
               interval={interval}
               onIntervalChange={setInterval}
-              onRefresh={handleRefresh}
+              intradayInterval={intradayInterval}
+              onIntradayIntervalChange={setIntradayInterval}
               isLoading={isLoading}
               chartType={chartType}
               onChartTypeChange={setChartType}
@@ -267,7 +483,7 @@ export default function MarketDataChartPage() {
 
           {/* 오른쪽 - 워치리스트 */}
           <Box sx={{ width: 320, p: 2, borderLeft: 1, borderColor: "divider" }}>
-            <WatchList
+            <WatchlistBar
               selectedSymbol={selectedSymbol}
               onSymbolChange={handleSymbolChange}
             />
