@@ -119,7 +119,6 @@ const TickerListItem = ({ symbol }: { symbol: string }) => {
       <Typography variant="body2" fontWeight="bold" sx={{ minWidth: "60px" }}>
         {symbol}
       </Typography>
-
       <Typography
         variant="body2"
         fontWeight="medium"

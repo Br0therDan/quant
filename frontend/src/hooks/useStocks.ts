@@ -276,8 +276,9 @@ export const useStockSearchSymbols = (keywords: string) => {
             });
             return response.data;
         },
-        enabled: !!keywords && keywords.length > 0,
+        enabled: !!keywords && keywords.length >= 2, // 최소 2글자 이상
         staleTime: 1000 * 60 * 5, // 5 minutes (search results are relatively stable)
         gcTime: 15 * 60 * 1000, // 15 minutes
+        // placeholderData 제거 - 이전 데이터 유지가 문제를 일으킬 수 있음
     });
 };

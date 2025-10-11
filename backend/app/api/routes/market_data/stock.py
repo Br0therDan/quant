@@ -474,7 +474,7 @@ async def search_stock_symbols(
 ) -> StockSymbolsResponse:
     """주식 심볼 검색"""
     try:
-        if not keywords or len(keywords.strip()) == 0:
+        if not keywords or len(keywords) == 0:
             raise HTTPException(status_code=400, detail="유효한 검색 키워드를 입력해주세요")
 
         market_service = service_factory.get_market_data_service()

@@ -63,7 +63,7 @@ export default function CreateWatchlistDialog({
   const [searchTerm, setSearchTerm] = React.useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = React.useState("");
 
-  // 디바운싱: 500ms 지연 후 검색
+  // 디바운싱: 500ms 지연 후 검색 (사용자 경험 개선)
   React.useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
@@ -83,42 +83,32 @@ export default function CreateWatchlistDialog({
     const detailsMap = new Map<string, SymbolOption>();
 
     const processItem = (item: any) => {
-      if (typeof item === "string") {
-        detailsMap.set(item, {
-          symbol: item,
-          name: item,
-          currency: "USD",
-          matchScore: "1.0000",
-        });
-        return;
-      }
-
-      const symbol =
-        item?.symbol || item?.Symbol || item?.ticker || item?.code || "";
+      // API 응답 구조에 맞게 파싱
+      const symbol = item?.symbol || "";
       if (!symbol) return;
 
       detailsMap.set(symbol, {
         symbol,
-        name: item?.name || item?.Name || item?.description || symbol,
-        currency: item?.currency || item?.Currency || "USD",
-        matchScore: item?.matchScore || item?.match_score || "1.0000",
+        name: item?.name || symbol,
+        currency: item?.currency || "USD",
+        matchScore:
+          item?.match_score?.toString() ||
+          item?.matchScore?.toString() ||
+          "1.0000",
       });
     };
 
-    if (Array.isArray(searchResults)) {
-      searchResults.slice(0, 20).forEach(processItem);
-    } else if (searchResults && typeof searchResults === "object") {
+    // API 응답이 { symbols: [...], count: number, search_term: string } 형태
+    if (searchResults && typeof searchResults === "object") {
       const searchObj = searchResults as any;
-      const matches =
-        searchObj.bestMatches ||
-        searchObj.results ||
-        searchObj.data ||
-        searchObj.symbols ||
-        [];
+      const symbols = searchObj.symbols || searchObj.data || [];
 
-      if (Array.isArray(matches)) {
-        matches.slice(0, 20).forEach(processItem);
+      if (Array.isArray(symbols)) {
+        symbols.slice(0, 20).forEach(processItem);
       }
+    } else if (Array.isArray(searchResults)) {
+      // 혹시 배열로 오는 경우 대비
+      (searchResults as any[]).slice(0, 20).forEach(processItem);
     }
 
     return detailsMap;
@@ -127,13 +117,15 @@ export default function CreateWatchlistDialog({
   // 검색 결과에서 심볼 배열 추출
   const availableSymbols = React.useMemo(() => {
     return Array.from(symbolDetails.keys());
-  }, [symbolDetails]); // 최종 옵션 리스트 - 검색 결과만 표시
+  }, [symbolDetails]);
+
+  // 최종 옵션 리스트 - 검색 결과 표시
   const symbolOptions = React.useMemo(() => {
-    if (debouncedSearchTerm.length > 1) {
-      // 최소 2글자 이상
-      return availableSymbols.length > 0 ? availableSymbols : [];
+    // 검색어가 최소 2글자 이상일 때만 결과 표시
+    if (debouncedSearchTerm && debouncedSearchTerm.trim().length >= 2) {
+      return availableSymbols;
     }
-    return []; // 검색어가 없으면 빈 배열
+    return []; // 검색어가 없거나 짧으면 빈 배열
   }, [debouncedSearchTerm, availableSymbols]);
 
   React.useEffect(() => {
@@ -232,15 +224,18 @@ export default function CreateWatchlistDialog({
               options={symbolOptions}
               value={formData.symbols}
               onChange={handleSymbolChange}
+              inputValue={searchTerm}
               onInputChange={(_, newInputValue) => {
                 setSearchTerm(newInputValue);
               }}
+              filterOptions={(options) => options}
               renderOption={(props, option) => {
                 const details = symbolDetails.get(option);
+                const { key, ...otherProps } = props;
 
                 if (!details) {
                   return (
-                    <Box component="li" {...props}>
+                    <Box component="li" key={key} {...otherProps}>
                       <Typography variant="body2">{option}</Typography>
                     </Box>
                   );
@@ -250,7 +245,8 @@ export default function CreateWatchlistDialog({
                 return (
                   <Box
                     component="li"
-                    {...props}
+                    key={key}
+                    {...otherProps}
                     sx={{
                       flexDirection: "column",
                       alignItems: "flex-start",
