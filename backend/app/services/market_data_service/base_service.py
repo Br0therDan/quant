@@ -493,7 +493,7 @@ class BaseMarketDataService(ABC):
             fresh_data = await refresh_callback(**refresh_kwargs)
 
             if fresh_data:
-                # 통합 캐시에 저장
+                # 통합 캐시에 저장 (dict 리스트)
                 success = self._db_manager.store_unified_cache(
                     cache_key=cache_key,
                     data=fresh_data,
@@ -508,7 +508,28 @@ class BaseMarketDataService(ABC):
                 else:
                     logger.warning(f"통합 캐시 저장 실패: {data_type}.{cache_key}")
 
-                return fresh_data
+                # dict를 모델로 변환
+                result = []
+                for item in fresh_data:
+                    try:
+                        if isinstance(item, dict):
+                            # ID 필드 제거
+                            item_copy = item.copy()
+                            item_copy.pop("id", None)
+                            # Decimal 필드 복원
+                            item_copy = self._restore_decimal_fields(item_copy)
+                            model_instance = model_class(**item_copy)
+                            result.append(model_instance)
+                        else:
+                            # 이미 모델 인스턴스인 경우
+                            result.append(item)
+                    except Exception as model_error:
+                        logger.warning(
+                            f"Failed to create model from fresh data: {model_error}"
+                        )
+                        continue
+
+                return result
             else:
                 logger.warning(
                     f"No data received from source for {data_type}.{cache_key}"

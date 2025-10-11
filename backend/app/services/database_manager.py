@@ -703,6 +703,13 @@ class DatabaseManager:
             if isinstance(data, dict):
                 data = [data]
 
+            # 디버깅: 데이터 타입 확인
+            logger.info(
+                f"📦 store_unified_cache 데이터 타입: {type(data)}, 길이: {len(data) if isinstance(data, list) else 'N/A'}"
+            )
+            if isinstance(data, list) and len(data) > 0:
+                logger.info(f"📦 첫 번째 항목 타입: {type(data[0])}")
+
             # 기존 캐시 삭제
             self.connection.execute(
                 """
@@ -715,26 +722,25 @@ class DatabaseManager:
             # 새 데이터 삽입
             expires_at = datetime.now(UTC) + timedelta(hours=ttl_hours)
 
-            for item in data:
-                # Decimal, datetime 등을 JSON 직렬화 가능하도록 변환
-                serializable_item = self._make_json_serializable(item)
+            # ✅ 전체 배열을 하나의 JSON으로 직렬화
+            serializable_data = [self._make_json_serializable(item) for item in data]
 
-                self.connection.execute(
-                    """
-                    INSERT INTO unified_cache
-                    (id, cache_key, data_type, symbol, data_json, metadata, expires_at)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
-                    """,
-                    [
-                        str(uuid.uuid4()),
-                        cache_key,
-                        data_type,
-                        symbol,
-                        json.dumps(serializable_item),
-                        json.dumps(metadata) if metadata else None,
-                        expires_at,
-                    ],
-                )
+            self.connection.execute(
+                """
+                INSERT INTO unified_cache
+                (id, cache_key, data_type, symbol, data_json, metadata, expires_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                """,
+                [
+                    str(uuid.uuid4()),
+                    cache_key,
+                    data_type,
+                    symbol,
+                    json.dumps(serializable_data),  # 전체 배열을 한 번에 저장
+                    json.dumps(metadata) if metadata else None,
+                    expires_at,
+                ],
+            )
 
             logger.info(f"통합 캐시 저장: {data_type}.{cache_key} ({len(data)} 항목)")
             return True
@@ -777,7 +783,8 @@ class DatabaseManager:
             results = self.connection.execute(query, params).fetchall()
 
             if results:
-                data = [json.loads(row[0]) for row in results]
+                # ✅ 첫 번째 행의 JSON을 파싱 (배열로 저장되어 있음)
+                data = json.loads(results[0][0])
                 logger.info(f"통합 캐시 HIT: {data_type}.{cache_key} ({len(data)} 항목)")
                 return data
             else:

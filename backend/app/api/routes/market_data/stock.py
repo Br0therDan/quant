@@ -3,6 +3,7 @@ Stock API Routes
 주식 데이터 관련 API 엔드포인트
 """
 
+import logging
 from datetime import date
 from typing import List, Literal, Optional, Dict, Any
 from fastapi import APIRouter, HTTPException, Query, Path
@@ -12,6 +13,7 @@ from app.services.service_factory import service_factory
 
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
 
 # 임시 응답 모델들 (나중에 스키마로 이동)
@@ -80,6 +82,22 @@ async def get_daily_prices(
         if not daily_prices:
             raise HTTPException(status_code=404, detail=f"주식 데이터를 찾을 수 없습니다: {symbol}")
 
+        # 날짜 필터링 디버깅
+        logger.info(f"📅 필터링 전 데이터: {len(daily_prices)}개")
+        logger.info(f"📅 필터 조건 - start_date: {start_date}, end_date: {end_date}")
+        if daily_prices:
+            first_date = (
+                daily_prices[0].date.date()
+                if hasattr(daily_prices[0].date, "date")
+                else daily_prices[0].date
+            )
+            last_date = (
+                daily_prices[-1].date.date()
+                if hasattr(daily_prices[-1].date, "date")
+                else daily_prices[-1].date
+            )
+            logger.info(f"📅 데이터 범위: {first_date} ~ {last_date}")
+
         # 날짜 필터링 및 데이터 변환
         filtered_prices = []
         for price in daily_prices:
@@ -102,6 +120,8 @@ async def get_daily_prices(
                         "volume": int(price.volume) if price.volume else None,
                     }
                 )
+
+        logger.info(f"📅 필터링 후 데이터: {len(filtered_prices)}개")
 
         return HistoricalDataResponse(
             symbol=symbol.upper(),

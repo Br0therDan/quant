@@ -150,29 +150,30 @@ class StockService(BaseMarketDataService):
                             logger.warning(f"Unexpected date type: {type(date_value)}")
                             continue
 
-                        daily_price = DailyPrice(
-                            symbol=symbol,
-                            date=date_obj,
-                            open=Decimal(str(item["open"])),
-                            high=Decimal(str(item["high"])),
-                            low=Decimal(str(item["low"])),
-                            close=Decimal(str(item["close"])),
-                            volume=int(item["volume"]),
-                            adjusted_close=Decimal(
+                        # dict로 저장 (Beanie 모델 초기화 문제 회피)
+                        daily_price_dict = {
+                            "symbol": symbol,
+                            "date": date_obj,
+                            "open": Decimal(str(item["open"])),
+                            "high": Decimal(str(item["high"])),
+                            "low": Decimal(str(item["low"])),
+                            "close": Decimal(str(item["close"])),
+                            "volume": int(item["volume"]),
+                            "adjusted_close": Decimal(
                                 str(item.get("adjusted_close", item["close"]))
                             ),
-                            dividend_amount=Decimal(
+                            "dividend_amount": Decimal(
                                 str(item.get("dividend_amount", 0))
                             ),
-                            split_coefficient=Decimal(
+                            "split_coefficient": Decimal(
                                 str(item.get("split_coefficient", 1))
                             ),
-                            data_quality_score=95.0,
-                            source="alpha_vantage",
-                            price_change=Decimal("0.0"),
-                            price_change_percent=Decimal("0.0"),
-                        )
-                        daily_prices.append(daily_price)
+                            "data_quality_score": 95.0,
+                            "source": "alpha_vantage",
+                            "price_change": Decimal("0.0"),
+                            "price_change_percent": Decimal("0.0"),
+                        }
+                        daily_prices.append(daily_price_dict)
 
                     except (ValueError, KeyError) as e:
                         logger.warning(f"Failed to parse daily price data: {e}")
@@ -259,7 +260,11 @@ class StockService(BaseMarketDataService):
                 return []
 
         except Exception as e:
+            import traceback
+
             logger.error(f"Failed to fetch daily prices from Alpha Vantage: {e}")
+            logger.error(f"Exception type: {type(e).__name__}")
+            logger.error(f"Traceback: {traceback.format_exc()}")
             return []
 
     async def _fetch_weekly_prices_from_alpha_vantage(
