@@ -138,16 +138,30 @@ export default function CandlestickChart({
       return;
     }
 
-    // 캔들스틱 데이터 설정
-    const candlestickData = data.map((item) => ({
-      time: item.time,
-      open: item.open,
-      high: item.high,
-      low: item.low,
-      close: item.close,
-    }));
+    // 캔들스틱 데이터 설정 - Unix timestamp로 변환 및 정렬
+    const candlestickData = data
+      .map((item) => {
+        // ISO 8601 문자열을 Unix timestamp (초 단위)로 변환
+        const timestamp = new Date(item.time).getTime() / 1000;
+
+        return {
+          time: timestamp as any,
+          open: item.open,
+          high: item.high,
+          low: item.low,
+          close: item.close,
+        };
+      })
+      // 시간 순서대로 정렬 (오름차순)
+      .sort((a, b) => a.time - b.time)
+      // 중복된 시간 제거 (같은 시간이면 마지막 데이터만 유지)
+      .filter((item, index, arr) => {
+        if (index === 0) return true;
+        return item.time !== arr[index - 1].time;
+      });
 
     console.log("✅ CandlestickChart - Setting data:", {
+      originalLength: data.length,
       candlestickDataLength: candlestickData.length,
       firstCandle: candlestickData[0],
       lastCandle: candlestickData[candlestickData.length - 1],
@@ -159,14 +173,24 @@ export default function CandlestickChart({
     if (volumeSeriesRef.current && showVolume) {
       const volumeData = data
         .filter((item) => item.volume !== undefined)
-        .map((item) => ({
-          time: item.time,
-          value: item.volume !== undefined ? item.volume : 0,
-          color:
-            item.close >= item.open
-              ? theme.palette.success.main + "80" // 80은 알파값 (투명도)
-              : theme.palette.error.main + "80",
-        }));
+        .map((item) => {
+          const timestamp = new Date(item.time).getTime() / 1000;
+          return {
+            time: timestamp as any,
+            value: item.volume !== undefined ? item.volume : 0,
+            color:
+              item.close >= item.open
+                ? theme.palette.success.main + "80" // 80은 알파값 (투명도)
+                : theme.palette.error.main + "80",
+          };
+        })
+        // 시간 순서대로 정렬
+        .sort((a, b) => a.time - b.time)
+        // 중복된 시간 제거
+        .filter((item, index, arr) => {
+          if (index === 0) return true;
+          return item.time !== arr[index - 1].time;
+        });
 
       volumeSeriesRef.current.setData(volumeData);
     }

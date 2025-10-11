@@ -296,21 +296,33 @@ export default function MarketDataChartPage() {
     });
 
     const processed = dataArray
-      .map((item) => ({
-        time: dayjs(item.date || item.timestamp || item.time).format(
-          "YYYY-MM-DD"
-        ),
-        open: Number(item.open) || 0,
-        high: Number(item.high) || 0,
-        low: Number(item.low) || 0,
-        close: Number(item.close) || 0,
-        volume: Number(item.volume) || 0,
-      }))
+      .map((item) => {
+        const dateStr = item.date || item.timestamp || item.time;
+
+        // 인트라데이 데이터인 경우 시간 정보를 포함한 ISO 형식 유지
+        // 일별 데이터인 경우 날짜만 추출
+        const hasTimeInfo = dateStr?.includes("T") || dateStr?.includes(":");
+        const timeValue = hasTimeInfo
+          ? dateStr // ISO 8601 형식 유지 (2025-10-07T10:30:00)
+          : dayjs(dateStr).format("YYYY-MM-DD"); // 일별 데이터 (2025-10-07)
+
+        return {
+          time: timeValue,
+          open: Number(item.open) || 0,
+          high: Number(item.high) || 0,
+          low: Number(item.low) || 0,
+          close: Number(item.close) || 0,
+          volume: Number(item.volume) || 0,
+        };
+      })
       .filter(
         (item) =>
           item.open > 0 && item.high > 0 && item.low > 0 && item.close > 0
       )
-      .sort((a, b) => a.time.localeCompare(b.time));
+      .sort((a, b) => {
+        // 시간 정보가 있는 경우 ISO 문자열 비교, 없는 경우 날짜 문자열 비교
+        return a.time.localeCompare(b.time);
+      });
 
     console.log("✅ Processed chart data:", {
       count: processed.length,
