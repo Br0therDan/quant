@@ -20,18 +20,18 @@ interface CandlestickData {
   volume?: number;
 }
 
-interface CandlestickChartProps {
+interface LightWeightChartProps {
   data: CandlestickData[];
   symbol: string;
   height?: number;
   showVolume?: boolean;
 }
 
-export default function CandlestickChart({
+export default function LightWeightChart({
   data,
   height = 400,
   showVolume = true,
-}: CandlestickChartProps) {
+}: LightWeightChartProps) {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const candlestickSeriesRef = useRef<any>(null);

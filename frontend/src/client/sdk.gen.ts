@@ -74,6 +74,27 @@ import type {
 	BacktestUpdateBacktestData,
 	BacktestUpdateBacktestErrors,
 	BacktestUpdateBacktestResponses,
+	CryptoGetBitcoinPriceData,
+	CryptoGetBitcoinPriceErrors,
+	CryptoGetBitcoinPriceResponses,
+	CryptoGetBulkExchangeRatesData,
+	CryptoGetBulkExchangeRatesErrors,
+	CryptoGetBulkExchangeRatesResponses,
+	CryptoGetDailyPricesData,
+	CryptoGetDailyPricesErrors,
+	CryptoGetDailyPricesResponses,
+	CryptoGetEthereumPriceData,
+	CryptoGetEthereumPriceErrors,
+	CryptoGetEthereumPriceResponses,
+	CryptoGetExchangeRateData,
+	CryptoGetExchangeRateErrors,
+	CryptoGetExchangeRateResponses,
+	CryptoGetMonthlyPricesData,
+	CryptoGetMonthlyPricesErrors,
+	CryptoGetMonthlyPricesResponses,
+	CryptoGetWeeklyPricesData,
+	CryptoGetWeeklyPricesErrors,
+	CryptoGetWeeklyPricesResponses,
 	DashboardGetDashboardSummaryData,
 	DashboardGetDashboardSummaryErrors,
 	DashboardGetDashboardSummaryResponses,
@@ -209,6 +230,12 @@ import type {
 	StrategyUpdateStrategyData,
 	StrategyUpdateStrategyErrors,
 	StrategyUpdateStrategyResponses,
+	TasksGetStockUpdateStatusData,
+	TasksGetStockUpdateStatusResponses,
+	TasksRunStockDeltaUpdateData,
+	TasksRunStockDeltaUpdateResponses,
+	TasksRunStockForceUpdateData,
+	TasksRunStockForceUpdateResponses,
 	TemplateCreateStrategyFromTemplateData,
 	TemplateCreateStrategyFromTemplateErrors,
 	TemplateCreateStrategyFromTemplateResponses,
@@ -899,6 +926,169 @@ export class StockService {
 				},
 			],
 			url: "/api/v1/market-data/stock/search",
+			...options,
+		});
+	}
+}
+
+export class CryptoService {
+	/**
+	 * Get Exchange Rate
+	 * 암호화폐/법정화폐 간의 실시간 환율을 조회합니다.
+	 */
+	public static getExchangeRate<ThrowOnError extends boolean = false>(
+		options: Options<CryptoGetExchangeRateData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			CryptoGetExchangeRateResponses,
+			CryptoGetExchangeRateErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/crypto/exchange-rate/{from_currency}/{to_currency}",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Bulk Exchange Rates
+	 * 여러 암호화폐의 환율을 일괄 조회합니다.
+	 */
+	public static getBulkExchangeRates<ThrowOnError extends boolean = false>(
+		options: Options<CryptoGetBulkExchangeRatesData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			CryptoGetBulkExchangeRatesResponses,
+			CryptoGetBulkExchangeRatesErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/crypto/exchange-rates/bulk",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Daily Prices
+	 * 암호화폐의 일일 가격 데이터(OHLCV)를 조회합니다.
+	 */
+	public static getDailyPrices<ThrowOnError extends boolean = false>(
+		options: Options<CryptoGetDailyPricesData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			CryptoGetDailyPricesResponses,
+			CryptoGetDailyPricesErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/crypto/daily/{symbol}",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Weekly Prices
+	 * 암호화폐의 주간 가격 데이터(OHLCV)를 조회합니다.
+	 */
+	public static getWeeklyPrices<ThrowOnError extends boolean = false>(
+		options: Options<CryptoGetWeeklyPricesData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			CryptoGetWeeklyPricesResponses,
+			CryptoGetWeeklyPricesErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/crypto/weekly/{symbol}",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Monthly Prices
+	 * 암호화폐의 월간 가격 데이터(OHLCV)를 조회합니다.
+	 */
+	public static getMonthlyPrices<ThrowOnError extends boolean = false>(
+		options: Options<CryptoGetMonthlyPricesData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			CryptoGetMonthlyPricesResponses,
+			CryptoGetMonthlyPricesErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/crypto/monthly/{symbol}",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Bitcoin Price
+	 * 비트코인 가격 데이터를 조회합니다.
+	 */
+	public static getBitcoinPrice<ThrowOnError extends boolean = false>(
+		options: Options<CryptoGetBitcoinPriceData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			CryptoGetBitcoinPriceResponses,
+			CryptoGetBitcoinPriceErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/crypto/bitcoin/{period}",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Ethereum Price
+	 * 이더리움 가격 데이터를 조회합니다.
+	 */
+	public static getEthereumPrice<ThrowOnError extends boolean = false>(
+		options: Options<CryptoGetEthereumPriceData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			CryptoGetEthereumPriceResponses,
+			CryptoGetEthereumPriceErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/crypto/ethereum/{period}",
 			...options,
 		});
 	}
@@ -2461,6 +2651,59 @@ export class DashboardService {
 				},
 			],
 			url: "/api/v1/dashboard/economic/calendar",
+			...options,
+		});
+	}
+}
+
+export class TasksService {
+	/**
+	 * Run Stock Delta Update
+	 * 만료된 주식 데이터를 증분 업데이트합니다.
+	 */
+	public static runStockDeltaUpdate<ThrowOnError extends boolean = false>(
+		options?: Options<TasksRunStockDeltaUpdateData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).post<
+			TasksRunStockDeltaUpdateResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/tasks/stock-update/delta",
+			...options,
+		});
+	}
+
+	/**
+	 * Run Stock Force Update
+	 * 모든 활성 심볼의 주식 데이터를 강제 전체 업데이트합니다.
+	 */
+	public static runStockForceUpdate<ThrowOnError extends boolean = false>(
+		options?: Options<TasksRunStockForceUpdateData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).post<
+			TasksRunStockForceUpdateResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/tasks/stock-update/force-all",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Stock Update Status
+	 * 주식 데이터 업데이트 상태를 조회합니다.
+	 */
+	public static getStockUpdateStatus<ThrowOnError extends boolean = false>(
+		options?: Options<TasksGetStockUpdateStatusData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			TasksGetStockUpdateStatusResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/tasks/stock-update/status",
 			...options,
 		});
 	}

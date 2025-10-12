@@ -11,28 +11,31 @@ import { useMemo } from "react";
 export const stockQueryKeys = {
     all: ["stock"] as const,
     dailyPrices: () => [...stockQueryKeys.all, "dailyPrices"] as const,
-    dailyPricesSymbol: (symbol: string, options?: { startDate?: string; endDate?: string }) => {
+    dailyPricesSymbol: (symbol: string, options?: { startDate?: string; endDate?: string; adjusted?: boolean }) => {
         const key = [...stockQueryKeys.dailyPrices(), symbol] as const;
         // undefined 값을 제거하여 일관된 키 생성
-        const params: Record<string, string> = {};
+        const params: Record<string, string | boolean> = {};
         if (options?.startDate) params.startDate = options.startDate;
         if (options?.endDate) params.endDate = options.endDate;
+        if (options?.adjusted !== undefined) params.adjusted = options.adjusted;
         return Object.keys(params).length > 0 ? [...key, params] as const : key;
     },
     weeklyPrices: () => [...stockQueryKeys.all, "weeklyPrices"] as const,
-    weeklyPricesSymbol: (symbol: string, options?: { startDate?: string; endDate?: string }) => {
+    weeklyPricesSymbol: (symbol: string, options?: { startDate?: string; endDate?: string; adjusted?: boolean }) => {
         const key = [...stockQueryKeys.weeklyPrices(), symbol] as const;
-        const params: Record<string, string> = {};
+        const params: Record<string, string | boolean> = {};
         if (options?.startDate) params.startDate = options.startDate;
         if (options?.endDate) params.endDate = options.endDate;
+        if (options?.adjusted !== undefined) params.adjusted = options.adjusted;
         return Object.keys(params).length > 0 ? [...key, params] as const : key;
     },
     monthlyPrices: () => [...stockQueryKeys.all, "monthlyPrices"] as const,
-    monthlyPricesSymbol: (symbol: string, options?: { startDate?: string; endDate?: string }) => {
+    monthlyPricesSymbol: (symbol: string, options?: { startDate?: string; endDate?: string; adjusted?: boolean }) => {
         const key = [...stockQueryKeys.monthlyPrices(), symbol] as const;
-        const params: Record<string, string> = {};
+        const params: Record<string, string | boolean> = {};
         if (options?.startDate) params.startDate = options.startDate;
         if (options?.endDate) params.endDate = options.endDate;
+        if (options?.adjusted !== undefined) params.adjusted = options.adjusted;
         return Object.keys(params).length > 0 ? [...key, params] as const : key;
     },
     quote: () => [...stockQueryKeys.all, "quote"] as const,
@@ -62,6 +65,7 @@ export const useStockDailyPrices = (
     symbol: string,
     options?: {
         outputsize?: "compact" | "full";
+        adjusted?: boolean;
         startDate?: string;
         endDate?: string;
         enabled?: boolean;
@@ -70,6 +74,7 @@ export const useStockDailyPrices = (
     const queryKey = stockQueryKeys.dailyPricesSymbol(symbol, {
         startDate: options?.startDate,
         endDate: options?.endDate,
+        adjusted: options?.adjusted,
     });
 
     return useQuery({
@@ -78,6 +83,7 @@ export const useStockDailyPrices = (
             console.log("🌐 API Call - Daily Prices:", {
                 symbol,
                 outputsize: options?.outputsize || "full",
+                adjusted: options?.adjusted ?? true,
                 start_date: options?.startDate,
                 end_date: options?.endDate,
                 queryKey,
@@ -86,6 +92,7 @@ export const useStockDailyPrices = (
                 path: { symbol },
                 query: {
                     outputsize: options?.outputsize || "full",
+                    adjusted: options?.adjusted ?? true,
                     start_date: options?.startDate,
                     end_date: options?.endDate,
                 } as any // Type assertion to bypass type checking for query params
@@ -103,10 +110,13 @@ export const useStockDailyPrices = (
         refetchOnMount: true, // 마운트 시 항상 refetch
         refetchOnWindowFocus: false, // 윈도우 포커스 시 refetch 비활성화
     });
-}; export const useStockWeeklyPrices = (
+};
+
+export const useStockWeeklyPrices = (
     symbol: string,
     options?: {
         outputsize?: "compact" | "full";
+        adjusted?: boolean;
         startDate?: string;
         endDate?: string;
         enabled?: boolean;
@@ -115,6 +125,7 @@ export const useStockDailyPrices = (
     const queryKey = stockQueryKeys.weeklyPricesSymbol(symbol, {
         startDate: options?.startDate,
         endDate: options?.endDate,
+        adjusted: options?.adjusted,
     });
 
     return useQuery({
@@ -123,6 +134,7 @@ export const useStockDailyPrices = (
             console.log("🌐 API Call - Weekly Prices:", {
                 symbol,
                 outputsize: options?.outputsize || "full",
+                adjusted: options?.adjusted ?? true,
                 start_date: options?.startDate,
                 end_date: options?.endDate,
                 queryKey,
@@ -131,6 +143,7 @@ export const useStockDailyPrices = (
                 path: { symbol },
                 query: {
                     outputsize: options?.outputsize || "full",
+                    adjusted: options?.adjusted ?? true,
                     start_date: options?.startDate,
                     end_date: options?.endDate,
                 } as any
@@ -154,6 +167,7 @@ export const useStockMonthlyPrices = (
     symbol: string,
     options?: {
         outputsize?: "compact" | "full";
+        adjusted?: boolean;
         startDate?: string;
         endDate?: string;
         enabled?: boolean;
@@ -162,6 +176,7 @@ export const useStockMonthlyPrices = (
     const queryKey = stockQueryKeys.monthlyPricesSymbol(symbol, {
         startDate: options?.startDate,
         endDate: options?.endDate,
+        adjusted: options?.adjusted,
     });
 
     return useQuery({
@@ -170,6 +185,7 @@ export const useStockMonthlyPrices = (
             console.log("🌐 API Call - Monthly Prices:", {
                 symbol,
                 outputsize: options?.outputsize || "full",
+                adjusted: options?.adjusted ?? true,
                 start_date: options?.startDate,
                 end_date: options?.endDate,
                 queryKey,
@@ -178,6 +194,7 @@ export const useStockMonthlyPrices = (
                 path: { symbol },
                 query: {
                     outputsize: options?.outputsize || "full",
+                    adjusted: options?.adjusted ?? true,
                     start_date: options?.startDate,
                     end_date: options?.endDate,
                 } as any

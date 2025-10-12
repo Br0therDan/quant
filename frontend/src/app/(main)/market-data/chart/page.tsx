@@ -6,11 +6,10 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { type Dayjs } from "dayjs";
 import "dayjs/locale/ko";
 import React from "react";
+import LightWeightChart from '@/components/market-data/LightweightChart';
 
-import CandlestickChart from "@/components/market-data/CandlestickChart";
 import ChartControls from "@/components/market-data/ChartControls";
 import MarketDataHeader from "@/components/market-data/MarketDataHeader";
-import WatchlistBar from "@/components/market-data/WatchlistBar";
 import {
   useStockDailyPrices,
   useStockIntraday,
@@ -40,6 +39,7 @@ export default function MarketDataChartPage() {
   const [endDate, setEndDate] = React.useState<Dayjs | null>(dayjs());
   const [interval, setInterval] = React.useState<string>("daily"); // 기본값: 일봉
   const [chartType, setChartType] = React.useState("candlestick");
+  const [adjusted, setAdjusted] = React.useState(true); // Adjusted prices 기본값
 
   // 워치리스트 데이터 가져오기
   const {
@@ -112,6 +112,7 @@ export default function MarketDataChartPage() {
     selectedSymbol,
     {
       outputsize: "full",
+      adjusted,
       startDate: startDate?.format("YYYY-MM-DD"),
       endDate: endDate?.format("YYYY-MM-DD"),
       enabled: apiType === "daily" && !!selectedSymbol,
@@ -123,6 +124,7 @@ export default function MarketDataChartPage() {
     selectedSymbol,
     {
       outputsize: "full",
+      adjusted,
       startDate: startDate?.format("YYYY-MM-DD"),
       endDate: endDate?.format("YYYY-MM-DD"),
       enabled: apiType === "weekly" && !!selectedSymbol,
@@ -133,6 +135,7 @@ export default function MarketDataChartPage() {
   const { data: monthlyPrices, isLoading: monthlyLoading } =
     useStockMonthlyPrices(selectedSymbol, {
       outputsize: "full",
+      adjusted,
       startDate: startDate?.format("YYYY-MM-DD"),
       endDate: endDate?.format("YYYY-MM-DD"),
       enabled: apiType === "monthly" && !!selectedSymbol,
@@ -415,7 +418,7 @@ export default function MarketDataChartPage() {
                   </Box>
                 </Box>
               ) : chartData.length > 0 ? (
-                <CandlestickChart
+                <LightWeightChart
                   data={chartData}
                   symbol={selectedSymbol}
                   height={
@@ -458,14 +461,8 @@ export default function MarketDataChartPage() {
               isLoading={isLoading}
               chartType={chartType}
               onChartTypeChange={setChartType}
-            />
-          </Box>
-
-          {/* 오른쪽 - 워치리스트 */}
-          <Box sx={{ width: 320, p: 2, borderLeft: 1, borderColor: "divider" }}>
-            <WatchlistBar
-              selectedSymbol={selectedSymbol}
-              onSymbolChange={handleSymbolChange}
+              adjusted={adjusted}
+              onAdjustedChange={setAdjusted}
             />
           </Box>
         </Box>

@@ -50,9 +50,17 @@ class StockService(BaseMarketDataService):
             or (datetime.utcnow() - coverage.last_full_update).days >= 7
         )
 
-        if needs_full_update or outputsize == "full":
+        # MongoDB에서 기존 데이터 조회
+        existing_prices = (
+            await DailyPrice.find({"symbol": symbol}).sort("-date").to_list()
+        )
+
+        # 데이터가 없거나 Full update가 필요한 경우만 API 호출
+        if not existing_prices or needs_full_update:
             # Full update: Alpha Vantage에서 전체 데이터 가져와서 MongoDB에 저장
-            logger.info(f"Performing full update for {symbol} daily prices")
+            logger.info(
+                f"🔄 Performing full update for {symbol} daily prices (existing: {len(existing_prices)}, needs_full: {needs_full_update})"
+            )
             prices = await self._fetch_and_store_daily_prices(
                 symbol, adjusted=adjusted, is_full=True
             )
@@ -62,37 +70,13 @@ class StockService(BaseMarketDataService):
                 await self._update_coverage(
                     coverage=coverage, data_records=prices, update_type="full"
                 )
+            return prices or []
         else:
-            # Delta update: MongoDB에서 조회 후 최신 데이터만 보충
-            logger.info(f"Performing delta update for {symbol} daily prices")
-
-            # MongoDB에서 기존 데이터 조회
-            existing_prices = (
-                await DailyPrice.find({"symbol": symbol}).sort("-date").to_list()
+            # 캐시된 데이터 사용 (Alpha Vantage API 호출 없음)
+            logger.info(
+                f"✅ Using cached data for {symbol} daily prices ({len(existing_prices)} records, last_update: {coverage.last_full_update})"
             )
-
-            if not existing_prices:
-                # 데이터가 없으면 full update
-                prices = await self._fetch_and_store_daily_prices(
-                    symbol, adjusted=adjusted, is_full=True
-                )
-                if prices:
-                    await self._update_coverage(coverage, prices, "full")
-            else:
-                # 최신 데이터만 가져오기 (compact로 최근 100개)
-                latest_prices = await self._fetch_and_store_daily_prices(
-                    symbol, adjusted=adjusted, is_full=False
-                )
-
-                if latest_prices:
-                    await self._update_coverage(coverage, latest_prices, "delta")
-
-                # 전체 데이터 재조회 (병합된 결과)
-                prices = (
-                    await DailyPrice.find({"symbol": symbol}).sort("-date").to_list()
-                )
-
-        return prices or []
+            return existing_prices
 
     async def get_weekly_prices(
         self,
@@ -115,7 +99,7 @@ class StockService(BaseMarketDataService):
         )
 
         if needs_full_update:
-            logger.info(f"Performing full update for {symbol} weekly prices")
+            logger.info(f"🔄 Performing full update for {symbol} weekly prices")
             prices = await self._fetch_and_store_weekly_prices(
                 symbol, adjusted=adjusted
             )
@@ -124,6 +108,9 @@ class StockService(BaseMarketDataService):
                 await self._update_coverage(coverage, prices, "full")
         else:
             # MongoDB에서 조회
+            logger.info(
+                f"✅ Using cached data for {symbol} weekly prices (last_update: {coverage.last_full_update})"
+            )
             prices = await WeeklyPrice.find({"symbol": symbol}).sort("-date").to_list()
 
         return prices or []
@@ -149,7 +136,7 @@ class StockService(BaseMarketDataService):
         )
 
         if needs_full_update:
-            logger.info(f"Performing full update for {symbol} monthly prices")
+            logger.info(f"🔄 Performing full update for {symbol} monthly prices")
             prices = await self._fetch_and_store_monthly_prices(
                 symbol, adjusted=adjusted
             )
@@ -158,6 +145,9 @@ class StockService(BaseMarketDataService):
                 await self._update_coverage(coverage, prices, "full")
         else:
             # MongoDB에서 조회
+            logger.info(
+                f"✅ Using cached data for {symbol} monthly prices (last_update: {coverage.last_full_update})"
+            )
             prices = await MonthlyPrice.find({"symbol": symbol}).sort("-date").to_list()
 
         return prices or []

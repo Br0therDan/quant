@@ -867,6 +867,42 @@ export type CompanyOverviewResponse = {
 };
 
 /**
+ * CryptoHistoricalDataResponse
+ */
+export type CryptoHistoricalDataResponse = {
+	/**
+	 * Symbol
+	 */
+	symbol: string;
+	/**
+	 * Market
+	 */
+	market: string;
+	/**
+	 * Data
+	 */
+	data: Array<{
+		[key: string]: unknown;
+	}>;
+	/**
+	 * Count
+	 */
+	count: number;
+	/**
+	 * Start Date
+	 */
+	start_date?: Date | null;
+	/**
+	 * End Date
+	 */
+	end_date?: Date | null;
+	/**
+	 * Frequency
+	 */
+	frequency: string;
+};
+
+/**
  * DashboardSummary
  * 대시보드 요약 데이터.
  */
@@ -2552,6 +2588,37 @@ export type SymbolInfo = {
 };
 
 /**
+ * TaskResult
+ * 작업 실행 결과
+ */
+export type TaskResult = {
+	/**
+	 * Status
+	 */
+	status: string;
+	/**
+	 * Message
+	 */
+	message: string;
+	/**
+	 * Total
+	 */
+	total?: number;
+	/**
+	 * Success
+	 */
+	success?: number;
+	/**
+	 * Failed
+	 */
+	failed?: number;
+	/**
+	 * Errors
+	 */
+	errors?: Array<string>;
+};
+
+/**
  * TemplateCreate
  * Template creation request
  */
@@ -3769,6 +3836,11 @@ export type StockGetDailyPricesData = {
 		 */
 		outputsize?: string;
 		/**
+		 * Adjusted
+		 * Adjusted prices 사용 여부 (True: adjusted, False: raw)
+		 */
+		adjusted?: boolean;
+		/**
 		 * Start Date
 		 * 시작 날짜 (YYYY-MM-DD)
 		 */
@@ -3812,6 +3884,11 @@ export type StockGetWeeklyPricesData = {
 		symbol: string;
 	};
 	query?: {
+		/**
+		 * Adjusted
+		 * Adjusted prices 사용 여부 (True: adjusted, False: raw)
+		 */
+		adjusted?: boolean;
 		/**
 		 * Start Date
 		 * 시작 날짜 (YYYY-MM-DD)
@@ -3861,6 +3938,11 @@ export type StockGetMonthlyPricesData = {
 		symbol: string;
 	};
 	query?: {
+		/**
+		 * Adjusted
+		 * Adjusted prices 사용 여부 (True: adjusted, False: raw)
+		 */
+		adjusted?: boolean;
 		/**
 		 * Start Date
 		 * 시작 날짜 (YYYY-MM-DD)
@@ -3948,6 +4030,11 @@ export type StockGetIntradayDataData = {
 		 */
 		interval?: "1min" | "5min" | "15min" | "30min" | "60min";
 		/**
+		 * Month
+		 * 조회할 월 (YYYY-MM 형식). 지정하지 않으면 최신 데이터 조회. Premium plan only.
+		 */
+		month?: string | null;
+		/**
 		 * Extended Hours
 		 * 연장 거래 시간 포함 여부
 		 */
@@ -3969,7 +4056,7 @@ export type StockGetIntradayDataData = {
 		end_date?: Date | null;
 		/**
 		 * Outputsize
-		 * 데이터 크기 (compact/full)
+		 * 데이터 크기 (compact: 100 data points, full: 30 days or full month)
 		 */
 		outputsize?: "compact" | "full";
 	};
@@ -4028,6 +4115,333 @@ export type StockSearchStockSymbolsResponses = {
 
 export type StockSearchStockSymbolsResponse =
 	StockSearchStockSymbolsResponses[keyof StockSearchStockSymbolsResponses];
+
+export type CryptoGetExchangeRateData = {
+	body?: never;
+	path: {
+		/**
+		 * From Currency
+		 * 기준 통화 (예: BTC, ETH, USD)
+		 */
+		from_currency: string;
+		/**
+		 * To Currency
+		 * 대상 통화 (예: USD, EUR, KRW)
+		 */
+		to_currency: string;
+	};
+	query?: never;
+	url: "/api/v1/market-data/crypto/exchange-rate/{from_currency}/{to_currency}";
+};
+
+export type CryptoGetExchangeRateErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type CryptoGetExchangeRateError =
+	CryptoGetExchangeRateErrors[keyof CryptoGetExchangeRateErrors];
+
+export type CryptoGetExchangeRateResponses = {
+	/**
+	 * Response Crypto-Get Exchange Rate
+	 * Successful Response
+	 */
+	200: {
+		[key: string]: unknown;
+	};
+};
+
+export type CryptoGetExchangeRateResponse =
+	CryptoGetExchangeRateResponses[keyof CryptoGetExchangeRateResponses];
+
+export type CryptoGetBulkExchangeRatesData = {
+	body?: never;
+	path?: never;
+	query: {
+		/**
+		 * Crypto Symbols
+		 * 암호화폐 심볼 리스트
+		 */
+		crypto_symbols: Array<string>;
+		/**
+		 * Target Currency
+		 * 목표 통화
+		 */
+		target_currency?: string;
+	};
+	url: "/api/v1/market-data/crypto/exchange-rates/bulk";
+};
+
+export type CryptoGetBulkExchangeRatesErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type CryptoGetBulkExchangeRatesError =
+	CryptoGetBulkExchangeRatesErrors[keyof CryptoGetBulkExchangeRatesErrors];
+
+export type CryptoGetBulkExchangeRatesResponses = {
+	/**
+	 * Response Crypto-Get Bulk Exchange Rates
+	 * Successful Response
+	 */
+	200: {
+		[key: string]: unknown;
+	};
+};
+
+export type CryptoGetBulkExchangeRatesResponse =
+	CryptoGetBulkExchangeRatesResponses[keyof CryptoGetBulkExchangeRatesResponses];
+
+export type CryptoGetDailyPricesData = {
+	body?: never;
+	path: {
+		/**
+		 * Symbol
+		 * 암호화폐 심볼 (예: BTC, ETH)
+		 */
+		symbol: string;
+	};
+	query?: {
+		/**
+		 * Market
+		 * 시장/통화 (예: USD, EUR, KRW)
+		 */
+		market?: string;
+		/**
+		 * Start Date
+		 * 시작 날짜 (YYYY-MM-DD)
+		 */
+		start_date?: Date | null;
+		/**
+		 * End Date
+		 * 종료 날짜 (YYYY-MM-DD)
+		 */
+		end_date?: Date | null;
+	};
+	url: "/api/v1/market-data/crypto/daily/{symbol}";
+};
+
+export type CryptoGetDailyPricesErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type CryptoGetDailyPricesError =
+	CryptoGetDailyPricesErrors[keyof CryptoGetDailyPricesErrors];
+
+export type CryptoGetDailyPricesResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: CryptoHistoricalDataResponse;
+};
+
+export type CryptoGetDailyPricesResponse =
+	CryptoGetDailyPricesResponses[keyof CryptoGetDailyPricesResponses];
+
+export type CryptoGetWeeklyPricesData = {
+	body?: never;
+	path: {
+		/**
+		 * Symbol
+		 * 암호화폐 심볼 (예: BTC, ETH)
+		 */
+		symbol: string;
+	};
+	query?: {
+		/**
+		 * Market
+		 * 시장/통화 (예: USD, EUR)
+		 */
+		market?: string;
+		/**
+		 * Start Date
+		 * 시작 날짜 (YYYY-MM-DD)
+		 */
+		start_date?: Date | null;
+		/**
+		 * End Date
+		 * 종료 날짜 (YYYY-MM-DD)
+		 */
+		end_date?: Date | null;
+	};
+	url: "/api/v1/market-data/crypto/weekly/{symbol}";
+};
+
+export type CryptoGetWeeklyPricesErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type CryptoGetWeeklyPricesError =
+	CryptoGetWeeklyPricesErrors[keyof CryptoGetWeeklyPricesErrors];
+
+export type CryptoGetWeeklyPricesResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: CryptoHistoricalDataResponse;
+};
+
+export type CryptoGetWeeklyPricesResponse =
+	CryptoGetWeeklyPricesResponses[keyof CryptoGetWeeklyPricesResponses];
+
+export type CryptoGetMonthlyPricesData = {
+	body?: never;
+	path: {
+		/**
+		 * Symbol
+		 * 암호화폐 심볼 (예: BTC, ETH)
+		 */
+		symbol: string;
+	};
+	query?: {
+		/**
+		 * Market
+		 * 시장/통화 (예: USD, EUR)
+		 */
+		market?: string;
+		/**
+		 * Start Date
+		 * 시작 날짜 (YYYY-MM-DD)
+		 */
+		start_date?: Date | null;
+		/**
+		 * End Date
+		 * 종료 날짜 (YYYY-MM-DD)
+		 */
+		end_date?: Date | null;
+	};
+	url: "/api/v1/market-data/crypto/monthly/{symbol}";
+};
+
+export type CryptoGetMonthlyPricesErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type CryptoGetMonthlyPricesError =
+	CryptoGetMonthlyPricesErrors[keyof CryptoGetMonthlyPricesErrors];
+
+export type CryptoGetMonthlyPricesResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: CryptoHistoricalDataResponse;
+};
+
+export type CryptoGetMonthlyPricesResponse =
+	CryptoGetMonthlyPricesResponses[keyof CryptoGetMonthlyPricesResponses];
+
+export type CryptoGetBitcoinPriceData = {
+	body?: never;
+	path: {
+		/**
+		 * Period
+		 * 조회 기간 (daily, weekly, monthly)
+		 */
+		period: "daily" | "weekly" | "monthly";
+	};
+	query?: {
+		/**
+		 * Market
+		 * 시장/통화 (예: USD, EUR, KRW)
+		 */
+		market?: string;
+		/**
+		 * Start Date
+		 * 시작 날짜 (YYYY-MM-DD)
+		 */
+		start_date?: Date | null;
+		/**
+		 * End Date
+		 * 종료 날짜 (YYYY-MM-DD)
+		 */
+		end_date?: Date | null;
+	};
+	url: "/api/v1/market-data/crypto/bitcoin/{period}";
+};
+
+export type CryptoGetBitcoinPriceErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type CryptoGetBitcoinPriceError =
+	CryptoGetBitcoinPriceErrors[keyof CryptoGetBitcoinPriceErrors];
+
+export type CryptoGetBitcoinPriceResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: CryptoHistoricalDataResponse;
+};
+
+export type CryptoGetBitcoinPriceResponse =
+	CryptoGetBitcoinPriceResponses[keyof CryptoGetBitcoinPriceResponses];
+
+export type CryptoGetEthereumPriceData = {
+	body?: never;
+	path: {
+		/**
+		 * Period
+		 * 조회 기간 (daily, weekly, monthly)
+		 */
+		period: "daily" | "weekly" | "monthly";
+	};
+	query?: {
+		/**
+		 * Market
+		 * 시장/통화 (예: USD, EUR, KRW)
+		 */
+		market?: string;
+		/**
+		 * Start Date
+		 * 시작 날짜 (YYYY-MM-DD)
+		 */
+		start_date?: Date | null;
+		/**
+		 * End Date
+		 * 종료 날짜 (YYYY-MM-DD)
+		 */
+		end_date?: Date | null;
+	};
+	url: "/api/v1/market-data/crypto/ethereum/{period}";
+};
+
+export type CryptoGetEthereumPriceErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type CryptoGetEthereumPriceError =
+	CryptoGetEthereumPriceErrors[keyof CryptoGetEthereumPriceErrors];
+
+export type CryptoGetEthereumPriceResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: CryptoHistoricalDataResponse;
+};
+
+export type CryptoGetEthereumPriceResponse =
+	CryptoGetEthereumPriceResponses[keyof CryptoGetEthereumPriceResponses];
 
 export type FundamentalGetCompanyOverviewData = {
 	body?: never;
@@ -6147,3 +6561,51 @@ export type DashboardGetEconomicCalendarResponses = {
 
 export type DashboardGetEconomicCalendarResponse =
 	DashboardGetEconomicCalendarResponses[keyof DashboardGetEconomicCalendarResponses];
+
+export type TasksRunStockDeltaUpdateData = {
+	body?: never;
+	path?: never;
+	query?: never;
+	url: "/api/v1/tasks/stock-update/delta";
+};
+
+export type TasksRunStockDeltaUpdateResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: TaskResult;
+};
+
+export type TasksRunStockDeltaUpdateResponse =
+	TasksRunStockDeltaUpdateResponses[keyof TasksRunStockDeltaUpdateResponses];
+
+export type TasksRunStockForceUpdateData = {
+	body?: never;
+	path?: never;
+	query?: never;
+	url: "/api/v1/tasks/stock-update/force-all";
+};
+
+export type TasksRunStockForceUpdateResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: TaskResult;
+};
+
+export type TasksRunStockForceUpdateResponse =
+	TasksRunStockForceUpdateResponses[keyof TasksRunStockForceUpdateResponses];
+
+export type TasksGetStockUpdateStatusData = {
+	body?: never;
+	path?: never;
+	query?: never;
+	url: "/api/v1/tasks/stock-update/status";
+};
+
+export type TasksGetStockUpdateStatusResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: unknown;
+};

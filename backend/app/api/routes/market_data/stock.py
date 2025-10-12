@@ -117,8 +117,43 @@ async def get_daily_prices(
                 if end_date and price_date > end_date:
                     continue
 
-                filtered_prices.append(
-                    {
+                # adjusted 파라미터에 따라 OHLCV 값 결정
+                if adjusted and price.adjusted_close and price.close:
+                    # adjusted_close / close 비율로 모든 가격 조정
+                    adjustment_factor = float(price.adjusted_close) / float(price.close)
+
+                    price_dict = {
+                        "date": price_date.isoformat(),
+                        "open": (
+                            float(price.open) * adjustment_factor
+                            if price.open
+                            else None
+                        ),
+                        "high": (
+                            float(price.high) * adjustment_factor
+                            if price.high
+                            else None
+                        ),
+                        "low": (
+                            float(price.low) * adjustment_factor if price.low else None
+                        ),
+                        "close": float(price.adjusted_close),
+                        "volume": int(price.volume) if price.volume else None,
+                        "adjusted_close": float(price.adjusted_close),
+                        "dividend_amount": (
+                            float(price.dividend_amount)
+                            if price.dividend_amount
+                            else None
+                        ),
+                        "split_coefficient": (
+                            float(price.split_coefficient)
+                            if price.split_coefficient
+                            else None
+                        ),
+                    }
+                else:
+                    # Raw prices 사용
+                    price_dict = {
                         "date": price_date.isoformat(),
                         "open": float(price.open) if price.open else None,
                         "high": float(price.high) if price.high else None,
@@ -126,7 +161,8 @@ async def get_daily_prices(
                         "close": float(price.close) if price.close else None,
                         "volume": int(price.volume) if price.volume else None,
                     }
-                )
+
+                filtered_prices.append(price_dict)
 
         logger.info(f"📅 필터링 후 데이터: {len(filtered_prices)}개")
 
@@ -195,19 +231,29 @@ async def get_weekly_prices(
                 if end_date and price_date > end_date:
                     continue
 
-                filtered_prices.append(
-                    {
+                # adjusted 파라미터에 따라 OHLCV 값 결정
+                if adjusted and price.adjusted_close and price.close:
+                    # adjusted_close / close 비율로 모든 가격 조정
+                    adjustment_factor = float(price.adjusted_close) / float(price.close)
+
+                    price_dict = {
                         "date": price_date.isoformat(),
-                        "open": float(price.open) if price.open else None,
-                        "high": float(price.high) if price.high else None,
-                        "low": float(price.low) if price.low else None,
-                        "close": float(price.close) if price.close else None,
-                        "volume": price.volume,
-                        "adjusted_close": (
-                            float(price.adjusted_close)
-                            if price.adjusted_close
+                        "open": (
+                            float(price.open) * adjustment_factor
+                            if price.open
                             else None
                         ),
+                        "high": (
+                            float(price.high) * adjustment_factor
+                            if price.high
+                            else None
+                        ),
+                        "low": (
+                            float(price.low) * adjustment_factor if price.low else None
+                        ),
+                        "close": float(price.adjusted_close),
+                        "volume": price.volume,
+                        "adjusted_close": float(price.adjusted_close),
                         "dividend_amount": (
                             float(price.dividend_amount)
                             if price.dividend_amount
@@ -219,7 +265,18 @@ async def get_weekly_prices(
                             else None
                         ),
                     }
-                )
+                else:
+                    # Raw prices 사용
+                    price_dict = {
+                        "date": price_date.isoformat(),
+                        "open": float(price.open) if price.open else None,
+                        "high": float(price.high) if price.high else None,
+                        "low": float(price.low) if price.low else None,
+                        "close": float(price.close) if price.close else None,
+                        "volume": price.volume,
+                    }
+
+                filtered_prices.append(price_dict)
 
         return HistoricalDataResponse(
             symbol=symbol.upper(),
@@ -286,19 +343,29 @@ async def get_monthly_prices(
                 if end_date and price_date > end_date:
                     continue
 
-                filtered_prices.append(
-                    {
+                # adjusted 파라미터에 따라 OHLCV 값 결정
+                if adjusted and price.adjusted_close and price.close:
+                    # adjusted_close / close 비율로 모든 가격 조정
+                    adjustment_factor = float(price.adjusted_close) / float(price.close)
+
+                    price_dict = {
                         "date": price_date.isoformat(),
-                        "open": float(price.open) if price.open else None,
-                        "high": float(price.high) if price.high else None,
-                        "low": float(price.low) if price.low else None,
-                        "close": float(price.close) if price.close else None,
-                        "volume": price.volume,
-                        "adjusted_close": (
-                            float(price.adjusted_close)
-                            if price.adjusted_close
+                        "open": (
+                            float(price.open) * adjustment_factor
+                            if price.open
                             else None
                         ),
+                        "high": (
+                            float(price.high) * adjustment_factor
+                            if price.high
+                            else None
+                        ),
+                        "low": (
+                            float(price.low) * adjustment_factor if price.low else None
+                        ),
+                        "close": float(price.adjusted_close),
+                        "volume": price.volume,
+                        "adjusted_close": float(price.adjusted_close),
                         "dividend_amount": (
                             float(price.dividend_amount)
                             if price.dividend_amount
@@ -310,7 +377,18 @@ async def get_monthly_prices(
                             else None
                         ),
                     }
-                )
+                else:
+                    # Raw prices 사용
+                    price_dict = {
+                        "date": price_date.isoformat(),
+                        "open": float(price.open) if price.open else None,
+                        "high": float(price.high) if price.high else None,
+                        "low": float(price.low) if price.low else None,
+                        "close": float(price.close) if price.close else None,
+                        "volume": price.volume,
+                    }
+
+                filtered_prices.append(price_dict)
 
         return HistoricalDataResponse(
             symbol=symbol.upper(),

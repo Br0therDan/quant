@@ -8,6 +8,11 @@ import type {
 	BacktestGetBacktestResponse,
 	BacktestGetBacktestsResponse,
 	BacktestUpdateBacktestResponse,
+	CryptoGetBitcoinPriceResponse,
+	CryptoGetDailyPricesResponse,
+	CryptoGetEthereumPriceResponse,
+	CryptoGetMonthlyPricesResponse,
+	CryptoGetWeeklyPricesResponse,
 	DashboardGetDashboardSummaryResponse,
 	DashboardGetEconomicCalendarResponse,
 	DashboardGetNewsFeedResponse,
@@ -133,6 +138,51 @@ export const stockGetIntradayDataResponseTransformer = async (
 	data: any,
 ): Promise<StockGetIntradayDataResponse> => {
 	data = historicalDataResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const cryptoGetDailyPricesResponseTransformer = async (
+	data: any,
+): Promise<CryptoGetDailyPricesResponse> => {
+	data = cryptoHistoricalDataResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const cryptoHistoricalDataResponseSchemaResponseTransformer = (data: any) => {
+	if (data.start_date) {
+		data.start_date = new Date(data.start_date);
+	}
+	if (data.end_date) {
+		data.end_date = new Date(data.end_date);
+	}
+	return data;
+};
+
+export const cryptoGetWeeklyPricesResponseTransformer = async (
+	data: any,
+): Promise<CryptoGetWeeklyPricesResponse> => {
+	data = cryptoHistoricalDataResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const cryptoGetMonthlyPricesResponseTransformer = async (
+	data: any,
+): Promise<CryptoGetMonthlyPricesResponse> => {
+	data = cryptoHistoricalDataResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const cryptoGetBitcoinPriceResponseTransformer = async (
+	data: any,
+): Promise<CryptoGetBitcoinPriceResponse> => {
+	data = cryptoHistoricalDataResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const cryptoGetEthereumPriceResponseTransformer = async (
+	data: any,
+): Promise<CryptoGetEthereumPriceResponse> => {
+	data = cryptoHistoricalDataResponseSchemaResponseTransformer(data);
 	return data;
 };
 

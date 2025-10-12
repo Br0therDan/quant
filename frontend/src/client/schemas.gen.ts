@@ -1551,6 +1551,62 @@ export const CompanyOverviewResponseSchema = {
 	description: "기업 개요 조회 응답 스키마",
 } as const;
 
+export const CryptoHistoricalDataResponseSchema = {
+	properties: {
+		symbol: {
+			type: "string",
+			title: "Symbol",
+		},
+		market: {
+			type: "string",
+			title: "Market",
+		},
+		data: {
+			items: {
+				additionalProperties: true,
+				type: "object",
+			},
+			type: "array",
+			title: "Data",
+		},
+		count: {
+			type: "integer",
+			title: "Count",
+		},
+		start_date: {
+			anyOf: [
+				{
+					type: "string",
+					format: "date",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Start Date",
+		},
+		end_date: {
+			anyOf: [
+				{
+					type: "string",
+					format: "date",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "End Date",
+		},
+		frequency: {
+			type: "string",
+			title: "Frequency",
+		},
+	},
+	type: "object",
+	required: ["symbol", "market", "data", "count", "frequency"],
+	title: "CryptoHistoricalDataResponse",
+} as const;
+
 export const DashboardSummarySchema = {
 	properties: {
 		user_id: {
@@ -4199,6 +4255,46 @@ export const SymbolInfoSchema = {
 	type: "object",
 	required: ["symbol", "name", "type", "region"],
 	title: "SymbolInfo",
+} as const;
+
+export const TaskResultSchema = {
+	properties: {
+		status: {
+			type: "string",
+			title: "Status",
+		},
+		message: {
+			type: "string",
+			title: "Message",
+		},
+		total: {
+			type: "integer",
+			title: "Total",
+			default: 0,
+		},
+		success: {
+			type: "integer",
+			title: "Success",
+			default: 0,
+		},
+		failed: {
+			type: "integer",
+			title: "Failed",
+			default: 0,
+		},
+		errors: {
+			items: {
+				type: "string",
+			},
+			type: "array",
+			title: "Errors",
+			default: [],
+		},
+	},
+	type: "object",
+	required: ["status", "message"],
+	title: "TaskResult",
+	description: "작업 실행 결과",
 } as const;
 
 export const TemplateCreateSchema = {

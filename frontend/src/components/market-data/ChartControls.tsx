@@ -5,7 +5,15 @@ import {
   CandlestickChart as CandlestickIcon,
   ShowChart as LineIcon,
 } from "@mui/icons-material";
-import { Box, Button, ButtonGroup, Chip, Tooltip } from "@mui/material";
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Chip,
+  FormControlLabel,
+  Switch,
+  Tooltip,
+} from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { type Dayjs } from "dayjs";
 import React from "react";
@@ -20,6 +28,8 @@ interface ChartControlsProps {
   isLoading?: boolean;
   chartType?: string;
   onChartTypeChange?: (type: string) => void;
+  adjusted?: boolean;
+  onAdjustedChange?: (adjusted: boolean) => void;
 }
 
 // 레인지(기간) 옵션
@@ -66,6 +76,8 @@ export default function ChartControls({
   isLoading = false,
   chartType = "candlestick",
   onChartTypeChange,
+  adjusted = true,
+  onAdjustedChange,
 }: ChartControlsProps) {
   const [selectedRange, setSelectedRange] = React.useState("1m");
   const [showCustomDate, setShowCustomDate] = React.useState(false);
@@ -208,7 +220,7 @@ export default function ChartControls({
         </Box>
       )}
 
-      {/* 두 번째 줄: 인터벌 + 차트 타입 */}
+      {/* 두 번째 줄: 인터벌 + 차트 타입 + Adjusted Toggle */}
       <Box
         display="flex"
         alignItems="center"
@@ -230,27 +242,51 @@ export default function ChartControls({
           ))}
         </ButtonGroup>
 
-        {/* 오른쪽: 차트 타입 선택 */}
-        {onChartTypeChange && (
-          <ButtonGroup size="small" variant="outlined">
-            {CHART_TYPES.map((type) => {
-              const IconComponent = type.icon;
-              return (
-                <Tooltip key={type.value} title={type.label}>
-                  <Button
-                    variant={
-                      chartType === type.value ? "contained" : "outlined"
-                    }
-                    onClick={() => onChartTypeChange(type.value)}
-                    sx={{ minWidth: 40 }}
-                  >
-                    <IconComponent sx={{ fontSize: 18 }} />
-                  </Button>
-                </Tooltip>
-              );
-            })}
-          </ButtonGroup>
-        )}
+        {/* 오른쪽: Adjusted Toggle + 차트 타입 선택 */}
+        <Box display="flex" alignItems="center" gap={2}>
+          {/* Adjusted Price Toggle */}
+          {onAdjustedChange && (
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={adjusted}
+                  onChange={(e) => onAdjustedChange(e.target.checked)}
+                  size="small"
+                />
+              }
+              label="Adjusted"
+              sx={{
+                m: 0,
+                "& .MuiFormControlLabel-label": {
+                  fontSize: "0.875rem",
+                  fontWeight: adjusted ? 600 : 400,
+                },
+              }}
+            />
+          )}
+
+          {/* 차트 타입 선택 */}
+          {onChartTypeChange && (
+            <ButtonGroup size="small" variant="outlined">
+              {CHART_TYPES.map((type) => {
+                const IconComponent = type.icon;
+                return (
+                  <Tooltip key={type.value} title={type.label}>
+                    <Button
+                      variant={
+                        chartType === type.value ? "contained" : "outlined"
+                      }
+                      onClick={() => onChartTypeChange(type.value)}
+                      sx={{ minWidth: 40 }}
+                    >
+                      <IconComponent sx={{ fontSize: 18 }} />
+                    </Button>
+                  </Tooltip>
+                );
+              })}
+            </ButtonGroup>
+          )}
+        </Box>
       </Box>
     </Box>
   );

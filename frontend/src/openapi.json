@@ -1137,6 +1137,18 @@
             "description": "데이터 크기 (compact: 최근 100일, full: 전체)"
           },
           {
+            "name": "adjusted",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "description": "Adjusted prices 사용 여부 (True: adjusted, False: raw)",
+              "default": true,
+              "title": "Adjusted"
+            },
+            "description": "Adjusted prices 사용 여부 (True: adjusted, False: raw)"
+          },
+          {
             "name": "start_date",
             "in": "query",
             "required": false,
@@ -1241,6 +1253,18 @@
             "description": "종목 심볼 (예: AAPL, TSLA)"
           },
           {
+            "name": "adjusted",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "description": "Adjusted prices 사용 여부 (True: adjusted, False: raw)",
+              "default": true,
+              "title": "Adjusted"
+            },
+            "description": "Adjusted prices 사용 여부 (True: adjusted, False: raw)"
+          },
+          {
             "name": "start_date",
             "in": "query",
             "required": false,
@@ -1285,7 +1309,7 @@
             "schema": {
               "type": "string",
               "description": "데이터 크기 (compact: 최근 100개, full: 전체)",
-              "default": "compact",
+              "default": "full",
               "title": "Outputsize"
             },
             "description": "데이터 크기 (compact: 최근 100개, full: 전체)"
@@ -1357,6 +1381,18 @@
             "description": "종목 심볼 (예: AAPL, TSLA)"
           },
           {
+            "name": "adjusted",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "description": "Adjusted prices 사용 여부 (True: adjusted, False: raw)",
+              "default": true,
+              "title": "Adjusted"
+            },
+            "description": "Adjusted prices 사용 여부 (True: adjusted, False: raw)"
+          },
+          {
             "name": "start_date",
             "in": "query",
             "required": false,
@@ -1401,7 +1437,7 @@
             "schema": {
               "type": "string",
               "description": "데이터 크기 (compact: 최근 100개, full: 전체)",
-              "default": "compact",
+              "default": "full",
               "title": "Outputsize"
             },
             "description": "데이터 크기 (compact: 최근 100개, full: 전체)"
@@ -1558,6 +1594,25 @@
             "description": "데이터 간격 (1min, 5min, 15min, 30min, 60min)"
           },
           {
+            "name": "month",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^\\d{4}-\\d{2}$"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "조회할 월 (YYYY-MM 형식). 지정하지 않으면 최신 데이터 조회. Premium plan only.",
+              "title": "Month"
+            },
+            "description": "조회할 월 (YYYY-MM 형식). 지정하지 않으면 최신 데이터 조회. Premium plan only."
+          },
+          {
             "name": "extended_hours",
             "in": "query",
             "required": false,
@@ -1629,11 +1684,11 @@
                 "full"
               ],
               "type": "string",
-              "description": "데이터 크기 (compact/full)",
+              "description": "데이터 크기 (compact: 100 data points, full: 30 days or full month)",
               "default": "compact",
               "title": "Outputsize"
             },
-            "description": "데이터 크기 (compact/full)"
+            "description": "데이터 크기 (compact: 100 data points, full: 30 days or full month)"
           },
           {
             "name": "access_token",
@@ -1725,6 +1780,758 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/StockSymbolsResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/market-data/crypto/exchange-rate/{from_currency}/{to_currency}": {
+      "get": {
+        "tags": [
+          "Crypto"
+        ],
+        "summary": "Get Exchange Rate",
+        "description": "암호화폐/법정화폐 간의 실시간 환율을 조회합니다.",
+        "operationId": "Crypto-get_exchange_rate",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "from_currency",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "기준 통화 (예: BTC, ETH, USD)",
+              "title": "From Currency"
+            },
+            "description": "기준 통화 (예: BTC, ETH, USD)"
+          },
+          {
+            "name": "to_currency",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "대상 통화 (예: USD, EUR, KRW)",
+              "title": "To Currency"
+            },
+            "description": "대상 통화 (예: USD, EUR, KRW)"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Crypto-Get Exchange Rate"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/market-data/crypto/exchange-rates/bulk": {
+      "post": {
+        "tags": [
+          "Crypto"
+        ],
+        "summary": "Get Bulk Exchange Rates",
+        "description": "여러 암호화폐의 환율을 일괄 조회합니다.",
+        "operationId": "Crypto-get_bulk_exchange_rates",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "crypto_symbols",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "암호화폐 심볼 리스트",
+              "title": "Crypto Symbols"
+            },
+            "description": "암호화폐 심볼 리스트"
+          },
+          {
+            "name": "target_currency",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "목표 통화",
+              "default": "USD",
+              "title": "Target Currency"
+            },
+            "description": "목표 통화"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Crypto-Get Bulk Exchange Rates"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/market-data/crypto/daily/{symbol}": {
+      "get": {
+        "tags": [
+          "Crypto"
+        ],
+        "summary": "Get Daily Prices",
+        "description": "암호화폐의 일일 가격 데이터(OHLCV)를 조회합니다.",
+        "operationId": "Crypto-get_daily_prices",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "암호화폐 심볼 (예: BTC, ETH)",
+              "title": "Symbol"
+            },
+            "description": "암호화폐 심볼 (예: BTC, ETH)"
+          },
+          {
+            "name": "market",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "시장/통화 (예: USD, EUR, KRW)",
+              "default": "USD",
+              "title": "Market"
+            },
+            "description": "시장/통화 (예: USD, EUR, KRW)"
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "시작 날짜 (YYYY-MM-DD)",
+              "title": "Start Date"
+            },
+            "description": "시작 날짜 (YYYY-MM-DD)"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "종료 날짜 (YYYY-MM-DD)",
+              "title": "End Date"
+            },
+            "description": "종료 날짜 (YYYY-MM-DD)"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CryptoHistoricalDataResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/market-data/crypto/weekly/{symbol}": {
+      "get": {
+        "tags": [
+          "Crypto"
+        ],
+        "summary": "Get Weekly Prices",
+        "description": "암호화폐의 주간 가격 데이터(OHLCV)를 조회합니다.",
+        "operationId": "Crypto-get_weekly_prices",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "암호화폐 심볼 (예: BTC, ETH)",
+              "title": "Symbol"
+            },
+            "description": "암호화폐 심볼 (예: BTC, ETH)"
+          },
+          {
+            "name": "market",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "시장/통화 (예: USD, EUR)",
+              "default": "USD",
+              "title": "Market"
+            },
+            "description": "시장/통화 (예: USD, EUR)"
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "시작 날짜 (YYYY-MM-DD)",
+              "title": "Start Date"
+            },
+            "description": "시작 날짜 (YYYY-MM-DD)"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "종료 날짜 (YYYY-MM-DD)",
+              "title": "End Date"
+            },
+            "description": "종료 날짜 (YYYY-MM-DD)"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CryptoHistoricalDataResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/market-data/crypto/monthly/{symbol}": {
+      "get": {
+        "tags": [
+          "Crypto"
+        ],
+        "summary": "Get Monthly Prices",
+        "description": "암호화폐의 월간 가격 데이터(OHLCV)를 조회합니다.",
+        "operationId": "Crypto-get_monthly_prices",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "암호화폐 심볼 (예: BTC, ETH)",
+              "title": "Symbol"
+            },
+            "description": "암호화폐 심볼 (예: BTC, ETH)"
+          },
+          {
+            "name": "market",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "시장/통화 (예: USD, EUR)",
+              "default": "USD",
+              "title": "Market"
+            },
+            "description": "시장/통화 (예: USD, EUR)"
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "시작 날짜 (YYYY-MM-DD)",
+              "title": "Start Date"
+            },
+            "description": "시작 날짜 (YYYY-MM-DD)"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "종료 날짜 (YYYY-MM-DD)",
+              "title": "End Date"
+            },
+            "description": "종료 날짜 (YYYY-MM-DD)"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CryptoHistoricalDataResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/market-data/crypto/bitcoin/{period}": {
+      "get": {
+        "tags": [
+          "Crypto"
+        ],
+        "summary": "Get Bitcoin Price",
+        "description": "비트코인 가격 데이터를 조회합니다.",
+        "operationId": "Crypto-get_bitcoin_price",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "period",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "daily",
+                "weekly",
+                "monthly"
+              ],
+              "type": "string",
+              "description": "조회 기간 (daily, weekly, monthly)",
+              "title": "Period"
+            },
+            "description": "조회 기간 (daily, weekly, monthly)"
+          },
+          {
+            "name": "market",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "시장/통화 (예: USD, EUR, KRW)",
+              "default": "USD",
+              "title": "Market"
+            },
+            "description": "시장/통화 (예: USD, EUR, KRW)"
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "시작 날짜 (YYYY-MM-DD)",
+              "title": "Start Date"
+            },
+            "description": "시작 날짜 (YYYY-MM-DD)"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "종료 날짜 (YYYY-MM-DD)",
+              "title": "End Date"
+            },
+            "description": "종료 날짜 (YYYY-MM-DD)"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CryptoHistoricalDataResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/market-data/crypto/ethereum/{period}": {
+      "get": {
+        "tags": [
+          "Crypto"
+        ],
+        "summary": "Get Ethereum Price",
+        "description": "이더리움 가격 데이터를 조회합니다.",
+        "operationId": "Crypto-get_ethereum_price",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "period",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "daily",
+                "weekly",
+                "monthly"
+              ],
+              "type": "string",
+              "description": "조회 기간 (daily, weekly, monthly)",
+              "title": "Period"
+            },
+            "description": "조회 기간 (daily, weekly, monthly)"
+          },
+          {
+            "name": "market",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "시장/통화 (예: USD, EUR, KRW)",
+              "default": "USD",
+              "title": "Market"
+            },
+            "description": "시장/통화 (예: USD, EUR, KRW)"
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "시작 날짜 (YYYY-MM-DD)",
+              "title": "Start Date"
+            },
+            "description": "시작 날짜 (YYYY-MM-DD)"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "종료 날짜 (YYYY-MM-DD)",
+              "title": "End Date"
+            },
+            "description": "종료 날짜 (YYYY-MM-DD)"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CryptoHistoricalDataResponse"
                 }
               }
             }
@@ -6355,6 +7162,70 @@
           }
         }
       }
+    },
+    "/api/v1/tasks/stock-update/delta": {
+      "post": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Run Stock Delta Update",
+        "description": "만료된 주식 데이터를 증분 업데이트합니다.",
+        "operationId": "Tasks-run_stock_delta_update",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tasks/stock-update/force-all": {
+      "post": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Run Stock Force Update",
+        "description": "모든 활성 심볼의 주식 데이터를 강제 전체 업데이트합니다.",
+        "operationId": "Tasks-run_stock_force_update",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tasks/stock-update/status": {
+      "get": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Get Stock Update Status",
+        "description": "주식 데이터 업데이트 상태를 조회합니다.",
+        "operationId": "Tasks-get_stock_update_status",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -7953,6 +8824,67 @@
         ],
         "title": "CompanyOverviewResponse",
         "description": "기업 개요 조회 응답 스키마"
+      },
+      "CryptoHistoricalDataResponse": {
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "title": "Symbol"
+          },
+          "market": {
+            "type": "string",
+            "title": "Market"
+          },
+          "data": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Data"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          },
+          "start_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start Date"
+          },
+          "end_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End Date"
+          },
+          "frequency": {
+            "type": "string",
+            "title": "Frequency"
+          }
+        },
+        "type": "object",
+        "required": [
+          "symbol",
+          "market",
+          "data",
+          "count",
+          "frequency"
+        ],
+        "title": "CryptoHistoricalDataResponse"
       },
       "DashboardSummary": {
         "properties": {
@@ -10707,6 +11639,48 @@
           "region"
         ],
         "title": "SymbolInfo"
+      },
+      "TaskResult": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total",
+            "default": 0
+          },
+          "success": {
+            "type": "integer",
+            "title": "Success",
+            "default": 0
+          },
+          "failed": {
+            "type": "integer",
+            "title": "Failed",
+            "default": 0
+          },
+          "errors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Errors",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "message"
+        ],
+        "title": "TaskResult",
+        "description": "작업 실행 결과"
       },
       "TemplateCreate": {
         "properties": {
