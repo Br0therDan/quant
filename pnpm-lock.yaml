@@ -67,6 +67,36 @@ importers:
       '@mui/x-tree-view':
         specifier: ^8.12.0
         version: 8.12.0(@emotion/react@11.14.0)(@emotion/styled@11.14.1)(@mui/material@7.3.2)(@mui/system@7.3.2)(@types/react@18.3.1)(react-dom@18.3.1)(react@18.3.1)
+      '@react-financial-charts/annotations':
+        specifier: ^2.0.0
+        version: 2.0.0(react-dom@18.3.1)(react@18.3.1)
+      '@react-financial-charts/axes':
+        specifier: ^2.0.0
+        version: 2.0.0(react-dom@18.3.1)(react@18.3.1)
+      '@react-financial-charts/coordinates':
+        specifier: ^2.0.0
+        version: 2.0.0(react-dom@18.3.1)(react@18.3.1)
+      '@react-financial-charts/core':
+        specifier: ^2.0.0
+        version: 2.0.0(react-dom@18.3.1)(react@18.3.1)
+      '@react-financial-charts/indicators':
+        specifier: ^2.0.0
+        version: 2.0.0(react-dom@18.3.1)(react@18.3.1)
+      '@react-financial-charts/interactive':
+        specifier: ^2.0.0
+        version: 2.0.0(react-dom@18.3.1)(react@18.3.1)
+      '@react-financial-charts/scales':
+        specifier: ^2.0.0
+        version: 2.0.0(react-dom@18.3.1)(react@18.3.1)
+      '@react-financial-charts/series':
+        specifier: ^2.0.0
+        version: 2.0.0(react-dom@18.3.1)(react@18.3.1)
+      '@react-financial-charts/tooltip':
+        specifier: ^2.0.0
+        version: 2.0.0(react-dom@18.3.1)(react@18.3.1)
+      '@react-financial-charts/utils':
+        specifier: ^2.0.1
+        version: 2.0.1(react-dom@18.3.1)(react@18.3.1)
       '@react-spring/web':
         specifier: ^10.0.3
         version: 10.0.3(react-dom@18.3.1)(react@18.3.1)
@@ -76,9 +106,21 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.90.2
         version: 5.90.2(react@18.3.1)
+      '@types/d3-scale':
+        specifier: ^4.0.9
+        version: 4.0.9
+      '@types/d3-time-format':
+        specifier: ^4.0.3
+        version: 4.0.3
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      d3-scale:
+        specifier: ^4.0.2
+        version: 4.0.2
+      d3-time-format:
+        specifier: ^4.1.0
+        version: 4.1.0
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -1814,6 +1856,10 @@ packages:
       '@types/d3-path': 3.1.1
     dev: false
 
+  /@types/d3-time-format@4.0.3:
+    resolution: {integrity: sha512-5xg9rC+wWL8kdDj153qZcsJ0FWiFt0J5RB6LYUNZjwSnesfblqrI/bJ1wBdJ8OQfncgbJG5+2F+qfqnqyzYxyg==}
+    dev: false
+
   /@types/d3-time@2.1.4:
     resolution: {integrity: sha512-BTfLsxTeo7yFxI/haOOf1ZwJ6xKgQLT9dCp+EcmQv87Gox6X+oKl4mLKfO6fnWm3P22+A6DknMNEZany8ql2Rw==}
     dev: false
@@ -2704,7 +2750,7 @@ packages:
   /d3-shape@2.1.0:
     resolution: {integrity: sha512-PnjUqfM2PpskbSLTJvAzp2Wv4CZsnAgTfcVRTwW03QR3MkXF8Uo7B1y/lWkAsmbKwuecto++4NlsYcvYpXpTHA==}
     dependencies:
-      d3-path: 1.0.9
+      d3-path: 2.0.0
     dev: false
 
   /d3-shape@3.2.0:

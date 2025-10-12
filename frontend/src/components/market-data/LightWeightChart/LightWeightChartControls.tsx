@@ -18,7 +18,7 @@ import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { type Dayjs } from "dayjs";
 import React from "react";
 
-interface ChartControlsProps {
+interface LightWeightChartControlsProps {
   startDate: Dayjs | null;
   endDate: Dayjs | null;
   onStartDateChange: (date: Dayjs | null) => void;
@@ -66,7 +66,7 @@ const CHART_TYPES = [
   { icon: LineIcon, label: "라인", value: "line" },
 ];
 
-export default function ChartControls({
+export default function LightWeightChartControls({
   startDate,
   endDate,
   onStartDateChange,
@@ -78,7 +78,7 @@ export default function ChartControls({
   onChartTypeChange,
   adjusted = true,
   onAdjustedChange,
-}: ChartControlsProps) {
+}: LightWeightChartControlsProps) {
   const [selectedRange, setSelectedRange] = React.useState("1m");
   const [showCustomDate, setShowCustomDate] = React.useState(false);
 

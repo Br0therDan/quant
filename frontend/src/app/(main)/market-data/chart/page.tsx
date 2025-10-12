@@ -6,10 +6,11 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { type Dayjs } from "dayjs";
 import "dayjs/locale/ko";
 import React from "react";
-import LightWeightChart from '@/components/market-data/LightweightChart';
 
-import ChartControls from "@/components/market-data/ChartControls";
 import MarketDataHeader from "@/components/market-data/MarketDataHeader";
+import ReactFinancialChart from "@/components/market-data/ReactFinancialChart";
+import type { IndicatorConfig } from "@/components/market-data/ReactFinancialChart/ReactFinancialChart";
+import ReactFinancialChartControls from "@/components/market-data/ReactFinancialChart/ReactFinancialChartControls";
 import {
   useStockDailyPrices,
   useStockIntraday,
@@ -38,8 +39,35 @@ export default function MarketDataChartPage() {
   );
   const [endDate, setEndDate] = React.useState<Dayjs | null>(dayjs());
   const [interval, setInterval] = React.useState<string>("daily"); // 기본값: 일봉
-  const [chartType, setChartType] = React.useState("candlestick");
+  const [chartType, setChartType] = React.useState<
+    | "candlestick"
+    | "ohlc"
+    | "line"
+    | "area"
+    | "scatter"
+    | "heikinAshi"
+    | "renko"
+    | "kagi"
+    | "pointAndFigure"
+  >("candlestick");
   const [adjusted, setAdjusted] = React.useState(true); // Adjusted prices 기본값
+
+  // 인디케이터 상태
+  const [indicators, setIndicators] = React.useState<IndicatorConfig>({
+    ema: [],
+    sma: [],
+    wma: [],
+    tma: [],
+    bollingerBand: false,
+    atr: false,
+    sar: false,
+    macd: false,
+    rsi: false,
+    stochastic: null,
+    forceIndex: false,
+    elderRay: false,
+    elderImpulse: false,
+  });
 
   // 워치리스트 데이터 가져오기
   const {
@@ -158,9 +186,9 @@ export default function MarketDataChartPage() {
     });
   }, [selectedSymbol, apiType, interval, startDate, endDate]);
 
-  const handleSymbolChange = React.useCallback((symbol: string) => {
-    setSelectedSymbol(symbol);
-  }, []);
+  // const handleSymbolChange = React.useCallback((symbol: string) => {
+  //   setSelectedSymbol(symbol);
+  // }, []);
 
   // 디버깅: 데이터 상태 확인
   React.useEffect(() => {
@@ -418,7 +446,7 @@ export default function MarketDataChartPage() {
                   </Box>
                 </Box>
               ) : chartData.length > 0 ? (
-                <LightWeightChart
+                <ReactFinancialChart
                   data={chartData}
                   symbol={selectedSymbol}
                   height={
@@ -426,7 +454,8 @@ export default function MarketDataChartPage() {
                       ? window.innerHeight - 300
                       : 600
                   }
-                  showVolume={true}
+                  chartType={chartType}
+                  indicators={indicators}
                 />
               ) : (
                 <Box
@@ -451,7 +480,7 @@ export default function MarketDataChartPage() {
             </Box>
 
             {/* 차트 컨트롤 */}
-            <ChartControls
+            <ReactFinancialChartControls
               startDate={startDate}
               endDate={endDate}
               onStartDateChange={setStartDate}
@@ -463,6 +492,8 @@ export default function MarketDataChartPage() {
               onChartTypeChange={setChartType}
               adjusted={adjusted}
               onAdjustedChange={setAdjusted}
+              indicators={indicators}
+              onIndicatorsChange={setIndicators}
             />
           </Box>
         </Box>

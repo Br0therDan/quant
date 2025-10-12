@@ -1,38 +1,105 @@
 "use client";
 
 import LoadingSpinner from "@/components/common/LoadingSpinner";
-import LightWeightChart from "@/components/market-data/LightweightChart";
-import ChartControls from "@/components/market-data/ChartControls";
+import ReactFinancialChart, {
+  ChartFooter,
+  ChartHeader,
+} from "@/components/market-data/ReactFinancialChart";
+import type { IndicatorConfig } from "@/components/market-data/ReactFinancialChart/ReactFinancialChart";
+import { useChartSettings } from "@/components/market-data/ReactFinancialChart/useChartSettings";
 import {
   useStockDailyPrices,
   useStockMonthlyPrices,
   useStockWeeklyPrices,
 } from "@/hooks/useStocks";
-import {
-  Box,
-  Card,
-  CardContent,
-  Container,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { Box } from "@mui/material";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import { useParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function SymbolChartPage() {
   const params = useParams();
   const symbol = (params.symbol as string)?.toUpperCase();
 
   // 차트 상태
-  const [chartType, setChartType] = useState<string>("candlestick");
+  const [chartType, setChartType] = useState<
+    | "candlestick"
+    | "ohlc"
+    | "line"
+    | "area"
+    | "scatter"
+    | "heikinAshi"
+    | "renko"
+    | "kagi"
+    | "pointAndFigure"
+  >("candlestick");
   const [interval, setInterval] = useState<string>("daily");
   const [adjusted, setAdjusted] = useState(true);
   const [startDate, setStartDate] = useState<Dayjs | null>(
     dayjs().subtract(1, "year")
   );
   const [endDate, setEndDate] = useState<Dayjs | null>(dayjs());
+
+  // 인디케이터 상태
+  const [indicators, setIndicators] = useState<IndicatorConfig>({
+    ema: [],
+    sma: [],
+    wma: [],
+    tma: [],
+    bollingerBand: false,
+    atr: false,
+    sar: false,
+    macd: false,
+    rsi: false,
+    stochastic: null,
+    forceIndex: false,
+    elderRay: false,
+    elderImpulse: false,
+  });
+
+  // localStorage 훅 (심볼별 설정 관리)
+  const { loadSettings, saveSettings } = useChartSettings({
+    symbol,
+    autoSave: true,
+    debounceMs: 500,
+  });
+
+  // 컴포넌트 마운트 시 저장된 설정 복원
+  useEffect(() => {
+    const loaded = loadSettings();
+    if (loaded) {
+      setChartType(loaded.chartType);
+      setIndicators(loaded.indicators);
+      if (loaded.interval) setInterval(loaded.interval);
+      if (loaded.adjusted !== undefined) setAdjusted(loaded.adjusted);
+      if (loaded.dateRange?.start) setStartDate(dayjs(loaded.dateRange.start));
+      if (loaded.dateRange?.end) setEndDate(dayjs(loaded.dateRange.end));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadSettings]);
+
+  // 설정 변경 시 자동 저장 (디바운싱)
+  useEffect(() => {
+    saveSettings({
+      chartType,
+      indicators,
+      interval,
+      adjusted,
+      dateRange: {
+        start: startDate?.format("YYYY-MM-DD") || null,
+        end: endDate?.format("YYYY-MM-DD") || null,
+      },
+    });
+  }, [
+    chartType,
+    indicators,
+    interval,
+    adjusted,
+    startDate,
+    endDate,
+    saveSettings,
+  ]);
 
   // 날짜 문자열 변환
   const dateRange = useMemo(() => {
@@ -120,102 +187,68 @@ export default function SymbolChartPage() {
   }, [currentData]);
 
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-      <Box display="flex" flexDirection="column" gap={3}>
-        {/* 헤더 */}
-        <Box>
-          <Typography variant="h4" gutterBottom>
-            {symbol} - Chart Analysis
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Interactive price chart with technical analysis tools
-          </Typography>
-        </Box>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100vh",
+        overflow: "hidden",
+      }}
+    >
+      {/* Chart Header */}
+      <ChartHeader
+        symbol={symbol}
+        interval={interval}
+        onIntervalChange={setInterval}
+        chartType={chartType}
+        onChartTypeChange={setChartType}
+        indicators={indicators}
+        onIndicatorsChange={setIndicators}
+      />
 
-        {/* 차트 컨트롤 */}
-        <Paper elevation={1} sx={{ p: 2 }}>
-          <ChartControls
-            startDate={startDate}
-            endDate={endDate}
-            onStartDateChange={setStartDate}
-            onEndDateChange={setEndDate}
-            interval={interval}
-            onIntervalChange={setInterval}
-            chartType={chartType}
-            onChartTypeChange={setChartType}
-            adjusted={adjusted}
-            onAdjustedChange={setAdjusted}
-            isLoading={isLoading}
+      {/* Chart Canvas */}
+      <Box sx={{ flex: 1, overflow: "hidden", position: "relative" }}>
+        {isLoading ? (
+          <LoadingSpinner
+            variant="chart"
+            height="100%"
+            message="차트 데이터를 불러오는 중..."
           />
-        </Paper>
-
-        {/* 차트 */}
-        <Card>
-          <CardContent>
-            {isLoading ? (
-              <LoadingSpinner
-                variant="chart"
-                height={600}
-                message="차트 데이터를 불러오는 중..."
-              />
-            ) : candlestickData.length > 0 ? (
-              <LightWeightChart
-                data={candlestickData}
-                symbol={symbol}
-                height={600}
-                showVolume={true}
-              />
-            ) : (
+        ) : candlestickData.length > 0 ? (
+          <ReactFinancialChart
+            data={candlestickData}
+            symbol={symbol}
+            height={
+              typeof window !== "undefined" ? window.innerHeight - 120 : 800
+            }
+            chartType={chartType}
+            indicators={indicators}
+          />
+        ) : (
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            height="100%"
+          >
+            <Box textAlign="center">
               <Box
-                height={600}
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
+                component="span"
+                sx={{ fontSize: "0.875rem", color: "text.secondary" }}
               >
-                <Typography color="text.secondary">
-                  차트 데이터를 불러올 수 없습니다
-                </Typography>
+                차트 데이터를 불러올 수 없습니다
               </Box>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* 차트 정보 */}
-        <Card>
-          <CardContent>
-            <Typography variant="h6" gutterBottom>
-              Chart Information
-            </Typography>
-            <Box display="flex" flexDirection="column" gap={1}>
-              <InfoRow label="Symbol" value={symbol} />
-              <InfoRow label="Interval" value={interval.toUpperCase()} />
-              <InfoRow label="Data Points" value={candlestickData.length} />
-              <InfoRow
-                label="Adjusted Prices"
-                value={adjusted ? "Yes" : "No"}
-              />
-              <InfoRow
-                label="Date Range"
-                value={`${dateRange.startDate} ~ ${dateRange.endDate}`}
-              />
             </Box>
-          </CardContent>
-        </Card>
+          </Box>
+        )}
       </Box>
-    </Container>
-  );
-}
 
-// Helper component
-function InfoRow({ label, value }: { label: string; value: string | number }) {
-  return (
-    <Box display="flex" justifyContent="space-between">
-      <Typography variant="body2" color="text.secondary">
-        {label}
-      </Typography>
-      <Typography variant="body2" fontWeight="medium">
-        {value}
-      </Typography>
+      {/* Chart Footer */}
+      <ChartFooter
+        onStartDateChange={setStartDate}
+        onEndDateChange={setEndDate}
+        onIntervalChange={setInterval}
+      />
     </Box>
   );
 }

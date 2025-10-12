@@ -24,12 +24,10 @@ const AppBar = styled(MuiAppBar)(({ theme }) => ({
 }));
 
 const LogoContainer = styled("div")({
-	position: "relative",
-	height: 40,
-	display: "flex",
+	height: 45,
 	alignItems: "center",
 	"& img": {
-		maxHeight: 40,
+		maxHeight: 45,
 	},
 });
 
@@ -82,8 +80,8 @@ export default function Header({
 	);
 
 	return (
-		<AppBar color="inherit" position="absolute" sx={{ displayPrint: "none" }}>
-			<Toolbar sx={{ backgroundColor: "inherit", mx: { xs: -0.75, sm: -1 } }}>
+		<AppBar color="inherit" position="fixed" sx={{ displayPrint: "none", height: 60 }}>
+			<Toolbar sx={{ mx: { xs: -0.75, sm: -1 } }}>
 				<Stack
 					direction="row"
 					justifyContent="space-between"

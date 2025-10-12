@@ -1,7 +1,8 @@
 "use client";
 
 import LoadingSpinner from "@/components/common/LoadingSpinner";
-import LightWeightChart from '@/components/market-data/LightweightChart';
+import SymbolOverviewHeader from '@/components/market-data/OverviewHeader';
+import ReactFinancialChart from "@/components/market-data/ReactFinancialChart";
 
 import { useStockIntraday, useStockQuote } from "@/hooks/useStocks";
 import {
@@ -12,12 +13,10 @@ import {
 } from "@/hooks/ussFundamental";
 import {
   ShowChart as ChartIcon,
-  VerifiedUser as VerifiedIcon,
 } from "@mui/icons-material";
 import {
   Box,
   Button,
-  Chip,
   Divider,
   Grid,
   Paper,
@@ -40,9 +39,9 @@ export default function SymbolOverviewPage() {
   const symbol = (params.symbol as string)?.toUpperCase();
 
   // 데이터 fetching
-  const { data: companyResponse, isLoading: companyLoading } =
+  const { data: companyResponse } =
     useFundamentalCompanyOverview(symbol);
-  const { data: quoteData, isLoading: quoteLoading } = useStockQuote(symbol);
+  const { data: quoteData } = useStockQuote(symbol);
   const { data: earningsResponse } = useFundamentalEarnings(symbol);
   const { data: incomeResponse, isLoading: incomeLoading } =
     useFundamentalIncomeStatement(symbol);
@@ -56,7 +55,6 @@ export default function SymbolOverviewPage() {
       interval: "5min", // 5분 간격
     }
   );
-
   const companyData = companyResponse?.data;
   const earningsData = earningsResponse?.data?.[0]; // 배열의 첫 번째 요소
   const incomeData = incomeResponse?.data?.[0]; // 배열의 첫 번째 요소
@@ -68,7 +66,6 @@ export default function SymbolOverviewPage() {
   const priceChangePercent = quoteData?.change_percent
     ? Number(quoteData.change_percent)
     : 0;
-  const isPositive = priceChange >= 0;
 
   // 차트 데이터 변환
   const candlestickData = useMemo(() => {
@@ -108,96 +105,14 @@ export default function SymbolOverviewPage() {
   return (
     <Box sx={{ maxWidth: 1400, mx: "auto" }}>
       {/* 헤더: 회사명 & 가격 정보 */}
-      <Box sx={{ p: 3, pb: 0 }}>
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="flex-start"
-          mb={2}
-        >
-          {/* 왼쪽: 회사명 & 메타 정보 */}
-          <Box>
-            {companyLoading ? (
-              <Skeleton width={300} height={40} />
-            ) : (
-              <>
-                <Typography variant="h4" fontWeight="600" gutterBottom>
-                  {companyData?.name || symbol}
-                </Typography>
-                <Box display="flex" gap={1} alignItems="center">
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    fontWeight="500"
-                  >
-                    {symbol}
-                  </Typography>
-                  <VerifiedIcon
-                    sx={{ fontSize: 16, color: "primary.main" }}
-                    titleAccess="Nasdaq Stock Market"
-                  />
-                  <Chip
-                    label={companyData?.exchange || "Nasdaq Stock Market"}
-                    size="small"
-                    variant="outlined"
-                    sx={{ height: 20 }}
-                  />
-                </Box>
-              </>
-            )}
-          </Box>
-
-          {/* 오른쪽: 현재가 & 변동 */}
-          <Box textAlign="right">
-            {quoteLoading ? (
-              <Skeleton width={200} height={60} />
-            ) : (
-              <>
-                <Box display="flex" alignItems="baseline" gap={1}>
-                  <Typography variant="h3" fontWeight="700">
-                    {currentPrice.toFixed(2)}
-                  </Typography>
-                  <Typography variant="h6" color="text.secondary">
-                    USD
-                  </Typography>
-                </Box>
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="flex-end"
-                  gap={0.5}
-                  mt={0.5}
-                >
-                  <Typography
-                    variant="h6"
-                    fontWeight="600"
-                    color={isPositive ? "error.main" : "success.main"}
-                  >
-                    {isPositive ? "−" : "+"}
-                    {Math.abs(priceChange).toFixed(2)}
-                  </Typography>
-                  <Typography
-                    variant="h6"
-                    fontWeight="600"
-                    color={isPositive ? "error.main" : "success.main"}
-                  >
-                    {isPositive ? "−" : "+"}
-                    {Math.abs(priceChangePercent).toFixed(2)}%
-                  </Typography>
-                </Box>
-                <Typography
-                  variant="caption"
-                  color="text.secondary"
-                  display="block"
-                  mt={0.5}
-                >
-                  {dayjs().format("M월 D일 HH:mm")} GMT+9 에 마감 때
-                </Typography>
-              </>
-            )}
-          </Box>
-        </Box>
-      </Box>
+      <SymbolOverviewHeader
+        symbol={symbol}
+        companyName={companyData?.name || symbol}
+        exchange={companyData?.exchange}
+        priceChange={priceChange}
+        priceChangePercent={priceChangePercent}
+        currentPrice={currentPrice}
+      />
 
       <Grid container spacing={3} sx={{ p: 3 }}>
         {/* 차트 섹션 */}
@@ -228,11 +143,12 @@ export default function SymbolOverviewPage() {
                 message="차트 로딩 중..."
               />
             ) : candlestickData.length > 0 ? (
-              <LightWeightChart
+              <ReactFinancialChart
                 data={candlestickData}
                 symbol={symbol}
                 height={400}
-                showVolume={true}
+                chartType="candlestick"
+                indicators={{}}
               />
             ) : (
               <Box

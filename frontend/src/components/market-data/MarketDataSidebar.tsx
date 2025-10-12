@@ -18,7 +18,6 @@ import {
   List,
   ListItem,
   ListItemButton,
-  Paper,
   Stack,
   Typography,
   useTheme,
@@ -68,10 +67,7 @@ function WatchlistSymbolItem({
         sx={{
           py: 1,
           px: 2,
-          "&.Mui-selected": {
-            backgroundColor: theme.palette.action.selected,
-            borderLeft: `3px solid ${theme.palette.primary.main}`,
-          },
+          // borderLeft: `3px solid ${theme.palette.primary.main}`,
         }}
       >
         <Box
@@ -89,7 +85,6 @@ function WatchlistSymbolItem({
             fontWeight="600"
             sx={{
               minWidth: "60px",
-              color: theme.palette.text.primary,
             }}
           >
             {symbol}
@@ -420,8 +415,7 @@ export default function MarketDataSidebar({
 
   return (
     <>
-      <Paper
-        elevation={0}
+      <Box
         sx={{
           height: "100%",
           display: "flex",
@@ -454,7 +448,7 @@ export default function MarketDataSidebar({
             </Box>
           ) : watchlists.length === 0 ? (
             <Box sx={{ p: 2, textAlign: "center" }}>
-              <Typography variant="caption" color="text.secondary" paragraph>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: "block" }}>
                 워치리스트가 없습니다
               </Typography>
               <Button
@@ -483,7 +477,7 @@ export default function MarketDataSidebar({
 
         {/* 심볼 개요 */}
         <SymbolOverview symbol={currentSymbol} />
-      </Paper>
+      </Box>
 
       {/* 워치리스트 편집 다이얼로그 */}
       <WatchlistEditDialog
