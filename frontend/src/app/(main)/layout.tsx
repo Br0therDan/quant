@@ -1,4 +1,9 @@
 "use client";
+import { MyLogo } from "@/components/common/logo";
+import Header from "@/components/layout/Header";
+import Sidebar from "@/components/layout/sidebar";
+import DialogsProvider from "@/hooks/useDialogs/DialogsProvider";
+import NotificationsProvider from "@/hooks/useNotifications/NotificationsProvider";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useTheme } from "@mui/material/styles";
@@ -8,12 +13,6 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import * as React from "react";
 import { useState } from "react";
-import { MyLogo } from "@/components/common/logo";
-import Header from "@/components/layout/Header";
-import Sidebar from "@/components/layout/sidebar";
-import AppTheme from "@/components/shared-theme/AppTheme";
-import DialogsProvider from "@/hooks/useDialogs/DialogsProvider";
-import NotificationsProvider from "@/hooks/useNotifications/NotificationsProvider";
 
 export default function MainLayout({
   children,
@@ -53,57 +52,57 @@ export default function MainLayout({
   const layoutRef = React.useRef(null);
 
   return (
-    <AppTheme>
-        <CssBaseline enableColorScheme />
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <NotificationsProvider>
-            <DialogsProvider>
+    <>
+      <CssBaseline enableColorScheme />
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <NotificationsProvider>
+          <DialogsProvider>
+            <Box
+              ref={layoutRef}
+              sx={{
+                position: "relative",
+                display: "flex",
+                overflow: "hidden",
+                height: "100vh",
+                width: "100%",
+              }}
+            >
+              <Header
+                logo={<MyLogo noLink />}
+                title=""
+                menuOpen={isNavigationExpanded}
+                onToggleMenu={handleToggleHeaderMenu}
+              />
+              <Sidebar
+                expanded={isNavigationExpanded}
+                setExpanded={setIsNavigationExpanded}
+                container={layoutRef?.current ?? undefined}
+              />
               <Box
-                ref={layoutRef}
                 sx={{
-                  position: "relative",
                   display: "flex",
-                  overflow: "hidden",
-                  height: "100vh",
-                  width: "100%",
+                  flexDirection: "column",
+                  flex: 1,
+                  minWidth: 0,
                 }}
               >
-                <Header
-                  logo={<MyLogo noLink />}
-                  title=""
-                  menuOpen={isNavigationExpanded}
-                  onToggleMenu={handleToggleHeaderMenu}
-                />
-                <Sidebar
-                  expanded={isNavigationExpanded}
-                  setExpanded={setIsNavigationExpanded}
-                  container={layoutRef?.current ?? undefined}
-                />
+                <Toolbar sx={{ displayPrint: "none" }} />
                 <Box
+                  component="main"
                   sx={{
                     display: "flex",
                     flexDirection: "column",
                     flex: 1,
-                    minWidth: 0,
+                    overflow: "auto",
                   }}
                 >
-                  <Toolbar sx={{ displayPrint: "none" }} />
-                  <Box
-                    component="main"
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      flex: 1,
-                      overflow: "auto",
-                    }}
-                  >
-                    {children}
-                  </Box>
+                  {children}
                 </Box>
               </Box>
-            </DialogsProvider>
-          </NotificationsProvider>
-        </LocalizationProvider>
-    </AppTheme>
+            </Box>
+          </DialogsProvider>
+        </NotificationsProvider>
+      </LocalizationProvider>
+    </>
   );
 }

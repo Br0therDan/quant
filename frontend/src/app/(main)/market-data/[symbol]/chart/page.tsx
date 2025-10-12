@@ -22,7 +22,7 @@ export default function SymbolChartPage() {
   const params = useParams();
   const symbol = (params.symbol as string)?.toUpperCase();
   const chartContainerRef = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 800 });
+  const [dimensions, setDimensions] = useState({ width: 0, height: 400 });
 
   // 차트 상태
   const [chartType, setChartType] = useState<
@@ -209,7 +209,7 @@ export default function SymbolChartPage() {
       sx={{
         display: "flex",
         flexDirection: "column",
-        height: "100vh",
+        height: "100svh",
         overflow: "hidden",
       }}
     >
@@ -227,7 +227,7 @@ export default function SymbolChartPage() {
       {/* Chart Canvas */}
       <Box
         ref={chartContainerRef}
-        sx={{ flex: 1, overflow: "hidden", position: "relative" }}
+        sx={{ flex: 1, overflow: "hidden", position: "relative", padding: 1 }}
       >
         {isLoading ? (
           <LoadingSpinner

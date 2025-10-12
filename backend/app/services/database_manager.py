@@ -214,6 +214,9 @@ class DatabaseManager:
         # 통합 캐시 테이블 생성
         self._create_unified_cache_table()
 
+        # 기술적 지표 캐시 테이블 생성
+        self._create_technical_indicators_cache_table()
+
         # 인덱스 생성 (모든 테이블 생성 후)
         self._create_indexes()
 
@@ -238,6 +241,11 @@ class DatabaseManager:
             "CREATE INDEX IF NOT EXISTS idx_unified_cache_data_type ON unified_cache(data_type)",
             "CREATE INDEX IF NOT EXISTS idx_unified_cache_symbol ON unified_cache(symbol)",
             "CREATE INDEX IF NOT EXISTS idx_unified_cache_updated_at ON unified_cache(updated_at)",
+            # 기술적 지표 캐시 테이블 인덱스
+            "CREATE INDEX IF NOT EXISTS idx_ti_cache_key ON technical_indicators_cache(cache_key)",
+            "CREATE INDEX IF NOT EXISTS idx_ti_symbol ON technical_indicators_cache(symbol)",
+            "CREATE INDEX IF NOT EXISTS idx_ti_indicator_type ON technical_indicators_cache(indicator_type)",
+            "CREATE INDEX IF NOT EXISTS idx_ti_cached_at ON technical_indicators_cache(cached_at)",
         ]
 
         for index_sql in indexes:
@@ -668,6 +676,33 @@ class DatabaseManager:
         self._create_cache_table("market_data_cache")
 
         logger.info("통합 캐시 테이블 생성 완료")
+
+    def _create_technical_indicators_cache_table(self) -> None:
+        """기술적 지표 캐시 테이블 생성"""
+        self._ensure_connected()
+        if not self.connection:
+            raise RuntimeError("데이터베이스에 연결되지 않음")
+
+        self.connection.execute(
+            """
+            CREATE TABLE IF NOT EXISTS technical_indicators_cache (
+                cache_key VARCHAR NOT NULL,
+                symbol VARCHAR NOT NULL,
+                indicator_type VARCHAR NOT NULL,  -- 'SMA', 'EMA', 'RSI', 'MACD', etc.
+                interval VARCHAR NOT NULL,        -- '1min', '5min', 'daily', etc.
+                parameters_json TEXT,             -- JSON 직렬화된 파라미터
+                date DATE,                        -- 날짜 (daily 이상)
+                timestamp TIMESTAMP,              -- 타임스탬프 (intraday)
+                value DECIMAL(18, 8),             -- 단일 값 (SMA, EMA, RSI 등)
+                values_json TEXT,                 -- 복수 값 JSON (MACD, BBANDS 등)
+                cached_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+                PRIMARY KEY (cache_key, COALESCE(timestamp, date))
+            )
+        """
+        )
+
+        logger.info("기술적 지표 캐시 테이블 생성 완료")
 
     # ===== 통합 캐시 관리 메서드들 =====
 

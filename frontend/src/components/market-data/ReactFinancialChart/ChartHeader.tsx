@@ -142,7 +142,6 @@ export default function ChartHeader({
           px: 2,
           py: 1,
           borderBottom: `1px solid ${theme.palette.divider}`,
-          backgroundColor: theme.palette.background.paper,
         }}
       >
         {/* 심볼 */}

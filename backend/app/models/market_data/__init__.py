@@ -40,6 +40,10 @@ from .intelligence import (
     MarketMood,
     OptionFlow,
 )
+from .technical_indicator import (
+    TechnicalIndicator,
+    IndicatorDataPoint,
+)
 
 
 __all__ = [
@@ -78,4 +82,7 @@ __all__ = [
     "SocialSentiment",
     "MarketMood",
     "OptionFlow",
+    # Technical indicator models
+    "TechnicalIndicator",
+    "IndicatorDataPoint",
 ]

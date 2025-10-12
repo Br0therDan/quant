@@ -300,69 +300,56 @@ class CryptoService(BaseMarketDataService):
 
             logger.info(f"Alpha Vantage response type: {type(response)}")
 
-            if isinstance(response, list):
+            if isinstance(response, dict):
+                logger.debug(f"Response keys: {response.keys()}")
+                # Crypto intraday는 "Time Series Crypto (5min)" 같은 키를 사용
+                time_series_key = f"Time Series Crypto ({interval})"
+                time_series = response.get(time_series_key, {})
+
+                if not time_series:
+                    logger.warning(
+                        f"No time series data found in response for {symbol}/{market} intraday ({interval})"
+                    )
+                    return []
+
                 intraday_prices = []
 
-                for item in response:
-                    if not isinstance(item, dict):
+                for timestamp_str, price_data in time_series.items():
+                    if not isinstance(price_data, dict):
                         continue
 
                     try:
-                        timestamp_value = item.get("timestamp") or item.get("time")
-                        if isinstance(timestamp_value, str):
-                            timestamp_obj = datetime.fromisoformat(timestamp_value)
-                        elif isinstance(timestamp_value, datetime):
-                            timestamp_obj = timestamp_value
-                        else:
-                            continue
+                        # Alpha Vantage intraday는 "YYYY-MM-DD HH:MM:SS" 형식
+                        timestamp_obj = datetime.strptime(
+                            timestamp_str, "%Y-%m-%d %H:%M:%S"
+                        )
 
+                        # Alpha Vantage crypto API는 단순히 "1. open", "2. high" 형식 사용
                         price_dict = {
                             "symbol": symbol,
                             "market": market,
                             "timestamp": timestamp_obj,
                             "interval": interval,
-                            "open_market": Decimal(
-                                str(item.get("open") or item.get("1. open", 0))
-                            ),
-                            "high_market": Decimal(
-                                str(item.get("high") or item.get("2. high", 0))
-                            ),
-                            "low_market": Decimal(
-                                str(item.get("low") or item.get("3. low", 0))
-                            ),
+                            "open_market": Decimal(str(price_data.get("1. open", "0"))),
+                            "high_market": Decimal(str(price_data.get("2. high", "0"))),
+                            "low_market": Decimal(str(price_data.get("3. low", "0"))),
                             "close_market": Decimal(
-                                str(item.get("close") or item.get("4. close", 0))
+                                str(price_data.get("4. close", "0"))
                             ),
-                            "volume": Decimal(
-                                str(item.get("volume") or item.get("5. volume", 0))
-                            ),
-                            "open_usd": (
-                                Decimal(str(item.get("open_usd", 0)))
-                                if "open_usd" in item
-                                else None
-                            ),
-                            "high_usd": (
-                                Decimal(str(item.get("high_usd", 0)))
-                                if "high_usd" in item
-                                else None
-                            ),
-                            "low_usd": (
-                                Decimal(str(item.get("low_usd", 0)))
-                                if "low_usd" in item
-                                else None
-                            ),
-                            "close_usd": (
-                                Decimal(str(item.get("close_usd", 0)))
-                                if "close_usd" in item
-                                else None
-                            ),
+                            "volume": Decimal(str(price_data.get("5. volume", "0"))),
+                            "open_usd": None,
+                            "high_usd": None,
+                            "low_usd": None,
+                            "close_usd": None,
                             "data_quality_score": 95.0,
                             "source": "alpha_vantage",
                         }
                         intraday_prices.append(price_dict)
 
                     except (ValueError, KeyError) as e:
-                        logger.warning(f"Failed to parse intraday price data: {e}")
+                        logger.warning(
+                            f"Failed to parse intraday price data for {timestamp_str}: {e}"
+                        )
                         continue
 
                 logger.info(
@@ -391,68 +378,58 @@ class CryptoService(BaseMarketDataService):
             )
 
             logger.info(f"Alpha Vantage response type: {type(response)}")
+            logger.debug(
+                f"Response keys: {response.keys() if isinstance(response, dict) else 'Not a dict'}"
+            )
 
-            if isinstance(response, list):
+            if isinstance(response, dict):
+                # Alpha Vantage는 "Time Series (Digital Currency Daily)" 키로 데이터를 반환
+                time_series_key = "Time Series (Digital Currency Daily)"
+                time_series = response.get(time_series_key, {})
+
+                if not time_series:
+                    logger.warning(
+                        f"No time series data found in response for {symbol}/{market}"
+                    )
+                    logger.debug(f"Available keys: {list(response.keys())}")
+                    return []
+
                 daily_prices = []
 
-                for item in response:
-                    if not isinstance(item, dict):
+                for date_str, price_data in time_series.items():
+                    if not isinstance(price_data, dict):
                         continue
 
                     try:
-                        date_value = item.get("date")
-                        if isinstance(date_value, str):
-                            date_obj = datetime.strptime(date_value, "%Y-%m-%d")
-                        elif isinstance(date_value, datetime):
-                            date_obj = date_value
-                        else:
-                            continue
+                        # 첫 번째 항목만 로깅 (디버그용)
+                        if len(daily_prices) == 0:
+                            logger.debug(
+                                f"First daily price_data keys: {list(price_data.keys())}"
+                            )
+                            logger.debug(f"Sample daily price_data: {price_data}")
 
+                        date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+
+                        # Alpha Vantage crypto API는 단순히 "1. open", "2. high" 형식 사용
                         price_dict = {
                             "symbol": symbol,
                             "market": market,
                             "date": date_obj,
-                            "open_market": Decimal(
-                                str(item.get(f"1a. open ({market})", 0))
-                            ),
-                            "high_market": Decimal(
-                                str(item.get(f"2a. high ({market})", 0))
-                            ),
-                            "low_market": Decimal(
-                                str(item.get(f"3a. low ({market})", 0))
-                            ),
+                            "open_market": Decimal(str(price_data.get("1. open", "0"))),
+                            "high_market": Decimal(str(price_data.get("2. high", "0"))),
+                            "low_market": Decimal(str(price_data.get("3. low", "0"))),
                             "close_market": Decimal(
-                                str(item.get(f"4a. close ({market})", 0))
+                                str(price_data.get("4. close", "0"))
                             ),
-                            "volume": Decimal(str(item.get("5. volume", 0))),
-                            "market_cap": (
-                                Decimal(str(item.get(f"6. market cap ({market})", 0)))
-                                if f"6. market cap ({market})" in item
-                                else None
-                            ),
-                            "open_usd": (
-                                Decimal(str(item.get("1b. open (USD)", 0)))
-                                if "1b. open (USD)" in item
-                                else None
-                            ),
-                            "high_usd": (
-                                Decimal(str(item.get("2b. high (USD)", 0)))
-                                if "2b. high (USD)" in item
-                                else None
-                            ),
-                            "low_usd": (
-                                Decimal(str(item.get("3b. low (USD)", 0)))
-                                if "3b. low (USD)" in item
-                                else None
-                            ),
-                            "close_usd": (
-                                Decimal(str(item.get("4b. close (USD)", 0)))
-                                if "4b. close (USD)" in item
-                                else None
-                            ),
+                            "volume": Decimal(str(price_data.get("5. volume", "0"))),
+                            "market_cap": None,  # Crypto API doesn't provide market cap in time series
+                            "open_usd": None,
+                            "high_usd": None,
+                            "low_usd": None,
+                            "close_usd": None,
                             "market_cap_usd": (
-                                Decimal(str(item.get("6. market cap (USD)", 0)))
-                                if "6. market cap (USD)" in item
+                                Decimal(str(price_data.get("6. market cap (USD)", "0")))
+                                if "6. market cap (USD)" in price_data
                                 else None
                             ),
                             "price_change": Decimal("0.0"),
@@ -463,7 +440,9 @@ class CryptoService(BaseMarketDataService):
                         daily_prices.append(price_dict)
 
                     except (ValueError, KeyError) as e:
-                        logger.warning(f"Failed to parse daily price data: {e}")
+                        logger.warning(
+                            f"Failed to parse daily price data for {date_str}: {e}"
+                        )
                         continue
 
                 logger.info(
@@ -471,6 +450,7 @@ class CryptoService(BaseMarketDataService):
                 )
                 return daily_prices
 
+            logger.warning(f"Unexpected response type: {type(response)}")
             return []
 
         except Exception as e:
@@ -493,76 +473,60 @@ class CryptoService(BaseMarketDataService):
 
             logger.info(f"Alpha Vantage response type: {type(response)}")
 
-            if isinstance(response, list):
+            if isinstance(response, dict):
+                logger.debug(f"Response keys: {response.keys()}")
+                time_series_key = "Time Series (Digital Currency Weekly)"
+                time_series = response.get(time_series_key, {})
+
+                if not time_series:
+                    logger.warning(
+                        f"No time series data found in response for {symbol}/{market} weekly"
+                    )
+                    return []
+
                 weekly_prices = []
 
-                for item in response:
-                    if not isinstance(item, dict):
+                for date_str, price_data in time_series.items():
+                    if not isinstance(price_data, dict):
                         continue
 
                     try:
-                        date_value = item.get("date")
-                        if isinstance(date_value, str):
-                            date_obj = datetime.strptime(date_value, "%Y-%m-%d")
-                        elif isinstance(date_value, datetime):
-                            date_obj = date_value
-                        else:
-                            continue
+                        # 첫 번째 항목만 로깅 (디버그용)
+                        if len(weekly_prices) == 0:
+                            logger.debug(
+                                f"First weekly price_data keys: {list(price_data.keys())}"
+                            )
+                            logger.debug(f"Sample weekly price_data: {price_data}")
 
+                        date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+
+                        # Alpha Vantage crypto API는 단순히 "1. open", "2. high" 형식 사용
                         price_dict = {
                             "symbol": symbol,
                             "market": market,
                             "date": date_obj,
-                            "open_market": Decimal(
-                                str(item.get(f"1a. open ({market})", 0))
-                            ),
-                            "high_market": Decimal(
-                                str(item.get(f"2a. high ({market})", 0))
-                            ),
-                            "low_market": Decimal(
-                                str(item.get(f"3a. low ({market})", 0))
-                            ),
+                            "open_market": Decimal(str(price_data.get("1. open", "0"))),
+                            "high_market": Decimal(str(price_data.get("2. high", "0"))),
+                            "low_market": Decimal(str(price_data.get("3. low", "0"))),
                             "close_market": Decimal(
-                                str(item.get(f"4a. close ({market})", 0))
+                                str(price_data.get("4. close", "0"))
                             ),
-                            "volume": Decimal(str(item.get("5. volume", 0))),
-                            "market_cap": (
-                                Decimal(str(item.get(f"6. market cap ({market})", 0)))
-                                if f"6. market cap ({market})" in item
-                                else None
-                            ),
-                            "open_usd": (
-                                Decimal(str(item.get("1b. open (USD)", 0)))
-                                if "1b. open (USD)" in item
-                                else None
-                            ),
-                            "high_usd": (
-                                Decimal(str(item.get("2b. high (USD)", 0)))
-                                if "2b. high (USD)" in item
-                                else None
-                            ),
-                            "low_usd": (
-                                Decimal(str(item.get("3b. low (USD)", 0)))
-                                if "3b. low (USD)" in item
-                                else None
-                            ),
-                            "close_usd": (
-                                Decimal(str(item.get("4b. close (USD)", 0)))
-                                if "4b. close (USD)" in item
-                                else None
-                            ),
-                            "market_cap_usd": (
-                                Decimal(str(item.get("6. market cap (USD)", 0)))
-                                if "6. market cap (USD)" in item
-                                else None
-                            ),
+                            "volume": Decimal(str(price_data.get("5. volume", "0"))),
+                            "market_cap": None,
+                            "open_usd": None,
+                            "high_usd": None,
+                            "low_usd": None,
+                            "close_usd": None,
+                            "market_cap_usd": None,
                             "data_quality_score": 95.0,
                             "source": "alpha_vantage",
                         }
                         weekly_prices.append(price_dict)
 
                     except (ValueError, KeyError) as e:
-                        logger.warning(f"Failed to parse weekly price data: {e}")
+                        logger.warning(
+                            f"Failed to parse weekly price data for {date_str}: {e}"
+                        )
                         continue
 
                 logger.info(
@@ -592,76 +556,60 @@ class CryptoService(BaseMarketDataService):
 
             logger.info(f"Alpha Vantage response type: {type(response)}")
 
-            if isinstance(response, list):
+            if isinstance(response, dict):
+                logger.debug(f"Response keys: {response.keys()}")
+                time_series_key = "Time Series (Digital Currency Monthly)"
+                time_series = response.get(time_series_key, {})
+
+                if not time_series:
+                    logger.warning(
+                        f"No time series data found in response for {symbol}/{market} monthly"
+                    )
+                    return []
+
                 monthly_prices = []
 
-                for item in response:
-                    if not isinstance(item, dict):
+                for date_str, price_data in time_series.items():
+                    if not isinstance(price_data, dict):
                         continue
 
                     try:
-                        date_value = item.get("date")
-                        if isinstance(date_value, str):
-                            date_obj = datetime.strptime(date_value, "%Y-%m-%d")
-                        elif isinstance(date_value, datetime):
-                            date_obj = date_value
-                        else:
-                            continue
+                        # 첫 번째 항목만 로깅 (디버그용)
+                        if len(monthly_prices) == 0:
+                            logger.debug(
+                                f"First monthly price_data keys: {list(price_data.keys())}"
+                            )
+                            logger.debug(f"Sample monthly price_data: {price_data}")
 
+                        date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+
+                        # Alpha Vantage crypto API는 단순히 "1. open", "2. high" 형식 사용
                         price_dict = {
                             "symbol": symbol,
                             "market": market,
                             "date": date_obj,
-                            "open_market": Decimal(
-                                str(item.get(f"1a. open ({market})", 0))
-                            ),
-                            "high_market": Decimal(
-                                str(item.get(f"2a. high ({market})", 0))
-                            ),
-                            "low_market": Decimal(
-                                str(item.get(f"3a. low ({market})", 0))
-                            ),
+                            "open_market": Decimal(str(price_data.get("1. open", "0"))),
+                            "high_market": Decimal(str(price_data.get("2. high", "0"))),
+                            "low_market": Decimal(str(price_data.get("3. low", "0"))),
                             "close_market": Decimal(
-                                str(item.get(f"4a. close ({market})", 0))
+                                str(price_data.get("4. close", "0"))
                             ),
-                            "volume": Decimal(str(item.get("5. volume", 0))),
-                            "market_cap": (
-                                Decimal(str(item.get(f"6. market cap ({market})", 0)))
-                                if f"6. market cap ({market})" in item
-                                else None
-                            ),
-                            "open_usd": (
-                                Decimal(str(item.get("1b. open (USD)", 0)))
-                                if "1b. open (USD)" in item
-                                else None
-                            ),
-                            "high_usd": (
-                                Decimal(str(item.get("2b. high (USD)", 0)))
-                                if "2b. high (USD)" in item
-                                else None
-                            ),
-                            "low_usd": (
-                                Decimal(str(item.get("3b. low (USD)", 0)))
-                                if "3b. low (USD)" in item
-                                else None
-                            ),
-                            "close_usd": (
-                                Decimal(str(item.get("4b. close (USD)", 0)))
-                                if "4b. close (USD)" in item
-                                else None
-                            ),
-                            "market_cap_usd": (
-                                Decimal(str(item.get("6. market cap (USD)", 0)))
-                                if "6. market cap (USD)" in item
-                                else None
-                            ),
+                            "volume": Decimal(str(price_data.get("5. volume", "0"))),
+                            "market_cap": None,
+                            "open_usd": None,
+                            "high_usd": None,
+                            "low_usd": None,
+                            "close_usd": None,
+                            "market_cap_usd": None,
                             "data_quality_score": 95.0,
                             "source": "alpha_vantage",
                         }
                         monthly_prices.append(price_dict)
 
                     except (ValueError, KeyError) as e:
-                        logger.warning(f"Failed to parse monthly price data: {e}")
+                        logger.warning(
+                            f"Failed to parse monthly price data for {date_str}: {e}"
+                        )
                         continue
 
                 logger.info(

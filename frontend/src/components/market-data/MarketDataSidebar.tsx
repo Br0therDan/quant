@@ -33,6 +33,8 @@ import WatchlistEditDialog from "./WatchlistEditDialog";
 
 interface MarketDataSidebarProps {
   currentSymbol: string;
+  width?: number;
+  onWidthChange?: (width: number) => void;
 }
 
 // 워치리스트 심볼 아이템
@@ -377,10 +379,14 @@ function SymbolOverview({ symbol }: { symbol: string }) {
 
 export default function MarketDataSidebar({
   currentSymbol,
+  width = 320,
+  onWidthChange,
 }: MarketDataSidebarProps) {
+  const theme = useTheme();
   const router = useRouter();
   const [editDialogOpen, setEditDialogOpen] = React.useState(false);
   const [selectedWatchlist, setSelectedWatchlist] = React.useState<any>(null);
+  const [isResizing, setIsResizing] = React.useState(false);
 
   const {
     watchlistList,
@@ -413,18 +419,81 @@ export default function MarketDataSidebar({
     setEditDialogOpen(true);
   };
 
+  // 리사이저 핸들러
+  const handleMouseDown = React.useCallback(() => {
+    setIsResizing(true);
+  }, []);
+
+  React.useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isResizing) return;
+
+      // 화면 오른쪽에서부터의 거리 계산
+      const newWidth = window.innerWidth - e.clientX;
+
+      // 최소/최대 폭 제한
+      const minWidth = 250;
+      const maxWidth = 600;
+      const clampedWidth = Math.min(Math.max(newWidth, minWidth), maxWidth);
+
+      if (onWidthChange) {
+        onWidthChange(clampedWidth);
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsResizing(false);
+    };
+
+    if (isResizing) {
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+      document.body.style.cursor = "col-resize";
+      document.body.style.userSelect = "none";
+    }
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+    };
+  }, [isResizing, onWidthChange]);
+
   return (
     <>
       <Box
         sx={{
+          position: "relative",
           height: "100%",
+          width: width,
           display: "flex",
           flexDirection: "column",
           borderLeft: 1,
           borderColor: "divider",
-          overflow: "hidden", // 전체 스크롤 방지
+          overflow: "hidden",
         }}
       >
+        {/* 리사이저 핸들 */}
+        <Box
+          onMouseDown={handleMouseDown}
+          sx={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: "4px",
+            cursor: "col-resize",
+            zIndex: 1000,
+            backgroundColor: isResizing
+              ? theme.palette.primary.main
+              : "transparent",
+            transition: "background-color 0.2s",
+            "&:hover": {
+              backgroundColor: theme.palette.primary.light,
+            },
+          }}
+        />
         {/* 워치리스트 섹션 */}
         <Box sx={{ overflow: "auto", flexShrink: 0 }}>
           <Box

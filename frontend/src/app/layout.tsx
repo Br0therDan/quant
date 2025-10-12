@@ -1,12 +1,33 @@
 import QueryProvider from "@/components/providers/QueryProvider";
+import AppTheme from "@/components/shared-theme/AppTheme";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { SnackbarProvider } from "@/contexts/SnackbarContext";
-import theme from "@/theme";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import CssBaseline from "@mui/material/CssBaseline";
 import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
-import { ThemeProvider } from "@mui/material/styles";
+import { Roboto, Inter, JetBrains_Mono } from "next/font/google";
 import type * as React from "react";
+
+const roboto = Roboto({
+  weight: ["300", "400", "500", "700"],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-roboto",
+});
+
+const inter = Inter({
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  weight: ["400", "500", "600"],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-jetbrains-mono",
+});
 
 export const metadata = {
   title: "MySingle Quant",
@@ -19,7 +40,11 @@ export const metadata = {
 
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${roboto.variable} ${inter.variable} ${jetbrainsMono.variable}`}
+    >
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -27,7 +52,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
       <body>
         <InitColorSchemeScript attribute="class" />
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
-          <ThemeProvider theme={theme}>
+          <AppTheme>
             <SnackbarProvider>
               <QueryProvider>
                 <AuthProvider>
@@ -36,7 +61,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
                 </AuthProvider>
               </QueryProvider>
             </SnackbarProvider>
-          </ThemeProvider>
+          </AppTheme>
         </AppRouterCacheProvider>
       </body>
     </html>

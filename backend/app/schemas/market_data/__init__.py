@@ -176,6 +176,28 @@ from .intelligence import (
     SentimentAlertResponse,
 )
 
+# Technical indicator schemas
+from .technical_indicator import (
+    # Request schemas
+    TechnicalIndicatorRequest,
+    SMARequest,
+    EMARequest,
+    RSIRequest,
+    MACDRequest,
+    BBANDSRequest,
+    STOCHRequest,
+    ADXRequest,
+    MultipleIndicatorsRequest,
+    # Response data models
+    IndicatorDataPoint,
+    TechnicalIndicatorData,
+    MultipleIndicatorsData,
+    # Response schemas
+    TechnicalIndicatorResponse,
+    MultipleIndicatorsResponse,
+    IndicatorListResponse,
+)
+
 
 __all__ = [
     # Base schemas
@@ -328,4 +350,22 @@ __all__ = [
     "OptionFlowListResponse",
     "IntelligenceOverviewResponse",
     "SentimentAlertResponse",
+    # Technical indicator schemas - Requests
+    "TechnicalIndicatorRequest",
+    "SMARequest",
+    "EMARequest",
+    "RSIRequest",
+    "MACDRequest",
+    "BBANDSRequest",
+    "STOCHRequest",
+    "ADXRequest",
+    "MultipleIndicatorsRequest",
+    # Technical indicator schemas - Data models
+    "IndicatorDataPoint",
+    "TechnicalIndicatorData",
+    "MultipleIndicatorsData",
+    # Technical indicator schemas - Responses
+    "TechnicalIndicatorResponse",
+    "MultipleIndicatorsResponse",
+    "IndicatorListResponse",
 ]

@@ -36,6 +36,9 @@ from .market_data import (
     SocialSentiment,
     MarketMood,
     OptionFlow,
+    # Technical indicators
+    TechnicalIndicator,
+    IndicatorDataPoint,
 )
 from .performance import StrategyPerformance
 from .strategy import Strategy, StrategyTemplate, StrategyExecution
@@ -80,6 +83,9 @@ collections = [
     SocialSentiment,
     MarketMood,
     OptionFlow,
+    # 기술적 지표
+    TechnicalIndicator,
+    IndicatorDataPoint,
     # 전략 및 성과
     Strategy,
     StrategyTemplate,
@@ -125,6 +131,9 @@ __all__ = [
     "SocialSentiment",
     "MarketMood",
     "OptionFlow",
+    # Technical indicators
+    "TechnicalIndicator",
+    "IndicatorDataPoint",
     # Other models
     "Watchlist",
     "Backtest",

@@ -65,8 +65,8 @@ class TechnicalIndicators(BaseAPIHandler):
             "apikey": self.api_key,
         }
 
-        # Add additional parameters
-        params.update(kwargs)
+        # Add additional parameters, filtering out None values
+        params.update({k: v for k, v in kwargs.items() if v is not None})
 
         data = await self._make_request(params)
         return self._parse_technical_indicator_response(data, function)

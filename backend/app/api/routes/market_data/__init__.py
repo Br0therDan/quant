@@ -12,6 +12,7 @@ from .fundamental import router as fundamental_router
 from .economic_indicator import router as economic_indicator_router
 from .intelligence import router as intelligence_router
 from .management import router as management_router
+from .technical_indicators import router as technical_indicators_router
 
 # 메인 마켓 데이터 라우터
 router = APIRouter(dependencies=[Depends(get_current_active_verified_user)])
@@ -25,6 +26,11 @@ router.include_router(
     intelligence_router, prefix="/intelligence", tags=["Intelligence"]
 )
 router.include_router(management_router, prefix="/management", tags=["Market Data"])
+router.include_router(
+    technical_indicators_router,
+    prefix="/technical-indicators",
+    tags=["Technical Indicators"],
+)
 
 
 @router.get("/", tags=["Market Data"])
@@ -84,6 +90,17 @@ async def get_market_data_info():
                     "/status",
                 ],
             },
+            "technical-indicators": {
+                "description": "기술적 지표 (SMA, EMA, RSI, MACD, Bollinger Bands 등)",
+                "endpoints": [
+                    "/indicators",
+                    "/{symbol}/sma",
+                    "/{symbol}/ema",
+                    "/{symbol}/rsi",
+                    "/{symbol}/macd",
+                    "/{symbol}/bbands",
+                ],
+            },
         },
     }
 
@@ -99,6 +116,7 @@ async def health_check():
             "fundamental_service": "operational",
             "economic_indicator_service": "operational",
             "intelligence_service": "operational",
+            "technical_indicator_service": "operational",
         },
         "cache_status": {"duckdb": "connected", "mongodb": "connected"},
     }

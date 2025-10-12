@@ -10,6 +10,7 @@ from .market_data_service.stock import StockService
 from .market_data_service.fundamental import FundamentalService
 from .market_data_service.economic_indicator import EconomicIndicatorService
 from .market_data_service.intelligence import IntelligenceService
+from .market_data_service.technical_indicator import TechnicalIndicatorService
 from .strategy_service import StrategyService
 from .backtest_service import BacktestService
 from .database_manager import DatabaseManager
@@ -29,6 +30,7 @@ class ServiceFactory:
     _fundamental_service: Optional[FundamentalService] = None
     _economic_indicator_service: Optional[EconomicIndicatorService] = None
     _intelligence_service: Optional[IntelligenceService] = None
+    _technical_indicator_service: Optional[TechnicalIndicatorService] = None
     _strategy_service: Optional[StrategyService] = None
     _backtest_service: Optional[BacktestService] = None
     _database_manager: Optional[DatabaseManager] = None
@@ -86,6 +88,16 @@ class ServiceFactory:
             self._intelligence_service = IntelligenceService()
             logger.info("Created IntelligenceService instance")
         return self._intelligence_service
+
+    def get_technical_indicator_service(self) -> TechnicalIndicatorService:
+        """TechnicalIndicatorService 인스턴스 반환 (DuckDB 연동)"""
+        if self._technical_indicator_service is None:
+            database_manager = self.get_database_manager()
+            self._technical_indicator_service = TechnicalIndicatorService(
+                database_manager
+            )
+            logger.info("Created TechnicalIndicatorService instance with DuckDB")
+        return self._technical_indicator_service
 
     def get_strategy_service(self) -> StrategyService:
         """StrategyService 인스턴스 반환"""
