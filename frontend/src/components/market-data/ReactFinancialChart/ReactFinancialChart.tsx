@@ -1,6 +1,7 @@
 "use client";
 
 import { Box } from "@mui/material";
+import { HoverTooltip } from "@react-financial-charts/tooltip";
 import { format } from "d3-format";
 import { timeFormat } from "d3-time-format";
 import * as React from "react";
@@ -509,6 +510,44 @@ function ReactFinancialChart({
 
           <ZoomButtons />
           <OHLCTooltip origin={[8, 16]} />
+
+          {/* Hover Tooltip - Tooltips.tsx 예제 참고 */}
+          <HoverTooltip
+            yAccessor={(d: any) => d.close}
+            tooltip={{
+              content: ({ currentItem, xAccessor }) => {
+                const dateStr = timeDisplayFormat(xAccessor(currentItem));
+                return {
+                  x: dateStr,
+                  y: [
+                    {
+                      label: "open",
+                      value:
+                        currentItem.open &&
+                        pricesDisplayFormat(currentItem.open),
+                    },
+                    {
+                      label: "high",
+                      value:
+                        currentItem.high &&
+                        pricesDisplayFormat(currentItem.high),
+                    },
+                    {
+                      label: "low",
+                      value:
+                        currentItem.low && pricesDisplayFormat(currentItem.low),
+                    },
+                    {
+                      label: "close",
+                      value:
+                        currentItem.close &&
+                        pricesDisplayFormat(currentItem.close),
+                    },
+                  ],
+                };
+              },
+            }}
+          />
         </Chart>
 
         {/* Elder Ray Chart (차트 4) - StockChart 패턴 */}
@@ -544,8 +583,13 @@ function ReactFinancialChart({
           </Chart>
         )}
 
-        {/* CrossHair Cursor */}
-        <CrossHairCursor />
+        {/* CrossHair Cursor - Customized */}
+        <CrossHairCursor
+          snapX={true}
+          strokeStyle="rgba(100, 149, 237, 0.6)"
+          strokeDasharray="ShortDash"
+          strokeWidth={1}
+        />
       </ChartCanvas>
     </Box>
   );
