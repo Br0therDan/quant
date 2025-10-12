@@ -13,7 +13,6 @@ import MarketDataHeader from "@/components/market-data/MarketDataHeader";
 import WatchlistBar from "@/components/market-data/WatchlistBar";
 import {
   useStockDailyPrices,
-  useStockHistorical,
   useStockIntraday,
   useStockMonthlyPrices,
   useStockQuote,
@@ -39,9 +38,7 @@ export default function MarketDataChartPage() {
     dayjs().subtract(1, "month")
   );
   const [endDate, setEndDate] = React.useState<Dayjs | null>(dayjs());
-  const [interval, setInterval] = React.useState<string>("1d");
-  const [intradayInterval, setIntradayInterval] =
-    React.useState<string>("5min");
+  const [interval, setInterval] = React.useState<string>("daily"); // 기본값: 일봉
   const [chartType, setChartType] = React.useState("candlestick");
 
   // 워치리스트 데이터 가져오기
@@ -80,12 +77,21 @@ export default function MarketDataChartPage() {
 
   // 기간에 따른 적절한 API 선택
   const apiType = React.useMemo(() => {
-    // interval에 따라 API 결정
-    if (interval === "intraday") return "intraday";
-    if (interval === "1w") return "weekly";
-    if (interval === "1m") return "monthly";
-    if (interval === "1d") return "daily";
-    return "historical"; // 그 외는 historical
+    // interval 값으로 API 결정
+    // 분봉: 1min, 5min, 15min, 30min, 60min
+    if (["1min", "5min", "15min", "30min", "60min"].includes(interval)) {
+      return "intraday";
+    }
+    // 주봉
+    if (interval === "weekly") {
+      return "weekly";
+    }
+    // 월봉
+    if (interval === "monthly") {
+      return "monthly";
+    }
+    // 일봉 (기본값)
+    return "daily";
   }, [interval]);
 
   // 실시간 Quote (항상 필요)
@@ -96,12 +102,7 @@ export default function MarketDataChartPage() {
   const { data: intradayData, isLoading: intradayLoading } = useStockIntraday(
     selectedSymbol,
     {
-      interval: intradayInterval as
-        | "1min"
-        | "5min"
-        | "15min"
-        | "30min"
-        | "60min",
+      interval: interval as "1min" | "5min" | "15min" | "30min" | "60min",
       enabled: apiType === "intraday" && !!selectedSymbol,
     }
   );
@@ -137,20 +138,6 @@ export default function MarketDataChartPage() {
       enabled: apiType === "monthly" && !!selectedSymbol,
     });
 
-  // Historical API (기타 interval용)
-  const { data: historicalData, isLoading: historicalLoading } =
-    useStockHistorical(
-      selectedSymbol,
-      {
-        startDate: startDate?.format("YYYY-MM-DD"),
-        endDate: endDate?.format("YYYY-MM-DD"),
-        frequency: interval,
-      },
-      {
-        enabled: apiType === "historical" && !!selectedSymbol,
-      }
-    );
-
   // 디버깅: API 호출 조건 확인
   React.useEffect(() => {
     console.log("🔍 API Call Conditions:", {
@@ -164,7 +151,6 @@ export default function MarketDataChartPage() {
         daily: apiType === "daily" && !!selectedSymbol,
         weekly: apiType === "weekly" && !!selectedSymbol,
         monthly: apiType === "monthly" && !!selectedSymbol,
-        historical: apiType === "historical" && !!selectedSymbol,
       },
     });
   }, [selectedSymbol, apiType, interval, startDate, endDate]);
@@ -199,17 +185,11 @@ export default function MarketDataChartPage() {
           ? `Array[${monthlyPrices.length}]`
           : "Object"
         : "null",
-      historicalData: historicalData
-        ? Array.isArray(historicalData)
-          ? `Array[${historicalData.length}]`
-          : "Object"
-        : "null",
       isLoading: {
         intradayLoading,
         dailyLoading,
         weeklyLoading,
         monthlyLoading,
-        historicalLoading,
       },
     });
   }, [
@@ -220,12 +200,10 @@ export default function MarketDataChartPage() {
     dailyPrices,
     weeklyPrices,
     monthlyPrices,
-    historicalData,
     intradayLoading,
     dailyLoading,
     weeklyLoading,
     monthlyLoading,
-    historicalLoading,
   ]);
 
   // 차트 데이터 결정 - apiType에 따라 적절한 데이터 선택
@@ -234,16 +212,8 @@ export default function MarketDataChartPage() {
     if (apiType === "daily") return dailyPrices;
     if (apiType === "weekly") return weeklyPrices;
     if (apiType === "monthly") return monthlyPrices;
-    if (apiType === "historical") return historicalData;
     return null;
-  }, [
-    apiType,
-    intradayData,
-    dailyPrices,
-    weeklyPrices,
-    monthlyPrices,
-    historicalData,
-  ]);
+  }, [apiType, intradayData, dailyPrices, weeklyPrices, monthlyPrices]);
 
   // 마켓 데이터를 차트 데이터로 변환
   const chartData: CandlestickData[] = React.useMemo(() => {
@@ -399,20 +369,20 @@ export default function MarketDataChartPage() {
 
   const isLoading = React.useMemo(() => {
     let dataLoading = false;
-    if (apiType === "daily") dataLoading = dailyLoading;
+    if (apiType === "intraday") dataLoading = intradayLoading;
+    else if (apiType === "daily") dataLoading = dailyLoading;
     else if (apiType === "weekly") dataLoading = weeklyLoading;
     else if (apiType === "monthly") dataLoading = monthlyLoading;
-    else if (apiType === "historical") dataLoading = historicalLoading;
 
     return watchlistLoading || quoteLoading || dataLoading;
   }, [
     watchlistLoading,
     quoteLoading,
     apiType,
+    intradayLoading,
     dailyLoading,
     weeklyLoading,
     monthlyLoading,
-    historicalLoading,
   ]);
 
   return (
@@ -485,8 +455,6 @@ export default function MarketDataChartPage() {
               onEndDateChange={setEndDate}
               interval={interval}
               onIntervalChange={setInterval}
-              intradayInterval={intradayInterval}
-              onIntradayIntervalChange={setIntradayInterval}
               isLoading={isLoading}
               chartType={chartType}
               onChartTypeChange={setChartType}

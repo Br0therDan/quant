@@ -4,7 +4,7 @@ import type { StrategyType } from "@/client/types.gen";
 import PageContainer from "@/components/layout/PageContainer";
 import StrategyParameters from "@/components/strategies/StrategyParameters";
 import { useStrategy, useStrategyDetail } from "@/hooks/useStrategy";
-import { ArrowBack, Save } from "@mui/icons-material";
+import { ArrowBack, PlayArrow, Save } from "@mui/icons-material";
 import {
   Alert,
   Box,
@@ -25,20 +25,17 @@ import {
   Typography,
 } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import type React from "react";
 import { useEffect, useState } from "react";
 
 const steps = ["기본 정보", "파라미터 설정", "백테스트 실행"];
 
-export default function CreateStrategyPage() {
+export default function EditStrategyPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const params = useParams();
   const queryClient = useQueryClient();
-
-  // URL에서 복제 파라미터 추출
-  const cloneId = searchParams.get("clone");
-  const isClone = !!cloneId;
+  const strategyId = params.id as string;
 
   const [activeStep, setActiveStep] = useState(0);
   const [strategyData, setStrategyData] = useState({
@@ -49,35 +46,32 @@ export default function CreateStrategyPage() {
     tags: [] as string[],
   });
 
-  // 복제할 전략 데이터 조회
-  const { data: sourceStrategy, isLoading: isLoadingSource } =
-    useStrategyDetail(cloneId || "");
+  // 전략 데이터 조회
+  const {
+    data: strategy,
+    isLoading: isLoadingStrategy,
+    error,
+  } = useStrategyDetail(strategyId);
 
   // 전략 관리 액션들
-  const { createStrategy: createStrategyFn, isMutating } = useStrategy();
+  const {
+    updateStrategy: updateStrategyFn,
+    executeStrategy: executeStrategyFn,
+    isMutating,
+  } = useStrategy();
 
-  const handleCreateStrategy = async (data: any) => {
-    try {
-      await createStrategyFn(data);
-      queryClient.invalidateQueries({ queryKey: ["strategy", "list"] });
-      router.push("/strategies/my-strategies");
-    } catch (error) {
-      console.error("전략 생성 실패:", error);
-    }
-  };
-
-  // 소스 전략 데이터로 초기화 (복제 모드)
+  // 전략 데이터로 초기화
   useEffect(() => {
-    if (sourceStrategy && isClone) {
+    if (strategy) {
       setStrategyData({
-        name: `${sourceStrategy.name} (복사본)`,
-        description: sourceStrategy.description || "",
-        strategy_type: sourceStrategy.strategy_type,
-        parameters: sourceStrategy.parameters || {},
-        tags: sourceStrategy.tags || [],
+        name: strategy.name,
+        description: strategy.description || "",
+        strategy_type: strategy.strategy_type,
+        parameters: strategy.parameters || {},
+        tags: strategy.tags || [],
       });
     }
-  }, [sourceStrategy, isClone]);
+  }, [strategy]);
 
   const handleNext = () => {
     setActiveStep((prevStep) => prevStep + 1);
@@ -87,24 +81,66 @@ export default function CreateStrategyPage() {
     setActiveStep((prevStep) => prevStep - 1);
   };
 
-  const handleSave = () => {
-    handleCreateStrategy(strategyData);
+  const handleSave = async () => {
+    try {
+      await updateStrategyFn({ id: strategyId, updateData: strategyData });
+      queryClient.invalidateQueries({ queryKey: ["strategy", "list"] });
+      queryClient.invalidateQueries({
+        queryKey: ["strategy", "detail", strategyId],
+      });
+      router.push(`/strategies/${strategyId}`);
+    } catch (error) {
+      console.error("전략 업데이트 실패:", error);
+    }
   };
 
-  const getPageTitle = () => {
-    if (isClone) return "전략 복사";
-    return "새 전략 만들기";
+  const handleExecute = async () => {
+    try {
+      await executeStrategyFn({
+        id: strategyId,
+        data: {
+          symbol: "AAPL",
+          market_data: {
+            start_date: new Date(
+              Date.now() - 365 * 24 * 60 * 60 * 1000
+            ).toISOString(),
+            end_date: new Date().toISOString(),
+          },
+        },
+      });
+      router.push(`/backtests`);
+    } catch (error) {
+      console.error("전략 실행 실패:", error);
+    }
   };
 
-  const getBreadcrumbs = () => [
-    { title: "Strategy Center" },
-    { title: "Strategies" },
-    { title: "Create" },
-  ];
-
-  if (isLoadingSource) {
+  if (error) {
     return (
-      <PageContainer title={getPageTitle()} breadcrumbs={getBreadcrumbs()}>
+      <PageContainer
+        title="전략 편집"
+        breadcrumbs={[
+          { title: "Strategy Center" },
+          { title: "Strategies" },
+          { title: "Edit" },
+        ]}
+      >
+        <Alert severity="error">
+          전략을 불러오는 중 오류가 발생했습니다: {(error as any)?.message}
+        </Alert>
+      </PageContainer>
+    );
+  }
+
+  if (isLoadingStrategy) {
+    return (
+      <PageContainer
+        title="전략 편집"
+        breadcrumbs={[
+          { title: "Strategy Center" },
+          { title: "Strategies" },
+          { title: "Edit" },
+        ]}
+      >
         <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
           <CircularProgress />
         </Box>
@@ -114,15 +150,20 @@ export default function CreateStrategyPage() {
 
   return (
     <PageContainer
-      title={getPageTitle()}
-      breadcrumbs={getBreadcrumbs()}
+      title={`"${strategy?.name}" 편집`}
+      breadcrumbs={[
+        { title: "Strategy Center" },
+        { title: "Strategies" },
+        { title: strategy?.name || "전략" },
+        { title: "Edit" },
+      ]}
       actions={[
         <Button
           key="back"
           startIcon={<ArrowBack />}
-          onClick={() => router.back()}
+          onClick={() => router.push(`/strategies/${strategyId}`)}
         >
-          뒤로가기
+          취소
         </Button>,
       ]}
     >
@@ -175,25 +216,28 @@ export default function CreateStrategyPage() {
                 </Grid>
 
                 <Grid size={{ xs: 12 }}>
-                  <FormControl fullWidth required>
+                  <FormControl fullWidth required disabled>
                     <InputLabel>전략 타입</InputLabel>
                     <Select
                       value={strategyData.strategy_type}
                       label="전략 타입"
-                      onChange={(e: any) =>
-                        setStrategyData((prev) => ({
-                          ...prev,
-                          strategy_type: e.target.value as StrategyType,
-                        }))
-                      }
+                      disabled
                     >
-                      <MenuItem value="sma_crossover">SMA 크로스오버</MenuItem>
-                      <MenuItem value="rsi_mean_reversion">
-                        RSI 평균회귀
+                      <MenuItem value="sma_crossover">SMA Crossover</MenuItem>
+                      <MenuItem value="rsi">RSI</MenuItem>
+                      <MenuItem value="bollinger_bands">
+                        Bollinger Bands
                       </MenuItem>
-                      <MenuItem value="momentum">모멘텀</MenuItem>
-                      <MenuItem value="buy_and_hold">매수후보유</MenuItem>
+                      <MenuItem value="macd">MACD</MenuItem>
+                      <MenuItem value="momentum">Momentum</MenuItem>
                     </Select>
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      sx={{ mt: 1 }}
+                    >
+                      전략 타입은 변경할 수 없습니다.
+                    </Typography>
                   </FormControl>
                 </Grid>
               </Grid>
@@ -241,25 +285,37 @@ export default function CreateStrategyPage() {
           <Card>
             <CardContent>
               <Typography variant="h6" sx={{ mb: 3 }}>
-                전략 저장
+                저장 및 백테스트
               </Typography>
 
               <Alert severity="info" sx={{ mb: 3 }}>
-                전략을 저장하면 내 전략 목록에서 확인할 수 있습니다.
+                전략을 저장하고 백테스트를 실행하여 성과를 확인할 수 있습니다.
               </Alert>
 
               <Box
                 sx={{ display: "flex", justifyContent: "space-between", mt: 3 }}
               >
                 <Button onClick={handleBack}>이전</Button>
-                <Button
-                  startIcon={<Save />}
-                  variant="contained"
-                  onClick={handleSave}
-                  disabled={isMutating.createStrategy}
-                >
-                  {isMutating.createStrategy ? "저장 중..." : "저장"}
-                </Button>
+                <Box sx={{ display: "flex", gap: 2 }}>
+                  <Button
+                    startIcon={<Save />}
+                    variant="outlined"
+                    onClick={handleSave}
+                    disabled={isMutating.updateStrategy}
+                  >
+                    {isMutating.updateStrategy ? "저장 중..." : "저장"}
+                  </Button>
+                  <Button
+                    startIcon={<PlayArrow />}
+                    variant="contained"
+                    onClick={handleExecute}
+                    disabled={isMutating.executeStrategy}
+                  >
+                    {isMutating.executeStrategy
+                      ? "실행 중..."
+                      : "백테스트 실행"}
+                  </Button>
+                </Box>
               </Box>
             </CardContent>
           </Card>

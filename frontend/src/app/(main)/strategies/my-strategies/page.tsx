@@ -42,17 +42,14 @@ export default function MyStrategiesPage() {
     strategyList: allStrategies,
     isLoading: { strategyList: isLoading },
     error: { strategyList: error },
-    deleteStrategy: deleteStrategyFn,
-    executeStrategy: executeStrategyFn,
-    isDeleting,
-    isExecuting,
+    deleteStrategy,
+    executeStrategy,
+    isMutating,
   } = useStrategy();
 
   // 템플릿이 아닌 전략들만 필터링
   const strategies =
-    allStrategies?.strategies?.filter((strategy) => !strategy.is_template) ||
-    [];
-
+    allStrategies?.filter((strategy) => !strategy.is_template) || [];
 
   // 필터링된 전략 (템플릿 제외)
   const filteredStrategies = strategies.filter((strategy: any) => {
@@ -105,17 +102,16 @@ export default function MyStrategiesPage() {
 
   const confirmDelete = () => {
     if (deleteDialog.strategy) {
-      deleteStrategy.mutate({
-        path: { strategy_id: deleteDialog.strategy.id },
-      });
+      deleteStrategy(deleteDialog.strategy.id);
+      setDeleteDialog({ open: false });
     }
   };
 
   const handleExecute = (strategy: any) => {
     // 기본 설정으로 전략 실행
-    executeStrategy.mutate({
-      path: { strategy_id: strategy.id },
-      body: {
+    executeStrategy({
+      id: strategy.id,
+      data: {
         symbol: "AAPL",
         market_data: {
           start_date: new Date(
@@ -253,19 +249,19 @@ export default function MyStrategiesPage() {
             onClick={confirmDelete}
             color="error"
             variant="contained"
-            disabled={deleteStrategy.isPending}
+            disabled={isMutating.deleteStrategy}
           >
-            {deleteStrategy.isPending ? "삭제 중..." : "삭제"}
+            {isMutating.deleteStrategy ? "삭제 중..." : "삭제"}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* 로딩 상태 */}
-      {(executeStrategy.isPending || deleteStrategy.isPending) && (
+      {(isMutating.executeStrategy || isMutating.deleteStrategy) && (
         <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
           <CircularProgress size={24} />
           <Typography variant="body2" sx={{ ml: 1 }}>
-            {executeStrategy.isPending
+            {isMutating.executeStrategy
               ? "전략을 실행하는 중..."
               : "전략을 삭제하는 중..."}
           </Typography>

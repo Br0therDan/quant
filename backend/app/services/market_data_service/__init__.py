@@ -9,6 +9,7 @@ import logging
 from typing import Optional
 from .base_service import BaseMarketDataService, CacheResult, DataCoverage
 from .stock import StockService
+from .crypto import CryptoService
 from .fundamental import FundamentalService
 from .economic_indicator import EconomicIndicatorService
 from .intelligence import IntelligenceService
@@ -29,6 +30,7 @@ class MarketDataService:
 
         # 각 도메인별 서비스 인스턴스
         self._stock_service = None
+        self._crypto_service = None
         self._fundamental_service = None
         self._economic_indicator_service = None
         self._intelligence_service = None
@@ -39,6 +41,13 @@ class MarketDataService:
         if self._stock_service is None:
             self._stock_service = StockService(self.database_manager)
         return self._stock_service
+
+    @property
+    def crypto(self) -> CryptoService:
+        """암호화폐 데이터 서비스 접근"""
+        if self._crypto_service is None:
+            self._crypto_service = CryptoService(self.database_manager)
+        return self._crypto_service
 
     @property
     def fundamental(self) -> FundamentalService:
@@ -67,6 +76,7 @@ class MarketDataService:
         """모든 서비스 종료 및 리소스 정리"""
         services = [
             self._stock_service,
+            self._crypto_service,
             self._fundamental_service,
             self._economic_indicator_service,
             self._intelligence_service,

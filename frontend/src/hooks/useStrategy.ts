@@ -5,7 +5,7 @@
 // Hey-API 기반: @/client/sdk.gen.ts 의 각 엔드포인트별 서비스클래스 및 @/client/types.gen.ts 의 타입정의 활용(엔드포인트의 스키마명칭과 호환)
 
 import { StrategyService } from "@/client";
-import type { StrategyCreateRequest, StrategyExecuteRequest } from "@/client/types.gen";
+import type { StrategyCreate, StrategyExecute } from "@/client/types.gen";
 import { useSnackbar } from "@/contexts/SnackbarContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
@@ -39,7 +39,7 @@ export function useStrategy() {
 
     // Mutations
     const createStrategyMutation = useMutation({
-        mutationFn: async (data: StrategyCreateRequest) => {
+        mutationFn: async (data: StrategyCreate) => {
             const response = await StrategyService.createStrategy({
                 body: data
             });
@@ -56,7 +56,7 @@ export function useStrategy() {
     });
 
     const updateStrategyMutation = useMutation({
-        mutationFn: async (data: { id: string; updateData: Partial<StrategyCreateRequest> }) => {
+        mutationFn: async (data: { id: string; updateData: Partial<StrategyCreate> }) => {
             const response = await StrategyService.updateStrategy({
                 path: { strategy_id: data.id },
                 body: data.updateData
@@ -92,7 +92,7 @@ export function useStrategy() {
     });
 
     const executeStrategyMutation = useMutation({
-        mutationFn: async ({id, data}: { id: string; data: StrategyExecuteRequest }) => {
+        mutationFn: async ({id, data}: { id: string; data: StrategyExecute }) => {
             const response = await StrategyService.executeStrategy({
                 path: { strategy_id: id },
                 body: data

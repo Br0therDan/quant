@@ -57,6 +57,10 @@ async def get_daily_prices(
     outputsize: str = Query(
         default="compact", description="데이터 크기 (compact: 최근 100일, full: 전체)"
     ),
+    adjusted: bool = Query(
+        default=True,
+        description="Adjusted prices 사용 여부 (True: adjusted, False: raw)",
+    ),
     start_date: Optional[date] = Query(default=None, description="시작 날짜 (YYYY-MM-DD)"),
     end_date: Optional[date] = Query(default=None, description="종료 날짜 (YYYY-MM-DD)"),
 ) -> HistoricalDataResponse:
@@ -79,7 +83,7 @@ async def get_daily_prices(
 
         market_service = service_factory.get_market_data_service()
         daily_prices = await market_service.stock.get_daily_prices(
-            symbol=symbol, outputsize=outputsize
+            symbol=symbol, outputsize=outputsize, adjusted=adjusted
         )
 
         if not daily_prices:
@@ -146,11 +150,13 @@ async def get_daily_prices(
 )
 async def get_weekly_prices(
     symbol: str = Path(..., description="종목 심볼 (예: AAPL, TSLA)"),
+    adjusted: bool = Query(
+        default=True,
+        description="Adjusted prices 사용 여부 (True: adjusted, False: raw)",
+    ),
     start_date: Optional[date] = Query(default=None, description="시작 날짜 (YYYY-MM-DD)"),
     end_date: Optional[date] = Query(default=None, description="종료 날짜 (YYYY-MM-DD)"),
-    outputsize: str = Query(
-        "compact", description="데이터 크기 (compact: 최근 100개, full: 전체)"
-    ),
+    outputsize: str = Query("full", description="데이터 크기 (compact: 최근 100개, full: 전체)"),
 ) -> HistoricalDataResponse:
     """주간 주가 데이터 조회"""
     try:
@@ -171,7 +177,7 @@ async def get_weekly_prices(
 
         market_service = service_factory.get_market_data_service()
         weekly_prices = await market_service.stock.get_weekly_prices(
-            symbol=symbol, outputsize=outputsize
+            symbol=symbol, outputsize=outputsize, adjusted=adjusted
         )
 
         if not weekly_prices:
@@ -235,11 +241,13 @@ async def get_weekly_prices(
 )
 async def get_monthly_prices(
     symbol: str = Path(..., description="종목 심볼 (예: AAPL, TSLA)"),
+    adjusted: bool = Query(
+        default=True,
+        description="Adjusted prices 사용 여부 (True: adjusted, False: raw)",
+    ),
     start_date: Optional[date] = Query(default=None, description="시작 날짜 (YYYY-MM-DD)"),
     end_date: Optional[date] = Query(default=None, description="종료 날짜 (YYYY-MM-DD)"),
-    outputsize: str = Query(
-        "compact", description="데이터 크기 (compact: 최근 100개, full: 전체)"
-    ),
+    outputsize: str = Query("full", description="데이터 크기 (compact: 최근 100개, full: 전체)"),
 ) -> HistoricalDataResponse:
     """월간 주가 데이터 조회"""
     try:
@@ -260,7 +268,7 @@ async def get_monthly_prices(
 
         market_service = service_factory.get_market_data_service()
         monthly_prices = await market_service.stock.get_monthly_prices(
-            symbol=symbol, outputsize=outputsize
+            symbol=symbol, outputsize=outputsize, adjusted=adjusted
         )
 
         if not monthly_prices:
@@ -372,12 +380,18 @@ async def get_intraday_data(
     interval: Literal["1min", "5min", "15min", "30min", "60min"] = Query(
         default="15min", description="데이터 간격 (1min, 5min, 15min, 30min, 60min)"
     ),
+    month: Optional[str] = Query(
+        default=None,
+        description="조회할 월 (YYYY-MM 형식). 지정하지 않으면 최신 데이터 조회. Premium plan only.",
+        pattern=r"^\d{4}-\d{2}$",
+    ),
     extended_hours: bool = Query(default=False, description="연장 거래 시간 포함 여부"),
     adjusted: bool = Query(default=True, description="조정 가격 여부"),
     start_date: Optional[date] = Query(default=None, description="시작 날짜 (YYYY-MM-DD)"),
     end_date: Optional[date] = Query(default=None, description="종료 날짜 (YYYY-MM-DD)"),
     outputsize: Literal["compact", "full"] = Query(
-        default="compact", description="데이터 크기 (compact/full)"
+        default="compact",
+        description="데이터 크기 (compact: 100 data points, full: 30 days or full month)",
     ),
 ):
     """실시간/분봉 주가 데이터 조회"""
@@ -405,6 +419,7 @@ async def get_intraday_data(
             adjusted=adjusted,
             extended_hours=extended_hours,
             outputsize=outputsize,
+            month=month,
         )
 
         if not intraday_prices:

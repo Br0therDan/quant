@@ -9,9 +9,13 @@ from .market_data import (
     WeeklyPrice,
     MonthlyPrice,
     IntradayPrice,
-    Quote,
-    Dividend,
-    Split,
+    StockDataCoverage,
+    # Crypto data
+    CryptoExchangeRate,
+    CryptoIntradayPrice,
+    CryptoDailyPrice,
+    CryptoWeeklyPrice,
+    CryptoMonthlyPrice,
     # Fundamental data
     CompanyOverview,
     IncomeStatement,
@@ -44,14 +48,18 @@ collections = [
     BacktestResult,
     # Company 및 Watchlist
     Watchlist,
-    # 시장 데이터
+    # 시장 데이터 - 주식
     DailyPrice,
     WeeklyPrice,
     MonthlyPrice,
     IntradayPrice,
-    Quote,
-    Dividend,
-    Split,
+    StockDataCoverage,
+    # 시장 데이터 - 암호화폐
+    CryptoExchangeRate,
+    CryptoIntradayPrice,
+    CryptoDailyPrice,
+    CryptoWeeklyPrice,
+    CryptoMonthlyPrice,
     # 펀더멘털 데이터
     CompanyOverview,
     IncomeStatement,
@@ -85,25 +93,32 @@ __all__ = [
     # Auth models
     "User",
     "OAuthAccount",
-    # Market data models
+    # Market data models - Stock
     "DailyPrice",
     "WeeklyPrice",
     "MonthlyPrice",
     "IntradayPrice",
-    "Quote",
-    "Dividend",
-    "Split",
+    "StockDataCoverage",
+    # Market data models - Crypto
+    "CryptoExchangeRate",
+    "CryptoIntradayPrice",
+    "CryptoDailyPrice",
+    "CryptoWeeklyPrice",
+    "CryptoMonthlyPrice",
+    # Fundamental data
     "CompanyOverview",
     "IncomeStatement",
     "BalanceSheet",
     "CashFlow",
     "Earnings",
+    # Economic indicators
     "EconomicIndicator",
     "GDP",
     "Inflation",
     "InterestRate",
     "Employment",
     "Manufacturing",
+    # Intelligence data
     "NewsSentiment",
     "NewsArticle",
     "AnalystRating",

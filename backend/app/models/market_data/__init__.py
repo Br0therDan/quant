@@ -4,13 +4,18 @@ Market data models package
 
 from .base import BaseMarketDataDocument, DataQualityMixin
 from .stock import (
+    IntradayPrice,
     DailyPrice,
     WeeklyPrice,
     MonthlyPrice,
-    IntradayPrice,
-    Quote,
-    Dividend,
-    Split,
+    StockDataCoverage,
+)
+from .crypto import (
+    CryptoExchangeRate,
+    CryptoIntradayPrice,
+    CryptoDailyPrice,
+    CryptoWeeklyPrice,
+    CryptoMonthlyPrice,
 )
 from .fundamental import (
     CompanyOverview,
@@ -46,9 +51,13 @@ __all__ = [
     "WeeklyPrice",
     "MonthlyPrice",
     "IntradayPrice",
-    "Quote",
-    "Dividend",
-    "Split",
+    "StockDataCoverage",
+    # Crypto models
+    "CryptoExchangeRate",
+    "CryptoIntradayPrice",
+    "CryptoDailyPrice",
+    "CryptoWeeklyPrice",
+    "CryptoMonthlyPrice",
     # Fundamental models
     "CompanyOverview",
     "IncomeStatement",
@@ -69,6 +78,4 @@ __all__ = [
     "SocialSentiment",
     "MarketMood",
     "OptionFlow",
-    # Collections list
-    "market_data_collections",
 ]

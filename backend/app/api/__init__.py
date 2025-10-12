@@ -9,6 +9,7 @@ from .routes import (
     strategies_router,
     watchlists_router,
     dashboard_router,
+    tasks_router,
 )
 
 # Create main API router
@@ -20,6 +21,7 @@ api_router.include_router(strategies_router, prefix="/strategies")
 api_router.include_router(backtests_router, prefix="/backtests", tags=["Backtest"])
 api_router.include_router(watchlists_router, prefix="/watchlists", tags=["Watchlist"])
 api_router.include_router(dashboard_router, prefix="/dashboard", tags=["Dashboard"])
+api_router.include_router(tasks_router, prefix="/tasks", tags=["Tasks"])
 
 
 __all__ = ["api_router"]

@@ -1,5 +1,10 @@
 "use client";
 
+import type { StrategyExecute } from "@/client";
+import PageContainer from "@/components/layout/PageContainer";
+import StrategyParameters from "@/components/strategies/StrategyParameters";
+import StrategyPerformanceSummary from "@/components/strategies/StrategyPerformanceSummary";
+import { useStrategy, useStrategyDetail } from "@/hooks/useStrategy";
 import {
   Delete,
   Edit,
@@ -27,44 +32,25 @@ import {
 import { useParams, useRouter } from "next/navigation";
 import type React from "react";
 import { useState } from "react";
-import PageContainer from "@/components/layout/PageContainer";
-import StrategyParameters from "@/components/strategies/StrategyParameters";
-import StrategyPerformanceSummary from "@/components/strategies/StrategyPerformanceSummary";
-import { useStrategy, useStrategyDetail } from "@/hooks/useStrategy";
-import type { StrategyExecute } from '@/client';
-import { useWatchlist } from '@/hooks/useWatchList';
 // Strategy utilities 임시 정의
 const strategyUtils = {
   formatStrategyType: (type: string) => type.replace("_", " ").toUpperCase(),
-  getStrategyTypeColor: (type: string) => type === "primary" ? "primary" as const : "secondary" as const,
+  getStrategyTypeColor: (type: string) =>
+    type === "primary" ? ("primary" as const) : ("secondary" as const),
 };
 
 export default function StrategyDetailPage() {
   const router = useRouter();
   const params = useParams();
   const strategyId = params.id as string;
-  const { watchlistList } = useWatchlist();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [ data, setData ] = useState<StrategyExecute>({
-    symbol: "AAPL",
-    market_data: {
-      start_date: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString(),
-      end_date: new Date().toISOString(),
-    },
-  });
 
   // 전략 데이터 조회
   const { data: strategy, isLoading, error } = useStrategyDetail(strategyId);
 
   // 전략 관리 액션들
-  const {
-    deleteStrategy,
-    executeStrategy,
-    isMutating
-  } = useStrategy();
-
-  const handleWatch
+  const { deleteStrategy, executeStrategy, isMutating } = useStrategy();
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -75,7 +61,7 @@ export default function StrategyDetailPage() {
   };
 
   const handleEdit = () => {
-    router.push(`/strategies/create?edit=${strategyId}`);
+    router.push(`/strategies/${strategyId}/edit`);
     handleMenuClose();
   };
 
@@ -91,8 +77,8 @@ export default function StrategyDetailPage() {
     handleMenuClose();
   };
 
-  const handleExecute = (id: string, data: StrategyExecuteRequest) => {
-    executeStrategy({id, data})
+  const handleExecute = (id: string, data: StrategyExecute) => {
+    executeStrategy({ id, data });
   };
 
   const handleViewPerformance = () => {
@@ -146,15 +132,17 @@ export default function StrategyDetailPage() {
           key="execute"
           variant="contained"
           startIcon={<PlayArrow />}
-          onClick={() => handleExecute(strategyId, {
-            symbol: "AAPL",
-            market_data: {
-              start_date: new Date(
-                Date.now() - 365 * 24 * 60 * 60 * 1000
-              ).toISOString(),
-              end_date: new Date().toISOString(),
-            },
-          })}
+          onClick={() =>
+            handleExecute(strategyId, {
+              symbol: "AAPL",
+              market_data: {
+                start_date: new Date(
+                  Date.now() - 365 * 24 * 60 * 60 * 1000
+                ).toISOString(),
+                end_date: new Date().toISOString(),
+              },
+            })
+          }
           disabled={isMutating.executeStrategy}
         >
           {isMutating.executeStrategy ? "실행 중..." : "백테스트 실행"}

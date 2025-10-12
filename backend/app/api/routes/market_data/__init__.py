@@ -7,6 +7,7 @@ from fastapi import APIRouter, Depends
 from mysingle_quant.auth import get_current_active_verified_user
 
 from .stock import router as stock_router
+from .crypto import router as crypto_router
 from .fundamental import router as fundamental_router
 from .economic_indicator import router as economic_indicator_router
 from .intelligence import router as intelligence_router
@@ -17,6 +18,7 @@ router = APIRouter(dependencies=[Depends(get_current_active_verified_user)])
 
 # 도메인별 라우터 포함
 router.include_router(stock_router, prefix="/stock", tags=["Stock"])
+router.include_router(crypto_router, prefix="/crypto", tags=["Crypto"])
 router.include_router(fundamental_router, prefix="/fundamental", tags=["Fundamental"])
 router.include_router(economic_indicator_router, prefix="/economic", tags=["Economic"])
 router.include_router(
@@ -39,6 +41,17 @@ async def get_market_data_info():
                     "/daily/{symbol}",
                     "/quote/{symbol}",
                     "/historical/{symbol}",
+                ],
+            },
+            "crypto": {
+                "description": "암호화폐 데이터 (일일/주간/월간 가격, 환율 등)",
+                "endpoints": [
+                    "/exchange-rate/{from_currency}/{to_currency}",
+                    "/daily/{symbol}",
+                    "/weekly/{symbol}",
+                    "/monthly/{symbol}",
+                    "/bitcoin/{period}",
+                    "/ethereum/{period}",
                 ],
             },
             "fundamental": {
@@ -82,6 +95,7 @@ async def health_check():
         "status": "healthy",
         "services": {
             "stock_service": "operational",
+            "crypto_service": "operational",
             "fundamental_service": "operational",
             "economic_indicator_service": "operational",
             "intelligence_service": "operational",

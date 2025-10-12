@@ -5,10 +5,6 @@ import {
   ExpandLess as ExpandLessIcon,
   ExpandMore as ExpandMoreIcon,
   List as ListIcon,
-  StarBorder as StarBorderIcon,
-  Star as StarIcon,
-  TrendingDown as TrendingDownIcon,
-  TrendingUp as TrendingUpIcon,
 } from "@mui/icons-material";
 import {
   Box,
@@ -17,7 +13,6 @@ import {
   Chip,
   Collapse,
   Divider,
-  IconButton,
   InputAdornment,
   List,
   ListItem,
@@ -41,15 +36,11 @@ function SymbolItem({
   symbol,
   selectedSymbol,
   onSymbolChange,
-  favorites,
-  toggleFavorite,
   theme,
 }: {
   symbol: string;
   selectedSymbol: string;
   onSymbolChange: (symbol: string) => void;
-  favorites: Set<string>;
-  toggleFavorite: (symbol: string) => void;
   theme: any;
 }) {
   const { data: quote } = useStockQuote(symbol);
@@ -87,62 +78,58 @@ function SymbolItem({
         onClick={() => onSymbolChange(symbol)}
         sx={{
           py: 1,
+          px: 2,
           "&.Mui-selected": {
             backgroundColor: theme.palette.primary.main + "20",
           },
         }}
       >
-        <Box display="flex" alignItems="center" width="100%" gap={1}>
-          <IconButton
-            size="small"
-            onClick={(e) => {
-              e.stopPropagation();
-              toggleFavorite(symbol);
+        <Box display="flex" alignItems="center" width="100%" gap={0.5}>
+          {/* 심볼 */}
+          <Typography
+            variant="body2"
+            fontWeight="medium"
+            sx={{ width: 45, flex: "0 0 45px" }}
+          >
+            {symbol}
+          </Typography>
+
+          {/* 가격 */}
+          <Typography
+            variant="body2"
+            fontWeight="medium"
+            sx={{ width: 55, flex: "0 0 55px", textAlign: "right" }}
+          >
+            {price ? formatNumber(price) : "--"}
+          </Typography>
+
+          {/* 변동 금액 */}
+          <Typography
+            variant="body2"
+            sx={{
+              color: changeColor,
+              width: 50,
+              flex: "0 0 50px",
+              textAlign: "right",
             }}
           >
-            {favorites.has(symbol) ? (
-              <StarIcon
-                sx={{ color: theme.palette.warning.main, fontSize: 16 }}
-              />
-            ) : (
-              <StarBorderIcon sx={{ fontSize: 16 }} />
-            )}
-          </IconButton>
+            {isPositive ? "+" : ""}
+            {formatNumber(change, 2)}
+          </Typography>
 
-          <Box flexGrow={1}>
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Typography variant="body2" fontWeight="medium">
-                {symbol}
-              </Typography>
-              <Typography variant="body2" fontWeight="medium">
-                {price ? formatNumber(price) : "--"}
-              </Typography>
-            </Box>
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Typography variant="caption" color="text.secondary">
-                {symbol}
-              </Typography>
-              <Box display="flex" alignItems="center" gap={0.5}>
-                {isPositive ? (
-                  <TrendingUpIcon sx={{ fontSize: 12, color: changeColor }} />
-                ) : (
-                  <TrendingDownIcon sx={{ fontSize: 12, color: changeColor }} />
-                )}
-                <Typography variant="caption" sx={{ color: changeColor }}>
-                  {isPositive ? "+" : ""}
-                  {formatNumber(changePercent)}%
-                </Typography>
-              </Box>
-            </Box>
-          </Box>
+          {/* 변동률 */}
+          <Typography
+            variant="body2"
+            sx={{
+              color: changeColor,
+              width: 50,
+              flex: "0 0 50px",
+              textAlign: "right",
+            }}
+          >
+            {isPositive ? "+" : ""}
+            {formatNumber(changePercent, 2)}%
+          </Typography>
         </Box>
       </ListItemButton>
     </ListItem>
@@ -154,16 +141,12 @@ function WatchlistSymbols({
   watchlistId,
   selectedSymbol,
   onSymbolChange,
-  favorites,
-  toggleFavorite,
   searchTerm,
   theme,
 }: {
   watchlistId: string;
   selectedSymbol: string;
   onSymbolChange: (symbol: string) => void;
-  favorites: Set<string>;
-  toggleFavorite: (symbol: string) => void;
   searchTerm: string;
   theme: any;
 }) {
@@ -194,8 +177,6 @@ function WatchlistSymbols({
           symbol={symbol}
           selectedSymbol={selectedSymbol}
           onSymbolChange={onSymbolChange}
-          favorites={favorites}
-          toggleFavorite={toggleFavorite}
           theme={theme}
         />
       ))}
@@ -209,7 +190,6 @@ export default function WatchlistBar({
 }: WatchlistBarProps) {
   const theme = useTheme();
   const [searchTerm, setSearchTerm] = React.useState("");
-  const [favorites, setFavorites] = React.useState<Set<string>>(new Set());
   const [expandedWatchlists, setExpandedWatchlists] = React.useState<
     Set<string>
   >(new Set());
@@ -248,18 +228,6 @@ export default function WatchlistBar({
       }
     }
   }, [watchlists, expandedWatchlists.size]);
-
-  const toggleFavorite = (symbol: string) => {
-    setFavorites((prev) => {
-      const newFavorites = new Set(prev);
-      if (newFavorites.has(symbol)) {
-        newFavorites.delete(symbol);
-      } else {
-        newFavorites.add(symbol);
-      }
-      return newFavorites;
-    });
-  };
 
   const toggleWatchlistExpansion = (watchlistId: string) => {
     setExpandedWatchlists((prev) => {
@@ -353,8 +321,6 @@ export default function WatchlistBar({
                       watchlistId={watchlistId}
                       selectedSymbol={selectedSymbol}
                       onSymbolChange={onSymbolChange}
-                      favorites={favorites}
-                      toggleFavorite={toggleFavorite}
                       searchTerm={searchTerm}
                       theme={theme}
                     />

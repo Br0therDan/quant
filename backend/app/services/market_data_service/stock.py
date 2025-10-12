@@ -4,7 +4,7 @@ Stock data service implementation
 """
 
 from typing import List, Literal, Optional, cast
-from datetime import datetime
+from datetime import datetime, timedelta
 from decimal import Decimal
 import logging
 
@@ -12,7 +12,12 @@ from app.services.market_data_service.base_service import (
     BaseMarketDataService,
     DataQualityValidator,
 )
-from app.models.market_data.stock import DailyPrice, WeeklyPrice, MonthlyPrice
+from app.models.market_data.stock import (
+    DailyPrice,
+    WeeklyPrice,
+    MonthlyPrice,
+    StockDataCoverage,
+)
 from app.schemas.market_data.stock import QuoteData
 
 
@@ -26,72 +31,136 @@ class StockService(BaseMarketDataService):
         self,
         symbol: str,
         outputsize: str = "compact",
+        adjusted: bool = True,
     ) -> List[DailyPrice]:
-        """일일 주가 데이터 조회"""
-        cache_key = f"daily_stock_{symbol}_{outputsize}"
+        """
+        일일 주가 데이터 조회 (Coverage 기반 캐싱)
 
-        async def refresh_callback():
-            return await self._fetch_daily_prices_from_alpha_vantage(symbol, outputsize)
+        Args:
+            symbol: 종목 심볼
+            outputsize: 'compact' (최근 100개) 또는 'full' (전체 데이터)
+            adjusted: True면 adjusted prices, False면 raw prices
+        """
+        # Coverage 확인
+        coverage = await self._get_or_create_coverage(symbol, "daily")
 
-        results = await self.get_data_with_unified_cache(
-            cache_key=cache_key,
-            model_class=DailyPrice,
-            data_type="stock_daily",
-            symbol=symbol,
-            refresh_callback=refresh_callback,
-            ttl_hours=6,  # 주식 데이터는 6시간 TTL
+        # Full update가 필요한지 확인 (최초 또는 7일 이상 경과)
+        needs_full_update = (
+            coverage.last_full_update is None
+            or (datetime.utcnow() - coverage.last_full_update).days >= 7
         )
 
-        # 타입 캐스팅 (실제로는 DailyPrice 객체들이 반환됨)
-        return cast(List[DailyPrice], results)
+        if needs_full_update or outputsize == "full":
+            # Full update: Alpha Vantage에서 전체 데이터 가져와서 MongoDB에 저장
+            logger.info(f"Performing full update for {symbol} daily prices")
+            prices = await self._fetch_and_store_daily_prices(
+                symbol, adjusted=adjusted, is_full=True
+            )
+
+            # Coverage 업데이트
+            if prices:
+                await self._update_coverage(
+                    coverage=coverage, data_records=prices, update_type="full"
+                )
+        else:
+            # Delta update: MongoDB에서 조회 후 최신 데이터만 보충
+            logger.info(f"Performing delta update for {symbol} daily prices")
+
+            # MongoDB에서 기존 데이터 조회
+            existing_prices = (
+                await DailyPrice.find({"symbol": symbol}).sort("-date").to_list()
+            )
+
+            if not existing_prices:
+                # 데이터가 없으면 full update
+                prices = await self._fetch_and_store_daily_prices(
+                    symbol, adjusted=adjusted, is_full=True
+                )
+                if prices:
+                    await self._update_coverage(coverage, prices, "full")
+            else:
+                # 최신 데이터만 가져오기 (compact로 최근 100개)
+                latest_prices = await self._fetch_and_store_daily_prices(
+                    symbol, adjusted=adjusted, is_full=False
+                )
+
+                if latest_prices:
+                    await self._update_coverage(coverage, latest_prices, "delta")
+
+                # 전체 데이터 재조회 (병합된 결과)
+                prices = (
+                    await DailyPrice.find({"symbol": symbol}).sort("-date").to_list()
+                )
+
+        return prices or []
 
     async def get_weekly_prices(
         self,
         symbol: str,
         outputsize: str = "full",
+        adjusted: bool = True,
     ) -> List[WeeklyPrice]:
-        """주간 주가 데이터 조회"""
-        cache_key = f"weekly_stock_{symbol}_{outputsize}"
+        """
+        주간 주가 데이터 조회 (Coverage 기반 캐싱)
 
-        async def refresh_callback():
-            return await self._fetch_weekly_prices_from_alpha_vantage(
-                symbol, outputsize
-            )
+        Weekly는 항상 full로 요청하여 MongoDB에 저장
+        """
+        # Coverage 확인
+        coverage = await self._get_or_create_coverage(symbol, "weekly")
 
-        results = await self.get_data_with_unified_cache(
-            cache_key=cache_key,
-            model_class=WeeklyPrice,
-            data_type="stock_weekly",
-            symbol=symbol,
-            refresh_callback=refresh_callback,
-            ttl_hours=24,  # 주간 데이터는 24시간 TTL
+        # Full update가 필요한지 확인 (최초 또는 30일 이상 경과)
+        needs_full_update = (
+            coverage.last_full_update is None
+            or (datetime.utcnow() - coverage.last_full_update).days >= 30
         )
 
-        return cast(List[WeeklyPrice], results)
+        if needs_full_update:
+            logger.info(f"Performing full update for {symbol} weekly prices")
+            prices = await self._fetch_and_store_weekly_prices(
+                symbol, adjusted=adjusted
+            )
+
+            if prices:
+                await self._update_coverage(coverage, prices, "full")
+        else:
+            # MongoDB에서 조회
+            prices = await WeeklyPrice.find({"symbol": symbol}).sort("-date").to_list()
+
+        return prices or []
 
     async def get_monthly_prices(
         self,
         symbol: str,
         outputsize: str = "full",
+        adjusted: bool = True,
     ) -> List[MonthlyPrice]:
-        """월간 주가 데이터 조회"""
-        cache_key = f"monthly_stock_{symbol}_{outputsize}"
+        """
+        월간 주가 데이터 조회 (Coverage 기반 캐싱)
 
-        async def refresh_callback():
-            return await self._fetch_monthly_prices_from_alpha_vantage(
-                symbol, outputsize
-            )
+        Monthly는 항상 full로 요청하여 MongoDB에 저장
+        """
+        # Coverage 확인
+        coverage = await self._get_or_create_coverage(symbol, "monthly")
 
-        results = await self.get_data_with_unified_cache(
-            cache_key=cache_key,
-            model_class=MonthlyPrice,
-            data_type="stock_monthly",
-            symbol=symbol,
-            refresh_callback=refresh_callback,
-            ttl_hours=168,  # 월간 데이터는 1주일(168시간) TTL
+        # Full update가 필요한지 확인 (최초 또는 60일 이상 경과)
+        needs_full_update = (
+            coverage.last_full_update is None
+            or (datetime.utcnow() - coverage.last_full_update).days >= 60
         )
 
-        return cast(List[MonthlyPrice], results)
+        if needs_full_update:
+            logger.info(f"Performing full update for {symbol} monthly prices")
+            prices = await self._fetch_and_store_monthly_prices(
+                symbol, adjusted=adjusted
+            )
+
+            if prices:
+                await self._update_coverage(coverage, prices, "full")
+        else:
+            # MongoDB에서 조회
+            prices = await MonthlyPrice.find({"symbol": symbol}).sort("-date").to_list()
+
+        return prices or []
 
     # Alpha Vantage API 호출 메서드들
     async def _fetch_daily_prices_from_alpha_vantage(
@@ -702,6 +771,7 @@ class StockService(BaseMarketDataService):
         adjusted: bool = False,
         extended_hours: bool = False,
         outputsize: Literal["compact", "full"] | None = "full",
+        month: Optional[str] = None,
     ) -> List[DailyPrice]:
         """실시간/인트라데이 데이터 조회 (Alpha Vantage TIME_SERIES_INTRADAY)
 
@@ -710,10 +780,11 @@ class StockService(BaseMarketDataService):
             interval: 데이터 간격 (1min, 5min, 15min, 30min, 60min)
             adjusted: 조정된 가격 사용 여부
             extended_hours: 장외 시간 포함 여부
-            outputsize: 출력 크기 (compact, full)
+            outputsize: 출력 크기 (compact: 100 data points, full: 30 days or full month)
+            month: 조회할 월 (YYYY-MM 형식, Premium plan only)
 
         Returns:
-            인트라데이  가격 데이터 리스트
+            인트라데이 가격 데이터 리스트
         """
         # 인터벌에 따른 적절한 TTL 설정
         interval_ttl_mapping = {
@@ -725,14 +796,12 @@ class StockService(BaseMarketDataService):
         }
 
         ttl_hours = interval_ttl_mapping.get(interval, 4)
-        cache_key = (
-            f"intraday_{symbol}_{interval}_{adjusted}_{extended_hours}_{outputsize}"
-        )
+        cache_key = f"intraday_{symbol}_{interval}_{adjusted}_{extended_hours}_{outputsize}_{month or 'latest'}"
 
         async def refresh_callback():
             """Alpha Vantage에서 인트라데이 데이터를 가져옵니다"""
             return await self._fetch_intraday_from_alpha_vantage(
-                symbol, interval, adjusted, extended_hours, outputsize
+                symbol, interval, adjusted, extended_hours, outputsize, month
             )
 
         results = await self.get_data_with_unified_cache(
@@ -754,12 +823,23 @@ class StockService(BaseMarketDataService):
         adjusted: bool = False,
         extended_hours: bool = False,
         outputsize: Literal["compact", "full"] | None = "full",
+        month: Optional[str] = None,
     ) -> List[DailyPrice]:
         """Alpha Vantage에서 인트라데이 데이터 가져오기"""
         try:
             logger.info(
-                f"📊 Fetching intraday data for {symbol} ({interval}) from Alpha Vantage"
+                f"📊 Fetching intraday data for {symbol} ({interval}, month={month or 'latest'}) from Alpha Vantage"
             )
+
+            # month 파라미터를 datetime으로 변환 (YYYY-MM -> datetime)
+            month_dt = None
+            if month:
+                try:
+                    # "2025-01" -> datetime(2025, 1, 1)
+                    year, month_num = month.split("-")
+                    month_dt = datetime(int(year), int(month_num), 1)
+                except ValueError:
+                    logger.warning(f"Invalid month format: {month}. Expected YYYY-MM.")
 
             # Alpha Vantage API 호출 (리스트 반환)
             response = await self.alpha_vantage.stock.intraday(
@@ -768,6 +848,7 @@ class StockService(BaseMarketDataService):
                 adjusted=adjusted,
                 extended_hours=extended_hours,
                 outputsize=outputsize,
+                month=month_dt,  # Premium plan only
             )
 
             if not isinstance(response, list):
@@ -942,3 +1023,185 @@ class StockService(BaseMarketDataService):
     #     except Exception as e:
     #         logger.error(f"Failed to get available symbols: {e}")
     #         return []
+
+    # ==================== Coverage & Caching Helper Methods ====================
+
+    async def _get_or_create_coverage(
+        self, symbol: str, data_type: str
+    ) -> StockDataCoverage:
+        """Coverage 레코드 조회 또는 생성"""
+        coverage = await StockDataCoverage.find_one(
+            {"symbol": symbol, "data_type": data_type}
+        )
+
+        if not coverage:
+            coverage = StockDataCoverage(
+                symbol=symbol,
+                data_type=data_type,
+                is_active=True,
+                update_frequency="daily",
+                total_records=0,
+                source="alpha_vantage",
+                data_quality_score=0.0,
+            )
+            await coverage.insert()
+
+        return coverage
+
+    async def _update_coverage(
+        self,
+        coverage: StockDataCoverage,
+        data_records: List,  # Union type으로 인한 타입 체크 우회
+        update_type: Literal["full", "delta"],
+    ) -> None:
+        """Coverage 레코드 업데이트"""
+        if not data_records:
+            return
+
+        # 날짜 범위 계산
+        dates = [record.date for record in data_records]
+        first_date = min(dates)
+        last_date = max(dates)
+
+        # Coverage 업데이트
+        coverage.total_records = len(data_records)
+        coverage.first_date = first_date
+        coverage.last_date = last_date
+
+        if update_type == "full":
+            coverage.last_full_update = datetime.utcnow()
+        else:
+            coverage.last_delta_update = datetime.utcnow()
+
+        # 다음 업데이트 예정일 (daily는 1일, weekly는 7일, monthly는 30일 후)
+        update_intervals = {"daily": 1, "weekly": 7, "monthly": 30}
+        days_offset = update_intervals.get(coverage.data_type, 1)
+        coverage.next_update_due = datetime.utcnow() + timedelta(days=days_offset)
+
+        await coverage.save()
+
+    async def _fetch_and_store_daily_prices(
+        self, symbol: str, adjusted: bool = True, is_full: bool = True
+    ) -> List[DailyPrice]:
+        """
+        Alpha Vantage에서 Daily Prices를 가져와 MongoDB에 저장
+
+        Args:
+            symbol: 종목 심볼
+            adjusted: True면 adjusted prices 사용
+            is_full: True면 전체 데이터 (full), False면 최근 데이터 (compact)
+        """
+        outputsize = "full" if is_full else "compact"
+
+        # Alpha Vantage API 호출 (항상 adjusted 사용)
+        prices = await self._fetch_daily_prices_from_alpha_vantage(
+            symbol, outputsize=outputsize
+        )
+
+        if not prices:
+            return []
+
+        # MongoDB에 저장 (기존 데이터는 삭제 후 재저장)
+        if is_full:
+            # Full update: 기존 데이터 삭제
+            await DailyPrice.find({"symbol": symbol}).delete()
+
+        # DailyPrice 객체로 변환 및 저장
+        saved_prices = []
+        for price_data in prices:
+            if isinstance(price_data, dict):
+                # dict를 DailyPrice 객체로 변환
+                price_obj = DailyPrice(**price_data)
+            else:
+                price_obj = price_data
+
+            # Upsert (symbol + date로 unique)
+            existing = await DailyPrice.find_one(
+                {"symbol": price_obj.symbol, "date": price_obj.date}
+            )
+
+            if existing:
+                # 업데이트
+                existing.open = price_obj.open
+                existing.high = price_obj.high
+                existing.low = price_obj.low
+                existing.close = price_obj.close
+                existing.volume = price_obj.volume
+                existing.adjusted_close = price_obj.adjusted_close
+                existing.dividend_amount = price_obj.dividend_amount
+                existing.split_coefficient = price_obj.split_coefficient
+                await existing.save()
+                saved_prices.append(existing)
+            else:
+                # 신규 저장
+                await price_obj.insert()
+                saved_prices.append(price_obj)
+
+        logger.info(
+            f"Stored {len(saved_prices)} daily prices for {symbol} "
+            f"(adjusted={adjusted}, full={is_full})"
+        )
+
+        return saved_prices
+
+    async def _fetch_and_store_weekly_prices(
+        self, symbol: str, adjusted: bool = True
+    ) -> List[WeeklyPrice]:
+        """
+        Alpha Vantage에서 Weekly Prices를 가져와 MongoDB에 저장
+        """
+        # Alpha Vantage API 호출 (항상 adjusted, full)
+        prices = await self._fetch_weekly_prices_from_alpha_vantage(
+            symbol, outputsize="full"
+        )
+
+        if not prices:
+            return []
+
+        # MongoDB에 저장 (기존 데이터 삭제 후 재저장)
+        await WeeklyPrice.find({"symbol": symbol}).delete()
+
+        # WeeklyPrice 객체로 변환 및 저장
+        saved_prices = []
+        for price_data in prices:
+            if isinstance(price_data, dict):
+                price_obj = WeeklyPrice(**price_data)
+            else:
+                price_obj = price_data
+
+            await price_obj.insert()
+            saved_prices.append(price_obj)
+
+        logger.info(f"Stored {len(saved_prices)} weekly prices for {symbol}")
+        return saved_prices
+
+    async def _fetch_and_store_monthly_prices(
+        self, symbol: str, adjusted: bool = True
+    ) -> List[MonthlyPrice]:
+        """
+        Alpha Vantage에서 Monthly Prices를 가져와 MongoDB에 저장
+        """
+        # Alpha Vantage API 호출 (항상 adjusted, full)
+        prices = await self._fetch_monthly_prices_from_alpha_vantage(
+            symbol, outputsize="full"
+        )
+
+        if not prices:
+            return []
+
+        # MongoDB에 저장 (기존 데이터 삭제 후 재저장)
+        await MonthlyPrice.find({"symbol": symbol}).delete()
+
+        # MonthlyPrice 객체로 변환 및 저장
+        saved_prices = []
+        for price_data in prices:
+            if isinstance(price_data, dict):
+                price_obj = MonthlyPrice(**price_data)
+            else:
+                price_obj = price_data
+
+            await price_obj.insert()
+            saved_prices.append(price_obj)
+
+        logger.info(f"Stored {len(saved_prices)} monthly prices for {symbol}")
+        return saved_prices

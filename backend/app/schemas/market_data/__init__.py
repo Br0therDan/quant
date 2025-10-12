@@ -64,6 +64,32 @@ from .stock import (
     BatchStockResponse,
 )
 
+# Crypto schemas
+from .crypto import (
+    # Request schemas
+    CryptoExchangeRateRequest,
+    CryptoBulkExchangeRateRequest,
+    CryptoDailyPriceRequest,
+    CryptoWeeklyPriceRequest,
+    CryptoMonthlyPriceRequest,
+    CryptoIntradayPriceRequest,
+    # Response data models
+    CryptoExchangeRateData,
+    CryptoIntradayPriceData,
+    CryptoDailyPriceData,
+    CryptoWeeklyPriceData,
+    CryptoMonthlyPriceData,
+    # Response schemas
+    CryptoExchangeRateResponse,
+    CryptoBulkExchangeRateResponse,
+    CryptoIntradayPriceResponse,
+    CryptoDailyPriceResponse,
+    CryptoWeeklyPriceResponse,
+    CryptoMonthlyPriceResponse,
+    BitcoinPriceResponse,
+    EthereumPriceResponse,
+)
+
 # Fundamental schemas
 from .fundamental import (
     # Request schemas
@@ -206,6 +232,28 @@ __all__ = [
     "StockSearchResponse",
     "MarketStatusResponse",
     "BatchStockResponse",
+    # Crypto schemas - Requests
+    "CryptoExchangeRateRequest",
+    "CryptoBulkExchangeRateRequest",
+    "CryptoDailyPriceRequest",
+    "CryptoWeeklyPriceRequest",
+    "CryptoMonthlyPriceRequest",
+    "CryptoIntradayPriceRequest",
+    # Crypto schemas - Data models
+    "CryptoExchangeRateData",
+    "CryptoIntradayPriceData",
+    "CryptoDailyPriceData",
+    "CryptoWeeklyPriceData",
+    "CryptoMonthlyPriceData",
+    # Crypto schemas - Responses
+    "CryptoExchangeRateResponse",
+    "CryptoBulkExchangeRateResponse",
+    "CryptoIntradayPriceResponse",
+    "CryptoDailyPriceResponse",
+    "CryptoWeeklyPriceResponse",
+    "CryptoMonthlyPriceResponse",
+    "BitcoinPriceResponse",
+    "EthereumPriceResponse",
     # Fundamental schemas - Requests
     "CompanyOverviewRequest",
     "FinancialStatementRequest",

@@ -302,35 +302,35 @@ class Quote(BaseMarketDataDocument, DataQualityMixin):
         ]
 
 
-class Dividend(BaseMarketDataDocument):
-    """배당 정보 모델"""
+class StockDataCoverage(BaseMarketDataDocument):
+    """주식 데이터 커버리지 추적 모델"""
 
     symbol: str = Field(..., description="주식 심볼")
-    ex_date: datetime = Field(..., description="배당락일")
-    payment_date: Optional[datetime] = Field(None, description="배당 지급일")
-    record_date: Optional[datetime] = Field(None, description="배당 기준일")
-    declaration_date: Optional[datetime] = Field(None, description="배당 선언일")
+    data_type: str = Field(..., description="데이터 타입 (daily, weekly, monthly)")
 
-    amount: Decimal = Field(..., description="배당금", gt=0)
-    frequency: Optional[str] = Field(
-        None, description="배당 주기 (quarterly, monthly, annual)"
+    # 커버리지 정보
+    first_date: Optional[datetime] = Field(default=None, description="최초 데이터 날짜")
+    last_date: Optional[datetime] = Field(default=None, description="최신 데이터 날짜")
+    total_records: int = Field(default=0, description="총 레코드 수", ge=0)
+
+    # 업데이트 정보
+    last_full_update: Optional[datetime] = Field(
+        default=None, description="마지막 전체 업데이트"
     )
-    dividend_type: str = Field(default="cash", description="배당 유형 (cash, stock)")
+    last_delta_update: Optional[datetime] = Field(
+        default=None, description="마지막 증분 업데이트"
+    )
+    next_update_due: Optional[datetime] = Field(default=None, description="다음 업데이트 예정일")
+
+    # 메타데이터
+    is_active: bool = Field(default=True, description="활성 상태")
+    update_frequency: str = Field(default="daily", description="업데이트 주기")
 
     class Settings:
-        name = "stock_dividends"
-        indexes = [[("symbol", 1), ("ex_date", 1)], "symbol", "ex_date"]
-
-
-class Split(BaseMarketDataDocument):
-    """주식 분할 정보 모델"""
-
-    symbol: str = Field(..., description="주식 심볼")
-    date: datetime = Field(..., description="분할 실행일")
-    ratio: Decimal = Field(..., description="분할 비율", gt=0)
-    from_factor: int = Field(..., description="분할 전 주식 수", gt=0)
-    to_factor: int = Field(..., description="분할 후 주식 수", gt=0)
-
-    class Settings:
-        name = "stock_splits"
-        indexes = [[("symbol", 1), ("date", 1)], "symbol", "date"]
+        name = "stock_data_coverage"
+        indexes = [
+            [("symbol", 1), ("data_type", 1)],  # 복합 유니크 인덱스
+            "symbol",
+            "last_date",
+            "is_active",
+        ]
