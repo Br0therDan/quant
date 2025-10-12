@@ -16,11 +16,13 @@ import { Box } from "@mui/material";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import { useParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 export default function SymbolChartPage() {
   const params = useParams();
   const symbol = (params.symbol as string)?.toUpperCase();
+  const chartContainerRef = useRef<HTMLDivElement>(null);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 800 });
 
   // 차트 상태
   const [chartType, setChartType] = useState<
@@ -78,6 +80,22 @@ export default function SymbolChartPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadSettings]);
+
+  // 차트 크기 계산
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (chartContainerRef.current) {
+        setDimensions({
+          width: chartContainerRef.current.clientWidth,
+          height: window.innerHeight - 120,
+        });
+      }
+    };
+
+    updateDimensions();
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
 
   // 설정 변경 시 자동 저장 (디바운싱)
   useEffect(() => {
@@ -207,20 +225,22 @@ export default function SymbolChartPage() {
       />
 
       {/* Chart Canvas */}
-      <Box sx={{ flex: 1, overflow: "hidden", position: "relative" }}>
+      <Box
+        ref={chartContainerRef}
+        sx={{ flex: 1, overflow: "hidden", position: "relative" }}
+      >
         {isLoading ? (
           <LoadingSpinner
             variant="chart"
             height="100%"
             message="차트 데이터를 불러오는 중..."
           />
-        ) : candlestickData.length > 0 ? (
+        ) : candlestickData.length > 0 && dimensions.width > 0 ? (
           <ReactFinancialChart
             data={candlestickData}
             symbol={symbol}
-            height={
-              typeof window !== "undefined" ? window.innerHeight - 120 : 800
-            }
+            height={dimensions.height}
+            width={dimensions.width}
             chartType={chartType}
             indicators={indicators}
           />

@@ -1,8 +1,9 @@
 "use client";
 
 import LoadingSpinner from "@/components/common/LoadingSpinner";
-import SymbolOverviewHeader from '@/components/market-data/OverviewHeader';
+import SymbolOverviewHeader from "@/components/market-data/OverviewHeader";
 import ReactFinancialChart from "@/components/market-data/ReactFinancialChart";
+import SymbolTabs from "@/components/market-data/SymbolTabs";
 
 import { useStockIntraday, useStockQuote } from "@/hooks/useStocks";
 import {
@@ -11,9 +12,7 @@ import {
   useFundamentalEarnings,
   useFundamentalIncomeStatement,
 } from "@/hooks/ussFundamental";
-import {
-  ShowChart as ChartIcon,
-} from "@mui/icons-material";
+import { ShowChart as ChartIcon } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -31,16 +30,39 @@ import {
 } from "@mui/material";
 import dayjs from "dayjs";
 import { useParams, useRouter } from "next/navigation";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 export default function SymbolOverviewPage() {
   const params = useParams();
   const router = useRouter();
   const symbol = (params.symbol as string)?.toUpperCase();
 
+  // 차트 컨테이너 dimension 관리
+  const chartContainerRef = useRef<HTMLDivElement>(null);
+  const [chartDimensions, setChartDimensions] = useState({
+    width: 0,
+    height: 600,
+  });
+
+  // 차트 컨테이너 크기 계산
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (chartContainerRef.current) {
+        const containerWidth = chartContainerRef.current.clientWidth; // clientWidth 사용 (padding 제외)
+        setChartDimensions({
+          width: containerWidth,
+          height: 400,
+        });
+      }
+    };
+
+    updateDimensions();
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+
   // 데이터 fetching
-  const { data: companyResponse } =
-    useFundamentalCompanyOverview(symbol);
+  const { data: companyResponse } = useFundamentalCompanyOverview(symbol);
   const { data: quoteData } = useStockQuote(symbol);
   const { data: earningsResponse } = useFundamentalEarnings(symbol);
   const { data: incomeResponse, isLoading: incomeLoading } =
@@ -113,6 +135,7 @@ export default function SymbolOverviewPage() {
         priceChangePercent={priceChangePercent}
         currentPrice={currentPrice}
       />
+      <SymbolTabs symbol={symbol} />
 
       <Grid container spacing={3} sx={{ p: 3 }}>
         {/* 차트 섹션 */}
@@ -136,32 +159,35 @@ export default function SymbolOverviewPage() {
                 전체 차트
               </Button>
             </Box>
-            {chartLoading ? (
-              <LoadingSpinner
-                variant="chart"
-                height={400}
-                message="차트 로딩 중..."
-              />
-            ) : candlestickData.length > 0 ? (
-              <ReactFinancialChart
-                data={candlestickData}
-                symbol={symbol}
-                height={400}
-                chartType="candlestick"
-                indicators={{}}
-              />
-            ) : (
-              <Box
-                height={400}
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <Typography color="text.secondary">
-                  차트 데이터를 불러올 수 없습니다
-                </Typography>
-              </Box>
-            )}
+            <Box ref={chartContainerRef} sx={{ width: "100%" }}>
+              {chartLoading ? (
+                <LoadingSpinner
+                  variant="chart"
+                  height={400}
+                  message="차트 로딩 중..."
+                />
+              ) : candlestickData.length > 0 && chartDimensions.width > 0 ? (
+                <ReactFinancialChart
+                  data={candlestickData}
+                  symbol={symbol}
+                  width={chartDimensions.width}
+                  height={chartDimensions.height}
+                  chartType="candlestick"
+                  indicators={{}}
+                />
+              ) : (
+                <Box
+                  height={400}
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Typography color="text.secondary">
+                    차트 데이터를 불러올 수 없습니다
+                  </Typography>
+                </Box>
+              )}
+            </Box>
           </Paper>
         </Grid>
 

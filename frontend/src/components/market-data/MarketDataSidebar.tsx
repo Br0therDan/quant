@@ -422,14 +422,15 @@ export default function MarketDataSidebar({
           flexDirection: "column",
           borderLeft: 1,
           borderColor: "divider",
+          overflow: "hidden", // 전체 스크롤 방지
         }}
       >
         {/* 워치리스트 섹션 */}
-        <Box sx={{ flexGrow: 1, overflow: "auto" }}>
+        <Box sx={{ overflow: "auto", flexShrink: 0 }}>
           <Box
             display="flex"
             alignItems="center"
-            justifyContent="space-between"
+            justifyContent="start"
             sx={{ px: 2, py: 1.5 }}
           >
             <Typography variant="subtitle2" fontWeight="600">
@@ -448,7 +449,11 @@ export default function MarketDataSidebar({
             </Box>
           ) : watchlists.length === 0 ? (
             <Box sx={{ p: 2, textAlign: "center" }}>
-              <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: "block" }}>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ mb: 1, display: "block" }}
+              >
                 워치리스트가 없습니다
               </Typography>
               <Button
@@ -476,7 +481,9 @@ export default function MarketDataSidebar({
         <Divider />
 
         {/* 심볼 개요 */}
-        <SymbolOverview symbol={currentSymbol} />
+        <Box sx={{ pt: 2, overflow: "auto", flexShrink: 0 }}>
+          <SymbolOverview symbol={currentSymbol} />
+        </Box>
       </Box>
 
       {/* 워치리스트 편집 다이얼로그 */}

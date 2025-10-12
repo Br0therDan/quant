@@ -30,6 +30,7 @@
 		"@types/d3-scale": "^4.0.9",
 		"@types/d3-time-format": "^4.0.3",
 		"clsx": "^2.1.1",
+		"d3-format": "^3.1.0",
 		"d3-scale": "^4.0.2",
 		"d3-time-format": "^4.1.0",
 		"date-fns": "^4.1.0",
@@ -45,6 +46,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.2.0",
+		"@types/d3-format": "^3.0.4",
 		"@types/js-cookie": "^3.0.6",
 		"@types/node": "latest",
 		"@types/prop-types": "^15.7.15",

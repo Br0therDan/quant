@@ -1,8 +1,10 @@
 "use client";
 
-import { Box, useTheme } from "@mui/material";
+import { Box } from "@mui/material";
+import { format } from "d3-format";
 import { timeFormat } from "d3-time-format";
-import { memo, useEffect, useMemo, useRef, useState } from "react";
+import * as React from "react";
+import { useMemo } from "react";
 import {
   atr,
   BarSeries,
@@ -22,29 +24,21 @@ import {
   forceIndex,
   heikinAshi,
   kagi,
-  KagiSeries,
+  lastVisibleItemBasedZoomAnchor,
   LineSeries,
   macd,
-  MACDSeries,
-  MACDTooltip,
   MouseCoordinateX,
   MouseCoordinateY,
+  MovingAverageTooltip,
   OHLCTooltip,
   pointAndFigure,
-  PointAndFigureSeries,
   renko,
-  RenkoSeries,
   rsi,
-  RSISeries,
-  RSITooltip,
   sar,
   SARSeries,
-  ScatterSeries,
   SingleValueTooltip,
   sma,
   stochasticOscillator,
-  StochasticSeries,
-  StochasticTooltip,
   tma,
   wma,
   XAxis,
@@ -116,50 +110,50 @@ interface ReactFinancialChartProps {
   chartType?: ChartType["type"];
   indicators?: IndicatorConfig;
   ratio?: number;
+  width: number;
 }
 
 function ReactFinancialChart({
   data,
   symbol,
-  height = 600,
+  height = 800,
   chartType = "candlestick",
   indicators = {},
   ratio = 1,
+  width,
 }: ReactFinancialChartProps) {
-  const theme = useTheme();
-  const chartRef = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = useState({ width: 0, height });
-
-  // 윈도우 리사이즈 처리
-  useEffect(() => {
-    const updateDimensions = () => {
-      if (chartRef.current) {
-        setDimensions({
-          width: chartRef.current.clientWidth,
-          height,
-        });
-      }
-    };
-
-    updateDimensions();
-    window.addEventListener("resize", updateDimensions);
-    return () => window.removeEventListener("resize", updateDimensions);
-  }, [height]);
+  // Display format utilities
+  const pricesDisplayFormat = format(".2f");
+  const dateTimeFormat = "%d %b %H:%M";
+  const timeDisplayFormat = timeFormat(dateTimeFormat); // xScale Provider (StockChart 패턴)
+  const xScaleProvider = useMemo(
+    () =>
+      discontinuousTimeScaleProviderBuilder().inputDateAccessor(
+        (d: ProcessedData) => d.date
+      ),
+    []
+  );
 
   // 데이터 처리 및 지표 계산
-  const processedData = useMemo(() => {
+  const calculatedData = useMemo(() => {
     if (!data || data.length === 0) return [];
 
-    // 기본 데이터 변환
+    // 기본 데이터 변환 (UTC → 로컬 시간대)
     let processed: ProcessedData[] = data
-      .map((d) => ({
-        date: new Date(d.time),
-        open: d.open,
-        high: d.high,
-        low: d.low,
-        close: d.close,
-        volume: d.volume || 0,
-      }))
+      .map((d) => {
+        // Alpha Vantage API는 UTC 시간을 반환하므로 로컬 시간대로 변환
+        // JavaScript Date 객체는 내부적으로 UTC를 저장하고
+        // 표시할 때 자동으로 로컬 시간대로 변환됨
+        const date = new Date(d.time);
+        return {
+          date,
+          open: d.open,
+          high: d.high,
+          low: d.low,
+          close: d.close,
+          volume: d.volume || 0,
+        };
+      })
       .sort((a, b) => a.date.getTime() - b.date.getTime());
 
     // 차트 타입별 데이터 변환
@@ -177,9 +171,10 @@ function ReactFinancialChart({
       processed = pnfCalculator(processed);
     }
 
-    // EMA 지표
+    // EMA 지표 (StockChart 패턴 적용)
     indicators.ema?.forEach((period) => {
       const emaCalculator = ema()
+        .id(period)
         .options({ windowSize: period })
         .merge((d: any, c: any) => {
           d[`ema${period}`] = c;
@@ -309,22 +304,27 @@ function ReactFinancialChart({
     return processed;
   }, [data, chartType, indicators]);
 
+  // xScale Provider로 데이터 변환 (StockChart 패턴)
   const {
     data: chartData,
     xScale,
     xAccessor,
     displayXAccessor,
   } = useMemo(() => {
-    const ScaleProvider =
-      discontinuousTimeScaleProviderBuilder().inputDateAccessor(
-        (d: ProcessedData) => d.date
-      );
-    return ScaleProvider(processedData);
-  }, [processedData]);
+    return xScaleProvider(calculatedData);
+  }, [calculatedData, xScaleProvider]);
 
-  if (!chartData || chartData.length === 0 || dimensions.width === 0) {
+  // xExtents 계산 (StockChart 패턴: 마지막 100개 + 5 여유)
+  const xExtents = useMemo(() => {
+    if (!chartData || chartData.length === 0) return [0, 0];
+    const max = xAccessor(chartData[chartData.length - 1]);
+    const min = xAccessor(chartData[Math.max(0, chartData.length - 100)]);
+    return [min, max + 5];
+  }, [chartData, xAccessor]);
+
+  if (!chartData || chartData.length === 0 || width === 0) {
     return (
-      <Box ref={chartRef} sx={{ width: "100%", height }}>
+      <Box sx={{ width: "100%", height }}>
         <Box
           sx={{
             display: "flex",
@@ -339,88 +339,55 @@ function ReactFinancialChart({
     );
   }
 
-  // 차트 높이 계산
-  const mainChartHeight =
-    indicators.macd || indicators.rsi || indicators.stochastic
-      ? height * 0.6
-      : height * 0.85;
+  // Margin 설정 (StockChart 패턴)
+  const margin = { left: 0, right: 80, top: 0, bottom: 30 };
+  const gridHeight = height - margin.top - margin.bottom;
 
-  const volumeHeight = height * 0.15;
-  const indicatorHeight = height * 0.25;
+  // 차트별 높이 계산 (StockChart 패턴 개선)
+  const indicatorHeight = gridHeight * 0.2;
 
-  let currentYOffset = 0;
-  const charts: any[] = [];
+  // Volume은 메인 차트 하단에 작게 오버레이
+  const volumeHeight = gridHeight * 0.25;
+  const mainPriceHeight = gridHeight;
 
-  // 메인 차트
-  charts.push({
-    id: 1,
-    yExtents: (d: ProcessedData) => [d.high, d.low],
-    height: mainChartHeight,
-    origin: [0, currentYOffset],
-  });
-  currentYOffset += mainChartHeight;
+  // Elder Ray가 있으면 별도 영역
+  const elderRayHeight = indicators.elderRay ? 120 : 0;
 
-  // 볼륨 차트
-  if (chartData.some((d: any) => d.volume)) {
-    charts.push({
-      id: 2,
-      yExtents: (d: ProcessedData) => d.volume || 0,
-      height: volumeHeight,
-      origin: [0, currentYOffset],
-    });
-    currentYOffset += volumeHeight;
-  }
+  // 메인 차트 높이 계산
+  let adjustedMainHeight = mainPriceHeight;
+  if (indicators.macd) adjustedMainHeight -= indicatorHeight;
+  if (indicators.rsi) adjustedMainHeight -= indicatorHeight;
+  if (indicators.stochastic) adjustedMainHeight -= indicatorHeight;
+  if (indicators.elderRay) adjustedMainHeight -= elderRayHeight;
 
-  // MACD 차트
-  if (indicators.macd) {
-    charts.push({
-      id: 3,
-      yExtents: (d: any) =>
-        d.macd ? [d.macd.divergence, d.macd.macd, d.macd.signal] : [0],
-      height: indicatorHeight,
-      origin: [0, currentYOffset],
-    });
-    currentYOffset += indicatorHeight;
-  }
+  // Origin 계산 함수 (StockChart 패턴)
+  const volumeOrigin = (_: number, h: number) => [
+    0,
+    h - volumeHeight - elderRayHeight,
+  ];
+  const elderRayOrigin = (_: number, h: number) => [0, h - elderRayHeight];
 
-  // RSI 차트
-  if (indicators.rsi) {
-    charts.push({
-      id: 4,
-      yExtents: [0, 100],
-      height: indicatorHeight,
-      origin: [0, currentYOffset],
-    });
-    currentYOffset += indicatorHeight;
-  }
-
-  // Stochastic 차트
-  if (indicators.stochastic) {
-    charts.push({
-      id: 5,
-      yExtents: [0, 100],
-      height: indicatorHeight,
-      origin: [0, currentYOffset],
-    });
-    currentYOffset += indicatorHeight;
-  }
-
-  const margin = { left: 0, right: 60, top: 10, bottom: 30 };
-  const gridHeight = currentYOffset;
+  // Helper functions
+  const barChartExtents = (d: ProcessedData) => d.volume || 0;
+  const candleChartExtents = (d: ProcessedData) => [d.high, d.low];
+  const yEdgeIndicator = (d: ProcessedData) => d.close;
+  const volumeColor = (d: ProcessedData) =>
+    d.close > d.open ? "rgba(38, 166, 154, 0.3)" : "rgba(239, 83, 80, 0.3)";
+  const openCloseColor = (d: ProcessedData) =>
+    d.close > d.open ? "#26a69a" : "#ef5350";
 
   return (
     <Box
-      ref={chartRef}
       sx={{
         width: "100%",
-        height: gridHeight,
+        height,
         position: "relative",
-        backgroundColor: "transparent",
+        overflow: "hidden", // 차트가 컨테이너를 벗어나지 않도록
       }}
     >
       <ChartCanvas
-        height={gridHeight}
-        width={dimensions.width}
+        height={height}
+        width={width}
         ratio={ratio}
         margin={margin}
         data={chartData}
@@ -428,127 +395,67 @@ function ReactFinancialChart({
         seriesName={symbol}
         xScale={xScale}
         xAccessor={xAccessor}
-        xExtents={[
-          xAccessor(chartData[0]),
-          xAccessor(chartData[chartData.length - 1]),
-        ]}
+        xExtents={xExtents}
+        zoomAnchor={lastVisibleItemBasedZoomAnchor}
       >
-        {/* 메인 차트 */}
-        <Chart
-          id={1}
-          yExtents={charts[0].yExtents}
-          height={charts[0].height}
-          origin={charts[0].origin}
-        >
-          <XAxis />
-          <YAxis />
+        {/* Volume Chart (차트 2) - 별도 차트로 하되 오버레이 효과 */}
+        {chartData.some((d: any) => d.volume) && (
+          <Chart
+            id={2}
+            height={volumeHeight}
+            origin={volumeOrigin}
+            yExtents={barChartExtents}
+          >
+            <BarSeries fillStyle={volumeColor} yAccessor={barChartExtents} />
+            {!indicators.elderRay && <XAxis showGridLines showTicks />}
+          </Chart>
+        )}
 
-          {/* 차트 타입별 렌더링 */}
-          {chartType === "candlestick" && (
-            <CandlestickSeries
-              fill={(d: ProcessedData) =>
-                d.close > d.open
-                  ? theme.palette.success.main
-                  : theme.palette.error.main
-              }
-              wickStroke={(d: ProcessedData) =>
-                d.close > d.open
-                  ? theme.palette.success.main
-                  : theme.palette.error.main
-              }
-            />
-          )}
+        {/* Main Price Chart (차트 3) - StockChart 패턴 */}
+        <Chart id={3} height={adjustedMainHeight} yExtents={candleChartExtents}>
+          <XAxis showGridLines showTicks={false} showTickLabel={false} />
+          <YAxis showGridLines tickFormat={pricesDisplayFormat} />
 
-          {chartType === "ohlc" && (
-            <CandlestickSeries
-              wickStroke={(d: ProcessedData) =>
-                d.close > d.open
-                  ? theme.palette.success.main
-                  : theme.palette.error.main
-              }
-            />
-          )}
+          {/* 캔들스틱 차트 */}
+          <CandlestickSeries />
 
-          {chartType === "line" && (
-            <LineSeries
-              yAccessor={(d: ProcessedData) => d.close}
-              strokeStyle={theme.palette.primary.main}
-            />
-          )}
+          {/* 이동평균선 - EMA */}
+          {indicators.ema?.map((period) => {
+            const emaAccessor = (d: any) => d[`ema${period}`];
+            const emaStroke = `hsl(${(period * 137) % 360}, 70%, 50%)`;
+            return (
+              <React.Fragment key={`ema-${period}`}>
+                <LineSeries
+                  yAccessor={emaAccessor}
+                  strokeStyle={emaStroke}
+                  strokeWidth={2}
+                />
+                <CurrentCoordinate
+                  yAccessor={emaAccessor}
+                  fillStyle={emaStroke}
+                />
+              </React.Fragment>
+            );
+          })}
 
-          {chartType === "area" && (
-            <LineSeries
-              yAccessor={(d: ProcessedData) => d.close}
-              strokeStyle={theme.palette.primary.main}
-            />
-          )}
-
-          {chartType === "scatter" && (
-            <ScatterSeries
-              yAccessor={(d: ProcessedData) => d.close}
-              marker={(props: any) => {
-                const { datum } = props;
-                const fill =
-                  datum.close > datum.open
-                    ? theme.palette.success.main
-                    : theme.palette.error.main;
-                return <circle {...props} fill={fill} r={3} />;
-              }}
-            />
-          )}
-
-          {chartType === "heikinAshi" && (
-            <CandlestickSeries
-              fill={(d: any) =>
-                d.close > d.open
-                  ? theme.palette.success.main
-                  : theme.palette.error.main
-              }
-            />
-          )}
-
-          {chartType === "renko" && <RenkoSeries />}
-
-          {chartType === "kagi" && <KagiSeries />}
-
-          {chartType === "pointAndFigure" && <PointAndFigureSeries />}
-
-          {/* 이동평균선 */}
-          {indicators.ema?.map((period) => (
-            <LineSeries
-              key={`ema-${period}`}
-              yAccessor={(d: any) => d[`ema${period}`]}
-              strokeStyle={`hsl(${period * 30}, 70%, 50%)`}
-              strokeWidth={2}
-            />
-          ))}
-
-          {indicators.sma?.map((period) => (
-            <LineSeries
-              key={`sma-${period}`}
-              yAccessor={(d: any) => d[`sma${period}`]}
-              strokeStyle={`hsl(${period * 30 + 60}, 70%, 50%)`}
-              strokeWidth={2}
-            />
-          ))}
-
-          {indicators.wma?.map((period) => (
-            <LineSeries
-              key={`wma-${period}`}
-              yAccessor={(d: any) => d[`wma${period}`]}
-              strokeStyle={`hsl(${period * 30 + 120}, 70%, 50%)`}
-              strokeWidth={2}
-            />
-          ))}
-
-          {indicators.tma?.map((period) => (
-            <LineSeries
-              key={`tma-${period}`}
-              yAccessor={(d: any) => d[`tma${period}`]}
-              strokeStyle={`hsl(${period * 30 + 180}, 70%, 50%)`}
-              strokeWidth={2}
-            />
-          ))}
+          {/* 이동평균선 - SMA */}
+          {indicators.sma?.map((period) => {
+            const smaAccessor = (d: any) => d[`sma${period}`];
+            const smaStroke = `hsl(${((period * 137) % 360) + 60}, 70%, 50%)`;
+            return (
+              <React.Fragment key={`sma-${period}`}>
+                <LineSeries
+                  yAccessor={smaAccessor}
+                  strokeStyle={smaStroke}
+                  strokeWidth={2}
+                />
+                <CurrentCoordinate
+                  yAccessor={smaAccessor}
+                  fillStyle={smaStroke}
+                />
+              </React.Fragment>
+            );
+          })}
 
           {/* Bollinger Bands */}
           {indicators.bollingerBand && (
@@ -558,177 +465,90 @@ function ReactFinancialChart({
           {/* SAR */}
           {indicators.sar && <SARSeries yAccessor={(d: any) => d.sar} />}
 
-          {/* Elder Ray */}
-          {indicators.elderRay && (
-            <ElderRaySeries yAccessor={(d: any) => d.elderRay} />
-          )}
-
-          {/* Edge Indicators */}
-          <CurrentCoordinate
-            yAccessor={(d: ProcessedData) => d.close}
-            fillStyle={theme.palette.primary.main}
+          {/* MouseCoordinates */}
+          <MouseCoordinateY
+            rectWidth={margin.right}
+            displayFormat={pricesDisplayFormat}
           />
+
+          {/* Edge Indicator (StockChart 패턴) */}
           <EdgeIndicator
             itemType="last"
-            rectWidth={60}
-            fill={theme.palette.primary.main}
-            lineStroke={theme.palette.primary.main}
-            displayFormat={(value: number) => value.toFixed(2)}
-            yAccessor={(d: ProcessedData) => d.close}
+            rectWidth={margin.right}
+            fill={openCloseColor}
+            lineStroke={openCloseColor}
+            displayFormat={pricesDisplayFormat}
+            yAccessor={yEdgeIndicator}
           />
 
-          {/* Tooltips */}
-          <OHLCTooltip origin={[8, 16]} />
-
-          {indicators.bollingerBand && (
-            <SingleValueTooltip
-              yAccessor={(d: any) => d.bb}
-              yLabel="BB"
-              origin={[8, 40]}
+          {/* Moving Average Tooltip */}
+          {(indicators.ema || indicators.sma) && (
+            <MovingAverageTooltip
+              origin={[8, 24]}
+              options={[
+                ...(indicators.ema?.map((period) => ({
+                  yAccessor: (d: any) => d[`ema${period}`],
+                  type: "EMA",
+                  stroke: `hsl(${(period * 137) % 360}, 70%, 50%)`,
+                  windowSize: period,
+                })) || []),
+                ...(indicators.sma?.map((period) => ({
+                  yAccessor: (d: any) => d[`sma${period}`],
+                  type: "SMA",
+                  stroke: `hsl(${((period * 137) % 360) + 60}, 70%, 50%)`,
+                  windowSize: period,
+                })) || []),
+              ]}
             />
           )}
 
-          {/* MouseCoordinate for crosshair */}
-          <MouseCoordinateX displayFormat={timeFormat("%Y-%m-%d %H:%M")} />
-          <MouseCoordinateY
-            rectWidth={margin.right}
-            displayFormat={(d: number) => d.toFixed(2)}
-          />
+          {/* Volume도 없고 Elder Ray도 없을 때만 메인 차트에 XAxis 표시 */}
+          {!chartData.some((d: any) => d.volume) && !indicators.elderRay && (
+            <XAxis showGridLines showTicks />
+          )}
+
+          <ZoomButtons />
+          <OHLCTooltip origin={[8, 16]} />
         </Chart>
 
-        {/* 볼륨 차트 */}
-        {charts.length > 1 && chartData.some((d: any) => d.volume) && (
+        {/* Elder Ray Chart (차트 4) - StockChart 패턴 */}
+        {indicators.elderRay && (
           <Chart
-            id={2}
-            yExtents={charts[1].yExtents}
-            height={charts[1].height}
-            origin={charts[1].origin}
+            id={4}
+            height={elderRayHeight}
+            yExtents={(d: any) => d.elderRay}
+            origin={elderRayOrigin}
+            padding={{ top: 8, bottom: 8 }}
           >
-            <YAxis ticks={3} />
-            <BarSeries
-              yAccessor={(d: ProcessedData) => d.volume || 0}
-              fillStyle={(d: ProcessedData) =>
-                d.close > d.open
-                  ? theme.palette.success.main + "80"
-                  : theme.palette.error.main + "80"
+            <XAxis showGridLines showTicks />
+            <YAxis ticks={4} tickFormat={pricesDisplayFormat} />
+
+            <MouseCoordinateX displayFormat={timeDisplayFormat} />
+            <MouseCoordinateY
+              rectWidth={margin.right}
+              displayFormat={pricesDisplayFormat}
+            />
+
+            <ElderRaySeries yAccessor={(d: any) => d.elderRay} />
+
+            <SingleValueTooltip
+              yAccessor={(d: any) => d.elderRay}
+              yLabel="Elder Ray"
+              yDisplayFormat={(d: any) =>
+                `${pricesDisplayFormat(d.bullPower)}, ${pricesDisplayFormat(
+                  d.bearPower
+                )}`
               }
+              origin={[8, 16]}
             />
           </Chart>
         )}
 
-        {/* MACD 차트 */}
-        {indicators.macd &&
-          (() => {
-            const macdChart = charts.find((c) => c.id === 3);
-            if (!macdChart) return null;
-            return (
-              <Chart
-                id={3}
-                yExtents={macdChart.yExtents}
-                height={macdChart.height}
-                origin={macdChart.origin}
-              >
-                <XAxis />
-                <YAxis ticks={2} />
-                <MACDSeries yAccessor={(d: any) => d.macd} />
-                <MACDTooltip
-                  origin={[8, 16]}
-                  yAccessor={(d: any) => d.macd}
-                  options={{
-                    fast: 12,
-                    slow: 26,
-                    signal: 9,
-                  }}
-                  appearance={{
-                    strokeStyle: {
-                      macd: "#2196f3",
-                      signal: "#f44336",
-                    },
-                    fillStyle: {
-                      divergence: "#4CAF50",
-                    },
-                  }}
-                />
-              </Chart>
-            );
-          })()}
-
-        {/* RSI 차트 */}
-        {indicators.rsi &&
-          (() => {
-            const rsiChart = charts.find((c) => c.id === 4);
-            if (!rsiChart) return null;
-            return (
-              <Chart
-                id={4}
-                yExtents={[0, 100]}
-                height={rsiChart.height}
-                origin={rsiChart.origin}
-              >
-                <XAxis />
-                <YAxis ticks={2} tickValues={[30, 70]} />
-                <RSISeries yAccessor={(d: any) => d.rsi} />
-                <RSITooltip
-                  origin={[8, 16]}
-                  yAccessor={(d: any) => d.rsi}
-                  options={{ windowSize: 14 }}
-                />
-              </Chart>
-            );
-          })()}
-
-        {/* Stochastic 차트 */}
-        {indicators.stochastic &&
-          (() => {
-            const stochasticChart = charts.find((c) => c.id === 5);
-            if (!stochasticChart) return null;
-            return (
-              <Chart
-                id={5}
-                yExtents={[0, 100]}
-                height={stochasticChart.height}
-                origin={stochasticChart.origin}
-              >
-                <XAxis />
-                <YAxis ticks={2} tickValues={[20, 80]} />
-                <StochasticSeries yAccessor={(d: any) => d.stochastic} />
-                <StochasticTooltip
-                  origin={[8, 16]}
-                  yAccessor={(d: any) => d.stochastic}
-                  options={{
-                    windowSize: 14,
-                    kWindowSize: indicators.stochastic === "slow" ? 3 : 1,
-                    dWindowSize: 3,
-                  }}
-                  appearance={{
-                    stroke: {
-                      kLine: "#2196f3",
-                      dLine: "#f44336",
-                    },
-                  }}
-                />
-              </Chart>
-            );
-          })()}
-
         {/* CrossHair Cursor */}
         <CrossHairCursor />
-        <ZoomButtons />
       </ChartCanvas>
     </Box>
   );
 }
 
-// Performance optimization: Memoize component to prevent unnecessary re-renders
-export default memo(ReactFinancialChart, (prevProps, nextProps) => {
-  // Custom comparison function for memo
-  return (
-    prevProps.symbol === nextProps.symbol &&
-    prevProps.height === nextProps.height &&
-    prevProps.chartType === nextProps.chartType &&
-    prevProps.ratio === nextProps.ratio &&
-    prevProps.data.length === nextProps.data.length &&
-    JSON.stringify(prevProps.indicators) ===
-      JSON.stringify(nextProps.indicators)
-  );
-});
+export default ReactFinancialChart;
