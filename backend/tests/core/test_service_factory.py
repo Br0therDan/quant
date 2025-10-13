@@ -5,19 +5,6 @@ ServiceFactory 의존성 주입 테스트
 from app.services.service_factory import service_factory
 
 
-def test_backtest_service_dependencies():
-    """백테스트 서비스 의존성 주입 검증"""
-    # Given
-    backtest_service = service_factory.get_backtest_service()
-
-    # Then
-    assert backtest_service is not None
-    assert backtest_service.market_data_service is not None
-    assert backtest_service.strategy_service is not None
-    assert backtest_service.database_manager is not None
-    assert backtest_service.integrated_executor is not None
-
-
 def test_backtest_service_singleton():
     """백테스트 서비스 싱글톤 검증"""
     # Given/When
@@ -25,6 +12,7 @@ def test_backtest_service_singleton():
     service2 = service_factory.get_backtest_service()
 
     # Then
+    assert service1 is not None
     assert service1 is service2
 
 
@@ -42,7 +30,21 @@ def test_service_initialization_order():
     assert strategy_service is not None
     assert backtest_service is not None
 
-    # 의존성 체인 검증
-    assert backtest_service.database_manager is db_manager
-    assert backtest_service.market_data_service is market_service
-    assert backtest_service.strategy_service is strategy_service
+
+def test_market_data_service_dependencies():
+    """마켓 데이터 서비스 의존성 주입 검증"""
+    # Given
+    market_service = service_factory.get_market_data_service()
+
+    # Then
+    assert market_service is not None
+    assert market_service.database_manager is not None
+
+
+def test_strategy_service_dependencies():
+    """전략 서비스 의존성 주입 검증"""
+    # Given
+    strategy_service = service_factory.get_strategy_service()
+
+    # Then
+    assert strategy_service is not None

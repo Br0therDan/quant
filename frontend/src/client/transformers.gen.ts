@@ -23,6 +23,17 @@ import type {
 	DashboardGetRecentTradesResponse,
 	DashboardGetStrategyComparisonResponse,
 	DashboardGetWatchlistQuotesResponse,
+	FeatureStoreActivateFeatureResponse,
+	FeatureStoreCreateFeatureResponse,
+	FeatureStoreCreateVersionResponse,
+	FeatureStoreDeprecateFeatureResponse,
+	FeatureStoreGetFeatureResponse,
+	FeatureStoreGetFeatureStatisticsResponse,
+	FeatureStoreGetFeatureVersionsResponse,
+	FeatureStoreListFeaturesResponse,
+	FeatureStoreRecordFeatureUsageResponse,
+	FeatureStoreRollbackVersionResponse,
+	FeatureStoreUpdateFeatureResponse,
 	FundamentalGetBalanceSheetResponse,
 	FundamentalGetCashFlowResponse,
 	FundamentalGetCompanyOverviewResponse,
@@ -30,7 +41,33 @@ import type {
 	FundamentalGetIncomeStatementResponse,
 	HealthHealthCheckResponse,
 	MarketRegimeGetMarketRegimeResponse,
+	MlCreateExperimentResponse,
+	MlGetRunResponse,
+	MlListDriftEventsResponse,
+	MlListEvaluationRunsResponse,
+	MlListExperimentsResponse,
+	MlListModelVersionsResponse,
+	MlListRunsResponse,
+	MlListScenariosResponse,
+	MlLogRunResponse,
+	MlRecordDriftEventResponse,
+	MlRegisterModelVersionResponse,
+	MlRegisterScenarioResponse,
+	MlRunEvaluationResponse,
+	MlUpdateExperimentResponse,
+	MlUpdateModelVersionResponse,
+	MlUpdateRunResponse,
+	MlUpdateScenarioResponse,
 	NarrativeGenerateNarrativeReportResponse,
+	PromptGovernanceApprovePromptResponse,
+	PromptGovernanceCreatePromptTemplateResponse,
+	PromptGovernanceEvaluatePromptResponse,
+	PromptGovernanceListPromptAuditLogsResponse,
+	PromptGovernanceListPromptTemplatesResponse,
+	PromptGovernanceLogPromptUsageResponse,
+	PromptGovernanceRejectPromptResponse,
+	PromptGovernanceSubmitPromptForReviewResponse,
+	PromptGovernanceUpdatePromptTemplateResponse,
 	SignalsGetMlSignalResponse,
 	StockGetDailyPricesResponse,
 	StockGetIntradayDataResponse,
@@ -1027,6 +1064,204 @@ const mlSignalResponseSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
+export const mlListExperimentsResponseTransformer = async (
+	data: any,
+): Promise<MlListExperimentsResponse> => {
+	data = data.map((item: any) => {
+		return experimentResponseSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+const experimentResponseSchemaResponseTransformer = (data: any) => {
+	data.created_at = new Date(data.created_at);
+	data.updated_at = new Date(data.updated_at);
+	return data;
+};
+
+export const mlCreateExperimentResponseTransformer = async (
+	data: any,
+): Promise<MlCreateExperimentResponse> => {
+	data = experimentResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const mlUpdateExperimentResponseTransformer = async (
+	data: any,
+): Promise<MlUpdateExperimentResponse> => {
+	data = experimentResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const mlListRunsResponseTransformer = async (
+	data: any,
+): Promise<MlListRunsResponse> => {
+	data = data.map((item: any) => {
+		return runResponseSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+const runResponseSchemaResponseTransformer = (data: any) => {
+	data.started_at = new Date(data.started_at);
+	if (data.completed_at) {
+		data.completed_at = new Date(data.completed_at);
+	}
+	return data;
+};
+
+export const mlLogRunResponseTransformer = async (
+	data: any,
+): Promise<MlLogRunResponse> => {
+	data = runResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const mlGetRunResponseTransformer = async (
+	data: any,
+): Promise<MlGetRunResponse> => {
+	data = runResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const mlUpdateRunResponseTransformer = async (
+	data: any,
+): Promise<MlUpdateRunResponse> => {
+	data = runResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const mlListModelVersionsResponseTransformer = async (
+	data: any,
+): Promise<MlListModelVersionsResponse> => {
+	data = data.map((item: any) => {
+		return modelVersionResponseSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+const modelVersionResponseSchemaResponseTransformer = (data: any) => {
+	data.approval_checklist = data.approval_checklist.map((item: any) => {
+		return deploymentChecklistItemSchemaResponseTransformer(item);
+	});
+	if (data.approved_at) {
+		data.approved_at = new Date(data.approved_at);
+	}
+	data.created_at = new Date(data.created_at);
+	data.updated_at = new Date(data.updated_at);
+	return data;
+};
+
+const deploymentChecklistItemSchemaResponseTransformer = (data: any) => {
+	if (data.completed_at) {
+		data.completed_at = new Date(data.completed_at);
+	}
+	return data;
+};
+
+export const mlRegisterModelVersionResponseTransformer = async (
+	data: any,
+): Promise<MlRegisterModelVersionResponse> => {
+	data = modelVersionResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const mlUpdateModelVersionResponseTransformer = async (
+	data: any,
+): Promise<MlUpdateModelVersionResponse> => {
+	data = modelVersionResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const mlListDriftEventsResponseTransformer = async (
+	data: any,
+): Promise<MlListDriftEventsResponse> => {
+	data = data.map((item: any) => {
+		return driftEventResponseSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+const driftEventResponseSchemaResponseTransformer = (data: any) => {
+	data.detected_at = new Date(data.detected_at);
+	return data;
+};
+
+export const mlRecordDriftEventResponseTransformer = async (
+	data: any,
+): Promise<MlRecordDriftEventResponse> => {
+	data = driftEventResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const mlListScenariosResponseTransformer = async (
+	data: any,
+): Promise<MlListScenariosResponse> => {
+	data = data.map((item: any) => {
+		return scenarioResponseSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+const scenarioResponseSchemaResponseTransformer = (data: any) => {
+	if (data.start_date) {
+		data.start_date = new Date(data.start_date);
+	}
+	if (data.end_date) {
+		data.end_date = new Date(data.end_date);
+	}
+	data.stress_events = data.stress_events.map((item: any) => {
+		return scenarioEventSchemaResponseTransformer(item);
+	});
+	data.created_at = new Date(data.created_at);
+	data.updated_at = new Date(data.updated_at);
+	return data;
+};
+
+const scenarioEventSchemaResponseTransformer = (data: any) => {
+	data.start = new Date(data.start);
+	data.end = new Date(data.end);
+	return data;
+};
+
+export const mlRegisterScenarioResponseTransformer = async (
+	data: any,
+): Promise<MlRegisterScenarioResponse> => {
+	data = scenarioResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const mlUpdateScenarioResponseTransformer = async (
+	data: any,
+): Promise<MlUpdateScenarioResponse> => {
+	data = scenarioResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const mlListEvaluationRunsResponseTransformer = async (
+	data: any,
+): Promise<MlListEvaluationRunsResponse> => {
+	data = data.map((item: any) => {
+		return evaluationRunResponseSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+const evaluationRunResponseSchemaResponseTransformer = (data: any) => {
+	data.started_at = new Date(data.started_at);
+	if (data.completed_at) {
+		data.completed_at = new Date(data.completed_at);
+	}
+	return data;
+};
+
+export const mlRunEvaluationResponseTransformer = async (
+	data: any,
+): Promise<MlRunEvaluationResponse> => {
+	data = evaluationRunResponseSchemaResponseTransformer(data);
+	return data;
+};
+
 export const chatOpsExecuteChatopsResponseTransformer = async (
 	data: any,
 ): Promise<ChatOpsExecuteChatopsResponse> => {
@@ -1125,5 +1360,233 @@ const strategyApprovalResponseSchemaResponseTransformer = (data: any) => {
 	if (data.approved_at) {
 		data.approved_at = new Date(data.approved_at);
 	}
+	return data;
+};
+
+export const featureStoreListFeaturesResponseTransformer = async (
+	data: any,
+): Promise<FeatureStoreListFeaturesResponse> => {
+	data = featureListResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const featureListResponseSchemaResponseTransformer = (data: any) => {
+	data.features = data.features.map((item: any) => {
+		return featureResponseSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+const featureResponseSchemaResponseTransformer = (data: any) => {
+	if (data.last_used_at) {
+		data.last_used_at = new Date(data.last_used_at);
+	}
+	data.created_at = new Date(data.created_at);
+	data.updated_at = new Date(data.updated_at);
+	if (data.deprecated_at) {
+		data.deprecated_at = new Date(data.deprecated_at);
+	}
+	return data;
+};
+
+export const featureStoreCreateFeatureResponseTransformer = async (
+	data: any,
+): Promise<FeatureStoreCreateFeatureResponse> => {
+	data = featureResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const featureStoreGetFeatureResponseTransformer = async (
+	data: any,
+): Promise<FeatureStoreGetFeatureResponse> => {
+	data = featureResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const featureStoreUpdateFeatureResponseTransformer = async (
+	data: any,
+): Promise<FeatureStoreUpdateFeatureResponse> => {
+	data = featureResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const featureStoreActivateFeatureResponseTransformer = async (
+	data: any,
+): Promise<FeatureStoreActivateFeatureResponse> => {
+	data = featureResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const featureStoreDeprecateFeatureResponseTransformer = async (
+	data: any,
+): Promise<FeatureStoreDeprecateFeatureResponse> => {
+	data = featureResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const featureStoreGetFeatureVersionsResponseTransformer = async (
+	data: any,
+): Promise<FeatureStoreGetFeatureVersionsResponse> => {
+	data = featureVersionListResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const featureVersionListResponseSchemaResponseTransformer = (data: any) => {
+	data.versions = data.versions.map((item: any) => {
+		return featureVersionResponseSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+const featureVersionResponseSchemaResponseTransformer = (data: any) => {
+	data.created_at = new Date(data.created_at);
+	if (data.rolled_back_at) {
+		data.rolled_back_at = new Date(data.rolled_back_at);
+	}
+	return data;
+};
+
+export const featureStoreCreateVersionResponseTransformer = async (
+	data: any,
+): Promise<FeatureStoreCreateVersionResponse> => {
+	data = featureVersionResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const featureStoreRollbackVersionResponseTransformer = async (
+	data: any,
+): Promise<FeatureStoreRollbackVersionResponse> => {
+	data = featureVersionResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const featureStoreRecordFeatureUsageResponseTransformer = async (
+	data: any,
+): Promise<FeatureStoreRecordFeatureUsageResponse> => {
+	data = featureUsageResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const featureUsageResponseSchemaResponseTransformer = (data: any) => {
+	data.usage_timestamp = new Date(data.usage_timestamp);
+	return data;
+};
+
+export const featureStoreGetFeatureStatisticsResponseTransformer = async (
+	data: any,
+): Promise<FeatureStoreGetFeatureStatisticsResponse> => {
+	data = featureStatisticsResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const featureStatisticsResponseSchemaResponseTransformer = (data: any) => {
+	if (data.first_used_at) {
+		data.first_used_at = new Date(data.first_used_at);
+	}
+	if (data.last_used_at) {
+		data.last_used_at = new Date(data.last_used_at);
+	}
+	return data;
+};
+
+export const promptGovernanceListPromptTemplatesResponseTransformer = async (
+	data: any,
+): Promise<PromptGovernanceListPromptTemplatesResponse> => {
+	data = data.map((item: any) => {
+		return promptTemplateResponseSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+const promptTemplateResponseSchemaResponseTransformer = (data: any) => {
+	if (data.evaluation) {
+		data.evaluation = promptEvaluationSummarySchemaResponseTransformer(
+			data.evaluation,
+		);
+	}
+	data.created_at = new Date(data.created_at);
+	data.updated_at = new Date(data.updated_at);
+	return data;
+};
+
+const promptEvaluationSummarySchemaResponseTransformer = (data: any) => {
+	if (data.evaluated_at) {
+		data.evaluated_at = new Date(data.evaluated_at);
+	}
+	return data;
+};
+
+export const promptGovernanceCreatePromptTemplateResponseTransformer = async (
+	data: any,
+): Promise<PromptGovernanceCreatePromptTemplateResponse> => {
+	data = promptTemplateResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const promptGovernanceUpdatePromptTemplateResponseTransformer = async (
+	data: any,
+): Promise<PromptGovernanceUpdatePromptTemplateResponse> => {
+	data = promptTemplateResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const promptGovernanceSubmitPromptForReviewResponseTransformer = async (
+	data: any,
+): Promise<PromptGovernanceSubmitPromptForReviewResponse> => {
+	data = promptTemplateResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const promptGovernanceApprovePromptResponseTransformer = async (
+	data: any,
+): Promise<PromptGovernanceApprovePromptResponse> => {
+	data = promptTemplateResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const promptGovernanceRejectPromptResponseTransformer = async (
+	data: any,
+): Promise<PromptGovernanceRejectPromptResponse> => {
+	data = promptTemplateResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const promptGovernanceEvaluatePromptResponseTransformer = async (
+	data: any,
+): Promise<PromptGovernanceEvaluatePromptResponse> => {
+	data = promptEvaluationResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const promptEvaluationResponseSchemaResponseTransformer = (data: any) => {
+	data.evaluation = promptEvaluationSummarySchemaResponseTransformer(
+		data.evaluation,
+	);
+	return data;
+};
+
+export const promptGovernanceLogPromptUsageResponseTransformer = async (
+	data: any,
+): Promise<PromptGovernanceLogPromptUsageResponse> => {
+	data = promptUsageLogResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const promptUsageLogResponseSchemaResponseTransformer = (data: any) => {
+	data.created_at = new Date(data.created_at);
+	return data;
+};
+
+export const promptGovernanceListPromptAuditLogsResponseTransformer = async (
+	data: any,
+): Promise<PromptGovernanceListPromptAuditLogsResponse> => {
+	data = data.map((item: any) => {
+		return promptAuditLogResponseSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+const promptAuditLogResponseSchemaResponseTransformer = (data: any) => {
+	data.created_at = new Date(data.created_at);
 	return data;
 };

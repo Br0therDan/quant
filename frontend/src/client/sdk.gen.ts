@@ -92,6 +92,9 @@ import type {
 	ChatOpsAdvancedCreateChatSessionData,
 	ChatOpsAdvancedCreateChatSessionErrors,
 	ChatOpsAdvancedCreateChatSessionResponses,
+	ChatOpsAdvancedDebugCompareStrategiesData,
+	ChatOpsAdvancedDebugCompareStrategiesErrors,
+	ChatOpsAdvancedDebugCompareStrategiesResponses,
 	ChatOpsAdvancedTriggerAutoBacktestData,
 	ChatOpsAdvancedTriggerAutoBacktestErrors,
 	ChatOpsAdvancedTriggerAutoBacktestResponses,
@@ -158,6 +161,45 @@ import type {
 	EconomicGetInterestRatesData,
 	EconomicGetInterestRatesErrors,
 	EconomicGetInterestRatesResponses,
+	FeatureStoreActivateFeatureData,
+	FeatureStoreActivateFeatureErrors,
+	FeatureStoreActivateFeatureResponses,
+	FeatureStoreCreateFeatureData,
+	FeatureStoreCreateFeatureErrors,
+	FeatureStoreCreateFeatureResponses,
+	FeatureStoreCreateVersionData,
+	FeatureStoreCreateVersionErrors,
+	FeatureStoreCreateVersionResponses,
+	FeatureStoreDeleteFeatureData,
+	FeatureStoreDeleteFeatureErrors,
+	FeatureStoreDeleteFeatureResponses,
+	FeatureStoreDeprecateFeatureData,
+	FeatureStoreDeprecateFeatureErrors,
+	FeatureStoreDeprecateFeatureResponses,
+	FeatureStoreGetFeatureData,
+	FeatureStoreGetFeatureErrors,
+	FeatureStoreGetFeatureLineageData,
+	FeatureStoreGetFeatureLineageErrors,
+	FeatureStoreGetFeatureLineageResponses,
+	FeatureStoreGetFeatureResponses,
+	FeatureStoreGetFeatureStatisticsData,
+	FeatureStoreGetFeatureStatisticsErrors,
+	FeatureStoreGetFeatureStatisticsResponses,
+	FeatureStoreGetFeatureVersionsData,
+	FeatureStoreGetFeatureVersionsErrors,
+	FeatureStoreGetFeatureVersionsResponses,
+	FeatureStoreListFeaturesData,
+	FeatureStoreListFeaturesErrors,
+	FeatureStoreListFeaturesResponses,
+	FeatureStoreRecordFeatureUsageData,
+	FeatureStoreRecordFeatureUsageErrors,
+	FeatureStoreRecordFeatureUsageResponses,
+	FeatureStoreRollbackVersionData,
+	FeatureStoreRollbackVersionErrors,
+	FeatureStoreRollbackVersionResponses,
+	FeatureStoreUpdateFeatureData,
+	FeatureStoreUpdateFeatureErrors,
+	FeatureStoreUpdateFeatureResponses,
 	FundamentalGetBalanceSheetData,
 	FundamentalGetBalanceSheetErrors,
 	FundamentalGetBalanceSheetResponses,
@@ -218,18 +260,74 @@ import type {
 	MlCompareModelsData,
 	MlCompareModelsErrors,
 	MlCompareModelsResponses,
+	MlCompareModelVersionsData,
+	MlCompareModelVersionsErrors,
+	MlCompareModelVersionsResponses,
+	MlCreateExperimentData,
+	MlCreateExperimentErrors,
+	MlCreateExperimentResponses,
 	MlDeleteModelData,
 	MlDeleteModelErrors,
 	MlDeleteModelResponses,
+	MlGetEvaluationReportData,
+	MlGetEvaluationReportErrors,
+	MlGetEvaluationReportResponses,
 	MlGetModelInfoData,
 	MlGetModelInfoErrors,
 	MlGetModelInfoResponses,
+	MlGetRunData,
+	MlGetRunErrors,
+	MlGetRunResponses,
+	MlListDriftEventsData,
+	MlListDriftEventsErrors,
+	MlListDriftEventsResponses,
+	MlListEvaluationRunsData,
+	MlListEvaluationRunsErrors,
+	MlListEvaluationRunsResponses,
+	MlListExperimentsData,
+	MlListExperimentsErrors,
+	MlListExperimentsResponses,
 	MlListModelsData,
 	MlListModelsErrors,
 	MlListModelsResponses,
+	MlListModelVersionsData,
+	MlListModelVersionsErrors,
+	MlListModelVersionsResponses,
+	MlListRunsData,
+	MlListRunsErrors,
+	MlListRunsResponses,
+	MlListScenariosData,
+	MlListScenariosResponses,
+	MlLogRunData,
+	MlLogRunErrors,
+	MlLogRunResponses,
+	MlRecordDriftEventData,
+	MlRecordDriftEventErrors,
+	MlRecordDriftEventResponses,
+	MlRegisterModelVersionData,
+	MlRegisterModelVersionErrors,
+	MlRegisterModelVersionResponses,
+	MlRegisterScenarioData,
+	MlRegisterScenarioErrors,
+	MlRegisterScenarioResponses,
+	MlRunEvaluationData,
+	MlRunEvaluationErrors,
+	MlRunEvaluationResponses,
 	MlTrainModelData,
 	MlTrainModelErrors,
 	MlTrainModelResponses,
+	MlUpdateExperimentData,
+	MlUpdateExperimentErrors,
+	MlUpdateExperimentResponses,
+	MlUpdateModelVersionData,
+	MlUpdateModelVersionErrors,
+	MlUpdateModelVersionResponses,
+	MlUpdateRunData,
+	MlUpdateRunErrors,
+	MlUpdateRunResponses,
+	MlUpdateScenarioData,
+	MlUpdateScenarioErrors,
+	MlUpdateScenarioResponses,
 	NarrativeGenerateNarrativeReportData,
 	NarrativeGenerateNarrativeReportErrors,
 	NarrativeGenerateNarrativeReportResponses,
@@ -239,6 +337,33 @@ import type {
 	OAuth2CallbackData,
 	OAuth2CallbackErrors,
 	OAuth2CallbackResponses,
+	PromptGovernanceApprovePromptData,
+	PromptGovernanceApprovePromptErrors,
+	PromptGovernanceApprovePromptResponses,
+	PromptGovernanceCreatePromptTemplateData,
+	PromptGovernanceCreatePromptTemplateErrors,
+	PromptGovernanceCreatePromptTemplateResponses,
+	PromptGovernanceEvaluatePromptData,
+	PromptGovernanceEvaluatePromptErrors,
+	PromptGovernanceEvaluatePromptResponses,
+	PromptGovernanceListPromptAuditLogsData,
+	PromptGovernanceListPromptAuditLogsErrors,
+	PromptGovernanceListPromptAuditLogsResponses,
+	PromptGovernanceListPromptTemplatesData,
+	PromptGovernanceListPromptTemplatesErrors,
+	PromptGovernanceListPromptTemplatesResponses,
+	PromptGovernanceLogPromptUsageData,
+	PromptGovernanceLogPromptUsageErrors,
+	PromptGovernanceLogPromptUsageResponses,
+	PromptGovernanceRejectPromptData,
+	PromptGovernanceRejectPromptErrors,
+	PromptGovernanceRejectPromptResponses,
+	PromptGovernanceSubmitPromptForReviewData,
+	PromptGovernanceSubmitPromptForReviewErrors,
+	PromptGovernanceSubmitPromptForReviewResponses,
+	PromptGovernanceUpdatePromptTemplateData,
+	PromptGovernanceUpdatePromptTemplateErrors,
+	PromptGovernanceUpdatePromptTemplateResponses,
 	SignalsGetMlSignalData,
 	SignalsGetMlSignalErrors,
 	SignalsGetMlSignalResponses,
@@ -3550,6 +3675,706 @@ export class MlService {
 			...options,
 		});
 	}
+
+	/**
+	 * List Experiments
+	 */
+	public static listExperiments<ThrowOnError extends boolean = false>(
+		options?: Options<MlListExperimentsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListExperimentsResponses,
+			MlListExperimentsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/experiments",
+			...options,
+		});
+	}
+
+	/**
+	 * Create Experiment
+	 */
+	public static createExperiment<ThrowOnError extends boolean = false>(
+		options: Options<MlCreateExperimentData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlCreateExperimentResponses,
+			MlCreateExperimentErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/experiments",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Update Experiment
+	 */
+	public static updateExperiment<ThrowOnError extends boolean = false>(
+		options: Options<MlUpdateExperimentData, ThrowOnError>,
+	) {
+		return (options.client ?? client).patch<
+			MlUpdateExperimentResponses,
+			MlUpdateExperimentErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/experiments/{name}",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * List Runs
+	 */
+	public static listRuns<ThrowOnError extends boolean = false>(
+		options?: Options<MlListRunsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListRunsResponses,
+			MlListRunsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/runs",
+			...options,
+		});
+	}
+
+	/**
+	 * Log Run
+	 */
+	public static logRun<ThrowOnError extends boolean = false>(
+		options: Options<MlLogRunData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlLogRunResponses,
+			MlLogRunErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/runs",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Get Run
+	 */
+	public static getRun<ThrowOnError extends boolean = false>(
+		options: Options<MlGetRunData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MlGetRunResponses,
+			MlGetRunErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/runs/{run_id}",
+			...options,
+		});
+	}
+
+	/**
+	 * Update Run
+	 */
+	public static updateRun<ThrowOnError extends boolean = false>(
+		options: Options<MlUpdateRunData, ThrowOnError>,
+	) {
+		return (options.client ?? client).patch<
+			MlUpdateRunResponses,
+			MlUpdateRunErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/runs/{run_id}",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * List Model Versions
+	 */
+	public static listModelVersions<ThrowOnError extends boolean = false>(
+		options?: Options<MlListModelVersionsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListModelVersionsResponses,
+			MlListModelVersionsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/models",
+			...options,
+		});
+	}
+
+	/**
+	 * Register Model Version
+	 */
+	public static registerModelVersion<ThrowOnError extends boolean = false>(
+		options: Options<MlRegisterModelVersionData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlRegisterModelVersionResponses,
+			MlRegisterModelVersionErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/models",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Update Model Version
+	 */
+	public static updateModelVersion<ThrowOnError extends boolean = false>(
+		options: Options<MlUpdateModelVersionData, ThrowOnError>,
+	) {
+		return (options.client ?? client).patch<
+			MlUpdateModelVersionResponses,
+			MlUpdateModelVersionErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/models/{model_name}/{version}",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Compare Model Versions
+	 */
+	public static compareModelVersions<ThrowOnError extends boolean = false>(
+		options: Options<MlCompareModelVersionsData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlCompareModelVersionsResponses,
+			MlCompareModelVersionsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/models/{model_name}/compare",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * List Drift Events
+	 */
+	public static listDriftEvents<ThrowOnError extends boolean = false>(
+		options?: Options<MlListDriftEventsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListDriftEventsResponses,
+			MlListDriftEventsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/drift-events",
+			...options,
+		});
+	}
+
+	/**
+	 * Record Drift Event
+	 */
+	public static recordDriftEvent<ThrowOnError extends boolean = false>(
+		options: Options<MlRecordDriftEventData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlRecordDriftEventResponses,
+			MlRecordDriftEventErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/drift-events",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * List Scenarios
+	 */
+	public static listScenarios<ThrowOnError extends boolean = false>(
+		options?: Options<MlListScenariosData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListScenariosResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/scenarios",
+			...options,
+		});
+	}
+
+	/**
+	 * Register Scenario
+	 */
+	public static registerScenario<ThrowOnError extends boolean = false>(
+		options: Options<MlRegisterScenarioData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlRegisterScenarioResponses,
+			MlRegisterScenarioErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/scenarios",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Update Scenario
+	 */
+	public static updateScenario<ThrowOnError extends boolean = false>(
+		options: Options<MlUpdateScenarioData, ThrowOnError>,
+	) {
+		return (options.client ?? client).patch<
+			MlUpdateScenarioResponses,
+			MlUpdateScenarioErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/scenarios/{name}",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * List Evaluation Runs
+	 */
+	public static listEvaluationRuns<ThrowOnError extends boolean = false>(
+		options?: Options<MlListEvaluationRunsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListEvaluationRunsResponses,
+			MlListEvaluationRunsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/runs",
+			...options,
+		});
+	}
+
+	/**
+	 * Run Evaluation
+	 */
+	public static runEvaluation<ThrowOnError extends boolean = false>(
+		options: Options<MlRunEvaluationData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlRunEvaluationResponses,
+			MlRunEvaluationErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/runs",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Get Evaluation Report
+	 */
+	public static getEvaluationReport<ThrowOnError extends boolean = false>(
+		options: Options<MlGetEvaluationReportData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MlGetEvaluationReportResponses,
+			MlGetEvaluationReportErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/runs/{run_id}/report",
+			...options,
+		});
+	}
+}
+
+export class ModelLifecycleService {
+	/**
+	 * List Experiments
+	 */
+	public static listExperiments<ThrowOnError extends boolean = false>(
+		options?: Options<MlListExperimentsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListExperimentsResponses,
+			MlListExperimentsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/experiments",
+			...options,
+		});
+	}
+
+	/**
+	 * Create Experiment
+	 */
+	public static createExperiment<ThrowOnError extends boolean = false>(
+		options: Options<MlCreateExperimentData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlCreateExperimentResponses,
+			MlCreateExperimentErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/experiments",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Update Experiment
+	 */
+	public static updateExperiment<ThrowOnError extends boolean = false>(
+		options: Options<MlUpdateExperimentData, ThrowOnError>,
+	) {
+		return (options.client ?? client).patch<
+			MlUpdateExperimentResponses,
+			MlUpdateExperimentErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/experiments/{name}",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * List Runs
+	 */
+	public static listRuns<ThrowOnError extends boolean = false>(
+		options?: Options<MlListRunsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListRunsResponses,
+			MlListRunsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/runs",
+			...options,
+		});
+	}
+
+	/**
+	 * Log Run
+	 */
+	public static logRun<ThrowOnError extends boolean = false>(
+		options: Options<MlLogRunData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlLogRunResponses,
+			MlLogRunErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/runs",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Get Run
+	 */
+	public static getRun<ThrowOnError extends boolean = false>(
+		options: Options<MlGetRunData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MlGetRunResponses,
+			MlGetRunErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/runs/{run_id}",
+			...options,
+		});
+	}
+
+	/**
+	 * Update Run
+	 */
+	public static updateRun<ThrowOnError extends boolean = false>(
+		options: Options<MlUpdateRunData, ThrowOnError>,
+	) {
+		return (options.client ?? client).patch<
+			MlUpdateRunResponses,
+			MlUpdateRunErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/runs/{run_id}",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * List Model Versions
+	 */
+	public static listModelVersions<ThrowOnError extends boolean = false>(
+		options?: Options<MlListModelVersionsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListModelVersionsResponses,
+			MlListModelVersionsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/models",
+			...options,
+		});
+	}
+
+	/**
+	 * Register Model Version
+	 */
+	public static registerModelVersion<ThrowOnError extends boolean = false>(
+		options: Options<MlRegisterModelVersionData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlRegisterModelVersionResponses,
+			MlRegisterModelVersionErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/models",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Update Model Version
+	 */
+	public static updateModelVersion<ThrowOnError extends boolean = false>(
+		options: Options<MlUpdateModelVersionData, ThrowOnError>,
+	) {
+		return (options.client ?? client).patch<
+			MlUpdateModelVersionResponses,
+			MlUpdateModelVersionErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/models/{model_name}/{version}",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Compare Model Versions
+	 */
+	public static compareModelVersions<ThrowOnError extends boolean = false>(
+		options: Options<MlCompareModelVersionsData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlCompareModelVersionsResponses,
+			MlCompareModelVersionsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/models/{model_name}/compare",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * List Drift Events
+	 */
+	public static listDriftEvents<ThrowOnError extends boolean = false>(
+		options?: Options<MlListDriftEventsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListDriftEventsResponses,
+			MlListDriftEventsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/drift-events",
+			...options,
+		});
+	}
+
+	/**
+	 * Record Drift Event
+	 */
+	public static recordDriftEvent<ThrowOnError extends boolean = false>(
+		options: Options<MlRecordDriftEventData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlRecordDriftEventResponses,
+			MlRecordDriftEventErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/drift-events",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+}
+
+export class EvaluationHarnessService {
+	/**
+	 * List Scenarios
+	 */
+	public static listScenarios<ThrowOnError extends boolean = false>(
+		options?: Options<MlListScenariosData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListScenariosResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/scenarios",
+			...options,
+		});
+	}
+
+	/**
+	 * Register Scenario
+	 */
+	public static registerScenario<ThrowOnError extends boolean = false>(
+		options: Options<MlRegisterScenarioData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlRegisterScenarioResponses,
+			MlRegisterScenarioErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/scenarios",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Update Scenario
+	 */
+	public static updateScenario<ThrowOnError extends boolean = false>(
+		options: Options<MlUpdateScenarioData, ThrowOnError>,
+	) {
+		return (options.client ?? client).patch<
+			MlUpdateScenarioResponses,
+			MlUpdateScenarioErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/scenarios/{name}",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * List Evaluation Runs
+	 */
+	public static listEvaluationRuns<ThrowOnError extends boolean = false>(
+		options?: Options<MlListEvaluationRunsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListEvaluationRunsResponses,
+			MlListEvaluationRunsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/runs",
+			...options,
+		});
+	}
+
+	/**
+	 * Run Evaluation
+	 */
+	public static runEvaluation<ThrowOnError extends boolean = false>(
+		options: Options<MlRunEvaluationData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlRunEvaluationResponses,
+			MlRunEvaluationErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/runs",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Get Evaluation Report
+	 */
+	public static getEvaluationReport<ThrowOnError extends boolean = false>(
+		options: Options<MlGetEvaluationReportData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MlGetEvaluationReportResponses,
+			MlGetEvaluationReportErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/runs/{run_id}/report",
+			...options,
+		});
+	}
 }
 
 export class ChatOpsService {
@@ -3744,7 +4569,7 @@ export class StrategyBuilderService {
 export class ChatOpsAdvancedService {
 	/**
 	 * Create Chat Session
-	 * 새 채팅 세션 생성 (멀티턴 대화용)
+	 * 새 채팅 세션 생성 (멀티턴 대화용, MongoDB 저장)
 	 *
 	 * **Phase 3 D3**
 	 *
@@ -3839,18 +4664,54 @@ export class ChatOpsAdvancedService {
 	}
 
 	/**
+	 * Debug Compare Strategies
+	 * 전략 비교 디버그 (LLM 없이 데이터만 조회)
+	 *
+	 * **Phase 3 D3 Debug**
+	 *
+	 * MongoDB에서 실제 데이터를 조회하는 로직을 테스트합니다.
+	 * LLM 호출 없이 전략 데이터만 반환합니다.
+	 *
+	 * Args:
+	 * request: 전략 비교 요청
+	 *
+	 * Returns:
+	 * 조회된 전략 데이터 목록
+	 */
+	public static debugCompareStrategies<ThrowOnError extends boolean = false>(
+		options: Options<ChatOpsAdvancedDebugCompareStrategiesData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			ChatOpsAdvancedDebugCompareStrategiesResponses,
+			ChatOpsAdvancedDebugCompareStrategiesErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/chatops-advanced/strategies/compare/debug",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
 	 * Trigger Auto Backtest
-	 * 자동 백테스트 트리거
+	 * 자동 백테스트 트리거 (백그라운드 실행)
 	 *
 	 * **Phase 3 D3**
 	 *
-	 * 전략 빌더 또는 최적화 결과를 기반으로 백테스트를 자동 실행합니다.
+	 * 전략 빌더 또는 최적화 결과를 기반으로 백테스트를 자동 생성하고 백그라운드에서 실행합니다.
 	 *
 	 * Example:
 	 * ```
 	 * POST /api/v1/chatops-advanced/backtest/trigger?user_id=user_123
 	 * {
-	 * "strategy_config": { "name": "RSI Strategy", "indicators": [...] },
+	 * "strategy_config": {
+	 * "name": "RSI Strategy",
+	 * "symbols": ["AAPL", "MSFT"],
+	 * "initial_cash": 100000.0
+	 * },
 	 * "trigger_reason": "strategy_builder",
 	 * "generate_report": true,
 	 * "notify_on_completion": true
@@ -3859,6 +4720,7 @@ export class ChatOpsAdvancedService {
 	 *
 	 * Args:
 	 * request: 자동 백테스트 요청
+	 * background_tasks: FastAPI 백그라운드 태스크
 	 * user_id: 사용자 ID (기본: system)
 	 *
 	 * Returns:
@@ -3878,6 +4740,468 @@ export class ChatOpsAdvancedService {
 				"Content-Type": "application/json",
 				...options.headers,
 			},
+		});
+	}
+}
+
+export class FeatureStoreService {
+	/**
+	 * List Features
+	 * 피처 목록 조회 (필터링/페이지네이션)
+	 *
+	 * - **owner**: 소유자 필터
+	 * - **feature_type**: 피처 타입 필터 (RAW, DERIVED, AGGREGATED)
+	 * - **status**: 상태 필터 (DRAFT, ACTIVE, DEPRECATED)
+	 * - **tags**: 태그 필터 (comma-separated: "financial,risk")
+	 * - **skip/limit**: 페이지네이션
+	 */
+	public static listFeatures<ThrowOnError extends boolean = false>(
+		options?: Options<FeatureStoreListFeaturesData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			FeatureStoreListFeaturesResponses,
+			FeatureStoreListFeaturesErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/features",
+			...options,
+		});
+	}
+
+	/**
+	 * Create Feature
+	 * 새 피처 생성
+	 *
+	 * - **feature_name**: 피처 고유 식별자 (중복 불가)
+	 * - **feature_type**: RAW, DERIVED, AGGREGATED
+	 * - **data_type**: numeric, categorical, text, datetime, boolean
+	 * - **transformation**: 변환 로직 (SQL, Python 등)
+	 * - **validation_rules**: 검증 규칙 (타입, 범위, 제약조건)
+	 * - **upstream_features**: 의존하는 상위 피처 목록
+	 */
+	public static createFeature<ThrowOnError extends boolean = false>(
+		options: Options<FeatureStoreCreateFeatureData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			FeatureStoreCreateFeatureResponses,
+			FeatureStoreCreateFeatureErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/features",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Delete Feature
+	 * 피처 삭제 (소프트 삭제)
+	 *
+	 * - 실제 데이터는 유지되며 상태만 DEPRECATED로 변경
+	 * - 하위 피처(downstream_features)가 있으면 삭제 불가
+	 */
+	public static deleteFeature<ThrowOnError extends boolean = false>(
+		options: Options<FeatureStoreDeleteFeatureData, ThrowOnError>,
+	) {
+		return (options.client ?? client).delete<
+			FeatureStoreDeleteFeatureResponses,
+			FeatureStoreDeleteFeatureErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/features/{feature_name}",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Feature
+	 * 피처 상세 조회
+	 */
+	public static getFeature<ThrowOnError extends boolean = false>(
+		options: Options<FeatureStoreGetFeatureData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			FeatureStoreGetFeatureResponses,
+			FeatureStoreGetFeatureErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/features/{feature_name}",
+			...options,
+		});
+	}
+
+	/**
+	 * Update Feature
+	 * 피처 업데이트
+	 *
+	 * - 변환 로직이나 검증 규칙 변경 시 새 버전 생성 권장
+	 * - 메타데이터(description, tags)만 업데이트 시 버전 증가 없음
+	 */
+	public static updateFeature<ThrowOnError extends boolean = false>(
+		options: Options<FeatureStoreUpdateFeatureData, ThrowOnError>,
+	) {
+		return (options.client ?? client).put<
+			FeatureStoreUpdateFeatureResponses,
+			FeatureStoreUpdateFeatureErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/features/{feature_name}",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Activate Feature
+	 * 피처 활성화 (DRAFT → ACTIVE)
+	 *
+	 * - 검증 규칙을 통과해야 활성화 가능
+	 * - 활성화 후 프로덕션 환경에서 사용 가능
+	 */
+	public static activateFeature<ThrowOnError extends boolean = false>(
+		options: Options<FeatureStoreActivateFeatureData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			FeatureStoreActivateFeatureResponses,
+			FeatureStoreActivateFeatureErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/features/{feature_name}/activate",
+			...options,
+		});
+	}
+
+	/**
+	 * Deprecate Feature
+	 * 피처 폐기 (ACTIVE → DEPRECATED)
+	 *
+	 * - 더 이상 사용하지 않는 피처 표시
+	 * - 하위 피처(downstream_features)가 있으면 폐기 불가
+	 * - 기존 사용처는 계속 작동하지만 신규 사용 불가
+	 */
+	public static deprecateFeature<ThrowOnError extends boolean = false>(
+		options: Options<FeatureStoreDeprecateFeatureData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			FeatureStoreDeprecateFeatureResponses,
+			FeatureStoreDeprecateFeatureErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/features/{feature_name}/deprecate",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Feature Versions
+	 * 피처의 모든 버전 조회 (최신순)
+	 */
+	public static getFeatureVersions<ThrowOnError extends boolean = false>(
+		options: Options<FeatureStoreGetFeatureVersionsData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			FeatureStoreGetFeatureVersionsResponses,
+			FeatureStoreGetFeatureVersionsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/features/{feature_name}/versions",
+			...options,
+		});
+	}
+
+	/**
+	 * Create Version
+	 * 새 버전 생성
+	 *
+	 * - 변환 로직이나 검증 규칙 변경 시 필수
+	 * - Semantic Versioning 권장 (1.0.0 → 1.1.0 → 2.0.0)
+	 * - breaking_changes=True면 Major 버전 증가 (1.x.x → 2.0.0)
+	 */
+	public static createVersion<ThrowOnError extends boolean = false>(
+		options: Options<FeatureStoreCreateVersionData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			FeatureStoreCreateVersionResponses,
+			FeatureStoreCreateVersionErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/features/{feature_name}/versions",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Rollback Version
+	 * 버전 롤백
+	 *
+	 * - 이전 버전으로 복원 (변환 로직, 검증 규칙 스냅샷 복원)
+	 * - 현재 버전에 `is_rolled_back=True` 표시
+	 * - 새 버전이 생성되며 current_version 업데이트
+	 */
+	public static rollbackVersion<ThrowOnError extends boolean = false>(
+		options: Options<FeatureStoreRollbackVersionData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			FeatureStoreRollbackVersionResponses,
+			FeatureStoreRollbackVersionErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/features/{feature_name}/rollback",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Feature Lineage
+	 * 피처 계보 추적
+	 *
+	 * - upstream_features: 이 피처가 의존하는 상위 피처들
+	 * - downstream_features: 이 피처를 사용하는 하위 피처들
+	 * - recursive=True: 재귀적으로 전체 의존성 트리 추적
+	 */
+	public static getFeatureLineage<ThrowOnError extends boolean = false>(
+		options: Options<FeatureStoreGetFeatureLineageData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			FeatureStoreGetFeatureLineageResponses,
+			FeatureStoreGetFeatureLineageErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/features/{feature_name}/lineage",
+			...options,
+		});
+	}
+
+	/**
+	 * Record Feature Usage
+	 * 피처 사용 기록
+	 *
+	 * - 모델이 피처를 사용할 때마다 호출
+	 * - feature_importance: 모델에서의 중요도 (0.0 ~ 1.0)
+	 * - correlation_with_target: 타겟과의 상관관계 (-1.0 ~ 1.0)
+	 */
+	public static recordFeatureUsage<ThrowOnError extends boolean = false>(
+		options: Options<FeatureStoreRecordFeatureUsageData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			FeatureStoreRecordFeatureUsageResponses,
+			FeatureStoreRecordFeatureUsageErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/features/usage",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Get Feature Statistics
+	 * 피처 사용 통계 조회
+	 *
+	 * - total_usage: 총 사용 횟수
+	 * - unique_models: 사용한 고유 모델 수
+	 * - environments: 사용 환경 분포 (dev, staging, production)
+	 * - avg_importance: 평균 feature importance
+	 * - avg_correlation: 평균 상관관계
+	 * - last_used_at: 마지막 사용 시각
+	 */
+	public static getFeatureStatistics<ThrowOnError extends boolean = false>(
+		options: Options<FeatureStoreGetFeatureStatisticsData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			FeatureStoreGetFeatureStatisticsResponses,
+			FeatureStoreGetFeatureStatisticsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/features/{feature_name}/statistics",
+			...options,
+		});
+	}
+}
+
+export class PromptGovernanceService {
+	/**
+	 * List Prompt Templates
+	 */
+	public static listPromptTemplates<ThrowOnError extends boolean = false>(
+		options?: Options<PromptGovernanceListPromptTemplatesData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			PromptGovernanceListPromptTemplatesResponses,
+			PromptGovernanceListPromptTemplatesErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/prompt-governance/prompts/templates",
+			...options,
+		});
+	}
+
+	/**
+	 * Create Prompt Template
+	 */
+	public static createPromptTemplate<ThrowOnError extends boolean = false>(
+		options: Options<PromptGovernanceCreatePromptTemplateData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			PromptGovernanceCreatePromptTemplateResponses,
+			PromptGovernanceCreatePromptTemplateErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/prompt-governance/prompts/templates",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Update Prompt Template
+	 */
+	public static updatePromptTemplate<ThrowOnError extends boolean = false>(
+		options: Options<PromptGovernanceUpdatePromptTemplateData, ThrowOnError>,
+	) {
+		return (options.client ?? client).patch<
+			PromptGovernanceUpdatePromptTemplateResponses,
+			PromptGovernanceUpdatePromptTemplateErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/prompt-governance/prompts/templates/{prompt_id}/{version}",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Submit Prompt For Review
+	 */
+	public static submitPromptForReview<ThrowOnError extends boolean = false>(
+		options: Options<PromptGovernanceSubmitPromptForReviewData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			PromptGovernanceSubmitPromptForReviewResponses,
+			PromptGovernanceSubmitPromptForReviewErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/prompt-governance/prompts/templates/{prompt_id}/{version}/submit",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Approve Prompt
+	 */
+	public static approvePrompt<ThrowOnError extends boolean = false>(
+		options: Options<PromptGovernanceApprovePromptData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			PromptGovernanceApprovePromptResponses,
+			PromptGovernanceApprovePromptErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/prompt-governance/prompts/templates/{prompt_id}/{version}/approve",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Reject Prompt
+	 */
+	public static rejectPrompt<ThrowOnError extends boolean = false>(
+		options: Options<PromptGovernanceRejectPromptData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			PromptGovernanceRejectPromptResponses,
+			PromptGovernanceRejectPromptErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/prompt-governance/prompts/templates/{prompt_id}/{version}/reject",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Evaluate Prompt
+	 */
+	public static evaluatePrompt<ThrowOnError extends boolean = false>(
+		options: Options<PromptGovernanceEvaluatePromptData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			PromptGovernanceEvaluatePromptResponses,
+			PromptGovernanceEvaluatePromptErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/prompt-governance/prompts/evaluate",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Log Prompt Usage
+	 */
+	public static logPromptUsage<ThrowOnError extends boolean = false>(
+		options: Options<PromptGovernanceLogPromptUsageData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			PromptGovernanceLogPromptUsageResponses,
+			PromptGovernanceLogPromptUsageErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/prompt-governance/prompts/templates/{prompt_id}/{version}/usage",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * List Prompt Audit Logs
+	 */
+	public static listPromptAuditLogs<ThrowOnError extends boolean = false>(
+		options: Options<PromptGovernanceListPromptAuditLogsData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			PromptGovernanceListPromptAuditLogsResponses,
+			PromptGovernanceListPromptAuditLogsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/prompt-governance/prompts/templates/{prompt_id}/{version}/audit",
+			...options,
 		});
 	}
 }

@@ -9420,6 +9420,967 @@
         }
       }
     },
+    "/api/v1/ml/lifecycle/experiments": {
+      "post": {
+        "tags": [
+          "ML",
+          "Model Lifecycle"
+        ],
+        "summary": "Create Experiment",
+        "operationId": "ML-create_experiment",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExperimentCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExperimentResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "ML",
+          "Model Lifecycle"
+        ],
+        "summary": "List Experiments",
+        "operationId": "ML-list_experiments",
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Owner"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExperimentResponse"
+                  },
+                  "title": "Response Ml-List Experiments"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ml/lifecycle/experiments/{name}": {
+      "patch": {
+        "tags": [
+          "ML",
+          "Model Lifecycle"
+        ],
+        "summary": "Update Experiment",
+        "operationId": "ML-update_experiment",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Name"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExperimentUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExperimentResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ml/lifecycle/runs": {
+      "post": {
+        "tags": [
+          "ML",
+          "Model Lifecycle"
+        ],
+        "summary": "Log Run",
+        "operationId": "ML-log_run",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RunCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "ML",
+          "Model Lifecycle"
+        ],
+        "summary": "List Runs",
+        "operationId": "ML-list_runs",
+        "parameters": [
+          {
+            "name": "experiment_name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Experiment Name"
+            }
+          },
+          {
+            "name": "statuses",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Statuses"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RunResponse"
+                  },
+                  "title": "Response Ml-List Runs"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ml/lifecycle/runs/{run_id}": {
+      "patch": {
+        "tags": [
+          "ML",
+          "Model Lifecycle"
+        ],
+        "summary": "Update Run",
+        "operationId": "ML-update_run",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RunUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "ML",
+          "Model Lifecycle"
+        ],
+        "summary": "Get Run",
+        "operationId": "ML-get_run",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ml/lifecycle/models": {
+      "post": {
+        "tags": [
+          "ML",
+          "Model Lifecycle"
+        ],
+        "summary": "Register Model Version",
+        "operationId": "ML-register_model_version",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModelVersionCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelVersionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "ML",
+          "Model Lifecycle"
+        ],
+        "summary": "List Model Versions",
+        "operationId": "ML-list_model_versions",
+        "parameters": [
+          {
+            "name": "model_name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Model Name"
+            }
+          },
+          {
+            "name": "stage",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Stage"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ModelVersionResponse"
+                  },
+                  "title": "Response Ml-List Model Versions"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ml/lifecycle/models/{model_name}/{version}": {
+      "patch": {
+        "tags": [
+          "ML",
+          "Model Lifecycle"
+        ],
+        "summary": "Update Model Version",
+        "operationId": "ML-update_model_version",
+        "parameters": [
+          {
+            "name": "model_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Model Name"
+            }
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Version"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChecklistUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelVersionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ml/lifecycle/models/{model_name}/compare": {
+      "post": {
+        "tags": [
+          "ML",
+          "Model Lifecycle"
+        ],
+        "summary": "Compare Model Versions",
+        "operationId": "ML-compare_model_versions",
+        "parameters": [
+          {
+            "name": "model_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Model Name"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModelComparisonRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelComparisonResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ml/lifecycle/drift-events": {
+      "post": {
+        "tags": [
+          "ML",
+          "Model Lifecycle"
+        ],
+        "summary": "Record Drift Event",
+        "operationId": "ML-record_drift_event",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DriftEventCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DriftEventResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "ML",
+          "Model Lifecycle"
+        ],
+        "summary": "List Drift Events",
+        "operationId": "ML-list_drift_events",
+        "parameters": [
+          {
+            "name": "model_name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Model Name"
+            }
+          },
+          {
+            "name": "severity",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Severity"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DriftEventResponse"
+                  },
+                  "title": "Response Ml-List Drift Events"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ml/evaluation/scenarios": {
+      "get": {
+        "tags": [
+          "ML",
+          "Evaluation Harness"
+        ],
+        "summary": "List Scenarios",
+        "operationId": "ML-list_scenarios",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ScenarioResponse"
+                  },
+                  "type": "array",
+                  "title": "Response Ml-List Scenarios"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ML",
+          "Evaluation Harness"
+        ],
+        "summary": "Register Scenario",
+        "operationId": "ML-register_scenario",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScenarioCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScenarioResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ml/evaluation/scenarios/{name}": {
+      "patch": {
+        "tags": [
+          "ML",
+          "Evaluation Harness"
+        ],
+        "summary": "Update Scenario",
+        "operationId": "ML-update_scenario",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Name"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScenarioUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScenarioResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ml/evaluation/runs": {
+      "post": {
+        "tags": [
+          "ML",
+          "Evaluation Harness"
+        ],
+        "summary": "Run Evaluation",
+        "operationId": "ML-run_evaluation",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvaluationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvaluationRunResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "ML",
+          "Evaluation Harness"
+        ],
+        "summary": "List Evaluation Runs",
+        "operationId": "ML-list_evaluation_runs",
+        "parameters": [
+          {
+            "name": "scenario_name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Scenario Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EvaluationRunResponse"
+                  },
+                  "title": "Response Ml-List Evaluation Runs"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ml/evaluation/runs/{run_id}/report": {
+      "get": {
+        "tags": [
+          "ML",
+          "Evaluation Harness"
+        ],
+        "summary": "Get Evaluation Report",
+        "operationId": "ML-get_evaluation_report",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvaluationReport"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/chatops/": {
       "post": {
         "tags": [
@@ -9688,7 +10649,7 @@
           "ChatOps Advanced"
         ],
         "summary": "Create Chat Session",
-        "description": "새 채팅 세션 생성 (멀티턴 대화용)\n\n**Phase 3 D3**\n\nArgs:\n    user_id: 사용자 ID\n\nReturns:\n    session_id: 생성된 세션 ID",
+        "description": "새 채팅 세션 생성 (멀티턴 대화용, MongoDB 저장)\n\n**Phase 3 D3**\n\nArgs:\n    user_id: 사용자 ID\n\nReturns:\n    session_id: 생성된 세션 ID",
         "operationId": "ChatOps Advanced-create_chat_session",
         "parameters": [
           {
@@ -9826,13 +10787,57 @@
         }
       }
     },
+    "/api/v1/chatops-advanced/strategies/compare/debug": {
+      "post": {
+        "tags": [
+          "ChatOps Advanced"
+        ],
+        "summary": "Debug Compare Strategies",
+        "description": "전략 비교 디버그 (LLM 없이 데이터만 조회)\n\n**Phase 3 D3 Debug**\n\nMongoDB에서 실제 데이터를 조회하는 로직을 테스트합니다.\nLLM 호출 없이 전략 데이터만 반환합니다.\n\nArgs:\n    request: 전략 비교 요청\n\nReturns:\n    조회된 전략 데이터 목록",
+        "operationId": "ChatOps Advanced-debug_compare_strategies",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StrategyComparisonRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Chatops Advanced-Debug Compare Strategies"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/chatops-advanced/backtest/trigger": {
       "post": {
         "tags": [
           "ChatOps Advanced"
         ],
         "summary": "Trigger Auto Backtest",
-        "description": "자동 백테스트 트리거\n\n**Phase 3 D3**\n\n전략 빌더 또는 최적화 결과를 기반으로 백테스트를 자동 실행합니다.\n\nExample:\n    ```\n    POST /api/v1/chatops-advanced/backtest/trigger?user_id=user_123\n    {\n        \"strategy_config\": { \"name\": \"RSI Strategy\", \"indicators\": [...] },\n        \"trigger_reason\": \"strategy_builder\",\n        \"generate_report\": true,\n        \"notify_on_completion\": true\n    }\n    ```\n\nArgs:\n    request: 자동 백테스트 요청\n    user_id: 사용자 ID (기본: system)\n\nReturns:\n    AutoBacktestResponse: 백테스트 ID, 상태, 예상 소요 시간",
+        "description": "자동 백테스트 트리거 (백그라운드 실행)\n\n**Phase 3 D3**\n\n전략 빌더 또는 최적화 결과를 기반으로 백테스트를 자동 생성하고 백그라운드에서 실행합니다.\n\nExample:\n    ```\n    POST /api/v1/chatops-advanced/backtest/trigger?user_id=user_123\n    {\n        \"strategy_config\": {\n            \"name\": \"RSI Strategy\",\n            \"symbols\": [\"AAPL\", \"MSFT\"],\n            \"initial_cash\": 100000.0\n        },\n        \"trigger_reason\": \"strategy_builder\",\n        \"generate_report\": true,\n        \"notify_on_completion\": true\n    }\n    ```\n\nArgs:\n    request: 자동 백테스트 요청\n    background_tasks: FastAPI 백그라운드 태스크\n    user_id: 사용자 ID (기본: system)\n\nReturns:\n    AutoBacktestResponse: 백테스트 ID, 상태, 예상 소요 시간",
         "operationId": "ChatOps Advanced-trigger_auto_backtest",
         "parameters": [
           {
@@ -9879,10 +10884,1233 @@
           }
         }
       }
+    },
+    "/api/v1/features": {
+      "post": {
+        "tags": [
+          "Feature Store",
+          "feature-store"
+        ],
+        "summary": "Create Feature",
+        "description": "새 피처 생성\n\n- **feature_name**: 피처 고유 식별자 (중복 불가)\n- **feature_type**: RAW, DERIVED, AGGREGATED\n- **data_type**: numeric, categorical, text, datetime, boolean\n- **transformation**: 변환 로직 (SQL, Python 등)\n- **validation_rules**: 검증 규칙 (타입, 범위, 제약조건)\n- **upstream_features**: 의존하는 상위 피처 목록",
+        "operationId": "Feature Store-create_feature",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeatureCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Feature Store",
+          "feature-store"
+        ],
+        "summary": "List Features",
+        "description": "피처 목록 조회 (필터링/페이지네이션)\n\n- **owner**: 소유자 필터\n- **feature_type**: 피처 타입 필터 (RAW, DERIVED, AGGREGATED)\n- **status**: 상태 필터 (DRAFT, ACTIVE, DEPRECATED)\n- **tags**: 태그 필터 (comma-separated: \"financial,risk\")\n- **skip/limit**: 페이지네이션",
+        "operationId": "Feature Store-list_features",
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Owner"
+            }
+          },
+          {
+            "name": "feature_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/FeatureType"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Feature Type"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/FeatureStatus"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Comma-separated tags",
+              "title": "Tags"
+            },
+            "description": "Comma-separated tags"
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Skip"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/features/{feature_name}": {
+      "get": {
+        "tags": [
+          "Feature Store",
+          "feature-store"
+        ],
+        "summary": "Get Feature",
+        "description": "피처 상세 조회",
+        "operationId": "Feature Store-get_feature",
+        "parameters": [
+          {
+            "name": "feature_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Feature Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Feature Store",
+          "feature-store"
+        ],
+        "summary": "Update Feature",
+        "description": "피처 업데이트\n\n- 변환 로직이나 검증 규칙 변경 시 새 버전 생성 권장\n- 메타데이터(description, tags)만 업데이트 시 버전 증가 없음",
+        "operationId": "Feature Store-update_feature",
+        "parameters": [
+          {
+            "name": "feature_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Feature Name"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeatureUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Feature Store",
+          "feature-store"
+        ],
+        "summary": "Delete Feature",
+        "description": "피처 삭제 (소프트 삭제)\n\n- 실제 데이터는 유지되며 상태만 DEPRECATED로 변경\n- 하위 피처(downstream_features)가 있으면 삭제 불가",
+        "operationId": "Feature Store-delete_feature",
+        "parameters": [
+          {
+            "name": "feature_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Feature Name"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/features/{feature_name}/activate": {
+      "post": {
+        "tags": [
+          "Feature Store",
+          "feature-store"
+        ],
+        "summary": "Activate Feature",
+        "description": "피처 활성화 (DRAFT → ACTIVE)\n\n- 검증 규칙을 통과해야 활성화 가능\n- 활성화 후 프로덕션 환경에서 사용 가능",
+        "operationId": "Feature Store-activate_feature",
+        "parameters": [
+          {
+            "name": "feature_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Feature Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/features/{feature_name}/deprecate": {
+      "post": {
+        "tags": [
+          "Feature Store",
+          "feature-store"
+        ],
+        "summary": "Deprecate Feature",
+        "description": "피처 폐기 (ACTIVE → DEPRECATED)\n\n- 더 이상 사용하지 않는 피처 표시\n- 하위 피처(downstream_features)가 있으면 폐기 불가\n- 기존 사용처는 계속 작동하지만 신규 사용 불가",
+        "operationId": "Feature Store-deprecate_feature",
+        "parameters": [
+          {
+            "name": "feature_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Feature Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/features/{feature_name}/versions": {
+      "post": {
+        "tags": [
+          "Feature Store",
+          "feature-store"
+        ],
+        "summary": "Create Version",
+        "description": "새 버전 생성\n\n- 변환 로직이나 검증 규칙 변경 시 필수\n- Semantic Versioning 권장 (1.0.0 → 1.1.0 → 2.0.0)\n- breaking_changes=True면 Major 버전 증가 (1.x.x → 2.0.0)",
+        "operationId": "Feature Store-create_version",
+        "parameters": [
+          {
+            "name": "feature_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Feature Name"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeatureVersionCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureVersionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Feature Store",
+          "feature-store"
+        ],
+        "summary": "Get Feature Versions",
+        "description": "피처의 모든 버전 조회 (최신순)",
+        "operationId": "Feature Store-get_feature_versions",
+        "parameters": [
+          {
+            "name": "feature_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Feature Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureVersionListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/features/{feature_name}/rollback": {
+      "post": {
+        "tags": [
+          "Feature Store",
+          "feature-store"
+        ],
+        "summary": "Rollback Version",
+        "description": "버전 롤백\n\n- 이전 버전으로 복원 (변환 로직, 검증 규칙 스냅샷 복원)\n- 현재 버전에 `is_rolled_back=True` 표시\n- 새 버전이 생성되며 current_version 업데이트",
+        "operationId": "Feature Store-rollback_version",
+        "parameters": [
+          {
+            "name": "feature_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Feature Name"
+            }
+          },
+          {
+            "name": "target_version",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "롤백할 버전",
+              "title": "Target Version"
+            },
+            "description": "롤백할 버전"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureVersionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/features/{feature_name}/lineage": {
+      "get": {
+        "tags": [
+          "Feature Store",
+          "feature-store"
+        ],
+        "summary": "Get Feature Lineage",
+        "description": "피처 계보 추적\n\n- upstream_features: 이 피처가 의존하는 상위 피처들\n- downstream_features: 이 피처를 사용하는 하위 피처들\n- recursive=True: 재귀적으로 전체 의존성 트리 추적",
+        "operationId": "Feature Store-get_feature_lineage",
+        "parameters": [
+          {
+            "name": "feature_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Feature Name"
+            }
+          },
+          {
+            "name": "recursive",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "description": "재귀적 의존성 추적",
+              "default": true,
+              "title": "Recursive"
+            },
+            "description": "재귀적 의존성 추적"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureLineageResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/features/usage": {
+      "post": {
+        "tags": [
+          "Feature Store",
+          "feature-store"
+        ],
+        "summary": "Record Feature Usage",
+        "description": "피처 사용 기록\n\n- 모델이 피처를 사용할 때마다 호출\n- feature_importance: 모델에서의 중요도 (0.0 ~ 1.0)\n- correlation_with_target: 타겟과의 상관관계 (-1.0 ~ 1.0)",
+        "operationId": "Feature Store-record_feature_usage",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeatureUsageCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureUsageResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/features/{feature_name}/statistics": {
+      "get": {
+        "tags": [
+          "Feature Store",
+          "feature-store"
+        ],
+        "summary": "Get Feature Statistics",
+        "description": "피처 사용 통계 조회\n\n- total_usage: 총 사용 횟수\n- unique_models: 사용한 고유 모델 수\n- environments: 사용 환경 분포 (dev, staging, production)\n- avg_importance: 평균 feature importance\n- avg_correlation: 평균 상관관계\n- last_used_at: 마지막 사용 시각",
+        "operationId": "Feature Store-get_feature_statistics",
+        "parameters": [
+          {
+            "name": "feature_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Feature Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureStatisticsResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/prompt-governance/prompts/templates": {
+      "post": {
+        "tags": [
+          "Prompt Governance",
+          "Prompt Governance"
+        ],
+        "summary": "Create Prompt Template",
+        "operationId": "Prompt Governance-create_prompt_template",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PromptTemplateCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromptTemplateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Prompt Governance",
+          "Prompt Governance"
+        ],
+        "summary": "List Prompt Templates",
+        "operationId": "Prompt Governance-list_prompt_templates",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "name": "tag",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Tag"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PromptTemplateResponse"
+                  },
+                  "title": "Response Prompt Governance-List Prompt Templates"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/prompt-governance/prompts/templates/{prompt_id}/{version}": {
+      "patch": {
+        "tags": [
+          "Prompt Governance",
+          "Prompt Governance"
+        ],
+        "summary": "Update Prompt Template",
+        "operationId": "Prompt Governance-update_prompt_template",
+        "parameters": [
+          {
+            "name": "prompt_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Prompt Id"
+            }
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Version"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PromptTemplateUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromptTemplateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/prompt-governance/prompts/templates/{prompt_id}/{version}/submit": {
+      "post": {
+        "tags": [
+          "Prompt Governance",
+          "Prompt Governance"
+        ],
+        "summary": "Submit Prompt For Review",
+        "operationId": "Prompt Governance-submit_prompt_for_review",
+        "parameters": [
+          {
+            "name": "prompt_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Prompt Id"
+            }
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Version"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PromptWorkflowAction"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromptTemplateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/prompt-governance/prompts/templates/{prompt_id}/{version}/approve": {
+      "post": {
+        "tags": [
+          "Prompt Governance",
+          "Prompt Governance"
+        ],
+        "summary": "Approve Prompt",
+        "operationId": "Prompt Governance-approve_prompt",
+        "parameters": [
+          {
+            "name": "prompt_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Prompt Id"
+            }
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Version"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PromptWorkflowAction"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromptTemplateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/prompt-governance/prompts/templates/{prompt_id}/{version}/reject": {
+      "post": {
+        "tags": [
+          "Prompt Governance",
+          "Prompt Governance"
+        ],
+        "summary": "Reject Prompt",
+        "operationId": "Prompt Governance-reject_prompt",
+        "parameters": [
+          {
+            "name": "prompt_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Prompt Id"
+            }
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Version"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PromptWorkflowAction"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromptTemplateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/prompt-governance/prompts/evaluate": {
+      "post": {
+        "tags": [
+          "Prompt Governance",
+          "Prompt Governance"
+        ],
+        "summary": "Evaluate Prompt",
+        "operationId": "Prompt Governance-evaluate_prompt",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PromptEvaluationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromptEvaluationResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/prompt-governance/prompts/templates/{prompt_id}/{version}/usage": {
+      "post": {
+        "tags": [
+          "Prompt Governance",
+          "Prompt Governance"
+        ],
+        "summary": "Log Prompt Usage",
+        "operationId": "Prompt Governance-log_prompt_usage",
+        "parameters": [
+          {
+            "name": "prompt_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Prompt Id"
+            }
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Version"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PromptUsageLogCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromptUsageLogResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/prompt-governance/prompts/templates/{prompt_id}/{version}/audit": {
+      "get": {
+        "tags": [
+          "Prompt Governance",
+          "Prompt Governance"
+        ],
+        "summary": "List Prompt Audit Logs",
+        "operationId": "Prompt Governance-list_prompt_audit_logs",
+        "parameters": [
+          {
+            "name": "prompt_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Prompt Id"
+            }
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Version"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PromptAuditLogResponse"
+                  },
+                  "title": "Response Prompt Governance-List Prompt Audit Logs"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "ArtifactReference": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "아티팩트 이름"
+          },
+          "uri": {
+            "type": "string",
+            "title": "Uri",
+            "description": "저장 위치 URI"
+          },
+          "artifact_type": {
+            "type": "string",
+            "title": "Artifact Type",
+            "description": "아티팩트 타입 (model, report 등)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "uri",
+          "artifact_type"
+        ],
+        "title": "ArtifactReference",
+        "description": "Reference to persisted artifacts (MLflow/W&B)."
+      },
       "AutoBacktestRequest": {
         "properties": {
           "strategy_config": {
@@ -10864,6 +13092,39 @@
         "title": "BalanceSheetResponse",
         "description": "재무상태표 조회 응답 스키마"
       },
+      "BenchmarkMetric": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "메트릭 이름"
+          },
+          "threshold": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Threshold",
+            "description": "임계값"
+          },
+          "higher_is_better": {
+            "type": "boolean",
+            "title": "Higher Is Better",
+            "description": "높을수록 좋은 메트릭 여부",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "BenchmarkMetric",
+        "description": "Benchmark metric definition used by evaluation scenarios."
+      },
       "Body_Auth-forgot_password": {
         "properties": {
           "email": {
@@ -11475,6 +13736,64 @@
         "title": "ChatOpsResponse",
         "description": "Response payload returned by the ChatOps agent."
       },
+      "ChecklistStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "passed",
+          "failed"
+        ],
+        "title": "ChecklistStatus",
+        "description": "Approval checklist states."
+      },
+      "ChecklistUpdateRequest": {
+        "properties": {
+          "stage": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ModelStage"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "checklist": {
+            "items": {
+              "$ref": "#/components/schemas/DeploymentChecklistItem"
+            },
+            "type": "array",
+            "title": "Checklist"
+          },
+          "approved_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Approved By"
+          },
+          "approval_notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Approval Notes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "checklist"
+        ],
+        "title": "ChecklistUpdateRequest"
+      },
       "CompanyOverviewData": {
         "properties": {
           "symbol": {
@@ -11888,6 +14207,16 @@
         "title": "CompanyOverviewResponse",
         "description": "기업 개요 조회 응답 스키마"
       },
+      "ComplianceStatus": {
+        "type": "string",
+        "enum": [
+          "passed",
+          "warning",
+          "failed"
+        ],
+        "title": "ComplianceStatus",
+        "description": "Compliance outcome for evaluation."
+      },
       "ConfidenceLevel": {
         "type": "string",
         "enum": [
@@ -12183,6 +14512,212 @@
         "title": "DataQualitySummary",
         "description": "데이터 품질 센티널 요약."
       },
+      "DataType": {
+        "type": "string",
+        "enum": [
+          "float",
+          "integer",
+          "string",
+          "boolean",
+          "timestamp"
+        ],
+        "title": "DataType",
+        "description": "데이터 타입"
+      },
+      "DeploymentChecklistItem": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "Checklist 항목 이름"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ChecklistStatus",
+            "description": "체크 상태",
+            "default": "pending"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note",
+            "description": "검토 메모"
+          },
+          "completed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completed At",
+            "description": "완료 시간"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "DeploymentChecklistItem",
+        "description": "Individual checklist item used during approvals."
+      },
+      "DriftEventCreate": {
+        "properties": {
+          "model_name": {
+            "type": "string",
+            "title": "Model Name"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "severity": {
+            "$ref": "#/components/schemas/DriftSeverity"
+          },
+          "metric_name": {
+            "type": "string",
+            "title": "Metric Name"
+          },
+          "metric_value": {
+            "type": "number",
+            "title": "Metric Value"
+          },
+          "threshold": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Threshold"
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          },
+          "remediation_action": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Remediation Action"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model_name",
+          "version",
+          "severity",
+          "metric_name",
+          "metric_value"
+        ],
+        "title": "DriftEventCreate"
+      },
+      "DriftEventResponse": {
+        "properties": {
+          "model_name": {
+            "type": "string",
+            "title": "Model Name"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "detected_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Detected At"
+          },
+          "severity": {
+            "$ref": "#/components/schemas/DriftSeverity"
+          },
+          "metric_name": {
+            "type": "string",
+            "title": "Metric Name"
+          },
+          "metric_value": {
+            "type": "number",
+            "title": "Metric Value"
+          },
+          "threshold": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Threshold"
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          },
+          "remediation_action": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Remediation Action"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model_name",
+          "version",
+          "detected_at",
+          "severity",
+          "metric_name",
+          "metric_value",
+          "threshold",
+          "message",
+          "remediation_action"
+        ],
+        "title": "DriftEventResponse"
+      },
+      "DriftSeverity": {
+        "type": "string",
+        "enum": [
+          "low",
+          "medium",
+          "high"
+        ],
+        "title": "DriftSeverity",
+        "description": "Severity flag for drift events."
+      },
       "EarningsData": {
         "properties": {
           "symbol": {
@@ -12426,6 +14961,238 @@
         "title": "EconomicEvent",
         "description": "경제 이벤트."
       },
+      "EvaluationReport": {
+        "properties": {
+          "scenario_name": {
+            "type": "string",
+            "title": "Scenario Name"
+          },
+          "candidate_model_name": {
+            "type": "string",
+            "title": "Candidate Model Name"
+          },
+          "candidate_model_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Candidate Model Version"
+          },
+          "compliance": {
+            "$ref": "#/components/schemas/ComplianceStatus"
+          },
+          "metrics": {
+            "items": {
+              "$ref": "#/components/schemas/app__models__evaluation__MetricComparison"
+            },
+            "type": "array",
+            "title": "Metrics"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "scenario_name",
+          "candidate_model_name",
+          "candidate_model_version",
+          "compliance",
+          "metrics"
+        ],
+        "title": "EvaluationReport"
+      },
+      "EvaluationRequest": {
+        "properties": {
+          "scenario_name": {
+            "type": "string",
+            "title": "Scenario Name"
+          },
+          "candidate_backtest_id": {
+            "type": "string",
+            "title": "Candidate Backtest Id"
+          },
+          "candidate_model_name": {
+            "type": "string",
+            "title": "Candidate Model Name"
+          },
+          "candidate_model_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Candidate Model Version"
+          },
+          "candidate_metrics": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Candidate Metrics"
+          },
+          "explainability": {
+            "items": {
+              "$ref": "#/components/schemas/ExplainabilityArtifact"
+            },
+            "type": "array",
+            "title": "Explainability"
+          },
+          "compliance_inputs": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Compliance Inputs"
+          }
+        },
+        "type": "object",
+        "required": [
+          "scenario_name",
+          "candidate_backtest_id",
+          "candidate_model_name"
+        ],
+        "title": "EvaluationRequest"
+      },
+      "EvaluationRunResponse": {
+        "properties": {
+          "scenario_name": {
+            "type": "string",
+            "title": "Scenario Name"
+          },
+          "candidate_backtest_id": {
+            "type": "string",
+            "title": "Candidate Backtest Id"
+          },
+          "candidate_model_name": {
+            "type": "string",
+            "title": "Candidate Model Name"
+          },
+          "candidate_model_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Candidate Model Version"
+          },
+          "status": {
+            "$ref": "#/components/schemas/EvaluationStatus"
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Started At"
+          },
+          "completed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completed At"
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/EvaluationSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "explainability": {
+            "items": {
+              "$ref": "#/components/schemas/ExplainabilityArtifact"
+            },
+            "type": "array",
+            "title": "Explainability"
+          },
+          "compliance_checks": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Compliance Checks"
+          }
+        },
+        "type": "object",
+        "required": [
+          "scenario_name",
+          "candidate_backtest_id",
+          "candidate_model_name",
+          "candidate_model_version",
+          "status",
+          "started_at",
+          "completed_at",
+          "summary",
+          "explainability",
+          "compliance_checks"
+        ],
+        "title": "EvaluationRunResponse"
+      },
+      "EvaluationStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "running",
+          "completed",
+          "failed"
+        ],
+        "title": "EvaluationStatus",
+        "description": "Status flag for evaluation runs."
+      },
+      "EvaluationSummary": {
+        "properties": {
+          "metrics": {
+            "items": {
+              "$ref": "#/components/schemas/app__models__evaluation__MetricComparison"
+            },
+            "type": "array",
+            "title": "Metrics",
+            "description": "메트릭 비교"
+          },
+          "compliance": {
+            "$ref": "#/components/schemas/ComplianceStatus",
+            "description": "컴플라이언스 결과",
+            "default": "passed"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes",
+            "description": "메모"
+          }
+        },
+        "type": "object",
+        "title": "EvaluationSummary",
+        "description": "Summary of evaluation outputs."
+      },
       "ExecutionListResponse": {
         "properties": {
           "user_id": {
@@ -12600,6 +15367,201 @@
         "title": "ExecutiveSummary",
         "description": "임원용 요약"
       },
+      "ExperimentCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "owner": {
+            "type": "string",
+            "title": "Owner"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Tags"
+          },
+          "metadata": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Metadata"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "description",
+          "owner"
+        ],
+        "title": "ExperimentCreate"
+      },
+      "ExperimentResponse": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "owner": {
+            "type": "string",
+            "title": "Owner"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ExperimentStatus"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Tags"
+          },
+          "metadata": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Metadata"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "description",
+          "owner",
+          "status",
+          "tags",
+          "metadata",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "ExperimentResponse"
+      },
+      "ExperimentStatus": {
+        "type": "string",
+        "enum": [
+          "active",
+          "archived"
+        ],
+        "title": "ExperimentStatus",
+        "description": "Lifecycle state for an experiment."
+      },
+      "ExperimentUpdate": {
+        "properties": {
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "owner": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Owner"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ExperimentStatus"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "tags": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tags"
+          },
+          "metadata": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Metadata"
+          }
+        },
+        "type": "object",
+        "title": "ExperimentUpdate"
+      },
+      "ExplainabilityArtifact": {
+        "properties": {
+          "feature_name": {
+            "type": "string",
+            "title": "Feature Name",
+            "description": "피처 이름"
+          },
+          "importance": {
+            "type": "number",
+            "title": "Importance",
+            "description": "중요도"
+          },
+          "impact_direction": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Impact Direction",
+            "description": "영향 방향 (+/-)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "feature_name",
+          "importance"
+        ],
+        "title": "ExplainabilityArtifact",
+        "description": "Explainability artifact reference (e.g., SHAP)."
+      },
       "FailureInsight": {
         "properties": {
           "source": {
@@ -12695,6 +15657,1009 @@
         ],
         "title": "FeatureContribution",
         "description": "Contribution details for a single engineered feature."
+      },
+      "FeatureCreate": {
+        "properties": {
+          "feature_name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 3,
+            "title": "Feature Name",
+            "description": "피처 이름"
+          },
+          "feature_type": {
+            "$ref": "#/components/schemas/FeatureType"
+          },
+          "data_type": {
+            "$ref": "#/components/schemas/DataType"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 10,
+            "title": "Description",
+            "description": "설명"
+          },
+          "owner": {
+            "type": "string",
+            "title": "Owner",
+            "description": "담당자 ID"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Tags",
+            "description": "태그"
+          },
+          "transformation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FeatureTransformation"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "변환 로직"
+          },
+          "validation_rules": {
+            "items": {
+              "$ref": "#/components/schemas/FeatureValidation"
+            },
+            "type": "array",
+            "title": "Validation Rules",
+            "description": "검증 규칙"
+          },
+          "upstream_features": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Upstream Features",
+            "description": "상위 의존 피처 이름 목록"
+          },
+          "duckdb_table": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duckdb Table",
+            "description": "DuckDB 테이블"
+          },
+          "duckdb_view": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duckdb View",
+            "description": "DuckDB 뷰"
+          }
+        },
+        "type": "object",
+        "required": [
+          "feature_name",
+          "feature_type",
+          "data_type",
+          "description",
+          "owner"
+        ],
+        "title": "FeatureCreate",
+        "description": "피처 생성 요청"
+      },
+      "FeatureLineageNode": {
+        "properties": {
+          "feature_name": {
+            "type": "string",
+            "title": "Feature Name",
+            "description": "피처 이름"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version",
+            "description": "피처 버전"
+          },
+          "relationship": {
+            "type": "string",
+            "title": "Relationship",
+            "description": "관계 (depends_on, derived_from, used_by)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "feature_name",
+          "version",
+          "relationship"
+        ],
+        "title": "FeatureLineageNode",
+        "description": "피처 계보 노드 (upstream/downstream)"
+      },
+      "FeatureLineageResponse": {
+        "properties": {
+          "feature_name": {
+            "type": "string",
+            "title": "Feature Name",
+            "description": "피처 이름"
+          },
+          "current_version": {
+            "type": "string",
+            "title": "Current Version",
+            "description": "현재 버전"
+          },
+          "upstream_features": {
+            "items": {
+              "$ref": "#/components/schemas/FeatureLineageNode"
+            },
+            "type": "array",
+            "title": "Upstream Features",
+            "description": "상위 의존 피처 (이 피처가 사용하는 피처들)"
+          },
+          "downstream_features": {
+            "items": {
+              "$ref": "#/components/schemas/FeatureLineageNode"
+            },
+            "type": "array",
+            "title": "Downstream Features",
+            "description": "하위 파생 피처 (이 피처를 사용하는 피처들)"
+          },
+          "all_upstream": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "All Upstream",
+            "description": "전체 상위 의존성"
+          },
+          "all_downstream": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "All Downstream",
+            "description": "전체 하위 의존성"
+          },
+          "direct_dependents_count": {
+            "type": "integer",
+            "title": "Direct Dependents Count",
+            "description": "직접 의존하는 피처 수"
+          },
+          "total_dependents_count": {
+            "type": "integer",
+            "title": "Total Dependents Count",
+            "description": "전체 의존하는 피처 수"
+          }
+        },
+        "type": "object",
+        "required": [
+          "feature_name",
+          "current_version",
+          "upstream_features",
+          "downstream_features",
+          "all_upstream",
+          "all_downstream",
+          "direct_dependents_count",
+          "total_dependents_count"
+        ],
+        "title": "FeatureLineageResponse",
+        "description": "피처 계보 응답"
+      },
+      "FeatureListResponse": {
+        "properties": {
+          "features": {
+            "items": {
+              "$ref": "#/components/schemas/FeatureResponse"
+            },
+            "type": "array",
+            "title": "Features",
+            "description": "피처 목록"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total",
+            "description": "전체 개수"
+          }
+        },
+        "type": "object",
+        "required": [
+          "features",
+          "total"
+        ],
+        "title": "FeatureListResponse",
+        "description": "피처 목록 응답"
+      },
+      "FeatureResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "MongoDB ObjectId"
+          },
+          "feature_name": {
+            "type": "string",
+            "title": "Feature Name",
+            "description": "피처 이름"
+          },
+          "current_version": {
+            "type": "string",
+            "title": "Current Version",
+            "description": "현재 버전"
+          },
+          "feature_type": {
+            "$ref": "#/components/schemas/FeatureType"
+          },
+          "data_type": {
+            "$ref": "#/components/schemas/DataType"
+          },
+          "status": {
+            "$ref": "#/components/schemas/FeatureStatus",
+            "description": "상태"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "description": "설명"
+          },
+          "owner": {
+            "type": "string",
+            "title": "Owner",
+            "description": "담당자"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Tags",
+            "description": "태그"
+          },
+          "upstream_features": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Upstream Features",
+            "description": "상위 의존 피처"
+          },
+          "downstream_features": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Downstream Features",
+            "description": "하위 파생 피처"
+          },
+          "transformation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FeatureTransformation"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "변환 로직"
+          },
+          "validation_rules": {
+            "items": {
+              "$ref": "#/components/schemas/FeatureValidation"
+            },
+            "type": "array",
+            "title": "Validation Rules",
+            "description": "검증 규칙"
+          },
+          "duckdb_table": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duckdb Table",
+            "description": "DuckDB 테이블"
+          },
+          "duckdb_view": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duckdb View",
+            "description": "DuckDB 뷰"
+          },
+          "usage_count": {
+            "type": "integer",
+            "title": "Usage Count",
+            "description": "사용 횟수"
+          },
+          "last_used_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Used At",
+            "description": "마지막 사용 시간"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "생성 시간"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At",
+            "description": "업데이트 시간"
+          },
+          "deprecated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deprecated At",
+            "description": "폐기 시간"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "feature_name",
+          "current_version",
+          "feature_type",
+          "data_type",
+          "status",
+          "description",
+          "owner",
+          "tags",
+          "upstream_features",
+          "downstream_features",
+          "validation_rules",
+          "usage_count",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "FeatureResponse",
+        "description": "피처 조회 응답"
+      },
+      "FeatureStatisticsResponse": {
+        "properties": {
+          "feature_name": {
+            "type": "string",
+            "title": "Feature Name",
+            "description": "피처 이름"
+          },
+          "total_usage_count": {
+            "type": "integer",
+            "title": "Total Usage Count",
+            "description": "총 사용 횟수"
+          },
+          "unique_models_count": {
+            "type": "integer",
+            "title": "Unique Models Count",
+            "description": "사용한 고유 모델 수"
+          },
+          "environments": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Environments",
+            "description": "환경별 사용 횟수"
+          },
+          "avg_feature_importance": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avg Feature Importance",
+            "description": "평균 피처 중요도"
+          },
+          "avg_correlation": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avg Correlation",
+            "description": "평균 타겟 상관계수"
+          },
+          "first_used_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "First Used At",
+            "description": "최초 사용 시간"
+          },
+          "last_used_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Used At",
+            "description": "마지막 사용 시간"
+          }
+        },
+        "type": "object",
+        "required": [
+          "feature_name",
+          "total_usage_count",
+          "unique_models_count",
+          "environments"
+        ],
+        "title": "FeatureStatisticsResponse",
+        "description": "피처 통계 응답"
+      },
+      "FeatureStatus": {
+        "type": "string",
+        "enum": [
+          "active",
+          "deprecated",
+          "archived",
+          "draft"
+        ],
+        "title": "FeatureStatus",
+        "description": "피처 상태"
+      },
+      "FeatureTransformation": {
+        "properties": {
+          "transformation_type": {
+            "type": "string",
+            "title": "Transformation Type",
+            "description": "변환 타입 (sql, python, spark)"
+          },
+          "code": {
+            "type": "string",
+            "title": "Code",
+            "description": "변환 코드"
+          },
+          "parameters": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Parameters",
+            "description": "파라미터"
+          }
+        },
+        "type": "object",
+        "required": [
+          "transformation_type",
+          "code"
+        ],
+        "title": "FeatureTransformation",
+        "description": "피처 변환 로직"
+      },
+      "FeatureType": {
+        "type": "string",
+        "enum": [
+          "technical_indicator",
+          "fundamental",
+          "sentiment",
+          "macro_economic",
+          "derived",
+          "raw"
+        ],
+        "title": "FeatureType",
+        "description": "피처 타입"
+      },
+      "FeatureUpdate": {
+        "properties": {
+          "description": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 10
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "설명"
+          },
+          "tags": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tags",
+            "description": "태그"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FeatureStatus"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "상태"
+          },
+          "transformation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FeatureTransformation"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "변환 로직"
+          },
+          "validation_rules": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/FeatureValidation"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Validation Rules",
+            "description": "검증 규칙"
+          },
+          "duckdb_table": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duckdb Table",
+            "description": "DuckDB 테이블"
+          },
+          "duckdb_view": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duckdb View",
+            "description": "DuckDB 뷰"
+          }
+        },
+        "type": "object",
+        "title": "FeatureUpdate",
+        "description": "피처 업데이트 요청"
+      },
+      "FeatureUsageCreate": {
+        "properties": {
+          "feature_name": {
+            "type": "string",
+            "title": "Feature Name",
+            "description": "피처 이름"
+          },
+          "feature_version": {
+            "type": "string",
+            "title": "Feature Version",
+            "description": "피처 버전"
+          },
+          "used_by_model": {
+            "type": "string",
+            "title": "Used By Model",
+            "description": "모델 이름"
+          },
+          "model_version": {
+            "type": "string",
+            "title": "Model Version",
+            "description": "모델 버전"
+          },
+          "environment": {
+            "type": "string",
+            "title": "Environment",
+            "description": "환경"
+          },
+          "feature_importance": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Feature Importance",
+            "description": "피처 중요도"
+          },
+          "correlation_with_target": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Correlation With Target",
+            "description": "타겟 상관계수"
+          },
+          "execution_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Execution Id",
+            "description": "실행 ID"
+          },
+          "execution_duration_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Execution Duration Ms",
+            "description": "실행 시간"
+          }
+        },
+        "type": "object",
+        "required": [
+          "feature_name",
+          "feature_version",
+          "used_by_model",
+          "model_version",
+          "environment"
+        ],
+        "title": "FeatureUsageCreate",
+        "description": "피처 사용 기록 생성"
+      },
+      "FeatureUsageResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "MongoDB ObjectId"
+          },
+          "feature_name": {
+            "type": "string",
+            "title": "Feature Name",
+            "description": "피처 이름"
+          },
+          "feature_version": {
+            "type": "string",
+            "title": "Feature Version",
+            "description": "피처 버전"
+          },
+          "used_by_model": {
+            "type": "string",
+            "title": "Used By Model",
+            "description": "모델 이름"
+          },
+          "model_version": {
+            "type": "string",
+            "title": "Model Version",
+            "description": "모델 버전"
+          },
+          "environment": {
+            "type": "string",
+            "title": "Environment",
+            "description": "환경"
+          },
+          "feature_importance": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Feature Importance",
+            "description": "피처 중요도"
+          },
+          "correlation_with_target": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Correlation With Target",
+            "description": "타겟 상관계수"
+          },
+          "execution_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Execution Id",
+            "description": "실행 ID"
+          },
+          "execution_duration_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Execution Duration Ms",
+            "description": "실행 시간"
+          },
+          "usage_timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Usage Timestamp",
+            "description": "사용 시간"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "feature_name",
+          "feature_version",
+          "used_by_model",
+          "model_version",
+          "environment",
+          "usage_timestamp"
+        ],
+        "title": "FeatureUsageResponse",
+        "description": "피처 사용 기록 응답"
+      },
+      "FeatureValidation": {
+        "properties": {
+          "rule_type": {
+            "type": "string",
+            "title": "Rule Type",
+            "description": "규칙 타입 (range, null_check, outlier)"
+          },
+          "parameters": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Parameters",
+            "description": "규칙 파라미터"
+          },
+          "is_blocking": {
+            "type": "boolean",
+            "title": "Is Blocking",
+            "description": "블로킹 여부",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "rule_type",
+          "parameters"
+        ],
+        "title": "FeatureValidation",
+        "description": "피처 검증 규칙"
+      },
+      "FeatureVersionCreate": {
+        "properties": {
+          "version": {
+            "type": "string",
+            "title": "Version",
+            "description": "버전 (Semantic Versioning)"
+          },
+          "changelog": {
+            "type": "string",
+            "minLength": 10,
+            "title": "Changelog",
+            "description": "변경 사항"
+          },
+          "breaking_changes": {
+            "type": "boolean",
+            "title": "Breaking Changes",
+            "description": "호환성 깨짐 여부",
+            "default": false
+          },
+          "created_by": {
+            "type": "string",
+            "title": "Created By",
+            "description": "생성자 ID"
+          },
+          "transformation_snapshot": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FeatureTransformation"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "변환 로직 스냅샷"
+          },
+          "validation_snapshot": {
+            "items": {
+              "$ref": "#/components/schemas/FeatureValidation"
+            },
+            "type": "array",
+            "title": "Validation Snapshot",
+            "description": "검증 규칙 스냅샷"
+          }
+        },
+        "type": "object",
+        "required": [
+          "version",
+          "changelog",
+          "created_by"
+        ],
+        "title": "FeatureVersionCreate",
+        "description": "피처 버전 생성 요청"
+      },
+      "FeatureVersionListResponse": {
+        "properties": {
+          "versions": {
+            "items": {
+              "$ref": "#/components/schemas/FeatureVersionResponse"
+            },
+            "type": "array",
+            "title": "Versions",
+            "description": "버전 목록"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total",
+            "description": "전체 개수"
+          }
+        },
+        "type": "object",
+        "required": [
+          "versions",
+          "total"
+        ],
+        "title": "FeatureVersionListResponse",
+        "description": "피처 버전 목록 응답"
+      },
+      "FeatureVersionResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "MongoDB ObjectId"
+          },
+          "feature_name": {
+            "type": "string",
+            "title": "Feature Name",
+            "description": "피처 이름"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version",
+            "description": "버전"
+          },
+          "changelog": {
+            "type": "string",
+            "title": "Changelog",
+            "description": "변경 사항"
+          },
+          "breaking_changes": {
+            "type": "boolean",
+            "title": "Breaking Changes",
+            "description": "호환성 깨짐 여부"
+          },
+          "transformation_snapshot": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FeatureTransformation"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "변환 로직 스냅샷"
+          },
+          "validation_snapshot": {
+            "items": {
+              "$ref": "#/components/schemas/FeatureValidation"
+            },
+            "type": "array",
+            "title": "Validation Snapshot",
+            "description": "검증 규칙 스냅샷"
+          },
+          "created_by": {
+            "type": "string",
+            "title": "Created By",
+            "description": "생성자"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "생성 시간"
+          },
+          "is_rolled_back": {
+            "type": "boolean",
+            "title": "Is Rolled Back",
+            "description": "롤백 여부"
+          },
+          "rolled_back_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rolled Back At",
+            "description": "롤백 시간"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "feature_name",
+          "version",
+          "changelog",
+          "breaking_changes",
+          "validation_snapshot",
+          "created_by",
+          "created_at",
+          "is_rolled_back"
+        ],
+        "title": "FeatureVersionResponse",
+        "description": "피처 버전 응답"
       },
       "ForecastPercentileBand": {
         "properties": {
@@ -13883,6 +17848,77 @@
         "title": "MetadataInfo",
         "description": "메타데이터 정보"
       },
+      "MetricSnapshot": {
+        "properties": {
+          "metric_name": {
+            "type": "string",
+            "title": "Metric Name",
+            "description": "메트릭 이름"
+          },
+          "value": {
+            "type": "number",
+            "title": "Value",
+            "description": "메트릭 값"
+          },
+          "dataset": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dataset",
+            "description": "평가 데이터셋"
+          }
+        },
+        "type": "object",
+        "required": [
+          "metric_name",
+          "value"
+        ],
+        "title": "MetricSnapshot",
+        "description": "Metric snapshot stored alongside runs/versions."
+      },
+      "ModelComparisonRequest": {
+        "properties": {
+          "versions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Versions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "versions"
+        ],
+        "title": "ModelComparisonRequest"
+      },
+      "ModelComparisonResponse": {
+        "properties": {
+          "model_name": {
+            "type": "string",
+            "title": "Model Name"
+          },
+          "comparisons": {
+            "items": {
+              "$ref": "#/components/schemas/app__schemas__model_lifecycle__MetricComparison"
+            },
+            "type": "array",
+            "title": "Comparisons"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model_name",
+          "comparisons"
+        ],
+        "title": "ModelComparisonResponse"
+      },
       "ModelInfoResponse": {
         "properties": {
           "version": {
@@ -13966,6 +18002,150 @@
         ],
         "title": "ModelListResponse",
         "description": "Response schema for model list."
+      },
+      "ModelStage": {
+        "type": "string",
+        "enum": [
+          "experimental",
+          "staging",
+          "production",
+          "archived"
+        ],
+        "title": "ModelStage",
+        "description": "Deployment stage for a model version."
+      },
+      "ModelVersionCreate": {
+        "properties": {
+          "model_name": {
+            "type": "string",
+            "title": "Model Name"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "stage": {
+            "$ref": "#/components/schemas/ModelStage",
+            "default": "experimental"
+          },
+          "metrics": {
+            "items": {
+              "$ref": "#/components/schemas/MetricSnapshot"
+            },
+            "type": "array",
+            "title": "Metrics"
+          },
+          "approval_checklist": {
+            "items": {
+              "$ref": "#/components/schemas/DeploymentChecklistItem"
+            },
+            "type": "array",
+            "title": "Approval Checklist"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model_name",
+          "version",
+          "run_id"
+        ],
+        "title": "ModelVersionCreate"
+      },
+      "ModelVersionResponse": {
+        "properties": {
+          "model_name": {
+            "type": "string",
+            "title": "Model Name"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "stage": {
+            "$ref": "#/components/schemas/ModelStage"
+          },
+          "approval_checklist": {
+            "items": {
+              "$ref": "#/components/schemas/DeploymentChecklistItem"
+            },
+            "type": "array",
+            "title": "Approval Checklist"
+          },
+          "metrics": {
+            "items": {
+              "$ref": "#/components/schemas/MetricSnapshot"
+            },
+            "type": "array",
+            "title": "Metrics"
+          },
+          "approved_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Approved By"
+          },
+          "approved_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Approved At"
+          },
+          "rollback_notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rollback Notes"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model_name",
+          "version",
+          "run_id",
+          "stage",
+          "approval_checklist",
+          "metrics",
+          "approved_by",
+          "approved_at",
+          "rollback_notes",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "ModelVersionResponse"
       },
       "MomentumConfig": {
         "properties": {
@@ -14659,6 +18839,26 @@
         ],
         "title": "OrderType",
         "description": "주문 타입"
+      },
+      "ParameterSnapshot": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "파라미터 이름"
+          },
+          "value": {
+            "title": "Value",
+            "description": "파라미터 값"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "value"
+        ],
+        "title": "ParameterSnapshot",
+        "description": "Parameter capture for a run."
       },
       "ParameterSpace": {
         "properties": {
@@ -15549,6 +19749,534 @@
         "title": "PredictiveInsightsResponse",
         "description": "Response wrapper for predictive dashboard bundle."
       },
+      "PromptAuditLogResponse": {
+        "properties": {
+          "prompt_id": {
+            "type": "string",
+            "title": "Prompt Id"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "action": {
+            "type": "string",
+            "title": "Action"
+          },
+          "actor": {
+            "type": "string",
+            "title": "Actor"
+          },
+          "details": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Details"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "prompt_id",
+          "version",
+          "action",
+          "actor",
+          "details",
+          "created_at"
+        ],
+        "title": "PromptAuditLogResponse"
+      },
+      "PromptEvaluationRequest": {
+        "properties": {
+          "prompt_id": {
+            "type": "string",
+            "title": "Prompt Id"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          },
+          "evaluator": {
+            "type": "string",
+            "title": "Evaluator",
+            "default": "automated"
+          },
+          "context_samples": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Context Samples"
+          }
+        },
+        "type": "object",
+        "required": [
+          "prompt_id",
+          "version",
+          "content"
+        ],
+        "title": "PromptEvaluationRequest"
+      },
+      "PromptEvaluationResponse": {
+        "properties": {
+          "evaluation": {
+            "$ref": "#/components/schemas/PromptEvaluationSummary"
+          }
+        },
+        "type": "object",
+        "required": [
+          "evaluation"
+        ],
+        "title": "PromptEvaluationResponse"
+      },
+      "PromptEvaluationSummary": {
+        "properties": {
+          "toxicity_score": {
+            "type": "number",
+            "title": "Toxicity Score",
+            "description": "독성 점수 0-1"
+          },
+          "hallucination_score": {
+            "type": "number",
+            "title": "Hallucination Score",
+            "description": "환각 가능성 점수 0-1"
+          },
+          "factual_consistency": {
+            "type": "number",
+            "title": "Factual Consistency",
+            "description": "사실 일치 점수 0-1"
+          },
+          "risk_level": {
+            "$ref": "#/components/schemas/PromptRiskLevel",
+            "description": "위험도"
+          },
+          "evaluator": {
+            "type": "string",
+            "title": "Evaluator",
+            "description": "평가자 또는 시스템"
+          },
+          "evaluated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Evaluated At",
+            "description": "평가 시각"
+          }
+        },
+        "type": "object",
+        "required": [
+          "toxicity_score",
+          "hallucination_score",
+          "factual_consistency",
+          "risk_level",
+          "evaluator"
+        ],
+        "title": "PromptEvaluationSummary",
+        "description": "Summary of automated evaluation results."
+      },
+      "PromptRiskLevel": {
+        "type": "string",
+        "enum": [
+          "low",
+          "medium",
+          "high"
+        ],
+        "title": "PromptRiskLevel",
+        "description": "Risk tier for prompts."
+      },
+      "PromptStatus": {
+        "type": "string",
+        "enum": [
+          "draft",
+          "in_review",
+          "approved",
+          "rejected",
+          "archived"
+        ],
+        "title": "PromptStatus",
+        "description": "Lifecycle status for prompts."
+      },
+      "PromptTemplateCreate": {
+        "properties": {
+          "prompt_id": {
+            "type": "string",
+            "title": "Prompt Id"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          },
+          "owner": {
+            "type": "string",
+            "title": "Owner"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Tags"
+          },
+          "risk_level": {
+            "$ref": "#/components/schemas/PromptRiskLevel",
+            "default": "medium"
+          },
+          "policies": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Policies"
+          }
+        },
+        "type": "object",
+        "required": [
+          "prompt_id",
+          "version",
+          "name",
+          "description",
+          "content",
+          "owner"
+        ],
+        "title": "PromptTemplateCreate"
+      },
+      "PromptTemplateResponse": {
+        "properties": {
+          "prompt_id": {
+            "type": "string",
+            "title": "Prompt Id"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          },
+          "owner": {
+            "type": "string",
+            "title": "Owner"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Tags"
+          },
+          "status": {
+            "$ref": "#/components/schemas/PromptStatus"
+          },
+          "risk_level": {
+            "$ref": "#/components/schemas/PromptRiskLevel"
+          },
+          "policies": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Policies"
+          },
+          "evaluation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PromptEvaluationSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "approval_notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Approval Notes"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "prompt_id",
+          "version",
+          "name",
+          "description",
+          "content",
+          "owner",
+          "tags",
+          "status",
+          "risk_level",
+          "policies",
+          "evaluation",
+          "approval_notes",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "PromptTemplateResponse"
+      },
+      "PromptTemplateUpdate": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "content": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Content"
+          },
+          "tags": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tags"
+          },
+          "risk_level": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PromptRiskLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "policies": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Policies"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PromptStatus"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "approval_notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Approval Notes"
+          }
+        },
+        "type": "object",
+        "title": "PromptTemplateUpdate"
+      },
+      "PromptUsageLogCreate": {
+        "properties": {
+          "prompt_id": {
+            "type": "string",
+            "title": "Prompt Id"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "session_id": {
+            "type": "string",
+            "title": "Session Id"
+          },
+          "outcome": {
+            "type": "string",
+            "title": "Outcome"
+          },
+          "toxicity_score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Toxicity Score"
+          },
+          "hallucination_flags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Hallucination Flags"
+          }
+        },
+        "type": "object",
+        "required": [
+          "prompt_id",
+          "version",
+          "session_id",
+          "outcome"
+        ],
+        "title": "PromptUsageLogCreate"
+      },
+      "PromptUsageLogResponse": {
+        "properties": {
+          "prompt_id": {
+            "type": "string",
+            "title": "Prompt Id"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "session_id": {
+            "type": "string",
+            "title": "Session Id"
+          },
+          "outcome": {
+            "type": "string",
+            "title": "Outcome"
+          },
+          "toxicity_score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Toxicity Score"
+          },
+          "hallucination_flags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Hallucination Flags"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "prompt_id",
+          "version",
+          "session_id",
+          "outcome",
+          "toxicity_score",
+          "hallucination_flags",
+          "created_at"
+        ],
+        "title": "PromptUsageLogResponse"
+      },
+      "PromptWorkflowAction": {
+        "properties": {
+          "reviewer": {
+            "type": "string",
+            "title": "Reviewer"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "reviewer"
+        ],
+        "title": "PromptWorkflowAction"
+      },
       "PydanticObjectId": {
         "type": "string",
         "maxLength": 24,
@@ -16089,6 +20817,273 @@
         "title": "RiskAssessment",
         "description": "리스크 평가"
       },
+      "RunCreate": {
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "minLength": 8,
+            "title": "Run Id"
+          },
+          "experiment_name": {
+            "type": "string",
+            "title": "Experiment Name"
+          },
+          "parameters": {
+            "items": {
+              "$ref": "#/components/schemas/ParameterSnapshot"
+            },
+            "type": "array",
+            "title": "Parameters"
+          },
+          "metrics": {
+            "items": {
+              "$ref": "#/components/schemas/MetricSnapshot"
+            },
+            "type": "array",
+            "title": "Metrics"
+          },
+          "dataset_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dataset Name"
+          },
+          "dataset_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dataset Version"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Tags"
+          },
+          "artifacts": {
+            "items": {
+              "$ref": "#/components/schemas/ArtifactReference"
+            },
+            "type": "array",
+            "title": "Artifacts"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "run_id",
+          "experiment_name"
+        ],
+        "title": "RunCreate"
+      },
+      "RunResponse": {
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "experiment_name": {
+            "type": "string",
+            "title": "Experiment Name"
+          },
+          "status": {
+            "$ref": "#/components/schemas/RunStatus"
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Started At"
+          },
+          "completed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completed At"
+          },
+          "parameters": {
+            "items": {
+              "$ref": "#/components/schemas/ParameterSnapshot"
+            },
+            "type": "array",
+            "title": "Parameters"
+          },
+          "metrics": {
+            "items": {
+              "$ref": "#/components/schemas/MetricSnapshot"
+            },
+            "type": "array",
+            "title": "Metrics"
+          },
+          "dataset_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dataset Name"
+          },
+          "dataset_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dataset Version"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Tags"
+          },
+          "artifacts": {
+            "items": {
+              "$ref": "#/components/schemas/ArtifactReference"
+            },
+            "type": "array",
+            "title": "Artifacts"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "run_id",
+          "experiment_name",
+          "status",
+          "started_at",
+          "completed_at",
+          "parameters",
+          "metrics",
+          "dataset_name",
+          "dataset_version",
+          "tags",
+          "artifacts",
+          "notes"
+        ],
+        "title": "RunResponse"
+      },
+      "RunStatus": {
+        "type": "string",
+        "enum": [
+          "running",
+          "completed",
+          "failed",
+          "cancelled"
+        ],
+        "title": "RunStatus",
+        "description": "Execution status for a model run."
+      },
+      "RunUpdate": {
+        "properties": {
+          "status": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunStatus"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "metrics": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/MetricSnapshot"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Metrics"
+          },
+          "completed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completed At"
+          },
+          "artifacts": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ArtifactReference"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Artifacts"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          }
+        },
+        "type": "object",
+        "title": "RunUpdate"
+      },
       "SMACrossoverConfig": {
         "properties": {
           "config_type": {
@@ -16175,6 +21170,291 @@
         "type": "object",
         "title": "SMACrossoverConfig",
         "description": "SMA 크로스오버 전략 설정"
+      },
+      "ScenarioCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "symbols": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Symbols"
+          },
+          "start_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start Date"
+          },
+          "end_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End Date"
+          },
+          "baseline_backtest_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Baseline Backtest Ids"
+          },
+          "benchmark_metrics": {
+            "items": {
+              "$ref": "#/components/schemas/BenchmarkMetric"
+            },
+            "type": "array",
+            "title": "Benchmark Metrics"
+          },
+          "stress_events": {
+            "items": {
+              "$ref": "#/components/schemas/ScenarioEvent"
+            },
+            "type": "array",
+            "title": "Stress Events"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "description"
+        ],
+        "title": "ScenarioCreate"
+      },
+      "ScenarioEvent": {
+        "properties": {
+          "label": {
+            "type": "string",
+            "title": "Label",
+            "description": "이벤트 라벨"
+          },
+          "start": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Start",
+            "description": "시작일"
+          },
+          "end": {
+            "type": "string",
+            "format": "date-time",
+            "title": "End",
+            "description": "종료일"
+          }
+        },
+        "type": "object",
+        "required": [
+          "label",
+          "start",
+          "end"
+        ],
+        "title": "ScenarioEvent",
+        "description": "Historical event or stress period definition."
+      },
+      "ScenarioResponse": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "symbols": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Symbols"
+          },
+          "start_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start Date"
+          },
+          "end_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End Date"
+          },
+          "baseline_backtest_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Baseline Backtest Ids"
+          },
+          "benchmark_metrics": {
+            "items": {
+              "$ref": "#/components/schemas/BenchmarkMetric"
+            },
+            "type": "array",
+            "title": "Benchmark Metrics"
+          },
+          "stress_events": {
+            "items": {
+              "$ref": "#/components/schemas/ScenarioEvent"
+            },
+            "type": "array",
+            "title": "Stress Events"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "description",
+          "symbols",
+          "start_date",
+          "end_date",
+          "baseline_backtest_ids",
+          "benchmark_metrics",
+          "stress_events",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "ScenarioResponse"
+      },
+      "ScenarioUpdate": {
+        "properties": {
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "symbols": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Symbols"
+          },
+          "start_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start Date"
+          },
+          "end_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End Date"
+          },
+          "baseline_backtest_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Baseline Backtest Ids"
+          },
+          "benchmark_metrics": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/BenchmarkMetric"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Benchmark Metrics"
+          },
+          "stress_events": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ScenarioEvent"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stress Events"
+          }
+        },
+        "type": "object",
+        "title": "ScenarioUpdate"
       },
       "SentimentType": {
         "type": "string",
@@ -18838,6 +24118,72 @@
         ],
         "title": "WatchlistUpdate",
         "description": "워치리스트 업데이트 모델"
+      },
+      "app__models__evaluation__MetricComparison": {
+        "properties": {
+          "metric_name": {
+            "type": "string",
+            "title": "Metric Name",
+            "description": "메트릭 이름"
+          },
+          "candidate": {
+            "type": "number",
+            "title": "Candidate",
+            "description": "후보 모델 값"
+          },
+          "baseline_average": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Baseline Average",
+            "description": "기준 평균"
+          },
+          "delta": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Delta",
+            "description": "차이"
+          }
+        },
+        "type": "object",
+        "required": [
+          "metric_name",
+          "candidate"
+        ],
+        "title": "MetricComparison",
+        "description": "Comparison between candidate and baseline."
+      },
+      "app__schemas__model_lifecycle__MetricComparison": {
+        "properties": {
+          "metric_name": {
+            "type": "string",
+            "title": "Metric Name"
+          },
+          "values": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Values"
+          }
+        },
+        "type": "object",
+        "required": [
+          "metric_name",
+          "values"
+        ],
+        "title": "MetricComparison"
       }
     },
     "securitySchemes": {

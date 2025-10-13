@@ -5,6 +5,28 @@ export type ClientOptions = {
 };
 
 /**
+ * ArtifactReference
+ * Reference to persisted artifacts (MLflow/W&B).
+ */
+export type ArtifactReference = {
+	/**
+	 * Name
+	 * 아티팩트 이름
+	 */
+	name: string;
+	/**
+	 * Uri
+	 * 저장 위치 URI
+	 */
+	uri: string;
+	/**
+	 * Artifact Type
+	 * 아티팩트 타입 (model, report 등)
+	 */
+	artifact_type: string;
+};
+
+/**
  * AutoBacktestRequest
  * 자동 백테스트 트리거 요청
  */
@@ -568,6 +590,28 @@ export type BalanceSheetResponse = {
 };
 
 /**
+ * BenchmarkMetric
+ * Benchmark metric definition used by evaluation scenarios.
+ */
+export type BenchmarkMetric = {
+	/**
+	 * Name
+	 * 메트릭 이름
+	 */
+	name: string;
+	/**
+	 * Threshold
+	 * 임계값
+	 */
+	threshold?: number | null;
+	/**
+	 * Higher Is Better
+	 * 높을수록 좋은 메트릭 여부
+	 */
+	higher_is_better?: boolean;
+};
+
+/**
  * Body_Auth-forgot_password
  */
 export type BodyAuthForgotPassword = {
@@ -927,6 +971,31 @@ export type ChatOpsResponse = {
 };
 
 /**
+ * ChecklistStatus
+ * Approval checklist states.
+ */
+export type ChecklistStatus = "pending" | "passed" | "failed";
+
+/**
+ * ChecklistUpdateRequest
+ */
+export type ChecklistUpdateRequest = {
+	stage?: ModelStage | null;
+	/**
+	 * Checklist
+	 */
+	checklist: Array<DeploymentChecklistItem>;
+	/**
+	 * Approved By
+	 */
+	approved_by?: string | null;
+	/**
+	 * Approval Notes
+	 */
+	approval_notes?: string | null;
+};
+
+/**
  * CompanyOverviewData
  * 기업 개요 응답 모델
  */
@@ -1122,6 +1191,12 @@ export type CompanyOverviewResponse = {
 	 */
 	metadata: MetadataInfo;
 };
+
+/**
+ * ComplianceStatus
+ * Compliance outcome for evaluation.
+ */
+export type ComplianceStatus = "passed" | "warning" | "failed";
 
 /**
  * ConfidenceLevel
@@ -1328,6 +1403,118 @@ export type DataQualitySummary = {
 };
 
 /**
+ * DataType
+ * 데이터 타입
+ */
+export type DataType = "float" | "integer" | "string" | "boolean" | "timestamp";
+
+/**
+ * DeploymentChecklistItem
+ * Individual checklist item used during approvals.
+ */
+export type DeploymentChecklistItem = {
+	/**
+	 * Name
+	 * Checklist 항목 이름
+	 */
+	name: string;
+	/**
+	 * 체크 상태
+	 */
+	status?: ChecklistStatus;
+	/**
+	 * Note
+	 * 검토 메모
+	 */
+	note?: string | null;
+	/**
+	 * Completed At
+	 * 완료 시간
+	 */
+	completed_at?: Date | null;
+};
+
+/**
+ * DriftEventCreate
+ */
+export type DriftEventCreate = {
+	/**
+	 * Model Name
+	 */
+	model_name: string;
+	/**
+	 * Version
+	 */
+	version: string;
+	severity: DriftSeverity;
+	/**
+	 * Metric Name
+	 */
+	metric_name: string;
+	/**
+	 * Metric Value
+	 */
+	metric_value: number;
+	/**
+	 * Threshold
+	 */
+	threshold?: number | null;
+	/**
+	 * Message
+	 */
+	message?: string | null;
+	/**
+	 * Remediation Action
+	 */
+	remediation_action?: string | null;
+};
+
+/**
+ * DriftEventResponse
+ */
+export type DriftEventResponse = {
+	/**
+	 * Model Name
+	 */
+	model_name: string;
+	/**
+	 * Version
+	 */
+	version: string;
+	/**
+	 * Detected At
+	 */
+	detected_at: Date;
+	severity: DriftSeverity;
+	/**
+	 * Metric Name
+	 */
+	metric_name: string;
+	/**
+	 * Metric Value
+	 */
+	metric_value: number;
+	/**
+	 * Threshold
+	 */
+	threshold: number | null;
+	/**
+	 * Message
+	 */
+	message: string | null;
+	/**
+	 * Remediation Action
+	 */
+	remediation_action: string | null;
+};
+
+/**
+ * DriftSeverity
+ * Severity flag for drift events.
+ */
+export type DriftSeverity = "low" | "medium" | "high";
+
+/**
  * EarningsData
  * 실적 발표 응답 모델
  */
@@ -1480,6 +1667,140 @@ export type EconomicEvent = {
 };
 
 /**
+ * EvaluationReport
+ */
+export type EvaluationReport = {
+	/**
+	 * Scenario Name
+	 */
+	scenario_name: string;
+	/**
+	 * Candidate Model Name
+	 */
+	candidate_model_name: string;
+	/**
+	 * Candidate Model Version
+	 */
+	candidate_model_version: string | null;
+	compliance: ComplianceStatus;
+	/**
+	 * Metrics
+	 */
+	metrics: Array<AppModelsEvaluationMetricComparison>;
+	/**
+	 * Notes
+	 */
+	notes?: string | null;
+};
+
+/**
+ * EvaluationRequest
+ */
+export type EvaluationRequest = {
+	/**
+	 * Scenario Name
+	 */
+	scenario_name: string;
+	/**
+	 * Candidate Backtest Id
+	 */
+	candidate_backtest_id: string;
+	/**
+	 * Candidate Model Name
+	 */
+	candidate_model_name: string;
+	/**
+	 * Candidate Model Version
+	 */
+	candidate_model_version?: string | null;
+	/**
+	 * Candidate Metrics
+	 */
+	candidate_metrics?: {
+		[key: string]: number;
+	};
+	/**
+	 * Explainability
+	 */
+	explainability?: Array<ExplainabilityArtifact>;
+	/**
+	 * Compliance Inputs
+	 */
+	compliance_inputs?: {
+		[key: string]: unknown;
+	};
+};
+
+/**
+ * EvaluationRunResponse
+ */
+export type EvaluationRunResponse = {
+	/**
+	 * Scenario Name
+	 */
+	scenario_name: string;
+	/**
+	 * Candidate Backtest Id
+	 */
+	candidate_backtest_id: string;
+	/**
+	 * Candidate Model Name
+	 */
+	candidate_model_name: string;
+	/**
+	 * Candidate Model Version
+	 */
+	candidate_model_version: string | null;
+	status: EvaluationStatus;
+	/**
+	 * Started At
+	 */
+	started_at: Date;
+	/**
+	 * Completed At
+	 */
+	completed_at: Date | null;
+	summary: EvaluationSummary | null;
+	/**
+	 * Explainability
+	 */
+	explainability: Array<ExplainabilityArtifact>;
+	/**
+	 * Compliance Checks
+	 */
+	compliance_checks: {
+		[key: string]: unknown;
+	};
+};
+
+/**
+ * EvaluationStatus
+ * Status flag for evaluation runs.
+ */
+export type EvaluationStatus = "pending" | "running" | "completed" | "failed";
+
+/**
+ * EvaluationSummary
+ * Summary of evaluation outputs.
+ */
+export type EvaluationSummary = {
+	/**
+	 * Metrics
+	 * 메트릭 비교
+	 */
+	metrics?: Array<AppModelsEvaluationMetricComparison>;
+	/**
+	 * 컴플라이언스 결과
+	 */
+	compliance?: ComplianceStatus;
+	/**
+	 * Notes
+	 * 메모
+	 */
+	notes?: string | null;
+};
+
+/**
  * ExecutionListResponse
  * Execution list response
  */
@@ -1596,6 +1917,124 @@ export type ExecutiveSummary = {
 };
 
 /**
+ * ExperimentCreate
+ */
+export type ExperimentCreate = {
+	/**
+	 * Name
+	 */
+	name: string;
+	/**
+	 * Description
+	 */
+	description: string;
+	/**
+	 * Owner
+	 */
+	owner: string;
+	/**
+	 * Tags
+	 */
+	tags?: Array<string>;
+	/**
+	 * Metadata
+	 */
+	metadata?: {
+		[key: string]: unknown;
+	};
+};
+
+/**
+ * ExperimentResponse
+ */
+export type ExperimentResponse = {
+	/**
+	 * Name
+	 */
+	name: string;
+	/**
+	 * Description
+	 */
+	description: string;
+	/**
+	 * Owner
+	 */
+	owner: string;
+	status: ExperimentStatus;
+	/**
+	 * Tags
+	 */
+	tags: Array<string>;
+	/**
+	 * Metadata
+	 */
+	metadata: {
+		[key: string]: unknown;
+	};
+	/**
+	 * Created At
+	 */
+	created_at: Date;
+	/**
+	 * Updated At
+	 */
+	updated_at: Date;
+};
+
+/**
+ * ExperimentStatus
+ * Lifecycle state for an experiment.
+ */
+export type ExperimentStatus = "active" | "archived";
+
+/**
+ * ExperimentUpdate
+ */
+export type ExperimentUpdate = {
+	/**
+	 * Description
+	 */
+	description?: string | null;
+	/**
+	 * Owner
+	 */
+	owner?: string | null;
+	status?: ExperimentStatus | null;
+	/**
+	 * Tags
+	 */
+	tags?: Array<string> | null;
+	/**
+	 * Metadata
+	 */
+	metadata?: {
+		[key: string]: unknown;
+	} | null;
+};
+
+/**
+ * ExplainabilityArtifact
+ * Explainability artifact reference (e.g., SHAP).
+ */
+export type ExplainabilityArtifact = {
+	/**
+	 * Feature Name
+	 * 피처 이름
+	 */
+	feature_name: string;
+	/**
+	 * Importance
+	 * 중요도
+	 */
+	importance: number;
+	/**
+	 * Impact Direction
+	 * 영향 방향 (+/-)
+	 */
+	impact_direction?: string | null;
+};
+
+/**
  * FailureInsight
  * Represents a recent operational failure surfaced to the operator.
  */
@@ -1663,6 +2102,625 @@ export type FeatureContribution = {
 	 * Human readable description of how the feature influences the score
 	 */
 	direction?: string | null;
+};
+
+/**
+ * FeatureCreate
+ * 피처 생성 요청
+ */
+export type FeatureCreate = {
+	/**
+	 * Feature Name
+	 * 피처 이름
+	 */
+	feature_name: string;
+	feature_type: FeatureType;
+	data_type: DataType;
+	/**
+	 * Description
+	 * 설명
+	 */
+	description: string;
+	/**
+	 * Owner
+	 * 담당자 ID
+	 */
+	owner: string;
+	/**
+	 * Tags
+	 * 태그
+	 */
+	tags?: Array<string>;
+	/**
+	 * 변환 로직
+	 */
+	transformation?: FeatureTransformation | null;
+	/**
+	 * Validation Rules
+	 * 검증 규칙
+	 */
+	validation_rules?: Array<FeatureValidation>;
+	/**
+	 * Upstream Features
+	 * 상위 의존 피처 이름 목록
+	 */
+	upstream_features?: Array<string>;
+	/**
+	 * Duckdb Table
+	 * DuckDB 테이블
+	 */
+	duckdb_table?: string | null;
+	/**
+	 * Duckdb View
+	 * DuckDB 뷰
+	 */
+	duckdb_view?: string | null;
+};
+
+/**
+ * FeatureLineageNode
+ * 피처 계보 노드 (upstream/downstream)
+ */
+export type FeatureLineageNode = {
+	/**
+	 * Feature Name
+	 * 피처 이름
+	 */
+	feature_name: string;
+	/**
+	 * Version
+	 * 피처 버전
+	 */
+	version: string;
+	/**
+	 * Relationship
+	 * 관계 (depends_on, derived_from, used_by)
+	 */
+	relationship: string;
+};
+
+/**
+ * FeatureLineageResponse
+ * 피처 계보 응답
+ */
+export type FeatureLineageResponse = {
+	/**
+	 * Feature Name
+	 * 피처 이름
+	 */
+	feature_name: string;
+	/**
+	 * Current Version
+	 * 현재 버전
+	 */
+	current_version: string;
+	/**
+	 * Upstream Features
+	 * 상위 의존 피처 (이 피처가 사용하는 피처들)
+	 */
+	upstream_features: Array<FeatureLineageNode>;
+	/**
+	 * Downstream Features
+	 * 하위 파생 피처 (이 피처를 사용하는 피처들)
+	 */
+	downstream_features: Array<FeatureLineageNode>;
+	/**
+	 * All Upstream
+	 * 전체 상위 의존성
+	 */
+	all_upstream: Array<string>;
+	/**
+	 * All Downstream
+	 * 전체 하위 의존성
+	 */
+	all_downstream: Array<string>;
+	/**
+	 * Direct Dependents Count
+	 * 직접 의존하는 피처 수
+	 */
+	direct_dependents_count: number;
+	/**
+	 * Total Dependents Count
+	 * 전체 의존하는 피처 수
+	 */
+	total_dependents_count: number;
+};
+
+/**
+ * FeatureListResponse
+ * 피처 목록 응답
+ */
+export type FeatureListResponse = {
+	/**
+	 * Features
+	 * 피처 목록
+	 */
+	features: Array<FeatureResponse>;
+	/**
+	 * Total
+	 * 전체 개수
+	 */
+	total: number;
+};
+
+/**
+ * FeatureResponse
+ * 피처 조회 응답
+ */
+export type FeatureResponse = {
+	/**
+	 * Id
+	 * MongoDB ObjectId
+	 */
+	id: string;
+	/**
+	 * Feature Name
+	 * 피처 이름
+	 */
+	feature_name: string;
+	/**
+	 * Current Version
+	 * 현재 버전
+	 */
+	current_version: string;
+	feature_type: FeatureType;
+	data_type: DataType;
+	/**
+	 * 상태
+	 */
+	status: FeatureStatus;
+	/**
+	 * Description
+	 * 설명
+	 */
+	description: string;
+	/**
+	 * Owner
+	 * 담당자
+	 */
+	owner: string;
+	/**
+	 * Tags
+	 * 태그
+	 */
+	tags: Array<string>;
+	/**
+	 * Upstream Features
+	 * 상위 의존 피처
+	 */
+	upstream_features: Array<string>;
+	/**
+	 * Downstream Features
+	 * 하위 파생 피처
+	 */
+	downstream_features: Array<string>;
+	/**
+	 * 변환 로직
+	 */
+	transformation?: FeatureTransformation | null;
+	/**
+	 * Validation Rules
+	 * 검증 규칙
+	 */
+	validation_rules: Array<FeatureValidation>;
+	/**
+	 * Duckdb Table
+	 * DuckDB 테이블
+	 */
+	duckdb_table?: string | null;
+	/**
+	 * Duckdb View
+	 * DuckDB 뷰
+	 */
+	duckdb_view?: string | null;
+	/**
+	 * Usage Count
+	 * 사용 횟수
+	 */
+	usage_count: number;
+	/**
+	 * Last Used At
+	 * 마지막 사용 시간
+	 */
+	last_used_at?: Date | null;
+	/**
+	 * Created At
+	 * 생성 시간
+	 */
+	created_at: Date;
+	/**
+	 * Updated At
+	 * 업데이트 시간
+	 */
+	updated_at: Date;
+	/**
+	 * Deprecated At
+	 * 폐기 시간
+	 */
+	deprecated_at?: Date | null;
+};
+
+/**
+ * FeatureStatisticsResponse
+ * 피처 통계 응답
+ */
+export type FeatureStatisticsResponse = {
+	/**
+	 * Feature Name
+	 * 피처 이름
+	 */
+	feature_name: string;
+	/**
+	 * Total Usage Count
+	 * 총 사용 횟수
+	 */
+	total_usage_count: number;
+	/**
+	 * Unique Models Count
+	 * 사용한 고유 모델 수
+	 */
+	unique_models_count: number;
+	/**
+	 * Environments
+	 * 환경별 사용 횟수
+	 */
+	environments: {
+		[key: string]: number;
+	};
+	/**
+	 * Avg Feature Importance
+	 * 평균 피처 중요도
+	 */
+	avg_feature_importance?: number | null;
+	/**
+	 * Avg Correlation
+	 * 평균 타겟 상관계수
+	 */
+	avg_correlation?: number | null;
+	/**
+	 * First Used At
+	 * 최초 사용 시간
+	 */
+	first_used_at?: Date | null;
+	/**
+	 * Last Used At
+	 * 마지막 사용 시간
+	 */
+	last_used_at?: Date | null;
+};
+
+/**
+ * FeatureStatus
+ * 피처 상태
+ */
+export type FeatureStatus = "active" | "deprecated" | "archived" | "draft";
+
+/**
+ * FeatureTransformation
+ * 피처 변환 로직
+ */
+export type FeatureTransformation = {
+	/**
+	 * Transformation Type
+	 * 변환 타입 (sql, python, spark)
+	 */
+	transformation_type: string;
+	/**
+	 * Code
+	 * 변환 코드
+	 */
+	code: string;
+	/**
+	 * Parameters
+	 * 파라미터
+	 */
+	parameters?: {
+		[key: string]: unknown;
+	};
+};
+
+/**
+ * FeatureType
+ * 피처 타입
+ */
+export type FeatureType =
+	| "technical_indicator"
+	| "fundamental"
+	| "sentiment"
+	| "macro_economic"
+	| "derived"
+	| "raw";
+
+/**
+ * FeatureUpdate
+ * 피처 업데이트 요청
+ */
+export type FeatureUpdate = {
+	/**
+	 * Description
+	 * 설명
+	 */
+	description?: string | null;
+	/**
+	 * Tags
+	 * 태그
+	 */
+	tags?: Array<string> | null;
+	/**
+	 * 상태
+	 */
+	status?: FeatureStatus | null;
+	/**
+	 * 변환 로직
+	 */
+	transformation?: FeatureTransformation | null;
+	/**
+	 * Validation Rules
+	 * 검증 규칙
+	 */
+	validation_rules?: Array<FeatureValidation> | null;
+	/**
+	 * Duckdb Table
+	 * DuckDB 테이블
+	 */
+	duckdb_table?: string | null;
+	/**
+	 * Duckdb View
+	 * DuckDB 뷰
+	 */
+	duckdb_view?: string | null;
+};
+
+/**
+ * FeatureUsageCreate
+ * 피처 사용 기록 생성
+ */
+export type FeatureUsageCreate = {
+	/**
+	 * Feature Name
+	 * 피처 이름
+	 */
+	feature_name: string;
+	/**
+	 * Feature Version
+	 * 피처 버전
+	 */
+	feature_version: string;
+	/**
+	 * Used By Model
+	 * 모델 이름
+	 */
+	used_by_model: string;
+	/**
+	 * Model Version
+	 * 모델 버전
+	 */
+	model_version: string;
+	/**
+	 * Environment
+	 * 환경
+	 */
+	environment: string;
+	/**
+	 * Feature Importance
+	 * 피처 중요도
+	 */
+	feature_importance?: number | null;
+	/**
+	 * Correlation With Target
+	 * 타겟 상관계수
+	 */
+	correlation_with_target?: number | null;
+	/**
+	 * Execution Id
+	 * 실행 ID
+	 */
+	execution_id?: string | null;
+	/**
+	 * Execution Duration Ms
+	 * 실행 시간
+	 */
+	execution_duration_ms?: number | null;
+};
+
+/**
+ * FeatureUsageResponse
+ * 피처 사용 기록 응답
+ */
+export type FeatureUsageResponse = {
+	/**
+	 * Id
+	 * MongoDB ObjectId
+	 */
+	id: string;
+	/**
+	 * Feature Name
+	 * 피처 이름
+	 */
+	feature_name: string;
+	/**
+	 * Feature Version
+	 * 피처 버전
+	 */
+	feature_version: string;
+	/**
+	 * Used By Model
+	 * 모델 이름
+	 */
+	used_by_model: string;
+	/**
+	 * Model Version
+	 * 모델 버전
+	 */
+	model_version: string;
+	/**
+	 * Environment
+	 * 환경
+	 */
+	environment: string;
+	/**
+	 * Feature Importance
+	 * 피처 중요도
+	 */
+	feature_importance?: number | null;
+	/**
+	 * Correlation With Target
+	 * 타겟 상관계수
+	 */
+	correlation_with_target?: number | null;
+	/**
+	 * Execution Id
+	 * 실행 ID
+	 */
+	execution_id?: string | null;
+	/**
+	 * Execution Duration Ms
+	 * 실행 시간
+	 */
+	execution_duration_ms?: number | null;
+	/**
+	 * Usage Timestamp
+	 * 사용 시간
+	 */
+	usage_timestamp: Date;
+};
+
+/**
+ * FeatureValidation
+ * 피처 검증 규칙
+ */
+export type FeatureValidation = {
+	/**
+	 * Rule Type
+	 * 규칙 타입 (range, null_check, outlier)
+	 */
+	rule_type: string;
+	/**
+	 * Parameters
+	 * 규칙 파라미터
+	 */
+	parameters: {
+		[key: string]: unknown;
+	};
+	/**
+	 * Is Blocking
+	 * 블로킹 여부
+	 */
+	is_blocking?: boolean;
+};
+
+/**
+ * FeatureVersionCreate
+ * 피처 버전 생성 요청
+ */
+export type FeatureVersionCreate = {
+	/**
+	 * Version
+	 * 버전 (Semantic Versioning)
+	 */
+	version: string;
+	/**
+	 * Changelog
+	 * 변경 사항
+	 */
+	changelog: string;
+	/**
+	 * Breaking Changes
+	 * 호환성 깨짐 여부
+	 */
+	breaking_changes?: boolean;
+	/**
+	 * Created By
+	 * 생성자 ID
+	 */
+	created_by: string;
+	/**
+	 * 변환 로직 스냅샷
+	 */
+	transformation_snapshot?: FeatureTransformation | null;
+	/**
+	 * Validation Snapshot
+	 * 검증 규칙 스냅샷
+	 */
+	validation_snapshot?: Array<FeatureValidation>;
+};
+
+/**
+ * FeatureVersionListResponse
+ * 피처 버전 목록 응답
+ */
+export type FeatureVersionListResponse = {
+	/**
+	 * Versions
+	 * 버전 목록
+	 */
+	versions: Array<FeatureVersionResponse>;
+	/**
+	 * Total
+	 * 전체 개수
+	 */
+	total: number;
+};
+
+/**
+ * FeatureVersionResponse
+ * 피처 버전 응답
+ */
+export type FeatureVersionResponse = {
+	/**
+	 * Id
+	 * MongoDB ObjectId
+	 */
+	id: string;
+	/**
+	 * Feature Name
+	 * 피처 이름
+	 */
+	feature_name: string;
+	/**
+	 * Version
+	 * 버전
+	 */
+	version: string;
+	/**
+	 * Changelog
+	 * 변경 사항
+	 */
+	changelog: string;
+	/**
+	 * Breaking Changes
+	 * 호환성 깨짐 여부
+	 */
+	breaking_changes: boolean;
+	/**
+	 * 변환 로직 스냅샷
+	 */
+	transformation_snapshot?: FeatureTransformation | null;
+	/**
+	 * Validation Snapshot
+	 * 검증 규칙 스냅샷
+	 */
+	validation_snapshot: Array<FeatureValidation>;
+	/**
+	 * Created By
+	 * 생성자
+	 */
+	created_by: string;
+	/**
+	 * Created At
+	 * 생성 시간
+	 */
+	created_at: Date;
+	/**
+	 * Is Rolled Back
+	 * 롤백 여부
+	 */
+	is_rolled_back: boolean;
+	/**
+	 * Rolled Back At
+	 * 롤백 시간
+	 */
+	rolled_back_at?: Date | null;
 };
 
 /**
@@ -2374,6 +3432,52 @@ export type MetadataInfo = {
 };
 
 /**
+ * MetricSnapshot
+ * Metric snapshot stored alongside runs/versions.
+ */
+export type MetricSnapshot = {
+	/**
+	 * Metric Name
+	 * 메트릭 이름
+	 */
+	metric_name: string;
+	/**
+	 * Value
+	 * 메트릭 값
+	 */
+	value: number;
+	/**
+	 * Dataset
+	 * 평가 데이터셋
+	 */
+	dataset?: string | null;
+};
+
+/**
+ * ModelComparisonRequest
+ */
+export type ModelComparisonRequest = {
+	/**
+	 * Versions
+	 */
+	versions: Array<string>;
+};
+
+/**
+ * ModelComparisonResponse
+ */
+export type ModelComparisonResponse = {
+	/**
+	 * Model Name
+	 */
+	model_name: string;
+	/**
+	 * Comparisons
+	 */
+	comparisons: Array<AppSchemasModelLifecycleMetricComparison>;
+};
+
+/**
  * ModelInfoResponse
  * Response schema for model info.
  */
@@ -2427,6 +3531,86 @@ export type ModelListResponse = {
 	 * Latest Version
 	 */
 	latest_version: string | null;
+};
+
+/**
+ * ModelStage
+ * Deployment stage for a model version.
+ */
+export type ModelStage = "experimental" | "staging" | "production" | "archived";
+
+/**
+ * ModelVersionCreate
+ */
+export type ModelVersionCreate = {
+	/**
+	 * Model Name
+	 */
+	model_name: string;
+	/**
+	 * Version
+	 */
+	version: string;
+	/**
+	 * Run Id
+	 */
+	run_id: string;
+	stage?: ModelStage;
+	/**
+	 * Metrics
+	 */
+	metrics?: Array<MetricSnapshot>;
+	/**
+	 * Approval Checklist
+	 */
+	approval_checklist?: Array<DeploymentChecklistItem>;
+};
+
+/**
+ * ModelVersionResponse
+ */
+export type ModelVersionResponse = {
+	/**
+	 * Model Name
+	 */
+	model_name: string;
+	/**
+	 * Version
+	 */
+	version: string;
+	/**
+	 * Run Id
+	 */
+	run_id: string;
+	stage: ModelStage;
+	/**
+	 * Approval Checklist
+	 */
+	approval_checklist: Array<DeploymentChecklistItem>;
+	/**
+	 * Metrics
+	 */
+	metrics: Array<MetricSnapshot>;
+	/**
+	 * Approved By
+	 */
+	approved_by: string | null;
+	/**
+	 * Approved At
+	 */
+	approved_at: Date | null;
+	/**
+	 * Rollback Notes
+	 */
+	rollback_notes: string | null;
+	/**
+	 * Created At
+	 */
+	created_at: Date;
+	/**
+	 * Updated At
+	 */
+	updated_at: Date;
 };
 
 /**
@@ -2877,6 +4061,23 @@ export type OptimizationResult = {
  * 주문 타입
  */
 export type OrderType = "MARKET" | "LIMIT" | "STOP" | "STOP_LIMIT";
+
+/**
+ * ParameterSnapshot
+ * Parameter capture for a run.
+ */
+export type ParameterSnapshot = {
+	/**
+	 * Name
+	 * 파라미터 이름
+	 */
+	name: string;
+	/**
+	 * Value
+	 * 파라미터 값
+	 */
+	value: unknown;
+};
 
 /**
  * ParameterSpace
@@ -3480,6 +4681,326 @@ export type PredictiveInsightsResponse = {
 	metadata?: MetadataInfo;
 };
 
+/**
+ * PromptAuditLogResponse
+ */
+export type PromptAuditLogResponse = {
+	/**
+	 * Prompt Id
+	 */
+	prompt_id: string;
+	/**
+	 * Version
+	 */
+	version: string;
+	/**
+	 * Action
+	 */
+	action: string;
+	/**
+	 * Actor
+	 */
+	actor: string;
+	/**
+	 * Details
+	 */
+	details: {
+		[key: string]: unknown;
+	};
+	/**
+	 * Created At
+	 */
+	created_at: Date;
+};
+
+/**
+ * PromptEvaluationRequest
+ */
+export type PromptEvaluationRequest = {
+	/**
+	 * Prompt Id
+	 */
+	prompt_id: string;
+	/**
+	 * Version
+	 */
+	version: string;
+	/**
+	 * Content
+	 */
+	content: string;
+	/**
+	 * Evaluator
+	 */
+	evaluator?: string;
+	/**
+	 * Context Samples
+	 */
+	context_samples?: Array<string>;
+};
+
+/**
+ * PromptEvaluationResponse
+ */
+export type PromptEvaluationResponse = {
+	evaluation: PromptEvaluationSummary;
+};
+
+/**
+ * PromptEvaluationSummary
+ * Summary of automated evaluation results.
+ */
+export type PromptEvaluationSummary = {
+	/**
+	 * Toxicity Score
+	 * 독성 점수 0-1
+	 */
+	toxicity_score: number;
+	/**
+	 * Hallucination Score
+	 * 환각 가능성 점수 0-1
+	 */
+	hallucination_score: number;
+	/**
+	 * Factual Consistency
+	 * 사실 일치 점수 0-1
+	 */
+	factual_consistency: number;
+	/**
+	 * 위험도
+	 */
+	risk_level: PromptRiskLevel;
+	/**
+	 * Evaluator
+	 * 평가자 또는 시스템
+	 */
+	evaluator: string;
+	/**
+	 * Evaluated At
+	 * 평가 시각
+	 */
+	evaluated_at?: Date;
+};
+
+/**
+ * PromptRiskLevel
+ * Risk tier for prompts.
+ */
+export type PromptRiskLevel = "low" | "medium" | "high";
+
+/**
+ * PromptStatus
+ * Lifecycle status for prompts.
+ */
+export type PromptStatus =
+	| "draft"
+	| "in_review"
+	| "approved"
+	| "rejected"
+	| "archived";
+
+/**
+ * PromptTemplateCreate
+ */
+export type PromptTemplateCreate = {
+	/**
+	 * Prompt Id
+	 */
+	prompt_id: string;
+	/**
+	 * Version
+	 */
+	version: string;
+	/**
+	 * Name
+	 */
+	name: string;
+	/**
+	 * Description
+	 */
+	description: string;
+	/**
+	 * Content
+	 */
+	content: string;
+	/**
+	 * Owner
+	 */
+	owner: string;
+	/**
+	 * Tags
+	 */
+	tags?: Array<string>;
+	risk_level?: PromptRiskLevel;
+	/**
+	 * Policies
+	 */
+	policies?: Array<string>;
+};
+
+/**
+ * PromptTemplateResponse
+ */
+export type PromptTemplateResponse = {
+	/**
+	 * Prompt Id
+	 */
+	prompt_id: string;
+	/**
+	 * Version
+	 */
+	version: string;
+	/**
+	 * Name
+	 */
+	name: string;
+	/**
+	 * Description
+	 */
+	description: string;
+	/**
+	 * Content
+	 */
+	content: string;
+	/**
+	 * Owner
+	 */
+	owner: string;
+	/**
+	 * Tags
+	 */
+	tags: Array<string>;
+	status: PromptStatus;
+	risk_level: PromptRiskLevel;
+	/**
+	 * Policies
+	 */
+	policies: Array<string>;
+	evaluation: PromptEvaluationSummary | null;
+	/**
+	 * Approval Notes
+	 */
+	approval_notes: string | null;
+	/**
+	 * Created At
+	 */
+	created_at: Date;
+	/**
+	 * Updated At
+	 */
+	updated_at: Date;
+};
+
+/**
+ * PromptTemplateUpdate
+ */
+export type PromptTemplateUpdate = {
+	/**
+	 * Name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 */
+	description?: string | null;
+	/**
+	 * Content
+	 */
+	content?: string | null;
+	/**
+	 * Tags
+	 */
+	tags?: Array<string> | null;
+	risk_level?: PromptRiskLevel | null;
+	/**
+	 * Policies
+	 */
+	policies?: Array<string> | null;
+	status?: PromptStatus | null;
+	/**
+	 * Approval Notes
+	 */
+	approval_notes?: string | null;
+};
+
+/**
+ * PromptUsageLogCreate
+ */
+export type PromptUsageLogCreate = {
+	/**
+	 * Prompt Id
+	 */
+	prompt_id: string;
+	/**
+	 * Version
+	 */
+	version: string;
+	/**
+	 * Session Id
+	 */
+	session_id: string;
+	/**
+	 * Outcome
+	 */
+	outcome: string;
+	/**
+	 * Toxicity Score
+	 */
+	toxicity_score?: number | null;
+	/**
+	 * Hallucination Flags
+	 */
+	hallucination_flags?: Array<string>;
+};
+
+/**
+ * PromptUsageLogResponse
+ */
+export type PromptUsageLogResponse = {
+	/**
+	 * Prompt Id
+	 */
+	prompt_id: string;
+	/**
+	 * Version
+	 */
+	version: string;
+	/**
+	 * Session Id
+	 */
+	session_id: string;
+	/**
+	 * Outcome
+	 */
+	outcome: string;
+	/**
+	 * Toxicity Score
+	 */
+	toxicity_score: number | null;
+	/**
+	 * Hallucination Flags
+	 */
+	hallucination_flags: Array<string>;
+	/**
+	 * Created At
+	 */
+	created_at: Date;
+};
+
+/**
+ * PromptWorkflowAction
+ */
+export type PromptWorkflowAction = {
+	/**
+	 * Reviewer
+	 */
+	reviewer: string;
+	/**
+	 * Notes
+	 */
+	notes?: string | null;
+};
+
 export type PydanticObjectId = string;
 
 /**
@@ -3806,6 +5327,128 @@ export type RiskAssessment = {
 };
 
 /**
+ * RunCreate
+ */
+export type RunCreate = {
+	/**
+	 * Run Id
+	 */
+	run_id: string;
+	/**
+	 * Experiment Name
+	 */
+	experiment_name: string;
+	/**
+	 * Parameters
+	 */
+	parameters?: Array<ParameterSnapshot>;
+	/**
+	 * Metrics
+	 */
+	metrics?: Array<MetricSnapshot>;
+	/**
+	 * Dataset Name
+	 */
+	dataset_name?: string | null;
+	/**
+	 * Dataset Version
+	 */
+	dataset_version?: string | null;
+	/**
+	 * Tags
+	 */
+	tags?: Array<string>;
+	/**
+	 * Artifacts
+	 */
+	artifacts?: Array<ArtifactReference>;
+	/**
+	 * Notes
+	 */
+	notes?: string | null;
+};
+
+/**
+ * RunResponse
+ */
+export type RunResponse = {
+	/**
+	 * Run Id
+	 */
+	run_id: string;
+	/**
+	 * Experiment Name
+	 */
+	experiment_name: string;
+	status: RunStatus;
+	/**
+	 * Started At
+	 */
+	started_at: Date;
+	/**
+	 * Completed At
+	 */
+	completed_at: Date | null;
+	/**
+	 * Parameters
+	 */
+	parameters: Array<ParameterSnapshot>;
+	/**
+	 * Metrics
+	 */
+	metrics: Array<MetricSnapshot>;
+	/**
+	 * Dataset Name
+	 */
+	dataset_name: string | null;
+	/**
+	 * Dataset Version
+	 */
+	dataset_version: string | null;
+	/**
+	 * Tags
+	 */
+	tags: Array<string>;
+	/**
+	 * Artifacts
+	 */
+	artifacts: Array<ArtifactReference>;
+	/**
+	 * Notes
+	 */
+	notes: string | null;
+};
+
+/**
+ * RunStatus
+ * Execution status for a model run.
+ */
+export type RunStatus = "running" | "completed" | "failed" | "cancelled";
+
+/**
+ * RunUpdate
+ */
+export type RunUpdate = {
+	status?: RunStatus | null;
+	/**
+	 * Metrics
+	 */
+	metrics?: Array<MetricSnapshot> | null;
+	/**
+	 * Completed At
+	 */
+	completed_at?: Date | null;
+	/**
+	 * Artifacts
+	 */
+	artifacts?: Array<ArtifactReference> | null;
+	/**
+	 * Notes
+	 */
+	notes?: string | null;
+};
+
+/**
  * SMACrossoverConfig
  * SMA 크로스오버 전략 설정
  */
@@ -3855,6 +5498,146 @@ export type SmaCrossoverConfig = {
 	 * 최소 교차 강도
 	 */
 	min_crossover_strength?: number;
+};
+
+/**
+ * ScenarioCreate
+ */
+export type ScenarioCreate = {
+	/**
+	 * Name
+	 */
+	name: string;
+	/**
+	 * Description
+	 */
+	description: string;
+	/**
+	 * Symbols
+	 */
+	symbols?: Array<string>;
+	/**
+	 * Start Date
+	 */
+	start_date?: Date | null;
+	/**
+	 * End Date
+	 */
+	end_date?: Date | null;
+	/**
+	 * Baseline Backtest Ids
+	 */
+	baseline_backtest_ids?: Array<string>;
+	/**
+	 * Benchmark Metrics
+	 */
+	benchmark_metrics?: Array<BenchmarkMetric>;
+	/**
+	 * Stress Events
+	 */
+	stress_events?: Array<ScenarioEvent>;
+};
+
+/**
+ * ScenarioEvent
+ * Historical event or stress period definition.
+ */
+export type ScenarioEvent = {
+	/**
+	 * Label
+	 * 이벤트 라벨
+	 */
+	label: string;
+	/**
+	 * Start
+	 * 시작일
+	 */
+	start: Date;
+	/**
+	 * End
+	 * 종료일
+	 */
+	end: Date;
+};
+
+/**
+ * ScenarioResponse
+ */
+export type ScenarioResponse = {
+	/**
+	 * Name
+	 */
+	name: string;
+	/**
+	 * Description
+	 */
+	description: string;
+	/**
+	 * Symbols
+	 */
+	symbols: Array<string>;
+	/**
+	 * Start Date
+	 */
+	start_date: Date | null;
+	/**
+	 * End Date
+	 */
+	end_date: Date | null;
+	/**
+	 * Baseline Backtest Ids
+	 */
+	baseline_backtest_ids: Array<string>;
+	/**
+	 * Benchmark Metrics
+	 */
+	benchmark_metrics: Array<BenchmarkMetric>;
+	/**
+	 * Stress Events
+	 */
+	stress_events: Array<ScenarioEvent>;
+	/**
+	 * Created At
+	 */
+	created_at: Date;
+	/**
+	 * Updated At
+	 */
+	updated_at: Date;
+};
+
+/**
+ * ScenarioUpdate
+ */
+export type ScenarioUpdate = {
+	/**
+	 * Description
+	 */
+	description?: string | null;
+	/**
+	 * Symbols
+	 */
+	symbols?: Array<string> | null;
+	/**
+	 * Start Date
+	 */
+	start_date?: Date | null;
+	/**
+	 * End Date
+	 */
+	end_date?: Date | null;
+	/**
+	 * Baseline Backtest Ids
+	 */
+	baseline_backtest_ids?: Array<string> | null;
+	/**
+	 * Benchmark Metrics
+	 */
+	benchmark_metrics?: Array<BenchmarkMetric> | null;
+	/**
+	 * Stress Events
+	 */
+	stress_events?: Array<ScenarioEvent> | null;
 };
 
 /**
@@ -5452,6 +7235,49 @@ export type WatchlistUpdate = {
 	 * Description
 	 */
 	description?: string | null;
+};
+
+/**
+ * MetricComparison
+ * Comparison between candidate and baseline.
+ */
+export type AppModelsEvaluationMetricComparison = {
+	/**
+	 * Metric Name
+	 * 메트릭 이름
+	 */
+	metric_name: string;
+	/**
+	 * Candidate
+	 * 후보 모델 값
+	 */
+	candidate: number;
+	/**
+	 * Baseline Average
+	 * 기준 평균
+	 */
+	baseline_average?: number | null;
+	/**
+	 * Delta
+	 * 차이
+	 */
+	delta?: number | null;
+};
+
+/**
+ * MetricComparison
+ */
+export type AppSchemasModelLifecycleMetricComparison = {
+	/**
+	 * Metric Name
+	 */
+	metric_name: string;
+	/**
+	 * Values
+	 */
+	values: {
+		[key: string]: number;
+	};
 };
 
 export type HealthHealthCheckData = {
@@ -9935,6 +11761,588 @@ export type MlCompareModelsResponses = {
 export type MlCompareModelsResponse =
 	MlCompareModelsResponses[keyof MlCompareModelsResponses];
 
+export type MlListExperimentsData = {
+	body?: never;
+	path?: never;
+	query?: {
+		/**
+		 * Owner
+		 */
+		owner?: string | null;
+		/**
+		 * Status
+		 */
+		status?: string | null;
+	};
+	url: "/api/v1/ml/lifecycle/experiments";
+};
+
+export type MlListExperimentsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlListExperimentsError =
+	MlListExperimentsErrors[keyof MlListExperimentsErrors];
+
+export type MlListExperimentsResponses = {
+	/**
+	 * Response Ml-List Experiments
+	 * Successful Response
+	 */
+	200: Array<ExperimentResponse>;
+};
+
+export type MlListExperimentsResponse =
+	MlListExperimentsResponses[keyof MlListExperimentsResponses];
+
+export type MlCreateExperimentData = {
+	body: ExperimentCreate;
+	path?: never;
+	query?: never;
+	url: "/api/v1/ml/lifecycle/experiments";
+};
+
+export type MlCreateExperimentErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlCreateExperimentError =
+	MlCreateExperimentErrors[keyof MlCreateExperimentErrors];
+
+export type MlCreateExperimentResponses = {
+	/**
+	 * Successful Response
+	 */
+	201: ExperimentResponse;
+};
+
+export type MlCreateExperimentResponse =
+	MlCreateExperimentResponses[keyof MlCreateExperimentResponses];
+
+export type MlUpdateExperimentData = {
+	body: ExperimentUpdate;
+	path: {
+		/**
+		 * Name
+		 */
+		name: string;
+	};
+	query?: never;
+	url: "/api/v1/ml/lifecycle/experiments/{name}";
+};
+
+export type MlUpdateExperimentErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlUpdateExperimentError =
+	MlUpdateExperimentErrors[keyof MlUpdateExperimentErrors];
+
+export type MlUpdateExperimentResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: ExperimentResponse;
+};
+
+export type MlUpdateExperimentResponse =
+	MlUpdateExperimentResponses[keyof MlUpdateExperimentResponses];
+
+export type MlListRunsData = {
+	body?: never;
+	path?: never;
+	query?: {
+		/**
+		 * Experiment Name
+		 */
+		experiment_name?: string | null;
+		/**
+		 * Statuses
+		 */
+		statuses?: Array<string> | null;
+	};
+	url: "/api/v1/ml/lifecycle/runs";
+};
+
+export type MlListRunsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlListRunsError = MlListRunsErrors[keyof MlListRunsErrors];
+
+export type MlListRunsResponses = {
+	/**
+	 * Response Ml-List Runs
+	 * Successful Response
+	 */
+	200: Array<RunResponse>;
+};
+
+export type MlListRunsResponse = MlListRunsResponses[keyof MlListRunsResponses];
+
+export type MlLogRunData = {
+	body: RunCreate;
+	path?: never;
+	query?: never;
+	url: "/api/v1/ml/lifecycle/runs";
+};
+
+export type MlLogRunErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlLogRunError = MlLogRunErrors[keyof MlLogRunErrors];
+
+export type MlLogRunResponses = {
+	/**
+	 * Successful Response
+	 */
+	201: RunResponse;
+};
+
+export type MlLogRunResponse = MlLogRunResponses[keyof MlLogRunResponses];
+
+export type MlGetRunData = {
+	body?: never;
+	path: {
+		/**
+		 * Run Id
+		 */
+		run_id: string;
+	};
+	query?: never;
+	url: "/api/v1/ml/lifecycle/runs/{run_id}";
+};
+
+export type MlGetRunErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlGetRunError = MlGetRunErrors[keyof MlGetRunErrors];
+
+export type MlGetRunResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: RunResponse;
+};
+
+export type MlGetRunResponse = MlGetRunResponses[keyof MlGetRunResponses];
+
+export type MlUpdateRunData = {
+	body: RunUpdate;
+	path: {
+		/**
+		 * Run Id
+		 */
+		run_id: string;
+	};
+	query?: never;
+	url: "/api/v1/ml/lifecycle/runs/{run_id}";
+};
+
+export type MlUpdateRunErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlUpdateRunError = MlUpdateRunErrors[keyof MlUpdateRunErrors];
+
+export type MlUpdateRunResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: RunResponse;
+};
+
+export type MlUpdateRunResponse =
+	MlUpdateRunResponses[keyof MlUpdateRunResponses];
+
+export type MlListModelVersionsData = {
+	body?: never;
+	path?: never;
+	query?: {
+		/**
+		 * Model Name
+		 */
+		model_name?: string | null;
+		/**
+		 * Stage
+		 */
+		stage?: string | null;
+	};
+	url: "/api/v1/ml/lifecycle/models";
+};
+
+export type MlListModelVersionsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlListModelVersionsError =
+	MlListModelVersionsErrors[keyof MlListModelVersionsErrors];
+
+export type MlListModelVersionsResponses = {
+	/**
+	 * Response Ml-List Model Versions
+	 * Successful Response
+	 */
+	200: Array<ModelVersionResponse>;
+};
+
+export type MlListModelVersionsResponse =
+	MlListModelVersionsResponses[keyof MlListModelVersionsResponses];
+
+export type MlRegisterModelVersionData = {
+	body: ModelVersionCreate;
+	path?: never;
+	query?: never;
+	url: "/api/v1/ml/lifecycle/models";
+};
+
+export type MlRegisterModelVersionErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlRegisterModelVersionError =
+	MlRegisterModelVersionErrors[keyof MlRegisterModelVersionErrors];
+
+export type MlRegisterModelVersionResponses = {
+	/**
+	 * Successful Response
+	 */
+	201: ModelVersionResponse;
+};
+
+export type MlRegisterModelVersionResponse =
+	MlRegisterModelVersionResponses[keyof MlRegisterModelVersionResponses];
+
+export type MlUpdateModelVersionData = {
+	body: ChecklistUpdateRequest;
+	path: {
+		/**
+		 * Model Name
+		 */
+		model_name: string;
+		/**
+		 * Version
+		 */
+		version: string;
+	};
+	query?: never;
+	url: "/api/v1/ml/lifecycle/models/{model_name}/{version}";
+};
+
+export type MlUpdateModelVersionErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlUpdateModelVersionError =
+	MlUpdateModelVersionErrors[keyof MlUpdateModelVersionErrors];
+
+export type MlUpdateModelVersionResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: ModelVersionResponse;
+};
+
+export type MlUpdateModelVersionResponse =
+	MlUpdateModelVersionResponses[keyof MlUpdateModelVersionResponses];
+
+export type MlCompareModelVersionsData = {
+	body: ModelComparisonRequest;
+	path: {
+		/**
+		 * Model Name
+		 */
+		model_name: string;
+	};
+	query?: never;
+	url: "/api/v1/ml/lifecycle/models/{model_name}/compare";
+};
+
+export type MlCompareModelVersionsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlCompareModelVersionsError =
+	MlCompareModelVersionsErrors[keyof MlCompareModelVersionsErrors];
+
+export type MlCompareModelVersionsResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: ModelComparisonResponse;
+};
+
+export type MlCompareModelVersionsResponse =
+	MlCompareModelVersionsResponses[keyof MlCompareModelVersionsResponses];
+
+export type MlListDriftEventsData = {
+	body?: never;
+	path?: never;
+	query?: {
+		/**
+		 * Model Name
+		 */
+		model_name?: string | null;
+		/**
+		 * Severity
+		 */
+		severity?: string | null;
+	};
+	url: "/api/v1/ml/lifecycle/drift-events";
+};
+
+export type MlListDriftEventsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlListDriftEventsError =
+	MlListDriftEventsErrors[keyof MlListDriftEventsErrors];
+
+export type MlListDriftEventsResponses = {
+	/**
+	 * Response Ml-List Drift Events
+	 * Successful Response
+	 */
+	200: Array<DriftEventResponse>;
+};
+
+export type MlListDriftEventsResponse =
+	MlListDriftEventsResponses[keyof MlListDriftEventsResponses];
+
+export type MlRecordDriftEventData = {
+	body: DriftEventCreate;
+	path?: never;
+	query?: never;
+	url: "/api/v1/ml/lifecycle/drift-events";
+};
+
+export type MlRecordDriftEventErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlRecordDriftEventError =
+	MlRecordDriftEventErrors[keyof MlRecordDriftEventErrors];
+
+export type MlRecordDriftEventResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: DriftEventResponse;
+};
+
+export type MlRecordDriftEventResponse =
+	MlRecordDriftEventResponses[keyof MlRecordDriftEventResponses];
+
+export type MlListScenariosData = {
+	body?: never;
+	path?: never;
+	query?: never;
+	url: "/api/v1/ml/evaluation/scenarios";
+};
+
+export type MlListScenariosResponses = {
+	/**
+	 * Response Ml-List Scenarios
+	 * Successful Response
+	 */
+	200: Array<ScenarioResponse>;
+};
+
+export type MlListScenariosResponse =
+	MlListScenariosResponses[keyof MlListScenariosResponses];
+
+export type MlRegisterScenarioData = {
+	body: ScenarioCreate;
+	path?: never;
+	query?: never;
+	url: "/api/v1/ml/evaluation/scenarios";
+};
+
+export type MlRegisterScenarioErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlRegisterScenarioError =
+	MlRegisterScenarioErrors[keyof MlRegisterScenarioErrors];
+
+export type MlRegisterScenarioResponses = {
+	/**
+	 * Successful Response
+	 */
+	201: ScenarioResponse;
+};
+
+export type MlRegisterScenarioResponse =
+	MlRegisterScenarioResponses[keyof MlRegisterScenarioResponses];
+
+export type MlUpdateScenarioData = {
+	body: ScenarioUpdate;
+	path: {
+		/**
+		 * Name
+		 */
+		name: string;
+	};
+	query?: never;
+	url: "/api/v1/ml/evaluation/scenarios/{name}";
+};
+
+export type MlUpdateScenarioErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlUpdateScenarioError =
+	MlUpdateScenarioErrors[keyof MlUpdateScenarioErrors];
+
+export type MlUpdateScenarioResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: ScenarioResponse;
+};
+
+export type MlUpdateScenarioResponse =
+	MlUpdateScenarioResponses[keyof MlUpdateScenarioResponses];
+
+export type MlListEvaluationRunsData = {
+	body?: never;
+	path?: never;
+	query?: {
+		/**
+		 * Scenario Name
+		 */
+		scenario_name?: string | null;
+	};
+	url: "/api/v1/ml/evaluation/runs";
+};
+
+export type MlListEvaluationRunsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlListEvaluationRunsError =
+	MlListEvaluationRunsErrors[keyof MlListEvaluationRunsErrors];
+
+export type MlListEvaluationRunsResponses = {
+	/**
+	 * Response Ml-List Evaluation Runs
+	 * Successful Response
+	 */
+	200: Array<EvaluationRunResponse>;
+};
+
+export type MlListEvaluationRunsResponse =
+	MlListEvaluationRunsResponses[keyof MlListEvaluationRunsResponses];
+
+export type MlRunEvaluationData = {
+	body: EvaluationRequest;
+	path?: never;
+	query?: never;
+	url: "/api/v1/ml/evaluation/runs";
+};
+
+export type MlRunEvaluationErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlRunEvaluationError =
+	MlRunEvaluationErrors[keyof MlRunEvaluationErrors];
+
+export type MlRunEvaluationResponses = {
+	/**
+	 * Successful Response
+	 */
+	201: EvaluationRunResponse;
+};
+
+export type MlRunEvaluationResponse =
+	MlRunEvaluationResponses[keyof MlRunEvaluationResponses];
+
+export type MlGetEvaluationReportData = {
+	body?: never;
+	path: {
+		/**
+		 * Run Id
+		 */
+		run_id: string;
+	};
+	query?: never;
+	url: "/api/v1/ml/evaluation/runs/{run_id}/report";
+};
+
+export type MlGetEvaluationReportErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlGetEvaluationReportError =
+	MlGetEvaluationReportErrors[keyof MlGetEvaluationReportErrors];
+
+export type MlGetEvaluationReportResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: EvaluationReport;
+};
+
+export type MlGetEvaluationReportResponse =
+	MlGetEvaluationReportResponses[keyof MlGetEvaluationReportResponses];
+
 export type ChatOpsExecuteChatopsData = {
 	body: ChatOpsRequest;
 	path?: never;
@@ -10188,6 +12596,36 @@ export type ChatOpsAdvancedCompareStrategiesResponses = {
 export type ChatOpsAdvancedCompareStrategiesResponse =
 	ChatOpsAdvancedCompareStrategiesResponses[keyof ChatOpsAdvancedCompareStrategiesResponses];
 
+export type ChatOpsAdvancedDebugCompareStrategiesData = {
+	body: StrategyComparisonRequest;
+	path?: never;
+	query?: never;
+	url: "/api/v1/chatops-advanced/strategies/compare/debug";
+};
+
+export type ChatOpsAdvancedDebugCompareStrategiesErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type ChatOpsAdvancedDebugCompareStrategiesError =
+	ChatOpsAdvancedDebugCompareStrategiesErrors[keyof ChatOpsAdvancedDebugCompareStrategiesErrors];
+
+export type ChatOpsAdvancedDebugCompareStrategiesResponses = {
+	/**
+	 * Response Chatops Advanced-Debug Compare Strategies
+	 * Successful Response
+	 */
+	200: {
+		[key: string]: unknown;
+	};
+};
+
+export type ChatOpsAdvancedDebugCompareStrategiesResponse =
+	ChatOpsAdvancedDebugCompareStrategiesResponses[keyof ChatOpsAdvancedDebugCompareStrategiesResponses];
+
 export type ChatOpsAdvancedTriggerAutoBacktestData = {
 	body: AutoBacktestRequest;
 	path?: never;
@@ -10219,3 +12657,750 @@ export type ChatOpsAdvancedTriggerAutoBacktestResponses = {
 
 export type ChatOpsAdvancedTriggerAutoBacktestResponse =
 	ChatOpsAdvancedTriggerAutoBacktestResponses[keyof ChatOpsAdvancedTriggerAutoBacktestResponses];
+
+export type FeatureStoreListFeaturesData = {
+	body?: never;
+	path?: never;
+	query?: {
+		/**
+		 * Owner
+		 */
+		owner?: string | null;
+		/**
+		 * Feature Type
+		 */
+		feature_type?: FeatureType | null;
+		/**
+		 * Status
+		 */
+		status?: FeatureStatus | null;
+		/**
+		 * Tags
+		 * Comma-separated tags
+		 */
+		tags?: string | null;
+		/**
+		 * Skip
+		 */
+		skip?: number;
+		/**
+		 * Limit
+		 */
+		limit?: number;
+	};
+	url: "/api/v1/features";
+};
+
+export type FeatureStoreListFeaturesErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type FeatureStoreListFeaturesError =
+	FeatureStoreListFeaturesErrors[keyof FeatureStoreListFeaturesErrors];
+
+export type FeatureStoreListFeaturesResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: FeatureListResponse;
+};
+
+export type FeatureStoreListFeaturesResponse =
+	FeatureStoreListFeaturesResponses[keyof FeatureStoreListFeaturesResponses];
+
+export type FeatureStoreCreateFeatureData = {
+	body: FeatureCreate;
+	path?: never;
+	query?: never;
+	url: "/api/v1/features";
+};
+
+export type FeatureStoreCreateFeatureErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type FeatureStoreCreateFeatureError =
+	FeatureStoreCreateFeatureErrors[keyof FeatureStoreCreateFeatureErrors];
+
+export type FeatureStoreCreateFeatureResponses = {
+	/**
+	 * Successful Response
+	 */
+	201: FeatureResponse;
+};
+
+export type FeatureStoreCreateFeatureResponse =
+	FeatureStoreCreateFeatureResponses[keyof FeatureStoreCreateFeatureResponses];
+
+export type FeatureStoreDeleteFeatureData = {
+	body?: never;
+	path: {
+		/**
+		 * Feature Name
+		 */
+		feature_name: string;
+	};
+	query?: never;
+	url: "/api/v1/features/{feature_name}";
+};
+
+export type FeatureStoreDeleteFeatureErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type FeatureStoreDeleteFeatureError =
+	FeatureStoreDeleteFeatureErrors[keyof FeatureStoreDeleteFeatureErrors];
+
+export type FeatureStoreDeleteFeatureResponses = {
+	/**
+	 * Successful Response
+	 */
+	204: void;
+};
+
+export type FeatureStoreDeleteFeatureResponse =
+	FeatureStoreDeleteFeatureResponses[keyof FeatureStoreDeleteFeatureResponses];
+
+export type FeatureStoreGetFeatureData = {
+	body?: never;
+	path: {
+		/**
+		 * Feature Name
+		 */
+		feature_name: string;
+	};
+	query?: never;
+	url: "/api/v1/features/{feature_name}";
+};
+
+export type FeatureStoreGetFeatureErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type FeatureStoreGetFeatureError =
+	FeatureStoreGetFeatureErrors[keyof FeatureStoreGetFeatureErrors];
+
+export type FeatureStoreGetFeatureResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: FeatureResponse;
+};
+
+export type FeatureStoreGetFeatureResponse =
+	FeatureStoreGetFeatureResponses[keyof FeatureStoreGetFeatureResponses];
+
+export type FeatureStoreUpdateFeatureData = {
+	body: FeatureUpdate;
+	path: {
+		/**
+		 * Feature Name
+		 */
+		feature_name: string;
+	};
+	query?: never;
+	url: "/api/v1/features/{feature_name}";
+};
+
+export type FeatureStoreUpdateFeatureErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type FeatureStoreUpdateFeatureError =
+	FeatureStoreUpdateFeatureErrors[keyof FeatureStoreUpdateFeatureErrors];
+
+export type FeatureStoreUpdateFeatureResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: FeatureResponse;
+};
+
+export type FeatureStoreUpdateFeatureResponse =
+	FeatureStoreUpdateFeatureResponses[keyof FeatureStoreUpdateFeatureResponses];
+
+export type FeatureStoreActivateFeatureData = {
+	body?: never;
+	path: {
+		/**
+		 * Feature Name
+		 */
+		feature_name: string;
+	};
+	query?: never;
+	url: "/api/v1/features/{feature_name}/activate";
+};
+
+export type FeatureStoreActivateFeatureErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type FeatureStoreActivateFeatureError =
+	FeatureStoreActivateFeatureErrors[keyof FeatureStoreActivateFeatureErrors];
+
+export type FeatureStoreActivateFeatureResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: FeatureResponse;
+};
+
+export type FeatureStoreActivateFeatureResponse =
+	FeatureStoreActivateFeatureResponses[keyof FeatureStoreActivateFeatureResponses];
+
+export type FeatureStoreDeprecateFeatureData = {
+	body?: never;
+	path: {
+		/**
+		 * Feature Name
+		 */
+		feature_name: string;
+	};
+	query?: never;
+	url: "/api/v1/features/{feature_name}/deprecate";
+};
+
+export type FeatureStoreDeprecateFeatureErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type FeatureStoreDeprecateFeatureError =
+	FeatureStoreDeprecateFeatureErrors[keyof FeatureStoreDeprecateFeatureErrors];
+
+export type FeatureStoreDeprecateFeatureResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: FeatureResponse;
+};
+
+export type FeatureStoreDeprecateFeatureResponse =
+	FeatureStoreDeprecateFeatureResponses[keyof FeatureStoreDeprecateFeatureResponses];
+
+export type FeatureStoreGetFeatureVersionsData = {
+	body?: never;
+	path: {
+		/**
+		 * Feature Name
+		 */
+		feature_name: string;
+	};
+	query?: never;
+	url: "/api/v1/features/{feature_name}/versions";
+};
+
+export type FeatureStoreGetFeatureVersionsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type FeatureStoreGetFeatureVersionsError =
+	FeatureStoreGetFeatureVersionsErrors[keyof FeatureStoreGetFeatureVersionsErrors];
+
+export type FeatureStoreGetFeatureVersionsResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: FeatureVersionListResponse;
+};
+
+export type FeatureStoreGetFeatureVersionsResponse =
+	FeatureStoreGetFeatureVersionsResponses[keyof FeatureStoreGetFeatureVersionsResponses];
+
+export type FeatureStoreCreateVersionData = {
+	body: FeatureVersionCreate;
+	path: {
+		/**
+		 * Feature Name
+		 */
+		feature_name: string;
+	};
+	query?: never;
+	url: "/api/v1/features/{feature_name}/versions";
+};
+
+export type FeatureStoreCreateVersionErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type FeatureStoreCreateVersionError =
+	FeatureStoreCreateVersionErrors[keyof FeatureStoreCreateVersionErrors];
+
+export type FeatureStoreCreateVersionResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: FeatureVersionResponse;
+};
+
+export type FeatureStoreCreateVersionResponse =
+	FeatureStoreCreateVersionResponses[keyof FeatureStoreCreateVersionResponses];
+
+export type FeatureStoreRollbackVersionData = {
+	body?: never;
+	path: {
+		/**
+		 * Feature Name
+		 */
+		feature_name: string;
+	};
+	query: {
+		/**
+		 * Target Version
+		 * 롤백할 버전
+		 */
+		target_version: string;
+	};
+	url: "/api/v1/features/{feature_name}/rollback";
+};
+
+export type FeatureStoreRollbackVersionErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type FeatureStoreRollbackVersionError =
+	FeatureStoreRollbackVersionErrors[keyof FeatureStoreRollbackVersionErrors];
+
+export type FeatureStoreRollbackVersionResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: FeatureVersionResponse;
+};
+
+export type FeatureStoreRollbackVersionResponse =
+	FeatureStoreRollbackVersionResponses[keyof FeatureStoreRollbackVersionResponses];
+
+export type FeatureStoreGetFeatureLineageData = {
+	body?: never;
+	path: {
+		/**
+		 * Feature Name
+		 */
+		feature_name: string;
+	};
+	query?: {
+		/**
+		 * Recursive
+		 * 재귀적 의존성 추적
+		 */
+		recursive?: boolean;
+	};
+	url: "/api/v1/features/{feature_name}/lineage";
+};
+
+export type FeatureStoreGetFeatureLineageErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type FeatureStoreGetFeatureLineageError =
+	FeatureStoreGetFeatureLineageErrors[keyof FeatureStoreGetFeatureLineageErrors];
+
+export type FeatureStoreGetFeatureLineageResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: FeatureLineageResponse;
+};
+
+export type FeatureStoreGetFeatureLineageResponse =
+	FeatureStoreGetFeatureLineageResponses[keyof FeatureStoreGetFeatureLineageResponses];
+
+export type FeatureStoreRecordFeatureUsageData = {
+	body: FeatureUsageCreate;
+	path?: never;
+	query?: never;
+	url: "/api/v1/features/usage";
+};
+
+export type FeatureStoreRecordFeatureUsageErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type FeatureStoreRecordFeatureUsageError =
+	FeatureStoreRecordFeatureUsageErrors[keyof FeatureStoreRecordFeatureUsageErrors];
+
+export type FeatureStoreRecordFeatureUsageResponses = {
+	/**
+	 * Successful Response
+	 */
+	201: FeatureUsageResponse;
+};
+
+export type FeatureStoreRecordFeatureUsageResponse =
+	FeatureStoreRecordFeatureUsageResponses[keyof FeatureStoreRecordFeatureUsageResponses];
+
+export type FeatureStoreGetFeatureStatisticsData = {
+	body?: never;
+	path: {
+		/**
+		 * Feature Name
+		 */
+		feature_name: string;
+	};
+	query?: never;
+	url: "/api/v1/features/{feature_name}/statistics";
+};
+
+export type FeatureStoreGetFeatureStatisticsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type FeatureStoreGetFeatureStatisticsError =
+	FeatureStoreGetFeatureStatisticsErrors[keyof FeatureStoreGetFeatureStatisticsErrors];
+
+export type FeatureStoreGetFeatureStatisticsResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: FeatureStatisticsResponse;
+};
+
+export type FeatureStoreGetFeatureStatisticsResponse =
+	FeatureStoreGetFeatureStatisticsResponses[keyof FeatureStoreGetFeatureStatisticsResponses];
+
+export type PromptGovernanceListPromptTemplatesData = {
+	body?: never;
+	path?: never;
+	query?: {
+		/**
+		 * Status
+		 */
+		status?: string | null;
+		/**
+		 * Tag
+		 */
+		tag?: string | null;
+	};
+	url: "/api/v1/prompt-governance/prompts/templates";
+};
+
+export type PromptGovernanceListPromptTemplatesErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type PromptGovernanceListPromptTemplatesError =
+	PromptGovernanceListPromptTemplatesErrors[keyof PromptGovernanceListPromptTemplatesErrors];
+
+export type PromptGovernanceListPromptTemplatesResponses = {
+	/**
+	 * Response Prompt Governance-List Prompt Templates
+	 * Successful Response
+	 */
+	200: Array<PromptTemplateResponse>;
+};
+
+export type PromptGovernanceListPromptTemplatesResponse =
+	PromptGovernanceListPromptTemplatesResponses[keyof PromptGovernanceListPromptTemplatesResponses];
+
+export type PromptGovernanceCreatePromptTemplateData = {
+	body: PromptTemplateCreate;
+	path?: never;
+	query?: never;
+	url: "/api/v1/prompt-governance/prompts/templates";
+};
+
+export type PromptGovernanceCreatePromptTemplateErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type PromptGovernanceCreatePromptTemplateError =
+	PromptGovernanceCreatePromptTemplateErrors[keyof PromptGovernanceCreatePromptTemplateErrors];
+
+export type PromptGovernanceCreatePromptTemplateResponses = {
+	/**
+	 * Successful Response
+	 */
+	201: PromptTemplateResponse;
+};
+
+export type PromptGovernanceCreatePromptTemplateResponse =
+	PromptGovernanceCreatePromptTemplateResponses[keyof PromptGovernanceCreatePromptTemplateResponses];
+
+export type PromptGovernanceUpdatePromptTemplateData = {
+	body: PromptTemplateUpdate;
+	path: {
+		/**
+		 * Prompt Id
+		 */
+		prompt_id: string;
+		/**
+		 * Version
+		 */
+		version: string;
+	};
+	query?: never;
+	url: "/api/v1/prompt-governance/prompts/templates/{prompt_id}/{version}";
+};
+
+export type PromptGovernanceUpdatePromptTemplateErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type PromptGovernanceUpdatePromptTemplateError =
+	PromptGovernanceUpdatePromptTemplateErrors[keyof PromptGovernanceUpdatePromptTemplateErrors];
+
+export type PromptGovernanceUpdatePromptTemplateResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: PromptTemplateResponse;
+};
+
+export type PromptGovernanceUpdatePromptTemplateResponse =
+	PromptGovernanceUpdatePromptTemplateResponses[keyof PromptGovernanceUpdatePromptTemplateResponses];
+
+export type PromptGovernanceSubmitPromptForReviewData = {
+	body: PromptWorkflowAction;
+	path: {
+		/**
+		 * Prompt Id
+		 */
+		prompt_id: string;
+		/**
+		 * Version
+		 */
+		version: string;
+	};
+	query?: never;
+	url: "/api/v1/prompt-governance/prompts/templates/{prompt_id}/{version}/submit";
+};
+
+export type PromptGovernanceSubmitPromptForReviewErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type PromptGovernanceSubmitPromptForReviewError =
+	PromptGovernanceSubmitPromptForReviewErrors[keyof PromptGovernanceSubmitPromptForReviewErrors];
+
+export type PromptGovernanceSubmitPromptForReviewResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: PromptTemplateResponse;
+};
+
+export type PromptGovernanceSubmitPromptForReviewResponse =
+	PromptGovernanceSubmitPromptForReviewResponses[keyof PromptGovernanceSubmitPromptForReviewResponses];
+
+export type PromptGovernanceApprovePromptData = {
+	body: PromptWorkflowAction;
+	path: {
+		/**
+		 * Prompt Id
+		 */
+		prompt_id: string;
+		/**
+		 * Version
+		 */
+		version: string;
+	};
+	query?: never;
+	url: "/api/v1/prompt-governance/prompts/templates/{prompt_id}/{version}/approve";
+};
+
+export type PromptGovernanceApprovePromptErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type PromptGovernanceApprovePromptError =
+	PromptGovernanceApprovePromptErrors[keyof PromptGovernanceApprovePromptErrors];
+
+export type PromptGovernanceApprovePromptResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: PromptTemplateResponse;
+};
+
+export type PromptGovernanceApprovePromptResponse =
+	PromptGovernanceApprovePromptResponses[keyof PromptGovernanceApprovePromptResponses];
+
+export type PromptGovernanceRejectPromptData = {
+	body: PromptWorkflowAction;
+	path: {
+		/**
+		 * Prompt Id
+		 */
+		prompt_id: string;
+		/**
+		 * Version
+		 */
+		version: string;
+	};
+	query?: never;
+	url: "/api/v1/prompt-governance/prompts/templates/{prompt_id}/{version}/reject";
+};
+
+export type PromptGovernanceRejectPromptErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type PromptGovernanceRejectPromptError =
+	PromptGovernanceRejectPromptErrors[keyof PromptGovernanceRejectPromptErrors];
+
+export type PromptGovernanceRejectPromptResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: PromptTemplateResponse;
+};
+
+export type PromptGovernanceRejectPromptResponse =
+	PromptGovernanceRejectPromptResponses[keyof PromptGovernanceRejectPromptResponses];
+
+export type PromptGovernanceEvaluatePromptData = {
+	body: PromptEvaluationRequest;
+	path?: never;
+	query?: never;
+	url: "/api/v1/prompt-governance/prompts/evaluate";
+};
+
+export type PromptGovernanceEvaluatePromptErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type PromptGovernanceEvaluatePromptError =
+	PromptGovernanceEvaluatePromptErrors[keyof PromptGovernanceEvaluatePromptErrors];
+
+export type PromptGovernanceEvaluatePromptResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: PromptEvaluationResponse;
+};
+
+export type PromptGovernanceEvaluatePromptResponse =
+	PromptGovernanceEvaluatePromptResponses[keyof PromptGovernanceEvaluatePromptResponses];
+
+export type PromptGovernanceLogPromptUsageData = {
+	body: PromptUsageLogCreate;
+	path: {
+		/**
+		 * Prompt Id
+		 */
+		prompt_id: string;
+		/**
+		 * Version
+		 */
+		version: string;
+	};
+	query?: never;
+	url: "/api/v1/prompt-governance/prompts/templates/{prompt_id}/{version}/usage";
+};
+
+export type PromptGovernanceLogPromptUsageErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type PromptGovernanceLogPromptUsageError =
+	PromptGovernanceLogPromptUsageErrors[keyof PromptGovernanceLogPromptUsageErrors];
+
+export type PromptGovernanceLogPromptUsageResponses = {
+	/**
+	 * Successful Response
+	 */
+	201: PromptUsageLogResponse;
+};
+
+export type PromptGovernanceLogPromptUsageResponse =
+	PromptGovernanceLogPromptUsageResponses[keyof PromptGovernanceLogPromptUsageResponses];
+
+export type PromptGovernanceListPromptAuditLogsData = {
+	body?: never;
+	path: {
+		/**
+		 * Prompt Id
+		 */
+		prompt_id: string;
+		/**
+		 * Version
+		 */
+		version: string;
+	};
+	query?: never;
+	url: "/api/v1/prompt-governance/prompts/templates/{prompt_id}/{version}/audit";
+};
+
+export type PromptGovernanceListPromptAuditLogsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type PromptGovernanceListPromptAuditLogsError =
+	PromptGovernanceListPromptAuditLogsErrors[keyof PromptGovernanceListPromptAuditLogsErrors];
+
+export type PromptGovernanceListPromptAuditLogsResponses = {
+	/**
+	 * Response Prompt Governance-List Prompt Audit Logs
+	 * Successful Response
+	 */
+	200: Array<PromptAuditLogResponse>;
+};
+
+export type PromptGovernanceListPromptAuditLogsResponse =
+	PromptGovernanceListPromptAuditLogsResponses[keyof PromptGovernanceListPromptAuditLogsResponses];
