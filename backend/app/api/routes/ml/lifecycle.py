@@ -47,9 +47,9 @@ async def create_experiment(
 
 @router.get("/experiments", response_model=list[ExperimentResponse])
 async def list_experiments(
+    service: Annotated[ModelLifecycleService, Depends(get_service)],
     owner: str | None = Query(default=None),
     status_filter: str | None = Query(default=None, alias="status"),
-    service: Annotated[ModelLifecycleService, Depends(get_service)] = Depends(),
 ) -> list[ExperimentResponse]:
     status_enum = None
     if status_filter:
@@ -69,7 +69,9 @@ async def update_experiment(
     payload: ExperimentUpdate,
     service: Annotated[ModelLifecycleService, Depends(get_service)],
 ) -> ExperimentResponse:
-    experiment = await service.update_experiment(name, payload.model_dump(exclude_none=True))
+    experiment = await service.update_experiment(
+        name, payload.model_dump(exclude_none=True)
+    )
     if experiment is None:
         raise HTTPException(status_code=404, detail="Experiment not found")
     return ExperimentResponse.model_validate(experiment)
@@ -101,9 +103,9 @@ async def update_run(
 
 @router.get("/runs", response_model=list[RunResponse])
 async def list_runs(
+    service: Annotated[ModelLifecycleService, Depends(get_service)],
     experiment_name: str | None = Query(default=None),
     statuses: list[str] | None = Query(default=None),
-    service: Annotated[ModelLifecycleService, Depends(get_service)] = Depends(),
 ) -> list[RunResponse]:
     status_enums = None
     if statuses:
@@ -166,21 +168,26 @@ async def update_model_version(
     if version_doc is None:
         raise HTTPException(status_code=404, detail="Model version not found")
     if payload.approved_by:
-        version_doc = await service.mark_checklist_status(
-            model_name,
-            version,
-            checklist=updates.get("approval_checklist", version_doc.approval_checklist),
-            approved_by=payload.approved_by,
-            approval_notes=payload.approval_notes,
-        ) or version_doc
+        version_doc = (
+            await service.mark_checklist_status(
+                model_name,
+                version,
+                checklist=updates.get(
+                    "approval_checklist", version_doc.approval_checklist
+                ),
+                approved_by=payload.approved_by,
+                approval_notes=payload.approval_notes,
+            )
+            or version_doc
+        )
     return ModelVersionResponse.model_validate(version_doc)
 
 
 @router.get("/models", response_model=list[ModelVersionResponse])
 async def list_model_versions(
+    service: Annotated[ModelLifecycleService, Depends(get_service)],
     model_name: str | None = Query(default=None),
     stage: str | None = Query(default=None),
-    service: Annotated[ModelLifecycleService, Depends(get_service)] = Depends(),
 ) -> list[ModelVersionResponse]:
     stage_enum = None
     if stage:
@@ -190,7 +197,9 @@ async def list_model_versions(
             stage_enum = ModelStage(stage)
         except ValueError:
             raise HTTPException(status_code=400, detail="Invalid stage value")
-    versions = await service.list_model_versions(model_name=model_name, stage=stage_enum)
+    versions = await service.list_model_versions(
+        model_name=model_name, stage=stage_enum
+    )
     return [ModelVersionResponse.model_validate(item) for item in versions]
 
 
@@ -222,9 +231,9 @@ async def record_drift_event(
 
 @router.get("/drift-events", response_model=list[DriftEventResponse])
 async def list_drift_events(
+    service: Annotated[ModelLifecycleService, Depends(get_service)],
     model_name: str | None = Query(default=None),
     severity: str | None = Query(default=None),
-    service: Annotated[ModelLifecycleService, Depends(get_service)] = Depends(),
 ) -> list[DriftEventResponse]:
     severity_enum = None
     if severity:
@@ -234,5 +243,7 @@ async def list_drift_events(
             severity_enum = DriftSeverity(severity)
         except ValueError:
             raise HTTPException(status_code=400, detail="Invalid severity value")
-    events = await service.list_drift_events(model_name=model_name, severity=severity_enum)
+    events = await service.list_drift_events(
+        model_name=model_name, severity=severity_enum
+    )
     return [DriftEventResponse.model_validate(event) for event in events]

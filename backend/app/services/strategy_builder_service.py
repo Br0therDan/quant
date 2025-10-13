@@ -8,7 +8,7 @@ Phase 3 D2: Interactive Strategy Builder
 import json
 import logging
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
 from openai import AsyncOpenAI
@@ -142,7 +142,7 @@ class StrategyBuilderService:
         if not self.client:
             raise Exception("OpenAI client not initialized. Check OPENAI_API_KEY.")
 
-        start_time = datetime.utcnow()
+        start_time = datetime.now(timezone.utc)
 
         # 1. 의도 파싱 (IntentType 분류)
         parsed_intent = await self._parse_intent(request)
@@ -167,7 +167,9 @@ class StrategyBuilderService:
                 )
 
         # 3. 처리 시간 계산
-        processing_time_ms = (datetime.utcnow() - start_time).total_seconds() * 1000
+        processing_time_ms = (
+            datetime.now(timezone.utc) - start_time
+        ).total_seconds() * 1000
 
         # 4. 응답 구성
         status = "success" if not validation_errors else "warning"
@@ -464,7 +466,7 @@ JSON 형식으로 응답하세요:
                     is_valid = False
                     message = f"잘못된 타입: {type(param_value).__name__}, 예상: {rule['type'].__name__}"
                     suggested_value = (
-                        rule["type"](param_value) if rule["type"] == int else None
+                        rule["type"](param_value) if rule["type"] is int else None
                     )
 
                 # 범위 체크

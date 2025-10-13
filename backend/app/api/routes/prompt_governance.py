@@ -27,7 +27,11 @@ def get_service() -> PromptGovernanceService:
     return service_factory.get_prompt_governance_service()
 
 
-@router.post("/templates", response_model=PromptTemplateResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/templates",
+    response_model=PromptTemplateResponse,
+    status_code=status.HTTP_201_CREATED,
+)
 async def create_prompt_template(
     payload: PromptTemplateCreate,
     service: Annotated[PromptGovernanceService, Depends(get_service)],
@@ -58,9 +62,9 @@ async def update_prompt_template(
 
 @router.get("/templates", response_model=list[PromptTemplateResponse])
 async def list_prompt_templates(
+    service: Annotated[PromptGovernanceService, Depends(get_service)],
     status_filter: str | None = Query(default=None, alias="status"),
     tag: str | None = Query(default=None),
-    service: Annotated[PromptGovernanceService, Depends(get_service)] = Depends(),
 ) -> list[PromptTemplateResponse]:
     status_enum = None
     if status_filter:
@@ -74,20 +78,26 @@ async def list_prompt_templates(
     return [PromptTemplateResponse.model_validate(item) for item in templates]
 
 
-@router.post("/templates/{prompt_id}/{version}/submit", response_model=PromptTemplateResponse)
+@router.post(
+    "/templates/{prompt_id}/{version}/submit", response_model=PromptTemplateResponse
+)
 async def submit_prompt_for_review(
     prompt_id: str,
     version: str,
     action: PromptWorkflowAction,
     service: Annotated[PromptGovernanceService, Depends(get_service)],
 ) -> PromptTemplateResponse:
-    template = await service.submit_for_review(prompt_id, version, reviewer=action.reviewer)
+    template = await service.submit_for_review(
+        prompt_id, version, reviewer=action.reviewer
+    )
     if template is None:
         raise HTTPException(status_code=404, detail="Prompt template not found")
     return PromptTemplateResponse.model_validate(template)
 
 
-@router.post("/templates/{prompt_id}/{version}/approve", response_model=PromptTemplateResponse)
+@router.post(
+    "/templates/{prompt_id}/{version}/approve", response_model=PromptTemplateResponse
+)
 async def approve_prompt(
     prompt_id: str,
     version: str,
@@ -105,7 +115,9 @@ async def approve_prompt(
     return PromptTemplateResponse.model_validate(template)
 
 
-@router.post("/templates/{prompt_id}/{version}/reject", response_model=PromptTemplateResponse)
+@router.post(
+    "/templates/{prompt_id}/{version}/reject", response_model=PromptTemplateResponse
+)
 async def reject_prompt(
     prompt_id: str,
     version: str,
@@ -132,7 +144,11 @@ async def evaluate_prompt(
     return PromptEvaluationResponse(evaluation=evaluation)
 
 
-@router.post("/templates/{prompt_id}/{version}/usage", response_model=PromptUsageLogResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/templates/{prompt_id}/{version}/usage",
+    response_model=PromptUsageLogResponse,
+    status_code=status.HTTP_201_CREATED,
+)
 async def log_prompt_usage(
     prompt_id: str,
     version: str,
@@ -140,12 +156,17 @@ async def log_prompt_usage(
     service: Annotated[PromptGovernanceService, Depends(get_service)],
 ) -> PromptUsageLogResponse:
     if payload.prompt_id != prompt_id or payload.version != version:
-        raise HTTPException(status_code=400, detail="Payload prompt identifiers mismatch")
+        raise HTTPException(
+            status_code=400, detail="Payload prompt identifiers mismatch"
+        )
     log_entry = await service.log_usage(payload.model_dump())
     return PromptUsageLogResponse.model_validate(log_entry)
 
 
-@router.get("/templates/{prompt_id}/{version}/audit", response_model=list[PromptAuditLogResponse])
+@router.get(
+    "/templates/{prompt_id}/{version}/audit",
+    response_model=list[PromptAuditLogResponse],
+)
 async def list_prompt_audit_logs(
     prompt_id: str,
     version: str,

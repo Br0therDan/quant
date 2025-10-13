@@ -5,7 +5,7 @@ Backtest API Schemas
 from datetime import datetime
 from typing import Any
 
-from pydantic import Field
+from pydantic import ConfigDict, Field
 from .base_schema import BaseSchema
 from app.models.backtest import (
     BacktestConfig,
@@ -38,8 +38,8 @@ class BacktestExecutionRequest(BaseSchema):
 
     signals: list[dict[str, Any]] = Field(..., description="트레이딩 시그널 목록")
 
-    class Config:
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "signals": [
                     {
@@ -57,6 +57,7 @@ class BacktestExecutionRequest(BaseSchema):
                 ]
             }
         }
+    )
 
 
 # Response Schemas

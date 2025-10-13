@@ -88,7 +88,7 @@ class ModelLifecycleService:
             cursor = ModelExperiment.find_all()
 
         experiments = await cursor.sort(
-            (ModelExperiment.created_at, SortDirection.DESCENDING)
+            ("created_at", SortDirection.DESCENDING)
         ).to_list()
         return experiments
 
@@ -106,9 +106,7 @@ class ModelLifecycleService:
 
         run = ModelRun(**payload)
         await run.insert()
-        logger.info(
-            "Logged run %s for experiment %s", run.run_id, run.experiment_name
-        )
+        logger.info("Logged run %s for experiment %s", run.run_id, run.experiment_name)
 
         await self._sync_run_to_mlflow(run)
         return run
@@ -145,9 +143,7 @@ class ModelLifecycleService:
         else:
             cursor = ModelRun.find_all()
 
-        runs = await cursor.sort(
-            (ModelRun.started_at, SortDirection.DESCENDING)
-        ).to_list()
+        runs = await cursor.sort(("started_at", SortDirection.DESCENDING)).to_list()
         return runs
 
     async def get_run(self, run_id: str) -> ModelRun | None:
@@ -156,12 +152,10 @@ class ModelLifecycleService:
     # ------------------------------------------------------------------
     # Model registry
     # ------------------------------------------------------------------
-    async def register_model_version(
-        self, payload: dict[str, Any]
-    ) -> ModelVersion:
+    async def register_model_version(self, payload: dict[str, Any]) -> ModelVersion:
         existing = await ModelVersion.find_one(
-            (ModelVersion.model_name == payload["model_name"]) &
-            (ModelVersion.version == payload["version"])
+            (ModelVersion.model_name == payload["model_name"])
+            & (ModelVersion.version == payload["version"])
         )
         if existing:
             raise ValueError(
@@ -181,8 +175,7 @@ class ModelLifecycleService:
         self, model_name: str, version: str, payload: dict[str, Any]
     ) -> ModelVersion | None:
         registry_entry = await ModelVersion.find_one(
-            (ModelVersion.model_name == model_name)
-            & (ModelVersion.version == version)
+            (ModelVersion.model_name == model_name) & (ModelVersion.version == version)
         )
         if registry_entry is None:
             return None
@@ -196,17 +189,16 @@ class ModelLifecycleService:
 
     async def compare_model_versions(
         self, model_name: str, versions: list[str]
-    ) -> dict[str, float | dict[str, float]]:
+    ) -> dict[str, dict[str, float]]:
         entries = await ModelVersion.find(
-            (ModelVersion.model_name == model_name)
-            & In(ModelVersion.version, versions)
+            ModelVersion.model_name == model_name, In(ModelVersion.version, versions)
         ).to_list()
         metrics: dict[str, dict[str, float]] = {}
         for entry in entries:
             for snapshot in entry.metrics:
-                metrics.setdefault(snapshot.metric_name, {})[entry.version] = (
-                    snapshot.value
-                )
+                metrics.setdefault(snapshot.metric_name, {})[
+                    entry.version
+                ] = snapshot.value
         return metrics
 
     async def list_model_versions(
@@ -226,9 +218,7 @@ class ModelLifecycleService:
         else:
             cursor = ModelVersion.find_all()
 
-        versions = await cursor.sort(
-            (ModelVersion.created_at, SortDirection.DESCENDING)
-        ).to_list()
+        versions = await cursor.sort(("created_at", SortDirection.DESCENDING)).to_list()
         return versions
 
     # ------------------------------------------------------------------
@@ -263,9 +253,7 @@ class ModelLifecycleService:
         else:
             cursor = DriftEvent.find_all()
 
-        return await cursor.sort(
-            (DriftEvent.detected_at, SortDirection.DESCENDING)
-        ).to_list()
+        return await cursor.sort(("detected_at", SortDirection.DESCENDING)).to_list()
 
     # ------------------------------------------------------------------
     # Helpers
@@ -304,8 +292,7 @@ class ModelLifecycleService:
         item: DeploymentChecklistItem,
     ) -> ModelVersion | None:
         entry = await ModelVersion.find_one(
-            (ModelVersion.model_name == model_name)
-            & (ModelVersion.version == version)
+            (ModelVersion.model_name == model_name) & (ModelVersion.version == version)
         )
         if entry is None:
             return None
@@ -330,8 +317,7 @@ class ModelLifecycleService:
         approval_notes: str | None = None,
     ) -> ModelVersion | None:
         entry = await ModelVersion.find_one(
-            (ModelVersion.model_name == model_name)
-            & (ModelVersion.version == version)
+            (ModelVersion.model_name == model_name) & (ModelVersion.version == version)
         )
         if entry is None:
             return None
@@ -352,8 +338,7 @@ class ModelLifecycleService:
         self, model_name: str, version: str, stage: ModelStage
     ) -> ModelVersion | None:
         entry = await ModelVersion.find_one(
-            (ModelVersion.model_name == model_name)
-            & (ModelVersion.version == version)
+            (ModelVersion.model_name == model_name) & (ModelVersion.version == version)
         )
         if entry is None:
             return None
@@ -378,6 +363,8 @@ def build_checklist(
         resolved = ChecklistStatus.PENDING
 
     return [
-        DeploymentChecklistItem(name=name, status=resolved)
+        DeploymentChecklistItem(
+            name=name, status=resolved, note=None, completed_at=None
+        )
         for name in items
     ]

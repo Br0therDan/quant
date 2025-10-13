@@ -5,7 +5,7 @@ from typing import Any, Dict, List
 
 from beanie import Document
 from pymongo import IndexModel, ASCENDING, DESCENDING
-from pydantic import Field
+from pydantic import ConfigDict, Field
 
 from app.schemas.chatops import ConversationTurn
 
@@ -46,8 +46,8 @@ class ChatSessionDocument(Document):
             ),
         ]
 
-    class Config:
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "session_id": "ce6887b6-a78e-4621-bae7-7869a046135a",
                 "user_id": "test_user",
@@ -65,3 +65,4 @@ class ChatSessionDocument(Document):
                 "is_active": True,
             }
         }
+    )

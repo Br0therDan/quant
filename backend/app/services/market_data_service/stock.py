@@ -4,7 +4,7 @@ Stock data service implementation
 """
 
 from typing import List, Literal, Optional, cast
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 import logging
 
@@ -57,7 +57,7 @@ class StockService(BaseMarketDataService):
         # Full update가 필요한지 확인 (최초 또는 7일 이상 경과)
         needs_full_update = (
             coverage.last_full_update is None
-            or (datetime.utcnow() - coverage.last_full_update).days >= 7
+            or (datetime.now(timezone.utc) - coverage.last_full_update).days >= 7
         )
 
         # MongoDB에서 기존 데이터 조회
@@ -105,7 +105,7 @@ class StockService(BaseMarketDataService):
         # Full update가 필요한지 확인 (최초 또는 30일 이상 경과)
         needs_full_update = (
             coverage.last_full_update is None
-            or (datetime.utcnow() - coverage.last_full_update).days >= 30
+            or (datetime.now(timezone.utc) - coverage.last_full_update).days >= 30
         )
 
         if needs_full_update:
@@ -142,7 +142,7 @@ class StockService(BaseMarketDataService):
         # Full update가 필요한지 확인 (최초 또는 60일 이상 경과)
         needs_full_update = (
             coverage.last_full_update is None
-            or (datetime.utcnow() - coverage.last_full_update).days >= 60
+            or (datetime.now(timezone.utc) - coverage.last_full_update).days >= 60
         )
 
         if needs_full_update:
@@ -176,9 +176,7 @@ class StockService(BaseMarketDataService):
             if outputsize not in ["compact", "full"]:
                 outputsize = "compact"
 
-            logger.info(
-                f"Alpha Vantage API 호출 시작: {symbol}, outputsize={outputsize}"
-            )
+            logger.info(f"Alpha Vantage API 호출 시작: {symbol}, outputsize={outputsize}")
 
             response = await self.alpha_vantage.stock.daily_adjusted(
                 symbol=symbol.upper().strip(),
@@ -315,6 +313,12 @@ class StockService(BaseMarketDataService):
                             source="alpha_vantage",
                             price_change=Decimal("0.0"),
                             price_change_percent=Decimal("0.0"),
+                            # Provide default anomaly-related fields required by the model
+                            iso_anomaly_score=0.0,
+                            prophet_anomaly_score=0.0,
+                            volume_z_score=0.0,
+                            anomaly_severity=None,
+                            anomaly_reasons=[],
                         )
                         daily_prices.append(daily_price)
                     except (ValueError, KeyError) as e:
@@ -580,6 +584,12 @@ class StockService(BaseMarketDataService):
                                 source="alpha_vantage",
                                 price_change=Decimal("0.0"),
                                 price_change_percent=Decimal("0.0"),
+                                # Anomaly 필드 추가
+                                iso_anomaly_score=0.0,
+                                prophet_anomaly_score=0.0,
+                                volume_z_score=0.0,
+                                anomaly_severity=None,
+                                anomaly_reasons=[],
                             )
                             daily_prices.append(daily_price)
                         except (ValueError, KeyError) as parse_error:
@@ -873,7 +883,9 @@ class StockService(BaseMarketDataService):
                     # datetime 또는 date 필드 확인
                     date_value = item.get("datetime") or item.get("date")
                     if not date_value:
-                        logger.warning(f"⚠️ Missing datetime/date field in item: {item}")
+                        logger.warning(
+                            f"⚠️ Missing datetime/date field in item: {item}"
+                        )
                         continue
 
                     # datetime 객체로 변환
@@ -920,9 +932,7 @@ class StockService(BaseMarketDataService):
                     logger.warning(f"⚠️ Failed to parse intraday data: {e}")
                     continue
 
-            logger.info(
-                f"✅ Parsed {len(intraday_prices)} intraday prices for {symbol}"
-            )
+            logger.info(f"✅ Parsed {len(intraday_prices)} intraday prices for {symbol}")
             return intraday_prices
 
         except Exception as e:
@@ -1073,14 +1083,16 @@ class StockService(BaseMarketDataService):
         coverage.last_date = last_date
 
         if update_type == "full":
-            coverage.last_full_update = datetime.utcnow()
+            coverage.last_full_update = datetime.now(timezone.utc)
         else:
-            coverage.last_delta_update = datetime.utcnow()
+            coverage.last_delta_update = datetime.now(timezone.utc)
 
         # 다음 업데이트 예정일 (daily는 1일, weekly는 7일, monthly는 30일 후)
         update_intervals = {"daily": 1, "weekly": 7, "monthly": 30}
         days_offset = update_intervals.get(coverage.data_type, 1)
-        coverage.next_update_due = datetime.utcnow() + timedelta(days=days_offset)
+        coverage.next_update_due = datetime.now(timezone.utc) + timedelta(
+            days=days_offset
+        )
 
         await coverage.save()
 

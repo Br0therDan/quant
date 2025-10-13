@@ -5,7 +5,7 @@ Strategy API Schemas
 from datetime import datetime
 from typing import Any
 
-from pydantic import Field
+from pydantic import ConfigDict, Field
 from .base_schema import BaseSchema
 from app.models.strategy import SignalType, StrategyType, StrategyConfigUnion
 
@@ -93,8 +93,7 @@ class StrategyResponse(BaseSchema):
     updated_at: datetime = Field(..., description="수정 시간")
     tags: list[str] = Field(default_factory=list, description="태그")
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class TemplateResponse(BaseSchema):
@@ -113,8 +112,7 @@ class TemplateResponse(BaseSchema):
     updated_at: datetime = Field(..., description="수정 시간")
     tags: list[str] = Field(default_factory=list, description="태그")
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class ExecutionResponse(BaseSchema):
@@ -132,8 +130,7 @@ class ExecutionResponse(BaseSchema):
     backtest_id: str | None = Field(None, description="백테스트 ID")
     created_at: datetime = Field(..., description="생성 시간")
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class PerformanceResponse(BaseSchema):
@@ -160,8 +157,7 @@ class PerformanceResponse(BaseSchema):
     created_at: datetime = Field(..., description="생성 시간")
     updated_at: datetime = Field(..., description="수정 시간")
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # List Response Schemas

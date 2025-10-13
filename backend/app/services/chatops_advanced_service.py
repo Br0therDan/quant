@@ -7,7 +7,7 @@ Phase 3 D3: Multi-turn conversation, strategy comparison, auto backtest triggeri
 import json
 import logging
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 from openai import AsyncOpenAI
@@ -62,8 +62,8 @@ class ChatOpsAdvancedService:
             user_id=user_id,
             conversation_history=[],
             context={},
-            created_at=datetime.utcnow(),
-            updated_at=datetime.utcnow(),
+            created_at=datetime.now(timezone.utc),
+            updated_at=datetime.now(timezone.utc),
             is_active=True,
         )
 
@@ -155,7 +155,7 @@ class ChatOpsAdvancedService:
             role=ConversationRole.ASSISTANT, content=answer, metadata=None
         )
         session_doc.conversation_history.append(assistant_turn)
-        session_doc.updated_at = datetime.utcnow()
+        session_doc.updated_at = datetime.now(timezone.utc)
 
         # MongoDB 업데이트
         await session_doc.save()

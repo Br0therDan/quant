@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import List, Optional
+from pydantic import ConfigDict
 from .base_schema import BaseSchema
 
 
@@ -28,8 +29,7 @@ class WatchlistResponse(BaseSchema):
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class WatchlistListResponse(BaseSchema):
@@ -38,5 +38,4 @@ class WatchlistListResponse(BaseSchema):
     watchlists: List[WatchlistResponse] = []
     total_count: int = 0
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

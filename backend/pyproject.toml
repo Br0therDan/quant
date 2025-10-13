@@ -30,6 +30,7 @@ dependencies = [
     "optuna>=4.5.0",
     "scikit-learn>=1.7.2",
     "openai>=2.3.0",
+    "mlflow>=3.4.0",
 ]
 
 [project.optional-dependencies]

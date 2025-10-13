@@ -105,10 +105,10 @@ async def get_stock_update_status():
     현재 업데이트가 필요한 Coverage 수 조회
     """
     try:
-        from datetime import datetime
+        from datetime import datetime, timezone
         from app.models.market_data.stock import StockDataCoverage
 
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
 
         # 만료된 Coverage 수
         expired_count = await StockDataCoverage.find(

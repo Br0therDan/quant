@@ -6,7 +6,7 @@ Stock data update tasks
 """
 
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 
 from app.models.market_data.stock import StockDataCoverage
 from app.services.service_factory import service_factory
@@ -28,7 +28,7 @@ async def update_stock_data_coverage() -> dict:
         market_service = service_factory.get_market_data_service()
 
         # 업데이트가 필요한 Coverage 찾기 (next_update_due가 현재 시간보다 이전)
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         expired_coverages = await StockDataCoverage.find(
             {"is_active": True, "next_update_due": {"$lte": now}}
         ).to_list()

@@ -24,7 +24,9 @@ def get_service() -> EvaluationHarnessService:
     return service_factory.get_evaluation_harness_service()
 
 
-@router.post("/scenarios", response_model=ScenarioResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/scenarios", response_model=ScenarioResponse, status_code=status.HTTP_201_CREATED
+)
 async def register_scenario(
     payload: ScenarioCreate,
     service: Annotated[EvaluationHarnessService, Depends(get_service)],
@@ -42,7 +44,9 @@ async def update_scenario(
     payload: ScenarioUpdate,
     service: Annotated[EvaluationHarnessService, Depends(get_service)],
 ) -> ScenarioResponse:
-    scenario = await service.update_scenario(name, payload.model_dump(exclude_none=True))
+    scenario = await service.update_scenario(
+        name, payload.model_dump(exclude_none=True)
+    )
     if scenario is None:
         raise HTTPException(status_code=404, detail="Scenario not found")
     return ScenarioResponse.model_validate(scenario)
@@ -50,13 +54,15 @@ async def update_scenario(
 
 @router.get("/scenarios", response_model=list[ScenarioResponse])
 async def list_scenarios(
-    service: Annotated[EvaluationHarnessService, Depends(get_service)] = Depends(),
+    service: Annotated[EvaluationHarnessService, Depends(get_service)],
 ) -> list[ScenarioResponse]:
     scenarios = await service.list_scenarios()
     return [ScenarioResponse.model_validate(item) for item in scenarios]
 
 
-@router.post("/runs", response_model=EvaluationRunResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/runs", response_model=EvaluationRunResponse, status_code=status.HTTP_201_CREATED
+)
 async def run_evaluation(
     payload: EvaluationRequest,
     service: Annotated[EvaluationHarnessService, Depends(get_service)],
@@ -70,8 +76,8 @@ async def run_evaluation(
 
 @router.get("/runs", response_model=list[EvaluationRunResponse])
 async def list_evaluation_runs(
+    service: Annotated[EvaluationHarnessService, Depends(get_service)],
     scenario_name: str | None = Query(default=None),
-    service: Annotated[EvaluationHarnessService, Depends(get_service)] = Depends(),
 ) -> list[EvaluationRunResponse]:
     runs = await service.list_runs(scenario_name=scenario_name)
     return [EvaluationRunResponse.model_validate(run) for run in runs]
