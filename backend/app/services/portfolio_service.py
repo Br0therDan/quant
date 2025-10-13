@@ -185,9 +185,7 @@ class PortfolioService:
                     portfolio_value=round(portfolio_value, 2),
                     pnl=round(pnl, 2),
                     pnl_percentage=round(pnl_percentage, 4),
-                    benchmark_value=round(
-                        base_value * 1.001, 2
-                    ),  # 벤치마크는 약간의 성장
+                    benchmark_value=round(base_value * 1.001, 2),  # 벤치마크는 약간의 성장
                 )
             )
 
@@ -256,3 +254,46 @@ class PortfolioService:
             sharpe_ratio=round(sharpe_ratio, 2),
             max_drawdown=round(max_drawdown, 2),
         )
+
+    async def get_portfolio_forecast(
+        self, user_id: str, horizon_days: int = 30
+    ) -> PortfolioForecastDistribution:
+        """포트폴리오 확률적 예측을 생성합니다.
+
+        Args:
+            user_id: 사용자 ID
+            horizon_days: 예측 기간 (일)
+
+        Returns:
+            백분위 예측 분포
+
+        Raises:
+            Exception: probabilistic_service가 주입되지 않은 경우
+            ValueError: 포트폴리오 히스토리가 없는 경우
+        """
+        if self.probabilistic_service is None:
+            raise Exception(
+                "ProbabilisticKPIService가 주입되지 않았습니다. "
+                "ServiceFactory를 통해 PortfolioService를 생성하세요."
+            )
+
+        try:
+            # 최근 포트폴리오 성과 데이터 조회 (6개월)
+            performance = await self.get_portfolio_performance(
+                user_id=user_id, period="6M", granularity="day"
+            )
+
+            if not performance.data_points:
+                raise ValueError(f"사용자 {user_id}의 포트폴리오 히스토리가 없습니다")
+
+            # ProbabilisticKPIService로 예측 생성
+            forecast = await self.probabilistic_service.forecast_from_history(
+                data_points=performance.data_points, horizon_days=horizon_days
+            )
+
+            return forecast
+
+        except ValueError:
+            raise
+        except Exception as e:
+            raise Exception(f"포트폴리오 예측 생성 실패: {str(e)}")

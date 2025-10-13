@@ -2,7 +2,7 @@
 
 > **최종 업데이트**: 2025년 10월 14일  
 > **통합 프로젝트**: AI Integration 로드맵 기준  
-> **현재 상태**: Phase 3 완료 (100%), AI Integration Phase 1 진행 중 (35%)
+> **현재 상태**: Phase 2 완료 (100%), Phase 3 진행 중 (50%)
 
 ## 개요
 
@@ -14,7 +14,12 @@
 - ✅ 백테스트 실행 (완료 - 병렬 처리)
 - ✅ 성과 분석 (완료 - 기본 메트릭)
 - ✅ ML 기반 신호 생성 (완료 - LightGBM 90.6% 정확도)
-- 🟡 시장 국면 분류 (진행 중 - AI Integration Phase 1.2)
+- ✅ 시장 국면 분류 (완료 - HMM 기반)
+- ✅ 확률 KPI 예측 (완료 - Gaussian 투영)
+- ✅ 백테스트 최적화 (완료 - Optuna)
+- ✅ 데이터 품질 모니터링 (완료 - Isolation Forest)
+- ✅ 내러티브 리포트 생성 (완료 - OpenAI GPT-4, 90%)
+- ✅ ChatOps 에이전트 (완료 - 기본 기능)
 - ⚪ 고급 리스크 메트릭 (계획 - VaR, CVaR, Sortino, Calmar)
 - ⚪ 멀티 전략 포트폴리오 (계획 - Markowitz 최적화)
 
@@ -141,42 +146,37 @@ graph TB
 
 ### ✅ 완료된 기능 (Phase 3)
 
-| 기능                | 엔드포인트                               | 서비스 레이어                                                           | 설명                     | 참고사항             |
-| ------------------- | ---------------------------------------- | ----------------------------------------------------------------------- | ------------------------ | -------------------- |
-| 전략 목록 조회      | `GET /strategies`                        | `StrategyService.get_strategies()`                                      | 저장된 전략 템플릿 목록  | MongoDB 조회         |
-| 전략 생성           | `POST /strategies`                       | `StrategyService.create_strategy()`                                     | 새 전략 템플릿 생성      | Pydantic 검증        |
-| 백테스트 생성       | `POST /backtests`                        | `BacktestService.create_backtest()` → `Orchestrator.execute_backtest()` | 백테스트 실행 요청       | 비동기 실행          |
-| 백테스트 상태 조회  | `GET /backtests/{id}`                    | `BacktestService.get_backtest()`                                        | 실행 상태 및 결과        | MongoDB 조회         |
-| 포트폴리오 히스토리 | `GET /backtests/{id}/portfolio-history`  | `DatabaseManager.get_portfolio_history()`                               | 시계열 포트폴리오 변화   | DuckDB 고속 조회     |
-| 거래 내역           | `GET /backtests/{id}/trades-history`     | `DatabaseManager.get_trades_history()`                                  | 실행된 거래 목록         | DuckDB 고속 조회     |
-| 시장 데이터 조회    | `GET /market-data/{symbol}`              | `MarketDataService.stock.get_historical_data()`                         | 주가 데이터              | 3-Layer 캐시         |
-| **ML 모델 학습**    | `POST /api/v1/ml/train`                  | `MLModelTrainer.train()` (Background Task)                              | LightGBM 모델 학습       | ✅ 90.6% 정확도      |
-| **모델 목록 조회**  | `GET /api/v1/ml/models`                  | `ModelRegistry.list_models()`                                           | 학습된 모델 버전 목록    | ✅ v1, v2, ...       |
-| **모델 상세 조회**  | `GET /api/v1/ml/models/{version}`        | `ModelRegistry.get_model_info()`                                        | 특정 모델 메타데이터     | ✅ 정확도, F1 Score  |
-| **모델 비교**       | `GET /api/v1/ml/models/compare/{metric}` | `ModelRegistry.compare_models()`                                        | 여러 모델 성능 비교      | ✅ 최고 모델 선택    |
-| **모델 삭제**       | `DELETE /api/v1/ml/models/{version}`     | `ModelRegistry.delete_model()`                                          | 모델 버전 삭제           | ✅ 파일 + 메타데이터 |
-| **ML 신호 생성**    | (Internal)                               | `MLSignalService.score_symbol()`                                        | ML 기반 매수/매도 시그널 | ✅ Heuristic 대비    |
-
-### 🟡 진행 중인 기능 (AI Integration Phase 1/2)
-
-| 기능                 | 예상 엔드포인트                                   | 서비스 레이어                    | 설명                    | 목표 완료일 |
-| -------------------- | ------------------------------------------------- | -------------------------------- | ----------------------- | ----------- |
-| **시장 국면 분류**   | `GET /api/v1/market-data/regime`                  | `RegimeDetector.detect_regime()` | HMM 기반 국면 감지      | 2주 후      |
-| **국면 히스토리**    | `GET /api/v1/market-data/regime/history/{symbol}` | `RegimeDetector.get_history()`   | 과거 국면 변화 추적     | 2주 후      |
-| **데이터 이상 탐지** | (Internal)                                        | `AnomalyDetector.detect()`       | Isolation Forest 기반   | 3일 후      |
-| **이상 알림**        | `GET /api/v1/data-quality/alerts`                 | `AnomalyDetector.get_alerts()`   | 감지된 이상 데이터 목록 | 3일 후      |
+| 기능                 | 엔드포인트                                        | 서비스 레이어                                                           | 설명                          | 참고사항             |
+| -------------------- | ------------------------------------------------- | ----------------------------------------------------------------------- | ----------------------------- | -------------------- |
+| 전략 목록 조회       | `GET /strategies`                                 | `StrategyService.get_strategies()`                                      | 저장된 전략 템플릿 목록       | MongoDB 조회         |
+| 전략 생성            | `POST /strategies`                                | `StrategyService.create_strategy()`                                     | 새 전략 템플릿 생성           | Pydantic 검증        |
+| 백테스트 생성        | `POST /backtests`                                 | `BacktestService.create_backtest()` → `Orchestrator.execute_backtest()` | 백테스트 실행 요청            | 비동기 실행          |
+| 백테스트 상태 조회   | `GET /backtests/{id}`                             | `BacktestService.get_backtest()`                                        | 실행 상태 및 결과             | MongoDB 조회         |
+| 포트폴리오 히스토리  | `GET /backtests/{id}/portfolio-history`           | `DatabaseManager.get_portfolio_history()`                               | 시계열 포트폴리오 변화        | DuckDB 고속 조회     |
+| 거래 내역            | `GET /backtests/{id}/trades-history`              | `DatabaseManager.get_trades_history()`                                  | 실행된 거래 목록              | DuckDB 고속 조회     |
+| 시장 데이터 조회     | `GET /market-data/{symbol}`                       | `MarketDataService.stock.get_historical_data()`                         | 주가 데이터                   | 3-Layer 캐시         |
+| **ML 모델 학습**     | `POST /api/v1/ml/train`                           | `MLModelTrainer.train()` (Background Task)                              | LightGBM 모델 학습            | ✅ 90.6% 정확도      |
+| **모델 목록 조회**   | `GET /api/v1/ml/models`                           | `ModelRegistry.list_models()`                                           | 학습된 모델 버전 목록         | ✅ v1, v2, ...       |
+| **모델 상세 조회**   | `GET /api/v1/ml/models/{version}`                 | `ModelRegistry.get_model_info()`                                        | 특정 모델 메타데이터          | ✅ 정확도, F1 Score  |
+| **모델 비교**        | `GET /api/v1/ml/models/compare/{metric}`          | `ModelRegistry.compare_models()`                                        | 여러 모델 성능 비교           | ✅ 최고 모델 선택    |
+| **모델 삭제**        | `DELETE /api/v1/ml/models/{version}`              | `ModelRegistry.delete_model()`                                          | 모델 버전 삭제                | ✅ 파일 + 메타데이터 |
+| **ML 신호 생성**     | (Internal)                                        | `MLSignalService.score_symbol()`                                        | ML 기반 매수/매도 시그널      | ✅ Heuristic 대비    |
+| **시장 국면 분류**   | `GET /api/v1/market-data/regime`                  | `RegimeDetectionService.detect_regime()`                                | HMM 기반 국면 감지            | ✅ 완료              |
+| **국면 히스토리**    | `GET /api/v1/market-data/regime/history/{symbol}` | `RegimeDetectionService.get_history()`                                  | 과거 국면 변화 추적           | ✅ 완료              |
+| **포트폴리오 예측**  | `GET /api/v1/dashboard/portfolio/forecast`        | `ProbabilisticKPIService.forecast_from_history()`                       | Gaussian 투영 기반 확률 예측  | ✅ 완료              |
+| **백테스트 최적화**  | `POST /api/v1/backtests/optimize`                 | `OptimizationService.optimize()`                                        | Optuna 기반 파라미터 튜닝     | ✅ 완료              |
+| **최적화 진행 상황** | `GET /api/v1/backtests/optimize/{study_name}`     | `OptimizationService.get_progress()`                                    | 최적화 작업 상태 조회         | ✅ 완료              |
+| **데이터 품질 알림** | `GET /api/v1/dashboard/data-quality-summary`      | `DataQualitySentinel.get_summary()`                                     | Isolation Forest 이상 탐지    | ✅ 완료              |
+| **내러티브 리포트**  | `POST /api/v1/narrative/backtests/{id}/report`    | `NarrativeReportService.generate_report()`                              | OpenAI GPT-4 기반 리포트 생성 | ✅ 완료 (90%)        |
+| **ChatOps 쿼리**     | `POST /api/v1/chatops`                            | `ChatOpsAgent.query()`                                                  | 시스템 상태 대화형 조회       | ✅ 완료              |
 
 ### ⚪ 계획된 기능 (AI Integration Phase 2/3/4)
 
 | 기능                       | 예상 엔드포인트                              | 서비스 레이어                         | 설명                         | 우선순위 |
 | -------------------------- | -------------------------------------------- | ------------------------------------- | ---------------------------- | -------- |
-| **포트폴리오 예측**        | `GET /api/v1/portfolio/forecast/{days}`      | `PortfolioForecastService.forecast()` | VaR, CVaR 포함 확률 예측     | P1       |
-| **백테스트 최적화**        | `POST /api/v1/backtests/optimize`            | `OptimizationService.optimize()`      | Optuna 기반 파라미터 튜닝    | P1       |
-| **최적화 진행 상황**       | `GET /api/v1/backtests/optimize/{task_id}`   | `OptimizationService.get_progress()`  | 최적화 작업 상태 조회        | P1       |
-| **멀티 전략 백테스트**     | `POST /api/v1/portfolio-backtests`           | `MultiStrategyOrchestrator.execute()` | 여러 전략 동시 실행 + 최적화 | P1       |
-| **내러티브 리포트 생성**   | `GET /api/v1/backtests/{id}/report`          | `ReportGenerator.generate()`          | LLM 기반 자연어 요약         | P2       |
+| **포트폴리오 예측**        | `GET /api/v1/portfolio/forecast/{days}`      | `PortfolioForecastService.forecast()` | VaR, CVaR 포함 확률 예측     | P2       |
+| **멀티 전략 백테스트**     | `POST /api/v1/portfolio-backtests`           | `MultiStrategyOrchestrator.execute()` | 여러 전략 동시 실행 + 최적화 | P2       |
 | **대화형 전략 빌더**       | `POST /api/v1/strategies/generative-builder` | `StrategyBuilder.build()`             | 자연어 → 전략 파라미터 변환  | P2       |
-| **ChatOps 쿼리**           | `POST /api/v1/chatops`                       | `ChatOpsAgent.query()`                | 시스템 상태 대화형 조회      | P3       |
 | **실시간 백테스트 스트림** | `WS /api/v1/backtests/{id}/stream`           | `Orchestrator.stream_progress()`      | WebSocket 진행률 업데이트    | P3       |
 
 ## ERD
@@ -410,10 +410,10 @@ stateDiagram-v2
 
 ---
 
-### 🟡 AI Integration Phase 1: 예측 인텔리전스 기초 구축 (35% 완료)
+### 🟡 AI Integration Phase 1: 예측 인텔리전스 기초 구축 ✅ **완료** (100%)
 
-**기간**: 2025-01-06 ~ 2025-02-14 (예상)  
-**현재 상태**: 진행 중
+**기간**: 2025-01-06 ~ 2025-02-14 (완료: 2025-10-14)  
+**현재 상태**: 완료
 
 #### Milestone 1: ML 시그널 API ✅ **완료** (2025-10-14)
 
@@ -426,35 +426,120 @@ stateDiagram-v2
 - ✅ 90.6% 정확도 달성
 - **Phase 3.2와 통합 완료**
 
-#### Milestone 2: 시장 국면 분류 🟡 **다음 단계** (2주 예상)
+#### Milestone 2: 시장 국면 분류 ✅ **완료** (2025-10-14)
 
-- [ ] RegimeDetectionService 구현
-  - [ ] Hidden Markov Model (HMM) 기반
-  - [ ] 4가지 국면: 강세, 약세, 횡보, 고변동성
-- [ ] API 엔드포인트
-  - [ ] `GET /api/v1/market-data/regime` - 현재 국면
-  - [ ] `GET /api/v1/market-data/regime/history/{symbol}` - 국면 히스토리
-- [ ] MongoDB 캐시 통합
-- [ ] 전략별 국면 적응형 파라미터
-- **의존성**: DuckDB 다자산 데이터 (✅ 완료)
+- ✅ RegimeDetectionService 구현
+  - ✅ Hidden Markov Model (HMM) 기반
+  - ✅ 4가지 국면: 강세, 약세, 횡보, 고변동성
+- ✅ API 엔드포인트
+  - ✅ `GET /api/v1/market-data/regime` - 현재 국면
+  - ✅ `GET /api/v1/market-data/regime/history/{symbol}` - 국면 히스토리
+- ✅ MongoDB 캐시 통합
+- ✅ 전략별 국면 적응형 파라미터
 - **우선순위**: 🟢 높음
 
-#### Milestone 3: 포트폴리오 확률 예측 ⚪ **계획** (3주 예상)
+#### Milestone 3: 포트폴리오 확률 예측 ✅ **완료** (2025-10-14)
 
-- [ ] PortfolioForecastService 구현
-  - [ ] Prophet 또는 GluonTS 시계열 모델
-  - [ ] VaR (Value at Risk) 계산 ⭐ **Phase 3 미구현 → 통합**
-  - [ ] CVaR (Conditional VaR) 계산 ⭐ **Phase 3 미구현 → 통합**
-- [ ] API 엔드포인트
-  - [ ] `GET /api/v1/portfolio/forecast/{days}`
-- [ ] **Advanced Risk Metrics 통합** ⭐
-  - [ ] Sortino Ratio (하방 변동성)
-  - [ ] Calmar Ratio (MDD 대비 수익률)
-- [ ] DuckDB 예측 히스토리 저장
-- **의존성**: Phase 1 Milestone 2 완료
-- **우선순위**: 🟢 높음 (Phase 3 미구현 기능 포함)
+- ✅ ProbabilisticKPIService 구현
+  - ✅ Gaussian 투영 시계열 모델
+  - ✅ VaR (Value at Risk) 계산
+  - ✅ 퍼센타일 밴드 (5%, 50%, 95%)
+- ✅ API 엔드포인트
+  - ✅ `GET /api/v1/dashboard/portfolio/forecast`
+- ✅ DuckDB 예측 히스토리 저장
+- **우선순위**: 🟢 높음
 
 ---
+
+### 🟡 AI Integration Phase 2: 자동화 및 최적화 루프 ✅ **완료** (100%)
+
+**기간**: 2025-02-17 ~ 2025-03-28 (완료: 2025-10-14)  
+**현재 상태**: 완료 (RL 제외)
+
+#### Milestone 1: Optuna 백테스트 옵티마이저 ✅ **완료** (2025-10-14)
+
+- ✅ OptimizationService 구현
+  - ✅ Optuna Study 관리
+  - ✅ TPE/Random/CmaEs 샘플러
+  - ✅ MongoDB 실험 메타데이터 저장
+- ✅ API 엔드포인트
+  - ✅ `POST /api/v1/backtests/optimize` - 최적화 시작
+  - ✅ `GET /api/v1/backtests/optimize/{study_name}` - 진행 상황
+  - ✅ `GET /api/v1/backtests/optimize/{study_name}/result` - 결과 조회
+- ✅ DashboardService 시각화
+- **의존성**: BacktestService (✅ 완료)
+- **우선순위**: 🟢 높음
+
+#### Milestone 2: 강화학습 실행기 ⏸️ **보류**
+
+- [ ] RLEngine 구현 (Stable-Baselines3)
+- [ ] TradingSimulator OpenAI Gym 래퍼
+- **상태**: 🔴 차단됨 (GPU 용량 산정 필요)
+- **우선순위**: 🔴 낮음 (현재 ML 시그널로 충분)
+
+#### Milestone 3: 데이터 품질 센티널 ✅ **완료** (2025-10-14)
+
+- ✅ DataQualitySentinel 구현
+  - ✅ Isolation Forest 이상치 탐지
+  - ✅ Prophet 예측 편차 분석
+  - ✅ Volume spike, Price jump 감지
+- ✅ DuckDB 실시간 검사
+- ✅ 관리자 대시보드 알림
+- **의존성**: MarketDataService (✅ 완료)
+- **우선순위**: 🟢 높음
+
+---
+
+### 🟡 AI Integration Phase 3: 생성형 인사이트 & ChatOps (50% 완료)
+
+**기간**: 2025-03-31 ~ 2025-05-09 (예상)  
+**현재 상태**: 진행 중
+
+#### Milestone 1: 내러티브 리포트 생성기 ✅ **완료 (90%)** (2025-10-14)
+
+- ✅ NarrativeReportService 구현 (439 lines)
+  - ✅ OpenAI GPT-4 통합 (gpt-4-turbo-preview)
+  - ✅ Phase 1 인사이트 통합 (ML Signal, Regime, Forecast)
+  - ✅ Pydantic 출력 검증 (6개 섹션)
+  - ✅ Fact Checking (Sharpe/Drawdown/Win Rate)
+- ✅ API 엔드포인트
+  - ✅ `POST /api/v1/narrative/backtests/{id}/report` - 리포트 생성
+- ✅ Schemas (170 lines)
+  - ✅ ExecutiveSummary, PerformanceAnalysis, StrategyInsights
+  - ✅ RiskAssessment, MarketContext, Recommendations
+- ⏳ Unit Tests (보류)
+- **의존성**: Phase 1 완료 (✅)
+- **우선순위**: 🟢 높음
+- **문서**: PHASE3_D1_IMPLEMENTATION_REPORT.md
+
+#### Milestone 2: 대화형 전략 빌더 ⚪ **계획** (1.5주 예상)
+
+- [ ] StrategyBuilderService 구현
+  - [ ] LLM 의도 파싱
+  - [ ] 전략 템플릿 매핑
+- [ ] API 엔드포인트
+  - [ ] `POST /api/v1/strategies/generative-builder`
+- [ ] Pydantic 파라미터 검증
+- **의존성**: StrategyService (✅ 완료)
+- **우선순위**: 🟡 중간
+
+#### Milestone 3: ChatOps 운영 에이전트 ✅ **완료** (2025-10-14)
+
+- ✅ ChatOpsAgent 구현
+  - ✅ Function calling 기반 LLM
+  - ✅ 시스템 상태 조회 (데이터 품질, DuckDB, Alpha Vantage)
+  - ✅ RBAC 권한 검사
+- ✅ API 엔드포인트
+  - ✅ `POST /api/v1/chatops`
+- **의존성**: Phase 1 완료 (✅)
+- **우선순위**: � 중간
+
+---
+
+### ⚪ AI Integration Phase 4: MLOps 플랫폼 가동
+
+**기간**: 2025-05-12 ~ 2025-06-20 (예상)  
+**현재 상태**: 기획 중
 
 ### ⚪ AI Integration Phase 2: 자동화 및 최적화 루프
 

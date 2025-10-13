@@ -24,6 +24,8 @@ from .probabilistic_kpi_service import ProbabilisticKPIService
 from .monitoring.data_quality_sentinel import DataQualitySentinel
 from .llm.chatops_agent import ChatOpsAgent
 from .ml.anomaly_detector import AnomalyDetectionService
+from .optimization_service import OptimizationService
+from .narrative_report_service import NarrativeReportService
 
 logger = logging.getLogger(__name__)
 
@@ -51,6 +53,8 @@ class ServiceFactory:
     _data_quality_sentinel: Optional[DataQualitySentinel] = None
     _anomaly_detection_service: Optional[AnomalyDetectionService] = None
     _chatops_agent: Optional[ChatOpsAgent] = None
+    _optimization_service: Optional[OptimizationService] = None
+    _narrative_report_service: Optional[NarrativeReportService] = None
 
     def __new__(cls):
         if cls._instance is None:
@@ -251,6 +255,37 @@ class ServiceFactory:
             )
             logger.info("Created ChatOpsAgent instance")
         return self._chatops_agent
+
+    def get_optimization_service(self) -> OptimizationService:
+        """최적화 서비스 (Phase 2 D1: Optuna 기반 하이퍼파라미터 최적화)"""
+        if self._optimization_service is None:
+            backtest_service = self.get_backtest_service()
+            strategy_service = self.get_strategy_service()
+            self._optimization_service = OptimizationService(
+                backtest_service, strategy_service
+            )
+            logger.info("OptimizationService initialized (Phase 2 D1)")
+        return self._optimization_service
+
+    def get_narrative_report_service(self) -> NarrativeReportService:
+        """내러티브 리포트 서비스 (Phase 3 D1: LLM 기반 리포트 생성)"""
+        if self._narrative_report_service is None:
+            # 필수: BacktestService
+            backtest_service = self.get_backtest_service()
+
+            # 선택: Phase 1 서비스 (있으면 주입, 없으면 None)
+            ml_signal_service = self.get_ml_signal_service()
+            regime_service = self.get_regime_detection_service()
+            probabilistic_service = self.get_probabilistic_kpi_service()
+
+            self._narrative_report_service = NarrativeReportService(
+                backtest_service=backtest_service,
+                ml_signal_service=ml_signal_service,
+                regime_service=regime_service,
+                probabilistic_service=probabilistic_service,
+            )
+            logger.info("NarrativeReportService initialized (Phase 3 D1)")
+        return self._narrative_report_service
 
     async def cleanup(self):
         """모든 서비스 정리"""

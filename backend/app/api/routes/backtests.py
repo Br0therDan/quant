@@ -22,6 +22,7 @@ from app.schemas.backtest import (
 from app.services.service_factory import service_factory
 from app.services.backtest_service import BacktestService
 from app.services.backtest import BacktestOrchestrator
+from .optimize_backtests import router as optimize_router
 
 # from app.models.backtest import BacktestConfig  # ❌ Removed in P3.0
 from mysingle_quant.auth import get_current_active_verified_user, User
@@ -610,3 +611,9 @@ async def get_trades_history(
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"거래 내역 조회 실패: {str(e)}")
+
+
+# Include optimization routes
+
+
+router.include_router(optimize_router, prefix="/optimize", tags=["Optimization"])

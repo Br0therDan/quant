@@ -14,7 +14,10 @@ from app.schemas.dashboard import (
     NewsFeedResponse,
     EconomicCalendarResponse,
 )
-from app.schemas.predictive import PredictiveInsightsResponse
+from app.schemas.predictive import (
+    PredictiveInsightsResponse,
+    PortfolioForecastResponse,
+)
 
 
 router = APIRouter()
@@ -45,9 +48,7 @@ async def get_portfolio_performance(
     performance = await dashboard_service.get_portfolio_performance(
         str(user.id), period, granularity
     )
-    return PortfolioPerformanceResponse(
-        data=performance, message="포트폴리오 성과 조회 성공"
-    )
+    return PortfolioPerformanceResponse(data=performance, message="포트폴리오 성과 조회 성공")
 
 
 @router.get("/strategies/comparison", response_model=StrategyComparisonResponse)
@@ -147,6 +148,7 @@ async def get_predictive_overview(
     )
 
     response = PredictiveInsightsResponse(
+        success=True,
         data=insights,
         message="Predictive insights retrieved",
     )
@@ -159,3 +161,71 @@ async def get_predictive_overview(
     response.metadata.cache_info.cache_timestamp = insights.regime.as_of
     response.metadata.processing_time_ms = None
     return response
+
+
+@router.get(
+    "/portfolio/forecast",
+    response_model=PortfolioForecastResponse,
+)
+async def get_portfolio_forecast(
+    horizon_days: int = Query(30, ge=7, le=120, description="예측 기간 (일, 7-120일)"),
+    user: User = Depends(get_current_active_verified_user),
+):
+    """포트폴리오 확률적 예측을 조회합니다.
+
+    히스토리 기반 Gaussian projection으로 5/50/95 백분위 예측을 생성합니다.
+
+    Args:
+        horizon_days: 예측 기간 (일)
+        user: 인증된 사용자
+
+    Returns:
+        백분위 예측 분포 (5th, 50th, 95th percentiles)
+
+    Raises:
+        400: 포트폴리오 히스토리가 없는 경우
+        500: 예측 생성 실패
+    """
+    portfolio_service = service_factory.get_portfolio_service()
+
+    try:
+        forecast = await portfolio_service.get_portfolio_forecast(
+            user_id=str(user.id), horizon_days=horizon_days
+        )
+
+        from app.schemas.market_data.base import (
+            MetadataInfo,
+            DataQualityInfo,
+            CacheInfo,
+        )
+
+        response = PortfolioForecastResponse(
+            success=True,
+            message=f"{horizon_days}일 포트폴리오 예측 생성 완료",
+            data=forecast,
+            metadata=MetadataInfo(
+                data_quality=DataQualityInfo(
+                    quality_score=Decimal("95.0"),
+                    last_updated=forecast.as_of,
+                    data_source="probabilistic_kpi",
+                    confidence_level="model_based",
+                ),
+                cache_info=CacheInfo(
+                    cached=False,
+                    cache_hit=False,
+                    cache_timestamp=None,
+                    cache_ttl=None,
+                ),
+                processing_time_ms=0.0,
+            ),
+        )
+        return response
+
+    except ValueError as ve:
+        from fastapi import HTTPException
+
+        raise HTTPException(status_code=400, detail=str(ve))
+    except Exception as e:
+        from fastapi import HTTPException
+
+        raise HTTPException(status_code=500, detail=f"예측 생성 실패: {str(e)}")
