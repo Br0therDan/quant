@@ -23,11 +23,13 @@ const AppBar = styled(MuiAppBar)(({ theme }) => ({
 	zIndex: theme.zIndex.drawer + 1,
 }));
 
-const LogoContainer = styled("div")({
+const LogoContainer = styled(Box)({
+	display: "flex",
 	height: 45,
 	alignItems: "center",
 	"& img": {
 		maxHeight: 45,
+		width: 100
 	},
 });
 

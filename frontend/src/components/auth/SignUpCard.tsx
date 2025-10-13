@@ -3,9 +3,8 @@
 import { MyLogo } from "@/components/common/logo";
 import AppTheme from "@/components/shared-theme/AppTheme";
 import ColorModeSelect from "@/components/shared-theme/ColorModeSelect";
-import { useRegister } from "@/hooks/useAuth";
 import type { RegisterData } from "@/types/auth";
-import Alert from "@mui/material/Alert";
+// import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import MuiCard from "@mui/material/Card";
@@ -23,6 +22,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { FacebookIcon, GoogleIcon } from "./CustomIcons";
+import { useAuth } from '@/contexts/AuthContext';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -82,23 +82,7 @@ export default function SignUpCard(props: { disableCustomTheme?: boolean }) {
   const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] =
     React.useState("");
 
-  const { register, isLoading, error } = useRegister();
-  // const { isAuthenticated } = useAuthStatus();
-
-  // 이미 로그인된 경우 리다이렉트
-  // React.useEffect(() => {
-  //   if (isAuthenticated) {
-  //     // URL 파라미터에서 redirect 값 가져오기
-  //     const urlParams = new URLSearchParams(window.location.search);
-  //     const redirectUrl = urlParams.get("redirect") || "/dashboard";
-  //     console.log("Register successful, redirecting to:", redirectUrl);
-
-  //     // router.push가 작동하지 않으므로 window.location.href 사용
-  //     setTimeout(() => {
-  //       window.location.href = redirectUrl;
-  //     }, 100); // 약간의 지연을 추가하여 state 업데이트 완료 보장
-  //   }
-  // }, [isAuthenticated]);
+  const { register, isLoading } = useAuth();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -193,11 +177,11 @@ export default function SignUpCard(props: { disableCustomTheme?: boolean }) {
             Sign up
           </Typography>
 
-          {error && (
+          {/* {isError && (
             <Alert severity="error" sx={{ mb: 2 }}>
               회원가입에 실패했습니다. 입력 정보를 확인해주세요.
             </Alert>
-          )}
+          )} */}
 
           <Box
             component="form"

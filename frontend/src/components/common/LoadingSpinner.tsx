@@ -3,6 +3,7 @@
 import { TrendingUp as TrendingUpIcon } from "@mui/icons-material";
 import { Box, CircularProgress, Skeleton, Typography } from "@mui/material";
 import type { SxProps, Theme } from "@mui/material/styles";
+import { MyLogo } from './logo';
 
 interface LoadingSpinnerProps {
   message?: string;
@@ -62,17 +63,7 @@ export default function LoadingSpinner({
               justifyContent: "center",
             }}
           >
-            <TrendingUpIcon
-              sx={{
-                fontSize: size * 0.5,
-                color: (theme) => theme.palette.primary.main,
-                animation: "pulse 1.5s ease-in-out infinite",
-                "@keyframes pulse": {
-                  "0%, 100%": { opacity: 1 },
-                  "50%": { opacity: 0.5 },
-                },
-              }}
-            />
+            <MyLogo icon={true} width={30} />
           </Box>
         </Box>
         <Typography variant="body2" color="text.secondary">

@@ -1,6 +1,6 @@
 "use client";
 
-import { UserService, type BodyAuthLogin } from "@/client";
+import { AuthService, UserService, type BodyAuthLogin } from "@/client";
 import type { AuthActions, AuthState } from "@/types/auth";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -179,6 +179,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
  */
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
+
+
 
   if (context === undefined) {
     throw new Error("useAuth must be used within an AuthProvider");

@@ -406,7 +406,7 @@ export default function MarketDataSidebar({
   }, [watchlistList]);
 
   const handleSymbolClick = (symbol: string) => {
-    router.push(`/market-data/${symbol}`);
+    router.push(`/market-data/stock/${symbol}`);
   };
 
   const handleEditWatchlist = (watchlist: any) => {

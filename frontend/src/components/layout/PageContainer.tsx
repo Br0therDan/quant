@@ -7,7 +7,6 @@ import MuiLink from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import type * as React from "react";
 import { Link } from "react-router";
 
 const PageContentHeader = styled("div")(({ theme }) => ({
@@ -59,7 +58,7 @@ export default function PageContainer(props: PageContainerProps) {
 						separator={<NavigateNextRoundedIcon fontSize="small" />}
 					>
 						{breadcrumbs
-							? breadcrumbs.map((breadcrumb, index) => {
+							? breadcrumbs.map((breadcrumb) => {
 									return breadcrumb.path ? (
 										<MuiLink
 											key={breadcrumb.title}

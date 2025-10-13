@@ -2,13 +2,11 @@
 // Icons for quant platform
 import SidebarContext from "@/contexts/SidebarContext";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
-import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import DataObjectIcon from "@mui/icons-material/DataObject";
 import HistoryIcon from "@mui/icons-material/History";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PsychologyIcon from "@mui/icons-material/Psychology";
-import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import WatchlistIcon from "@mui/icons-material/Visibility";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";

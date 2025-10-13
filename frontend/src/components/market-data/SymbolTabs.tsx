@@ -15,7 +15,7 @@ export default function SymbolTabs({ symbol }: SymbolTabsProps) {
 
   // 현재 활성 탭 결정
   const getActiveTab = () => {
-    if (pathname === `/market-data/${symbol}`) return "overview";
+    if (pathname === `/market-data/stock/${symbol}`) return "overview";
     if (pathname.includes("/financials")) return "financials";
     if (pathname.includes("/news")) return "news";
     if (pathname.includes("/chart")) return "chart";
@@ -27,16 +27,19 @@ export default function SymbolTabs({ symbol }: SymbolTabsProps) {
   const handleTabChange = (_event: React.SyntheticEvent, newValue: string) => {
     switch (newValue) {
       case "overview":
-        router.push(`/market-data/${symbol}`);
+        router.push(`/market-data/stock/${symbol}`);
         break;
       case "financials":
-        router.push(`/market-data/${symbol}/financials`);
+        router.push(`/market-data/stock/${symbol}/financials`);
         break;
       case "news":
-        router.push(`/market-data/${symbol}/news`);
+        router.push(`/market-data/stock/${symbol}/news`);
+        break;
+      case "analysis":
+        router.push(`/market-data/stock/${symbol}/analysis`);
         break;
       case "chart":
-        router.push(`/market-data/${symbol}/chart`);
+        router.push(`/market-data/stock/${symbol}/chart`);
         break;
     }
   };
@@ -53,7 +56,8 @@ export default function SymbolTabs({ symbol }: SymbolTabsProps) {
             <Tab label="Overview" value="overview" />
             <Tab label="Chart" value="chart" />
             <Tab label="Financials" value="financials" />
-            <Tab label="News & Analysis" value="news" />
+            <Tab label="News" value="news" />
+            <Tab label="Analysis" value="analysis" />
           </Tabs>
       </Box>
     </Box>
