@@ -1,0 +1,99 @@
+{
+    "projects": [
+        {
+            "name": "Quant Platform (Full Stack)",
+            "rootPath": "/Users/donghakim/quant",
+            "paths": [],
+            "tags": [
+                "fullstack",
+                "production",
+                "main"
+            ],
+            "enabled": true,
+            "group": "Main Projects"
+        },
+        {
+            "name": "Quant - Backend (FastAPI)",
+            "rootPath": "/Users/donghakim/quant/backend",
+            "paths": [],
+            "tags": [
+                "backend",
+                "python",
+                "fastapi"
+            ],
+            "enabled": true,
+            "group": "Backend Development"
+        },
+        {
+            "name": "Quant - Frontend (Next.js)",
+            "rootPath": "/Users/donghakim/quant/frontend",
+            "paths": [],
+            "tags": [
+                "frontend",
+                "nextjs",
+                "react"
+            ],
+            "enabled": true,
+            "group": "Frontend Development"
+        },
+        {
+            "name": "Quant - Strategy Development",
+            "rootPath": "/Users/donghakim/quant/backend/app/strategies",
+            "paths": [],
+            "tags": [
+                "strategy",
+                "trading",
+                "development"
+            ],
+            "enabled": true,
+            "group": "Strategy Development"
+        },
+        {
+            "name": "Quant - API Routes",
+            "rootPath": "/Users/donghakim/quant/backend/app/api/routes",
+            "paths": [],
+            "tags": [
+                "api",
+                "backend",
+                "routes"
+            ],
+            "enabled": true,
+            "group": "Backend Development"
+        },
+        {
+            "name": "Quant - Services Layer",
+            "rootPath": "/Users/donghakim/quant/backend/app/services",
+            "paths": [],
+            "tags": [
+                "services",
+                "backend",
+                "business-logic"
+            ],
+            "enabled": true,
+            "group": "Backend Development"
+        },
+        {
+            "name": "Quant - Documentation",
+            "rootPath": "/Users/donghakim/quant/docs",
+            "paths": [],
+            "tags": [
+                "docs",
+                "documentation"
+            ],
+            "enabled": true,
+            "group": "Documentation"
+        },
+        {
+            "name": "Quant - Tests",
+            "rootPath": "/Users/donghakim/quant/backend/tests",
+            "paths": [],
+            "tags": [
+                "tests",
+                "testing",
+                "qa"
+            ],
+            "enabled": true,
+            "group": "Testing"
+        }
+    ]
+}

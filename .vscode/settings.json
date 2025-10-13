@@ -1,0 +1,64 @@
+{
+    "python.defaultInterpreterPath": "./.venv/bin/python",
+    "python.terminal.activateEnvironment": true,
+    "python.envFile": "${workspaceFolder}/.env",
+    "python.formatting.provider": "none",
+    "python.testing.pytestEnabled": true,
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestArgs": [
+        "tests",
+        "backend/tests"
+    ],
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/*.pyc": true,
+        ".pytest_cache": true,
+        ".mypy_cache": true,
+        "*.egg-info": true
+    },
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+    },
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+        }
+    },
+    "ruff.args": [
+        "--config=pyproject.toml"
+    ],
+    "ruff.format.args": [
+        "--config=pyproject.toml"
+    ],
+    "black-formatter.args": [
+        "--config=pyproject.toml"
+    ],
+    "projectManager.git.baseFolders": [
+        "/Users/donghakim/quant"
+    ],
+    "projectManager.sortList": "Name",
+    "projectManager.groupList": true,
+    "projectManager.openInNewWindowWhenClickingInStatusBar": false,
+    "projectManager.showProjectNameInStatusBar": true,
+    "projectManager.checkInvalidPathsBeforeListing": true,
+    "projectManager.removeCurrentProjectFromList": false,
+    "projectManager.projectsLocation": "/Users/donghakim/quant/.vscode/projects.json",
+    "projectManager.tags": [
+        "fullstack",
+        "backend",
+        "frontend",
+        "python",
+        "nextjs",
+        "fastapi",
+        "react",
+        "strategy",
+        "trading",
+        "api",
+        "services",
+        "docs",
+        "tests"
+    ]
+}

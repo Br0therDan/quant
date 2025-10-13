@@ -40,7 +40,11 @@ uv.lock
 poetry.lock
 
 # IDE
-.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/projects.json
+!.vscode/PROJECT_MANAGER_GUIDE.md
+!.vscode/mcp.json
 .idea/
 *.swp
 *.swo
