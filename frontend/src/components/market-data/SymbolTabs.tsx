@@ -35,9 +35,6 @@ export default function SymbolTabs({ symbol }: SymbolTabsProps) {
       case "news":
         router.push(`/market-data/stock/${symbol}/news`);
         break;
-      case "analysis":
-        router.push(`/market-data/stock/${symbol}/analysis`);
-        break;
       case "chart":
         router.push(`/market-data/stock/${symbol}/chart`);
         break;
@@ -57,7 +54,6 @@ export default function SymbolTabs({ symbol }: SymbolTabsProps) {
             <Tab label="Chart" value="chart" />
             <Tab label="Financials" value="financials" />
             <Tab label="News" value="news" />
-            <Tab label="Analysis" value="analysis" />
           </Tabs>
       </Box>
     </Box>

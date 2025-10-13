@@ -38,16 +38,30 @@ import {
 	Tooltip,
 	Typography,
 } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import PageContainer from "@/components/layout/PageContainer";
-import {
-	backtestsGetBacktestOptions,
-	type BacktestStatus,
-	backtestUtils,
-	useBacktestActions,
-} from "@/services/backtestsQuery";
+import { useBacktestDetail } from "@/hooks/useBacktest";
+import { useBacktest } from "@/hooks/useBacktest";
+
+type BacktestStatus = "COMPLETED" | "FAILED" | "QUEUED" | "INITIALIZING" | "RUNNING";
+
+// Utility functions
+const formatStatus = (status: string) => {
+	const statusMap: Record<string, string> = {
+		COMPLETED: "완료",
+		FAILED: "실패",
+		QUEUED: "대기중",
+		INITIALIZING: "초기화중",
+		RUNNING: "실행중",
+	};
+	return statusMap[status] || status;
+};
+
+const isRunning = (status: string) => ["INITIALIZING", "RUNNING"].includes(status);
+
+const formatCurrency = (value: number) => `$${value.toLocaleString()}`;
+const formatPercentage = (value: number) => `${(value * 100).toFixed(2)}%`;
 
 interface LogEntry {
 	timestamp: string;
@@ -117,36 +131,15 @@ export default function BacktestMonitoringPage() {
 	const router = useRouter();
 	const backtestId = params.id as string;
 	const [autoRefresh, setAutoRefresh] = useState(true);
-	const [refreshInterval, setRefreshInterval] = useState(5000); // 5 seconds
+	const [refreshInterval] = useState(5000); // 5 seconds
 
-	// Fetch backtest data
+	// Use useBacktestDetail hook
 	const {
-		data: backtestResponse,
+		data: backtest,
 		isLoading: backtestLoading,
 		error: backtestError,
 		refetch: refetchBacktest,
-	} = useQuery(
-		backtestsGetBacktestOptions({ path: { backtest_id: backtestId } }),
-	);
-
-	const {
-		data: resultsResponse,
-		isLoading: resultsLoading,
-		refetch: refetchResults,
-	} = useQuery({
-		queryKey: ["backtest-results", backtestId],
-		queryFn: async () => {
-			if (!backtestId) throw new Error("No backtest ID");
-			// Return mock data for now since API is not properly configured
-			return {};
-		},
-		enabled: !!backtestId,
-	});
-
-	const backtest = backtestResponse;
-	const results = resultsResponse;
-
-	const { executeBacktest, deleteBacktest } = useBacktestActions();
+	} = useBacktestDetail(backtestId);
 
 	const stopBacktest = async (id: string) => {
 		// TODO: Implement stop functionality
@@ -158,11 +151,10 @@ export default function BacktestMonitoringPage() {
 		if (!autoRefresh || !backtest?.status) return;
 
 		const status = backtest.status as BacktestStatus;
-		if (!backtestUtils.isRunning(status)) return;
+		if (!isRunning(status)) return;
 
 		const interval = setInterval(() => {
 			refetchBacktest();
-			refetchResults();
 		}, refreshInterval);
 
 		return () => clearInterval(interval);
@@ -171,7 +163,6 @@ export default function BacktestMonitoringPage() {
 		refreshInterval,
 		backtest?.status,
 		refetchBacktest,
-		refetchResults,
 	]);
 
 	const handleRefresh = () => {
