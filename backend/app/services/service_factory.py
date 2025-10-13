@@ -22,6 +22,7 @@ from .ml_signal_service import MLSignalService
 from .regime_detection_service import RegimeDetectionService
 from .probabilistic_kpi_service import ProbabilisticKPIService
 from .monitoring.data_quality_sentinel import DataQualitySentinel
+from .llm.chatops_agent import ChatOpsAgent
 from .ml.anomaly_detector import AnomalyDetectionService
 
 logger = logging.getLogger(__name__)
@@ -49,6 +50,7 @@ class ServiceFactory:
     _probabilistic_kpi_service: Optional[ProbabilisticKPIService] = None
     _data_quality_sentinel: Optional[DataQualitySentinel] = None
     _anomaly_detection_service: Optional[AnomalyDetectionService] = None
+    _chatops_agent: Optional[ChatOpsAgent] = None
 
     def __new__(cls):
         if cls._instance is None:
@@ -235,6 +237,20 @@ class ServiceFactory:
             self._probabilistic_kpi_service = ProbabilisticKPIService(database_manager)
             logger.info("Created ProbabilisticKPIService instance")
         return self._probabilistic_kpi_service
+
+    def get_chatops_agent(self) -> ChatOpsAgent:
+        """ChatOpsAgent 인스턴스 반환"""
+        if self._chatops_agent is None:
+            market_data_service = self.get_market_data_service()
+            database_manager = self.get_database_manager()
+            data_quality_sentinel = self.get_data_quality_sentinel()
+            self._chatops_agent = ChatOpsAgent(
+                market_data_service=market_data_service,
+                database_manager=database_manager,
+                data_quality_sentinel=data_quality_sentinel,
+            )
+            logger.info("Created ChatOpsAgent instance")
+        return self._chatops_agent
 
     async def cleanup(self):
         """모든 서비스 정리"""

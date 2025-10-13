@@ -450,6 +450,10 @@ tools = [
        - Backtest #125: Symbol not found"
 ```
 
+**진행 상황 (2025-10-14):** FastAPI `/api/v1/chatops` 라우트와 `ChatOpsAgent`가 데이터
+품질 센티널 요약, DuckDB/MongoDB 캐시 상태, Alpha Vantage 헬스체크를 RBAC 기반으로
+응답하도록 배포되었습니다.
+
 ---
 
 ### Phase 4: MLOps 플랫폼 가동
@@ -656,7 +660,7 @@ backend/app/services/ml/evaluation_harness.py
 
 - [ ] 내러티브 리포트 생성기
 - [ ] 대화형 전략 빌더
-- [ ] ChatOps 에이전트
+- [x] ChatOps 에이전트 (FastAPI ChatOps 엔드포인트, 데이터 품질 요약 배포)
 
 **Week 4-6**:
 
@@ -668,7 +672,7 @@ backend/app/services/ml/evaluation_harness.py
 
 - LLM 기반 리포트 생성 API
 - 자연어 전략 빌더
-- ChatOps 운영 봇
+- ChatOps 운영 봇 (FastAPI 기반 베타 가동)
 - 평가 하니스 및 벤치마크
 
 ---
@@ -728,7 +732,7 @@ backend/app/services/ml/evaluation_harness.py
 | ------------------- | ------ | ---- | --------- |
 | 리포트 생성 시간    | < 10초 | TBD  | ⚪ 미시작 |
 | 전략 빌더 신뢰도    | > 90%  | TBD  | ⚪ 미시작 |
-| ChatOps 응답 정확도 | > 95%  | TBD  | ⚪ 미시작 |
+| ChatOps 응답 정확도 | > 95%  | 초기 룰 기반 에이전트 | 🟡 진행 중 |
 
 ### Phase 4 (MLOps)
 

@@ -11,6 +11,7 @@ from .dashboard import router as dashboard_router
 from .tasks import router as tasks_router
 from .signals import router as signals_router
 from .ml import router as ml_router
+from .chatops import router as chatops_router
 
 
 __all__ = [
@@ -23,4 +24,5 @@ __all__ = [
     "tasks_router",
     "signals_router",
     "ml_router",
+    "chatops_router",
 ]

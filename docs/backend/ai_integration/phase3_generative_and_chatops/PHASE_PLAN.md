@@ -16,6 +16,10 @@
 | D2  | 대화형 전략 빌더       | 사용자 의도를 StrategyService 템플릿에 매핑하는 자연어 인터페이스.                    | - 마스터 플랜 4.2절 기준을 충족하는 `/strategies/generative-builder` API가 검증된 설정을 반환【F:docs/backend/ai_integration/master_plan.md†L160-L187】<br>- 사용 가능한 지표를 포괄하는 임베딩 인덱스<br>- 휴먼 인 더 루프 승인 워크플로우 |
 | D3  | 운영 ChatOps 에이전트  | 캐시, 파이프라인, 서비스 상태 진단을 제공하는 툴 기반 LLM.                            | - 마스터 플랜 4.3절에 따라 툴 사용을 허용하는 Slack/FastAPI 엔드포인트 제공【F:docs/backend/ai_integration/master_plan.md†L188-L207】<br>- RBAC 적용 및 감사 로그<br>- 런북 통합                                                            |
 
+**진행 상황 (2025-10-14 업데이트):** FastAPI `/api/v1/chatops` 엔드포인트와 `ChatOpsAgent`
+가 데이터 품질 센티널, DuckDB 캐시, Alpha Vantage 헬스체크를 툴로 노출하며 RBAC 기반
+요약 응답을 제공한다.
+
 ### 범위 제외
 
 - 생성된 전략의 자동 프로덕션 배포(수동 승인이 계속 필요).
