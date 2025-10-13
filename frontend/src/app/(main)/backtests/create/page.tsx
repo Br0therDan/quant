@@ -16,6 +16,7 @@ import {
   CardContent,
   Container,
   FormControl,
+  Grid,
   InputAdornment,
   InputLabel,
   MenuItem,
@@ -28,7 +29,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -288,18 +288,29 @@ export default function CreateBacktestPage() {
                   onChange={(date) =>
                     setFormState((prev) => ({
                       ...prev,
-                      startDate: date ?? prev.startDate,
+                      startDate:
+                        date == null
+                          ? prev.startDate
+                          : typeof (date as any).toDate === "function"
+                          ? (date as any).toDate()
+                          : (date as Date),
                     }))
                   }
                   slotProps={{ textField: { fullWidth: true } }}
                 />
+
                 <DatePicker
                   label="종료일"
                   value={formState.endDate}
                   onChange={(date) =>
                     setFormState((prev) => ({
                       ...prev,
-                      endDate: date ?? prev.endDate,
+                      endDate:
+                        date == null
+                          ? prev.endDate
+                          : typeof (date as any).toDate === "function"
+                          ? (date as any).toDate()
+                          : (date as Date),
                     }))
                   }
                   slotProps={{ textField: { fullWidth: true } }}
@@ -333,7 +344,7 @@ export default function CreateBacktestPage() {
                 </Typography>
               </Box>
               <Grid container spacing={3}>
-                <Grid xs={12} md={6}>
+                <Grid size={12} >
                   <TextField
                     label="초기 자본"
                     type="number"
@@ -352,7 +363,7 @@ export default function CreateBacktestPage() {
                     fullWidth
                   />
                 </Grid>
-                <Grid xs={12} md={6}>
+                <Grid size={12} >
                   <TextField
                     label="최대 포지션 비중 (%)"
                     type="number"
@@ -366,7 +377,7 @@ export default function CreateBacktestPage() {
                     fullWidth
                   />
                 </Grid>
-                <Grid xs={12} md={6}>
+                <Grid size={12} >
                   <TextField
                     label="수수료율 (%)"
                     type="number"
@@ -380,7 +391,7 @@ export default function CreateBacktestPage() {
                     fullWidth
                   />
                 </Grid>
-                <Grid xs={12} md={6}>
+                <Grid size={12} >
                   <TextField
                     label="슬리피지 (%)"
                     type="number"
@@ -394,7 +405,7 @@ export default function CreateBacktestPage() {
                     fullWidth
                   />
                 </Grid>
-                <Grid xs={12} md={6}>
+                <Grid size={12} >
                   <FormControl fullWidth>
                     <InputLabel>리밸런싱 주기</InputLabel>
                     <Select
@@ -413,7 +424,7 @@ export default function CreateBacktestPage() {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid xs={12}>
+                <Grid size={12}>
                   <TextField
                     label="태그"
                     helperText="쉼표로 구분하여 입력하세요"

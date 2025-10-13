@@ -24,6 +24,7 @@ import {
   Chip,
   Container,
   Divider,
+  Grid,
   IconButton,
   LinearProgress,
   Paper,
@@ -33,7 +34,6 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2";
 import { useParams, useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { backtestUtils } from "../utils";
@@ -127,7 +127,7 @@ export default function BacktestDetailPage() {
 
   if (detailLoading) {
     return (
-      <PageContainer title="백테스트 상세" breadcrumbs={[{ title: "백테스트" }, { title: "상세" }]}> 
+      <PageContainer title="백테스트 상세" breadcrumbs={[{ title: "백테스트" }, { title: "상세" }]}>
         <Box sx={{ mt: 4 }}>
           <LinearProgress />
         </Box>
@@ -137,7 +137,7 @@ export default function BacktestDetailPage() {
 
   if (detailError || !backtest) {
     return (
-      <PageContainer title="백테스트 상세" breadcrumbs={[{ title: "백테스트" }, { title: "상세" }]}> 
+      <PageContainer title="백테스트 상세" breadcrumbs={[{ title: "백테스트" }, { title: "상세" }]}>
         <Alert severity="error">백테스트를 찾을 수 없거나 불러오는 중 오류가 발생했습니다.</Alert>
       </PageContainer>
     );
@@ -150,7 +150,7 @@ export default function BacktestDetailPage() {
     >
       <Container maxWidth="lg">
         <Box sx={{ mb: 4 }}>
-          <Button startIcon={<ArrowBack />} onClick={() => router.push("/backtests")}> 
+          <Button startIcon={<ArrowBack />} onClick={() => router.push("/backtests")}>
             목록으로 돌아가기
           </Button>
         </Box>
@@ -228,7 +228,7 @@ export default function BacktestDetailPage() {
         )}
 
         <Grid container spacing={3} sx={{ mb: 4 }}>
-          <Grid xs={12} md={6} lg={3}>
+          <Grid size={12} >
             <Card variant="outlined">
               <CardContent>
                 <Stack spacing={1} alignItems="flex-start">
@@ -243,7 +243,7 @@ export default function BacktestDetailPage() {
               </CardContent>
             </Card>
           </Grid>
-          <Grid xs={12} md={6} lg={3}>
+          <Grid size={12} >
             <Card variant="outlined">
               <CardContent>
                 <Stack spacing={1} alignItems="flex-start">
@@ -258,7 +258,7 @@ export default function BacktestDetailPage() {
               </CardContent>
             </Card>
           </Grid>
-          <Grid xs={12} md={6} lg={3}>
+          <Grid size={12} >
             <Card variant="outlined">
               <CardContent>
                 <Stack spacing={1} alignItems="flex-start">
@@ -275,7 +275,7 @@ export default function BacktestDetailPage() {
               </CardContent>
             </Card>
           </Grid>
-          <Grid xs={12} md={6} lg={3}>
+          <Grid size={12} >
             <Card variant="outlined">
               <CardContent>
                 <Stack spacing={1} alignItems="flex-start">
@@ -306,7 +306,7 @@ export default function BacktestDetailPage() {
 
           <TabPanel value={activeTab} index={0}>
             <Grid container spacing={3}>
-              <Grid xs={12} md={6}>
+              <Grid size={12} >
                 <Card variant="outlined">
                   <CardContent>
                     <Typography variant="h6" gutterBottom>
@@ -326,7 +326,7 @@ export default function BacktestDetailPage() {
                   </CardContent>
                 </Card>
               </Grid>
-              <Grid xs={12} md={6}>
+              <Grid size={12} >
                 <Card variant="outlined">
                   <CardContent>
                     <Typography variant="h6" gutterBottom>
@@ -368,7 +368,7 @@ export default function BacktestDetailPage() {
           <TabPanel value={activeTab} index={1}>
             {performance ? (
               <Grid container spacing={3}>
-                <Grid xs={12} md={6}>
+                <Grid size={12} >
                   <Card variant="outlined">
                     <CardContent>
                       <Typography variant="subtitle1" gutterBottom>
@@ -395,7 +395,7 @@ export default function BacktestDetailPage() {
                     </CardContent>
                   </Card>
                 </Grid>
-                <Grid xs={12} md={6}>
+                <Grid size={12} >
                   <Card variant="outlined">
                     <CardContent>
                       <Typography variant="subtitle1" gutterBottom>

@@ -6,13 +6,13 @@ import {
   Alert,
   Button,
   Container,
+  Grid,
   InputAdornment,
   Paper,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -153,29 +153,39 @@ export default function RunBacktestPage() {
             />
             <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ko}>
               <Grid container spacing={2}>
-                <Grid xs={12} md={6}>
+                <Grid size={12} >
                   <DatePicker
                     label="시작일"
                     value={formState.startDate}
-                    onChange={(date) =>
+                    onChange={(date) => {
+                      const newDate: Date = date
+                        ? (typeof (date as any).toDate === "function"
+                            ? (date as any).toDate()
+                            : (date as Date))
+                        : formState.startDate;
                       setFormState((prev) => ({
                         ...prev,
-                        startDate: date ?? prev.startDate,
-                      }))
-                    }
+                        startDate: newDate,
+                      }));
+                    }}
                     slotProps={{ textField: { fullWidth: true } }}
                   />
                 </Grid>
-                <Grid xs={12} md={6}>
+                <Grid size={12} >
                   <DatePicker
                     label="종료일"
                     value={formState.endDate}
-                    onChange={(date) =>
+                    onChange={(date) => {
+                      const newDate: Date = date
+                        ? (typeof (date as any).toDate === "function"
+                            ? (date as any).toDate()
+                            : (date as Date))
+                        : formState.endDate;
                       setFormState((prev) => ({
                         ...prev,
-                        endDate: date ?? prev.endDate,
-                      }))
-                    }
+                        endDate: newDate,
+                      }));
+                    }}
                     slotProps={{ textField: { fullWidth: true } }}
                   />
                 </Grid>

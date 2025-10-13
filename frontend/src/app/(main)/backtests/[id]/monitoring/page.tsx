@@ -11,13 +11,14 @@ import {
   Chip,
   Container,
   FormControlLabel,
+  Grid,
   LinearProgress,
   Paper,
   Stack,
   Switch,
   Typography,
 } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2";
+
 import { Refresh, Schedule, TrendingUp } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
@@ -44,7 +45,7 @@ export default function BacktestMonitoringPage() {
       refetch();
     }, refreshInterval);
     return () => clearInterval(timer);
-  }, [autoRefresh, backtest, refreshInterval, refetch]);
+  }, [autoRefresh, backtest, refetch]);
 
   if (isLoading) {
     return (
@@ -126,7 +127,7 @@ export default function BacktestMonitoringPage() {
         </Stack>
 
         <Grid container spacing={3} sx={{ mb: 4 }}>
-          <Grid xs={12} md={4}>
+          <Grid size={12}>
             <Card variant="outlined">
               <CardContent>
                 <Stack spacing={1}>
@@ -141,7 +142,7 @@ export default function BacktestMonitoringPage() {
               </CardContent>
             </Card>
           </Grid>
-          <Grid xs={12} md={4}>
+          <Grid size={12}>
             <Card variant="outlined">
               <CardContent>
                 <Stack spacing={1}>
@@ -156,7 +157,7 @@ export default function BacktestMonitoringPage() {
               </CardContent>
             </Card>
           </Grid>
-          <Grid xs={12} md={4}>
+          <Grid size={12}>
             <Card variant="outlined">
               <CardContent>
                 <Stack spacing={1}>
@@ -181,7 +182,7 @@ export default function BacktestMonitoringPage() {
             구성 정보
           </Typography>
           <Grid container spacing={2}>
-            <Grid xs={12} md={6}>
+            <Grid size={12}>
               <Typography variant="subtitle2" gutterBottom>
                 심볼
               </Typography>
@@ -189,7 +190,7 @@ export default function BacktestMonitoringPage() {
                 {backtestUtils.extractSymbols(backtest)}
               </Typography>
             </Grid>
-            <Grid xs={12} md={6}>
+            <Grid size={12}>
               <Typography variant="subtitle2" gutterBottom>
                 기간
               </Typography>
@@ -199,7 +200,7 @@ export default function BacktestMonitoringPage() {
                   : "-"}
               </Typography>
             </Grid>
-            <Grid xs={12} md={6}>
+            <Grid size={12}>
               <Typography variant="subtitle2" gutterBottom>
                 초기 자본
               </Typography>
@@ -207,7 +208,7 @@ export default function BacktestMonitoringPage() {
                 {backtestUtils.formatCurrency(backtest.config?.initial_cash ?? undefined)}
               </Typography>
             </Grid>
-            <Grid xs={12} md={6}>
+            <Grid size={12}>
               <Typography variant="subtitle2" gutterBottom>
                 리밸런싱 주기
               </Typography>

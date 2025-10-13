@@ -225,4 +225,24 @@ NEXT_PUBLIC_API_BASE_URL=http://localhost:8500
 - **서비스 의존성**: 반드시 `service_factory` 사용
 - **Query 무효화**: Mutation 성공 시 `invalidateQueries` 필수
 
+## 주요 개선 프로젝트 문서
+
+### Strategy & Backtest 리팩토링 (진행 중)
+
+- **아키텍처 검토**: `docs/backend/strategy_backtest/ARCHITECTURE_REVIEW.md`
+  - 현재 시스템 12가지 문제점 분석
+  - 개선 방안 및 4단계 로드맵
+- **Phase 1 가이드**: `docs/backend/strategy_backtest/REFACTORING_PHASE1.md`
+  - 의존성 주입 개선 (즉시 실행)
+  - 거래 로직 통합 (중복 제거)
+  - 파라미터 타입 안전성 (Pydantic)
+- **새 아키텍처**: `docs/backend/strategy_backtest/NEW_ARCHITECTURE.md`
+  - 레이어드 아키텍처 설계
+  - 핵심 컴포넌트 (Orchestrator, Executor, etc.)
+  - 확장 포인트 및 성능 최적화
+- **마이그레이션 계획**: `docs/backend/strategy_backtest/MIGRATION_PLAN.md`
+  - 무중단 배포 전략
+  - 데이터 마이그레이션 스크립트
+  - 롤백 절차
+
 상세 가이드: `AGENTS.md`, `backend/AGENTS.md`, `frontend/AGENTS.md`

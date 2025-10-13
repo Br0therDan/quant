@@ -4,6 +4,7 @@ import PageContainer from "@/components/layout/PageContainer";
 import { useBacktest } from "@/hooks/useBacktests";
 import {
   Alert,
+  Grid,
   Paper,
   Table,
   TableBody,
@@ -12,7 +13,6 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2";
 import { useMemo } from "react";
 import { backtestUtils } from "../utils";
 
@@ -34,19 +34,19 @@ export default function BacktestHistoryPage() {
       breadcrumbs={[{ title: "백테스트" }, { title: "히스토리" }]}
     >
       <Grid container spacing={3}>
-        <Grid xs={12}>
+        <Grid size={12} >
           <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
             완료된 백테스트 목록과 핵심 성과를 확인할 수 있습니다.
           </Typography>
         </Grid>
 
         {listError && (
-          <Grid xs={12}>
+          <Grid size={12} >
             <Alert severity="error">백테스트 기록을 불러오는 중 오류가 발생했습니다.</Alert>
           </Grid>
         )}
 
-        <Grid xs={12}>
+        <Grid size={12} >
           <Paper sx={{ p: 2 }}>
             <Table size="small">
               <TableHead>

@@ -24,6 +24,7 @@ import {
   Container,
   Fab,
   FormControl,
+  Grid,
   IconButton,
   InputLabel,
   LinearProgress,
@@ -35,7 +36,6 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { backtestUtils, type BacktestListItem } from "./utils";
@@ -116,7 +116,7 @@ export default function BacktestsPage() {
 
   if (listError) {
     return (
-      <PageContainer title="백테스트" breadcrumbs={[{ title: "백테스트" }]}> 
+      <PageContainer title="백테스트" breadcrumbs={[{ title: "백테스트" }]}>
         <Alert severity="error">
           백테스트 목록을 불러오는 중 오류가 발생했습니다.
         </Alert>
@@ -138,7 +138,7 @@ export default function BacktestsPage() {
 
         <Paper sx={{ p: 3, mb: 3 }}>
           <Grid container spacing={2} alignItems="center">
-            <Grid xs={12} md={4}>
+            <Grid size={12} >
               <TextField
                 fullWidth
                 placeholder="백테스트 이름, 설명 또는 심볼 검색"
@@ -151,7 +151,7 @@ export default function BacktestsPage() {
                 }}
               />
             </Grid>
-            <Grid xs={6} md={2}>
+            <Grid size={6} >
               <FormControl fullWidth>
                 <InputLabel id="status-filter-label">상태</InputLabel>
                 <Select
@@ -171,7 +171,7 @@ export default function BacktestsPage() {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid xs={6} md={2}>
+            <Grid size={6} >
               <FormControl fullWidth>
                 <InputLabel id="sort-field-label">정렬</InputLabel>
                 <Select
@@ -189,7 +189,7 @@ export default function BacktestsPage() {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid xs={6} md={2}>
+            <Grid size={6} >
               <FormControl fullWidth>
                 <InputLabel id="sort-order-label">순서</InputLabel>
                 <Select
@@ -205,7 +205,7 @@ export default function BacktestsPage() {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid xs={6} md={2}>
+            <Grid size={6} >
               <Button
                 variant="outlined"
                 startIcon={<FilterList />}
@@ -238,7 +238,7 @@ export default function BacktestsPage() {
             const winRate = performance?.win_rate;
 
             return (
-              <Grid xs={12} md={6} lg={4} key={backtest.id}>
+              <Grid size={12} key={backtest.id}>
                 <Card
                   sx={{
                     height: "100%",
@@ -306,7 +306,7 @@ export default function BacktestsPage() {
                     )}
 
                     <Grid container spacing={2}>
-                      <Grid xs={6}>
+                      <Grid size={6}>
                         <Stack spacing={0.5} alignItems="flex-start">
                           <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
                             {totalReturn !== undefined && totalReturn !== null ? (
@@ -332,7 +332,7 @@ export default function BacktestsPage() {
                           </Typography>
                         </Stack>
                       </Grid>
-                      <Grid xs={6}>
+                      <Grid size={6}>
                         <Stack spacing={0.5} alignItems="flex-start">
                           <Assessment fontSize="small" />
                           <Typography variant="body1">
@@ -343,7 +343,7 @@ export default function BacktestsPage() {
                           </Typography>
                         </Stack>
                       </Grid>
-                      <Grid xs={6}>
+                      <Grid size={6} >
                         <Stack spacing={0.5} alignItems="flex-start">
                           <TrendingDown color="error" fontSize="small" />
                           <Typography variant="body1" color="error">
@@ -356,7 +356,7 @@ export default function BacktestsPage() {
                           </Typography>
                         </Stack>
                       </Grid>
-                      <Grid xs={6}>
+                      <Grid size={6} >
                         <Stack spacing={0.5} alignItems="flex-start">
                           <ShowChart fontSize="small" color="primary" />
                           <Typography variant="body1" color="primary">
