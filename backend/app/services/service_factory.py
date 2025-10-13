@@ -13,6 +13,7 @@ from .market_data_service.intelligence import IntelligenceService
 from .market_data_service.technical_indicator import TechnicalIndicatorService
 from .strategy_service import StrategyService
 from .backtest_service import BacktestService
+from .backtest.orchestrator import BacktestOrchestrator
 from .database_manager import DatabaseManager
 from .watchlist_service import WatchlistService
 from .portfolio_service import PortfolioService
@@ -33,6 +34,7 @@ class ServiceFactory:
     _technical_indicator_service: Optional[TechnicalIndicatorService] = None
     _strategy_service: Optional[StrategyService] = None
     _backtest_service: Optional[BacktestService] = None
+    _backtest_orchestrator: Optional[BacktestOrchestrator] = None
     _database_manager: Optional[DatabaseManager] = None
     _watchlist_service: Optional[WatchlistService] = None
     _portfolio_service: Optional[PortfolioService] = None
@@ -107,19 +109,26 @@ class ServiceFactory:
         return self._strategy_service
 
     def get_backtest_service(self) -> BacktestService:
-        """BacktestService 인스턴스 반환 (DuckDB 연동 의존성 주입)"""
+        """BacktestService 인스턴스 반환 (Phase 2: CRUD only)"""
         if self._backtest_service is None:
+            self._backtest_service = BacktestService()
+            logger.info("Created BacktestService instance (CRUD only)")
+        return self._backtest_service
+
+    def get_backtest_orchestrator(self) -> BacktestOrchestrator:
+        """BacktestOrchestrator 인스턴스 반환 (Phase 2: 실행 로직)"""
+        if self._backtest_orchestrator is None:
             market_data_service = self.get_market_data_service()
             strategy_service = self.get_strategy_service()
             database_manager = self.get_database_manager()
 
-            self._backtest_service = BacktestService(
+            self._backtest_orchestrator = BacktestOrchestrator(
                 market_data_service=market_data_service,
                 strategy_service=strategy_service,
                 database_manager=database_manager,
             )
-            logger.info("Created BacktestService instance with DuckDB integration")
-        return self._backtest_service
+            logger.info("Created BacktestOrchestrator instance (Phase 2)")
+        return self._backtest_orchestrator
 
     def get_watchlist_service(self) -> WatchlistService:
         """WatchlistService 인스턴스 반환"""
@@ -142,7 +151,7 @@ class ServiceFactory:
             database_manager = self.get_database_manager()
             portfolio_service = self.get_portfolio_service()
             strategy_service = self.get_strategy_service()
-            backtest_service = self.get_backtest_service()
+            backtest_service = self.get_backtest_service()  # CRUD 서비스만 사용
             market_data_service = self.get_market_data_service()
             watchlist_service = self.get_watchlist_service()
 

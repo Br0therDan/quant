@@ -21,8 +21,7 @@ from app.schemas.backtest import (
 )
 from app.services.service_factory import service_factory
 from app.services.backtest_service import BacktestService
-from app.services.integrated_backtest_executor import IntegratedBacktestExecutor
-from app.models.strategy import StrategyType
+from app.services.backtest import BacktestOrchestrator
 from app.models.backtest import BacktestConfig
 from mysingle_quant.auth import get_current_active_verified_user, User
 
@@ -38,14 +37,9 @@ async def get_backtest_service() -> AsyncGenerator[BacktestService, None]:
         pass  # ServiceFactory manages cleanup
 
 
-async def get_integrated_executor() -> IntegratedBacktestExecutor:
-    """통합 백테스트 실행기 의존성 주입"""
-    market_data_service = service_factory.get_market_data_service()
-    strategy_service = service_factory.get_strategy_service()
-
-    return IntegratedBacktestExecutor(
-        market_data_service=market_data_service, strategy_service=strategy_service
-    )
+async def get_backtest_orchestrator() -> BacktestOrchestrator:
+    """백테스트 Orchestrator 의존성 주입 (Phase 2)"""
+    return service_factory.get_backtest_orchestrator()
 
 
 @router.post("/", response_model=BacktestResponse)
@@ -226,8 +220,9 @@ async def execute_backtest(
     request: BacktestExecutionRequest,
     current_user: User = Depends(get_current_active_verified_user),
     service: BacktestService = Depends(get_backtest_service),
+    orchestrator: BacktestOrchestrator = Depends(get_backtest_orchestrator),
 ):
-    """Execute backtest with trading signals"""
+    """Execute backtest with trading signals (Phase 2)"""
     try:
         # 먼저 소유권 확인
         existing_backtest = await service.get_backtest(backtest_id)
@@ -237,13 +232,18 @@ async def execute_backtest(
         if existing_backtest.user_id != str(current_user.id):
             raise HTTPException(status_code=403, detail="Access denied")
 
-        execution = await service.execute_backtest(
-            backtest_id=backtest_id,
-            signals=request.signals,
-        )
+        # Orchestrator로 실행 (Phase 2)
+        result = await orchestrator.execute_backtest(backtest_id=backtest_id)
 
-        if not execution:
-            raise HTTPException(status_code=404, detail="Backtest not found")
+        if not result:
+            raise HTTPException(status_code=500, detail="Backtest execution failed")
+
+        # Execution 가져오기
+        executions = await service.get_backtest_executions(backtest_id)
+        if not executions:
+            raise HTTPException(status_code=404, detail="Execution not found")
+
+        execution = executions[0]  # 가장 최근 실행
 
         return BacktestExecutionResponse(
             id=str(execution.id),
@@ -315,8 +315,8 @@ async def get_backtest_executions(
         raise HTTPException(status_code=500, detail=str(e)) from e
 
 
-@router.get("/results/", response_model=dict)
-async def get_backtest_results(
+@router.get("/results/duckdb", response_model=dict)
+async def get_backtest_results_from_duckdb(
     backtest_id: str | None = Query(None, description="백테스트 ID 필터"),
     execution_id: str | None = Query(None, description="실행 ID 필터"),
     skip: int = Query(0, ge=0, description="건너뛸 개수"),
@@ -324,7 +324,7 @@ async def get_backtest_results(
     current_user: User = Depends(get_current_active_verified_user),
     service: BacktestService = Depends(get_backtest_service),
 ):
-    """Get backtest results from DuckDB (고성능 분석용)"""
+    """Get backtest results (MongoDB 기반 - Phase 2)"""
     try:
         # backtest_id가 제공된 경우 소유권 확인
         if backtest_id:
@@ -332,8 +332,20 @@ async def get_backtest_results(
             if existing_backtest and existing_backtest.user_id != str(current_user.id):
                 raise HTTPException(status_code=403, detail="Access denied")
 
-        # DuckDB에서 백테스트 결과 요약 조회
-        results_summary = service.get_duckdb_results_summary()
+        # MongoDB에서 백테스트 결과 조회
+        results = await service.get_backtest_results()
+
+        # 딕셔너리로 변환
+        results_summary = [
+            {
+                "backtest_id": str(r.backtest_id),
+                "execution_id": r.execution_id,
+                "total_return": r.performance.total_return,
+                "sharpe_ratio": r.performance.sharpe_ratio,
+                "max_drawdown": r.performance.max_drawdown,
+            }
+            for r in results
+        ]
 
         # 필터링 적용
         filtered_results = results_summary
@@ -355,8 +367,8 @@ async def get_backtest_results(
             "total": total,
             "skip": skip,
             "limit": limit,
-            "source": "duckdb",
-            "message": "Results from high-performance DuckDB cache",
+            "source": "mongodb",
+            "message": "Results from MongoDB (Phase 2)",
         }
 
     except Exception as e:
@@ -368,10 +380,10 @@ async def get_backtest_results(
 async def create_and_run_integrated_backtest(
     request: IntegratedBacktestRequest,
     current_user: User = Depends(get_current_active_verified_user),
-    executor: IntegratedBacktestExecutor = Depends(get_integrated_executor),
+    orchestrator: BacktestOrchestrator = Depends(get_backtest_orchestrator),
     service: BacktestService = Depends(get_backtest_service),
 ):
-    """통합 백테스트 생성 및 실행 - 모든 서비스 연동"""
+    """통합 백테스트 생성 및 실행 - Phase 2 Orchestrator"""
     try:
         # 1. 백테스트 설정 생성
         config = BacktestConfig(
@@ -392,40 +404,17 @@ async def create_and_run_integrated_backtest(
             user_id=str(current_user.id),
         )
 
-        # 3. 전략 타입 변환
-        try:
-            strategy_type = StrategyType(request.strategy_type)
-        except ValueError:
-            raise HTTPException(
-                status_code=400,
-                detail=f"Invalid strategy type: {request.strategy_type}",
-            )
-
-        # 4. 통합 백테스트 실행
-        result = await executor.execute_integrated_backtest(
-            backtest_id=str(backtest.id),
-            symbols=request.symbols,
-            start_date=request.start_date,
-            end_date=request.end_date,
-            strategy_type=strategy_type,
-            strategy_params=request.strategy_params,
-            initial_capital=request.initial_capital,
-        )
+        # 3. Orchestrator로 실행 (Phase 2)
+        result = await orchestrator.execute_backtest(backtest_id=str(backtest.id))
 
         if result:
             return IntegratedBacktestResponse(
                 backtest_id=str(backtest.id),
-                execution_id=(
-                    str(result.execution_id)
-                    if hasattr(result, "execution_id")
-                    else None
-                ),
+                execution_id=result.execution_id,
                 result_id=str(result.id),
                 status=BacktestStatus.COMPLETED,
-                message="Integrated backtest completed successfully",
-                performance=(
-                    result.performance if hasattr(result, "performance") else None
-                ),
+                message="Integrated backtest completed successfully (Phase 2)",
+                performance=result.performance,
                 start_time=backtest.start_time,
                 end_time=backtest.end_time,
             )
@@ -451,24 +440,21 @@ async def create_and_run_integrated_backtest(
 
 @router.get("/health")
 async def health_check():
-    """백테스트 시스템 상태 확인 (DuckDB + MongoDB 통합 상태)"""
+    """백테스트 시스템 상태 확인 (Phase 2)"""
     try:
         # DuckDB 상태 확인
         database_manager = service_factory.get_database_manager()
         duckdb_connected = database_manager.connection is not None
 
-        # 서비스 상태 확인
-        market_data_service = service_factory.get_market_data_service()
-        backtest_service = service_factory.get_backtest_service()
-
-        # 데이터 상태 확인
+        # DuckDB 데이터 상태 확인
         duckdb_symbols = (
             database_manager.get_available_symbols() if duckdb_connected else []
         )
-        mongodb_symbols = await market_data_service.stock.get_available_symbols()
 
-        # DuckDB 백테스트 결과 통계
-        results_count = len(backtest_service.get_duckdb_results_summary())
+        # MongoDB 백테스트 카운트
+        backtest_service = service_factory.get_backtest_service()
+        backtests = await backtest_service.get_backtests()
+        results_count = len(backtests)
 
         return {
             "status": "healthy",
@@ -477,15 +463,17 @@ async def health_check():
                 "duckdb": {
                     "connected": duckdb_connected,
                     "symbols_count": len(duckdb_symbols),
-                    "backtest_results_count": results_count,
                 },
-                "mongodb": {"connected": True, "symbols_count": len(mongodb_symbols)},
+                "mongodb": {
+                    "connected": True,
+                    "backtest_count": results_count,
+                },
             },
             "services": {
                 "market_data": "✅ Ready",
                 "strategy": "✅ Ready",
-                "backtest": "✅ Ready",
-                "integrated_executor": "✅ Ready",
+                "backtest": "✅ Ready (Phase 2)",
+                "orchestrator": "✅ Ready",
             },
         }
 
@@ -502,13 +490,51 @@ async def health_check():
 async def get_performance_analytics(
     service: BacktestService = Depends(get_backtest_service),
 ):
-    """백테스트 성과 분석 (DuckDB 고성능 분석)"""
+    """백테스트 성과 분석 (MongoDB 기반 - Phase 2)"""
     try:
-        stats = service.get_duckdb_performance_stats()
+        # MongoDB에서 백테스트 결과 가져오기
+        results = await service.get_backtest_results()
+
+        if not results:
+            return {
+                "status": "success",
+                "analytics": {
+                    "total_backtests": 0,
+                    "message": "No backtest results found",
+                },
+                "source": "mongodb",
+                "computed_at": datetime.now().isoformat(),
+            }
+
+        # 기본 통계 계산
+        total_count = len(results)
+        avg_return = (
+            sum(r.performance.total_return for r in results) / total_count
+            if total_count > 0
+            else 0
+        )
+        avg_sharpe = (
+            sum(r.performance.sharpe_ratio for r in results) / total_count
+            if total_count > 0
+            else 0
+        )
+
         return {
             "status": "success",
-            "analytics": stats,
-            "source": "duckdb",
+            "analytics": {
+                "total_backtests": total_count,
+                "average_return": avg_return,
+                "average_sharpe_ratio": avg_sharpe,
+                "results_preview": [
+                    {
+                        "backtest_id": str(r.backtest_id),
+                        "total_return": r.performance.total_return,
+                        "sharpe_ratio": r.performance.sharpe_ratio,
+                    }
+                    for r in results[:5]
+                ],
+            },
+            "source": "mongodb",
             "computed_at": datetime.now().isoformat(),
         }
     except Exception as e:
@@ -521,13 +547,14 @@ async def get_trades_analytics(
     symbol: str | None = Query(None, description="심볼 필터"),
     service: BacktestService = Depends(get_backtest_service),
 ):
-    """거래 기록 분석 (DuckDB 고성능 쿼리)"""
+    """거래 기록 분석 (MongoDB 기반)"""
     try:
         if execution_id:
-            trades = service.get_duckdb_trades_by_execution(execution_id)
+            # MongoDB에서 실행 정보 가져오기
+            executions = await service.get_backtest_executions(execution_id)
+            trades = executions[0].trades if executions else []
             analysis_scope = f"execution_{execution_id}"
         else:
-            # 전체 거래 기록 요약 (향후 구현)
             trades = []
             analysis_scope = "all_executions"
 
@@ -536,7 +563,7 @@ async def get_trades_analytics(
             "analysis_scope": analysis_scope,
             "trades_count": len(trades),
             "trades": trades,
-            "source": "duckdb",
+            "source": "mongodb",
             "queried_at": datetime.now().isoformat(),
         }
     except Exception as e:
@@ -547,16 +574,17 @@ async def get_trades_analytics(
 async def get_backtest_summary_analytics(
     service: BacktestService = Depends(get_backtest_service),
 ):
-    """백테스트 결과 요약 분석 (DuckDB 기반)"""
+    """백테스트 결과 요약 분석 (MongoDB 기반)"""
     try:
-        summary = service.get_duckdb_results_summary()
+        # MongoDB에서 백테스트 결과 가져오기
+        results = await service.get_backtest_results()
 
         return {
             "status": "success",
             "summary": {
-                "total_backtests": len(summary),
-                "recent_results": summary[:10],  # 최근 10개
-                "source": "duckdb",
+                "total_backtests": len(results),
+                "recent_results": results[:10],  # 최근 10개
+                "source": "mongodb",
             },
             "analyzed_at": datetime.now().isoformat(),
         }

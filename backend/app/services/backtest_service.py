@@ -1,19 +1,17 @@
 """
-Backtest Service Implementation with DuckDB Integration
+Backtest Service - CRUD Operations Only (Phase 2)
+
+Phase 2 변경사항:
+- 실행 로직 제거 → BacktestOrchestrator로 이동
+- CRUD 및 조회 기능만 유지
+- 700 lines → 150 lines 축소
 """
 
 import logging
-import uuid
 from datetime import datetime
-from typing import Any, TYPE_CHECKING
+from typing import Optional
 
-import numpy as np
 from beanie import PydanticObjectId
-
-if TYPE_CHECKING:
-    from app.services.market_data_service import MarketDataService
-    from app.services.strategy_service import StrategyService
-    from app.services.database_manager import DatabaseManager
 
 from app.models.backtest import (
     Backtest,
@@ -22,130 +20,26 @@ from app.models.backtest import (
     BacktestResult,
     BacktestStatus,
     PerformanceMetrics,
-    Trade,
 )
-from app.services.integrated_backtest_executor import IntegratedBacktestExecutor
-
 
 logger = logging.getLogger(__name__)
 
 
-class PerformanceCalculator:
-    """성과 계산기"""
-
-    @staticmethod
-    def calculate_metrics(
-        daily_values: list[float], initial_value: float
-    ) -> dict[str, float]:
-        """성과 지표 계산"""
-        if not daily_values or len(daily_values) < 2:
-            return {
-                "total_return": 0.0,
-                "annualized_return": 0.0,
-                "volatility": 0.0,
-                "sharpe_ratio": 0.0,
-                "max_drawdown": 0.0,
-            }
-
-        # 일일 수익률 계산
-        daily_returns = []
-        for i in range(1, len(daily_values)):
-            daily_return = (daily_values[i] - daily_values[i - 1]) / daily_values[i - 1]
-            daily_returns.append(daily_return)
-
-        # 총 수익률
-        total_return = (daily_values[-1] - initial_value) / initial_value
-
-        # 연환산 수익률
-        days = len(daily_values)
-        annualized_return = (1 + total_return) ** (365 / days) - 1 if days > 0 else 0.0
-
-        # 변동성
-        volatility = np.std(daily_returns) * np.sqrt(252) if daily_returns else 0.0
-
-        # 샤프 비율
-        sharpe_ratio = annualized_return / volatility if volatility > 0 else 0.0
-
-        # 최대 낙폭
-        max_drawdown = PerformanceCalculator._calculate_max_drawdown(daily_values)
-
-        return {
-            "total_return": total_return,
-            "annualized_return": annualized_return,
-            "volatility": volatility,
-            "sharpe_ratio": sharpe_ratio,
-            "max_drawdown": max_drawdown,
-        }
-
-    @staticmethod
-    def _calculate_max_drawdown(values: list[float]) -> float:
-        """최대 낙폭 계산"""
-        if not values:
-            return 0.0
-
-        peak = values[0]
-        max_dd = 0.0
-
-        for value in values:
-            if value > peak:
-                peak = value
-
-            drawdown = (peak - value) / peak if peak > 0 else 0.0
-            if drawdown > max_dd:
-                max_dd = drawdown
-
-        return max_dd
-
-
 class BacktestService:
-    """백테스트 서비스 with DuckDB Integration"""
+    """백테스트 CRUD 서비스
 
-    def __init__(
-        self,
-        market_data_service: "MarketDataService",
-        strategy_service: "StrategyService",
-        database_manager: "DatabaseManager",
-    ):
-        """백테스트 서비스 초기화
-
-        Args:
-            market_data_service: 시장 데이터 서비스
-            strategy_service: 전략 서비스
-            database_manager: 데이터베이스 매니저 (DuckDB)
-
-        Raises:
-            ValueError: 필수 의존성이 None인 경우
-        """
-        if market_data_service is None:
-            raise ValueError("market_data_service는 필수입니다")
-        if strategy_service is None:
-            raise ValueError("strategy_service는 필수입니다")
-        if database_manager is None:
-            raise ValueError("database_manager는 필수입니다")
-
-        self.performance_calculator = PerformanceCalculator()
-        self.market_data_service = market_data_service
-        self.strategy_service = strategy_service
-        self.database_manager = database_manager
-
-        # 통합 실행기 즉시 생성
-        self.integrated_executor = IntegratedBacktestExecutor(
-            market_data_service=market_data_service,
-            strategy_service=strategy_service,
-        )
-
-        logger.info("BacktestService initialized with all dependencies")
+    Phase 2에서 실행 로직은 BacktestOrchestrator로 분리되었습니다.
+    이 서비스는 순수 CRUD 작업만 담당합니다.
+    """
 
     async def create_backtest(
         self,
         name: str,
         description: str = "",
-        config: BacktestConfig | None = None,
-        user_id: str | None = None,
+        config: Optional[BacktestConfig] = None,
+        user_id: Optional[str] = None,
     ) -> Backtest:
         """백테스트 생성"""
-        from app.models.backtest import BacktestConfig  # 순환 import 방지
-
         if config is None:
             config = BacktestConfig(
                 name=name,
@@ -162,6 +56,7 @@ class BacktestService:
             description=description,
             config=config,
             user_id=user_id,
+            status=BacktestStatus.PENDING,
             start_time=None,
             end_time=None,
             duration_seconds=None,
@@ -174,14 +69,15 @@ class BacktestService:
         )
 
         await backtest.insert()
+        logger.info(f"Created backtest: {backtest.id}")
         return backtest
 
     async def get_backtests(
         self,
-        status: BacktestStatus | None = None,
+        status: Optional[BacktestStatus] = None,
         skip: int = 0,
         limit: int = 100,
-        user_id: str | None = None,
+        user_id: Optional[str] = None,
     ) -> list[Backtest]:
         """백테스트 목록 조회"""
         query = {}
@@ -192,20 +88,21 @@ class BacktestService:
 
         return await Backtest.find(query).skip(skip).limit(limit).to_list()
 
-    async def get_backtest(self, backtest_id: str) -> Backtest | None:
+    async def get_backtest(self, backtest_id: str) -> Optional[Backtest]:
         """백테스트 상세 조회"""
         try:
             return await Backtest.get(PydanticObjectId(backtest_id))
-        except Exception:
+        except Exception as e:
+            logger.error(f"Failed to get backtest {backtest_id}: {e}")
             return None
 
     async def update_backtest(
         self,
         backtest_id: str,
-        name: str | None = None,
-        description: str | None = None,
-        config: BacktestConfig | None = None,
-    ) -> Backtest | None:
+        name: Optional[str] = None,
+        description: Optional[str] = None,
+        config: Optional[BacktestConfig] = None,
+    ) -> Optional[Backtest]:
         """백테스트 수정"""
         backtest = await self.get_backtest(backtest_id)
         if not backtest:
@@ -220,6 +117,7 @@ class BacktestService:
 
         backtest.updated_at = datetime.now()
         await backtest.save()
+        logger.info(f"Updated backtest: {backtest_id}")
         return backtest
 
     async def delete_backtest(self, backtest_id: str) -> bool:
@@ -229,102 +127,8 @@ class BacktestService:
             return False
 
         await backtest.delete()
+        logger.info(f"Deleted backtest: {backtest_id}")
         return True
-
-    async def execute_backtest(
-        self,
-        backtest_id: str,
-        signals: list[dict[str, Any]],
-    ) -> BacktestExecution | None:
-        """백테스트 실행 (IntegratedBacktestExecutor 사용)"""
-        backtest = await self.get_backtest(backtest_id)
-        if not backtest:
-            return None
-
-        execution_id = str(uuid.uuid4())
-        start_time = datetime.now()
-
-        try:
-            # 백테스트 상태 업데이트
-            backtest.status = BacktestStatus.RUNNING
-            backtest.start_time = start_time
-            await backtest.save()
-
-            # ✅ IntegratedBacktestExecutor로 백테스트 실행
-            executor = IntegratedBacktestExecutor(
-                market_data_service=self.market_data_service,
-                strategy_service=self.strategy_service,
-            )
-
-            # execute_integrated_backtest 메서드 사용
-            result = await executor.execute_integrated_backtest(
-                backtest_id=backtest_id,
-                symbols=backtest.config.symbols,
-                start_date=backtest.config.start_date,
-                end_date=backtest.config.end_date,
-                strategy_type=backtest.strategy_id,  # strategy_id가 StrategyType
-                strategy_params={},  # 빈 딕셔너리 전달 (기본값 사용)
-                initial_capital=backtest.config.initial_cash,
-            )
-
-            if not result:
-                raise Exception("Backtest execution failed")
-
-            # BacktestResult에서 데이터 추출
-            trades_list = result.trades if hasattr(result, "trades") else []
-            portfolio_values_list = (
-                result.portfolio_values if hasattr(result, "portfolio_values") else []
-            )
-
-            end_time = datetime.now()
-
-            # 백테스트 실행 기록 생성
-            execution = BacktestExecution(
-                backtest_id=backtest_id,
-                execution_id=execution_id,
-                start_time=start_time,
-                end_time=end_time,
-                status=BacktestStatus.COMPLETED,
-                portfolio_values=portfolio_values_list,
-                trades=trades_list,
-                positions={},
-                error_message=None,
-                created_at=datetime.now(),
-            )
-
-            # 백테스트 완료 상태 업데이트
-            backtest.status = BacktestStatus.COMPLETED
-            backtest.end_time = end_time
-            backtest.duration_seconds = (end_time - start_time).total_seconds()
-            await backtest.save()
-
-            await execution.insert()
-            logger.info(f"Backtest execution completed: {backtest_id}")
-            return execution
-
-        except Exception as e:
-            logger.error(f"백테스트 실행 중 오류: {e}")
-
-            # 실패 상태로 업데이트
-            end_time = datetime.now()
-            backtest.status = BacktestStatus.FAILED
-            backtest.end_time = end_time
-            backtest.duration_seconds = (end_time - start_time).total_seconds()
-            await backtest.save()
-
-            # 실패한 실행 기록
-            execution = BacktestExecution(
-                backtest_id=backtest_id,
-                execution_id=execution_id,
-                start_time=start_time,
-                end_time=end_time,
-                status=BacktestStatus.FAILED,
-                error_message=str(e),
-                created_at=datetime.now(),
-            )
-            await execution.insert()
-            return execution
-            return execution
 
     async def get_backtest_executions(
         self,
@@ -343,8 +147,8 @@ class BacktestService:
 
     async def get_backtest_results(
         self,
-        backtest_id: str | None = None,
-        execution_id: str | None = None,
+        backtest_id: Optional[str] = None,
+        execution_id: Optional[str] = None,
         skip: int = 0,
         limit: int = 100,
     ) -> list[BacktestResult]:
@@ -365,8 +169,6 @@ class BacktestService:
         final_portfolio_value: float = 0.0,
         cash_remaining: float = 0.0,
         total_invested: float = 100000.0,
-        portfolio_history_path: str | None = None,
-        trades_history_path: str | None = None,
     ) -> BacktestResult:
         """백테스트 결과 생성"""
         result = BacktestResult(
@@ -387,219 +189,5 @@ class BacktestService:
         )
 
         await result.insert()
-
-        # DuckDB에도 백테스트 결과 저장 (고속 쿼리용)
-        if self.database_manager:
-            try:
-                await self._save_result_to_duckdb(result)
-            except Exception as e:
-                logger.error(f"DuckDB 백테스트 결과 저장 실패: {e}")
-
+        logger.info(f"Created backtest result: {execution_id}")
         return result
-
-    async def _save_result_to_duckdb(self, result: BacktestResult) -> None:
-        """백테스트 결과를 DuckDB에 저장"""
-        if not self.database_manager:
-            return
-
-        backtest = await Backtest.get(result.backtest_id)
-        if not backtest:
-            logger.warning(f"백테스트를 찾을 수 없음: {result.backtest_id}")
-            return
-
-        result_data = {
-            "strategy_name": backtest.name,
-            "symbols": backtest.config.symbols,
-            "start_date": backtest.config.start_date.date(),
-            "end_date": backtest.config.end_date.date(),
-            "initial_cash": backtest.config.initial_cash,
-            "final_value": result.final_portfolio_value,
-            "total_return": result.performance.total_return,
-            "annual_return": result.performance.annualized_return,
-            "volatility": result.performance.volatility,
-            "sharpe_ratio": result.performance.sharpe_ratio,
-            "max_drawdown": result.performance.max_drawdown,
-            "parameters": {},  # 전략 파라미터 (향후 확장 예정)
-        }
-
-        result_id = self.database_manager.save_backtest_result(result_data)
-        logger.info(f"백테스트 결과가 DuckDB에 저장됨: {result.execution_id} -> {result_id}")
-
-        # 거래 기록도 DuckDB에 저장 (선택적)
-        await self._save_trades_to_duckdb(result.execution_id, [])
-
-    def get_duckdb_results_summary(self) -> list[dict]:
-        """DuckDB에서 백테스트 결과 요약 조회"""
-        if not self.database_manager:
-            return []
-
-        try:
-            query = """
-                SELECT id, strategy_name, symbols, start_date, end_date,
-                       total_return, annual_return, sharpe_ratio, max_drawdown,
-                       created_at
-                FROM backtest_results
-                ORDER BY created_at DESC
-                LIMIT 50
-            """
-            result = self.database_manager.duckdb_conn.execute(query).fetchall()
-
-            columns = [
-                "id",
-                "strategy_name",
-                "symbols",
-                "start_date",
-                "end_date",
-                "total_return",
-                "annual_return",
-                "sharpe_ratio",
-                "max_drawdown",
-                "created_at",
-            ]
-
-            return [dict(zip(columns, row)) for row in result]
-
-        except Exception as e:
-            logger.error(f"DuckDB 결과 조회 실패: {e}")
-            return []
-
-    async def _save_trades_to_duckdb(
-        self, execution_id: str, trades: list[Trade]
-    ) -> None:
-        """거래 기록을 DuckDB에 저장"""
-        if not self.database_manager or not trades:
-            return
-
-        try:
-            for trade in trades:
-                self.database_manager.duckdb_conn.execute(
-                    """
-                    INSERT INTO trades
-                    (id, backtest_id, symbol, datetime, action, quantity,
-                     price, commission, value)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                    [
-                        trade.trade_id,
-                        execution_id,
-                        trade.symbol,
-                        trade.timestamp,
-                        trade.trade_type.value,
-                        trade.quantity,
-                        trade.price,
-                        trade.commission,
-                        trade.quantity * trade.price,
-                    ],
-                )
-
-            logger.info(f"거래 기록 {len(trades)}건이 DuckDB에 저장됨: {execution_id}")
-
-        except Exception as e:
-            logger.error(f"거래 기록 DuckDB 저장 실패: {e}")
-
-    def get_duckdb_trades_by_execution(self, execution_id: str) -> list[dict]:
-        """실행 ID별 거래 기록 조회 (DuckDB)"""
-        if not self.database_manager:
-            return []
-
-        try:
-            query = """
-                SELECT id, symbol, datetime, action, quantity, price, commission, value
-                FROM trades
-                WHERE backtest_id = ?
-                ORDER BY datetime
-            """
-            result = self.database_manager.duckdb_conn.execute(
-                query, [execution_id]
-            ).fetchall()
-
-            columns = [
-                "id",
-                "symbol",
-                "datetime",
-                "action",
-                "quantity",
-                "price",
-                "commission",
-                "value",
-            ]
-            return [dict(zip(columns, row)) for row in result]
-
-        except Exception as e:
-            logger.error(f"DuckDB 거래 기록 조회 실패: {e}")
-            return []
-
-    def get_duckdb_performance_stats(self) -> dict[str, Any]:
-        """DuckDB에서 성과 통계 조회"""
-        if not self.database_manager:
-            return {}
-
-        try:
-            # 전체 통계
-            overall_query = """
-                SELECT
-                    COUNT(*) as total_backtests,
-                    AVG(total_return) as avg_return,
-                    AVG(sharpe_ratio) as avg_sharpe,
-                    AVG(max_drawdown) as avg_drawdown,
-                    MAX(total_return) as best_return,
-                    MIN(total_return) as worst_return
-                FROM backtest_results
-            """
-            overall_stats = self.database_manager.duckdb_conn.execute(
-                overall_query
-            ).fetchone()
-
-            # 전략별 통계
-            strategy_query = """
-                SELECT
-                    strategy_name,
-                    COUNT(*) as count,
-                    AVG(total_return) as avg_return,
-                    AVG(sharpe_ratio) as avg_sharpe
-                FROM backtest_results
-                GROUP BY strategy_name
-                ORDER BY avg_return DESC
-                LIMIT 10
-            """
-            strategy_stats = self.database_manager.duckdb_conn.execute(
-                strategy_query
-            ).fetchall()
-
-            # overall_stats가 None이 아닐 때만 처리
-            if overall_stats:
-                return {
-                    "overall": {
-                        "total_backtests": overall_stats[0] or 0,
-                        "avg_return": round(overall_stats[1] or 0, 4),
-                        "avg_sharpe": round(overall_stats[2] or 0, 4),
-                        "avg_drawdown": round(overall_stats[3] or 0, 4),
-                        "best_return": round(overall_stats[4] or 0, 4),
-                        "worst_return": round(overall_stats[5] or 0, 4),
-                    },
-                    "by_strategy": [
-                        {
-                            "strategy_name": row[0],
-                            "count": row[1],
-                            "avg_return": round(row[2] or 0, 4),
-                            "avg_sharpe": round(row[3] or 0, 4),
-                        }
-                        for row in strategy_stats
-                    ],
-                }
-            else:
-                return {
-                    "overall": {
-                        "total_backtests": 0,
-                        "avg_return": 0.0,
-                        "avg_sharpe": 0.0,
-                        "avg_drawdown": 0.0,
-                        "best_return": 0.0,
-                        "worst_return": 0.0,
-                    },
-                    "by_strategy": [],
-                }
-
-        except Exception as e:
-            logger.error(f"DuckDB 성과 통계 조회 실패: {e}")
-            return {}
