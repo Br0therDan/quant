@@ -259,12 +259,12 @@ showError("API 호출 실패");
 ```mermaid
 quadrantChart
     title Frontend AI Integration 우선순위
-    x-axis 낮은 복잡도 --> 높은 복잡도
-    y-axis 낮은 비즈니스 가치 --> 높은 비즈니스 가치
-    quadrant-1 Phase 1 착수
-    quadrant-2 Phase 3 중기
-    quadrant-3 Phase 4 장기
-    quadrant-4 Phase 2 단기
+    x-axis "낮은 복잡도" --> "높은 복잡도"
+    y-axis "낮은 비즈니스 가치" --> "높은 비즈니스 가치"
+    quadrant-1 "Phase 1 착수"
+    quadrant-2 "Phase 3 중기"
+    quadrant-3 "Phase 4 장기"
+    quadrant-4 "Phase 2 단기"
     useMLModel: [0.3, 0.9]
     useRegimeDetection: [0.2, 0.85]
     usePortfolioForecast: [0.4, 0.8]

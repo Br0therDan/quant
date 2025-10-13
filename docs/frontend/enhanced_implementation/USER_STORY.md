@@ -187,6 +187,7 @@ sequenceDiagram
 
     par 병렬 데이터 로드
         FE->>API: GET /backtests/{id}
+
         API-->>FE: backtest + metrics
 
         FE->>API: GET /backtests/{id}/portfolio-history
