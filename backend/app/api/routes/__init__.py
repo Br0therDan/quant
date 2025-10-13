@@ -13,6 +13,7 @@ from .signals import router as signals_router
 from .ml import router as ml_router
 from .chatops import router as chatops_router
 from .narrative import router as narrative_router
+from .strategy_builder import router as strategy_builder_router
 
 
 __all__ = [
@@ -27,4 +28,5 @@ __all__ = [
     "ml_router",
     "chatops_router",
     "narrative_router",
+    "strategy_builder_router",
 ]

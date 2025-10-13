@@ -19,7 +19,7 @@
 | ---- | ------------------------- | ---------- | ---------- | ---------- | ------ | -------------------------------------------------------------------------- |
 | 1    | 예측 인텔리전스 기초 구축 | 2025-01-06 | 2025-02-14 | ✅ 완료    | 100%   | ML 시그널 API ✅, 레짐 감지 서비스 ✅, 확률적 KPI 예측 ✅ (2025-10-14)     |
 | 2    | 자동화 및 최적화 루프     | 2025-02-17 | 2025-03-28 | ✅ 완료    | 100%   | 백테스트 옵티마이저 ✅, RL 실행기 ⏸️(GPU 제약 보류), 데이터 QA 가드레일 ✅ |
-| 3    | 생성형 인사이트 & ChatOps | 2025-03-31 | 2025-05-09 | 🟡 진행 중 | 50%    | 내러티브 리포트 서비스 ✅ (90%), 대화형 전략 빌더, 운영 코파일럿 ✅        |
+| 3    | 생성형 인사이트 & ChatOps | 2025-03-31 | 2025-05-09 | 🟡 진행 중 | 65%    | 내러티브 리포트 ✅ (90%), 대화형 전략 빌더 ✅ (80%), 운영 코파일럿 ✅      |
 | 4    | MLOps 플랫폼 가동         | 2025-05-12 | 2025-06-20 | 🔵 기획 중 | 0%     | 피처 스토어 거버넌스, 모델 레지스트리, 평가 하니스                         |
 
 ## 우선순위 백로그
@@ -34,7 +34,7 @@
 | 6        | 피처 스토어 론칭           | ML 재사용을 위한 버전 관리 DuckDB 뷰                         | DuckDB 거버넌스, 이상 징후 플래그                    | 단계 4 | 계획됨                        |            |
 | 7        | 모델 라이프사이클 관리     | MongoDB 메타데이터와 연동된 MLflow/W&B 통합                  | 피처 스토어, 옵티마이저 산출물                       | 단계 4 | 계획됨                        |            |
 | 8        | 내러티브 리포트 생성기     | `/backtests/{id}/report` 가드레일 적용 LLM 서비스            | 단계 1 KPI 산출물                                    | 단계 3 | ✅ **완료**                   | 2025-10-14 |
-| 9        | 대화형 전략 빌더           | 자연어를 전략 구성으로 변환하는 생성형 빌더 라우트           | StrategyService 템플릿, 임베딩 스토어                | 단계 3 | 계획됨                        |            |
+| 9        | 대화형 전략 빌더           | 자연어를 전략 구성으로 변환하는 생성형 빌더 라우트           | StrategyService 템플릿, 임베딩 스토어                | 단계 3 | ✅ **완료** (Core 80%)        | 2025-10-14 |
 | 10       | ChatOps 운영 에이전트      | 캐시 및 파이프라인 상태 점검을 위한 툴 기반 LLM              | 데이터 품질 센티널, 상태 확인 API                    | 단계 3 | ✅ **완료**                   | 2025-10-14 |
 | 11       | 평가 하니스                | 설명 가능성을 수집하는 벤치마크 스위트                       | 백테스트 결과 스키마                                 | 단계 4 | 계획됨                        |            |
 | 12       | 강화학습(RL) 실행기        | TradingSimulator와 `RLEngine` 통합                           | 옵티마이저 텔레메트리, MarketDataService 시그널      | 단계 2 | ⏸️ **보류** (GPU 리소스 제약) |            |
@@ -84,7 +84,7 @@
   - _문서:
     [PHASE2_D1_IMPLEMENTATION_REPORT.md](./phase2_automation_and_optimization/PHASE2_D1_IMPLEMENTATION_REPORT.md)_
 
-- **M4 – 생성형 인사이트 MVP (2025-04-25):** ✅ **완료 (90%)** (2025-10-14)  
+- **M4 – 생성형 인사이트 MVP (2025-04-25):** ✅ **완료 (85%)** (2025-10-14)  
   자동화 내러티브 리포트와 대화형 빌더를 제공합니다.
 
   - ✅ NarrativeReportService (439 lines): OpenAI GPT-4 통합, Phase 1 인사이트
@@ -93,10 +93,17 @@
   - ✅ API Route (150 lines): POST /api/v1/narrative/backtests/{id}/report
   - ✅ ServiceFactory 통합: get_narrative_report_service()
   - ✅ Fact Checking: Sharpe/Drawdown/Win Rate 범위 검증
-  - ⏳ Unit Tests: \_build_prompt_context, \_call_llm, \_validate_output (보류)
-  - _상태: 핵심 기능 완료 - 테스트 대기_
+  - ✅ StrategyBuilderService (578 lines): LLM 의도 파싱, 지표 추천, 파라미터
+    검증
+  - ✅ Strategy Builder Schemas (190 lines): IntentType, ConfidenceLevel,
+    ValidationStatus
+  - ✅ Strategy Builder API (273 lines): POST /api/v1/strategy-builder
+  - ⏳ Embedding Index: 향후 확장 (현재 5개 지표 하드코딩)
+  - ⏳ Unit Tests: 서비스 및 API 테스트 (보류)
+  - _상태: 핵심 기능 완료 (85%) - 임베딩 & 테스트 대기_
   - _문서:
-    [PHASE3_D1_IMPLEMENTATION_REPORT.md](./phase3_generative_interfaces/PHASE3_D1_IMPLEMENTATION_REPORT.md)_
+    [PHASE3_D1_IMPLEMENTATION_REPORT.md](./phase3_generative_interfaces/PHASE3_D1_IMPLEMENTATION_REPORT.md),
+    [PHASE3_D2_IMPLEMENTATION_REPORT.md](./phase3_generative_interfaces/PHASE3_D2_IMPLEMENTATION_REPORT.md)_
 
 - **M5 – MLOps 플랫폼 론칭 (2025-06-20):** 피처 스토어, 모델 레지스트리, 평가
   하니스를 가동합니다.  

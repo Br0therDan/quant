@@ -6,7 +6,9 @@ import type {
 	BacktestGetBacktestExecutionsResponse,
 	BacktestGetBacktestResponse,
 	BacktestGetBacktestsResponse,
+	BacktestListOptimizationStudiesResponse,
 	BacktestUpdateBacktestResponse,
+	ChatOpsExecuteChatopsResponse,
 	CryptoGetBitcoinPriceResponse,
 	CryptoGetDailyPricesResponse,
 	CryptoGetEthereumPriceResponse,
@@ -15,6 +17,7 @@ import type {
 	DashboardGetDashboardSummaryResponse,
 	DashboardGetEconomicCalendarResponse,
 	DashboardGetNewsFeedResponse,
+	DashboardGetPortfolioForecastResponse,
 	DashboardGetPortfolioPerformanceResponse,
 	DashboardGetPredictiveOverviewResponse,
 	DashboardGetRecentTradesResponse,
@@ -27,12 +30,15 @@ import type {
 	FundamentalGetIncomeStatementResponse,
 	HealthHealthCheckResponse,
 	MarketRegimeGetMarketRegimeResponse,
+	NarrativeGenerateNarrativeReportResponse,
 	SignalsGetMlSignalResponse,
 	StockGetDailyPricesResponse,
 	StockGetIntradayDataResponse,
 	StockGetMonthlyPricesResponse,
 	StockGetQuoteResponse,
 	StockGetWeeklyPricesResponse,
+	StrategyBuilderApproveStrategyResponse,
+	StrategyBuilderGenerateStrategyResponse,
 	StrategyCreateStrategyResponse,
 	StrategyExecuteStrategyResponse,
 	StrategyGetStrategiesResponse,
@@ -691,6 +697,28 @@ const backtestExecutionListResponseSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
+export const backtestListOptimizationStudiesResponseTransformer = async (
+	data: any,
+): Promise<BacktestListOptimizationStudiesResponse> => {
+	data = studyListResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const studyListResponseSchemaResponseTransformer = (data: any) => {
+	data.studies = data.studies.map((item: any) => {
+		return studyListItemSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+const studyListItemSchemaResponseTransformer = (data: any) => {
+	data.created_at = new Date(data.created_at);
+	if (data.completed_at) {
+		data.completed_at = new Date(data.completed_at);
+	}
+	return data;
+};
+
 export const watchlistListWatchlistsResponseTransformer = async (
 	data: any,
 ): Promise<WatchlistListWatchlistsResponse> => {
@@ -761,6 +789,11 @@ const dashboardSummarySchemaResponseTransformer = (data: any) => {
 	data.recent_activity = recentActivitySchemaResponseTransformer(
 		data.recent_activity,
 	);
+	if (data.data_quality) {
+		data.data_quality = dataQualitySummarySchemaResponseTransformer(
+			data.data_quality,
+		);
+	}
 	return data;
 };
 
@@ -768,6 +801,21 @@ const recentActivitySchemaResponseTransformer = (data: any) => {
 	if (data.last_login) {
 		data.last_login = new Date(data.last_login);
 	}
+	return data;
+};
+
+const dataQualitySummarySchemaResponseTransformer = (data: any) => {
+	data.last_updated = new Date(data.last_updated);
+	if (data.recent_alerts) {
+		data.recent_alerts = data.recent_alerts.map((item: any) => {
+			return dataQualityAlertSchemaResponseTransformer(item);
+		});
+	}
+	return data;
+};
+
+const dataQualityAlertSchemaResponseTransformer = (data: any) => {
+	data.occurred_at = new Date(data.occurred_at);
 	return data;
 };
 
@@ -947,6 +995,22 @@ const portfolioForecastDistributionSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
+export const dashboardGetPortfolioForecastResponseTransformer = async (
+	data: any,
+): Promise<DashboardGetPortfolioForecastResponse> => {
+	data = portfolioForecastResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const portfolioForecastResponseSchemaResponseTransformer = (data: any) => {
+	if (data.timestamp) {
+		data.timestamp = new Date(data.timestamp);
+	}
+	data.data = portfolioForecastDistributionSchemaResponseTransformer(data.data);
+	data.metadata = metadataInfoSchemaResponseTransformer(data.metadata);
+	return data;
+};
+
 export const signalsGetMlSignalResponseTransformer = async (
 	data: any,
 ): Promise<SignalsGetMlSignalResponse> => {
@@ -960,5 +1024,106 @@ const mlSignalResponseSchemaResponseTransformer = (data: any) => {
 	}
 	data.data = mlSignalInsightSchemaResponseTransformer(data.data);
 	data.metadata = metadataInfoSchemaResponseTransformer(data.metadata);
+	return data;
+};
+
+export const chatOpsExecuteChatopsResponseTransformer = async (
+	data: any,
+): Promise<ChatOpsExecuteChatopsResponse> => {
+	data = chatOpsResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const chatOpsResponseSchemaResponseTransformer = (data: any) => {
+	if (data.cache_status) {
+		data.cache_status = cacheStatusSnapshotSchemaResponseTransformer(
+			data.cache_status,
+		);
+	}
+	if (data.data_quality) {
+		data.data_quality = dataQualitySummarySchemaResponseTransformer(
+			data.data_quality,
+		);
+	}
+	if (data.recent_failures) {
+		data.recent_failures = data.recent_failures.map((item: any) => {
+			return failureInsightSchemaResponseTransformer(item);
+		});
+	}
+	return data;
+};
+
+const cacheStatusSnapshotSchemaResponseTransformer = (data: any) => {
+	if (data.duckdb_last_updated) {
+		data.duckdb_last_updated = new Date(data.duckdb_last_updated);
+	}
+	if (data.mongodb_last_event_at) {
+		data.mongodb_last_event_at = new Date(data.mongodb_last_event_at);
+	}
+	return data;
+};
+
+const failureInsightSchemaResponseTransformer = (data: any) => {
+	data.occurred_at = new Date(data.occurred_at);
+	return data;
+};
+
+export const narrativeGenerateNarrativeReportResponseTransformer = async (
+	data: any,
+): Promise<NarrativeGenerateNarrativeReportResponse> => {
+	data = narrativeReportResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const narrativeReportResponseSchemaResponseTransformer = (data: any) => {
+	if (data.data) {
+		data.data = backtestNarrativeReportSchemaResponseTransformer(data.data);
+	}
+	if (data.timestamp) {
+		data.timestamp = new Date(data.timestamp);
+	}
+	return data;
+};
+
+const backtestNarrativeReportSchemaResponseTransformer = (data: any) => {
+	data.generated_at = new Date(data.generated_at);
+	return data;
+};
+
+export const strategyBuilderGenerateStrategyResponseTransformer = async (
+	data: any,
+): Promise<StrategyBuilderGenerateStrategyResponse> => {
+	data = strategyBuilderResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const strategyBuilderResponseSchemaResponseTransformer = (data: any) => {
+	data.human_approval = humanApprovalRequestSchemaResponseTransformer(
+		data.human_approval,
+	);
+	if (data.generated_at) {
+		data.generated_at = new Date(data.generated_at);
+	}
+	return data;
+};
+
+const humanApprovalRequestSchemaResponseTransformer = (data: any) => {
+	if (data.approval_deadline) {
+		data.approval_deadline = new Date(data.approval_deadline);
+	}
+	return data;
+};
+
+export const strategyBuilderApproveStrategyResponseTransformer = async (
+	data: any,
+): Promise<StrategyBuilderApproveStrategyResponse> => {
+	data = strategyApprovalResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const strategyApprovalResponseSchemaResponseTransformer = (data: any) => {
+	if (data.approved_at) {
+		data.approved_at = new Date(data.approved_at);
+	}
 	return data;
 };

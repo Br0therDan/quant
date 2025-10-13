@@ -149,7 +149,10 @@ class StrategyBuilderService:
         generated_strategy = None
         validation_errors = []
         human_approval = HumanApprovalRequest(
-            requires_approval=request.require_human_approval
+            requires_approval=request.require_human_approval,
+            approval_reasons=[],
+            suggested_modifications=[],
+            approval_deadline=None,
         )
 
         if parsed_intent.intent_type == IntentType.CREATE_STRATEGY:
@@ -256,6 +259,7 @@ JSON 형식으로 응답하세요:
 """
 
         try:
+            assert self.client is not None, "OpenAI client must be initialized"
             response = await self.client.chat.completions.create(
                 model=self.model,
                 messages=[
@@ -371,6 +375,7 @@ JSON 형식으로 응답하세요:
 """
 
         try:
+            assert self.client is not None, "OpenAI client must be initialized"
             response = await self.client.chat.completions.create(
                 model=self.model,
                 messages=[
@@ -499,6 +504,8 @@ JSON 형식으로 응답하세요:
                         is_valid=True,
                         validation_status=ValidationStatus.WARNING,
                         message="알 수 없는 파라미터 (검증 규칙 없음)",
+                        suggested_value=None,
+                        value_range=None,
                     )
                 )
 
@@ -543,6 +550,7 @@ JSON 형식으로 응답하세요:
             requires_approval=requires_approval,
             approval_reasons=approval_reasons,
             suggested_modifications=suggested_modifications,
+            approval_deadline=None,
         )
 
     def _generate_response_message(

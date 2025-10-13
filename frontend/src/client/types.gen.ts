@@ -219,6 +219,52 @@ export type BacktestListResponse = {
 };
 
 /**
+ * BacktestNarrativeReport
+ * 백테스트 내러티브 리포트 (전체)
+ */
+export type BacktestNarrativeReport = {
+	/**
+	 * Backtest Id
+	 * 백테스트 ID
+	 */
+	backtest_id: string;
+	/**
+	 * Generated At
+	 * 리포트 생성 시간
+	 */
+	generated_at: Date;
+	/**
+	 * Llm Model
+	 * 사용된 LLM 모델
+	 */
+	llm_model: string;
+	/**
+	 * Llm Version
+	 * LLM 버전
+	 */
+	llm_version?: string | null;
+	executive_summary: ExecutiveSummary;
+	performance_analysis: PerformanceAnalysis;
+	strategy_insights: StrategyInsights;
+	risk_assessment: RiskAssessment;
+	/**
+	 * 시장 맥락
+	 */
+	market_context: MarketContext;
+	recommendations: Recommendations;
+	/**
+	 * Fact Check Passed
+	 * 사실 확인 통과 여부
+	 */
+	fact_check_passed: boolean;
+	/**
+	 * Validation Errors
+	 * 검증 오류 (있는 경우)
+	 */
+	validation_errors?: Array<string>;
+};
+
+/**
  * BacktestResponse
  * 백테스트 응답
  */
@@ -611,6 +657,43 @@ export type CacheInfo = {
 };
 
 /**
+ * CacheStatusSnapshot
+ * Current cache backend health snapshot.
+ */
+export type CacheStatusSnapshot = {
+	/**
+	 * Duckdb Status
+	 * DuckDB 연결 상태
+	 */
+	duckdb_status: string;
+	/**
+	 * Duckdb Row Count
+	 * DuckDB 일별 시계열 행 수
+	 */
+	duckdb_row_count?: number | null;
+	/**
+	 * Duckdb Last Updated
+	 * DuckDB 최신 시계열 업데이트 시간
+	 */
+	duckdb_last_updated?: Date | null;
+	/**
+	 * Mongodb Status
+	 * MongoDB 연결 상태
+	 */
+	mongodb_status: string;
+	/**
+	 * Mongodb Last Event At
+	 * MongoDB에서 관측된 최신 데이터 품질 이벤트 시간
+	 */
+	mongodb_last_event_at?: Date | null;
+	/**
+	 * Notes
+	 * 추가 관찰 사항 또는 경고
+	 */
+	notes?: Array<string>;
+};
+
+/**
  * CashFlowData
  * 현금흐름표 응답 모델
  */
@@ -711,6 +794,70 @@ export type CashFlowResponse = {
 	 * 데이터 개수
 	 */
 	count: number;
+};
+
+/**
+ * ChatOpsRequest
+ * Request payload for ChatOps interactions.
+ */
+export type ChatOpsRequest = {
+	/**
+	 * Question
+	 * 사용자 질문 또는 명령
+	 */
+	question: string;
+	/**
+	 * User Roles
+	 * 요청을 수행하는 사용자의 역할 목록
+	 */
+	user_roles?: Array<string>;
+	/**
+	 * Channel
+	 * 질문이 발생한 채널(Slack, Console 등)
+	 */
+	channel?: string | null;
+};
+
+/**
+ * ChatOpsResponse
+ * Response payload returned by the ChatOps agent.
+ */
+export type ChatOpsResponse = {
+	/**
+	 * Answer
+	 * 사용자에게 제공되는 요약 응답
+	 */
+	answer: string;
+	/**
+	 * Used Tools
+	 * 실행된 ChatOps 툴 목록
+	 */
+	used_tools?: Array<string>;
+	/**
+	 * Denied Tools
+	 * 권한 부족으로 실행되지 않은 툴 목록
+	 */
+	denied_tools?: Array<string>;
+	/**
+	 * 캐시 및 저장소 상태 스냅샷
+	 */
+	cache_status?: CacheStatusSnapshot | null;
+	/**
+	 * 데이터 품질 센티널 요약
+	 */
+	data_quality?: DataQualitySummary | null;
+	/**
+	 * Recent Failures
+	 * 최근 운영 실패 목록
+	 */
+	recent_failures?: Array<FailureInsight>;
+	/**
+	 * External Services
+	 * 외부 서비스 상태
+	 */
+	external_services?: {
+		[key: string]: unknown;
+	};
 };
 
 /**
@@ -911,6 +1058,12 @@ export type CompanyOverviewResponse = {
 };
 
 /**
+ * ConfidenceLevel
+ * 신뢰도 수준
+ */
+export type ConfidenceLevel = "high" | "medium" | "low";
+
+/**
  * CryptoHistoricalDataResponse
  */
 export type CryptoHistoricalDataResponse = {
@@ -968,6 +1121,10 @@ export type DashboardSummary = {
 	 * 최근 활동
 	 */
 	recent_activity: RecentActivity;
+	/**
+	 * 데이터 품질 센티널 요약
+	 */
+	data_quality?: DataQualitySummary | null;
 };
 
 /**
@@ -984,6 +1141,57 @@ export type DashboardSummaryResponse = {
 	 * 응답 메시지
 	 */
 	message?: string;
+};
+
+/**
+ * DataQualityAlert
+ * 데이터 품질 이상 알림.
+ */
+export type DataQualityAlert = {
+	/**
+	 * Symbol
+	 * 심볼
+	 */
+	symbol: string;
+	/**
+	 * Data Type
+	 * 데이터 타입
+	 */
+	data_type: string;
+	/**
+	 * Occurred At
+	 * 이상 발생 시각
+	 */
+	occurred_at: Date;
+	/**
+	 * 심각도
+	 */
+	severity: DataQualitySeverity;
+	/**
+	 * Iso Score
+	 * Isolation Forest 점수
+	 */
+	iso_score: number;
+	/**
+	 * Prophet Score
+	 * Prophet 기반 잔차 점수
+	 */
+	prophet_score?: number | null;
+	/**
+	 * Price Change Pct
+	 * 전일 대비 변동률
+	 */
+	price_change_pct: number;
+	/**
+	 * Volume Z Score
+	 * 거래량 Z-Score
+	 */
+	volume_z_score: number;
+	/**
+	 * Message
+	 * 알림 메시지
+	 */
+	message: string;
 };
 
 /**
@@ -1011,6 +1219,46 @@ export type DataQualityInfo = {
 	 * 신뢰도 수준
 	 */
 	confidence_level?: string | null;
+};
+
+/**
+ * DataQualitySeverity
+ * 데이터 품질 이상 심각도.
+ */
+export type DataQualitySeverity =
+	| "normal"
+	| "low"
+	| "medium"
+	| "high"
+	| "critical";
+
+/**
+ * DataQualitySummary
+ * 데이터 품질 센티널 요약.
+ */
+export type DataQualitySummary = {
+	/**
+	 * Total Alerts
+	 * 총 이상 건수
+	 */
+	total_alerts: number;
+	/**
+	 * Severity Breakdown
+	 * 심각도별 건수
+	 */
+	severity_breakdown: {
+		[key in DataQualitySeverity]?: number;
+	};
+	/**
+	 * Last Updated
+	 * 마지막 업데이트 시각
+	 */
+	last_updated: Date;
+	/**
+	 * Recent Alerts
+	 * 최근 이상 목록
+	 */
+	recent_alerts?: Array<DataQualityAlert>;
 };
 
 /**
@@ -1251,6 +1499,75 @@ export type ExecutionResponse = {
 };
 
 /**
+ * ExecutiveSummary
+ * 임원용 요약
+ */
+export type ExecutiveSummary = {
+	/**
+	 * Title
+	 * 리포트 제목
+	 */
+	title: string;
+	/**
+	 * Overview
+	 * 백테스트 개요 (2-3 문장)
+	 */
+	overview: string;
+	/**
+	 * Key Findings
+	 * 핵심 발견사항 (3-5개)
+	 */
+	key_findings: Array<string>;
+	/**
+	 * 최종 추천 액션
+	 */
+	recommendation: ReportRecommendation;
+	/**
+	 * Confidence Level
+	 * 추천 신뢰도 (0-1)
+	 */
+	confidence_level: number;
+};
+
+/**
+ * FailureInsight
+ * Represents a recent operational failure surfaced to the operator.
+ */
+export type FailureInsight = {
+	/**
+	 * Source
+	 * 실패 이벤트 출처 (예: backtest, data_quality)
+	 */
+	source: string;
+	/**
+	 * Identifier
+	 * 이벤트 식별자 또는 연관 객체
+	 */
+	identifier: string;
+	/**
+	 * Occurred At
+	 * 실패가 발생한 시간
+	 */
+	occurred_at: Date;
+	/**
+	 * 데이터 품질 이벤트의 심각도
+	 */
+	severity?: DataQualitySeverity | null;
+	/**
+	 * Message
+	 * 사용자에게 노출할 메시지
+	 */
+	message: string;
+	/**
+	 * Metadata
+	 * 추가 컨텍스트 메타데이터
+	 */
+	metadata?: {
+		[key: string]: unknown;
+	};
+};
+
+/**
  * FeatureContribution
  * Contribution details for a single engineered feature.
  */
@@ -1297,6 +1614,67 @@ export type ForecastPercentileBand = {
 	 * Projected portfolio value at percentile
 	 */
 	projected_value: number;
+};
+
+/**
+ * GeneratedStrategyConfig
+ * 생성된 전략 설정
+ */
+export type GeneratedStrategyConfig = {
+	/**
+	 * Strategy Name
+	 * 전략 이름
+	 */
+	strategy_name: string;
+	/**
+	 * Strategy Type
+	 * 전략 타입 (기술적 지표 기반)
+	 */
+	strategy_type: string;
+	/**
+	 * Description
+	 * 전략 설명
+	 */
+	description: string;
+	/**
+	 * Indicators
+	 * 사용된 지표 목록 (1-5개)
+	 */
+	indicators: Array<IndicatorRecommendation>;
+	/**
+	 * Parameters
+	 * 전략 파라미터
+	 */
+	parameters: {
+		[key: string]: unknown;
+	};
+	/**
+	 * Parameter Validations
+	 * 파라미터 검증 결과
+	 */
+	parameter_validations: Array<ParameterValidation>;
+	/**
+	 * Entry Conditions
+	 * 진입 조건 설명
+	 */
+	entry_conditions: string;
+	/**
+	 * Exit Conditions
+	 * 청산 조건 설명
+	 */
+	exit_conditions: string;
+	/**
+	 * Risk Management
+	 * 리스크 관리 규칙
+	 */
+	risk_management?: string | null;
+	/**
+	 * Expected Performance
+	 * 예상 성과 (과거 유사 전략 기반)
+	 */
+	expected_performance?: {
+		[key: string]: unknown;
+	} | null;
 };
 
 /**
@@ -1374,6 +1752,33 @@ export type HistoricalDataResponse = {
 	 * Frequency
 	 */
 	frequency: string;
+};
+
+/**
+ * HumanApprovalRequest
+ * 휴먼 승인 요청
+ */
+export type HumanApprovalRequest = {
+	/**
+	 * Requires Approval
+	 * 승인 필요 여부
+	 */
+	requires_approval: boolean;
+	/**
+	 * Approval Reasons
+	 * 승인이 필요한 이유 (위험 요소 등)
+	 */
+	approval_reasons?: Array<string>;
+	/**
+	 * Suggested Modifications
+	 * 수정 제안 사항
+	 */
+	suggested_modifications?: Array<string>;
+	/**
+	 * Approval Deadline
+	 * 승인 기한
+	 */
+	approval_deadline?: Date | null;
 };
 
 /**
@@ -1583,6 +1988,107 @@ export type IndicatorListResponse = {
 };
 
 /**
+ * IndicatorRecommendation
+ * 지표 추천
+ */
+export type IndicatorRecommendation = {
+	/**
+	 * Indicator Name
+	 * 지표 이름 (예: RSI, MACD, Bollinger Bands)
+	 */
+	indicator_name: string;
+	/**
+	 * Indicator Type
+	 * 지표 유형 (momentum, trend, volatility 등)
+	 */
+	indicator_type: string;
+	/**
+	 * Confidence
+	 * 추천 신뢰도
+	 */
+	confidence: number;
+	/**
+	 * Rationale
+	 * 추천 이유
+	 */
+	rationale: string;
+	/**
+	 * Suggested Parameters
+	 * 제안된 기본 파라미터
+	 */
+	suggested_parameters?: {
+		[key: string]: unknown;
+	};
+	/**
+	 * Similarity Score
+	 * 쿼리와의 유사도 점수 (임베딩 기반)
+	 */
+	similarity_score: number;
+};
+
+/**
+ * IndicatorSearchRequest
+ * 지표 검색 요청 (임베딩 기반)
+ */
+export type IndicatorSearchRequest = {
+	/**
+	 * Query
+	 * 검색 쿼리
+	 */
+	query: string;
+	/**
+	 * Top K
+	 * 상위 K개 결과
+	 */
+	top_k?: number;
+	/**
+	 * Filters
+	 * 필터 (유형, 카테고리 등)
+	 */
+	filters?: {
+		[key: string]: unknown;
+	} | null;
+};
+
+/**
+ * IndicatorSearchResponse
+ * 지표 검색 응답
+ */
+export type IndicatorSearchResponse = {
+	/**
+	 * Status
+	 * 응답 상태
+	 */
+	status: string;
+	/**
+	 * Indicators
+	 * 검색된 지표 목록
+	 */
+	indicators: Array<IndicatorRecommendation>;
+	/**
+	 * Total
+	 * 총 검색 결과 수
+	 */
+	total: number;
+	/**
+	 * Query Embedding
+	 * 쿼리 임베딩 (디버깅용)
+	 */
+	query_embedding?: Array<number> | null;
+};
+
+/**
+ * IntentType
+ * 사용자 의도 유형
+ */
+export type IntentType =
+	| "create_strategy"
+	| "modify_strategy"
+	| "explain_strategy"
+	| "recommend_parameters"
+	| "optimize_strategy";
+
+/**
  * LoginResponse
  */
 export type LoginResponse = {
@@ -1675,6 +2181,33 @@ export type MlSignalResponse = {
 	 * Response metadata
 	 */
 	metadata: MetadataInfo;
+};
+
+/**
+ * MarketContext
+ * 시장 맥락 (Phase 1 통합)
+ */
+export type MarketContext = {
+	/**
+	 * Regime Analysis
+	 * 시장 레짐 분석 (Phase 1 D2)
+	 */
+	regime_analysis: string;
+	/**
+	 * Ml Signal Confidence
+	 * ML 시그널 신뢰도 (Phase 1 D1)
+	 */
+	ml_signal_confidence?: number | null;
+	/**
+	 * Forecast Outlook
+	 * 포트폴리오 예측 전망 (Phase 1 D3)
+	 */
+	forecast_outlook?: string | null;
+	/**
+	 * External Factors
+	 * 외부 요인 (뉴스, 경제 지표 등)
+	 */
+	external_factors?: Array<string>;
 };
 
 /**
@@ -1903,6 +2436,42 @@ export type MomentumConfig = {
 };
 
 /**
+ * NarrativeReportResponse
+ * 내러티브 리포트 응답
+ */
+export type NarrativeReportResponse = {
+	/**
+	 * Status
+	 * 응답 상태
+	 */
+	status: string;
+	/**
+	 * Message
+	 * 응답 메시지
+	 */
+	message: string;
+	/**
+	 * 리포트 데이터
+	 */
+	data?: BacktestNarrativeReport | null;
+	/**
+	 * Processing Time Ms
+	 * 처리 시간 (밀리초)
+	 */
+	processing_time_ms: number;
+	/**
+	 * Cached
+	 * 캐시된 결과 여부
+	 */
+	cached?: boolean;
+	/**
+	 * Timestamp
+	 * 응답 시간
+	 */
+	timestamp?: Date;
+};
+
+/**
  * NewsArticle
  * 뉴스 기사.
  */
@@ -2018,10 +2587,373 @@ export type OAuthAccount = {
 };
 
 /**
+ * OptimizationProgress
+ * Current optimization study progress.
+ */
+export type OptimizationProgress = {
+	/**
+	 * Study Name
+	 */
+	study_name: string;
+	/**
+	 * Status
+	 */
+	status: string;
+	/**
+	 * Trials Completed
+	 */
+	trials_completed: number;
+	/**
+	 * N Trials
+	 */
+	n_trials: number;
+	/**
+	 * Best Value
+	 */
+	best_value?: number | null;
+	/**
+	 * Best Params
+	 */
+	best_params?: {
+		[key: string]: unknown;
+	} | null;
+	/**
+	 * Started At
+	 */
+	started_at?: Date | null;
+	/**
+	 * Estimated Completion
+	 */
+	estimated_completion?: Date | null;
+	/**
+	 * Recent Trials
+	 */
+	recent_trials?: Array<TrialResult>;
+};
+
+/**
+ * OptimizationRequest
+ * Request to start a new optimization study.
+ */
+export type OptimizationRequest = {
+	/**
+	 * Symbol
+	 * Symbol to optimize (e.g., AAPL)
+	 */
+	symbol: string;
+	/**
+	 * Strategy Name
+	 * Strategy template name (e.g., RSI)
+	 */
+	strategy_name: string;
+	/**
+	 * Search Space
+	 * Parameter search space
+	 */
+	search_space: {
+		[key: string]: ParameterSpace;
+	};
+	/**
+	 * N Trials
+	 * Number of trials
+	 */
+	n_trials?: number;
+	/**
+	 * Direction
+	 * Optimization direction (maximize/minimize)
+	 */
+	direction?: string;
+	/**
+	 * Sampler
+	 * Optuna sampler: TPE/Random/Grid/CMA-ES
+	 */
+	sampler?: string;
+	/**
+	 * Objective Metric
+	 * Metric to optimize: sharpe_ratio/return/...
+	 */
+	objective_metric?: string;
+	/**
+	 * Start Date
+	 * Backtest start date (YYYY-MM-DD)
+	 */
+	start_date: string;
+	/**
+	 * End Date
+	 * Backtest end date (YYYY-MM-DD)
+	 */
+	end_date: string;
+	/**
+	 * Initial Capital
+	 * Starting capital
+	 */
+	initial_capital?: number;
+	/**
+	 * Study Name
+	 * Custom study name (auto-generated if not provided)
+	 */
+	study_name?: string | null;
+	/**
+	 * Notes
+	 * Study description or notes
+	 */
+	notes?: string | null;
+};
+
+/**
+ * OptimizationResponse
+ * Response from optimization endpoint.
+ */
+export type OptimizationResponse = {
+	/**
+	 * Status
+	 * success/error
+	 */
+	status: string;
+	/**
+	 * Study Name
+	 */
+	study_name: string;
+	/**
+	 * Message
+	 */
+	message: string;
+	/**
+	 * Data
+	 */
+	data?: OptimizationProgress | OptimizationResult | null;
+};
+
+/**
+ * OptimizationResult
+ * Completed optimization study result.
+ */
+export type OptimizationResult = {
+	/**
+	 * Study Name
+	 */
+	study_name: string;
+	/**
+	 * Symbol
+	 */
+	symbol: string;
+	/**
+	 * Strategy Name
+	 */
+	strategy_name: string;
+	/**
+	 * Best Params
+	 */
+	best_params: {
+		[key: string]: unknown;
+	};
+	/**
+	 * Best Value
+	 */
+	best_value: number;
+	/**
+	 * Best Trial Number
+	 */
+	best_trial_number: number;
+	/**
+	 * Trials Completed
+	 */
+	trials_completed: number;
+	/**
+	 * N Trials
+	 */
+	n_trials: number;
+	/**
+	 * Direction
+	 */
+	direction: string;
+	/**
+	 * Objective Metric
+	 */
+	objective_metric: string;
+	/**
+	 * Sharpe Ratio
+	 */
+	sharpe_ratio?: number | null;
+	/**
+	 * Total Return
+	 */
+	total_return?: number | null;
+	/**
+	 * Max Drawdown
+	 */
+	max_drawdown?: number | null;
+	/**
+	 * Win Rate
+	 */
+	win_rate?: number | null;
+	/**
+	 * Started At
+	 */
+	started_at: Date;
+	/**
+	 * Completed At
+	 */
+	completed_at: Date;
+	/**
+	 * Total Duration Seconds
+	 */
+	total_duration_seconds: number;
+	/**
+	 * Top Trials
+	 * Top 5 trials
+	 */
+	top_trials?: Array<TrialResult>;
+};
+
+/**
  * OrderType
  * 주문 타입
  */
 export type OrderType = "MARKET" | "LIMIT" | "STOP" | "STOP_LIMIT";
+
+/**
+ * ParameterSpace
+ * Search space definition for a single parameter.
+ */
+export type ParameterSpace = {
+	/**
+	 * Type
+	 * Parameter type: int, float, categorical
+	 */
+	type: string;
+	/**
+	 * Low
+	 * Lower bound for numeric types
+	 */
+	low?: number | null;
+	/**
+	 * High
+	 * Upper bound for numeric types
+	 */
+	high?: number | null;
+	/**
+	 * Step
+	 * Step size for discrete sampling
+	 */
+	step?: number | null;
+	/**
+	 * Choices
+	 * Choices for categorical
+	 */
+	choices?: Array<unknown> | null;
+	/**
+	 * Log
+	 * Use log scale for sampling
+	 */
+	log?: boolean;
+};
+
+/**
+ * ParameterValidation
+ * 파라미터 검증 결과
+ */
+export type ParameterValidation = {
+	/**
+	 * Parameter Name
+	 * 파라미터 이름
+	 */
+	parameter_name: string;
+	/**
+	 * Value
+	 * 파라미터 값
+	 */
+	value: unknown;
+	/**
+	 * Is Valid
+	 * 유효성 여부
+	 */
+	is_valid: boolean;
+	validation_status: ValidationStatus;
+	/**
+	 * Message
+	 * 검증 메시지 (경고/오류)
+	 */
+	message?: string | null;
+	/**
+	 * Suggested Value
+	 * 제안된 값 (오류 시)
+	 */
+	suggested_value?: unknown | null;
+	/**
+	 * Value Range
+	 * 허용 범위 (min, max, allowed_values 등)
+	 */
+	value_range?: {
+		[key: string]: unknown;
+	} | null;
+};
+
+/**
+ * ParsedIntent
+ * 파싱된 사용자 의도
+ */
+export type ParsedIntent = {
+	/**
+	 * 의도 유형
+	 */
+	intent_type: IntentType;
+	/**
+	 * Confidence
+	 * 의도 파싱 신뢰도
+	 */
+	confidence: number;
+	confidence_level: ConfidenceLevel;
+	/**
+	 * Extracted Entities
+	 * 추출된 엔티티 (지표명, 파라미터 등)
+	 */
+	extracted_entities?: {
+		[key: string]: unknown;
+	};
+	/**
+	 * Reasoning
+	 * 의도 판단 근거
+	 */
+	reasoning: string;
+};
+
+/**
+ * PerformanceAnalysis
+ * 성과 분석
+ */
+export type PerformanceAnalysis = {
+	/**
+	 * Summary
+	 * 성과 요약 (2-3 문장)
+	 */
+	summary: string;
+	/**
+	 * Return Analysis
+	 * 수익률 분석
+	 */
+	return_analysis: string;
+	/**
+	 * Risk Analysis
+	 * 리스크 분석
+	 */
+	risk_analysis: string;
+	/**
+	 * Sharpe Interpretation
+	 * 샤프 비율 해석
+	 */
+	sharpe_interpretation: string;
+	/**
+	 * Drawdown Commentary
+	 * 낙폭 해설
+	 */
+	drawdown_commentary: string;
+	/**
+	 * Trade Statistics Summary
+	 * 거래 통계 요약
+	 */
+	trade_statistics_summary: string;
+};
 
 /**
  * PerformanceMetrics
@@ -2258,6 +3190,36 @@ export type PortfolioForecastDistribution = {
 	 * Shorthand name of the forecasting methodology
 	 */
 	methodology?: string;
+};
+
+/**
+ * PortfolioForecastResponse
+ * API response for probabilistic portfolio forecasts.
+ */
+export type PortfolioForecastResponse = {
+	/**
+	 * Success
+	 * 요청 성공 여부
+	 */
+	success?: boolean;
+	/**
+	 * Message
+	 * 응답 메시지
+	 */
+	message?: string | null;
+	/**
+	 * Timestamp
+	 * 응답 시간
+	 */
+	timestamp?: Date;
+	/**
+	 * Forecast output
+	 */
+	data: PortfolioForecastDistribution;
+	/**
+	 * Response metadata
+	 */
+	metadata: MetadataInfo;
 };
 
 /**
@@ -2673,6 +3635,37 @@ export type RecentTradesResponse = {
 };
 
 /**
+ * Recommendations
+ * 추천 사항
+ */
+export type Recommendations = {
+	/**
+	 * 추천 액션
+	 */
+	action: ReportRecommendation;
+	/**
+	 * Rationale
+	 * 추천 근거
+	 */
+	rationale: string;
+	/**
+	 * Next Steps
+	 * 다음 단계 (2-4개)
+	 */
+	next_steps: Array<string>;
+	/**
+	 * Optimization Suggestions
+	 * 최적화 제안 (선택 사항)
+	 */
+	optimization_suggestions?: Array<string> | null;
+	/**
+	 * Risk Mitigation
+	 * 리스크 완화 방안 (선택 사항)
+	 */
+	risk_mitigation?: Array<string> | null;
+};
+
+/**
  * RegimeMetrics
  * Quantitative metrics used for regime detection.
  */
@@ -2697,6 +3690,53 @@ export type RegimeMetrics = {
 	 * Z-score of short term momentum
 	 */
 	momentum_z: number;
+};
+
+/**
+ * ReportRecommendation
+ * 리포트 추천 액션
+ */
+export type ReportRecommendation =
+	| "proceed"
+	| "optimize"
+	| "reject"
+	| "research";
+
+/**
+ * RiskAssessment
+ * 리스크 평가
+ */
+export type RiskAssessment = {
+	/**
+	 * Overall Risk Level
+	 * 전체 리스크 수준 (Low/Medium/High/Very High)
+	 */
+	overall_risk_level: string;
+	/**
+	 * Risk Summary
+	 * 리스크 요약
+	 */
+	risk_summary: string;
+	/**
+	 * Volatility Assessment
+	 * 변동성 평가
+	 */
+	volatility_assessment: string;
+	/**
+	 * Max Drawdown Context
+	 * 최대 낙폭 맥락
+	 */
+	max_drawdown_context: string;
+	/**
+	 * Concentration Risk
+	 * 집중 리스크 분석
+	 */
+	concentration_risk: string;
+	/**
+	 * Tail Risk
+	 * 테일 리스크 평가
+	 */
+	tail_risk: string;
 };
 
 /**
@@ -2790,6 +3830,154 @@ export type StockSymbolsResponse = {
 	 * Search Term
 	 */
 	search_term?: string | null;
+};
+
+/**
+ * StrategyApprovalRequest
+ * 전략 승인 요청 (휴먼 인 더 루프)
+ */
+export type StrategyApprovalRequest = {
+	/**
+	 * Strategy Builder Response Id
+	 * 빌더 응답 ID
+	 */
+	strategy_builder_response_id: string;
+	/**
+	 * Approved
+	 * 승인 여부
+	 */
+	approved: boolean;
+	/**
+	 * Modifications
+	 * 수정 사항
+	 */
+	modifications?: {
+		[key: string]: unknown;
+	} | null;
+	/**
+	 * Approval Notes
+	 * 승인 메모
+	 */
+	approval_notes?: string | null;
+};
+
+/**
+ * StrategyApprovalResponse
+ * 전략 승인 응답
+ */
+export type StrategyApprovalResponse = {
+	/**
+	 * Status
+	 * 승인 상태 (approved/rejected/modified)
+	 */
+	status: string;
+	/**
+	 * Message
+	 * 응답 메시지
+	 */
+	message: string;
+	/**
+	 * Strategy Id
+	 * 생성된 전략 ID (승인 시)
+	 */
+	strategy_id?: string | null;
+	/**
+	 * Approved At
+	 * 승인 시간
+	 */
+	approved_at?: Date;
+};
+
+/**
+ * StrategyBuilderRequest
+ * 대화형 전략 빌더 요청
+ */
+export type StrategyBuilderRequest = {
+	/**
+	 * Query
+	 * 자연어 전략 설명 또는 요청
+	 */
+	query: string;
+	/**
+	 * Context
+	 * 추가 컨텍스트 (심볼, 기간, 제약조건 등)
+	 */
+	context?: {
+		[key: string]: unknown;
+	} | null;
+	/**
+	 * User Preferences
+	 * 사용자 선호도 (위험 선호도, 거래 빈도 등)
+	 */
+	user_preferences?: {
+		[key: string]: unknown;
+	} | null;
+	/**
+	 * Existing Strategy Id
+	 * 수정할 기존 전략 ID (modify intent)
+	 */
+	existing_strategy_id?: string | null;
+	/**
+	 * Require Human Approval
+	 * 사람 승인 필요 여부 (휴먼 인 더 루프)
+	 */
+	require_human_approval?: boolean;
+};
+
+/**
+ * StrategyBuilderResponse
+ * 대화형 전략 빌더 응답
+ */
+export type StrategyBuilderResponse = {
+	/**
+	 * Status
+	 * 처리 상태 (success/warning/error)
+	 */
+	status: string;
+	/**
+	 * Message
+	 * 응답 메시지
+	 */
+	message: string;
+	parsed_intent: ParsedIntent;
+	/**
+	 * 생성된 전략 설정
+	 */
+	generated_strategy?: GeneratedStrategyConfig | null;
+	/**
+	 * 휴먼 승인 요청 정보
+	 */
+	human_approval: HumanApprovalRequest;
+	/**
+	 * Alternative Suggestions
+	 * 대안 제안 (의도 파싱 실패 시)
+	 */
+	alternative_suggestions?: Array<string> | null;
+	/**
+	 * Processing Time Ms
+	 * 처리 시간 (밀리초)
+	 */
+	processing_time_ms: number;
+	/**
+	 * Llm Model
+	 * 사용된 LLM 모델
+	 */
+	llm_model: string;
+	/**
+	 * Generated At
+	 * 생성 시간
+	 */
+	generated_at?: Date;
+	/**
+	 * Validation Errors
+	 * 검증 오류 목록
+	 */
+	validation_errors?: Array<string> | null;
+	/**
+	 * Overall Confidence
+	 * 전체 신뢰도 (의도 + 전략 생성)
+	 */
+	overall_confidence: number;
 };
 
 /**
@@ -2922,6 +4110,45 @@ export type StrategyExecute = {
 	market_data: {
 		[key: string]: unknown;
 	};
+};
+
+/**
+ * StrategyInsights
+ * 전략 인사이트
+ */
+export type StrategyInsights = {
+	/**
+	 * Strategy Name
+	 * 전략 이름
+	 */
+	strategy_name: string;
+	/**
+	 * Strategy Description
+	 * 전략 설명
+	 */
+	strategy_description: string;
+	/**
+	 * Key Parameters
+	 * 핵심 파라미터
+	 */
+	key_parameters: {
+		[key: string]: unknown;
+	};
+	/**
+	 * Parameter Sensitivity
+	 * 파라미터 민감도 분석
+	 */
+	parameter_sensitivity: string;
+	/**
+	 * Strengths
+	 * 전략 강점 (2-4개)
+	 */
+	strengths: Array<string>;
+	/**
+	 * Weaknesses
+	 * 전략 약점 (2-4개)
+	 */
+	weaknesses: Array<string>;
 };
 
 /**
@@ -3163,6 +4390,68 @@ export type StrategyUpdate = {
 	 * 태그
 	 */
 	tags?: Array<string | null> | null;
+};
+
+/**
+ * StudyListItem
+ * Summary of an optimization study for listing.
+ */
+export type StudyListItem = {
+	/**
+	 * Study Name
+	 */
+	study_name: string;
+	/**
+	 * Symbol
+	 */
+	symbol: string;
+	/**
+	 * Strategy Name
+	 */
+	strategy_name: string;
+	/**
+	 * Status
+	 */
+	status: string;
+	/**
+	 * Trials Completed
+	 */
+	trials_completed: number;
+	/**
+	 * N Trials
+	 */
+	n_trials: number;
+	/**
+	 * Best Value
+	 */
+	best_value?: number | null;
+	/**
+	 * Created At
+	 */
+	created_at: Date;
+	/**
+	 * Completed At
+	 */
+	completed_at?: Date | null;
+};
+
+/**
+ * StudyListResponse
+ * Response for study listing.
+ */
+export type StudyListResponse = {
+	/**
+	 * Status
+	 */
+	status: string;
+	/**
+	 * Total
+	 */
+	total: number;
+	/**
+	 * Studies
+	 */
+	studies: Array<StudyListItem>;
 };
 
 /**
@@ -3700,6 +4989,47 @@ export type TrainModelResponse = {
 };
 
 /**
+ * TrialResult
+ * Individual trial result summary.
+ */
+export type TrialResult = {
+	/**
+	 * Trial Number
+	 */
+	trial_number: number;
+	/**
+	 * Params
+	 */
+	params: {
+		[key: string]: unknown;
+	};
+	/**
+	 * Value
+	 */
+	value: number;
+	/**
+	 * State
+	 */
+	state: string;
+	/**
+	 * Sharpe Ratio
+	 */
+	sharpe_ratio?: number | null;
+	/**
+	 * Total Return
+	 */
+	total_return?: number | null;
+	/**
+	 * Max Drawdown
+	 */
+	max_drawdown?: number | null;
+	/**
+	 * Duration Seconds
+	 */
+	duration_seconds?: number | null;
+};
+
+/**
  * UserCreate
  */
 export type UserCreate = {
@@ -3819,6 +5149,12 @@ export type ValidationError = {
 	 */
 	type: string;
 };
+
+/**
+ * ValidationStatus
+ * 검증 상태
+ */
+export type ValidationStatus = "valid" | "warning" | "error";
 
 /**
  * WatchlistCreate
@@ -7533,6 +8869,145 @@ export type BacktestGetTradesHistoryResponses = {
 	200: unknown;
 };
 
+export type BacktestListOptimizationStudiesData = {
+	body?: never;
+	path?: never;
+	query?: {
+		/**
+		 * Symbol
+		 * Filter by symbol
+		 */
+		symbol?: string | null;
+		/**
+		 * Strategy Name
+		 * Filter by strategy name
+		 */
+		strategy_name?: string | null;
+		/**
+		 * Status
+		 * Filter by status
+		 */
+		status?: string | null;
+		/**
+		 * Limit
+		 * Maximum number of studies
+		 */
+		limit?: number;
+	};
+	url: "/api/v1/backtests/optimize/";
+};
+
+export type BacktestListOptimizationStudiesErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type BacktestListOptimizationStudiesError =
+	BacktestListOptimizationStudiesErrors[keyof BacktestListOptimizationStudiesErrors];
+
+export type BacktestListOptimizationStudiesResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: StudyListResponse;
+};
+
+export type BacktestListOptimizationStudiesResponse =
+	BacktestListOptimizationStudiesResponses[keyof BacktestListOptimizationStudiesResponses];
+
+export type BacktestCreateOptimizationStudyData = {
+	body: OptimizationRequest;
+	path?: never;
+	query?: never;
+	url: "/api/v1/backtests/optimize/";
+};
+
+export type BacktestCreateOptimizationStudyErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type BacktestCreateOptimizationStudyError =
+	BacktestCreateOptimizationStudyErrors[keyof BacktestCreateOptimizationStudyErrors];
+
+export type BacktestCreateOptimizationStudyResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: OptimizationResponse;
+};
+
+export type BacktestCreateOptimizationStudyResponse =
+	BacktestCreateOptimizationStudyResponses[keyof BacktestCreateOptimizationStudyResponses];
+
+export type BacktestGetOptimizationProgressData = {
+	body?: never;
+	path: {
+		/**
+		 * Study Name
+		 */
+		study_name: string;
+	};
+	query?: never;
+	url: "/api/v1/backtests/optimize/{study_name}";
+};
+
+export type BacktestGetOptimizationProgressErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type BacktestGetOptimizationProgressError =
+	BacktestGetOptimizationProgressErrors[keyof BacktestGetOptimizationProgressErrors];
+
+export type BacktestGetOptimizationProgressResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: OptimizationResponse;
+};
+
+export type BacktestGetOptimizationProgressResponse =
+	BacktestGetOptimizationProgressResponses[keyof BacktestGetOptimizationProgressResponses];
+
+export type BacktestGetOptimizationResultData = {
+	body?: never;
+	path: {
+		/**
+		 * Study Name
+		 */
+		study_name: string;
+	};
+	query?: never;
+	url: "/api/v1/backtests/optimize/{study_name}/result";
+};
+
+export type BacktestGetOptimizationResultErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type BacktestGetOptimizationResultError =
+	BacktestGetOptimizationResultErrors[keyof BacktestGetOptimizationResultErrors];
+
+export type BacktestGetOptimizationResultResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: OptimizationResponse;
+};
+
+export type BacktestGetOptimizationResultResponse =
+	BacktestGetOptimizationResultResponses[keyof BacktestGetOptimizationResultResponses];
+
 export type WatchlistListWatchlistsData = {
 	body?: never;
 	path?: never;
@@ -8051,6 +9526,39 @@ export type DashboardGetPredictiveOverviewResponses = {
 export type DashboardGetPredictiveOverviewResponse =
 	DashboardGetPredictiveOverviewResponses[keyof DashboardGetPredictiveOverviewResponses];
 
+export type DashboardGetPortfolioForecastData = {
+	body?: never;
+	path?: never;
+	query?: {
+		/**
+		 * Horizon Days
+		 * 예측 기간 (일, 7-120일)
+		 */
+		horizon_days?: number;
+	};
+	url: "/api/v1/dashboard/portfolio/forecast";
+};
+
+export type DashboardGetPortfolioForecastErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type DashboardGetPortfolioForecastError =
+	DashboardGetPortfolioForecastErrors[keyof DashboardGetPortfolioForecastErrors];
+
+export type DashboardGetPortfolioForecastResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: PortfolioForecastResponse;
+};
+
+export type DashboardGetPortfolioForecastResponse =
+	DashboardGetPortfolioForecastResponses[keyof DashboardGetPortfolioForecastResponses];
+
 export type TasksRunStockDeltaUpdateData = {
 	body?: never;
 	path?: never;
@@ -8299,3 +9807,159 @@ export type MlCompareModelsResponses = {
 
 export type MlCompareModelsResponse =
 	MlCompareModelsResponses[keyof MlCompareModelsResponses];
+
+export type ChatOpsExecuteChatopsData = {
+	body: ChatOpsRequest;
+	path?: never;
+	query?: never;
+	url: "/api/v1/chatops/";
+};
+
+export type ChatOpsExecuteChatopsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type ChatOpsExecuteChatopsError =
+	ChatOpsExecuteChatopsErrors[keyof ChatOpsExecuteChatopsErrors];
+
+export type ChatOpsExecuteChatopsResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: ChatOpsResponse;
+};
+
+export type ChatOpsExecuteChatopsResponse =
+	ChatOpsExecuteChatopsResponses[keyof ChatOpsExecuteChatopsResponses];
+
+export type NarrativeGenerateNarrativeReportData = {
+	body?: never;
+	path: {
+		/**
+		 * Backtest Id
+		 */
+		backtest_id: string;
+	};
+	query?: {
+		/**
+		 * Include Phase1 Insights
+		 * Phase 1 인사이트 포함 여부 (ML Signal, Regime, Forecast)
+		 */
+		include_phase1_insights?: boolean;
+		/**
+		 * Language
+		 * 리포트 언어 (ko/en)
+		 */
+		language?: string | null;
+		/**
+		 * Detail Level
+		 * 상세도 수준 (brief/standard/detailed)
+		 */
+		detail_level?: string | null;
+	};
+	url: "/api/v1/narrative/backtests/{backtest_id}/report";
+};
+
+export type NarrativeGenerateNarrativeReportErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type NarrativeGenerateNarrativeReportError =
+	NarrativeGenerateNarrativeReportErrors[keyof NarrativeGenerateNarrativeReportErrors];
+
+export type NarrativeGenerateNarrativeReportResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: NarrativeReportResponse;
+};
+
+export type NarrativeGenerateNarrativeReportResponse =
+	NarrativeGenerateNarrativeReportResponses[keyof NarrativeGenerateNarrativeReportResponses];
+
+export type StrategyBuilderGenerateStrategyData = {
+	body: StrategyBuilderRequest;
+	path?: never;
+	query?: never;
+	url: "/api/v1/strategy-builder";
+};
+
+export type StrategyBuilderGenerateStrategyErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type StrategyBuilderGenerateStrategyError =
+	StrategyBuilderGenerateStrategyErrors[keyof StrategyBuilderGenerateStrategyErrors];
+
+export type StrategyBuilderGenerateStrategyResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: StrategyBuilderResponse;
+};
+
+export type StrategyBuilderGenerateStrategyResponse =
+	StrategyBuilderGenerateStrategyResponses[keyof StrategyBuilderGenerateStrategyResponses];
+
+export type StrategyBuilderApproveStrategyData = {
+	body: StrategyApprovalRequest;
+	path?: never;
+	query?: never;
+	url: "/api/v1/strategy-builder/approve";
+};
+
+export type StrategyBuilderApproveStrategyErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type StrategyBuilderApproveStrategyError =
+	StrategyBuilderApproveStrategyErrors[keyof StrategyBuilderApproveStrategyErrors];
+
+export type StrategyBuilderApproveStrategyResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: StrategyApprovalResponse;
+};
+
+export type StrategyBuilderApproveStrategyResponse =
+	StrategyBuilderApproveStrategyResponses[keyof StrategyBuilderApproveStrategyResponses];
+
+export type StrategyBuilderSearchIndicatorsData = {
+	body: IndicatorSearchRequest;
+	path?: never;
+	query?: never;
+	url: "/api/v1/strategy-builder/search-indicators";
+};
+
+export type StrategyBuilderSearchIndicatorsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type StrategyBuilderSearchIndicatorsError =
+	StrategyBuilderSearchIndicatorsErrors[keyof StrategyBuilderSearchIndicatorsErrors];
+
+export type StrategyBuilderSearchIndicatorsResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: IndicatorSearchResponse;
+};
+
+export type StrategyBuilderSearchIndicatorsResponse =
+	StrategyBuilderSearchIndicatorsResponses[keyof StrategyBuilderSearchIndicatorsResponses];

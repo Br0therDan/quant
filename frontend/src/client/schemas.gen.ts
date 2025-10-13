@@ -340,6 +340,86 @@ export const BacktestListResponseSchema = {
 	description: "백테스트 목록 응답",
 } as const;
 
+export const BacktestNarrativeReportSchema = {
+	properties: {
+		backtest_id: {
+			type: "string",
+			title: "Backtest Id",
+			description: "백테스트 ID",
+		},
+		generated_at: {
+			type: "string",
+			format: "date-time",
+			title: "Generated At",
+			description: "리포트 생성 시간",
+		},
+		llm_model: {
+			type: "string",
+			title: "Llm Model",
+			description: "사용된 LLM 모델",
+		},
+		llm_version: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Llm Version",
+			description: "LLM 버전",
+		},
+		executive_summary: {
+			$ref: "#/components/schemas/ExecutiveSummary",
+		},
+		performance_analysis: {
+			$ref: "#/components/schemas/PerformanceAnalysis",
+		},
+		strategy_insights: {
+			$ref: "#/components/schemas/StrategyInsights",
+		},
+		risk_assessment: {
+			$ref: "#/components/schemas/RiskAssessment",
+		},
+		market_context: {
+			$ref: "#/components/schemas/MarketContext",
+			description: "시장 맥락",
+		},
+		recommendations: {
+			$ref: "#/components/schemas/Recommendations",
+		},
+		fact_check_passed: {
+			type: "boolean",
+			title: "Fact Check Passed",
+			description: "사실 확인 통과 여부",
+		},
+		validation_errors: {
+			items: {
+				type: "string",
+			},
+			type: "array",
+			title: "Validation Errors",
+			description: "검증 오류 (있는 경우)",
+		},
+	},
+	type: "object",
+	required: [
+		"backtest_id",
+		"generated_at",
+		"llm_model",
+		"executive_summary",
+		"performance_analysis",
+		"strategy_insights",
+		"risk_assessment",
+		"market_context",
+		"recommendations",
+		"fact_check_passed",
+	],
+	title: "BacktestNarrativeReport",
+	description: "백테스트 내러티브 리포트 (전체)",
+} as const;
+
 export const BacktestResponseSchema = {
 	properties: {
 		user_id: {
@@ -1031,6 +1111,71 @@ export const CacheInfoSchema = {
 	description: "캐시 정보",
 } as const;
 
+export const CacheStatusSnapshotSchema = {
+	properties: {
+		duckdb_status: {
+			type: "string",
+			title: "Duckdb Status",
+			description: "DuckDB 연결 상태",
+		},
+		duckdb_row_count: {
+			anyOf: [
+				{
+					type: "integer",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Duckdb Row Count",
+			description: "DuckDB 일별 시계열 행 수",
+		},
+		duckdb_last_updated: {
+			anyOf: [
+				{
+					type: "string",
+					format: "date-time",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Duckdb Last Updated",
+			description: "DuckDB 최신 시계열 업데이트 시간",
+		},
+		mongodb_status: {
+			type: "string",
+			title: "Mongodb Status",
+			description: "MongoDB 연결 상태",
+		},
+		mongodb_last_event_at: {
+			anyOf: [
+				{
+					type: "string",
+					format: "date-time",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Mongodb Last Event At",
+			description: "MongoDB에서 관측된 최신 데이터 품질 이벤트 시간",
+		},
+		notes: {
+			items: {
+				type: "string",
+			},
+			type: "array",
+			title: "Notes",
+			description: "추가 관찰 사항 또는 경고",
+		},
+	},
+	type: "object",
+	required: ["duckdb_status", "mongodb_status"],
+	title: "CacheStatusSnapshot",
+	description: "Current cache backend health snapshot.",
+} as const;
+
 export const CashFlowDataSchema = {
 	properties: {
 		symbol: {
@@ -1213,6 +1358,106 @@ export const CashFlowResponseSchema = {
 	required: ["data", "metadata", "count"],
 	title: "CashFlowResponse",
 	description: "현금흐름표 조회 응답 스키마",
+} as const;
+
+export const ChatOpsRequestSchema = {
+	properties: {
+		question: {
+			type: "string",
+			title: "Question",
+			description: "사용자 질문 또는 명령",
+		},
+		user_roles: {
+			items: {
+				type: "string",
+			},
+			type: "array",
+			title: "User Roles",
+			description: "요청을 수행하는 사용자의 역할 목록",
+		},
+		channel: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Channel",
+			description: "질문이 발생한 채널(Slack, Console 등)",
+		},
+	},
+	type: "object",
+	required: ["question"],
+	title: "ChatOpsRequest",
+	description: "Request payload for ChatOps interactions.",
+} as const;
+
+export const ChatOpsResponseSchema = {
+	properties: {
+		answer: {
+			type: "string",
+			title: "Answer",
+			description: "사용자에게 제공되는 요약 응답",
+		},
+		used_tools: {
+			items: {
+				type: "string",
+			},
+			type: "array",
+			title: "Used Tools",
+			description: "실행된 ChatOps 툴 목록",
+		},
+		denied_tools: {
+			items: {
+				type: "string",
+			},
+			type: "array",
+			title: "Denied Tools",
+			description: "권한 부족으로 실행되지 않은 툴 목록",
+		},
+		cache_status: {
+			anyOf: [
+				{
+					$ref: "#/components/schemas/CacheStatusSnapshot",
+				},
+				{
+					type: "null",
+				},
+			],
+			description: "캐시 및 저장소 상태 스냅샷",
+		},
+		data_quality: {
+			anyOf: [
+				{
+					$ref: "#/components/schemas/DataQualitySummary",
+				},
+				{
+					type: "null",
+				},
+			],
+			description: "데이터 품질 센티널 요약",
+		},
+		recent_failures: {
+			items: {
+				$ref: "#/components/schemas/FailureInsight",
+			},
+			type: "array",
+			title: "Recent Failures",
+			description: "최근 운영 실패 목록",
+		},
+		external_services: {
+			additionalProperties: true,
+			type: "object",
+			title: "External Services",
+			description: "외부 서비스 상태",
+		},
+	},
+	type: "object",
+	required: ["answer"],
+	title: "ChatOpsResponse",
+	description: "Response payload returned by the ChatOps agent.",
 } as const;
 
 export const CompanyOverviewDataSchema = {
@@ -1623,6 +1868,13 @@ export const CompanyOverviewResponseSchema = {
 	description: "기업 개요 조회 응답 스키마",
 } as const;
 
+export const ConfidenceLevelSchema = {
+	type: "string",
+	enum: ["high", "medium", "low"],
+	title: "ConfidenceLevel",
+	description: "신뢰도 수준",
+} as const;
+
 export const CryptoHistoricalDataResponseSchema = {
 	properties: {
 		symbol: {
@@ -1698,6 +1950,17 @@ export const DashboardSummarySchema = {
 			$ref: "#/components/schemas/RecentActivity",
 			description: "최근 활동",
 		},
+		data_quality: {
+			anyOf: [
+				{
+					$ref: "#/components/schemas/DataQualitySummary",
+				},
+				{
+					type: "null",
+				},
+			],
+			description: "데이터 품질 센티널 요약",
+		},
 	},
 	type: "object",
 	required: ["user_id", "portfolio", "strategies", "recent_activity"],
@@ -1722,6 +1985,76 @@ export const DashboardSummaryResponseSchema = {
 	required: ["data"],
 	title: "DashboardSummaryResponse",
 	description: "대시보드 요약 응답.",
+} as const;
+
+export const DataQualityAlertSchema = {
+	properties: {
+		symbol: {
+			type: "string",
+			title: "Symbol",
+			description: "심볼",
+		},
+		data_type: {
+			type: "string",
+			title: "Data Type",
+			description: "데이터 타입",
+		},
+		occurred_at: {
+			type: "string",
+			format: "date-time",
+			title: "Occurred At",
+			description: "이상 발생 시각",
+		},
+		severity: {
+			$ref: "#/components/schemas/DataQualitySeverity",
+			description: "심각도",
+		},
+		iso_score: {
+			type: "number",
+			title: "Iso Score",
+			description: "Isolation Forest 점수",
+		},
+		prophet_score: {
+			anyOf: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Prophet Score",
+			description: "Prophet 기반 잔차 점수",
+		},
+		price_change_pct: {
+			type: "number",
+			title: "Price Change Pct",
+			description: "전일 대비 변동률",
+		},
+		volume_z_score: {
+			type: "number",
+			title: "Volume Z Score",
+			description: "거래량 Z-Score",
+		},
+		message: {
+			type: "string",
+			title: "Message",
+			description: "알림 메시지",
+		},
+	},
+	type: "object",
+	required: [
+		"symbol",
+		"data_type",
+		"occurred_at",
+		"severity",
+		"iso_score",
+		"price_change_pct",
+		"volume_z_score",
+		"message",
+	],
+	title: "DataQualityAlert",
+	description: "데이터 품질 이상 알림.",
 } as const;
 
 export const DataQualityInfoSchema = {
@@ -1759,6 +2092,52 @@ export const DataQualityInfoSchema = {
 	required: ["quality_score", "last_updated", "data_source"],
 	title: "DataQualityInfo",
 	description: "데이터 품질 정보",
+} as const;
+
+export const DataQualitySeveritySchema = {
+	type: "string",
+	enum: ["normal", "low", "medium", "high", "critical"],
+	title: "DataQualitySeverity",
+	description: "데이터 품질 이상 심각도.",
+} as const;
+
+export const DataQualitySummarySchema = {
+	properties: {
+		total_alerts: {
+			type: "integer",
+			title: "Total Alerts",
+			description: "총 이상 건수",
+		},
+		severity_breakdown: {
+			additionalProperties: {
+				type: "integer",
+			},
+			propertyNames: {
+				$ref: "#/components/schemas/DataQualitySeverity",
+			},
+			type: "object",
+			title: "Severity Breakdown",
+			description: "심각도별 건수",
+		},
+		last_updated: {
+			type: "string",
+			format: "date-time",
+			title: "Last Updated",
+			description: "마지막 업데이트 시각",
+		},
+		recent_alerts: {
+			items: {
+				$ref: "#/components/schemas/DataQualityAlert",
+			},
+			type: "array",
+			title: "Recent Alerts",
+			description: "최근 이상 목록",
+		},
+	},
+	type: "object",
+	required: ["total_alerts", "severity_breakdown", "last_updated"],
+	title: "DataQualitySummary",
+	description: "데이터 품질 센티널 요약.",
 } as const;
 
 export const EarningsDataSchema = {
@@ -2117,6 +2496,102 @@ export const ExecutionResponseSchema = {
 	description: "Execution response",
 } as const;
 
+export const ExecutiveSummarySchema = {
+	properties: {
+		title: {
+			type: "string",
+			title: "Title",
+			description: "리포트 제목",
+		},
+		overview: {
+			type: "string",
+			maxLength: 500,
+			minLength: 50,
+			title: "Overview",
+			description: "백테스트 개요 (2-3 문장)",
+		},
+		key_findings: {
+			items: {
+				type: "string",
+			},
+			type: "array",
+			maxItems: 5,
+			minItems: 3,
+			title: "Key Findings",
+			description: "핵심 발견사항 (3-5개)",
+		},
+		recommendation: {
+			$ref: "#/components/schemas/ReportRecommendation",
+			description: "최종 추천 액션",
+		},
+		confidence_level: {
+			type: "number",
+			maximum: 1,
+			minimum: 0,
+			title: "Confidence Level",
+			description: "추천 신뢰도 (0-1)",
+		},
+	},
+	type: "object",
+	required: [
+		"title",
+		"overview",
+		"key_findings",
+		"recommendation",
+		"confidence_level",
+	],
+	title: "ExecutiveSummary",
+	description: "임원용 요약",
+} as const;
+
+export const FailureInsightSchema = {
+	properties: {
+		source: {
+			type: "string",
+			title: "Source",
+			description: "실패 이벤트 출처 (예: backtest, data_quality)",
+		},
+		identifier: {
+			type: "string",
+			title: "Identifier",
+			description: "이벤트 식별자 또는 연관 객체",
+		},
+		occurred_at: {
+			type: "string",
+			format: "date-time",
+			title: "Occurred At",
+			description: "실패가 발생한 시간",
+		},
+		severity: {
+			anyOf: [
+				{
+					$ref: "#/components/schemas/DataQualitySeverity",
+				},
+				{
+					type: "null",
+				},
+			],
+			description: "데이터 품질 이벤트의 심각도",
+		},
+		message: {
+			type: "string",
+			title: "Message",
+			description: "사용자에게 노출할 메시지",
+		},
+		metadata: {
+			additionalProperties: true,
+			type: "object",
+			title: "Metadata",
+			description: "추가 컨텍스트 메타데이터",
+		},
+	},
+	type: "object",
+	required: ["source", "identifier", "occurred_at", "message"],
+	title: "FailureInsight",
+	description:
+		"Represents a recent operational failure surfaced to the operator.",
+} as const;
+
 export const FeatureContributionSchema = {
 	properties: {
 		feature: {
@@ -2178,6 +2653,106 @@ export const ForecastPercentileBandSchema = {
 	required: ["percentile", "projected_value"],
 	title: "ForecastPercentileBand",
 	description: "Single percentile projection for a future portfolio value.",
+} as const;
+
+export const GeneratedStrategyConfigSchema = {
+	properties: {
+		strategy_name: {
+			type: "string",
+			maxLength: 100,
+			minLength: 3,
+			title: "Strategy Name",
+			description: "전략 이름",
+		},
+		strategy_type: {
+			type: "string",
+			title: "Strategy Type",
+			description: "전략 타입 (기술적 지표 기반)",
+		},
+		description: {
+			type: "string",
+			maxLength: 500,
+			minLength: 50,
+			title: "Description",
+			description: "전략 설명",
+		},
+		indicators: {
+			items: {
+				$ref: "#/components/schemas/IndicatorRecommendation",
+			},
+			type: "array",
+			maxItems: 5,
+			minItems: 1,
+			title: "Indicators",
+			description: "사용된 지표 목록 (1-5개)",
+		},
+		parameters: {
+			additionalProperties: true,
+			type: "object",
+			title: "Parameters",
+			description: "전략 파라미터",
+		},
+		parameter_validations: {
+			items: {
+				$ref: "#/components/schemas/ParameterValidation",
+			},
+			type: "array",
+			title: "Parameter Validations",
+			description: "파라미터 검증 결과",
+		},
+		entry_conditions: {
+			type: "string",
+			maxLength: 300,
+			minLength: 50,
+			title: "Entry Conditions",
+			description: "진입 조건 설명",
+		},
+		exit_conditions: {
+			type: "string",
+			maxLength: 300,
+			minLength: 50,
+			title: "Exit Conditions",
+			description: "청산 조건 설명",
+		},
+		risk_management: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Risk Management",
+			description: "리스크 관리 규칙",
+		},
+		expected_performance: {
+			anyOf: [
+				{
+					additionalProperties: true,
+					type: "object",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Expected Performance",
+			description: "예상 성과 (과거 유사 전략 기반)",
+		},
+	},
+	type: "object",
+	required: [
+		"strategy_name",
+		"strategy_type",
+		"description",
+		"indicators",
+		"parameters",
+		"parameter_validations",
+		"entry_conditions",
+		"exit_conditions",
+	],
+	title: "GeneratedStrategyConfig",
+	description: "생성된 전략 설정",
 } as const;
 
 export const HTTPValidationErrorSchema = {
@@ -2282,6 +2857,49 @@ export const HistoricalDataResponseSchema = {
 	type: "object",
 	required: ["symbol", "data", "count", "frequency"],
 	title: "HistoricalDataResponse",
+} as const;
+
+export const HumanApprovalRequestSchema = {
+	properties: {
+		requires_approval: {
+			type: "boolean",
+			title: "Requires Approval",
+			description: "승인 필요 여부",
+		},
+		approval_reasons: {
+			items: {
+				type: "string",
+			},
+			type: "array",
+			title: "Approval Reasons",
+			description: "승인이 필요한 이유 (위험 요소 등)",
+		},
+		suggested_modifications: {
+			items: {
+				type: "string",
+			},
+			type: "array",
+			title: "Suggested Modifications",
+			description: "수정 제안 사항",
+		},
+		approval_deadline: {
+			anyOf: [
+				{
+					type: "string",
+					format: "date-time",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Approval Deadline",
+			description: "승인 기한",
+		},
+	},
+	type: "object",
+	required: ["requires_approval"],
+	title: "HumanApprovalRequest",
+	description: "휴먼 승인 요청",
 } as const;
 
 export const ImportanceLevelSchema = {
@@ -2671,6 +3289,150 @@ export const IndicatorListResponseSchema = {
 	description: "지원하는 지표 목록 응답",
 } as const;
 
+export const IndicatorRecommendationSchema = {
+	properties: {
+		indicator_name: {
+			type: "string",
+			title: "Indicator Name",
+			description: "지표 이름 (예: RSI, MACD, Bollinger Bands)",
+		},
+		indicator_type: {
+			type: "string",
+			title: "Indicator Type",
+			description: "지표 유형 (momentum, trend, volatility 등)",
+		},
+		confidence: {
+			type: "number",
+			maximum: 1,
+			minimum: 0,
+			title: "Confidence",
+			description: "추천 신뢰도",
+		},
+		rationale: {
+			type: "string",
+			maxLength: 300,
+			minLength: 50,
+			title: "Rationale",
+			description: "추천 이유",
+		},
+		suggested_parameters: {
+			additionalProperties: true,
+			type: "object",
+			title: "Suggested Parameters",
+			description: "제안된 기본 파라미터",
+		},
+		similarity_score: {
+			type: "number",
+			maximum: 1,
+			minimum: 0,
+			title: "Similarity Score",
+			description: "쿼리와의 유사도 점수 (임베딩 기반)",
+		},
+	},
+	type: "object",
+	required: [
+		"indicator_name",
+		"indicator_type",
+		"confidence",
+		"rationale",
+		"similarity_score",
+	],
+	title: "IndicatorRecommendation",
+	description: "지표 추천",
+} as const;
+
+export const IndicatorSearchRequestSchema = {
+	properties: {
+		query: {
+			type: "string",
+			maxLength: 200,
+			minLength: 3,
+			title: "Query",
+			description: "검색 쿼리",
+		},
+		top_k: {
+			type: "integer",
+			maximum: 10,
+			minimum: 1,
+			title: "Top K",
+			description: "상위 K개 결과",
+			default: 5,
+		},
+		filters: {
+			anyOf: [
+				{
+					additionalProperties: true,
+					type: "object",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Filters",
+			description: "필터 (유형, 카테고리 등)",
+		},
+	},
+	type: "object",
+	required: ["query"],
+	title: "IndicatorSearchRequest",
+	description: "지표 검색 요청 (임베딩 기반)",
+} as const;
+
+export const IndicatorSearchResponseSchema = {
+	properties: {
+		status: {
+			type: "string",
+			title: "Status",
+			description: "응답 상태",
+		},
+		indicators: {
+			items: {
+				$ref: "#/components/schemas/IndicatorRecommendation",
+			},
+			type: "array",
+			title: "Indicators",
+			description: "검색된 지표 목록",
+		},
+		total: {
+			type: "integer",
+			title: "Total",
+			description: "총 검색 결과 수",
+		},
+		query_embedding: {
+			anyOf: [
+				{
+					items: {
+						type: "number",
+					},
+					type: "array",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Query Embedding",
+			description: "쿼리 임베딩 (디버깅용)",
+		},
+	},
+	type: "object",
+	required: ["status", "indicators", "total"],
+	title: "IndicatorSearchResponse",
+	description: "지표 검색 응답",
+} as const;
+
+export const IntentTypeSchema = {
+	type: "string",
+	enum: [
+		"create_strategy",
+		"modify_strategy",
+		"explain_strategy",
+		"recommend_parameters",
+		"optimize_strategy",
+	],
+	title: "IntentType",
+	description: "사용자 의도 유형",
+} as const;
+
 export const LoginResponseSchema = {
 	properties: {
 		access_token: {
@@ -2834,6 +3596,57 @@ export const MLSignalResponseSchema = {
 	required: ["data", "metadata"],
 	title: "MLSignalResponse",
 	description: "API response wrapper for ML signal insights.",
+} as const;
+
+export const MarketContextSchema = {
+	properties: {
+		regime_analysis: {
+			type: "string",
+			maxLength: 300,
+			title: "Regime Analysis",
+			description: "시장 레짐 분석 (Phase 1 D2)",
+		},
+		ml_signal_confidence: {
+			anyOf: [
+				{
+					type: "number",
+					maximum: 1,
+					minimum: 0,
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Ml Signal Confidence",
+			description: "ML 시그널 신뢰도 (Phase 1 D1)",
+		},
+		forecast_outlook: {
+			anyOf: [
+				{
+					type: "string",
+					maxLength: 200,
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Forecast Outlook",
+			description: "포트폴리오 예측 전망 (Phase 1 D3)",
+		},
+		external_factors: {
+			items: {
+				type: "string",
+			},
+			type: "array",
+			maxItems: 5,
+			title: "External Factors",
+			description: "외부 요인 (뉴스, 경제 지표 등)",
+		},
+	},
+	type: "object",
+	required: ["regime_analysis"],
+	title: "MarketContext",
+	description: "시장 맥락 (Phase 1 통합)",
 } as const;
 
 export const MarketRegimeResponseSchema = {
@@ -3170,6 +3983,53 @@ export const MomentumConfigSchema = {
 	description: "모멘텀 전략 설정",
 } as const;
 
+export const NarrativeReportResponseSchema = {
+	properties: {
+		status: {
+			type: "string",
+			title: "Status",
+			description: "응답 상태",
+		},
+		message: {
+			type: "string",
+			title: "Message",
+			description: "응답 메시지",
+		},
+		data: {
+			anyOf: [
+				{
+					$ref: "#/components/schemas/BacktestNarrativeReport",
+				},
+				{
+					type: "null",
+				},
+			],
+			description: "리포트 데이터",
+		},
+		processing_time_ms: {
+			type: "number",
+			title: "Processing Time Ms",
+			description: "처리 시간 (밀리초)",
+		},
+		cached: {
+			type: "boolean",
+			title: "Cached",
+			description: "캐시된 결과 여부",
+			default: false,
+		},
+		timestamp: {
+			type: "string",
+			format: "date-time",
+			title: "Timestamp",
+			description: "응답 시간",
+		},
+	},
+	type: "object",
+	required: ["status", "message", "processing_time_ms"],
+	title: "NarrativeReportResponse",
+	description: "내러티브 리포트 응답",
+} as const;
+
 export const NewsArticleSchema = {
 	properties: {
 		title: {
@@ -3339,11 +4199,573 @@ export const OAuthAccountSchema = {
 	},
 } as const;
 
+export const OptimizationProgressSchema = {
+	properties: {
+		study_name: {
+			type: "string",
+			title: "Study Name",
+		},
+		status: {
+			type: "string",
+			title: "Status",
+		},
+		trials_completed: {
+			type: "integer",
+			title: "Trials Completed",
+		},
+		n_trials: {
+			type: "integer",
+			title: "N Trials",
+		},
+		best_value: {
+			anyOf: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Best Value",
+		},
+		best_params: {
+			anyOf: [
+				{
+					additionalProperties: true,
+					type: "object",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Best Params",
+		},
+		started_at: {
+			anyOf: [
+				{
+					type: "string",
+					format: "date-time",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Started At",
+		},
+		estimated_completion: {
+			anyOf: [
+				{
+					type: "string",
+					format: "date-time",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Estimated Completion",
+		},
+		recent_trials: {
+			items: {
+				$ref: "#/components/schemas/TrialResult",
+			},
+			type: "array",
+			title: "Recent Trials",
+		},
+	},
+	type: "object",
+	required: ["study_name", "status", "trials_completed", "n_trials"],
+	title: "OptimizationProgress",
+	description: "Current optimization study progress.",
+} as const;
+
+export const OptimizationRequestSchema = {
+	properties: {
+		symbol: {
+			type: "string",
+			title: "Symbol",
+			description: "Symbol to optimize (e.g., AAPL)",
+		},
+		strategy_name: {
+			type: "string",
+			title: "Strategy Name",
+			description: "Strategy template name (e.g., RSI)",
+		},
+		search_space: {
+			additionalProperties: {
+				$ref: "#/components/schemas/ParameterSpace",
+			},
+			type: "object",
+			title: "Search Space",
+			description: "Parameter search space",
+		},
+		n_trials: {
+			type: "integer",
+			maximum: 1000,
+			minimum: 1,
+			title: "N Trials",
+			description: "Number of trials",
+			default: 100,
+		},
+		direction: {
+			type: "string",
+			title: "Direction",
+			description: "Optimization direction (maximize/minimize)",
+			default: "maximize",
+		},
+		sampler: {
+			type: "string",
+			title: "Sampler",
+			description: "Optuna sampler: TPE/Random/Grid/CMA-ES",
+			default: "TPE",
+		},
+		objective_metric: {
+			type: "string",
+			title: "Objective Metric",
+			description: "Metric to optimize: sharpe_ratio/return/...",
+			default: "sharpe_ratio",
+		},
+		start_date: {
+			type: "string",
+			title: "Start Date",
+			description: "Backtest start date (YYYY-MM-DD)",
+		},
+		end_date: {
+			type: "string",
+			title: "End Date",
+			description: "Backtest end date (YYYY-MM-DD)",
+		},
+		initial_capital: {
+			type: "number",
+			title: "Initial Capital",
+			description: "Starting capital",
+			default: 100000,
+		},
+		study_name: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Study Name",
+			description: "Custom study name (auto-generated if not provided)",
+		},
+		notes: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Notes",
+			description: "Study description or notes",
+		},
+	},
+	type: "object",
+	required: [
+		"symbol",
+		"strategy_name",
+		"search_space",
+		"start_date",
+		"end_date",
+	],
+	title: "OptimizationRequest",
+	description: "Request to start a new optimization study.",
+} as const;
+
+export const OptimizationResponseSchema = {
+	properties: {
+		status: {
+			type: "string",
+			title: "Status",
+			description: "success/error",
+		},
+		study_name: {
+			type: "string",
+			title: "Study Name",
+		},
+		message: {
+			type: "string",
+			title: "Message",
+		},
+		data: {
+			anyOf: [
+				{
+					$ref: "#/components/schemas/OptimizationProgress",
+				},
+				{
+					$ref: "#/components/schemas/OptimizationResult",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Data",
+		},
+	},
+	type: "object",
+	required: ["status", "study_name", "message"],
+	title: "OptimizationResponse",
+	description: "Response from optimization endpoint.",
+} as const;
+
+export const OptimizationResultSchema = {
+	properties: {
+		study_name: {
+			type: "string",
+			title: "Study Name",
+		},
+		symbol: {
+			type: "string",
+			title: "Symbol",
+		},
+		strategy_name: {
+			type: "string",
+			title: "Strategy Name",
+		},
+		best_params: {
+			additionalProperties: true,
+			type: "object",
+			title: "Best Params",
+		},
+		best_value: {
+			type: "number",
+			title: "Best Value",
+		},
+		best_trial_number: {
+			type: "integer",
+			title: "Best Trial Number",
+		},
+		trials_completed: {
+			type: "integer",
+			title: "Trials Completed",
+		},
+		n_trials: {
+			type: "integer",
+			title: "N Trials",
+		},
+		direction: {
+			type: "string",
+			title: "Direction",
+		},
+		objective_metric: {
+			type: "string",
+			title: "Objective Metric",
+		},
+		sharpe_ratio: {
+			anyOf: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Sharpe Ratio",
+		},
+		total_return: {
+			anyOf: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Total Return",
+		},
+		max_drawdown: {
+			anyOf: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Max Drawdown",
+		},
+		win_rate: {
+			anyOf: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Win Rate",
+		},
+		started_at: {
+			type: "string",
+			format: "date-time",
+			title: "Started At",
+		},
+		completed_at: {
+			type: "string",
+			format: "date-time",
+			title: "Completed At",
+		},
+		total_duration_seconds: {
+			type: "number",
+			title: "Total Duration Seconds",
+		},
+		top_trials: {
+			items: {
+				$ref: "#/components/schemas/TrialResult",
+			},
+			type: "array",
+			title: "Top Trials",
+			description: "Top 5 trials",
+		},
+	},
+	type: "object",
+	required: [
+		"study_name",
+		"symbol",
+		"strategy_name",
+		"best_params",
+		"best_value",
+		"best_trial_number",
+		"trials_completed",
+		"n_trials",
+		"direction",
+		"objective_metric",
+		"started_at",
+		"completed_at",
+		"total_duration_seconds",
+	],
+	title: "OptimizationResult",
+	description: "Completed optimization study result.",
+} as const;
+
 export const OrderTypeSchema = {
 	type: "string",
 	enum: ["MARKET", "LIMIT", "STOP", "STOP_LIMIT"],
 	title: "OrderType",
 	description: "주문 타입",
+} as const;
+
+export const ParameterSpaceSchema = {
+	properties: {
+		type: {
+			type: "string",
+			title: "Type",
+			description: "Parameter type: int, float, categorical",
+		},
+		low: {
+			anyOf: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Low",
+			description: "Lower bound for numeric types",
+		},
+		high: {
+			anyOf: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "High",
+			description: "Upper bound for numeric types",
+		},
+		step: {
+			anyOf: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Step",
+			description: "Step size for discrete sampling",
+		},
+		choices: {
+			anyOf: [
+				{
+					items: {},
+					type: "array",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Choices",
+			description: "Choices for categorical",
+		},
+		log: {
+			type: "boolean",
+			title: "Log",
+			description: "Use log scale for sampling",
+			default: false,
+		},
+	},
+	type: "object",
+	required: ["type"],
+	title: "ParameterSpace",
+	description: "Search space definition for a single parameter.",
+} as const;
+
+export const ParameterValidationSchema = {
+	properties: {
+		parameter_name: {
+			type: "string",
+			title: "Parameter Name",
+			description: "파라미터 이름",
+		},
+		value: {
+			title: "Value",
+			description: "파라미터 값",
+		},
+		is_valid: {
+			type: "boolean",
+			title: "Is Valid",
+			description: "유효성 여부",
+		},
+		validation_status: {
+			$ref: "#/components/schemas/ValidationStatus",
+		},
+		message: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Message",
+			description: "검증 메시지 (경고/오류)",
+		},
+		suggested_value: {
+			anyOf: [
+				{},
+				{
+					type: "null",
+				},
+			],
+			title: "Suggested Value",
+			description: "제안된 값 (오류 시)",
+		},
+		value_range: {
+			anyOf: [
+				{
+					additionalProperties: true,
+					type: "object",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Value Range",
+			description: "허용 범위 (min, max, allowed_values 등)",
+		},
+	},
+	type: "object",
+	required: ["parameter_name", "value", "is_valid", "validation_status"],
+	title: "ParameterValidation",
+	description: "파라미터 검증 결과",
+} as const;
+
+export const ParsedIntentSchema = {
+	properties: {
+		intent_type: {
+			$ref: "#/components/schemas/IntentType",
+			description: "의도 유형",
+		},
+		confidence: {
+			type: "number",
+			maximum: 1,
+			minimum: 0,
+			title: "Confidence",
+			description: "의도 파싱 신뢰도",
+		},
+		confidence_level: {
+			$ref: "#/components/schemas/ConfidenceLevel",
+		},
+		extracted_entities: {
+			additionalProperties: true,
+			type: "object",
+			title: "Extracted Entities",
+			description: "추출된 엔티티 (지표명, 파라미터 등)",
+		},
+		reasoning: {
+			type: "string",
+			maxLength: 500,
+			minLength: 50,
+			title: "Reasoning",
+			description: "의도 판단 근거",
+		},
+	},
+	type: "object",
+	required: ["intent_type", "confidence", "confidence_level", "reasoning"],
+	title: "ParsedIntent",
+	description: "파싱된 사용자 의도",
+} as const;
+
+export const PerformanceAnalysisSchema = {
+	properties: {
+		summary: {
+			type: "string",
+			maxLength: 500,
+			title: "Summary",
+			description: "성과 요약 (2-3 문장)",
+		},
+		return_analysis: {
+			type: "string",
+			maxLength: 300,
+			title: "Return Analysis",
+			description: "수익률 분석",
+		},
+		risk_analysis: {
+			type: "string",
+			maxLength: 300,
+			title: "Risk Analysis",
+			description: "리스크 분석",
+		},
+		sharpe_interpretation: {
+			type: "string",
+			maxLength: 200,
+			title: "Sharpe Interpretation",
+			description: "샤프 비율 해석",
+		},
+		drawdown_commentary: {
+			type: "string",
+			maxLength: 200,
+			title: "Drawdown Commentary",
+			description: "낙폭 해설",
+		},
+		trade_statistics_summary: {
+			type: "string",
+			maxLength: 200,
+			title: "Trade Statistics Summary",
+			description: "거래 통계 요약",
+		},
+	},
+	type: "object",
+	required: [
+		"summary",
+		"return_analysis",
+		"risk_analysis",
+		"sharpe_interpretation",
+		"drawdown_commentary",
+		"trade_statistics_summary",
+	],
+	title: "PerformanceAnalysis",
+	description: "성과 분석",
 } as const;
 
 export const PerformanceMetricsSchema = {
@@ -3719,6 +5141,47 @@ export const PortfolioForecastDistributionSchema = {
 	title: "PortfolioForecastDistribution",
 	description:
 		"Distribution of future portfolio values based on Monte Carlo proxy.",
+} as const;
+
+export const PortfolioForecastResponseSchema = {
+	properties: {
+		success: {
+			type: "boolean",
+			title: "Success",
+			description: "요청 성공 여부",
+			default: true,
+		},
+		message: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Message",
+			description: "응답 메시지",
+		},
+		timestamp: {
+			type: "string",
+			format: "date-time",
+			title: "Timestamp",
+			description: "응답 시간",
+		},
+		data: {
+			$ref: "#/components/schemas/PortfolioForecastDistribution",
+			description: "Forecast output",
+		},
+		metadata: {
+			$ref: "#/components/schemas/MetadataInfo",
+			description: "Response metadata",
+		},
+	},
+	type: "object",
+	required: ["data", "metadata"],
+	title: "PortfolioForecastResponse",
+	description: "API response for probabilistic portfolio forecasts.",
 } as const;
 
 export const PortfolioPerformanceSchema = {
@@ -4330,6 +5793,67 @@ export const RecentTradesResponseSchema = {
 	description: "최근 거래 응답.",
 } as const;
 
+export const RecommendationsSchema = {
+	properties: {
+		action: {
+			$ref: "#/components/schemas/ReportRecommendation",
+			description: "추천 액션",
+		},
+		rationale: {
+			type: "string",
+			maxLength: 400,
+			title: "Rationale",
+			description: "추천 근거",
+		},
+		next_steps: {
+			items: {
+				type: "string",
+			},
+			type: "array",
+			maxItems: 4,
+			minItems: 2,
+			title: "Next Steps",
+			description: "다음 단계 (2-4개)",
+		},
+		optimization_suggestions: {
+			anyOf: [
+				{
+					items: {
+						type: "string",
+					},
+					type: "array",
+					maxItems: 5,
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Optimization Suggestions",
+			description: "최적화 제안 (선택 사항)",
+		},
+		risk_mitigation: {
+			anyOf: [
+				{
+					items: {
+						type: "string",
+					},
+					type: "array",
+					maxItems: 5,
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Risk Mitigation",
+			description: "리스크 완화 방안 (선택 사항)",
+		},
+	},
+	type: "object",
+	required: ["action", "rationale", "next_steps"],
+	title: "Recommendations",
+	description: "추천 사항",
+} as const;
+
 export const RegimeMetricsSchema = {
 	properties: {
 		trailing_return_pct: {
@@ -4362,6 +5886,64 @@ export const RegimeMetricsSchema = {
 	],
 	title: "RegimeMetrics",
 	description: "Quantitative metrics used for regime detection.",
+} as const;
+
+export const ReportRecommendationSchema = {
+	type: "string",
+	enum: ["proceed", "optimize", "reject", "research"],
+	title: "ReportRecommendation",
+	description: "리포트 추천 액션",
+} as const;
+
+export const RiskAssessmentSchema = {
+	properties: {
+		overall_risk_level: {
+			type: "string",
+			title: "Overall Risk Level",
+			description: "전체 리스크 수준 (Low/Medium/High/Very High)",
+		},
+		risk_summary: {
+			type: "string",
+			maxLength: 300,
+			title: "Risk Summary",
+			description: "리스크 요약",
+		},
+		volatility_assessment: {
+			type: "string",
+			maxLength: 200,
+			title: "Volatility Assessment",
+			description: "변동성 평가",
+		},
+		max_drawdown_context: {
+			type: "string",
+			maxLength: 200,
+			title: "Max Drawdown Context",
+			description: "최대 낙폭 맥락",
+		},
+		concentration_risk: {
+			type: "string",
+			maxLength: 200,
+			title: "Concentration Risk",
+			description: "집중 리스크 분석",
+		},
+		tail_risk: {
+			type: "string",
+			maxLength: 200,
+			title: "Tail Risk",
+			description: "테일 리스크 평가",
+		},
+	},
+	type: "object",
+	required: [
+		"overall_risk_level",
+		"risk_summary",
+		"volatility_assessment",
+		"max_drawdown_context",
+		"concentration_risk",
+		"tail_risk",
+	],
+	title: "RiskAssessment",
+	description: "리스크 평가",
 } as const;
 
 export const SMACrossoverConfigSchema = {
@@ -4501,6 +6083,245 @@ export const StockSymbolsResponseSchema = {
 	type: "object",
 	required: ["symbols", "count"],
 	title: "StockSymbolsResponse",
+} as const;
+
+export const StrategyApprovalRequestSchema = {
+	properties: {
+		strategy_builder_response_id: {
+			type: "string",
+			title: "Strategy Builder Response Id",
+			description: "빌더 응답 ID",
+		},
+		approved: {
+			type: "boolean",
+			title: "Approved",
+			description: "승인 여부",
+		},
+		modifications: {
+			anyOf: [
+				{
+					additionalProperties: true,
+					type: "object",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Modifications",
+			description: "수정 사항",
+		},
+		approval_notes: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Approval Notes",
+			description: "승인 메모",
+		},
+	},
+	type: "object",
+	required: ["strategy_builder_response_id", "approved"],
+	title: "StrategyApprovalRequest",
+	description: "전략 승인 요청 (휴먼 인 더 루프)",
+} as const;
+
+export const StrategyApprovalResponseSchema = {
+	properties: {
+		status: {
+			type: "string",
+			title: "Status",
+			description: "승인 상태 (approved/rejected/modified)",
+		},
+		message: {
+			type: "string",
+			title: "Message",
+			description: "응답 메시지",
+		},
+		strategy_id: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Strategy Id",
+			description: "생성된 전략 ID (승인 시)",
+		},
+		approved_at: {
+			type: "string",
+			format: "date-time",
+			title: "Approved At",
+			description: "승인 시간",
+		},
+	},
+	type: "object",
+	required: ["status", "message"],
+	title: "StrategyApprovalResponse",
+	description: "전략 승인 응답",
+} as const;
+
+export const StrategyBuilderRequestSchema = {
+	properties: {
+		query: {
+			type: "string",
+			maxLength: 1000,
+			minLength: 10,
+			title: "Query",
+			description: "자연어 전략 설명 또는 요청",
+		},
+		context: {
+			anyOf: [
+				{
+					additionalProperties: true,
+					type: "object",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Context",
+			description: "추가 컨텍스트 (심볼, 기간, 제약조건 등)",
+		},
+		user_preferences: {
+			anyOf: [
+				{
+					additionalProperties: true,
+					type: "object",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "User Preferences",
+			description: "사용자 선호도 (위험 선호도, 거래 빈도 등)",
+		},
+		existing_strategy_id: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Existing Strategy Id",
+			description: "수정할 기존 전략 ID (modify intent)",
+		},
+		require_human_approval: {
+			type: "boolean",
+			title: "Require Human Approval",
+			description: "사람 승인 필요 여부 (휴먼 인 더 루프)",
+			default: true,
+		},
+	},
+	type: "object",
+	required: ["query"],
+	title: "StrategyBuilderRequest",
+	description: "대화형 전략 빌더 요청",
+} as const;
+
+export const StrategyBuilderResponseSchema = {
+	properties: {
+		status: {
+			type: "string",
+			title: "Status",
+			description: "처리 상태 (success/warning/error)",
+		},
+		message: {
+			type: "string",
+			title: "Message",
+			description: "응답 메시지",
+		},
+		parsed_intent: {
+			$ref: "#/components/schemas/ParsedIntent",
+		},
+		generated_strategy: {
+			anyOf: [
+				{
+					$ref: "#/components/schemas/GeneratedStrategyConfig",
+				},
+				{
+					type: "null",
+				},
+			],
+			description: "생성된 전략 설정",
+		},
+		human_approval: {
+			$ref: "#/components/schemas/HumanApprovalRequest",
+			description: "휴먼 승인 요청 정보",
+		},
+		alternative_suggestions: {
+			anyOf: [
+				{
+					items: {
+						type: "string",
+					},
+					type: "array",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Alternative Suggestions",
+			description: "대안 제안 (의도 파싱 실패 시)",
+		},
+		processing_time_ms: {
+			type: "number",
+			title: "Processing Time Ms",
+			description: "처리 시간 (밀리초)",
+		},
+		llm_model: {
+			type: "string",
+			title: "Llm Model",
+			description: "사용된 LLM 모델",
+		},
+		generated_at: {
+			type: "string",
+			format: "date-time",
+			title: "Generated At",
+			description: "생성 시간",
+		},
+		validation_errors: {
+			anyOf: [
+				{
+					items: {
+						type: "string",
+					},
+					type: "array",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Validation Errors",
+			description: "검증 오류 목록",
+		},
+		overall_confidence: {
+			type: "number",
+			maximum: 1,
+			minimum: 0,
+			title: "Overall Confidence",
+			description: "전체 신뢰도 (의도 + 전략 생성)",
+		},
+	},
+	type: "object",
+	required: [
+		"status",
+		"message",
+		"parsed_intent",
+		"human_approval",
+		"processing_time_ms",
+		"llm_model",
+		"overall_confidence",
+	],
+	title: "StrategyBuilderResponse",
+	description: "대화형 전략 빌더 응답",
 } as const;
 
 export const StrategyComparisonSchema = {
@@ -4703,6 +6524,65 @@ export const StrategyExecuteSchema = {
 	required: ["symbol", "market_data"],
 	title: "StrategyExecute",
 	description: "Strategy execution request",
+} as const;
+
+export const StrategyInsightsSchema = {
+	properties: {
+		strategy_name: {
+			type: "string",
+			title: "Strategy Name",
+			description: "전략 이름",
+		},
+		strategy_description: {
+			type: "string",
+			maxLength: 300,
+			title: "Strategy Description",
+			description: "전략 설명",
+		},
+		key_parameters: {
+			additionalProperties: true,
+			type: "object",
+			title: "Key Parameters",
+			description: "핵심 파라미터",
+		},
+		parameter_sensitivity: {
+			type: "string",
+			maxLength: 300,
+			title: "Parameter Sensitivity",
+			description: "파라미터 민감도 분석",
+		},
+		strengths: {
+			items: {
+				type: "string",
+			},
+			type: "array",
+			maxItems: 4,
+			minItems: 2,
+			title: "Strengths",
+			description: "전략 강점 (2-4개)",
+		},
+		weaknesses: {
+			items: {
+				type: "string",
+			},
+			type: "array",
+			maxItems: 4,
+			minItems: 2,
+			title: "Weaknesses",
+			description: "전략 약점 (2-4개)",
+		},
+	},
+	type: "object",
+	required: [
+		"strategy_name",
+		"strategy_description",
+		"key_parameters",
+		"parameter_sensitivity",
+		"strengths",
+		"weaknesses",
+	],
+	title: "StrategyInsights",
+	description: "전략 인사이트",
 } as const;
 
 export const StrategyListResponseSchema = {
@@ -5091,6 +6971,99 @@ export const StrategyUpdateSchema = {
 	type: "object",
 	title: "StrategyUpdate",
 	description: "Strategy update request",
+} as const;
+
+export const StudyListItemSchema = {
+	properties: {
+		study_name: {
+			type: "string",
+			title: "Study Name",
+		},
+		symbol: {
+			type: "string",
+			title: "Symbol",
+		},
+		strategy_name: {
+			type: "string",
+			title: "Strategy Name",
+		},
+		status: {
+			type: "string",
+			title: "Status",
+		},
+		trials_completed: {
+			type: "integer",
+			title: "Trials Completed",
+		},
+		n_trials: {
+			type: "integer",
+			title: "N Trials",
+		},
+		best_value: {
+			anyOf: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Best Value",
+		},
+		created_at: {
+			type: "string",
+			format: "date-time",
+			title: "Created At",
+		},
+		completed_at: {
+			anyOf: [
+				{
+					type: "string",
+					format: "date-time",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Completed At",
+		},
+	},
+	type: "object",
+	required: [
+		"study_name",
+		"symbol",
+		"strategy_name",
+		"status",
+		"trials_completed",
+		"n_trials",
+		"created_at",
+	],
+	title: "StudyListItem",
+	description: "Summary of an optimization study for listing.",
+} as const;
+
+export const StudyListResponseSchema = {
+	properties: {
+		status: {
+			type: "string",
+			title: "Status",
+		},
+		total: {
+			type: "integer",
+			title: "Total",
+		},
+		studies: {
+			items: {
+				$ref: "#/components/schemas/StudyListItem",
+			},
+			type: "array",
+			title: "Studies",
+		},
+	},
+	type: "object",
+	required: ["status", "total", "studies"],
+	title: "StudyListResponse",
+	description: "Response for study listing.",
 } as const;
 
 export const SymbolInfoSchema = {
@@ -5909,6 +7882,76 @@ export const TrainModelResponseSchema = {
 	description: "Response schema for model training.",
 } as const;
 
+export const TrialResultSchema = {
+	properties: {
+		trial_number: {
+			type: "integer",
+			title: "Trial Number",
+		},
+		params: {
+			additionalProperties: true,
+			type: "object",
+			title: "Params",
+		},
+		value: {
+			type: "number",
+			title: "Value",
+		},
+		state: {
+			type: "string",
+			title: "State",
+		},
+		sharpe_ratio: {
+			anyOf: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Sharpe Ratio",
+		},
+		total_return: {
+			anyOf: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Total Return",
+		},
+		max_drawdown: {
+			anyOf: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Max Drawdown",
+		},
+		duration_seconds: {
+			anyOf: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Duration Seconds",
+		},
+	},
+	type: "object",
+	required: ["trial_number", "params", "value", "state"],
+	title: "TrialResult",
+	description: "Individual trial result summary.",
+} as const;
+
 export const UserCreateSchema = {
 	properties: {
 		email: {
@@ -6193,6 +8236,13 @@ export const ValidationErrorSchema = {
 	type: "object",
 	required: ["loc", "msg", "type"],
 	title: "ValidationError",
+} as const;
+
+export const ValidationStatusSchema = {
+	type: "string",
+	enum: ["valid", "warning", "error"],
+	title: "ValidationStatus",
+	description: "검증 상태",
 } as const;
 
 export const WatchlistCreateSchema = {

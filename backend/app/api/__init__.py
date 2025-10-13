@@ -14,6 +14,7 @@ from .routes import (
     ml_router,
     chatops_router,
     narrative_router,
+    strategy_builder_router,
 )
 
 # Create main API router
@@ -30,6 +31,9 @@ api_router.include_router(signals_router, prefix="/signals", tags=["Signals"])
 api_router.include_router(ml_router, prefix="/ml", tags=["ML"])
 api_router.include_router(chatops_router, prefix="/chatops", tags=["ChatOps"])
 api_router.include_router(narrative_router, prefix="/narrative", tags=["Narrative"])
+api_router.include_router(
+    strategy_builder_router, prefix="/strategy-builder", tags=["Strategy Builder"]
+)
 
 
 __all__ = ["api_router"]

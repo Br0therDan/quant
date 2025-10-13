@@ -38,6 +38,9 @@ import type {
 	BacktestCreateBacktestData,
 	BacktestCreateBacktestErrors,
 	BacktestCreateBacktestResponses,
+	BacktestCreateOptimizationStudyData,
+	BacktestCreateOptimizationStudyErrors,
+	BacktestCreateOptimizationStudyResponses,
 	BacktestDeleteBacktestData,
 	BacktestDeleteBacktestErrors,
 	BacktestDeleteBacktestResponses,
@@ -53,6 +56,12 @@ import type {
 	BacktestGetBacktestsData,
 	BacktestGetBacktestsErrors,
 	BacktestGetBacktestsResponses,
+	BacktestGetOptimizationProgressData,
+	BacktestGetOptimizationProgressErrors,
+	BacktestGetOptimizationProgressResponses,
+	BacktestGetOptimizationResultData,
+	BacktestGetOptimizationResultErrors,
+	BacktestGetOptimizationResultResponses,
 	BacktestGetPerformanceAnalyticsData,
 	BacktestGetPerformanceAnalyticsErrors,
 	BacktestGetPerformanceAnalyticsResponses,
@@ -68,9 +77,15 @@ import type {
 	BacktestHealthCheckData,
 	BacktestHealthCheckErrors,
 	BacktestHealthCheckResponses,
+	BacktestListOptimizationStudiesData,
+	BacktestListOptimizationStudiesErrors,
+	BacktestListOptimizationStudiesResponses,
 	BacktestUpdateBacktestData,
 	BacktestUpdateBacktestErrors,
 	BacktestUpdateBacktestResponses,
+	ChatOpsExecuteChatopsData,
+	ChatOpsExecuteChatopsErrors,
+	ChatOpsExecuteChatopsResponses,
 	CryptoGetBitcoinPriceData,
 	CryptoGetBitcoinPriceErrors,
 	CryptoGetBitcoinPriceResponses,
@@ -101,6 +116,9 @@ import type {
 	DashboardGetNewsFeedData,
 	DashboardGetNewsFeedErrors,
 	DashboardGetNewsFeedResponses,
+	DashboardGetPortfolioForecastData,
+	DashboardGetPortfolioForecastErrors,
+	DashboardGetPortfolioForecastResponses,
 	DashboardGetPortfolioPerformanceData,
 	DashboardGetPortfolioPerformanceErrors,
 	DashboardGetPortfolioPerformanceResponses,
@@ -200,6 +218,9 @@ import type {
 	MlTrainModelData,
 	MlTrainModelErrors,
 	MlTrainModelResponses,
+	NarrativeGenerateNarrativeReportData,
+	NarrativeGenerateNarrativeReportErrors,
+	NarrativeGenerateNarrativeReportResponses,
 	OAuth2AuthorizeData,
 	OAuth2AuthorizeErrors,
 	OAuth2AuthorizeResponses,
@@ -227,6 +248,15 @@ import type {
 	StockSearchStockSymbolsData,
 	StockSearchStockSymbolsErrors,
 	StockSearchStockSymbolsResponses,
+	StrategyBuilderApproveStrategyData,
+	StrategyBuilderApproveStrategyErrors,
+	StrategyBuilderApproveStrategyResponses,
+	StrategyBuilderGenerateStrategyData,
+	StrategyBuilderGenerateStrategyErrors,
+	StrategyBuilderGenerateStrategyResponses,
+	StrategyBuilderSearchIndicatorsData,
+	StrategyBuilderSearchIndicatorsErrors,
+	StrategyBuilderSearchIndicatorsResponses,
 	StrategyCreateStrategyData,
 	StrategyCreateStrategyErrors,
 	StrategyCreateStrategyResponses,
@@ -2600,6 +2630,256 @@ export class BacktestService {
 			...options,
 		});
 	}
+
+	/**
+	 * List Optimization Studies
+	 * List optimization studies with optional filters.
+	 *
+	 * Args:
+	 * symbol: Filter by symbol
+	 * strategy_name: Filter by strategy name
+	 * status: Filter by status (pending/running/completed/failed)
+	 * limit: Maximum number of studies to return
+	 *
+	 * Returns:
+	 * StudyListResponse with list of studies
+	 */
+	public static listOptimizationStudies<ThrowOnError extends boolean = false>(
+		options?: Options<BacktestListOptimizationStudiesData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			BacktestListOptimizationStudiesResponses,
+			BacktestListOptimizationStudiesErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/backtests/optimize/",
+			...options,
+		});
+	}
+
+	/**
+	 * Create Optimization Study
+	 * Create and start a new optimization study.
+	 *
+	 * Args:
+	 * request: Optimization configuration
+	 * background_tasks: FastAPI background tasks for async execution
+	 *
+	 * Returns:
+	 * OptimizationResponse with study name and status
+	 */
+	public static createOptimizationStudy<ThrowOnError extends boolean = false>(
+		options: Options<BacktestCreateOptimizationStudyData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			BacktestCreateOptimizationStudyResponses,
+			BacktestCreateOptimizationStudyErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/backtests/optimize/",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Get Optimization Progress
+	 * Get current progress of an optimization study.
+	 *
+	 * Args:
+	 * study_name: Study identifier
+	 *
+	 * Returns:
+	 * OptimizationResponse with progress information
+	 */
+	public static getOptimizationProgress<ThrowOnError extends boolean = false>(
+		options: Options<BacktestGetOptimizationProgressData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			BacktestGetOptimizationProgressResponses,
+			BacktestGetOptimizationProgressErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/backtests/optimize/{study_name}",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Optimization Result
+	 * Get final result of a completed optimization study.
+	 *
+	 * Args:
+	 * study_name: Study identifier
+	 *
+	 * Returns:
+	 * OptimizationResponse with optimization result
+	 */
+	public static getOptimizationResult<ThrowOnError extends boolean = false>(
+		options: Options<BacktestGetOptimizationResultData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			BacktestGetOptimizationResultResponses,
+			BacktestGetOptimizationResultErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/backtests/optimize/{study_name}/result",
+			...options,
+		});
+	}
+}
+
+export class OptimizationService {
+	/**
+	 * List Optimization Studies
+	 * List optimization studies with optional filters.
+	 *
+	 * Args:
+	 * symbol: Filter by symbol
+	 * strategy_name: Filter by strategy name
+	 * status: Filter by status (pending/running/completed/failed)
+	 * limit: Maximum number of studies to return
+	 *
+	 * Returns:
+	 * StudyListResponse with list of studies
+	 */
+	public static listOptimizationStudies<ThrowOnError extends boolean = false>(
+		options?: Options<BacktestListOptimizationStudiesData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			BacktestListOptimizationStudiesResponses,
+			BacktestListOptimizationStudiesErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/backtests/optimize/",
+			...options,
+		});
+	}
+
+	/**
+	 * Create Optimization Study
+	 * Create and start a new optimization study.
+	 *
+	 * Args:
+	 * request: Optimization configuration
+	 * background_tasks: FastAPI background tasks for async execution
+	 *
+	 * Returns:
+	 * OptimizationResponse with study name and status
+	 */
+	public static createOptimizationStudy<ThrowOnError extends boolean = false>(
+		options: Options<BacktestCreateOptimizationStudyData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			BacktestCreateOptimizationStudyResponses,
+			BacktestCreateOptimizationStudyErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/backtests/optimize/",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Get Optimization Progress
+	 * Get current progress of an optimization study.
+	 *
+	 * Args:
+	 * study_name: Study identifier
+	 *
+	 * Returns:
+	 * OptimizationResponse with progress information
+	 */
+	public static getOptimizationProgress<ThrowOnError extends boolean = false>(
+		options: Options<BacktestGetOptimizationProgressData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			BacktestGetOptimizationProgressResponses,
+			BacktestGetOptimizationProgressErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/backtests/optimize/{study_name}",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Optimization Result
+	 * Get final result of a completed optimization study.
+	 *
+	 * Args:
+	 * study_name: Study identifier
+	 *
+	 * Returns:
+	 * OptimizationResponse with optimization result
+	 */
+	public static getOptimizationResult<ThrowOnError extends boolean = false>(
+		options: Options<BacktestGetOptimizationResultData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			BacktestGetOptimizationResultResponses,
+			BacktestGetOptimizationResultErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/backtests/optimize/{study_name}/result",
+			...options,
+		});
+	}
 }
 
 export class WatchlistService {
@@ -3012,6 +3292,42 @@ export class DashboardService {
 			...options,
 		});
 	}
+
+	/**
+	 * Get Portfolio Forecast
+	 * 포트폴리오 확률적 예측을 조회합니다.
+	 *
+	 * 히스토리 기반 Gaussian projection으로 5/50/95 백분위 예측을 생성합니다.
+	 *
+	 * Args:
+	 * horizon_days: 예측 기간 (일)
+	 * user: 인증된 사용자
+	 *
+	 * Returns:
+	 * 백분위 예측 분포 (5th, 50th, 95th percentiles)
+	 *
+	 * Raises:
+	 * 400: 포트폴리오 히스토리가 없는 경우
+	 * 500: 예측 생성 실패
+	 */
+	public static getPortfolioForecast<ThrowOnError extends boolean = false>(
+		options?: Options<DashboardGetPortfolioForecastData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			DashboardGetPortfolioForecastResponses,
+			DashboardGetPortfolioForecastErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/dashboard/portfolio/forecast",
+			...options,
+		});
+	}
 }
 
 export class TasksService {
@@ -3220,6 +3536,195 @@ export class MlService {
 		>({
 			url: "/api/v1/ml/models/compare/{metric}",
 			...options,
+		});
+	}
+}
+
+export class ChatOpsService {
+	/**
+	 * Execute Chatops
+	 * Execute the ChatOps agent with the provided request payload.
+	 */
+	public static executeChatops<ThrowOnError extends boolean = false>(
+		options: Options<ChatOpsExecuteChatopsData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			ChatOpsExecuteChatopsResponses,
+			ChatOpsExecuteChatopsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/chatops/",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+}
+
+export class NarrativeService {
+	/**
+	 * Generate Narrative Report
+	 * 백테스트 결과에 대한 LLM 기반 내러티브 리포트 생성
+	 */
+	public static generateNarrativeReport<ThrowOnError extends boolean = false>(
+		options: Options<NarrativeGenerateNarrativeReportData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			NarrativeGenerateNarrativeReportResponses,
+			NarrativeGenerateNarrativeReportErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/narrative/backtests/{backtest_id}/report",
+			...options,
+		});
+	}
+}
+
+export class StrategyBuilderService {
+	/**
+	 * Generate Strategy
+	 * 자연어 입력으로 트레이딩 전략 생성
+	 *
+	 * **워크플로우:**
+	 * 1. 자연어 쿼리 → LLM 의도 파싱 (IntentType 분류)
+	 * 2. 엔티티 추출 (지표, 파라미터, 심볼 등)
+	 * 3. 지표 추천 (임베딩 기반 유사도 매칭)
+	 * 4. 파라미터 검증 (범위, 타입 체크)
+	 * 5. 전략 설정 생성 (GeneratedStrategyConfig)
+	 * 6. 휴먼 승인 필요성 평가
+	 *
+	 * **예시 요청:**
+	 * - "RSI가 30 이하일 때 매수하고, 70 이상일 때 매도하는 전략을 만들어줘"
+	 * - "MACD와 Bollinger Bands를 사용한 추세 추종 전략 추천해줘"
+	 * - "단기 매매에 적합한 EMA 크로스오버 전략을 테스트하고 싶어"
+	 *
+	 * **응답:**
+	 * - `status`: "success" | "warning" | "error"
+	 * - `parsed_intent`: LLM이 파싱한 사용자 의도 (IntentType, 신뢰도, 추출된 엔티티)
+	 * - `generated_strategy`: 생성된 전략 설정 (지표, 파라미터, 진입/청산 조건)
+	 * - `human_approval`: 승인 필요 여부 + 이유 + 수정 제안
+	 * - `overall_confidence`: 전체 신뢰도 (0.0-1.0)
+	 *
+	 * **주의사항:**
+	 * - OpenAI API 키 필요 (`OPENAI_API_KEY` 환경변수)
+	 * - 자연어 쿼리는 10-1000자 제한
+	 * - 생성된 전략은 기본적으로 승인 필요 (`require_human_approval=True`)
+	 * - 낮은 신뢰도 (<0.5) 시 대안 제안 제공
+	 */
+	public static generateStrategy<ThrowOnError extends boolean = false>(
+		options: Options<StrategyBuilderGenerateStrategyData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			StrategyBuilderGenerateStrategyResponses,
+			StrategyBuilderGenerateStrategyErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/strategy-builder",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Approve Strategy
+	 * 생성된 전략 승인 처리 (Human-in-the-Loop)
+	 *
+	 * **워크플로우:**
+	 * 1. 생성된 전략 ID 조회 (`strategy_builder_response_id`)
+	 * 2. 승인 여부 확인 (`approved`: true/false)
+	 * 3. 수정 사항 적용 (`modifications`: Dict)
+	 * 4. 실제 전략 생성 (StrategyService)
+	 * 5. 승인 로그 기록 (audit trail)
+	 *
+	 * **승인 시나리오:**
+	 * - **승인 (approved=true)**: 수정 없이 전략 생성
+	 * - **수정 후 승인 (approved=true + modifications)**: 파라미터 수정 후 생성
+	 * - **거부 (approved=false)**: 전략 생성 취소, 사유 기록
+	 *
+	 * **응답:**
+	 * - `status`: "approved" | "modified" | "rejected"
+	 * - `message`: 승인 결과 메시지
+	 * - `strategy_id`: 생성된 전략 ID (승인 시)
+	 * - `approved_at`: 승인 시각 (ISO 8601)
+	 *
+	 * **예시:**
+	 * ```json
+	 * {
+	 * "strategy_builder_response_id": "abc123",
+	 * "approved": true,
+	 * "modifications": {
+	 * "rsi_period": 21,
+	 * "rsi_oversold": 25
+	 * },
+	 * "approval_notes": "RSI 기간을 21로 조정하여 시장 변동성 반영"
+	 * }
+	 * ```
+	 */
+	public static approveStrategy<ThrowOnError extends boolean = false>(
+		options: Options<StrategyBuilderApproveStrategyData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			StrategyBuilderApproveStrategyResponses,
+			StrategyBuilderApproveStrategyErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/strategy-builder/approve",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Search Indicators
+	 * 임베딩 기반 지표 검색
+	 *
+	 * **기능:**
+	 * - 자연어 쿼리 → 임베딩 변환
+	 * - 지표 지식 베이스와 코사인 유사도 계산
+	 * - 상위 K개 지표 추천 (기본 5개)
+	 *
+	 * **사용 사례:**
+	 * - "변동성을 측정하는 지표를 찾아줘" → Bollinger Bands, ATR
+	 * - "추세 전환을 포착하는 지표" → MACD, EMA Crossover
+	 * - "모멘텀 지표" → RSI, Stochastic, CCI
+	 *
+	 * **응답:**
+	 * - `status`: "success" | "error"
+	 * - `indicators`: 추천 지표 목록 (유사도 순)
+	 * - `total`: 반환된 지표 수
+	 * - `query_embedding`: (디버깅용) 쿼리 임베딩 벡터
+	 *
+	 * **예시:**
+	 * ```json
+	 * {
+	 * "query": "변동성 측정 지표",
+	 * "top_k": 3,
+	 * "filters": {"type": "volatility"}
+	 * }
+	 * ```
+	 */
+	public static searchIndicators<ThrowOnError extends boolean = false>(
+		options: Options<StrategyBuilderSearchIndicatorsData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			StrategyBuilderSearchIndicatorsResponses,
+			StrategyBuilderSearchIndicatorsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/strategy-builder/search-indicators",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
 		});
 	}
 }

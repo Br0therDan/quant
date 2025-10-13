@@ -26,6 +26,7 @@ from .llm.chatops_agent import ChatOpsAgent
 from .ml.anomaly_detector import AnomalyDetectionService
 from .optimization_service import OptimizationService
 from .narrative_report_service import NarrativeReportService
+from .strategy_builder_service import StrategyBuilderService
 
 logger = logging.getLogger(__name__)
 
@@ -55,6 +56,7 @@ class ServiceFactory:
     _chatops_agent: Optional[ChatOpsAgent] = None
     _optimization_service: Optional[OptimizationService] = None
     _narrative_report_service: Optional[NarrativeReportService] = None
+    _strategy_builder_service: Optional[StrategyBuilderService] = None
 
     def __new__(cls):
         if cls._instance is None:
@@ -286,6 +288,16 @@ class ServiceFactory:
             )
             logger.info("NarrativeReportService initialized (Phase 3 D1)")
         return self._narrative_report_service
+
+    def get_strategy_builder_service(self) -> StrategyBuilderService:
+        """StrategyBuilderService 인스턴스 반환 (Phase 3 D2)"""
+        if self._strategy_builder_service is None:
+            strategy_service = self.get_strategy_service()
+            self._strategy_builder_service = StrategyBuilderService(
+                strategy_service=strategy_service
+            )
+            logger.info("StrategyBuilderService initialized (Phase 3 D2)")
+        return self._strategy_builder_service
 
     async def cleanup(self):
         """모든 서비스 정리"""
