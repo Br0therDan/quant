@@ -21,6 +21,8 @@ from .dashboard_service import DashboardService
 from .ml_signal_service import MLSignalService
 from .regime_detection_service import RegimeDetectionService
 from .probabilistic_kpi_service import ProbabilisticKPIService
+from .monitoring.data_quality_sentinel import DataQualitySentinel
+from .ml.anomaly_detector import AnomalyDetectionService
 
 logger = logging.getLogger(__name__)
 
@@ -45,6 +47,8 @@ class ServiceFactory:
     _ml_signal_service: Optional[MLSignalService] = None
     _regime_detection_service: Optional[RegimeDetectionService] = None
     _probabilistic_kpi_service: Optional[ProbabilisticKPIService] = None
+    _data_quality_sentinel: Optional[DataQualitySentinel] = None
+    _anomaly_detection_service: Optional[AnomalyDetectionService] = None
 
     def __new__(cls):
         if cls._instance is None:
@@ -65,14 +69,22 @@ class ServiceFactory:
         """MarketDataService 인스턴스 반환 (DuckDB 연동)"""
         if self._market_data_service is None:
             database_manager = self.get_database_manager()
-            self._market_data_service = MarketDataService(database_manager)
+            data_quality_sentinel = self.get_data_quality_sentinel()
+            self._market_data_service = MarketDataService(
+                database_manager, data_quality_sentinel=data_quality_sentinel
+            )
             logger.info("Created MarketDataService instance with DuckDB")
         return self._market_data_service
 
     def get_stock_service(self) -> StockService:
         """StockService 인스턴스 반환 (새로운 아키텍처)"""
         if self._stock_service is None:
-            self._stock_service = StockService()
+            database_manager = self.get_database_manager()
+            data_quality_sentinel = self.get_data_quality_sentinel()
+            self._stock_service = StockService(
+                database_manager=database_manager,
+                data_quality_sentinel=data_quality_sentinel,
+            )
             logger.info("Created StockService instance")
         return self._stock_service
 
@@ -168,6 +180,7 @@ class ServiceFactory:
             ml_signal_service = self.get_ml_signal_service()
             regime_service = self.get_regime_detection_service()
             probabilistic_service = self.get_probabilistic_kpi_service()
+            data_quality_sentinel = self.get_data_quality_sentinel()
 
             self._dashboard_service = DashboardService(
                 database_manager=database_manager,
@@ -179,9 +192,25 @@ class ServiceFactory:
                 ml_signal_service=ml_signal_service,
                 regime_service=regime_service,
                 probabilistic_service=probabilistic_service,
+                data_quality_sentinel=data_quality_sentinel,
             )
             logger.info("Created DashboardService instance")
         return self._dashboard_service
+
+    def get_anomaly_detection_service(self) -> AnomalyDetectionService:
+        """AnomalyDetectionService 인스턴스 반환"""
+        if self._anomaly_detection_service is None:
+            self._anomaly_detection_service = AnomalyDetectionService()
+            logger.info("Created AnomalyDetectionService instance")
+        return self._anomaly_detection_service
+
+    def get_data_quality_sentinel(self) -> DataQualitySentinel:
+        """DataQualitySentinel 인스턴스 반환"""
+        if self._data_quality_sentinel is None:
+            anomaly_detector = self.get_anomaly_detection_service()
+            self._data_quality_sentinel = DataQualitySentinel(anomaly_detector)
+            logger.info("Created DataQualitySentinel instance")
+        return self._data_quality_sentinel
 
     def get_ml_signal_service(self) -> MLSignalService:
         """MLSignalService 인스턴스 반환"""
