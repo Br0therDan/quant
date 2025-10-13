@@ -486,12 +486,12 @@ GET /api/v1/features/metadata
 
 ```python
 # 1. MLflow 통합
-backend/app/services/ml/mlflow_registry.py
+backend/app/services/model_lifecycle_service.py
 
 # 핵심 기능:
-- MLflow Tracking Server 연동
+- MLflow Tracking Server 연동 (선택적)과 실험 메타데이터 동기화
 - 실험 로그 자동화 (하이퍼파라미터, 메트릭, 아티팩트)
-- MongoDB에 모델 메타데이터 동기화
+- MongoDB에 모델/런/드리프트 이벤트 저장
 
 # 2. 모델 재학습 파이프라인
 - Celery 작업으로 주기적 재학습 (주간/월간)
@@ -499,9 +499,10 @@ backend/app/services/ml/mlflow_registry.py
 - A/B 테스트 프레임워크 (새 모델 vs 기존 모델)
 
 # 3. API 확장
-GET /api/v1/ml/experiments
-GET /api/v1/ml/models/{model_name}/compare
-  → 여러 버전의 모델 성능 비교
+GET /api/v1/ml/lifecycle/experiments
+GET /api/v1/ml/lifecycle/models/{model_name}/compare
+POST /api/v1/ml/lifecycle/drift-events
+  → 여러 버전 및 드리프트 추적 지원
 ```
 
 **기대 효과**:
@@ -520,7 +521,7 @@ GET /api/v1/ml/models/{model_name}/compare
 
 ```python
 # 1. EvaluationHarness 생성
-backend/app/services/ml/evaluation_harness.py
+backend/app/services/evaluation_harness_service.py
 
 # 핵심 기능:
 - 과거 기간 재생 백테스트
@@ -533,8 +534,8 @@ backend/app/services/ml/evaluation_harness.py
 - 국면별 성과 분석
 
 # 3. 리포트 생성
-- HTML 리포트 (모델 성능, 리스크 지표, 설명 가능성)
-- PDF 내보내기 (규제 제출용)
+- FastAPI JSON 리포트 (모델 성능, 리스크 지표, 설명 가능성)
+- 컴플라이언스 체크 포맷 (추후 PDF 변환 가능)
 ```
 
 **기대 효과**:
@@ -553,13 +554,14 @@ backend/app/services/ml/evaluation_harness.py
 | **시장 국면 분류**       | 1     | 높음          | 중간        | DuckDB      | P1       | 2주                |
 | **데이터 품질 센티널**   | 2     | 높음          | 낮음        | 없음        | P1       | ✅ 완료            |
 | **Optuna 옵티마이저**    | 2     | 매우 높음     | 중간        | Phase 1     | P1       | 1주                |
-| **피처 스토어**          | 4     | 매우 높음     | 중간        | Phase 1     | P1       | 2주                |
-| **모델 레지스트리 확장** | 4     | 높음          | 중간        | 피처 스토어 | P2       | 1.5주              |
+| **피처 스토어**          | 4     | 매우 높음     | 중간        | Phase 1     | P1       | ✅ 완료            |
+| **모델 레지스트리 확장** | 4     | 높음          | 중간        | 피처 스토어 | P2       | ✅ 완료            |
 | **포트폴리오 예측**      | 1     | 중간          | 높음        | Phase 1     | P2       | 3주                |
 | **내러티브 리포트**      | 3     | 높음          | 낮음        | Phase 1     | P2       | ✅ 완료            |
 | **대화형 전략 빌더**     | 3     | 높음          | 중간        | 없음        | P2       | ✅ 완료 (Core 80%) |
+| **프롬프트 거버넌스**    | 4     | 중간          | 중간        | Phase 3     | P2       | ✅ 완료            |
 | **ChatOps 에이전트**     | 3     | 중간          | 낮음        | Phase 1     | P3       | ✅ 완료            |
-| **평가 하니스**          | 4     | 중간          | 낮음        | Phase 1     | P3       | 1주                |
+| **평가 하니스**          | 4     | 중간          | 낮음        | Phase 1     | P3       | ✅ 완료            |
 | **강화학습 실행기**      | 2     | 낮음          | 매우 높음   | GPU         | P4       | 차단됨             |
 
 ### 우선순위 정의

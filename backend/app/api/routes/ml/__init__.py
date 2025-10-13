@@ -2,9 +2,12 @@
 
 from fastapi import APIRouter
 
-from app.api.routes.ml import train
+from app.api.routes.ml import lifecycle, train
+from app.api.routes.ml import evaluation
 
 router = APIRouter()
 router.include_router(train.router)
+router.include_router(lifecycle.router)
+router.include_router(evaluation.router)
 
 __all__ = ["router"]

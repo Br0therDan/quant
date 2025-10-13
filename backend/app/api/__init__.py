@@ -17,6 +17,7 @@ from .routes import (
     strategy_builder_router,
     chatops_advanced_router,
     feature_store_router,
+    prompt_governance_router,
 )
 
 # Create main API router
@@ -41,6 +42,9 @@ api_router.include_router(
 )
 api_router.include_router(
     feature_store_router, prefix="/features", tags=["Feature Store"]
+)
+api_router.include_router(
+    prompt_governance_router, prefix="/prompt-governance", tags=["Prompt Governance"]
 )
 
 

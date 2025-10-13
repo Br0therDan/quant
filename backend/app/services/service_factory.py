@@ -29,6 +29,9 @@ from .narrative_report_service import NarrativeReportService
 from .strategy_builder_service import StrategyBuilderService
 from .chatops_advanced_service import ChatOpsAdvancedService
 from .feature_store_service import FeatureStoreService
+from .model_lifecycle_service import ModelLifecycleService
+from .evaluation_harness_service import EvaluationHarnessService
+from .llm.prompt_governance_service import PromptGovernanceService
 
 logger = logging.getLogger(__name__)
 
@@ -61,6 +64,9 @@ class ServiceFactory:
     _strategy_builder_service: Optional[StrategyBuilderService] = None
     _chatops_advanced_service: Optional[ChatOpsAdvancedService] = None
     _feature_store_service: Optional[FeatureStoreService] = None
+    _model_lifecycle_service: Optional[ModelLifecycleService] = None
+    _evaluation_harness_service: Optional[EvaluationHarnessService] = None
+    _prompt_governance_service: Optional[PromptGovernanceService] = None
 
     def __new__(cls):
         if cls._instance is None:
@@ -319,6 +325,27 @@ class ServiceFactory:
             self._feature_store_service = FeatureStoreService()
             logger.info("FeatureStoreService initialized (Phase 4 D1)")
         return self._feature_store_service
+
+    def get_model_lifecycle_service(self) -> ModelLifecycleService:
+        """ModelLifecycleService 인스턴스 반환 (Phase 4 D2)."""
+        if self._model_lifecycle_service is None:
+            self._model_lifecycle_service = ModelLifecycleService()
+            logger.info("ModelLifecycleService initialized (Phase 4 D2)")
+        return self._model_lifecycle_service
+
+    def get_evaluation_harness_service(self) -> EvaluationHarnessService:
+        """EvaluationHarnessService 인스턴스 반환 (Phase 4 D3)."""
+        if self._evaluation_harness_service is None:
+            self._evaluation_harness_service = EvaluationHarnessService()
+            logger.info("EvaluationHarnessService initialized (Phase 4 D3)")
+        return self._evaluation_harness_service
+
+    def get_prompt_governance_service(self) -> PromptGovernanceService:
+        """PromptGovernanceService 인스턴스 반환 (Phase 4 D4)."""
+        if self._prompt_governance_service is None:
+            self._prompt_governance_service = PromptGovernanceService()
+            logger.info("PromptGovernanceService initialized (Phase 4 D4)")
+        return self._prompt_governance_service
 
     async def cleanup(self):
         """모든 서비스 정리"""
