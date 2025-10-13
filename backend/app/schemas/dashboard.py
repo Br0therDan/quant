@@ -1,7 +1,7 @@
 """Dashboard response schemas."""
 
 from datetime import datetime
-from typing import List, Optional
+from typing import Dict, List, Optional
 from pydantic import BaseModel, Field
 from enum import Enum
 
@@ -37,6 +37,16 @@ class ImportanceLevel(str, Enum):
     LOW = "low"
 
 
+class DataQualitySeverity(str, Enum):
+    """데이터 품질 이상 심각도."""
+
+    NORMAL = "normal"
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+    CRITICAL = "critical"
+
+
 # Portfolio Models
 class PortfolioSummary(BaseModel):
     """포트폴리오 요약 정보."""
@@ -65,6 +75,33 @@ class RecentActivity(BaseModel):
     last_login: Optional[datetime] = Field(None, description="마지막 로그인")
 
 
+class DataQualityAlert(BaseModel):
+    """데이터 품질 이상 알림."""
+
+    symbol: str = Field(..., description="심볼")
+    data_type: str = Field(..., description="데이터 타입")
+    occurred_at: datetime = Field(..., description="이상 발생 시각")
+    severity: DataQualitySeverity = Field(..., description="심각도")
+    iso_score: float = Field(..., description="Isolation Forest 점수")
+    prophet_score: Optional[float] = Field(None, description="Prophet 기반 잔차 점수")
+    price_change_pct: float = Field(..., description="전일 대비 변동률")
+    volume_z_score: float = Field(..., description="거래량 Z-Score")
+    message: str = Field(..., description="알림 메시지")
+
+
+class DataQualitySummary(BaseModel):
+    """데이터 품질 센티널 요약."""
+
+    total_alerts: int = Field(..., description="총 이상 건수")
+    severity_breakdown: Dict[DataQualitySeverity, int] = Field(
+        ..., description="심각도별 건수"
+    )
+    last_updated: datetime = Field(..., description="마지막 업데이트 시각")
+    recent_alerts: List[DataQualityAlert] = Field(
+        default_factory=list, description="최근 이상 목록"
+    )
+
+
 class DashboardSummary(BaseModel):
     """대시보드 요약 데이터."""
 
@@ -72,6 +109,9 @@ class DashboardSummary(BaseModel):
     portfolio: PortfolioSummary = Field(..., description="포트폴리오 정보")
     strategies: StrategySummary = Field(..., description="전략 정보")
     recent_activity: RecentActivity = Field(..., description="최근 활동")
+    data_quality: Optional[DataQualitySummary] = Field(
+        None, description="데이터 품질 센티널 요약"
+    )
 
 
 class PortfolioDataPoint(BaseModel):

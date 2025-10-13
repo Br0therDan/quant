@@ -1,13 +1,10 @@
 """Dashboard service for aggregating user dashboard data."""
 
+import logging
+import random
 from datetime import UTC, datetime, timedelta
 from typing import List, Optional, TYPE_CHECKING
-from app.services.database_manager import DatabaseManager
-from app.services.portfolio_service import PortfolioService
-from app.services.strategy_service import StrategyService
-from app.services.backtest_service import BacktestService
-from app.services.market_data_service import MarketDataService
-from app.services.watchlist_service import WatchlistService
+
 from app.schemas.dashboard import (
     DashboardSummary,
     StrategySummary,
@@ -26,15 +23,27 @@ from app.schemas.dashboard import (
     EconomicCalendar,
     EconomicEvent,
     ImportanceLevel,
+    DataQualitySummary,
+    DataQualityAlert,
+    DataQualitySeverity,
 )
 from app.schemas.predictive import PredictiveDashboardInsights
-import random
+from app.services.database_manager import DatabaseManager
+from app.services.portfolio_service import PortfolioService
+from app.services.strategy_service import StrategyService
+from app.services.backtest_service import BacktestService
+from app.services.market_data_service import MarketDataService
+from app.services.watchlist_service import WatchlistService
+from app.services.monitoring.data_quality_sentinel import DataQualitySentinel
 
 
 if TYPE_CHECKING:
     from app.services.ml_signal_service import MLSignalService
     from app.services.regime_detection_service import RegimeDetectionService
     from app.services.probabilistic_kpi_service import ProbabilisticKPIService
+
+
+logger = logging.getLogger(__name__)
 
 
 class DashboardService:
@@ -51,6 +60,7 @@ class DashboardService:
         ml_signal_service: "MLSignalService",
         regime_service: "RegimeDetectionService",
         probabilistic_service: "ProbabilisticKPIService",
+        data_quality_sentinel: Optional[DataQualitySentinel] = None,
     ):
         """대시보드 서비스 초기화.
 
@@ -64,6 +74,7 @@ class DashboardService:
             ml_signal_service: ML 시그널 서비스
             regime_service: 시장 레짐 감지 서비스
             probabilistic_service: 확률 KPI 서비스
+            data_quality_sentinel: 데이터 품질 센티널 서비스
         """
         self.db_manager = database_manager
         self.portfolio_service = portfolio_service
@@ -74,6 +85,7 @@ class DashboardService:
         self.ml_signal_service = ml_signal_service
         self.regime_service = regime_service
         self.probabilistic_service = probabilistic_service
+        self.data_quality_sentinel = data_quality_sentinel
 
     async def get_dashboard_summary(self, user_id: str) -> DashboardSummary:
         """대시보드 요약 데이터를 조회합니다.
@@ -91,15 +103,55 @@ class DashboardService:
             )
             strategies_summary = await self._get_strategies_summary(user_id)
             recent_activity = await self._get_recent_activity(user_id)
+            data_quality = await self._get_data_quality_summary()
 
             return DashboardSummary(
                 user_id=user_id,
                 portfolio=portfolio_summary,
                 strategies=strategies_summary,
                 recent_activity=recent_activity,
+                data_quality=data_quality,
             )
         except Exception as e:
             raise Exception(f"대시보드 요약 조회 실패: {str(e)}")
+
+    async def _get_data_quality_summary(self) -> Optional[DataQualitySummary]:
+        """최근 데이터 품질 이상 요약을 조회합니다."""
+
+        if not self.data_quality_sentinel:
+            return None
+
+        try:
+            snapshot = await self.data_quality_sentinel.get_recent_summary()
+        except Exception as exc:
+            logger.warning("Failed to load data quality summary: %s", exc)
+            return None
+
+        severity_breakdown = {
+            DataQualitySeverity(level.value): count
+            for level, count in snapshot.severity_breakdown.items()
+        }
+        alerts = [
+            DataQualityAlert(
+                symbol=alert.symbol,
+                data_type=alert.data_type,
+                occurred_at=alert.occurred_at,
+                severity=DataQualitySeverity(alert.severity.value),
+                iso_score=alert.iso_score,
+                prophet_score=alert.prophet_score,
+                price_change_pct=alert.price_change_pct,
+                volume_z_score=alert.volume_z_score,
+                message=alert.message,
+            )
+            for alert in snapshot.recent_alerts
+        ]
+
+        return DataQualitySummary(
+            total_alerts=snapshot.total_alerts,
+            severity_breakdown=severity_breakdown,
+            last_updated=snapshot.last_updated,
+            recent_alerts=alerts,
+        )
 
     async def get_portfolio_performance(
         self, user_id: str, period: str = "1M", granularity: str = "day"

@@ -23,6 +23,7 @@ class Settings(CommonSettings):
 
     # DuckDB 파일 경로 - 환경변수에서 읽어옴, 기본값 설정
     DUCKDB_PATH: str = getenv("DUCKDB_PATH", "./app/data/quant.duckdb")
+    DATA_QUALITY_WEBHOOK_URL: str | None = getenv("DATA_QUALITY_WEBHOOK_URL", None)
 
 
 settings = Settings()

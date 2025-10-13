@@ -14,6 +14,8 @@
   Circuit Breaker, 구조화 로깅 완료
 - **AI Integration Phase 1**: ML 시그널 서비스 기본 구현 완료 (LightGBM 90.6%
   정확도)
+- **AI Integration Phase 2**: 데이터 품질 센티널(D3) 가동, MarketDataService 적재에
+  이상 탐지/웹훅/대시보드 연동 완료
 - **Production Ready**: 현재 시스템은 프로덕션 배포 가능 상태
 
 ### 통합 전략
@@ -225,8 +227,8 @@ GET /api/v1/portfolio/forecast/{days}
 
 ### Phase 2: 자동화 및 최적화 루프
 
-**기간**: 2025-02-17 ~ 2025-03-28  
-**상태**: 🟡 위험 징후 (의존성: Phase 1 완료)
+**기간**: 2025-02-17 ~ 2025-03-28
+**상태**: 🟡 위험 완화 (D3 센티널 완료, D1/D2 대기)
 
 #### Milestone 1: Optuna 백테스트 옵티마이저 (Phase 4 통합)
 
@@ -300,33 +302,22 @@ GET /api/v1/backtests/optimize/{task_id}
 
 **목표**: 이상 데이터 자동 탐지 및 격리
 
-**우선순위**: 🟢 높음 (ML 모델 정확도 보호)
+**상태**: ✅ 완료 (2025-10-14)
 
-**구현 계획** (3일):
+**구현 결과**:
 
-```python
-# 1. AnomalyDetectionService 생성
-backend/app/services/ml/anomaly_detector.py
+- `DataQualitySentinel`이 일별 주가를 스코어링하며 `DailyPrice`에 이상 지표를
+  주입하고, 비정상 케이스는 `DataQualityEvent` 컬렉션으로 영속화
+- Isolation Forest, Prophet 기반 잔차, 거래량 Z-Score를 결합해 심각도를 산출하고
+  HIGH 이상은 환경 변수 기반 웹훅으로 통지
+- DashboardService가 `DataQualitySummary` 응답으로 24시간 요약과 최근 경보를
+  노출, MarketDataService 적재 루틴과 ServiceFactory 레지스트리가 센티널을 공유
 
-# 핵심 기능:
-- Isolation Forest 기반 이상치 탐지
-- Prophet anomaly score
-- Volume spike, Price jump 감지
+**후속 과제**:
 
-# 2. DuckDB 통합
-- 데이터 수집 시 실시간 검사
-- 이상 플래그를 별도 테이블에 저장
-
-# 3. 알림 시스템
-- 이상 발생 시 관리자 대시보드 알림
-- 격리된 데이터 수동 검토 UI
-```
-
-**기대 효과**:
-
-- ML 모델 drift 방지
-- 백테스트 신뢰성 향상
-- 데이터 품질 모니터링
+- RL/Optuna 실행 결과에 데이터 품질 지표를 결합하여 Phase 2 전체 자동화 루프에
+  위험 신호를 연결
+- 알림 확인 워크플로우와 대시보드 필터를 Phase 3 ChatOps 통합 시 확장
 
 ---
 
@@ -586,7 +577,7 @@ backend/app/services/ml/evaluation_harness.py
 | ------------------------ | ----- | ------------- | ----------- | ----------- | -------- | --------- |
 | **ML 시그널 API**        | 1     | 매우 높음     | 중간        | 없음        | P0       | ✅ 완료   |
 | **시장 국면 분류**       | 1     | 높음          | 중간        | DuckDB      | P1       | 2주       |
-| **데이터 품질 센티널**   | 2     | 높음          | 낮음        | 없음        | P1       | 3일       |
+| **데이터 품질 센티널**   | 2     | 높음          | 낮음        | 없음        | P1       | ✅ 완료       |
 | **Optuna 옵티마이저**    | 2     | 매우 높음     | 중간        | Phase 1     | P1       | 1주       |
 | **피처 스토어**          | 4     | 매우 높음     | 중간        | Phase 1     | P1       | 2주       |
 | **모델 레지스트리 확장** | 4     | 높음          | 중간        | 피처 스토어 | P2       | 1.5주     |
@@ -617,7 +608,7 @@ backend/app/services/ml/evaluation_harness.py
 
 - [x] ML 시그널 API 완료 (Phase 3.2에서 완료)
 - [ ] 시장 국면 분류 구현
-- [ ] 데이터 품질 센티널 구현
+- [x] 데이터 품질 센티널 구현 (완료)
 
 **Week 3-5**:
 
@@ -629,7 +620,7 @@ backend/app/services/ml/evaluation_harness.py
 
 - ML 시그널 API (완료)
 - 시장 국면 감지 API
-- 데이터 품질 모니터링 대시보드
+- 데이터 품질 모니터링 대시보드 (운영 중)
 - 포트폴리오 예측 API
 
 ### Q2 2025 (4-6월): Phase 2 + Phase 4 기초
@@ -728,7 +719,7 @@ backend/app/services/ml/evaluation_harness.py
 | 지표               | 목표                 | 현재 | 상태      |
 | ------------------ | -------------------- | ---- | --------- |
 | 최적화 수렴 시간   | < 1시간 (100 trials) | TBD  | ⚪ 미시작 |
-| 데이터 이상 감지율 | > 95%                | TBD  | ⚪ 미시작 |
+| 데이터 이상 감지율 | > 95%                | 초기 24h 통계 수집 | 🟡 측정 중 |
 | 파라미터 튜닝 ROI  | Sharpe +20%          | TBD  | ⚪ 미시작 |
 
 ### Phase 3 (생성형 AI)
@@ -795,14 +786,15 @@ backend/app/services/ml/evaluation_harness.py
 ### 현재 상태 요약
 
 ✅ **Phase 3 완료**: 성능 최적화, ML Integration, Circuit Breaker, 구조화 로깅  
-🟢 **AI Integration Phase 1 (35% 완료)**: ML 시그널 API 구현 완료, 국면 분류
+🟢 **AI Integration Phase 1 (35% 완료)**: ML 시그널 API 구현 완료, 국면 분류 다음 단계
+🟡 **AI Integration Phase 2 (30% 완료)**: 데이터 품질 센티널 가동, Optuna/RL 대기
 다음 단계  
 🚀 **Production Ready**: 현재 시스템은 프로덕션 배포 가능
 
 ### 다음 단계 (즉시 시작 가능)
 
 1. **시장 국면 분류 구현** (2주) - Phase 1 Milestone 2
-2. **데이터 품질 센티널 구현** (3일) - Phase 2 Milestone 3
+2. **데이터 품질 센티널 운영 지표 정착** (1주) - 경보 튜닝 및 테스트 커버리지 확장
 3. **문서 및 대시보드 업데이트** - 진행 상황 추적
 
 ### 장기 비전

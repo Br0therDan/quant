@@ -4,11 +4,12 @@ Stock-related data models
 """
 
 from datetime import datetime
-from typing import Optional
+from typing import List, Optional
 from pydantic import Field, field_validator
 from decimal import Decimal, InvalidOperation
 
 from .base import BaseMarketDataDocument, DataQualityMixin
+from app.models.data_quality import SeverityLevel
 
 
 class IntradayPrice(BaseMarketDataDocument, DataQualityMixin):
@@ -56,6 +57,24 @@ class DailyPrice(BaseMarketDataDocument, DataQualityMixin):
     # 계산된 필드들
     price_change: Optional[Decimal] = Field(None, description="전일 대비 변동")
     price_change_percent: Optional[Decimal] = Field(None, description="전일 대비 변동률 (%)")
+    iso_anomaly_score: Optional[float] = Field(
+        None,
+        ge=0,
+        le=1,
+        description="Isolation Forest 기반 이상 점수 (0-1)",
+    )
+    prophet_anomaly_score: Optional[float] = Field(
+        None, description="Prophet 잔차 기반 이상 점수 (z-score)"
+    )
+    volume_z_score: Optional[float] = Field(
+        None, description="최근 거래량 대비 표준화된 편차"
+    )
+    anomaly_severity: Optional[SeverityLevel] = Field(
+        None, description="데이터 품질 센티널 심각도"
+    )
+    anomaly_reasons: Optional[List[str]] = Field(
+        default=None, description="감지된 이상 유형 목록"
+    )
 
     @field_validator(
         "open",
