@@ -159,7 +159,9 @@ export function useBacktest() {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: backtestQueryKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: backtestQueryKeys.detail(data.id) });
+      if (data?.id) {
+        queryClient.invalidateQueries({ queryKey: backtestQueryKeys.detail(data.id) });
+      }
       showSuccess(
         `백테스트 "${data?.name || "백테스트"}"가 성공적으로 업데이트되었습니다`,
       );
