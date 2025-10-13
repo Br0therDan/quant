@@ -16,13 +16,14 @@ from app.schemas.backtest import (
     BacktestListResponse,
     BacktestResponse,
     BacktestUpdate,
-    IntegratedBacktestRequest,
-    IntegratedBacktestResponse,
+    # IntegratedBacktestRequest,  # ❌ Removed in P3.0
+    # IntegratedBacktestResponse,  # ❌ Removed in P3.0
 )
 from app.services.service_factory import service_factory
 from app.services.backtest_service import BacktestService
 from app.services.backtest import BacktestOrchestrator
-from app.models.backtest import BacktestConfig
+
+# from app.models.backtest import BacktestConfig  # ❌ Removed in P3.0
 from mysingle_quant.auth import get_current_active_verified_user, User
 
 router = APIRouter(dependencies=[Depends(get_current_active_verified_user)])
@@ -315,127 +316,76 @@ async def get_backtest_executions(
         raise HTTPException(status_code=500, detail=str(e)) from e
 
 
-@router.get("/results/duckdb", response_model=dict)
-async def get_backtest_results_from_duckdb(
-    backtest_id: str | None = Query(None, description="백테스트 ID 필터"),
-    execution_id: str | None = Query(None, description="실행 ID 필터"),
-    skip: int = Query(0, ge=0, description="건너뛸 개수"),
-    limit: int = Query(100, ge=1, le=1000, description="조회할 개수"),
-    current_user: User = Depends(get_current_active_verified_user),
-    service: BacktestService = Depends(get_backtest_service),
-):
-    """Get backtest results (MongoDB 기반 - Phase 2)"""
-    try:
-        # backtest_id가 제공된 경우 소유권 확인
-        if backtest_id:
-            existing_backtest = await service.get_backtest(backtest_id)
-            if existing_backtest and existing_backtest.user_id != str(current_user.id):
-                raise HTTPException(status_code=403, detail="Access denied")
+# ❌ DEPRECATED: /results/duckdb endpoint (P3.0 API cleanup)
+# Reason: DuckDB storage not implemented yet (_save_to_duckdb is empty)
+# Currently returns MongoDB data, which is misleading
+# TODO: Re-enable when DuckDB storage is implemented in P3.2
+# For now, use GET /{id}/executions for execution results
 
-        # MongoDB에서 백테스트 결과 조회
-        results = await service.get_backtest_results()
+# @router.get("/results/duckdb", response_model=dict)
+# async def get_backtest_results_from_duckdb(
+#     backtest_id: str | None = Query(None, description="백테스트 ID 필터"),
+#     execution_id: str | None = Query(None, description="실행 ID 필터"),
+#     skip: int = Query(0, ge=0, description="건너뛸 개수"),
+#     limit: int = Query(100, ge=1, le=1000, description="조회할 개수"),
+#     current_user: User = Depends(get_current_active_verified_user),
+#     service: BacktestService = Depends(get_backtest_service),
+# ):
+#     """Get backtest results (MongoDB 기반 - Phase 2)"""
+#     try:
+#         # backtest_id가 제공된 경우 소유권 확인
+#         if backtest_id:
+#             existing_backtest = await service.get_backtest(backtest_id)
+#             if existing_backtest and existing_backtest.user_id != str(current_user.id):
+#                 raise HTTPException(status_code=403, detail="Access denied")
+#
+#         # MongoDB에서 백테스트 결과 조회
+#         results = await service.get_backtest_results()
+#
+#         # 딕셔너리로 변환
+#         results_summary = [
+#             {
+#                 "backtest_id": str(r.backtest_id),
+#                 "execution_id": r.execution_id,
+#                 "total_return": r.performance.total_return,
+#                 "sharpe_ratio": r.performance.sharpe_ratio,
+#                 "max_drawdown": r.performance.max_drawdown,
+#             }
+#             for r in results
+#         ]
+#
+#         # 필터링 적용
+#         filtered_results = results_summary
+#         if backtest_id:
+#             filtered_results = [
+#                 r for r in filtered_results if r.get("backtest_id") == backtest_id
+#             ]
+#         if execution_id:
+#             filtered_results = [
+#                 r for r in filtered_results if r.get("execution_id") == execution_id
+#             ]
+#
+#         # 페이지네이션 적용
+#         total = len(filtered_results)
+#         paginated_results = filtered_results[skip : skip + limit]
+#
+#         return {
+#             "results": paginated_results,
+#             "total": total,
+#             "skip": skip,
+#             "limit": limit,
+#             "source": "mongodb",
+#             "message": "Results from MongoDB (Phase 2)",
+#         }
+#
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=str(e)) from e
 
-        # 딕셔너리로 변환
-        results_summary = [
-            {
-                "backtest_id": str(r.backtest_id),
-                "execution_id": r.execution_id,
-                "total_return": r.performance.total_return,
-                "sharpe_ratio": r.performance.sharpe_ratio,
-                "max_drawdown": r.performance.max_drawdown,
-            }
-            for r in results
-        ]
 
-        # 필터링 적용
-        filtered_results = results_summary
-        if backtest_id:
-            filtered_results = [
-                r for r in filtered_results if r.get("backtest_id") == backtest_id
-            ]
-        if execution_id:
-            filtered_results = [
-                r for r in filtered_results if r.get("execution_id") == execution_id
-            ]
-
-        # 페이지네이션 적용
-        total = len(filtered_results)
-        paginated_results = filtered_results[skip : skip + limit]
-
-        return {
-            "results": paginated_results,
-            "total": total,
-            "skip": skip,
-            "limit": limit,
-            "source": "mongodb",
-            "message": "Results from MongoDB (Phase 2)",
-        }
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e)) from e
-
-
-# Integrated Backtest Endpoints
-@router.post("/integrated", response_model=IntegratedBacktestResponse)
-async def create_and_run_integrated_backtest(
-    request: IntegratedBacktestRequest,
-    current_user: User = Depends(get_current_active_verified_user),
-    orchestrator: BacktestOrchestrator = Depends(get_backtest_orchestrator),
-    service: BacktestService = Depends(get_backtest_service),
-):
-    """통합 백테스트 생성 및 실행 - Phase 2 Orchestrator"""
-    try:
-        # 1. 백테스트 설정 생성
-        config = BacktestConfig(
-            name=request.name,
-            description=request.description,
-            start_date=request.start_date,
-            end_date=request.end_date,
-            symbols=request.symbols,
-            initial_cash=request.initial_capital,
-            rebalance_frequency="daily",
-        )
-
-        # 2. 백테스트 생성
-        backtest = await service.create_backtest(
-            name=request.name,
-            description=request.description,
-            config=config,
-            user_id=str(current_user.id),
-        )
-
-        # 3. Orchestrator로 실행 (Phase 2)
-        result = await orchestrator.execute_backtest(backtest_id=str(backtest.id))
-
-        if result:
-            return IntegratedBacktestResponse(
-                backtest_id=str(backtest.id),
-                execution_id=result.execution_id,
-                result_id=str(result.id),
-                status=BacktestStatus.COMPLETED,
-                message="Integrated backtest completed successfully (Phase 2)",
-                performance=result.performance,
-                start_time=backtest.start_time,
-                end_time=backtest.end_time,
-            )
-        else:
-            return IntegratedBacktestResponse(
-                backtest_id=str(backtest.id),
-                execution_id=None,
-                result_id=None,
-                status=BacktestStatus.FAILED,
-                message="Integrated backtest execution failed",
-                performance=None,
-                start_time=backtest.start_time,
-                end_time=None,
-            )
-
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(
-            status_code=500, detail=f"Failed to execute integrated backtest: {str(e)}"
-        )
+# ❌ REMOVED: /integrated endpoint (P3.0 API cleanup)
+# Reason: Duplicate functionality with POST / + POST /{id}/execute
+# Use two-step process: 1) Create backtest, 2) Execute backtest
+# For convenience, frontend can chain these calls
 
 
 @router.get("/health")
@@ -570,23 +520,28 @@ async def get_trades_analytics(
         raise HTTPException(status_code=500, detail=f"거래 분석 실패: {str(e)}")
 
 
-@router.get("/analytics/summary")
-async def get_backtest_summary_analytics(
-    service: BacktestService = Depends(get_backtest_service),
-):
-    """백테스트 결과 요약 분석 (MongoDB 기반)"""
-    try:
-        # MongoDB에서 백테스트 결과 가져오기
-        results = await service.get_backtest_results()
+# ❌ REMOVED: /analytics/summary endpoint (P3.0 API cleanup)
+# Reason: Duplicate functionality with /analytics/performance-stats
+# Use /analytics/performance-stats instead for performance metrics
+# Or use GET /{id}/executions for detailed execution data
 
-        return {
-            "status": "success",
-            "summary": {
-                "total_backtests": len(results),
-                "recent_results": results[:10],  # 최근 10개
-                "source": "mongodb",
-            },
-            "analyzed_at": datetime.now().isoformat(),
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"요약 분석 실패: {str(e)}")
+# @router.get("/analytics/summary")
+# async def get_backtest_summary_analytics(
+#     service: BacktestService = Depends(get_backtest_service),
+# ):
+#     """백테스트 결과 요약 분석 (MongoDB 기반)"""
+#     try:
+#         # MongoDB에서 백테스트 결과 가져오기
+#         results = await service.get_backtest_results()
+#
+#         return {
+#             "status": "success",
+#             "summary": {
+#                 "total_backtests": len(results),
+#                 "recent_results": results[:10],  # 최근 10개
+#                 "source": "mongodb",
+#             },
+#             "analyzed_at": datetime.now().isoformat(),
+#         }
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"요약 분석 실패: {str(e)}")
