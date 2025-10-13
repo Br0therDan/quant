@@ -4,7 +4,7 @@
 
 import logging
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Optional, TYPE_CHECKING, Any, Dict
 
 from beanie import PydanticObjectId
@@ -81,7 +81,7 @@ class CircuitBreaker:
         """리셋 시도 가능 여부"""
         if self.last_failure_time is None:
             return True
-        elapsed = (datetime.now(timezone.utc) - self.last_failure_time).total_seconds()
+        elapsed = (datetime.now() - self.last_failure_time).total_seconds()
         return elapsed >= self.timeout
 
     def _on_success(self):
@@ -94,7 +94,7 @@ class CircuitBreaker:
     def _on_failure(self):
         """실패 시 처리"""
         self.failure_count += 1
-        self.last_failure_time = datetime.now(timezone.utc)
+        self.last_failure_time = datetime.now()
 
         if self.failure_count >= self.failure_threshold:
             self.state = "OPEN"
@@ -220,10 +220,14 @@ class BacktestOrchestrator:
                         backtest.config.symbols
                     )
                     for signal in signals:
-                        ml_signal = signal_scores.get(signal.get("symbol"))
-                        if ml_signal:
-                            signal["ml_probability"] = ml_signal.probability
-                            signal["ml_recommendation"] = ml_signal.recommendation.value
+                        symbol = signal.get("symbol")
+                        if symbol and isinstance(symbol, str):
+                            ml_signal = signal_scores.get(symbol)
+                            if ml_signal:
+                                signal["ml_probability"] = ml_signal.probability
+                                signal[
+                                    "ml_recommendation"
+                                ] = ml_signal.recommendation.value
 
                     if signal_scores:
                         log_backtest_event(
@@ -293,14 +297,14 @@ class BacktestOrchestrator:
         self, backtest: Backtest, execution_id: str
     ) -> BacktestExecution:
         backtest.status = BacktestStatus.RUNNING
-        backtest.start_time = datetime.now(timezone.utc)
+        backtest.start_time = datetime.now()
         await backtest.save()
 
         execution = BacktestExecution(
             backtest_id=str(backtest.id),
             execution_id=execution_id,
             status=BacktestStatus.RUNNING,
-            start_time=datetime.now(timezone.utc),
+            start_time=datetime.now(),
             end_time=None,
             error_message=None,
         )
@@ -371,7 +375,7 @@ class BacktestOrchestrator:
             action = signal.get("action")
             quantity = signal.get("quantity", 0)
             price = signal.get("price", 0)
-            timestamp = signal.get("timestamp", datetime.now(timezone.utc))
+            timestamp = signal.get("timestamp", datetime.now())
 
             if not symbol or not action or quantity <= 0 or price <= 0:
                 continue
@@ -442,14 +446,12 @@ class BacktestOrchestrator:
 
                 # 2. 포트폴리오 히스토리 저장 (P3.2 신규)
                 if portfolio_values:
-                    from datetime import datetime, timezone
-
                     portfolio_history = []
                     start_value = backtest.config.initial_cash
                     for value in portfolio_values:
                         portfolio_history.append(
                             {
-                                "timestamp": datetime.now(timezone.utc),
+                                "timestamp": datetime.now(),
                                 "total_value": value,
                                 "cash": 0.0,  # TODO: 실제 현금 잔액 계산
                                 "positions_value": value,
@@ -468,9 +470,7 @@ class BacktestOrchestrator:
                     for trade in trades:
                         trades_data.append(
                             {
-                                "timestamp": trade.get(
-                                    "timestamp", datetime.now(timezone.utc)
-                                ),
+                                "timestamp": trade.get("timestamp", datetime.now()),
                                 "symbol": trade.get("symbol"),
                                 "side": trade.get("side"),
                                 "quantity": trade.get("quantity"),
@@ -499,7 +499,7 @@ class BacktestOrchestrator:
         execution: BacktestExecution,
         performance: PerformanceMetrics,
     ) -> None:
-        end_time = datetime.now(timezone.utc)
+        end_time = datetime.now()
 
         backtest.status = BacktestStatus.COMPLETED
         backtest.end_time = end_time
@@ -518,7 +518,7 @@ class BacktestOrchestrator:
         execution: Optional[BacktestExecution],
         error_message: str,
     ) -> None:
-        end_time = datetime.now(timezone.utc)
+        end_time = datetime.now()
 
         if backtest:
             backtest.status = BacktestStatus.FAILED

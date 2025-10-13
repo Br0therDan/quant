@@ -6,8 +6,8 @@ import QuickActions from "@/components/dashboard/QuickActions";
 import RecentBacktests from "@/components/dashboard/RecentBacktests";
 import SystemStatus from "@/components/dashboard/SystemStatus";
 import PageContainer from "@/components/layout/PageContainer";
-import Grid from "@mui/material/Grid";
 import { Box } from "@mui/material";
+import Grid from "@mui/material/Grid";
 
 /**
  * Dashboard Page - Epic 1: Story 1.1
@@ -36,7 +36,7 @@ export default function DashboardPage() {
 
           {/* 최근 백테스트 & 시스템 상태 */}
           <Grid size={{ xs: 12, lg: 8 }}>
-            <RecentBacktests limit={5} />
+            <RecentBacktests />
           </Grid>
 
           <Grid size={{ xs: 12, lg: 4 }}>

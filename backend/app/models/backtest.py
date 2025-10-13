@@ -128,6 +128,9 @@ class Backtest(BaseDocument):
     # 설정
     config: BacktestConfig = Field(..., description="백테스트 설정")
 
+    # 전략 연결 (Phase 2: optional, Phase 3+: required)
+    strategy_id: str | None = Field(None, description="전략 ID (Phase 3+)")
+
     # 실행 정보
     status: BacktestStatus = Field(default=BacktestStatus.PENDING, description="실행 상태")
     start_time: datetime | None = Field(None, description="실행 시작 시간")

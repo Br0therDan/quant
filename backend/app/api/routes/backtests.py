@@ -43,6 +43,54 @@ async def get_backtest_orchestrator() -> BacktestOrchestrator:
     return service_factory.get_backtest_orchestrator()
 
 
+@router.get("/health")
+async def health_check():
+    """백테스트 시스템 상태 확인 (Phase 2)"""
+    try:
+        # DuckDB 상태 확인
+        database_manager = service_factory.get_database_manager()
+        duckdb_connected = database_manager.connection is not None
+
+        # DuckDB 데이터 상태 확인
+        duckdb_symbols = (
+            database_manager.get_available_symbols() if duckdb_connected else []
+        )
+
+        # MongoDB 백테스트 카운트
+        backtest_service = service_factory.get_backtest_service()
+        backtests = await backtest_service.get_backtests()
+        results_count = len(backtests)
+
+        return {
+            "status": "healthy",
+            "timestamp": datetime.now().isoformat(),
+            "databases": {
+                "duckdb": {
+                    "connected": duckdb_connected,
+                    "symbols_count": len(duckdb_symbols),
+                },
+                "mongodb": {
+                    "connected": True,
+                    "backtest_count": results_count,
+                },
+            },
+            "services": {
+                "market_data": "✅ Ready",
+                "strategy": "✅ Ready",
+                "backtest": "✅ Ready (Phase 2)",
+                "orchestrator": "✅ Ready",
+            },
+        }
+
+    except Exception as e:
+        return {
+            "status": "unhealthy",
+            "timestamp": datetime.now().isoformat(),
+            "error": str(e),
+            "databases": {"duckdb": "❌ Error", "mongodb": "❌ Error"},
+        }
+
+
 @router.post("/", response_model=BacktestResponse)
 async def create_backtest(
     request: BacktestCreate,
@@ -386,54 +434,6 @@ async def get_backtest_executions(
 # Reason: Duplicate functionality with POST / + POST /{id}/execute
 # Use two-step process: 1) Create backtest, 2) Execute backtest
 # For convenience, frontend can chain these calls
-
-
-@router.get("/health")
-async def health_check():
-    """백테스트 시스템 상태 확인 (Phase 2)"""
-    try:
-        # DuckDB 상태 확인
-        database_manager = service_factory.get_database_manager()
-        duckdb_connected = database_manager.connection is not None
-
-        # DuckDB 데이터 상태 확인
-        duckdb_symbols = (
-            database_manager.get_available_symbols() if duckdb_connected else []
-        )
-
-        # MongoDB 백테스트 카운트
-        backtest_service = service_factory.get_backtest_service()
-        backtests = await backtest_service.get_backtests()
-        results_count = len(backtests)
-
-        return {
-            "status": "healthy",
-            "timestamp": datetime.now().isoformat(),
-            "databases": {
-                "duckdb": {
-                    "connected": duckdb_connected,
-                    "symbols_count": len(duckdb_symbols),
-                },
-                "mongodb": {
-                    "connected": True,
-                    "backtest_count": results_count,
-                },
-            },
-            "services": {
-                "market_data": "✅ Ready",
-                "strategy": "✅ Ready",
-                "backtest": "✅ Ready (Phase 2)",
-                "orchestrator": "✅ Ready",
-            },
-        }
-
-    except Exception as e:
-        return {
-            "status": "unhealthy",
-            "timestamp": datetime.now().isoformat(),
-            "error": str(e),
-            "databases": {"duckdb": "❌ Error", "mongodb": "❌ Error"},
-        }
 
 
 @router.get("/analytics/performance-stats")

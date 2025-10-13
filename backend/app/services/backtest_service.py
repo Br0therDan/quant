@@ -21,6 +21,8 @@ from app.models.backtest import (
     BacktestStatus,
     PerformanceMetrics,
 )
+from app.models.strategy import Strategy, StrategyType
+from app.strategies.configs import BuyAndHoldConfig
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +41,7 @@ class BacktestService:
         config: Optional[BacktestConfig] = None,
         user_id: Optional[str] = None,
     ) -> Backtest:
-        """백테스트 생성"""
+        """백테스트 생성 (Phase 2: 기본 전략 자동 생성)"""
         if config is None:
             config = BacktestConfig(
                 name=name,
@@ -51,10 +53,30 @@ class BacktestService:
                 rebalance_frequency=None,
             )
 
+        # Phase 2: 기본 Buy & Hold 전략 자동 생성
+        default_strategy = Strategy(
+            name=f"{name} - Buy & Hold Strategy",
+            strategy_type=StrategyType.BUY_AND_HOLD,
+            description="Auto-generated buy and hold strategy",
+            config=BuyAndHoldConfig(
+                config_type="buy_and_hold",
+                allocation={
+                    symbol: 1.0 / len(config.symbols) for symbol in config.symbols
+                },
+            ),
+            is_active=True,
+            is_template=False,
+            created_by=user_id or "system",
+            user_id=user_id,
+        )
+        await default_strategy.insert()
+        logger.info(f"Created default strategy: {default_strategy.id}")
+
         backtest = Backtest(
             name=name,
             description=description,
             config=config,
+            strategy_id=str(default_strategy.id),  # Phase 2: 전략 연결
             user_id=user_id,
             status=BacktestStatus.PENDING,
             start_time=None,

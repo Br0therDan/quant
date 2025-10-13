@@ -1,10 +1,13 @@
 "use client";
 
 import LoadingSpinner from "@/components/common/LoadingSpinner";
+import DataQualityIndicator from "@/components/market-data/DataQualityIndicator";
+import DataStatusCard from "@/components/market-data/DataStatusCard";
 import SymbolOverviewHeader from "@/components/market-data/OverviewHeader";
 import ReactFinancialChart from "@/components/market-data/ReactFinancialChart";
 import SymbolTabs from "@/components/market-data/SymbolTabs";
 
+import { useMarketDataCoverage } from "@/hooks/useMarketDataCoverage";
 import { useStockIntraday, useStockQuote } from "@/hooks/useStocks";
 import {
   useFundamentalBalanceSheet,
@@ -77,6 +80,18 @@ export default function SymbolOverviewPage() {
       interval: "5min", // 5분 간격
     }
   );
+
+  // 데이터 커버리지 정보
+  const {
+    coverage,
+    isLoading: coverageLoading,
+    collectAllData,
+    isCollecting,
+  } = useMarketDataCoverage(symbol);
+
+  // 타입 캐스팅 (API 응답 타입 처리)
+  const coverageData = coverage as any;
+
   const companyData = companyResponse?.data;
   const earningsData = earningsResponse?.data?.[0]; // 배열의 첫 번째 요소
   const incomeData = incomeResponse?.data?.[0]; // 배열의 첫 번째 요소
@@ -189,6 +204,69 @@ export default function SymbolOverviewPage() {
               )}
             </Box>
           </Paper>
+        </Grid>
+
+        {/* 데이터 상태 섹션 */}
+        <Grid size={{ xs: 12, md: 6 }}>
+          <DataStatusCard
+            symbol={symbol}
+            coverageData={coverageData}
+            onRefresh={async () => {
+              collectAllData(symbol);
+            }}
+            isLoading={coverageLoading || isCollecting}
+          />
+        </Grid>
+
+        <Grid size={{ xs: 12, md: 6 }}>
+          <DataQualityIndicator
+            metrics={
+              coverageData
+                ? {
+                    completeness:
+                      coverageData.company_info?.available &&
+                      coverageData.market_data?.available
+                        ? 100
+                        : 50,
+                    consistency: 85,
+                    accuracy: 90,
+                    timeliness: coverageData.market_data?.last_update
+                      ? Math.max(
+                          0,
+                          100 -
+                            Math.floor(
+                              (Date.now() -
+                                new Date(
+                                  coverageData.market_data.last_update
+                                ).getTime()) /
+                                (1000 * 60 * 60 * 24)
+                            )
+                        )
+                      : 0,
+                    overall_score:
+                      (coverageData.company_info?.available ? 50 : 0) +
+                      (coverageData.market_data?.available ? 50 : 0),
+                    issues: {
+                      missing_dates: coverageData.market_data?.available
+                        ? 0
+                        : undefined,
+                      outliers: 0,
+                      duplicates: 0,
+                      stale_data_days: coverageData.market_data?.last_update
+                        ? Math.floor(
+                            (Date.now() -
+                              new Date(
+                                coverageData.market_data.last_update
+                              ).getTime()) /
+                              (1000 * 60 * 60 * 24)
+                          )
+                        : undefined,
+                    },
+                  }
+                : undefined
+            }
+            isLoading={coverageLoading}
+          />
         </Grid>
 
         {/* 예정된 실적 발표 섹션 */}

@@ -2,12 +2,7 @@
 
 import PageContainer from "@/components/layout/PageContainer";
 import { useBacktest } from "@/hooks/useBacktests";
-import {
-  ArrowBack,
-  CheckCircle,
-  PlaylistAdd,
-  Save,
-} from "@mui/icons-material";
+import { ArrowBack, CheckCircle, PlaylistAdd, Save } from "@mui/icons-material";
 import {
   Alert,
   Box,
@@ -91,6 +86,7 @@ export default function CreateBacktestPage() {
 
   const {
     createBacktestAsync,
+    executeBacktestAsync,
     isMutating: { createBacktest: creating },
   } = useBacktest();
 
@@ -100,7 +96,7 @@ export default function CreateBacktestPage() {
         .split(",")
         .map((symbol) => symbol.trim().toUpperCase())
         .filter((symbol) => symbol.length > 0),
-    [formState.symbols],
+    [formState.symbols]
   );
 
   const tagList = useMemo(
@@ -109,7 +105,7 @@ export default function CreateBacktestPage() {
         .split(",")
         .map((tag) => tag.trim())
         .filter((tag) => tag.length > 0),
-    [formState.tags],
+    [formState.tags]
   );
 
   const buildPayload = () => ({
@@ -163,7 +159,9 @@ export default function CreateBacktestPage() {
         payload.config.max_position_size <= 0 ||
         payload.config.max_position_size > 1
       ) {
-        validationErrors.push("최대 포지션 크기는 0보다 크고 1 이하이어야 합니다.");
+        validationErrors.push(
+          "최대 포지션 크기는 0보다 크고 1 이하이어야 합니다."
+        );
       }
     }
 
@@ -193,14 +191,26 @@ export default function CreateBacktestPage() {
     }
     const payload = buildPayload();
     try {
-      await createBacktestAsync(payload);
-      router.push("/backtests");
+      // Step 1: Create backtest
+      const backtest = await createBacktestAsync(payload);
+
+      if (!backtest) {
+        throw new Error("백테스트 생성에 실패했습니다");
+      }
+
+      // Step 2: Execute backtest with empty signals (will trigger strategy execution)
+      await executeBacktestAsync({
+        backtestId: backtest.id,
+        signals: [],
+      });
+
+      // Navigate to backtest detail page
+      router.push(`/backtests/${backtest.id}`);
     } catch (error) {
-      console.error("Failed to create backtest", error);
-      setErrors(["백테스트 생성에 실패했습니다. 다시 시도해주세요."]);
+      console.error("Failed to create/execute backtest", error);
+      setErrors(["백테스트 생성 또는 실행에 실패했습니다. 다시 시도해주세요."]);
     }
   };
-
   return (
     <PageContainer
       title="새 백테스트 만들기"
@@ -208,7 +218,10 @@ export default function CreateBacktestPage() {
     >
       <Container maxWidth="lg">
         <Box sx={{ mb: 4 }}>
-          <Button startIcon={<ArrowBack />} onClick={() => router.push("/backtests")}>
+          <Button
+            startIcon={<ArrowBack />}
+            onClick={() => router.push("/backtests")}
+          >
             백테스트 목록으로
           </Button>
         </Box>
@@ -250,7 +263,10 @@ export default function CreateBacktestPage() {
                 label="백테스트 이름"
                 value={formState.name}
                 onChange={(event) =>
-                  setFormState((prev) => ({ ...prev, name: event.target.value }))
+                  setFormState((prev) => ({
+                    ...prev,
+                    name: event.target.value,
+                  }))
                 }
                 required
                 fullWidth
@@ -272,7 +288,10 @@ export default function CreateBacktestPage() {
           )}
 
           {step === 1 && (
-            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ko}>
+            <LocalizationProvider
+              dateAdapter={AdapterDateFns}
+              adapterLocale={ko}
+            >
               <Stack spacing={3}>
                 <Box>
                   <Typography variant="h6" gutterBottom>
@@ -344,7 +363,7 @@ export default function CreateBacktestPage() {
                 </Typography>
               </Box>
               <Grid container spacing={3}>
-                <Grid size={12} >
+                <Grid size={12}>
                   <TextField
                     label="초기 자본"
                     type="number"
@@ -363,7 +382,7 @@ export default function CreateBacktestPage() {
                     fullWidth
                   />
                 </Grid>
-                <Grid size={12} >
+                <Grid size={12}>
                   <TextField
                     label="최대 포지션 비중 (%)"
                     type="number"
@@ -377,7 +396,7 @@ export default function CreateBacktestPage() {
                     fullWidth
                   />
                 </Grid>
-                <Grid size={12} >
+                <Grid size={12}>
                   <TextField
                     label="수수료율 (%)"
                     type="number"
@@ -391,7 +410,7 @@ export default function CreateBacktestPage() {
                     fullWidth
                   />
                 </Grid>
-                <Grid size={12} >
+                <Grid size={12}>
                   <TextField
                     label="슬리피지 (%)"
                     type="number"
@@ -405,7 +424,7 @@ export default function CreateBacktestPage() {
                     fullWidth
                   />
                 </Grid>
-                <Grid size={12} >
+                <Grid size={12}>
                   <FormControl fullWidth>
                     <InputLabel>리밸런싱 주기</InputLabel>
                     <Select
@@ -414,7 +433,8 @@ export default function CreateBacktestPage() {
                       onChange={(event) =>
                         setFormState((prev) => ({
                           ...prev,
-                          rebalanceFrequency: event.target.value as FormState["rebalanceFrequency"],
+                          rebalanceFrequency: event.target
+                            .value as FormState["rebalanceFrequency"],
                         }))
                       }
                     >
@@ -458,25 +478,43 @@ export default function CreateBacktestPage() {
                     요약 정보
                   </Typography>
                   <Stack spacing={1.5}>
-                    <Typography variant="body1">이름: {formState.name}</Typography>
-                    <Typography variant="body1">설명: {formState.description || "(없음)"}</Typography>
                     <Typography variant="body1">
-                      기간: {formState.startDate.toLocaleDateString()} ~ {formState.endDate.toLocaleDateString()}
+                      이름: {formState.name}
                     </Typography>
                     <Typography variant="body1">
-                      심볼: {symbolList.length ? symbolList.join(", ") : "(없음)"}
+                      설명: {formState.description || "(없음)"}
                     </Typography>
                     <Typography variant="body1">
-                      초기 자본: {backtestUtils.formatCurrency(formState.initialCash)}
+                      기간: {formState.startDate.toLocaleDateString()} ~{" "}
+                      {formState.endDate.toLocaleDateString()}
                     </Typography>
                     <Typography variant="body1">
-                      최대 포지션 비중: {backtestUtils.formatPercentage(formState.maxPositionSize)}
+                      심볼:{" "}
+                      {symbolList.length ? symbolList.join(", ") : "(없음)"}
                     </Typography>
                     <Typography variant="body1">
-                      수수료율: {backtestUtils.formatPercentage(formState.commissionRate, 3)}
+                      초기 자본:{" "}
+                      {backtestUtils.formatCurrency(formState.initialCash)}
                     </Typography>
                     <Typography variant="body1">
-                      슬리피지: {backtestUtils.formatPercentage(formState.slippageRate, 3)}
+                      최대 포지션 비중:{" "}
+                      {backtestUtils.formatPercentage(
+                        formState.maxPositionSize
+                      )}
+                    </Typography>
+                    <Typography variant="body1">
+                      수수료율:{" "}
+                      {backtestUtils.formatPercentage(
+                        formState.commissionRate,
+                        3
+                      )}
+                    </Typography>
+                    <Typography variant="body1">
+                      슬리피지:{" "}
+                      {backtestUtils.formatPercentage(
+                        formState.slippageRate,
+                        3
+                      )}
                     </Typography>
                     <Typography variant="body1">
                       리밸런싱 주기: {formState.rebalanceFrequency}

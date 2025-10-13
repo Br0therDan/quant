@@ -2,7 +2,6 @@ import {
   BacktestService,
   type BacktestCreate,
   type BacktestUpdate,
-  type IntegratedBacktestRequest,
 } from "@/client";
 import { useSnackbar } from "@/contexts/SnackbarContext";
 import {
@@ -18,8 +17,6 @@ type UpdateBacktestVariables = {
   id: string;
   updateData: Partial<BacktestUpdate>;
 };
-
-type RunIntegratedBacktestVariables = IntegratedBacktestRequest;
 
 type CreateBacktestFn = UseMutateFunction<
   Awaited<ReturnType<typeof BacktestService.createBacktest>>["data"],
@@ -39,13 +36,6 @@ type DeleteBacktestFn = UseMutateFunction<
   Awaited<ReturnType<typeof BacktestService.deleteBacktest>>["data"],
   unknown,
   string,
-  unknown
->;
-
-type RunIntegratedBacktestFn = UseMutateFunction<
-  Awaited<ReturnType<typeof BacktestService.createAndRunIntegratedBacktest>>["data"],
-  unknown,
-  RunIntegratedBacktestVariables,
   unknown
 >;
 
@@ -78,46 +68,7 @@ export function useBacktest() {
     gcTime: 30 * 60 * 1000,
   });
 
-  const backtestResultsQuery = useQuery({
-    queryKey: backtestQueryKeys.results(),
-    queryFn: async () => {
-      const response = await BacktestService.getBacktestResults();
-      return response.data;
-    },
-    staleTime: 1000 * 60 * 5,
-    gcTime: 30 * 60 * 1000,
-  });
-
-  const backtestPerformanceAnalyticsQuery = useQuery({
-    queryKey: backtestQueryKeys.performanceState(),
-    queryFn: async () => {
-      const response = await BacktestService.getPerformanceAnalytics();
-      return response.data;
-    },
-    staleTime: 1000 * 60 * 5,
-    gcTime: 30 * 60 * 1000,
-  });
-
-  const backtestTradeAnalyticsQuery = useQuery({
-    queryKey: backtestQueryKeys.tradeState(),
-    queryFn: async () => {
-      const response = await BacktestService.getTradesAnalytics();
-      return response.data;
-    },
-    staleTime: 1000 * 60 * 5,
-    gcTime: 30 * 60 * 1000,
-  });
-
-  const backtestSummaryAnalyticsQuery = useQuery({
-    queryKey: [...backtestQueryKeys.analytics(), "summary"],
-    queryFn: async () => {
-      const response = await BacktestService.getBacktestSummaryAnalytics();
-      return response.data;
-    },
-    staleTime: 1000 * 60 * 5,
-    gcTime: 30 * 60 * 1000,
-  });
-
+  // Health check endpoint
   const backtestHealthCheckQuery = useQuery({
     queryKey: backtestQueryKeys.healthState(),
     queryFn: async () => {
@@ -198,19 +149,29 @@ export function useBacktest() {
     },
   });
 
-  const runIntegratedBacktestMutation = useMutation({
-    mutationFn: async (body: RunIntegratedBacktestVariables) => {
-      const response = await BacktestService.createAndRunIntegratedBacktest({
-        body,
+  const executeBacktestMutation = useMutation({
+    mutationFn: async ({
+      backtestId,
+      signals,
+    }: {
+      backtestId: string;
+      signals: Array<{ [key: string]: unknown }>;
+    }) => {
+      const response = await BacktestService.executeBacktest({
+        path: { backtest_id: backtestId },
+        body: { signals },
       });
       return response.data;
     },
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: backtestQueryKeys.lists() });
-      showSuccess("통합 백테스트 실행이 시작되었습니다");
+      queryClient.invalidateQueries({
+        queryKey: backtestQueryKeys.detail(variables.backtestId),
+      });
+      showSuccess("백테스트 실행이 시작되었습니다");
     },
     onError: (error) => {
-      console.error("통합 백테스트 실행 실패:", error);
+      console.error("백테스트 실행 실패:", error);
       showError(
         error instanceof Error
           ? error.message
@@ -222,32 +183,20 @@ export function useBacktest() {
   return useMemo(
     () => ({
       backtestList: backtestListQuery.data,
-      backtestResults: backtestResultsQuery.data,
-      backtestPerformanceAnalytics: backtestPerformanceAnalyticsQuery.data,
-      backtestTradeAnalytics: backtestTradeAnalyticsQuery.data,
-      backtestSummaryAnalytics: backtestSummaryAnalyticsQuery.data,
       backtestHealthCheck: backtestHealthCheckQuery.data,
       isError: {
         backtestList: backtestListQuery.isError,
-        backtestResults: backtestResultsQuery.isError,
-        backtestPerformanceAnalytics: backtestPerformanceAnalyticsQuery.isError,
-        backtestTradeAnalytics: backtestTradeAnalyticsQuery.isError,
-        backtestSummaryAnalytics: backtestSummaryAnalyticsQuery.isError,
         backtestHealthCheck: backtestHealthCheckQuery.isError,
       },
       isLoading: {
         backtestList: backtestListQuery.isLoading,
-        backtestResults: backtestResultsQuery.isLoading,
-        backtestPerformanceAnalytics: backtestPerformanceAnalyticsQuery.isLoading,
-        backtestTradeAnalytics: backtestTradeAnalyticsQuery.isLoading,
-        backtestSummaryAnalytics: backtestSummaryAnalyticsQuery.isLoading,
         backtestHealthCheck: backtestHealthCheckQuery.isLoading,
       },
       isMutating: {
         createBacktest: createBacktestMutation.isPending,
         updateBacktest: updateBacktestMutation.isPending,
         deleteBacktest: deleteBacktestMutation.isPending,
-        runIntegratedBacktest: runIntegratedBacktestMutation.isPending,
+        executeBacktest: executeBacktestMutation.isPending,
       },
       createBacktest: createBacktestMutation.mutate as CreateBacktestFn,
       createBacktestAsync:
@@ -273,35 +222,19 @@ export function useBacktest() {
           string,
           unknown
         >,
-      runIntegratedBacktest: runIntegratedBacktestMutation.mutate as RunIntegratedBacktestFn,
-      runIntegratedBacktestAsync:
-        runIntegratedBacktestMutation.mutateAsync as UseMutateAsyncFunction<
-          Awaited<
-            ReturnType<typeof BacktestService.createAndRunIntegratedBacktest>
-          >["data"],
-          unknown,
-          RunIntegratedBacktestVariables,
-          unknown
-        >,
+      executeBacktest: executeBacktestMutation.mutate,
+      executeBacktestAsync: executeBacktestMutation.mutateAsync,
       refetch: {
         list: backtestListQuery.refetch,
-        results: backtestResultsQuery.refetch,
-        performance: backtestPerformanceAnalyticsQuery.refetch,
-        trades: backtestTradeAnalyticsQuery.refetch,
-        summary: backtestSummaryAnalyticsQuery.refetch,
         health: backtestHealthCheckQuery.refetch,
       },
     }),
     [
       backtestHealthCheckQuery,
       backtestListQuery,
-      backtestPerformanceAnalyticsQuery,
-      backtestResultsQuery,
-      backtestSummaryAnalyticsQuery,
-      backtestTradeAnalyticsQuery,
       createBacktestMutation,
       deleteBacktestMutation,
-      runIntegratedBacktestMutation,
+      executeBacktestMutation,
       updateBacktestMutation,
     ],
   );
