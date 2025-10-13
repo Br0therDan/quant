@@ -35,9 +35,6 @@ import type {
 	AuthVerifyTokenData,
 	AuthVerifyTokenErrors,
 	AuthVerifyTokenResponses,
-	BacktestCreateAndRunIntegratedBacktestData,
-	BacktestCreateAndRunIntegratedBacktestErrors,
-	BacktestCreateAndRunIntegratedBacktestResponses,
 	BacktestCreateBacktestData,
 	BacktestCreateBacktestErrors,
 	BacktestCreateBacktestResponses,
@@ -53,21 +50,21 @@ import type {
 	BacktestGetBacktestExecutionsErrors,
 	BacktestGetBacktestExecutionsResponses,
 	BacktestGetBacktestResponses,
-	BacktestGetBacktestResultsData,
-	BacktestGetBacktestResultsErrors,
-	BacktestGetBacktestResultsResponses,
 	BacktestGetBacktestsData,
 	BacktestGetBacktestsErrors,
 	BacktestGetBacktestsResponses,
-	BacktestGetBacktestSummaryAnalyticsData,
-	BacktestGetBacktestSummaryAnalyticsErrors,
-	BacktestGetBacktestSummaryAnalyticsResponses,
 	BacktestGetPerformanceAnalyticsData,
 	BacktestGetPerformanceAnalyticsErrors,
 	BacktestGetPerformanceAnalyticsResponses,
+	BacktestGetPortfolioHistoryData,
+	BacktestGetPortfolioHistoryErrors,
+	BacktestGetPortfolioHistoryResponses,
 	BacktestGetTradesAnalyticsData,
 	BacktestGetTradesAnalyticsErrors,
 	BacktestGetTradesAnalyticsResponses,
+	BacktestGetTradesHistoryData,
+	BacktestGetTradesHistoryErrors,
+	BacktestGetTradesHistoryResponses,
 	BacktestHealthCheckData,
 	BacktestHealthCheckErrors,
 	BacktestHealthCheckResponses,
@@ -107,6 +104,9 @@ import type {
 	DashboardGetPortfolioPerformanceData,
 	DashboardGetPortfolioPerformanceErrors,
 	DashboardGetPortfolioPerformanceResponses,
+	DashboardGetPredictiveOverviewData,
+	DashboardGetPredictiveOverviewErrors,
+	DashboardGetPredictiveOverviewResponses,
 	DashboardGetRecentTradesData,
 	DashboardGetRecentTradesErrors,
 	DashboardGetRecentTradesResponses,
@@ -182,12 +182,18 @@ import type {
 	MarketDataHealthCheckData,
 	MarketDataHealthCheckErrors,
 	MarketDataHealthCheckResponses,
+	MarketRegimeGetMarketRegimeData,
+	MarketRegimeGetMarketRegimeErrors,
+	MarketRegimeGetMarketRegimeResponses,
 	OAuth2AuthorizeData,
 	OAuth2AuthorizeErrors,
 	OAuth2AuthorizeResponses,
 	OAuth2CallbackData,
 	OAuth2CallbackErrors,
 	OAuth2CallbackResponses,
+	SignalsGetMlSignalData,
+	SignalsGetMlSignalErrors,
+	SignalsGetMlSignalResponses,
 	StockGetDailyPricesData,
 	StockGetDailyPricesErrors,
 	StockGetDailyPricesResponses,
@@ -1889,6 +1895,31 @@ export class TechnicalIndicatorService {
 	}
 }
 
+export class MarketRegimeService {
+	/**
+	 * Get Market Regime
+	 * Return the latest market regime snapshot.
+	 */
+	public static getMarketRegime<ThrowOnError extends boolean = false>(
+		options: Options<MarketRegimeGetMarketRegimeData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MarketRegimeGetMarketRegimeResponses,
+			MarketRegimeGetMarketRegimeErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/regime/",
+			...options,
+		});
+	}
+}
+
 export class StrategyService {
 	/**
 	 * Get Strategies
@@ -2388,7 +2419,7 @@ export class BacktestService {
 
 	/**
 	 * Execute Backtest
-	 * Execute backtest with trading signals
+	 * Execute backtest with trading signals (Phase 2)
 	 */
 	public static executeBacktest<ThrowOnError extends boolean = false>(
 		options: Options<BacktestExecuteBacktestData, ThrowOnError>,
@@ -2437,60 +2468,8 @@ export class BacktestService {
 	}
 
 	/**
-	 * Get Backtest Results
-	 * Get backtest results from DuckDB (고성능 분석용)
-	 */
-	public static getBacktestResults<ThrowOnError extends boolean = false>(
-		options?: Options<BacktestGetBacktestResultsData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			BacktestGetBacktestResultsResponses,
-			BacktestGetBacktestResultsErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/results/",
-			...options,
-		});
-	}
-
-	/**
-	 * Create And Run Integrated Backtest
-	 * 통합 백테스트 생성 및 실행 - 모든 서비스 연동
-	 */
-	public static createAndRunIntegratedBacktest<
-		ThrowOnError extends boolean = false,
-	>(
-		options: Options<BacktestCreateAndRunIntegratedBacktestData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			BacktestCreateAndRunIntegratedBacktestResponses,
-			BacktestCreateAndRunIntegratedBacktestErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/integrated",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
 	 * Health Check
-	 * 백테스트 시스템 상태 확인 (DuckDB + MongoDB 통합 상태)
+	 * 백테스트 시스템 상태 확인 (Phase 2)
 	 */
 	public static healthCheck<ThrowOnError extends boolean = false>(
 		options?: Options<BacktestHealthCheckData, ThrowOnError>,
@@ -2513,7 +2492,7 @@ export class BacktestService {
 
 	/**
 	 * Get Performance Analytics
-	 * 백테스트 성과 분석 (DuckDB 고성능 분석)
+	 * 백테스트 성과 분석 (MongoDB 기반 - Phase 2)
 	 */
 	public static getPerformanceAnalytics<ThrowOnError extends boolean = false>(
 		options?: Options<BacktestGetPerformanceAnalyticsData, ThrowOnError>,
@@ -2536,7 +2515,7 @@ export class BacktestService {
 
 	/**
 	 * Get Trades Analytics
-	 * 거래 기록 분석 (DuckDB 고성능 쿼리)
+	 * 거래 기록 분석 (MongoDB 기반)
 	 */
 	public static getTradesAnalytics<ThrowOnError extends boolean = false>(
 		options?: Options<BacktestGetTradesAnalyticsData, ThrowOnError>,
@@ -2558,15 +2537,17 @@ export class BacktestService {
 	}
 
 	/**
-	 * Get Backtest Summary Analytics
-	 * 백테스트 결과 요약 분석 (DuckDB 기반)
+	 * Get Portfolio History
+	 * 백테스트 포트폴리오 히스토리 조회 (DuckDB)
+	 *
+	 * P3.2: 고성능 시계열 조회를 위한 DuckDB 조회
 	 */
-	public static getBacktestSummaryAnalytics<
-		ThrowOnError extends boolean = false,
-	>(options?: Options<BacktestGetBacktestSummaryAnalyticsData, ThrowOnError>) {
-		return (options?.client ?? client).get<
-			BacktestGetBacktestSummaryAnalyticsResponses,
-			BacktestGetBacktestSummaryAnalyticsErrors,
+	public static getPortfolioHistory<ThrowOnError extends boolean = false>(
+		options: Options<BacktestGetPortfolioHistoryData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			BacktestGetPortfolioHistoryResponses,
+			BacktestGetPortfolioHistoryErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -2575,7 +2556,32 @@ export class BacktestService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/backtests/analytics/summary",
+			url: "/api/v1/backtests/{backtest_id}/portfolio-history",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Trades History
+	 * 백테스트 거래 내역 조회 (DuckDB)
+	 *
+	 * P3.2: 고성능 거래 내역 조회를 위한 DuckDB 조회
+	 */
+	public static getTradesHistory<ThrowOnError extends boolean = false>(
+		options: Options<BacktestGetTradesHistoryData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			BacktestGetTradesHistoryResponses,
+			BacktestGetTradesHistoryErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/backtests/{backtest_id}/trades-history",
 			...options,
 		});
 	}
@@ -2968,6 +2974,29 @@ export class DashboardService {
 			...options,
 		});
 	}
+
+	/**
+	 * Get Predictive Overview
+	 * Predictive intelligence bundle combining signal, regime, and forecast.
+	 */
+	public static getPredictiveOverview<ThrowOnError extends boolean = false>(
+		options: Options<DashboardGetPredictiveOverviewData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			DashboardGetPredictiveOverviewResponses,
+			DashboardGetPredictiveOverviewErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/dashboard/predictive/overview",
+			...options,
+		});
+	}
 }
 
 export class TasksService {
@@ -3018,6 +3047,31 @@ export class TasksService {
 			ThrowOnError
 		>({
 			url: "/api/v1/tasks/stock-update/status",
+			...options,
+		});
+	}
+}
+
+export class SignalsService {
+	/**
+	 * Get Ml Signal
+	 * Return ML signal inference for the requested symbol.
+	 */
+	public static getMlSignal<ThrowOnError extends boolean = false>(
+		options: Options<SignalsGetMlSignalData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			SignalsGetMlSignalResponses,
+			SignalsGetMlSignalErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/signals/{symbol}",
 			...options,
 		});
 	}

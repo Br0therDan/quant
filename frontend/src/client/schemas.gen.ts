@@ -915,6 +915,71 @@ export const Body_Auth_verifySchema = {
 	title: "Body_Auth-verify",
 } as const;
 
+export const BuyAndHoldConfigSchema = {
+	properties: {
+		lookback_period: {
+			type: "integer",
+			minimum: 30,
+			title: "Lookback Period",
+			description: "조회 기간 (일)",
+			default: 252,
+		},
+		min_data_points: {
+			type: "integer",
+			minimum: 10,
+			title: "Min Data Points",
+			description: "최소 데이터 포인트",
+			default: 30,
+		},
+		max_position_size: {
+			type: "number",
+			maximum: 1,
+			minimum: 0,
+			title: "Max Position Size",
+			description: "최대 포지션 크기",
+			default: 1,
+		},
+		stop_loss_pct: {
+			anyOf: [
+				{
+					type: "number",
+					maximum: 1,
+					minimum: 0,
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Stop Loss Pct",
+			description: "손절 비율",
+		},
+		take_profit_pct: {
+			anyOf: [
+				{
+					type: "number",
+					minimum: 0,
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Take Profit Pct",
+			description: "익절 비율",
+		},
+		allocation: {
+			additionalProperties: {
+				type: "number",
+			},
+			type: "object",
+			title: "Allocation",
+			description: "종목별 할당 비율",
+		},
+	},
+	type: "object",
+	title: "BuyAndHoldConfig",
+	description: "바이앤홀드 전략 설정",
+} as const;
+
 export const CacheInfoSchema = {
 	properties: {
 		cached: {
@@ -2045,6 +2110,69 @@ export const ExecutionResponseSchema = {
 	description: "Execution response",
 } as const;
 
+export const FeatureContributionSchema = {
+	properties: {
+		feature: {
+			type: "string",
+			title: "Feature",
+			description: "Feature name",
+		},
+		value: {
+			type: "number",
+			title: "Value",
+			description: "Computed feature value",
+		},
+		weight: {
+			type: "number",
+			title: "Weight",
+			description: "Relative weight applied in scoring",
+		},
+		impact: {
+			type: "number",
+			title: "Impact",
+			description: "Signed contribution to probability",
+		},
+		direction: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Direction",
+			description:
+				"Human readable description of how the feature influences the score",
+		},
+	},
+	type: "object",
+	required: ["feature", "value", "weight", "impact"],
+	title: "FeatureContribution",
+	description: "Contribution details for a single engineered feature.",
+} as const;
+
+export const ForecastPercentileBandSchema = {
+	properties: {
+		percentile: {
+			type: "integer",
+			maximum: 100,
+			minimum: 0,
+			title: "Percentile",
+			description: "Percentile value (0-100)",
+		},
+		projected_value: {
+			type: "number",
+			title: "Projected Value",
+			description: "Projected portfolio value at percentile",
+		},
+	},
+	type: "object",
+	required: ["percentile", "projected_value"],
+	title: "ForecastPercentileBand",
+	description: "Single percentile projection for a future portfolio value.",
+} as const;
+
 export const HTTPValidationErrorSchema = {
 	properties: {
 		detail: {
@@ -2536,169 +2664,6 @@ export const IndicatorListResponseSchema = {
 	description: "지원하는 지표 목록 응답",
 } as const;
 
-export const IntegratedBacktestRequestSchema = {
-	properties: {
-		user_id: {
-			anyOf: [
-				{
-					type: "string",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "User Id",
-		},
-		name: {
-			type: "string",
-			title: "Name",
-			description: "백테스트 이름",
-		},
-		description: {
-			type: "string",
-			title: "Description",
-			description: "백테스트 설명",
-			default: "",
-		},
-		symbols: {
-			items: {
-				type: "string",
-			},
-			type: "array",
-			title: "Symbols",
-			description: "심볼 목록",
-		},
-		start_date: {
-			type: "string",
-			format: "date-time",
-			title: "Start Date",
-			description: "시작일",
-		},
-		end_date: {
-			type: "string",
-			format: "date-time",
-			title: "End Date",
-			description: "종료일",
-		},
-		strategy_type: {
-			type: "string",
-			title: "Strategy Type",
-			description: "전략 타입",
-		},
-		strategy_params: {
-			additionalProperties: true,
-			type: "object",
-			title: "Strategy Params",
-			description: "전략 매개변수",
-		},
-		initial_capital: {
-			type: "number",
-			title: "Initial Capital",
-			description: "초기 자본",
-			default: 100000,
-		},
-	},
-	type: "object",
-	required: ["name", "symbols", "start_date", "end_date", "strategy_type"],
-	title: "IntegratedBacktestRequest",
-	description: "통합 백테스트 요청",
-} as const;
-
-export const IntegratedBacktestResponseSchema = {
-	properties: {
-		user_id: {
-			anyOf: [
-				{
-					type: "string",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "User Id",
-		},
-		backtest_id: {
-			type: "string",
-			title: "Backtest Id",
-			description: "백테스트 ID",
-		},
-		execution_id: {
-			anyOf: [
-				{
-					type: "string",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "Execution Id",
-			description: "실행 ID",
-		},
-		result_id: {
-			anyOf: [
-				{
-					type: "string",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "Result Id",
-			description: "결과 ID",
-		},
-		status: {
-			$ref: "#/components/schemas/BacktestStatus",
-			description: "상태",
-		},
-		message: {
-			type: "string",
-			title: "Message",
-			description: "메시지",
-		},
-		performance: {
-			anyOf: [
-				{
-					$ref: "#/components/schemas/PerformanceMetrics",
-				},
-				{
-					type: "null",
-				},
-			],
-			description: "성과 지표",
-		},
-		start_time: {
-			anyOf: [
-				{
-					type: "string",
-					format: "date-time",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "Start Time",
-			description: "시작 시간",
-		},
-		end_time: {
-			anyOf: [
-				{
-					type: "string",
-					format: "date-time",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "End Time",
-			description: "종료 시간",
-		},
-	},
-	type: "object",
-	required: ["backtest_id", "status", "message"],
-	title: "IntegratedBacktestResponse",
-	description: "통합 백테스트 응답",
-} as const;
-
 export const LoginResponseSchema = {
 	properties: {
 		access_token: {
@@ -2756,6 +2721,229 @@ export const LoginResponseSchema = {
 	},
 } as const;
 
+export const MLSignalInsightSchema = {
+	properties: {
+		symbol: {
+			type: "string",
+			title: "Symbol",
+			description: "Instrument symbol",
+		},
+		as_of: {
+			type: "string",
+			format: "date-time",
+			title: "As Of",
+			description: "Timestamp of the latest observation",
+		},
+		lookback_days: {
+			type: "integer",
+			minimum: 5,
+			title: "Lookback Days",
+			description: "Lookback window used for features",
+		},
+		probability: {
+			type: "number",
+			maximum: 1,
+			minimum: 0,
+			title: "Probability",
+			description: "Probability of positive move",
+		},
+		confidence: {
+			type: "number",
+			maximum: 1,
+			minimum: 0,
+			title: "Confidence",
+			description: "Confidence proxy from data depth",
+		},
+		recommendation: {
+			$ref: "#/components/schemas/SignalRecommendation",
+			description: "Recommendation bucket derived from probability",
+		},
+		feature_contributions: {
+			items: {
+				$ref: "#/components/schemas/FeatureContribution",
+			},
+			type: "array",
+			title: "Feature Contributions",
+			description: "Ordered list of feature contributions",
+		},
+		top_signals: {
+			items: {
+				type: "string",
+			},
+			type: "array",
+			title: "Top Signals",
+			description: "Human readable highlights from the model",
+		},
+	},
+	type: "object",
+	required: [
+		"symbol",
+		"as_of",
+		"lookback_days",
+		"probability",
+		"confidence",
+		"recommendation",
+	],
+	title: "MLSignalInsight",
+	description: "Inference payload produced by the ML signal service.",
+} as const;
+
+export const MLSignalResponseSchema = {
+	properties: {
+		success: {
+			type: "boolean",
+			title: "Success",
+			description: "요청 성공 여부",
+			default: true,
+		},
+		message: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Message",
+			description: "응답 메시지",
+		},
+		timestamp: {
+			type: "string",
+			format: "date-time",
+			title: "Timestamp",
+			description: "응답 시간",
+		},
+		data: {
+			$ref: "#/components/schemas/MLSignalInsight",
+			description: "Signal inference payload",
+		},
+		metadata: {
+			$ref: "#/components/schemas/MetadataInfo",
+			description: "Response metadata",
+		},
+	},
+	type: "object",
+	required: ["data", "metadata"],
+	title: "MLSignalResponse",
+	description: "API response wrapper for ML signal insights.",
+} as const;
+
+export const MarketRegimeResponseSchema = {
+	properties: {
+		success: {
+			type: "boolean",
+			title: "Success",
+			description: "요청 성공 여부",
+			default: true,
+		},
+		message: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Message",
+			description: "응답 메시지",
+		},
+		timestamp: {
+			type: "string",
+			format: "date-time",
+			title: "Timestamp",
+			description: "응답 시간",
+		},
+		data: {
+			$ref: "#/components/schemas/MarketRegimeSnapshot",
+			description: "Regime snapshot",
+		},
+		metadata: {
+			$ref: "#/components/schemas/MetadataInfo",
+			description: "Response metadata",
+		},
+	},
+	type: "object",
+	required: ["data", "metadata"],
+	title: "MarketRegimeResponse",
+	description: "API response for regime classification.",
+} as const;
+
+export const MarketRegimeSnapshotSchema = {
+	properties: {
+		symbol: {
+			type: "string",
+			title: "Symbol",
+			description: "Instrument symbol for the regime classification",
+		},
+		as_of: {
+			type: "string",
+			format: "date-time",
+			title: "As Of",
+			description: "Reference timestamp for the snapshot",
+		},
+		lookback_days: {
+			type: "integer",
+			minimum: 5,
+			title: "Lookback Days",
+			description: "Lookback window in days",
+		},
+		regime: {
+			$ref: "#/components/schemas/MarketRegimeType",
+			description: "Detected market regime",
+		},
+		confidence: {
+			type: "number",
+			maximum: 1,
+			minimum: 0,
+			title: "Confidence",
+			description: "Confidence of classification",
+		},
+		probabilities: {
+			additionalProperties: {
+				type: "number",
+			},
+			propertyNames: {
+				$ref: "#/components/schemas/MarketRegimeType",
+			},
+			type: "object",
+			title: "Probabilities",
+			description: "Probability distribution across regimes",
+		},
+		metrics: {
+			$ref: "#/components/schemas/RegimeMetrics",
+			description: "Supporting quantitative metrics",
+		},
+		notes: {
+			items: {
+				type: "string",
+			},
+			type: "array",
+			title: "Notes",
+			description: "Notable drivers or anomalies",
+		},
+	},
+	type: "object",
+	required: [
+		"symbol",
+		"as_of",
+		"lookback_days",
+		"regime",
+		"confidence",
+		"metrics",
+	],
+	title: "MarketRegimeSnapshot",
+	description: "Market regime classification snapshot.",
+} as const;
+
+export const MarketRegimeTypeSchema = {
+	type: "string",
+	enum: ["bullish", "bearish", "volatile", "sideways"],
+	title: "MarketRegimeType",
+	description: "Supported market regimes for classification.",
+} as const;
+
 export const MetadataInfoSchema = {
 	properties: {
 		data_quality: {
@@ -2781,6 +2969,109 @@ export const MetadataInfoSchema = {
 	required: ["data_quality", "cache_info"],
 	title: "MetadataInfo",
 	description: "메타데이터 정보",
+} as const;
+
+export const MomentumConfigSchema = {
+	properties: {
+		lookback_period: {
+			type: "integer",
+			minimum: 30,
+			title: "Lookback Period",
+			description: "조회 기간 (일)",
+			default: 252,
+		},
+		min_data_points: {
+			type: "integer",
+			minimum: 10,
+			title: "Min Data Points",
+			description: "최소 데이터 포인트",
+			default: 30,
+		},
+		max_position_size: {
+			type: "number",
+			maximum: 1,
+			minimum: 0,
+			title: "Max Position Size",
+			description: "최대 포지션 크기",
+			default: 1,
+		},
+		stop_loss_pct: {
+			anyOf: [
+				{
+					type: "number",
+					maximum: 1,
+					minimum: 0,
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Stop Loss Pct",
+			description: "손절 비율",
+		},
+		take_profit_pct: {
+			anyOf: [
+				{
+					type: "number",
+					minimum: 0,
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Take Profit Pct",
+			description: "익절 비율",
+		},
+		momentum_period: {
+			type: "integer",
+			maximum: 100,
+			minimum: 5,
+			title: "Momentum Period",
+			description: "모멘텀 계산 기간",
+			default: 20,
+		},
+		buy_threshold: {
+			type: "number",
+			title: "Buy Threshold",
+			description: "매수 신호 임계값",
+			default: 0.02,
+		},
+		sell_threshold: {
+			type: "number",
+			title: "Sell Threshold",
+			description: "매도 신호 임계값",
+			default: -0.02,
+		},
+		volume_filter: {
+			type: "boolean",
+			title: "Volume Filter",
+			description: "거래량 필터 사용 여부",
+			default: true,
+		},
+		min_volume_ratio: {
+			type: "number",
+			title: "Min Volume Ratio",
+			description: "최소 거래량 비율",
+			default: 1.5,
+		},
+		top_n_stocks: {
+			type: "integer",
+			maximum: 20,
+			minimum: 1,
+			title: "Top N Stocks",
+			description: "상위 N개 종목 선택",
+			default: 5,
+		},
+		rebalance_frequency: {
+			type: "string",
+			title: "Rebalance Frequency",
+			description: "리밸런싱 주기",
+			default: "monthly",
+		},
+	},
+	type: "object",
+	title: "MomentumConfig",
+	description: "모멘텀 전략 설정",
 } as const;
 
 export const NewsArticleSchema = {
@@ -3276,6 +3567,64 @@ export const PortfolioDataPointSchema = {
 	description: "포트폴리오 데이터 포인트.",
 } as const;
 
+export const PortfolioForecastDistributionSchema = {
+	properties: {
+		as_of: {
+			type: "string",
+			format: "date-time",
+			title: "As Of",
+			description: "Timestamp the forecast was generated",
+		},
+		horizon_days: {
+			type: "integer",
+			minimum: 1,
+			title: "Horizon Days",
+			description: "Forecast horizon in days",
+		},
+		last_portfolio_value: {
+			type: "number",
+			title: "Last Portfolio Value",
+			description: "Most recent observed portfolio value",
+		},
+		expected_return_pct: {
+			type: "number",
+			title: "Expected Return Pct",
+			description: "Expected return over the horizon (%)",
+		},
+		expected_volatility_pct: {
+			type: "number",
+			title: "Expected Volatility Pct",
+			description: "Expected volatility over the horizon (%)",
+		},
+		percentile_bands: {
+			items: {
+				$ref: "#/components/schemas/ForecastPercentileBand",
+			},
+			type: "array",
+			title: "Percentile Bands",
+			description: "Projected percentile bands",
+		},
+		methodology: {
+			type: "string",
+			title: "Methodology",
+			description: "Shorthand name of the forecasting methodology",
+			default: "gaussian_projection",
+		},
+	},
+	type: "object",
+	required: [
+		"as_of",
+		"horizon_days",
+		"last_portfolio_value",
+		"expected_return_pct",
+		"expected_volatility_pct",
+		"percentile_bands",
+	],
+	title: "PortfolioForecastDistribution",
+	description:
+		"Distribution of future portfolio values based on Monte Carlo proxy.",
+} as const;
+
 export const PortfolioPerformanceSchema = {
 	properties: {
 		period: {
@@ -3447,6 +3796,68 @@ export const PositionSchema = {
 	],
 	title: "Position",
 	description: "포지션 정보 내장 모델",
+} as const;
+
+export const PredictiveDashboardInsightsSchema = {
+	properties: {
+		signal: {
+			$ref: "#/components/schemas/MLSignalInsight",
+			description: "Latest ML signal insight",
+		},
+		regime: {
+			$ref: "#/components/schemas/MarketRegimeSnapshot",
+			description: "Current market regime snapshot",
+		},
+		forecast: {
+			$ref: "#/components/schemas/PortfolioForecastDistribution",
+			description: "Probabilistic portfolio forecast",
+		},
+	},
+	type: "object",
+	required: ["signal", "regime", "forecast"],
+	title: "PredictiveDashboardInsights",
+	description: "Aggregated predictive insights exposed on the dashboard.",
+} as const;
+
+export const PredictiveInsightsResponseSchema = {
+	properties: {
+		success: {
+			type: "boolean",
+			title: "Success",
+			description: "요청 성공 여부",
+			default: true,
+		},
+		message: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Message",
+			description: "응답 메시지",
+		},
+		timestamp: {
+			type: "string",
+			format: "date-time",
+			title: "Timestamp",
+			description: "응답 시간",
+		},
+		data: {
+			$ref: "#/components/schemas/PredictiveDashboardInsights",
+			description: "Combined predictive intelligence payload",
+		},
+		metadata: {
+			$ref: "#/components/schemas/MetadataInfo",
+			description: "Response metadata for predictive payload",
+		},
+	},
+	type: "object",
+	required: ["data"],
+	title: "PredictiveInsightsResponse",
+	description: "Response wrapper for predictive dashboard bundle.",
 } as const;
 
 export const PydanticObjectIdSchema = {
@@ -3655,6 +4066,95 @@ export const QuoteResponseSchema = {
 	description: "실시간 호가 응답 스키마",
 } as const;
 
+export const RSIMeanReversionConfigSchema = {
+	properties: {
+		lookback_period: {
+			type: "integer",
+			minimum: 30,
+			title: "Lookback Period",
+			description: "조회 기간 (일)",
+			default: 252,
+		},
+		min_data_points: {
+			type: "integer",
+			minimum: 10,
+			title: "Min Data Points",
+			description: "최소 데이터 포인트",
+			default: 30,
+		},
+		max_position_size: {
+			type: "number",
+			maximum: 1,
+			minimum: 0,
+			title: "Max Position Size",
+			description: "최대 포지션 크기",
+			default: 1,
+		},
+		stop_loss_pct: {
+			anyOf: [
+				{
+					type: "number",
+					maximum: 1,
+					minimum: 0,
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Stop Loss Pct",
+			description: "손절 비율",
+		},
+		take_profit_pct: {
+			anyOf: [
+				{
+					type: "number",
+					minimum: 0,
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Take Profit Pct",
+			description: "익절 비율",
+		},
+		rsi_period: {
+			type: "integer",
+			maximum: 50,
+			minimum: 2,
+			title: "Rsi Period",
+			description: "RSI 계산 기간",
+			default: 14,
+		},
+		oversold_threshold: {
+			type: "number",
+			maximum: 50,
+			minimum: 0,
+			title: "Oversold Threshold",
+			description: "과매도 임계값",
+			default: 30,
+		},
+		overbought_threshold: {
+			type: "number",
+			maximum: 100,
+			minimum: 50,
+			title: "Overbought Threshold",
+			description: "과매수 임계값",
+			default: 70,
+		},
+		confirmation_periods: {
+			type: "integer",
+			maximum: 10,
+			minimum: 1,
+			title: "Confirmation Periods",
+			description: "신호 확인 기간",
+			default: 2,
+		},
+	},
+	type: "object",
+	title: "RSIMeanReversionConfig",
+	description: "RSI 평균회귀 전략 설정",
+} as const;
+
 export const RecentActivitySchema = {
 	properties: {
 		trades_count_today: {
@@ -3727,11 +4227,133 @@ export const RecentTradesResponseSchema = {
 	description: "최근 거래 응답.",
 } as const;
 
+export const RegimeMetricsSchema = {
+	properties: {
+		trailing_return_pct: {
+			type: "number",
+			title: "Trailing Return Pct",
+			description: "Lookback total return in %",
+		},
+		volatility_pct: {
+			type: "number",
+			title: "Volatility Pct",
+			description: "Annualised volatility in %",
+		},
+		drawdown_pct: {
+			type: "number",
+			title: "Drawdown Pct",
+			description: "Max drawdown observed in %",
+		},
+		momentum_z: {
+			type: "number",
+			title: "Momentum Z",
+			description: "Z-score of short term momentum",
+		},
+	},
+	type: "object",
+	required: [
+		"trailing_return_pct",
+		"volatility_pct",
+		"drawdown_pct",
+		"momentum_z",
+	],
+	title: "RegimeMetrics",
+	description: "Quantitative metrics used for regime detection.",
+} as const;
+
+export const SMACrossoverConfigSchema = {
+	properties: {
+		lookback_period: {
+			type: "integer",
+			minimum: 30,
+			title: "Lookback Period",
+			description: "조회 기간 (일)",
+			default: 252,
+		},
+		min_data_points: {
+			type: "integer",
+			minimum: 10,
+			title: "Min Data Points",
+			description: "최소 데이터 포인트",
+			default: 30,
+		},
+		max_position_size: {
+			type: "number",
+			maximum: 1,
+			minimum: 0,
+			title: "Max Position Size",
+			description: "최대 포지션 크기",
+			default: 1,
+		},
+		stop_loss_pct: {
+			anyOf: [
+				{
+					type: "number",
+					maximum: 1,
+					minimum: 0,
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Stop Loss Pct",
+			description: "손절 비율",
+		},
+		take_profit_pct: {
+			anyOf: [
+				{
+					type: "number",
+					minimum: 0,
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Take Profit Pct",
+			description: "익절 비율",
+		},
+		short_window: {
+			type: "integer",
+			maximum: 50,
+			minimum: 2,
+			title: "Short Window",
+			description: "단기 이동평균 기간",
+			default: 10,
+		},
+		long_window: {
+			type: "integer",
+			maximum: 200,
+			minimum: 10,
+			title: "Long Window",
+			description: "장기 이동평균 기간",
+			default: 30,
+		},
+		min_crossover_strength: {
+			type: "number",
+			maximum: 1,
+			minimum: 0,
+			title: "Min Crossover Strength",
+			description: "최소 교차 강도",
+			default: 0.01,
+		},
+	},
+	type: "object",
+	title: "SMACrossoverConfig",
+	description: "SMA 크로스오버 전략 설정",
+} as const;
+
 export const SentimentTypeSchema = {
 	type: "string",
 	enum: ["positive", "neutral", "negative"],
 	title: "SentimentType",
 	description: "감정 분석 유형.",
+} as const;
+
+export const SignalRecommendationSchema = {
+	type: "string",
+	enum: ["strong_buy", "buy", "hold", "sell", "strong_sell"],
+	title: "SignalRecommendation",
+	description: "Recommendation derived from model probability.",
 } as const;
 
 export const SignalTypeSchema = {
@@ -3841,11 +4463,23 @@ export const StrategyCreateSchema = {
 			title: "Description",
 			description: "전략 설명",
 		},
-		parameters: {
-			additionalProperties: true,
-			type: "object",
-			title: "Parameters",
-			description: "전략 파라미터",
+		config: {
+			anyOf: [
+				{
+					$ref: "#/components/schemas/SMACrossoverConfig",
+				},
+				{
+					$ref: "#/components/schemas/RSIMeanReversionConfig",
+				},
+				{
+					$ref: "#/components/schemas/MomentumConfig",
+				},
+				{
+					$ref: "#/components/schemas/BuyAndHoldConfig",
+				},
+			],
+			title: "Config",
+			description: "전략 설정 (타입 안전)",
 		},
 		tags: {
 			items: {
@@ -3857,7 +4491,7 @@ export const StrategyCreateSchema = {
 		},
 	},
 	type: "object",
-	required: ["name", "strategy_type"],
+	required: ["name", "strategy_type", "config"],
 	title: "StrategyCreate",
 	description: "Strategy creation request",
 } as const;
@@ -3880,25 +4514,26 @@ export const StrategyCreateFromTemplateSchema = {
 			title: "Name",
 			description: "전략 이름",
 		},
-		parameter_overrides: {
+		config_overrides: {
 			anyOf: [
 				{
-					additionalProperties: {
-						anyOf: [
-							{},
-							{
-								type: "null",
-							},
-						],
-					},
-					type: "object",
+					$ref: "#/components/schemas/SMACrossoverConfig",
+				},
+				{
+					$ref: "#/components/schemas/RSIMeanReversionConfig",
+				},
+				{
+					$ref: "#/components/schemas/MomentumConfig",
+				},
+				{
+					$ref: "#/components/schemas/BuyAndHoldConfig",
 				},
 				{
 					type: "null",
 				},
 			],
-			title: "Parameter Overrides",
-			description: "파라미터 오버라이드",
+			title: "Config Overrides",
+			description: "설정 오버라이드",
 		},
 	},
 	type: "object",
@@ -4080,11 +4715,23 @@ export const StrategyResponseSchema = {
 			title: "Description",
 			description: "전략 설명",
 		},
-		parameters: {
-			additionalProperties: true,
-			type: "object",
-			title: "Parameters",
-			description: "전략 파라미터",
+		config: {
+			anyOf: [
+				{
+					$ref: "#/components/schemas/SMACrossoverConfig",
+				},
+				{
+					$ref: "#/components/schemas/RSIMeanReversionConfig",
+				},
+				{
+					$ref: "#/components/schemas/MomentumConfig",
+				},
+				{
+					$ref: "#/components/schemas/BuyAndHoldConfig",
+				},
+			],
+			title: "Config",
+			description: "전략 설정 (타입 안전)",
 		},
 		is_active: {
 			type: "boolean",
@@ -4134,6 +4781,7 @@ export const StrategyResponseSchema = {
 		"id",
 		"name",
 		"strategy_type",
+		"config",
 		"is_active",
 		"is_template",
 		"created_at",
@@ -4230,25 +4878,26 @@ export const StrategyUpdateSchema = {
 			title: "Description",
 			description: "전략 설명",
 		},
-		parameters: {
+		config: {
 			anyOf: [
 				{
-					additionalProperties: {
-						anyOf: [
-							{},
-							{
-								type: "null",
-							},
-						],
-					},
-					type: "object",
+					$ref: "#/components/schemas/SMACrossoverConfig",
+				},
+				{
+					$ref: "#/components/schemas/RSIMeanReversionConfig",
+				},
+				{
+					$ref: "#/components/schemas/MomentumConfig",
+				},
+				{
+					$ref: "#/components/schemas/BuyAndHoldConfig",
 				},
 				{
 					type: "null",
 				},
 			],
-			title: "Parameters",
-			description: "전략 파라미터",
+			title: "Config",
+			description: "전략 설정",
 		},
 		is_active: {
 			anyOf: [
@@ -4553,31 +5202,28 @@ export const TemplateCreateSchema = {
 			title: "Description",
 			description: "템플릿 설명",
 		},
-		default_parameters: {
-			additionalProperties: true,
-			type: "object",
-			title: "Default Parameters",
-			description: "기본 파라미터",
-		},
-		parameter_schema: {
+		default_config: {
 			anyOf: [
 				{
-					additionalProperties: {
-						anyOf: [
-							{},
-							{
-								type: "null",
-							},
-						],
-					},
-					type: "object",
+					$ref: "#/components/schemas/SMACrossoverConfig",
 				},
 				{
-					type: "null",
+					$ref: "#/components/schemas/RSIMeanReversionConfig",
+				},
+				{
+					$ref: "#/components/schemas/MomentumConfig",
+				},
+				{
+					$ref: "#/components/schemas/BuyAndHoldConfig",
 				},
 			],
-			title: "Parameter Schema",
-			description: "파라미터 스키마",
+			title: "Default Config",
+			description: "기본 설정 타입 안전",
+		},
+		category: {
+			type: "string",
+			title: "Category",
+			description: "카테고리",
 		},
 		tags: {
 			items: {
@@ -4589,7 +5235,13 @@ export const TemplateCreateSchema = {
 		},
 	},
 	type: "object",
-	required: ["name", "strategy_type", "description"],
+	required: [
+		"name",
+		"strategy_type",
+		"description",
+		"default_config",
+		"category",
+	],
 	title: "TemplateCreate",
 	description: "Template creation request",
 } as const;
@@ -4659,31 +5311,28 @@ export const TemplateResponseSchema = {
 			title: "Description",
 			description: "템플릿 설명",
 		},
-		default_parameters: {
-			additionalProperties: true,
-			type: "object",
-			title: "Default Parameters",
-			description: "기본 파라미터",
-		},
-		parameter_schema: {
+		default_config: {
 			anyOf: [
 				{
-					additionalProperties: {
-						anyOf: [
-							{},
-							{
-								type: "null",
-							},
-						],
-					},
-					type: "object",
+					$ref: "#/components/schemas/SMACrossoverConfig",
 				},
 				{
-					type: "null",
+					$ref: "#/components/schemas/RSIMeanReversionConfig",
+				},
+				{
+					$ref: "#/components/schemas/MomentumConfig",
+				},
+				{
+					$ref: "#/components/schemas/BuyAndHoldConfig",
 				},
 			],
-			title: "Parameter Schema",
-			description: "파라미터 스키마",
+			title: "Default Config",
+			description: "기본 설정 (타입 안전)",
+		},
+		category: {
+			type: "string",
+			title: "Category",
+			description: "카테고리",
 		},
 		usage_count: {
 			type: "integer",
@@ -4717,6 +5366,8 @@ export const TemplateResponseSchema = {
 		"name",
 		"strategy_type",
 		"description",
+		"default_config",
+		"category",
 		"usage_count",
 		"created_at",
 		"updated_at",
@@ -4762,38 +5413,26 @@ export const TemplateUpdateSchema = {
 			title: "Description",
 			description: "템플릿 설명",
 		},
-		default_parameters: {
+		default_config: {
 			anyOf: [
 				{
-					additionalProperties: true,
-					type: "object",
+					$ref: "#/components/schemas/SMACrossoverConfig",
+				},
+				{
+					$ref: "#/components/schemas/RSIMeanReversionConfig",
+				},
+				{
+					$ref: "#/components/schemas/MomentumConfig",
+				},
+				{
+					$ref: "#/components/schemas/BuyAndHoldConfig",
 				},
 				{
 					type: "null",
 				},
 			],
-			title: "Default Parameters",
-			description: "기본 파라미터",
-		},
-		parameter_schema: {
-			anyOf: [
-				{
-					additionalProperties: {
-						anyOf: [
-							{},
-							{
-								type: "null",
-							},
-						],
-					},
-					type: "object",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "Parameter Schema",
-			description: "파라미터 스키마",
+			title: "Default Config",
+			description: "기본 설정",
 		},
 		tags: {
 			anyOf: [

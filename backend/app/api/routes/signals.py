@@ -47,6 +47,7 @@ async def get_ml_signal(
     )
 
     return MLSignalResponse(
+        success=True,
         data=insight,
         metadata=metadata,
         message="Signal inference generated",

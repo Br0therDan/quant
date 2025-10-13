@@ -44,7 +44,7 @@ class TemplateCreate(BaseSchema):
     name: str = Field(..., description="템플릿 이름")
     strategy_type: StrategyType = Field(..., description="전략 타입")
     description: str = Field(..., description="템플릿 설명")
-    default_config: StrategyConfigUnion = Field(..., description="기본 설정 (타입 안전)")
+    default_config: StrategyConfigUnion = Field(..., description="기본 설정 타입 안전")
     category: str = Field(..., description="카테고리")
     tags: list[str] = Field(default_factory=list, description="태그")
 

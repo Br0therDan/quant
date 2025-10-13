@@ -54,6 +54,7 @@ async def get_market_regime(
     )
 
     return MarketRegimeResponse(
+        success=True,
         data=snapshot,
         metadata=metadata,
         message="Market regime snapshot retrieved",

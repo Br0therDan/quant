@@ -540,6 +540,45 @@ export type BodyAuthVerify = {
 };
 
 /**
+ * BuyAndHoldConfig
+ * 바이앤홀드 전략 설정
+ */
+export type BuyAndHoldConfig = {
+	/**
+	 * Lookback Period
+	 * 조회 기간 (일)
+	 */
+	lookback_period?: number;
+	/**
+	 * Min Data Points
+	 * 최소 데이터 포인트
+	 */
+	min_data_points?: number;
+	/**
+	 * Max Position Size
+	 * 최대 포지션 크기
+	 */
+	max_position_size?: number;
+	/**
+	 * Stop Loss Pct
+	 * 손절 비율
+	 */
+	stop_loss_pct?: number | null;
+	/**
+	 * Take Profit Pct
+	 * 익절 비율
+	 */
+	take_profit_pct?: number | null;
+	/**
+	 * Allocation
+	 * 종목별 할당 비율
+	 */
+	allocation?: {
+		[key: string]: number;
+	};
+};
+
+/**
  * CacheInfo
  * 캐시 정보
  */
@@ -1207,6 +1246,55 @@ export type ExecutionResponse = {
 };
 
 /**
+ * FeatureContribution
+ * Contribution details for a single engineered feature.
+ */
+export type FeatureContribution = {
+	/**
+	 * Feature
+	 * Feature name
+	 */
+	feature: string;
+	/**
+	 * Value
+	 * Computed feature value
+	 */
+	value: number;
+	/**
+	 * Weight
+	 * Relative weight applied in scoring
+	 */
+	weight: number;
+	/**
+	 * Impact
+	 * Signed contribution to probability
+	 */
+	impact: number;
+	/**
+	 * Direction
+	 * Human readable description of how the feature influences the score
+	 */
+	direction?: string | null;
+};
+
+/**
+ * ForecastPercentileBand
+ * Single percentile projection for a future portfolio value.
+ */
+export type ForecastPercentileBand = {
+	/**
+	 * Percentile
+	 * Percentile value (0-100)
+	 */
+	percentile: number;
+	/**
+	 * Projected Value
+	 * Projected portfolio value at percentile
+	 */
+	projected_value: number;
+};
+
+/**
  * HTTPValidationError
  */
 export type HttpValidationError = {
@@ -1490,108 +1578,6 @@ export type IndicatorListResponse = {
 };
 
 /**
- * IntegratedBacktestRequest
- * 통합 백테스트 요청
- */
-export type IntegratedBacktestRequest = {
-	/**
-	 * User Id
-	 */
-	user_id?: string | null;
-	/**
-	 * Name
-	 * 백테스트 이름
-	 */
-	name: string;
-	/**
-	 * Description
-	 * 백테스트 설명
-	 */
-	description?: string;
-	/**
-	 * Symbols
-	 * 심볼 목록
-	 */
-	symbols: Array<string>;
-	/**
-	 * Start Date
-	 * 시작일
-	 */
-	start_date: Date;
-	/**
-	 * End Date
-	 * 종료일
-	 */
-	end_date: Date;
-	/**
-	 * Strategy Type
-	 * 전략 타입
-	 */
-	strategy_type: string;
-	/**
-	 * Strategy Params
-	 * 전략 매개변수
-	 */
-	strategy_params?: {
-		[key: string]: unknown;
-	};
-	/**
-	 * Initial Capital
-	 * 초기 자본
-	 */
-	initial_capital?: number;
-};
-
-/**
- * IntegratedBacktestResponse
- * 통합 백테스트 응답
- */
-export type IntegratedBacktestResponse = {
-	/**
-	 * User Id
-	 */
-	user_id?: string | null;
-	/**
-	 * Backtest Id
-	 * 백테스트 ID
-	 */
-	backtest_id: string;
-	/**
-	 * Execution Id
-	 * 실행 ID
-	 */
-	execution_id?: string | null;
-	/**
-	 * Result Id
-	 * 결과 ID
-	 */
-	result_id?: string | null;
-	/**
-	 * 상태
-	 */
-	status: BacktestStatus;
-	/**
-	 * Message
-	 * 메시지
-	 */
-	message: string;
-	/**
-	 * 성과 지표
-	 */
-	performance?: PerformanceMetrics | null;
-	/**
-	 * Start Time
-	 * 시작 시간
-	 */
-	start_time?: Date | null;
-	/**
-	 * End Time
-	 * 종료 시간
-	 */
-	end_time?: Date | null;
-};
-
-/**
  * LoginResponse
  */
 export type LoginResponse = {
@@ -1611,6 +1597,165 @@ export type LoginResponse = {
 };
 
 /**
+ * MLSignalInsight
+ * Inference payload produced by the ML signal service.
+ */
+export type MlSignalInsight = {
+	/**
+	 * Symbol
+	 * Instrument symbol
+	 */
+	symbol: string;
+	/**
+	 * As Of
+	 * Timestamp of the latest observation
+	 */
+	as_of: Date;
+	/**
+	 * Lookback Days
+	 * Lookback window used for features
+	 */
+	lookback_days: number;
+	/**
+	 * Probability
+	 * Probability of positive move
+	 */
+	probability: number;
+	/**
+	 * Confidence
+	 * Confidence proxy from data depth
+	 */
+	confidence: number;
+	/**
+	 * Recommendation bucket derived from probability
+	 */
+	recommendation: SignalRecommendation;
+	/**
+	 * Feature Contributions
+	 * Ordered list of feature contributions
+	 */
+	feature_contributions?: Array<FeatureContribution>;
+	/**
+	 * Top Signals
+	 * Human readable highlights from the model
+	 */
+	top_signals?: Array<string>;
+};
+
+/**
+ * MLSignalResponse
+ * API response wrapper for ML signal insights.
+ */
+export type MlSignalResponse = {
+	/**
+	 * Success
+	 * 요청 성공 여부
+	 */
+	success?: boolean;
+	/**
+	 * Message
+	 * 응답 메시지
+	 */
+	message?: string | null;
+	/**
+	 * Timestamp
+	 * 응답 시간
+	 */
+	timestamp?: Date;
+	/**
+	 * Signal inference payload
+	 */
+	data: MlSignalInsight;
+	/**
+	 * Response metadata
+	 */
+	metadata: MetadataInfo;
+};
+
+/**
+ * MarketRegimeResponse
+ * API response for regime classification.
+ */
+export type MarketRegimeResponse = {
+	/**
+	 * Success
+	 * 요청 성공 여부
+	 */
+	success?: boolean;
+	/**
+	 * Message
+	 * 응답 메시지
+	 */
+	message?: string | null;
+	/**
+	 * Timestamp
+	 * 응답 시간
+	 */
+	timestamp?: Date;
+	/**
+	 * Regime snapshot
+	 */
+	data: MarketRegimeSnapshot;
+	/**
+	 * Response metadata
+	 */
+	metadata: MetadataInfo;
+};
+
+/**
+ * MarketRegimeSnapshot
+ * Market regime classification snapshot.
+ */
+export type MarketRegimeSnapshot = {
+	/**
+	 * Symbol
+	 * Instrument symbol for the regime classification
+	 */
+	symbol: string;
+	/**
+	 * As Of
+	 * Reference timestamp for the snapshot
+	 */
+	as_of: Date;
+	/**
+	 * Lookback Days
+	 * Lookback window in days
+	 */
+	lookback_days: number;
+	/**
+	 * Detected market regime
+	 */
+	regime: MarketRegimeType;
+	/**
+	 * Confidence
+	 * Confidence of classification
+	 */
+	confidence: number;
+	/**
+	 * Probabilities
+	 * Probability distribution across regimes
+	 */
+	probabilities?: {
+		[key in MarketRegimeType]?: number;
+	};
+	/**
+	 * Supporting quantitative metrics
+	 */
+	metrics: RegimeMetrics;
+	/**
+	 * Notes
+	 * Notable drivers or anomalies
+	 */
+	notes?: Array<string>;
+};
+
+/**
+ * MarketRegimeType
+ * Supported market regimes for classification.
+ */
+export type MarketRegimeType = "bullish" | "bearish" | "volatile" | "sideways";
+
+/**
  * MetadataInfo
  * 메타데이터 정보
  */
@@ -1622,6 +1767,73 @@ export type MetadataInfo = {
 	 * 처리 시간 (밀리초)
 	 */
 	processing_time_ms?: number | null;
+};
+
+/**
+ * MomentumConfig
+ * 모멘텀 전략 설정
+ */
+export type MomentumConfig = {
+	/**
+	 * Lookback Period
+	 * 조회 기간 (일)
+	 */
+	lookback_period?: number;
+	/**
+	 * Min Data Points
+	 * 최소 데이터 포인트
+	 */
+	min_data_points?: number;
+	/**
+	 * Max Position Size
+	 * 최대 포지션 크기
+	 */
+	max_position_size?: number;
+	/**
+	 * Stop Loss Pct
+	 * 손절 비율
+	 */
+	stop_loss_pct?: number | null;
+	/**
+	 * Take Profit Pct
+	 * 익절 비율
+	 */
+	take_profit_pct?: number | null;
+	/**
+	 * Momentum Period
+	 * 모멘텀 계산 기간
+	 */
+	momentum_period?: number;
+	/**
+	 * Buy Threshold
+	 * 매수 신호 임계값
+	 */
+	buy_threshold?: number;
+	/**
+	 * Sell Threshold
+	 * 매도 신호 임계값
+	 */
+	sell_threshold?: number;
+	/**
+	 * Volume Filter
+	 * 거래량 필터 사용 여부
+	 */
+	volume_filter?: boolean;
+	/**
+	 * Min Volume Ratio
+	 * 최소 거래량 비율
+	 */
+	min_volume_ratio?: number;
+	/**
+	 * Top N Stocks
+	 * 상위 N개 종목 선택
+	 */
+	top_n_stocks?: number;
+	/**
+	 * Rebalance Frequency
+	 * 리밸런싱 주기
+	 */
+	rebalance_frequency?: string;
 };
 
 /**
@@ -1941,6 +2153,48 @@ export type PortfolioDataPoint = {
 };
 
 /**
+ * PortfolioForecastDistribution
+ * Distribution of future portfolio values based on Monte Carlo proxy.
+ */
+export type PortfolioForecastDistribution = {
+	/**
+	 * As Of
+	 * Timestamp the forecast was generated
+	 */
+	as_of: Date;
+	/**
+	 * Horizon Days
+	 * Forecast horizon in days
+	 */
+	horizon_days: number;
+	/**
+	 * Last Portfolio Value
+	 * Most recent observed portfolio value
+	 */
+	last_portfolio_value: number;
+	/**
+	 * Expected Return Pct
+	 * Expected return over the horizon (%)
+	 */
+	expected_return_pct: number;
+	/**
+	 * Expected Volatility Pct
+	 * Expected volatility over the horizon (%)
+	 */
+	expected_volatility_pct: number;
+	/**
+	 * Percentile Bands
+	 * Projected percentile bands
+	 */
+	percentile_bands: Array<ForecastPercentileBand>;
+	/**
+	 * Methodology
+	 * Shorthand name of the forecasting methodology
+	 */
+	methodology?: string;
+};
+
+/**
  * PortfolioPerformance
  * 포트폴리오 성과 데이터.
  */
@@ -2083,6 +2337,55 @@ export type Position = {
 	last_update?: Date;
 };
 
+/**
+ * PredictiveDashboardInsights
+ * Aggregated predictive insights exposed on the dashboard.
+ */
+export type PredictiveDashboardInsights = {
+	/**
+	 * Latest ML signal insight
+	 */
+	signal: MlSignalInsight;
+	/**
+	 * Current market regime snapshot
+	 */
+	regime: MarketRegimeSnapshot;
+	/**
+	 * Probabilistic portfolio forecast
+	 */
+	forecast: PortfolioForecastDistribution;
+};
+
+/**
+ * PredictiveInsightsResponse
+ * Response wrapper for predictive dashboard bundle.
+ */
+export type PredictiveInsightsResponse = {
+	/**
+	 * Success
+	 * 요청 성공 여부
+	 */
+	success?: boolean;
+	/**
+	 * Message
+	 * 응답 메시지
+	 */
+	message?: string | null;
+	/**
+	 * Timestamp
+	 * 응답 시간
+	 */
+	timestamp?: Date;
+	/**
+	 * Combined predictive intelligence payload
+	 */
+	data: PredictiveDashboardInsights;
+	/**
+	 * Response metadata for predictive payload
+	 */
+	metadata?: MetadataInfo;
+};
+
 export type PydanticObjectId = string;
 
 /**
@@ -2193,6 +2496,58 @@ export type QuoteResponse = {
 };
 
 /**
+ * RSIMeanReversionConfig
+ * RSI 평균회귀 전략 설정
+ */
+export type RsiMeanReversionConfig = {
+	/**
+	 * Lookback Period
+	 * 조회 기간 (일)
+	 */
+	lookback_period?: number;
+	/**
+	 * Min Data Points
+	 * 최소 데이터 포인트
+	 */
+	min_data_points?: number;
+	/**
+	 * Max Position Size
+	 * 최대 포지션 크기
+	 */
+	max_position_size?: number;
+	/**
+	 * Stop Loss Pct
+	 * 손절 비율
+	 */
+	stop_loss_pct?: number | null;
+	/**
+	 * Take Profit Pct
+	 * 익절 비율
+	 */
+	take_profit_pct?: number | null;
+	/**
+	 * Rsi Period
+	 * RSI 계산 기간
+	 */
+	rsi_period?: number;
+	/**
+	 * Oversold Threshold
+	 * 과매도 임계값
+	 */
+	oversold_threshold?: number;
+	/**
+	 * Overbought Threshold
+	 * 과매수 임계값
+	 */
+	overbought_threshold?: number;
+	/**
+	 * Confirmation Periods
+	 * 신호 확인 기간
+	 */
+	confirmation_periods?: number;
+};
+
+/**
  * RecentActivity
  * 최근 활동 정보.
  */
@@ -2247,10 +2602,95 @@ export type RecentTradesResponse = {
 };
 
 /**
+ * RegimeMetrics
+ * Quantitative metrics used for regime detection.
+ */
+export type RegimeMetrics = {
+	/**
+	 * Trailing Return Pct
+	 * Lookback total return in %
+	 */
+	trailing_return_pct: number;
+	/**
+	 * Volatility Pct
+	 * Annualised volatility in %
+	 */
+	volatility_pct: number;
+	/**
+	 * Drawdown Pct
+	 * Max drawdown observed in %
+	 */
+	drawdown_pct: number;
+	/**
+	 * Momentum Z
+	 * Z-score of short term momentum
+	 */
+	momentum_z: number;
+};
+
+/**
+ * SMACrossoverConfig
+ * SMA 크로스오버 전략 설정
+ */
+export type SmaCrossoverConfig = {
+	/**
+	 * Lookback Period
+	 * 조회 기간 (일)
+	 */
+	lookback_period?: number;
+	/**
+	 * Min Data Points
+	 * 최소 데이터 포인트
+	 */
+	min_data_points?: number;
+	/**
+	 * Max Position Size
+	 * 최대 포지션 크기
+	 */
+	max_position_size?: number;
+	/**
+	 * Stop Loss Pct
+	 * 손절 비율
+	 */
+	stop_loss_pct?: number | null;
+	/**
+	 * Take Profit Pct
+	 * 익절 비율
+	 */
+	take_profit_pct?: number | null;
+	/**
+	 * Short Window
+	 * 단기 이동평균 기간
+	 */
+	short_window?: number;
+	/**
+	 * Long Window
+	 * 장기 이동평균 기간
+	 */
+	long_window?: number;
+	/**
+	 * Min Crossover Strength
+	 * 최소 교차 강도
+	 */
+	min_crossover_strength?: number;
+};
+
+/**
  * SentimentType
  * 감정 분석 유형.
  */
 export type SentimentType = "positive" | "neutral" | "negative";
+
+/**
+ * SignalRecommendation
+ * Recommendation derived from model probability.
+ */
+export type SignalRecommendation =
+	| "strong_buy"
+	| "buy"
+	| "hold"
+	| "sell"
+	| "strong_sell";
 
 /**
  * SignalType
@@ -2328,12 +2768,14 @@ export type StrategyCreate = {
 	 */
 	description?: string | null;
 	/**
-	 * Parameters
-	 * 전략 파라미터
+	 * Config
+	 * 전략 설정 (타입 안전)
 	 */
-	parameters?: {
-		[key: string]: unknown;
-	};
+	config:
+		| SmaCrossoverConfig
+		| RsiMeanReversionConfig
+		| MomentumConfig
+		| BuyAndHoldConfig;
 	/**
 	 * Tags
 	 * 태그
@@ -2356,12 +2798,15 @@ export type StrategyCreateFromTemplate = {
 	 */
 	name: string;
 	/**
-	 * Parameter Overrides
-	 * 파라미터 오버라이드
+	 * Config Overrides
+	 * 설정 오버라이드
 	 */
-	parameter_overrides?: {
-		[key: string]: unknown | null;
-	} | null;
+	config_overrides?:
+		| SmaCrossoverConfig
+		| RsiMeanReversionConfig
+		| MomentumConfig
+		| BuyAndHoldConfig
+		| null;
 };
 
 /**
@@ -2488,12 +2933,14 @@ export type StrategyResponse = {
 	 */
 	description?: string | null;
 	/**
-	 * Parameters
-	 * 전략 파라미터
+	 * Config
+	 * 전략 설정 (타입 안전)
 	 */
-	parameters?: {
-		[key: string]: unknown;
-	};
+	config:
+		| SmaCrossoverConfig
+		| RsiMeanReversionConfig
+		| MomentumConfig
+		| BuyAndHoldConfig;
 	/**
 	 * Is Active
 	 * 활성화 상태
@@ -2589,12 +3036,15 @@ export type StrategyUpdate = {
 	 */
 	description?: string | null;
 	/**
-	 * Parameters
-	 * 전략 파라미터
+	 * Config
+	 * 전략 설정
 	 */
-	parameters?: {
-		[key: string]: unknown | null;
-	} | null;
+	config?:
+		| SmaCrossoverConfig
+		| RsiMeanReversionConfig
+		| MomentumConfig
+		| BuyAndHoldConfig
+		| null;
 	/**
 	 * Is Active
 	 * 활성화 상태
@@ -2783,19 +3233,19 @@ export type TemplateCreate = {
 	 */
 	description: string;
 	/**
-	 * Default Parameters
-	 * 기본 파라미터
+	 * Default Config
+	 * 기본 설정 타입 안전
 	 */
-	default_parameters?: {
-		[key: string]: unknown;
-	};
+	default_config:
+		| SmaCrossoverConfig
+		| RsiMeanReversionConfig
+		| MomentumConfig
+		| BuyAndHoldConfig;
 	/**
-	 * Parameter Schema
-	 * 파라미터 스키마
+	 * Category
+	 * 카테고리
 	 */
-	parameter_schema?: {
-		[key: string]: unknown | null;
-	} | null;
+	category: string;
 	/**
 	 * Tags
 	 * 태그
@@ -2853,19 +3303,19 @@ export type TemplateResponse = {
 	 */
 	description: string;
 	/**
-	 * Default Parameters
-	 * 기본 파라미터
+	 * Default Config
+	 * 기본 설정 (타입 안전)
 	 */
-	default_parameters?: {
-		[key: string]: unknown;
-	};
+	default_config:
+		| SmaCrossoverConfig
+		| RsiMeanReversionConfig
+		| MomentumConfig
+		| BuyAndHoldConfig;
 	/**
-	 * Parameter Schema
-	 * 파라미터 스키마
+	 * Category
+	 * 카테고리
 	 */
-	parameter_schema?: {
-		[key: string]: unknown | null;
-	} | null;
+	category: string;
 	/**
 	 * Usage Count
 	 * 사용 횟수
@@ -2908,19 +3358,15 @@ export type TemplateUpdate = {
 	 */
 	description?: string | null;
 	/**
-	 * Default Parameters
-	 * 기본 파라미터
+	 * Default Config
+	 * 기본 설정
 	 */
-	default_parameters?: {
-		[key: string]: unknown;
-	} | null;
-	/**
-	 * Parameter Schema
-	 * 파라미터 스키마
-	 */
-	parameter_schema?: {
-		[key: string]: unknown | null;
-	} | null;
+	default_config?:
+		| SmaCrossoverConfig
+		| RsiMeanReversionConfig
+		| MomentumConfig
+		| BuyAndHoldConfig
+		| null;
 	/**
 	 * Tags
 	 * 태그
@@ -5952,6 +6398,49 @@ export type TechnicalIndicatorGetStochResponses = {
 export type TechnicalIndicatorGetStochResponse =
 	TechnicalIndicatorGetStochResponses[keyof TechnicalIndicatorGetStochResponses];
 
+export type MarketRegimeGetMarketRegimeData = {
+	body?: never;
+	path?: never;
+	query: {
+		/**
+		 * Symbol
+		 * Symbol to retrieve regime for
+		 */
+		symbol: string;
+		/**
+		 * Refresh
+		 * Force refresh from raw features
+		 */
+		refresh?: boolean;
+		/**
+		 * Lookback Days
+		 * Lookback window in days
+		 */
+		lookback_days?: number;
+	};
+	url: "/api/v1/market-data/regime/";
+};
+
+export type MarketRegimeGetMarketRegimeErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MarketRegimeGetMarketRegimeError =
+	MarketRegimeGetMarketRegimeErrors[keyof MarketRegimeGetMarketRegimeErrors];
+
+export type MarketRegimeGetMarketRegimeResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: MarketRegimeResponse;
+};
+
+export type MarketRegimeGetMarketRegimeResponse =
+	MarketRegimeGetMarketRegimeResponses[keyof MarketRegimeGetMarketRegimeResponses];
+
 export type MarketDataGetMarketDataInfoData = {
 	body?: never;
 	path?: never;
@@ -6717,84 +7206,6 @@ export type BacktestGetBacktestExecutionsResponses = {
 export type BacktestGetBacktestExecutionsResponse =
 	BacktestGetBacktestExecutionsResponses[keyof BacktestGetBacktestExecutionsResponses];
 
-export type BacktestGetBacktestResultsData = {
-	body?: never;
-	path?: never;
-	query?: {
-		/**
-		 * Backtest Id
-		 * 백테스트 ID 필터
-		 */
-		backtest_id?: string | null;
-		/**
-		 * Execution Id
-		 * 실행 ID 필터
-		 */
-		execution_id?: string | null;
-		/**
-		 * Skip
-		 * 건너뛸 개수
-		 */
-		skip?: number;
-		/**
-		 * Limit
-		 * 조회할 개수
-		 */
-		limit?: number;
-	};
-	url: "/api/v1/backtests/results/";
-};
-
-export type BacktestGetBacktestResultsErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type BacktestGetBacktestResultsError =
-	BacktestGetBacktestResultsErrors[keyof BacktestGetBacktestResultsErrors];
-
-export type BacktestGetBacktestResultsResponses = {
-	/**
-	 * Response Backtest-Get Backtest Results
-	 * Successful Response
-	 */
-	200: {
-		[key: string]: unknown;
-	};
-};
-
-export type BacktestGetBacktestResultsResponse =
-	BacktestGetBacktestResultsResponses[keyof BacktestGetBacktestResultsResponses];
-
-export type BacktestCreateAndRunIntegratedBacktestData = {
-	body: IntegratedBacktestRequest;
-	path?: never;
-	query?: never;
-	url: "/api/v1/backtests/integrated";
-};
-
-export type BacktestCreateAndRunIntegratedBacktestErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type BacktestCreateAndRunIntegratedBacktestError =
-	BacktestCreateAndRunIntegratedBacktestErrors[keyof BacktestCreateAndRunIntegratedBacktestErrors];
-
-export type BacktestCreateAndRunIntegratedBacktestResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: IntegratedBacktestResponse;
-};
-
-export type BacktestCreateAndRunIntegratedBacktestResponse =
-	BacktestCreateAndRunIntegratedBacktestResponses[keyof BacktestCreateAndRunIntegratedBacktestResponses];
-
 export type BacktestHealthCheckData = {
 	body?: never;
 	path?: never;
@@ -6878,24 +7289,58 @@ export type BacktestGetTradesAnalyticsResponses = {
 	200: unknown;
 };
 
-export type BacktestGetBacktestSummaryAnalyticsData = {
+export type BacktestGetPortfolioHistoryData = {
 	body?: never;
-	path?: never;
+	path: {
+		/**
+		 * Backtest Id
+		 */
+		backtest_id: string;
+	};
 	query?: never;
-	url: "/api/v1/backtests/analytics/summary";
+	url: "/api/v1/backtests/{backtest_id}/portfolio-history";
 };
 
-export type BacktestGetBacktestSummaryAnalyticsErrors = {
+export type BacktestGetPortfolioHistoryErrors = {
 	/**
 	 * Validation Error
 	 */
 	422: HttpValidationError;
 };
 
-export type BacktestGetBacktestSummaryAnalyticsError =
-	BacktestGetBacktestSummaryAnalyticsErrors[keyof BacktestGetBacktestSummaryAnalyticsErrors];
+export type BacktestGetPortfolioHistoryError =
+	BacktestGetPortfolioHistoryErrors[keyof BacktestGetPortfolioHistoryErrors];
 
-export type BacktestGetBacktestSummaryAnalyticsResponses = {
+export type BacktestGetPortfolioHistoryResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: unknown;
+};
+
+export type BacktestGetTradesHistoryData = {
+	body?: never;
+	path: {
+		/**
+		 * Backtest Id
+		 */
+		backtest_id: string;
+	};
+	query?: never;
+	url: "/api/v1/backtests/{backtest_id}/trades-history";
+};
+
+export type BacktestGetTradesHistoryErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type BacktestGetTradesHistoryError =
+	BacktestGetTradesHistoryErrors[keyof BacktestGetTradesHistoryErrors];
+
+export type BacktestGetTradesHistoryResponses = {
 	/**
 	 * Successful Response
 	 */
@@ -7382,6 +7827,44 @@ export type DashboardGetEconomicCalendarResponses = {
 export type DashboardGetEconomicCalendarResponse =
 	DashboardGetEconomicCalendarResponses[keyof DashboardGetEconomicCalendarResponses];
 
+export type DashboardGetPredictiveOverviewData = {
+	body?: never;
+	path?: never;
+	query: {
+		/**
+		 * Symbol
+		 * 예측 인텔리전스를 요청할 심볼
+		 */
+		symbol: string;
+		/**
+		 * Horizon Days
+		 * 예측 기간 (일)
+		 */
+		horizon_days?: number;
+	};
+	url: "/api/v1/dashboard/predictive/overview";
+};
+
+export type DashboardGetPredictiveOverviewErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type DashboardGetPredictiveOverviewError =
+	DashboardGetPredictiveOverviewErrors[keyof DashboardGetPredictiveOverviewErrors];
+
+export type DashboardGetPredictiveOverviewResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: PredictiveInsightsResponse;
+};
+
+export type DashboardGetPredictiveOverviewResponse =
+	DashboardGetPredictiveOverviewResponses[keyof DashboardGetPredictiveOverviewResponses];
+
 export type TasksRunStockDeltaUpdateData = {
 	body?: never;
 	path?: never;
@@ -7429,3 +7912,41 @@ export type TasksGetStockUpdateStatusResponses = {
 	 */
 	200: unknown;
 };
+
+export type SignalsGetMlSignalData = {
+	body?: never;
+	path: {
+		/**
+		 * Symbol
+		 */
+		symbol: string;
+	};
+	query?: {
+		/**
+		 * Lookback Days
+		 * Feature lookback window
+		 */
+		lookback_days?: number;
+	};
+	url: "/api/v1/signals/{symbol}";
+};
+
+export type SignalsGetMlSignalErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type SignalsGetMlSignalError =
+	SignalsGetMlSignalErrors[keyof SignalsGetMlSignalErrors];
+
+export type SignalsGetMlSignalResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: MlSignalResponse;
+};
+
+export type SignalsGetMlSignalResponse =
+	SignalsGetMlSignalResponses[keyof SignalsGetMlSignalResponses];

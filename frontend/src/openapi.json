@@ -5430,6 +5430,99 @@
         }
       }
     },
+    "/api/v1/market-data/regime/": {
+      "get": {
+        "tags": [
+          "Market Regime",
+          "Market Regime"
+        ],
+        "summary": "Get Market Regime",
+        "description": "Return the latest market regime snapshot.",
+        "operationId": "Market Regime-get_market_regime",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Symbol to retrieve regime for",
+              "title": "Symbol"
+            },
+            "description": "Symbol to retrieve regime for"
+          },
+          {
+            "name": "refresh",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "description": "Force refresh from raw features",
+              "default": false,
+              "title": "Refresh"
+            },
+            "description": "Force refresh from raw features"
+          },
+          {
+            "name": "lookback_days",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 240,
+              "minimum": 30,
+              "description": "Lookback window in days",
+              "default": 90,
+              "title": "Lookback Days"
+            },
+            "description": "Lookback window in days"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarketRegimeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/market-data/": {
       "get": {
         "tags": [
@@ -6958,7 +7051,7 @@
           "Backtest"
         ],
         "summary": "Execute Backtest",
-        "description": "Execute backtest with trading signals",
+        "description": "Execute backtest with trading signals (Phase 2)",
         "operationId": "Backtest-execute_backtest",
         "security": [
           {
@@ -7117,198 +7210,13 @@
         }
       }
     },
-    "/api/v1/backtests/results/": {
-      "get": {
-        "tags": [
-          "Backtest"
-        ],
-        "summary": "Get Backtest Results",
-        "description": "Get backtest results from DuckDB (고성능 분석용)",
-        "operationId": "Backtest-get_backtest_results",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "backtest_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "description": "백테스트 ID 필터",
-              "title": "Backtest Id"
-            },
-            "description": "백테스트 ID 필터"
-          },
-          {
-            "name": "execution_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "description": "실행 ID 필터",
-              "title": "Execution Id"
-            },
-            "description": "실행 ID 필터"
-          },
-          {
-            "name": "skip",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 0,
-              "description": "건너뛸 개수",
-              "default": 0,
-              "title": "Skip"
-            },
-            "description": "건너뛸 개수"
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "maximum": 1000,
-              "minimum": 1,
-              "description": "조회할 개수",
-              "default": 100,
-              "title": "Limit"
-            },
-            "description": "조회할 개수"
-          },
-          {
-            "name": "access_token",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Access Token"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "title": "Response Backtest-Get Backtest Results"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/backtests/integrated": {
-      "post": {
-        "tags": [
-          "Backtest"
-        ],
-        "summary": "Create And Run Integrated Backtest",
-        "description": "통합 백테스트 생성 및 실행 - 모든 서비스 연동",
-        "operationId": "Backtest-create_and_run_integrated_backtest",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "access_token",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Access Token"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IntegratedBacktestRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IntegratedBacktestResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/backtests/health": {
       "get": {
         "tags": [
           "Backtest"
         ],
         "summary": "Health Check",
-        "description": "백테스트 시스템 상태 확인 (DuckDB + MongoDB 통합 상태)",
+        "description": "백테스트 시스템 상태 확인 (Phase 2)",
         "operationId": "Backtest-health_check",
         "security": [
           {
@@ -7361,7 +7269,7 @@
           "Backtest"
         ],
         "summary": "Get Performance Analytics",
-        "description": "백테스트 성과 분석 (DuckDB 고성능 분석)",
+        "description": "백테스트 성과 분석 (MongoDB 기반 - Phase 2)",
         "operationId": "Backtest-get_performance_analytics",
         "security": [
           {
@@ -7414,7 +7322,7 @@
           "Backtest"
         ],
         "summary": "Get Trades Analytics",
-        "description": "거래 기록 분석 (DuckDB 고성능 쿼리)",
+        "description": "거래 기록 분석 (MongoDB 기반)",
         "operationId": "Backtest-get_trades_analytics",
         "security": [
           {
@@ -7497,20 +7405,91 @@
         }
       }
     },
-    "/api/v1/backtests/analytics/summary": {
+    "/api/v1/backtests/{backtest_id}/portfolio-history": {
       "get": {
         "tags": [
           "Backtest"
         ],
-        "summary": "Get Backtest Summary Analytics",
-        "description": "백테스트 결과 요약 분석 (DuckDB 기반)",
-        "operationId": "Backtest-get_backtest_summary_analytics",
+        "summary": "Get Portfolio History",
+        "description": "백테스트 포트폴리오 히스토리 조회 (DuckDB)\n\nP3.2: 고성능 시계열 조회를 위한 DuckDB 조회",
+        "operationId": "Backtest-get_portfolio_history",
         "security": [
           {
             "OAuth2PasswordBearer": []
           }
         ],
         "parameters": [
+          {
+            "name": "backtest_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Backtest Id"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/backtests/{backtest_id}/trades-history": {
+      "get": {
+        "tags": [
+          "Backtest"
+        ],
+        "summary": "Get Trades History",
+        "description": "백테스트 거래 내역 조회 (DuckDB)\n\nP3.2: 고성능 거래 내역 조회를 위한 DuckDB 조회",
+        "operationId": "Backtest-get_trades_history",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "backtest_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Backtest Id"
+            }
+          },
           {
             "name": "access_token",
             "in": "cookie",
@@ -8596,6 +8575,86 @@
         }
       }
     },
+    "/api/v1/dashboard/predictive/overview": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "summary": "Get Predictive Overview",
+        "description": "Predictive intelligence bundle combining signal, regime, and forecast.",
+        "operationId": "Dashboard-get_predictive_overview",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "예측 인텔리전스를 요청할 심볼",
+              "title": "Symbol"
+            },
+            "description": "예측 인텔리전스를 요청할 심볼"
+          },
+          {
+            "name": "horizon_days",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 120,
+              "minimum": 7,
+              "description": "예측 기간 (일)",
+              "default": 30,
+              "title": "Horizon Days"
+            },
+            "description": "예측 기간 (일)"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PredictiveInsightsResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/tasks/stock-update/delta": {
       "post": {
         "tags": [
@@ -8654,6 +8713,85 @@
             "content": {
               "application/json": {
                 "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/signals/{symbol}": {
+      "get": {
+        "tags": [
+          "Signals",
+          "Signals"
+        ],
+        "summary": "Get Ml Signal",
+        "description": "Return ML signal inference for the requested symbol.",
+        "operationId": "Signals-get_ml_signal",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Symbol"
+            }
+          },
+          {
+            "name": "lookback_days",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 180,
+              "minimum": 20,
+              "description": "Feature lookback window",
+              "default": 60,
+              "title": "Lookback Days"
+            },
+            "description": "Feature lookback window"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MLSignalResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -9609,6 +9747,70 @@
           "token"
         ],
         "title": "Body_Auth-verify"
+      },
+      "BuyAndHoldConfig": {
+        "properties": {
+          "lookback_period": {
+            "type": "integer",
+            "minimum": 30.0,
+            "title": "Lookback Period",
+            "description": "조회 기간 (일)",
+            "default": 252
+          },
+          "min_data_points": {
+            "type": "integer",
+            "minimum": 10.0,
+            "title": "Min Data Points",
+            "description": "최소 데이터 포인트",
+            "default": 30
+          },
+          "max_position_size": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Max Position Size",
+            "description": "최대 포지션 크기",
+            "default": 1.0
+          },
+          "stop_loss_pct": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stop Loss Pct",
+            "description": "손절 비율"
+          },
+          "take_profit_pct": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Take Profit Pct",
+            "description": "익절 비율"
+          },
+          "allocation": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Allocation",
+            "description": "종목별 할당 비율"
+          }
+        },
+        "type": "object",
+        "title": "BuyAndHoldConfig",
+        "description": "바이앤홀드 전략 설정"
       },
       "CacheInfo": {
         "properties": {
@@ -10779,6 +10981,74 @@
         "title": "ExecutionResponse",
         "description": "Execution response"
       },
+      "FeatureContribution": {
+        "properties": {
+          "feature": {
+            "type": "string",
+            "title": "Feature",
+            "description": "Feature name"
+          },
+          "value": {
+            "type": "number",
+            "title": "Value",
+            "description": "Computed feature value"
+          },
+          "weight": {
+            "type": "number",
+            "title": "Weight",
+            "description": "Relative weight applied in scoring"
+          },
+          "impact": {
+            "type": "number",
+            "title": "Impact",
+            "description": "Signed contribution to probability"
+          },
+          "direction": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Direction",
+            "description": "Human readable description of how the feature influences the score"
+          }
+        },
+        "type": "object",
+        "required": [
+          "feature",
+          "value",
+          "weight",
+          "impact"
+        ],
+        "title": "FeatureContribution",
+        "description": "Contribution details for a single engineered feature."
+      },
+      "ForecastPercentileBand": {
+        "properties": {
+          "percentile": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Percentile",
+            "description": "Percentile value (0-100)"
+          },
+          "projected_value": {
+            "type": "number",
+            "title": "Projected Value",
+            "description": "Projected portfolio value at percentile"
+          }
+        },
+        "type": "object",
+        "required": [
+          "percentile",
+          "projected_value"
+        ],
+        "title": "ForecastPercentileBand",
+        "description": "Single percentile projection for a future portfolio value."
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -11286,177 +11556,6 @@
         "title": "IndicatorListResponse",
         "description": "지원하는 지표 목록 응답"
       },
-      "IntegratedBacktestRequest": {
-        "properties": {
-          "user_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "User Id"
-          },
-          "name": {
-            "type": "string",
-            "title": "Name",
-            "description": "백테스트 이름"
-          },
-          "description": {
-            "type": "string",
-            "title": "Description",
-            "description": "백테스트 설명",
-            "default": ""
-          },
-          "symbols": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Symbols",
-            "description": "심볼 목록"
-          },
-          "start_date": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Start Date",
-            "description": "시작일"
-          },
-          "end_date": {
-            "type": "string",
-            "format": "date-time",
-            "title": "End Date",
-            "description": "종료일"
-          },
-          "strategy_type": {
-            "type": "string",
-            "title": "Strategy Type",
-            "description": "전략 타입"
-          },
-          "strategy_params": {
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Strategy Params",
-            "description": "전략 매개변수"
-          },
-          "initial_capital": {
-            "type": "number",
-            "title": "Initial Capital",
-            "description": "초기 자본",
-            "default": 100000.0
-          }
-        },
-        "type": "object",
-        "required": [
-          "name",
-          "symbols",
-          "start_date",
-          "end_date",
-          "strategy_type"
-        ],
-        "title": "IntegratedBacktestRequest",
-        "description": "통합 백테스트 요청"
-      },
-      "IntegratedBacktestResponse": {
-        "properties": {
-          "user_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "User Id"
-          },
-          "backtest_id": {
-            "type": "string",
-            "title": "Backtest Id",
-            "description": "백테스트 ID"
-          },
-          "execution_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Execution Id",
-            "description": "실행 ID"
-          },
-          "result_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Result Id",
-            "description": "결과 ID"
-          },
-          "status": {
-            "$ref": "#/components/schemas/BacktestStatus",
-            "description": "상태"
-          },
-          "message": {
-            "type": "string",
-            "title": "Message",
-            "description": "메시지"
-          },
-          "performance": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/PerformanceMetrics"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "성과 지표"
-          },
-          "start_time": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Start Time",
-            "description": "시작 시간"
-          },
-          "end_time": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "End Time",
-            "description": "종료 시간"
-          }
-        },
-        "type": "object",
-        "required": [
-          "backtest_id",
-          "status",
-          "message"
-        ],
-        "title": "IntegratedBacktestResponse",
-        "description": "통합 백테스트 응답"
-      },
       "LoginResponse": {
         "properties": {
           "access_token": {
@@ -11515,6 +11614,235 @@
           }
         }
       },
+      "MLSignalInsight": {
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "title": "Symbol",
+            "description": "Instrument symbol"
+          },
+          "as_of": {
+            "type": "string",
+            "format": "date-time",
+            "title": "As Of",
+            "description": "Timestamp of the latest observation"
+          },
+          "lookback_days": {
+            "type": "integer",
+            "minimum": 5.0,
+            "title": "Lookback Days",
+            "description": "Lookback window used for features"
+          },
+          "probability": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Probability",
+            "description": "Probability of positive move"
+          },
+          "confidence": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence",
+            "description": "Confidence proxy from data depth"
+          },
+          "recommendation": {
+            "$ref": "#/components/schemas/SignalRecommendation",
+            "description": "Recommendation bucket derived from probability"
+          },
+          "feature_contributions": {
+            "items": {
+              "$ref": "#/components/schemas/FeatureContribution"
+            },
+            "type": "array",
+            "title": "Feature Contributions",
+            "description": "Ordered list of feature contributions"
+          },
+          "top_signals": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Top Signals",
+            "description": "Human readable highlights from the model"
+          }
+        },
+        "type": "object",
+        "required": [
+          "symbol",
+          "as_of",
+          "lookback_days",
+          "probability",
+          "confidence",
+          "recommendation"
+        ],
+        "title": "MLSignalInsight",
+        "description": "Inference payload produced by the ML signal service."
+      },
+      "MLSignalResponse": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success",
+            "description": "요청 성공 여부",
+            "default": true
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message",
+            "description": "응답 메시지"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp",
+            "description": "응답 시간"
+          },
+          "data": {
+            "$ref": "#/components/schemas/MLSignalInsight",
+            "description": "Signal inference payload"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataInfo",
+            "description": "Response metadata"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "metadata"
+        ],
+        "title": "MLSignalResponse",
+        "description": "API response wrapper for ML signal insights."
+      },
+      "MarketRegimeResponse": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success",
+            "description": "요청 성공 여부",
+            "default": true
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message",
+            "description": "응답 메시지"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp",
+            "description": "응답 시간"
+          },
+          "data": {
+            "$ref": "#/components/schemas/MarketRegimeSnapshot",
+            "description": "Regime snapshot"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataInfo",
+            "description": "Response metadata"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "metadata"
+        ],
+        "title": "MarketRegimeResponse",
+        "description": "API response for regime classification."
+      },
+      "MarketRegimeSnapshot": {
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "title": "Symbol",
+            "description": "Instrument symbol for the regime classification"
+          },
+          "as_of": {
+            "type": "string",
+            "format": "date-time",
+            "title": "As Of",
+            "description": "Reference timestamp for the snapshot"
+          },
+          "lookback_days": {
+            "type": "integer",
+            "minimum": 5.0,
+            "title": "Lookback Days",
+            "description": "Lookback window in days"
+          },
+          "regime": {
+            "$ref": "#/components/schemas/MarketRegimeType",
+            "description": "Detected market regime"
+          },
+          "confidence": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence",
+            "description": "Confidence of classification"
+          },
+          "probabilities": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "propertyNames": {
+              "$ref": "#/components/schemas/MarketRegimeType"
+            },
+            "type": "object",
+            "title": "Probabilities",
+            "description": "Probability distribution across regimes"
+          },
+          "metrics": {
+            "$ref": "#/components/schemas/RegimeMetrics",
+            "description": "Supporting quantitative metrics"
+          },
+          "notes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Notes",
+            "description": "Notable drivers or anomalies"
+          }
+        },
+        "type": "object",
+        "required": [
+          "symbol",
+          "as_of",
+          "lookback_days",
+          "regime",
+          "confidence",
+          "metrics"
+        ],
+        "title": "MarketRegimeSnapshot",
+        "description": "Market regime classification snapshot."
+      },
+      "MarketRegimeType": {
+        "type": "string",
+        "enum": [
+          "bullish",
+          "bearish",
+          "volatile",
+          "sideways"
+        ],
+        "title": "MarketRegimeType",
+        "description": "Supported market regimes for classification."
+      },
       "MetadataInfo": {
         "properties": {
           "data_quality": {
@@ -11543,6 +11871,108 @@
         ],
         "title": "MetadataInfo",
         "description": "메타데이터 정보"
+      },
+      "MomentumConfig": {
+        "properties": {
+          "lookback_period": {
+            "type": "integer",
+            "minimum": 30.0,
+            "title": "Lookback Period",
+            "description": "조회 기간 (일)",
+            "default": 252
+          },
+          "min_data_points": {
+            "type": "integer",
+            "minimum": 10.0,
+            "title": "Min Data Points",
+            "description": "최소 데이터 포인트",
+            "default": 30
+          },
+          "max_position_size": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Max Position Size",
+            "description": "최대 포지션 크기",
+            "default": 1.0
+          },
+          "stop_loss_pct": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stop Loss Pct",
+            "description": "손절 비율"
+          },
+          "take_profit_pct": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Take Profit Pct",
+            "description": "익절 비율"
+          },
+          "momentum_period": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 5.0,
+            "title": "Momentum Period",
+            "description": "모멘텀 계산 기간",
+            "default": 20
+          },
+          "buy_threshold": {
+            "type": "number",
+            "title": "Buy Threshold",
+            "description": "매수 신호 임계값",
+            "default": 0.02
+          },
+          "sell_threshold": {
+            "type": "number",
+            "title": "Sell Threshold",
+            "description": "매도 신호 임계값",
+            "default": -0.02
+          },
+          "volume_filter": {
+            "type": "boolean",
+            "title": "Volume Filter",
+            "description": "거래량 필터 사용 여부",
+            "default": true
+          },
+          "min_volume_ratio": {
+            "type": "number",
+            "title": "Min Volume Ratio",
+            "description": "최소 거래량 비율",
+            "default": 1.5
+          },
+          "top_n_stocks": {
+            "type": "integer",
+            "maximum": 20.0,
+            "minimum": 1.0,
+            "title": "Top N Stocks",
+            "description": "상위 N개 종목 선택",
+            "default": 5
+          },
+          "rebalance_frequency": {
+            "type": "string",
+            "title": "Rebalance Frequency",
+            "description": "리밸런싱 주기",
+            "default": "monthly"
+          }
+        },
+        "type": "object",
+        "title": "MomentumConfig",
+        "description": "모멘텀 전략 설정"
       },
       "NewsArticle": {
         "properties": {
@@ -12048,6 +12478,62 @@
         "title": "PortfolioDataPoint",
         "description": "포트폴리오 데이터 포인트."
       },
+      "PortfolioForecastDistribution": {
+        "properties": {
+          "as_of": {
+            "type": "string",
+            "format": "date-time",
+            "title": "As Of",
+            "description": "Timestamp the forecast was generated"
+          },
+          "horizon_days": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Horizon Days",
+            "description": "Forecast horizon in days"
+          },
+          "last_portfolio_value": {
+            "type": "number",
+            "title": "Last Portfolio Value",
+            "description": "Most recent observed portfolio value"
+          },
+          "expected_return_pct": {
+            "type": "number",
+            "title": "Expected Return Pct",
+            "description": "Expected return over the horizon (%)"
+          },
+          "expected_volatility_pct": {
+            "type": "number",
+            "title": "Expected Volatility Pct",
+            "description": "Expected volatility over the horizon (%)"
+          },
+          "percentile_bands": {
+            "items": {
+              "$ref": "#/components/schemas/ForecastPercentileBand"
+            },
+            "type": "array",
+            "title": "Percentile Bands",
+            "description": "Projected percentile bands"
+          },
+          "methodology": {
+            "type": "string",
+            "title": "Methodology",
+            "description": "Shorthand name of the forecasting methodology",
+            "default": "gaussian_projection"
+          }
+        },
+        "type": "object",
+        "required": [
+          "as_of",
+          "horizon_days",
+          "last_portfolio_value",
+          "expected_return_pct",
+          "expected_volatility_pct",
+          "percentile_bands"
+        ],
+        "title": "PortfolioForecastDistribution",
+        "description": "Distribution of future portfolio values based on Monte Carlo proxy."
+      },
       "PortfolioPerformance": {
         "properties": {
           "period": {
@@ -12226,6 +12712,72 @@
         ],
         "title": "Position",
         "description": "포지션 정보 내장 모델"
+      },
+      "PredictiveDashboardInsights": {
+        "properties": {
+          "signal": {
+            "$ref": "#/components/schemas/MLSignalInsight",
+            "description": "Latest ML signal insight"
+          },
+          "regime": {
+            "$ref": "#/components/schemas/MarketRegimeSnapshot",
+            "description": "Current market regime snapshot"
+          },
+          "forecast": {
+            "$ref": "#/components/schemas/PortfolioForecastDistribution",
+            "description": "Probabilistic portfolio forecast"
+          }
+        },
+        "type": "object",
+        "required": [
+          "signal",
+          "regime",
+          "forecast"
+        ],
+        "title": "PredictiveDashboardInsights",
+        "description": "Aggregated predictive insights exposed on the dashboard."
+      },
+      "PredictiveInsightsResponse": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success",
+            "description": "요청 성공 여부",
+            "default": true
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message",
+            "description": "응답 메시지"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp",
+            "description": "응답 시간"
+          },
+          "data": {
+            "$ref": "#/components/schemas/PredictiveDashboardInsights",
+            "description": "Combined predictive intelligence payload"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataInfo",
+            "description": "Response metadata for predictive payload"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "PredictiveInsightsResponse",
+        "description": "Response wrapper for predictive dashboard bundle."
       },
       "PydanticObjectId": {
         "type": "string",
@@ -12437,6 +12989,94 @@
         "title": "QuoteResponse",
         "description": "실시간 호가 응답 스키마"
       },
+      "RSIMeanReversionConfig": {
+        "properties": {
+          "lookback_period": {
+            "type": "integer",
+            "minimum": 30.0,
+            "title": "Lookback Period",
+            "description": "조회 기간 (일)",
+            "default": 252
+          },
+          "min_data_points": {
+            "type": "integer",
+            "minimum": 10.0,
+            "title": "Min Data Points",
+            "description": "최소 데이터 포인트",
+            "default": 30
+          },
+          "max_position_size": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Max Position Size",
+            "description": "최대 포지션 크기",
+            "default": 1.0
+          },
+          "stop_loss_pct": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stop Loss Pct",
+            "description": "손절 비율"
+          },
+          "take_profit_pct": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Take Profit Pct",
+            "description": "익절 비율"
+          },
+          "rsi_period": {
+            "type": "integer",
+            "maximum": 50.0,
+            "minimum": 2.0,
+            "title": "Rsi Period",
+            "description": "RSI 계산 기간",
+            "default": 14
+          },
+          "oversold_threshold": {
+            "type": "number",
+            "maximum": 50.0,
+            "minimum": 0.0,
+            "title": "Oversold Threshold",
+            "description": "과매도 임계값",
+            "default": 30.0
+          },
+          "overbought_threshold": {
+            "type": "number",
+            "maximum": 100.0,
+            "minimum": 50.0,
+            "title": "Overbought Threshold",
+            "description": "과매수 임계값",
+            "default": 70.0
+          },
+          "confirmation_periods": {
+            "type": "integer",
+            "maximum": 10.0,
+            "minimum": 1.0,
+            "title": "Confirmation Periods",
+            "description": "신호 확인 기간",
+            "default": 2
+          }
+        },
+        "type": "object",
+        "title": "RSIMeanReversionConfig",
+        "description": "RSI 평균회귀 전략 설정"
+      },
       "RecentActivity": {
         "properties": {
           "trades_count_today": {
@@ -12514,6 +13154,119 @@
         "title": "RecentTradesResponse",
         "description": "최근 거래 응답."
       },
+      "RegimeMetrics": {
+        "properties": {
+          "trailing_return_pct": {
+            "type": "number",
+            "title": "Trailing Return Pct",
+            "description": "Lookback total return in %"
+          },
+          "volatility_pct": {
+            "type": "number",
+            "title": "Volatility Pct",
+            "description": "Annualised volatility in %"
+          },
+          "drawdown_pct": {
+            "type": "number",
+            "title": "Drawdown Pct",
+            "description": "Max drawdown observed in %"
+          },
+          "momentum_z": {
+            "type": "number",
+            "title": "Momentum Z",
+            "description": "Z-score of short term momentum"
+          }
+        },
+        "type": "object",
+        "required": [
+          "trailing_return_pct",
+          "volatility_pct",
+          "drawdown_pct",
+          "momentum_z"
+        ],
+        "title": "RegimeMetrics",
+        "description": "Quantitative metrics used for regime detection."
+      },
+      "SMACrossoverConfig": {
+        "properties": {
+          "lookback_period": {
+            "type": "integer",
+            "minimum": 30.0,
+            "title": "Lookback Period",
+            "description": "조회 기간 (일)",
+            "default": 252
+          },
+          "min_data_points": {
+            "type": "integer",
+            "minimum": 10.0,
+            "title": "Min Data Points",
+            "description": "최소 데이터 포인트",
+            "default": 30
+          },
+          "max_position_size": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Max Position Size",
+            "description": "최대 포지션 크기",
+            "default": 1.0
+          },
+          "stop_loss_pct": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stop Loss Pct",
+            "description": "손절 비율"
+          },
+          "take_profit_pct": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Take Profit Pct",
+            "description": "익절 비율"
+          },
+          "short_window": {
+            "type": "integer",
+            "maximum": 50.0,
+            "minimum": 2.0,
+            "title": "Short Window",
+            "description": "단기 이동평균 기간",
+            "default": 10
+          },
+          "long_window": {
+            "type": "integer",
+            "maximum": 200.0,
+            "minimum": 10.0,
+            "title": "Long Window",
+            "description": "장기 이동평균 기간",
+            "default": 30
+          },
+          "min_crossover_strength": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Min Crossover Strength",
+            "description": "최소 교차 강도",
+            "default": 0.01
+          }
+        },
+        "type": "object",
+        "title": "SMACrossoverConfig",
+        "description": "SMA 크로스오버 전략 설정"
+      },
       "SentimentType": {
         "type": "string",
         "enum": [
@@ -12523,6 +13276,18 @@
         ],
         "title": "SentimentType",
         "description": "감정 분석 유형."
+      },
+      "SignalRecommendation": {
+        "type": "string",
+        "enum": [
+          "strong_buy",
+          "buy",
+          "hold",
+          "sell",
+          "strong_sell"
+        ],
+        "title": "SignalRecommendation",
+        "description": "Recommendation derived from model probability."
       },
       "SignalType": {
         "type": "string",
@@ -12638,11 +13403,23 @@
             "title": "Description",
             "description": "전략 설명"
           },
-          "parameters": {
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Parameters",
-            "description": "전략 파라미터"
+          "config": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SMACrossoverConfig"
+              },
+              {
+                "$ref": "#/components/schemas/RSIMeanReversionConfig"
+              },
+              {
+                "$ref": "#/components/schemas/MomentumConfig"
+              },
+              {
+                "$ref": "#/components/schemas/BuyAndHoldConfig"
+              }
+            ],
+            "title": "Config",
+            "description": "전략 설정 (타입 안전)"
           },
           "tags": {
             "items": {
@@ -12656,7 +13433,8 @@
         "type": "object",
         "required": [
           "name",
-          "strategy_type"
+          "strategy_type",
+          "config"
         ],
         "title": "StrategyCreate",
         "description": "Strategy creation request"
@@ -12679,25 +13457,26 @@
             "title": "Name",
             "description": "전략 이름"
           },
-          "parameter_overrides": {
+          "config_overrides": {
             "anyOf": [
               {
-                "additionalProperties": {
-                  "anyOf": [
-                    {},
-                    {
-                      "type": "null"
-                    }
-                  ]
-                },
-                "type": "object"
+                "$ref": "#/components/schemas/SMACrossoverConfig"
+              },
+              {
+                "$ref": "#/components/schemas/RSIMeanReversionConfig"
+              },
+              {
+                "$ref": "#/components/schemas/MomentumConfig"
+              },
+              {
+                "$ref": "#/components/schemas/BuyAndHoldConfig"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Parameter Overrides",
-            "description": "파라미터 오버라이드"
+            "title": "Config Overrides",
+            "description": "설정 오버라이드"
           }
         },
         "type": "object",
@@ -12883,11 +13662,23 @@
             "title": "Description",
             "description": "전략 설명"
           },
-          "parameters": {
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Parameters",
-            "description": "전략 파라미터"
+          "config": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SMACrossoverConfig"
+              },
+              {
+                "$ref": "#/components/schemas/RSIMeanReversionConfig"
+              },
+              {
+                "$ref": "#/components/schemas/MomentumConfig"
+              },
+              {
+                "$ref": "#/components/schemas/BuyAndHoldConfig"
+              }
+            ],
+            "title": "Config",
+            "description": "전략 설정 (타입 안전)"
           },
           "is_active": {
             "type": "boolean",
@@ -12937,6 +13728,7 @@
           "id",
           "name",
           "strategy_type",
+          "config",
           "is_active",
           "is_template",
           "created_at",
@@ -13042,25 +13834,26 @@
             "title": "Description",
             "description": "전략 설명"
           },
-          "parameters": {
+          "config": {
             "anyOf": [
               {
-                "additionalProperties": {
-                  "anyOf": [
-                    {},
-                    {
-                      "type": "null"
-                    }
-                  ]
-                },
-                "type": "object"
+                "$ref": "#/components/schemas/SMACrossoverConfig"
+              },
+              {
+                "$ref": "#/components/schemas/RSIMeanReversionConfig"
+              },
+              {
+                "$ref": "#/components/schemas/MomentumConfig"
+              },
+              {
+                "$ref": "#/components/schemas/BuyAndHoldConfig"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Parameters",
-            "description": "전략 파라미터"
+            "title": "Config",
+            "description": "전략 설정"
           },
           "is_active": {
             "anyOf": [
@@ -13374,31 +14167,28 @@
             "title": "Description",
             "description": "템플릿 설명"
           },
-          "default_parameters": {
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Default Parameters",
-            "description": "기본 파라미터"
-          },
-          "parameter_schema": {
+          "default_config": {
             "anyOf": [
               {
-                "additionalProperties": {
-                  "anyOf": [
-                    {},
-                    {
-                      "type": "null"
-                    }
-                  ]
-                },
-                "type": "object"
+                "$ref": "#/components/schemas/SMACrossoverConfig"
               },
               {
-                "type": "null"
+                "$ref": "#/components/schemas/RSIMeanReversionConfig"
+              },
+              {
+                "$ref": "#/components/schemas/MomentumConfig"
+              },
+              {
+                "$ref": "#/components/schemas/BuyAndHoldConfig"
               }
             ],
-            "title": "Parameter Schema",
-            "description": "파라미터 스키마"
+            "title": "Default Config",
+            "description": "기본 설정 타입 안전"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category",
+            "description": "카테고리"
           },
           "tags": {
             "items": {
@@ -13413,7 +14203,9 @@
         "required": [
           "name",
           "strategy_type",
-          "description"
+          "description",
+          "default_config",
+          "category"
         ],
         "title": "TemplateCreate",
         "description": "Template creation request"
@@ -13485,31 +14277,28 @@
             "title": "Description",
             "description": "템플릿 설명"
           },
-          "default_parameters": {
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Default Parameters",
-            "description": "기본 파라미터"
-          },
-          "parameter_schema": {
+          "default_config": {
             "anyOf": [
               {
-                "additionalProperties": {
-                  "anyOf": [
-                    {},
-                    {
-                      "type": "null"
-                    }
-                  ]
-                },
-                "type": "object"
+                "$ref": "#/components/schemas/SMACrossoverConfig"
               },
               {
-                "type": "null"
+                "$ref": "#/components/schemas/RSIMeanReversionConfig"
+              },
+              {
+                "$ref": "#/components/schemas/MomentumConfig"
+              },
+              {
+                "$ref": "#/components/schemas/BuyAndHoldConfig"
               }
             ],
-            "title": "Parameter Schema",
-            "description": "파라미터 스키마"
+            "title": "Default Config",
+            "description": "기본 설정 (타입 안전)"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category",
+            "description": "카테고리"
           },
           "usage_count": {
             "type": "integer",
@@ -13543,6 +14332,8 @@
           "name",
           "strategy_type",
           "description",
+          "default_config",
+          "category",
           "usage_count",
           "created_at",
           "updated_at"
@@ -13587,38 +14378,26 @@
             "title": "Description",
             "description": "템플릿 설명"
           },
-          "default_parameters": {
+          "default_config": {
             "anyOf": [
               {
-                "additionalProperties": true,
-                "type": "object"
+                "$ref": "#/components/schemas/SMACrossoverConfig"
+              },
+              {
+                "$ref": "#/components/schemas/RSIMeanReversionConfig"
+              },
+              {
+                "$ref": "#/components/schemas/MomentumConfig"
+              },
+              {
+                "$ref": "#/components/schemas/BuyAndHoldConfig"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Default Parameters",
-            "description": "기본 파라미터"
-          },
-          "parameter_schema": {
-            "anyOf": [
-              {
-                "additionalProperties": {
-                  "anyOf": [
-                    {},
-                    {
-                      "type": "null"
-                    }
-                  ]
-                },
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Parameter Schema",
-            "description": "파라미터 스키마"
+            "title": "Default Config",
+            "description": "기본 설정"
           },
           "tags": {
             "anyOf": [
