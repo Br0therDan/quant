@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     build-essential \
     pkg-config \
+    libgomp1 \
     && pip install --no-cache-dir uv==0.4.18 \
     && rm -rf /var/lib/apt/lists/*
 
@@ -52,6 +53,7 @@ FROM python:3.12-slim AS runtime
 # Install runtime dependencies and create user
 RUN apt-get update && apt-get install -y \
     curl \
+    libgomp1 \
     && rm -rf /var/lib/apt/lists/* \
     && groupadd -r appuser && useradd -r -g appuser appuser
 
