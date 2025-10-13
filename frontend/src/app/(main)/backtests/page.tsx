@@ -1,16 +1,13 @@
 "use client";
 
 import PageContainer from "@/components/layout/PageContainer";
-import { useBacktest } from "@/hooks/useBacktest";
+import { useBacktest } from "@/hooks/useBacktests";
 import {
   Add,
   Assessment,
   Delete,
   Edit,
-  Favorite,
-  FavoriteBorder,
   FilterList,
-  PlayArrow,
   Search,
   ShowChart,
   TrendingDown,
@@ -27,7 +24,6 @@ import {
   Container,
   Fab,
   FormControl,
-  Grid,
   IconButton,
   InputLabel,
   LinearProgress,
@@ -39,122 +35,70 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import Grid from "@mui/material/Unstable_Grid2";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
+import { backtestUtils, type BacktestListItem } from "./utils";
 
-type BacktestStatus =
-  | "COMPLETED"
-  | "FAILED"
-  | "QUEUED"
-  | "INITIALIZING"
-  | "RUNNING";
+type StatusFilter = "ALL" | BacktestListItem["status"];
 
-// Utility functions
-const formatStatus = (status: string) => {
-  const statusMap: Record<string, string> = {
-    COMPLETED: "완료",
-    FAILED: "실패",
-    QUEUED: "대기중",
-    INITIALIZING: "초기화중",
-    RUNNING: "실행중",
-  };
-  return statusMap[status] || status;
-};
+type SortField = "created_at" | "name" | "status" | "total_return";
 
-const getStatusColor = (status: string) => {
-  const colorMap: Record<string, string> = {
-    COMPLETED: "#4caf50",
-    FAILED: "#f44336",
-    QUEUED: "#ff9800",
-    INITIALIZING: "#2196f3",
-    RUNNING: "#2196f3",
-  };
-  return colorMap[status] || "#9e9e9e";
-};
-
-const isRunning = (status: string) =>
-  ["INITIALIZING", "RUNNING"].includes(status);
-const isCompleted = (status: string) => status === "COMPLETED";
-
-const formatPercentage = (value: number) => `${(value * 100).toFixed(2)}%`;
-const formatNumber = (value: number) => value.toFixed(2);
-const formatDuration = (start: string, end?: string) => {
-  if (!end) return "-";
-  const diff = new Date(end).getTime() - new Date(start).getTime();
-  const seconds = Math.floor(diff / 1000);
-  if (seconds < 60) return `${seconds}초`;
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes}분`;
-  const hours = Math.floor(minutes / 60);
-  return `${hours}시간 ${minutes % 60}분`;
+const sorters: Record<SortField, (a: BacktestListItem, b: BacktestListItem) => number> = {
+  created_at: (a, b) =>
+    new Date(b.created_at ?? 0).getTime() - new Date(a.created_at ?? 0).getTime(),
+  name: (a, b) => a.name.localeCompare(b.name),
+  status: (a, b) => a.status.localeCompare(b.status),
+  total_return: (a, b) =>
+    (b.performance?.total_return ?? -Infinity) -
+    (a.performance?.total_return ?? -Infinity),
 };
 
 export default function BacktestsPage() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<BacktestStatus | "ALL">(
-    "ALL"
-  );
-  const [sortBy, setSortBy] = useState<
-    "created_at" | "name" | "total_return" | "status"
-  >("created_at");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("ALL");
+  const [sortBy, setSortBy] = useState<SortField>("created_at");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
-  // Use useBacktest hook
   const {
     backtestList,
     deleteBacktest,
-    isLoading: { backtestList: isLoading },
-    isError: { backtestList: isError },
+    isLoading: { backtestList: listLoading },
+    isError: { backtestList: listError },
     isMutating,
   } = useBacktest();
 
-  // Extract backtests array
   const backtests = useMemo(() => {
-    if (!backtestList) return [];
-    return Array.isArray(backtestList)
-      ? backtestList
-      : (backtestList as any)?.backtests || [];
-  }, [backtestList]);
-
-  // Filter and sort backtests
-  const filteredBacktests = useMemo(() => {
-    let filtered = backtests;
-
-    // Apply search filter
-    if (searchQuery) {
-      filtered = filtered.filter(
-        (backtest: any) =>
-          backtest.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          backtest.strategy_name
-            ?.toLowerCase()
-            .includes(searchQuery.toLowerCase())
-      );
+    const items = backtestList?.backtests ?? [];
+    if (!items.length) {
+      return [];
     }
 
-    // Apply status filter
-    if (statusFilter !== "ALL") {
-      filtered = filtered.filter(
-        (backtest: any) => backtest.status === statusFilter
-      );
-    }
-
-    // Apply sorting
-    return filtered.sort((a: any, b: any) => {
-      let aVal = a[sortBy];
-      let bVal = b[sortBy];
-
-      if (sortBy === "created_at") {
-        aVal = new Date(aVal).getTime();
-        bVal = new Date(bVal).getTime();
+    const filtered = items.filter((item) => {
+      if (statusFilter !== "ALL" && item.status !== statusFilter) {
+        return false;
       }
-
-      if (sortOrder === "asc") {
-        return aVal > bVal ? 1 : -1;
+      if (searchQuery.trim().length > 0) {
+        const query = searchQuery.toLowerCase();
+        const description = item.description?.toLowerCase() ?? "";
+        const symbols = item.config?.symbols?.join(", ").toLowerCase() ?? "";
+        return (
+          item.name.toLowerCase().includes(query) ||
+          description.includes(query) ||
+          symbols.includes(query)
+        );
       }
-      return aVal < bVal ? 1 : -1;
+      return true;
     });
-  }, [backtests, searchQuery, statusFilter, sortBy, sortOrder]);
+
+    const sorter = sorters[sortBy];
+    const sorted = [...filtered].sort((a, b) => sorter(a, b));
+    if (sortOrder === "asc") {
+      sorted.reverse();
+    }
+    return sorted;
+  }, [backtestList?.backtests, searchQuery, statusFilter, sortBy, sortOrder]);
 
   const handleCreateNew = () => {
     router.push("/backtests/create");
@@ -164,42 +108,15 @@ export default function BacktestsPage() {
     router.push(`/backtests/${id}`);
   };
 
-  const handleExecuteBacktest = async (id: string) => {
-    console.log("Execute backtest:", id);
-    // TODO: Implement execute functionality
-  };
-
-  const handleDeleteBacktest = async (id: string) => {
+  const handleDeleteBacktest = (id: string) => {
     if (confirm("정말로 이 백테스트를 삭제하시겠습니까?")) {
       deleteBacktest(id);
     }
   };
 
-  const handleToggleFavorite = async (id: string) => {
-    console.log("Toggle favorite:", id);
-    // TODO: Implement favorite functionality
-  };
-
-  const getReturnIcon = (value?: number) => {
-    if (value === undefined || value === null) return <ShowChart />;
-    return value >= 0 ? (
-      <TrendingUp color="success" />
-    ) : (
-      <TrendingDown color="error" />
-    );
-  };
-
-  const getReturnColor = (value?: number) => {
-    if (value === undefined || value === null) return "text.secondary";
-    return value >= 0 ? "success.main" : "error.main";
-  };
-
-  if (isError) {
+  if (listError) {
     return (
-      <PageContainer
-        title="백테스트 히스토리"
-        breadcrumbs={[{ title: "백테스트" }]}
-      >
+      <PageContainer title="백테스트" breadcrumbs={[{ title: "백테스트" }]}> 
         <Alert severity="error">
           백테스트 목록을 불러오는 중 오류가 발생했습니다.
         </Alert>
@@ -209,26 +126,24 @@ export default function BacktestsPage() {
 
   return (
     <PageContainer
-      title="백테스트 히스토리"
+      title="백테스트"
       breadcrumbs={[{ title: "백테스트" }]}
     >
       <Container maxWidth="lg">
-        {/* Header */}
         <Box sx={{ mb: 4 }}>
           <Typography variant="body1" color="text.secondary">
-            실행된 백테스트 결과를 확인하고 관리하세요
+            실행된 백테스트를 확인하고 새로운 전략을 테스트해보세요.
           </Typography>
         </Box>
 
-        {/* Filters and Search */}
         <Paper sx={{ p: 3, mb: 3 }}>
           <Grid container spacing={2} alignItems="center">
-            <Grid size={4}>
+            <Grid xs={12} md={4}>
               <TextField
                 fullWidth
-                placeholder="백테스트 이름이나 전략으로 검색..."
+                placeholder="백테스트 이름, 설명 또는 심볼 검색"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(event) => setSearchQuery(event.target.value)}
                 InputProps={{
                   startAdornment: (
                     <Search sx={{ mr: 1, color: "text.secondary" }} />
@@ -236,47 +151,53 @@ export default function BacktestsPage() {
                 }}
               />
             </Grid>
-            <Grid size={2}>
+            <Grid xs={6} md={2}>
               <FormControl fullWidth>
-                <InputLabel>상태</InputLabel>
+                <InputLabel id="status-filter-label">상태</InputLabel>
                 <Select
+                  labelId="status-filter-label"
                   value={statusFilter}
                   label="상태"
-                  onChange={(e) =>
-                    setStatusFilter(e.target.value as BacktestStatus | "ALL")
+                  onChange={(event) =>
+                    setStatusFilter(event.target.value as StatusFilter)
                   }
                 >
                   <MenuItem value="ALL">전체</MenuItem>
-                  <MenuItem value="COMPLETED">완료</MenuItem>
-                  <MenuItem value="FAILED">실패</MenuItem>
-                  <MenuItem value="QUEUED">대기중</MenuItem>
-                  <MenuItem value="INITIALIZING">실행중</MenuItem>
+                  <MenuItem value="pending">대기 중</MenuItem>
+                  <MenuItem value="running">실행 중</MenuItem>
+                  <MenuItem value="completed">완료</MenuItem>
+                  <MenuItem value="failed">실패</MenuItem>
+                  <MenuItem value="cancelled">취소됨</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
-            <Grid size={2}>
+            <Grid xs={6} md={2}>
               <FormControl fullWidth>
-                <InputLabel>정렬</InputLabel>
+                <InputLabel id="sort-field-label">정렬</InputLabel>
                 <Select
+                  labelId="sort-field-label"
                   value={sortBy}
                   label="정렬"
-                  onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+                  onChange={(event) =>
+                    setSortBy(event.target.value as SortField)
+                  }
                 >
                   <MenuItem value="created_at">생성일</MenuItem>
                   <MenuItem value="name">이름</MenuItem>
-                  <MenuItem value="total_return">수익률</MenuItem>
                   <MenuItem value="status">상태</MenuItem>
+                  <MenuItem value="total_return">총 수익률</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
-            <Grid size={2}>
+            <Grid xs={6} md={2}>
               <FormControl fullWidth>
-                <InputLabel>순서</InputLabel>
+                <InputLabel id="sort-order-label">순서</InputLabel>
                 <Select
+                  labelId="sort-order-label"
                   value={sortOrder}
                   label="순서"
-                  onChange={(e) =>
-                    setSortOrder(e.target.value as "asc" | "desc")
+                  onChange={(event) =>
+                    setSortOrder(event.target.value as "asc" | "desc")
                   }
                 >
                   <MenuItem value="desc">내림차순</MenuItem>
@@ -284,7 +205,7 @@ export default function BacktestsPage() {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid size={2}>
+            <Grid xs={6} md={2}>
               <Button
                 variant="outlined"
                 startIcon={<FilterList />}
@@ -302,270 +223,227 @@ export default function BacktestsPage() {
           </Grid>
         </Paper>
 
-        {/* Loading */}
-        {isLoading && (
+        {listLoading && (
           <Box sx={{ mb: 3 }}>
             <LinearProgress />
           </Box>
         )}
 
-        {/* Backtest Cards */}
         <Grid container spacing={3}>
-          {filteredBacktests.map((backtest: any) => (
-            <Grid size={4} key={backtest.id}>
-              <Card
-                sx={{
-                  cursor: "pointer",
-                  transition: "all 0.2s",
-                  "&:hover": {
-                    boxShadow: 4,
-                    transform: "translateY(-2px)",
-                  },
-                }}
-              >
-                <CardContent>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "flex-start",
-                      mb: 2,
-                    }}
-                  >
-                    <Box sx={{ flex: 1 }}>
-                      <Typography variant="h6" component="h3" gutterBottom>
-                        {backtest.name}
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        gutterBottom
-                      >
-                        전략: {backtest.strategy_name} ({backtest.strategy_type}
-                        )
-                      </Typography>
-                    </Box>
-                    <Stack direction="row" spacing={1} alignItems="center">
+          {backtests.map((backtest) => {
+            const performance = backtest.performance;
+            const totalReturn = performance?.total_return;
+            const sharpeRatio = performance?.sharpe_ratio;
+            const maxDrawdown = performance?.max_drawdown;
+            const winRate = performance?.win_rate;
+
+            return (
+              <Grid xs={12} md={6} lg={4} key={backtest.id}>
+                <Card
+                  sx={{
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    transition: "box-shadow 0.2s ease, transform 0.2s ease",
+                    cursor: "pointer",
+                    "&:hover": {
+                      boxShadow: 6,
+                      transform: "translateY(-4px)",
+                    },
+                  }}
+                  onClick={() => handleViewBacktest(backtest.id)}
+                >
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "flex-start",
+                        mb: 2,
+                        gap: 1,
+                      }}
+                    >
+                      <Box sx={{ flex: 1, minWidth: 0 }}>
+                        <Typography
+                          variant="h6"
+                          component="h3"
+                          gutterBottom
+                          noWrap
+                        >
+                          {backtest.name}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          gutterBottom
+                        >
+                          {backtestUtils.extractSymbols(backtest)}
+                        </Typography>
+                      </Box>
                       <Chip
-                        label={formatStatus(backtest.status)}
+                        label={backtestUtils.formatStatus(backtest.status)}
                         size="small"
                         sx={{
-                          backgroundColor: getStatusColor(backtest.status),
+                          backgroundColor: backtestUtils.getStatusColor(
+                            backtest.status,
+                          ),
                           color: "white",
                         }}
                       />
-                      <IconButton
-                        size="small"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleToggleFavorite(backtest.id);
-                        }}
-                      >
-                        {backtest.is_favorite ? (
-                          <Favorite color="error" />
-                        ) : (
-                          <FavoriteBorder />
-                        )}
-                      </IconButton>
-                    </Stack>
-                  </Box>
-
-                  {/* Progress bar for running backtests */}
-                  {isRunning(backtest.status) && (
-                    <Box sx={{ mb: 2 }}>
-                      <LinearProgress variant="indeterminate" />
-                      <Typography
-                        variant="caption"
-                        color="text.secondary"
-                        sx={{ mt: 1 }}
-                      >
-                        {formatStatus(backtest.status)}...
-                      </Typography>
                     </Box>
-                  )}
 
-                  {/* Performance Metrics */}
-                  {isCompleted(backtest.status) && (
-                    <Grid container spacing={2} sx={{ mb: 2 }}>
-                      <Grid size={3}>
-                        <Box sx={{ textAlign: "center" }}>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              mb: 1,
-                            }}
-                          >
-                            {getReturnIcon(backtest.total_return)}
+                    {backtestUtils.isRunning(backtest.status) && (
+                      <Box sx={{ mb: 2 }}>
+                        <LinearProgress />
+                        <Typography
+                          variant="caption"
+                          color="text.secondary"
+                          sx={{ mt: 1 }}
+                        >
+                          백테스트가 실행 중입니다…
+                        </Typography>
+                      </Box>
+                    )}
+
+                    <Grid container spacing={2}>
+                      <Grid xs={6}>
+                        <Stack spacing={0.5} alignItems="flex-start">
+                          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                            {totalReturn !== undefined && totalReturn !== null ? (
+                              totalReturn >= 0 ? (
+                                <TrendingUp color="success" fontSize="small" />
+                              ) : (
+                                <TrendingDown color="error" fontSize="small" />
+                              )
+                            ) : (
+                              <ShowChart fontSize="small" />
+                            )}
+                            <Typography
+                              variant="body1"
+                              sx={{
+                                color: totalReturn && totalReturn < 0 ? "error.main" : "success.main",
+                              }}
+                            >
+                              {backtestUtils.formatPercentage(totalReturn)}
+                            </Typography>
                           </Box>
-                          <Typography
-                            variant="h6"
-                            sx={{
-                              color: getReturnColor(backtest.total_return),
-                            }}
-                          >
-                            {backtest.total_return
-                              ? formatPercentage(backtest.total_return)
-                              : "-"}
-                          </Typography>
                           <Typography variant="caption" color="text.secondary">
                             총 수익률
                           </Typography>
-                        </Box>
+                        </Stack>
                       </Grid>
-                      <Grid size={3}>
-                        <Box sx={{ textAlign: "center" }}>
-                          <Assessment sx={{ mb: 1 }} />
-                          <Typography variant="h6">
-                            {backtest.sharpe_ratio
-                              ? formatNumber(backtest.sharpe_ratio)
-                              : "-"}
+                      <Grid xs={6}>
+                        <Stack spacing={0.5} alignItems="flex-start">
+                          <Assessment fontSize="small" />
+                          <Typography variant="body1">
+                            {backtestUtils.formatNumber(sharpeRatio)}
                           </Typography>
                           <Typography variant="caption" color="text.secondary">
                             샤프 비율
                           </Typography>
-                        </Box>
+                        </Stack>
                       </Grid>
-                      <Grid size={3}>
-                        <Box sx={{ textAlign: "center" }}>
-                          <TrendingDown sx={{ mb: 1, color: "error.main" }} />
-                          <Typography variant="h6" color="error">
-                            {backtest.max_drawdown
-                              ? formatPercentage(
-                                  Math.abs(backtest.max_drawdown)
-                                )
-                              : "-"}
+                      <Grid xs={6}>
+                        <Stack spacing={0.5} alignItems="flex-start">
+                          <TrendingDown color="error" fontSize="small" />
+                          <Typography variant="body1" color="error">
+                            {backtestUtils.formatPercentage(
+                              maxDrawdown ? Math.abs(maxDrawdown) : maxDrawdown,
+                            )}
                           </Typography>
                           <Typography variant="caption" color="text.secondary">
                             최대 낙폭
                           </Typography>
-                        </Box>
+                        </Stack>
                       </Grid>
-                      <Grid size={3}>
-                        <Box sx={{ textAlign: "center" }}>
-                          <ShowChart sx={{ mb: 1 }} />
-                          <Typography variant="h6">
-                            {backtest.duration
-                              ? formatDuration(
-                                  backtest.created_at,
-                                  backtest.completed_at
-                                )
-                              : "-"}
+                      <Grid xs={6}>
+                        <Stack spacing={0.5} alignItems="flex-start">
+                          <ShowChart fontSize="small" color="primary" />
+                          <Typography variant="body1" color="primary">
+                            {backtestUtils.formatPercentage(winRate)}
                           </Typography>
                           <Typography variant="caption" color="text.secondary">
-                            실행 시간
+                            승률
                           </Typography>
-                        </Box>
+                        </Stack>
                       </Grid>
                     </Grid>
-                  )}
 
-                  {/* Tags */}
-                  {backtest.tags?.length > 0 && (
-                    <Box sx={{ mb: 2 }}>
-                      <Stack direction="row" spacing={1} flexWrap="wrap">
-                        {backtest.tags.map((tag: string) => (
-                          <Chip
-                            key={tag}
-                            label={tag}
-                            size="small"
-                            variant="outlined"
-                          />
-                        ))}
-                      </Stack>
+                    <Box sx={{ mt: 2 }}>
+                      <Typography variant="caption" color="text.secondary">
+                        생성일: {backtestUtils.formatDate(backtest.created_at)}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary" display="block">
+                        최근 업데이트: {backtestUtils.formatDate(backtest.updated_at ?? backtest.created_at)}
+                      </Typography>
                     </Box>
-                  )}
+                  </CardContent>
 
-                  {/* Meta Information */}
-                  <Typography variant="caption" color="text.secondary">
-                    생성일:{" "}
-                    {new Date(backtest.created_at).toLocaleDateString("ko-KR")}{" "}
-                    · 수정일:{" "}
-                    {new Date(backtest.updated_at).toLocaleDateString("ko-KR")}
-                  </Typography>
-                </CardContent>
-
-                <CardActions sx={{ justifyContent: "space-between" }}>
-                  <Box>
-                    <Button
-                      size="small"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleViewBacktest(backtest.id);
-                      }}
-                    >
+                  <CardActions sx={{ justifyContent: "space-between" }}>
+                    <Button size="small" onClick={() => handleViewBacktest(backtest.id)}>
                       자세히 보기
                     </Button>
-                    {isCompleted(backtest.status) && (
-                      <Button
-                        size="small"
-                        startIcon={<PlayArrow />}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleExecuteBacktest(backtest.id);
-                        }}
-                      >
-                        재실행
-                      </Button>
-                    )}
-                  </Box>
-                  <Box>
-                    <Tooltip title="수정">
-                      <IconButton
-                        size="small"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          router.push(`/backtests/${backtest.id}/edit`);
-                        }}
-                      >
-                        <Edit />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="삭제">
-                      <IconButton
-                        size="small"
-                        color="error"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteBacktest(backtest.id);
-                        }}
-                      >
-                        <Delete />
-                      </IconButton>
-                    </Tooltip>
-                  </Box>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
+                    <Stack direction="row" spacing={1}>
+                      <Tooltip title="수정">
+                        <span>
+                          <IconButton
+                            size="small"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              router.push(`/backtests/${backtest.id}/edit`);
+                            }}
+                          >
+                            <Edit fontSize="small" />
+                          </IconButton>
+                        </span>
+                      </Tooltip>
+                      <Tooltip title="삭제">
+                        <span>
+                          <IconButton
+                            size="small"
+                            color="error"
+                            disabled={isMutating.deleteBacktest}
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              handleDeleteBacktest(backtest.id);
+                            }}
+                          >
+                            <Delete fontSize="small" />
+                          </IconButton>
+                        </span>
+                      </Tooltip>
+                    </Stack>
+                  </CardActions>
+                </Card>
+              </Grid>
+            );
+          })}
         </Grid>
 
-        {/* Empty State */}
-        {!isLoading && filteredBacktests.length === 0 && (
-          <Paper sx={{ p: 6, textAlign: "center" }}>
+        {!listLoading && backtests.length === 0 && (
+          <Paper sx={{ p: 6, textAlign: "center", mt: 3 }}>
             <Typography variant="h6" gutterBottom>
               백테스트가 없습니다
             </Typography>
-            <Typography variant="body2" color="text.secondary" gutterBottom>
-              새로운 백테스트를 생성하여 전략의 성과를 확인해보세요
+            <Typography variant="body2" color="text.secondary">
+              새로운 백테스트를 생성하여 전략의 성과를 확인해보세요.
             </Typography>
             <Button
               variant="contained"
               startIcon={<Add />}
-              onClick={handleCreateNew}
               sx={{ mt: 2 }}
+              onClick={handleCreateNew}
             >
               새 백테스트 만들기
             </Button>
           </Paper>
         )}
 
-        {/* Floating Action Button */}
         <Fab
           color="primary"
           sx={{ position: "fixed", bottom: 24, right: 24 }}
           onClick={handleCreateNew}
+          aria-label="create backtest"
         >
           <Add />
         </Fab>

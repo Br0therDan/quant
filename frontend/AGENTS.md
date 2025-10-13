@@ -14,7 +14,7 @@ management, Hey-API auto-generated client, and Material-UI v7 component library.
 
 ```typescript
 // ✅ CORRECT
-import { useBacktest } from '@/hooks/useBacktest';
+import { useBacktest } from '@/hooks/useBacktests';
 
 function MyComponent() {
   const { backtestList, createBacktest, deleteBacktest } = useBacktest();
@@ -68,7 +68,7 @@ Access domain-specific data through custom hooks:
 
 ```typescript
 // Hook imports
-import { useBacktest } from "@/hooks/useBacktest";
+import { useBacktest } from "@/hooks/useBacktests";
 import { useMarketData } from "@/hooks/useMarketData";
 import { useStrategy } from "@/hooks/useStrategy";
 import { useWatchList } from "@/hooks/useWatchList";
@@ -706,7 +706,7 @@ function MyComponent() {
 
 ```typescript
 // ✅ CORRECT
-import { useBacktest } from "@/hooks/useBacktest";
+import { useBacktest } from "@/hooks/useBacktests";
 
 function MyComponent() {
   const { createBacktest } = useBacktest();

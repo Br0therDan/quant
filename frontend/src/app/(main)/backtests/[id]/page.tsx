@@ -1,17 +1,15 @@
 "use client";
 
 import PageContainer from "@/components/layout/PageContainer";
-import { useBacktest, useBacktestDetail } from "@/hooks/useBacktest";
+import { useBacktest, useBacktestDetail } from "@/hooks/useBacktests";
 import {
   ArrowBack,
   Assessment,
   Delete,
   Download,
   Edit,
-  PlayArrow,
   Refresh,
-  Share,
-  Stop,
+  ShowChart,
   TableChart,
   Timeline,
   TrendingDown,
@@ -26,7 +24,6 @@ import {
   Chip,
   Container,
   Divider,
-  Grid,
   IconButton,
   LinearProgress,
   Paper,
@@ -36,26 +33,20 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import Grid from "@mui/material/Unstable_Grid2";
 import { useParams, useRouter } from "next/navigation";
-import type React from "react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { backtestUtils } from "../utils";
 
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
+type TabIndex = 0 | 1 | 2;
 
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
+function TabPanel({ value, index, children }: { value: number; index: number; children: React.ReactNode }) {
   return (
     <div
       role="tabpanel"
       hidden={value !== index}
       id={`backtest-tabpanel-${index}`}
       aria-labelledby={`backtest-tab-${index}`}
-      {...other}
     >
       {value === index && <Box sx={{ py: 3 }}>{children}</Box>}
     </div>
@@ -66,47 +57,77 @@ export default function BacktestDetailPage() {
   const params = useParams();
   const router = useRouter();
   const backtestId = params.id as string;
-  const [activeTab, setActiveTab] = useState(0);
+  const [activeTab, setActiveTab] = useState<TabIndex>(0);
 
-  // Use useBacktestDetail hook
   const {
     data: backtest,
-    isLoading: backtestLoading,
-    error: backtestError,
+    isLoading: detailLoading,
+    error: detailError,
     refetch: refetchBacktest,
   } = useBacktestDetail(backtestId);
 
-  // Use useBacktest for mutations
-  const { deleteBacktest } = useBacktest();
+  const { deleteBacktest, isMutating } = useBacktest();
 
-  const handleExecute = async () => {
-    console.log("Execute backtest:", backtestId);
-    // TODO: Implement execute functionality
+  const performance = backtest?.performance;
+
+  const handleDelete = () => {
+    if (!backtestId) return;
+    if (confirm("정말로 이 백테스트를 삭제하시겠습니까?")) {
+      deleteBacktest(backtestId, {
+        onSuccess: () => {
+          router.push("/backtests");
+        },
+      });
+    }
+  };
+
+  const handleRefresh = () => {
     refetchBacktest();
   };
 
-  const handleDelete = async () => {
-    if (confirm("정말로 이 백테스트를 삭제하시겠습니까?")) {
-      deleteBacktest(backtestId);
-      router.push("/backtests");
-    }
-  };
-  const getReturnColor = (value?: number) => {
-    if (value === undefined || value === null) return "text.secondary";
-    return value >= 0 ? "success.main" : "error.main";
-  };
+  const overviewItems = useMemo(
+    () => [
+      {
+        label: "상태",
+        value: backtestUtils.formatStatus(backtest?.status),
+      },
+      {
+        label: "기간",
+        value: backtest?.config
+          ? `${backtestUtils.formatDate(backtest.config.start_date)} ~ ${backtestUtils.formatDate(backtest.config.end_date)}`
+          : "-",
+      },
+      {
+        label: "심볼",
+        value: backtestUtils.extractSymbols(backtest ?? undefined),
+      },
+      {
+        label: "초기 자본",
+        value: backtestUtils.formatCurrency(backtest?.config?.initial_cash ?? undefined),
+      },
+      {
+        label: "최대 포지션",
+        value: backtestUtils.formatPercentage(backtest?.config?.max_position_size ?? undefined),
+      },
+      {
+        label: "수수료율",
+        value: backtestUtils.formatPercentage(backtest?.config?.commission_rate ?? undefined, 3),
+      },
+      {
+        label: "슬리피지",
+        value: backtestUtils.formatPercentage(backtest?.config?.slippage_rate ?? undefined, 3),
+      },
+      {
+        label: "리밸런싱 주기",
+        value: backtest?.config?.rebalance_frequency ?? "-",
+      },
+    ],
+    [backtest],
+  );
 
-  const getReturnIcon = (value?: number) => {
-    if (value === undefined || value === null) return null;
-    return value >= 0 ? <TrendingUp /> : <TrendingDown />;
-  };
-
-  if (backtestLoading) {
+  if (detailLoading) {
     return (
-      <PageContainer
-        title="백테스트 상세"
-        breadcrumbs={[{ title: "상세 보기" }]}
-      >
+      <PageContainer title="백테스트 상세" breadcrumbs={[{ title: "백테스트" }, { title: "상세" }]}> 
         <Box sx={{ mt: 4 }}>
           <LinearProgress />
         </Box>
@@ -114,15 +135,10 @@ export default function BacktestDetailPage() {
     );
   }
 
-  if (backtestError || !backtest) {
+  if (detailError || !backtest) {
     return (
-      <PageContainer
-        title="백테스트 상세"
-        breadcrumbs={[{ title: "백테스트" }]}
-      >
-        <Alert severity="error">
-          백테스트를 찾을 수 없거나 불러오는 중 오류가 발생했습니다.
-        </Alert>
+      <PageContainer title="백테스트 상세" breadcrumbs={[{ title: "백테스트" }, { title: "상세" }]}> 
+        <Alert severity="error">백테스트를 찾을 수 없거나 불러오는 중 오류가 발생했습니다.</Alert>
       </PageContainer>
     );
   }
@@ -130,397 +146,293 @@ export default function BacktestDetailPage() {
   return (
     <PageContainer
       title={backtest.name}
-      breadcrumbs={[
-        { title: "백테스트" },
-        { title: backtest?.name || "상세 보기" },
-      ]}
+      breadcrumbs={[{ title: "백테스트" }, { title: backtest.name }]}
     >
       <Container maxWidth="lg">
-        {/* Header */}
         <Box sx={{ mb: 4 }}>
+          <Button startIcon={<ArrowBack />} onClick={() => router.push("/backtests")}> 
+            목록으로 돌아가기
+          </Button>
+        </Box>
+
+        <Paper sx={{ p: 3, mb: 4 }}>
           <Box
             sx={{
               display: "flex",
-              justifyContent: "space-between",
               alignItems: "center",
-              mb: 2,
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: 2,
             }}
           >
-            <Button
-              startIcon={<ArrowBack />}
-              onClick={() => router.push("/backtests")}
-            >
-              백테스트 목록으로
-            </Button>
+            <Stack spacing={1}>
+              <Typography variant="h4" component="h1">
+                {backtest.name}
+              </Typography>
+              <Stack direction="row" spacing={1} alignItems="center">
+                <Chip
+                  label={backtestUtils.formatStatus(backtest.status)}
+                  sx={{
+                    backgroundColor: backtestUtils.getStatusColor(backtest.status),
+                    color: "white",
+                  }}
+                />
+                <Typography variant="body2" color="text.secondary">
+                  생성일: {backtestUtils.formatDate(backtest.created_at)}
+                </Typography>
+              </Stack>
+              {backtest.description && (
+                <Typography variant="body2" color="text.secondary">
+                  {backtest.description}
+                </Typography>
+              )}
+            </Stack>
 
             <Stack direction="row" spacing={1}>
               <Tooltip title="새로고침">
-                <IconButton onClick={() => refetchBacktest()}>
-                  <Refresh />
-                </IconButton>
+                <span>
+                  <IconButton onClick={handleRefresh}>
+                    <Refresh />
+                  </IconButton>
+                </span>
               </Tooltip>
-              <Tooltip title="공유">
-                <IconButton>
-                  <Share />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="다운로드">
-                <IconButton>
-                  <Download />
-                </IconButton>
+              <Tooltip title="설정 다운로드">
+                <span>
+                  <IconButton disabled>
+                    <Download />
+                  </IconButton>
+                </span>
               </Tooltip>
               <Tooltip title="수정">
-                <IconButton
-                  onClick={() => router.push(`/backtests/${backtestId}/edit`)}
-                >
-                  <Edit />
-                </IconButton>
+                <span>
+                  <IconButton onClick={() => router.push(`/backtests/${backtestId}/edit`)}>
+                    <Edit />
+                  </IconButton>
+                </span>
               </Tooltip>
               <Tooltip title="삭제">
-                <IconButton color="error" onClick={handleDelete}>
-                  <Delete />
-                </IconButton>
+                <span>
+                  <IconButton color="error" disabled={isMutating.deleteBacktest} onClick={handleDelete}>
+                    <Delete />
+                  </IconButton>
+                </span>
               </Tooltip>
             </Stack>
           </Box>
+        </Paper>
 
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
-            <Chip
-              label={backtestUtils.formatStatus(backtest.status as any)}
-              size="medium"
-              sx={{
-                backgroundColor: backtestUtils.getStatusColor(
-                  backtest.status as any
-                ),
-                color: "white",
-              }}
-            />
-            {(backtest as any)?.tags?.map((tag: string) => (
-              <Chip key={tag} label={tag} size="small" variant="outlined" />
-            ))}
-          </Box>
-
-          {backtest.description && (
-            <Typography variant="body1" color="text.secondary" gutterBottom>
-              {backtest.description}
-            </Typography>
-          )}
-        </Box>
-
-        {/* Running Progress */}
-        {backtestUtils.isRunning(backtest.status as any) && (
-          <Alert severity="info" sx={{ mb: 3 }}>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <Box>
-                <Typography variant="subtitle2">
-                  백테스트가 실행 중입니다...
-                </Typography>
-                <Typography variant="body2">
-                  현재 상태:{" "}
-                  {backtestUtils.formatStatus(backtest.status as any)}
-                </Typography>
-              </Box>
-              <Button
-                variant="outlined"
-                color="error"
-                startIcon={<Stop />}
-                size="small"
-              >
-                중단
-              </Button>
-            </Box>
-            <LinearProgress sx={{ mt: 2 }} />
+        {backtestUtils.isRunning(backtest.status) && (
+          <Alert severity="info" sx={{ mb: 4 }}>
+            백테스트가 실행 중입니다. 진행 상황은 자동으로 업데이트됩니다.
           </Alert>
         )}
 
-        {/* Quick Stats */}
-        {backtestUtils.isCompleted(backtest.status as any) && results && (
-          <Grid container spacing={3} sx={{ mb: 3 }}>
-            <Grid size={12}>
-              <Card>
-                <CardContent sx={{ textAlign: "center" }}>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      mb: 1,
-                    }}
-                  >
-                    {getReturnIcon((results as any)?.total_return)}
-                  </Box>
-                  <Typography
-                    variant="h4"
-                    sx={{
-                      color: getReturnColor((results as any)?.total_return),
-                    }}
-                  >
-                    {(results as any)?.total_return
-                      ? backtestUtils.formatPercentage(
-                          (results as any).total_return
-                        )
-                      : "-"}
+        <Grid container spacing={3} sx={{ mb: 4 }}>
+          <Grid xs={12} md={6} lg={3}>
+            <Card variant="outlined">
+              <CardContent>
+                <Stack spacing={1} alignItems="flex-start">
+                  <TrendingUp color="success" />
+                  <Typography variant="h5">
+                    {backtestUtils.formatPercentage(performance?.total_return)}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     총 수익률
                   </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid size={12}>
-              <Card>
-                <CardContent sx={{ textAlign: "center" }}>
-                  <Assessment sx={{ mb: 1, fontSize: 40 }} />
-                  <Typography variant="h4">
-                    {(results as any)?.sharpe_ratio
-                      ? backtestUtils.formatNumber(
-                          (results as any).sharpe_ratio
-                        )
-                      : "-"}
+                </Stack>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid xs={12} md={6} lg={3}>
+            <Card variant="outlined">
+              <CardContent>
+                <Stack spacing={1} alignItems="flex-start">
+                  <Assessment color="primary" />
+                  <Typography variant="h5">
+                    {backtestUtils.formatNumber(performance?.sharpe_ratio)}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     샤프 비율
                   </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid size={12}>
-              <Card>
-                <CardContent sx={{ textAlign: "center" }}>
-                  <TrendingDown
-                    sx={{ mb: 1, fontSize: 40, color: "error.main" }}
-                  />
-                  <Typography variant="h4" color="error">
-                    {(results as any)?.max_drawdown
-                      ? backtestUtils.formatPercentage(
-                          Math.abs((results as any).max_drawdown)
-                        )
-                      : "-"}
+                </Stack>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid xs={12} md={6} lg={3}>
+            <Card variant="outlined">
+              <CardContent>
+                <Stack spacing={1} alignItems="flex-start">
+                  <TrendingDown color="error" />
+                  <Typography variant="h5" color="error">
+                    {backtestUtils.formatPercentage(
+                      performance?.max_drawdown ? Math.abs(performance?.max_drawdown) : performance?.max_drawdown,
+                    )}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     최대 낙폭
                   </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid size={12}>
-              <Card>
-                <CardContent sx={{ textAlign: "center" }}>
-                  <Timeline sx={{ mb: 1, fontSize: 40 }} />
-                  <Typography variant="h4">
-                    {(results as any)?.volatility
-                      ? backtestUtils.formatPercentage(
-                          (results as any).volatility
-                        )
-                      : "-"}
+                </Stack>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid xs={12} md={6} lg={3}>
+            <Card variant="outlined">
+              <CardContent>
+                <Stack spacing={1} alignItems="flex-start">
+                  <ShowChart color="primary" />
+                  <Typography variant="h5">
+                    {backtestUtils.formatPercentage(performance?.win_rate)}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    변동성
+                    승률
                   </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
+                </Stack>
+              </CardContent>
+            </Card>
           </Grid>
-        )}
+        </Grid>
 
-        {/* Main Content Tabs */}
-        <Paper sx={{ mb: 3 }}>
+        <Paper>
           <Tabs
             value={activeTab}
-            onChange={(_, newValue) => setActiveTab(newValue)}
-            aria-label="백테스트 탭"
+            onChange={(_, newValue) => setActiveTab(newValue as TabIndex)}
+            variant="scrollable"
+            allowScrollButtonsMobile
           >
-            <Tab label="개요" icon={<Assessment />} iconPosition="start" />
-            <Tab
-              label="성과 분석"
-              icon={<Timeline />}
-              iconPosition="start"
-              disabled={!backtestUtils.isCompleted(backtest.status as any)}
-            />
-            <Tab
-              label="거래 내역"
-              icon={<TableChart />}
-              iconPosition="start"
-              disabled={!backtestUtils.isCompleted(backtest.status as any)}
-            />
+            <Tab icon={<Assessment />} iconPosition="start" label="개요" />
+            <Tab icon={<Timeline />} iconPosition="start" label="성과" />
+            <Tab icon={<TableChart />} iconPosition="start" label="거래 내역" />
           </Tabs>
 
-          {/* Overview Tab */}
           <TabPanel value={activeTab} index={0}>
             <Grid container spacing={3}>
-              <Grid size={12}>
+              <Grid xs={12} md={6}>
                 <Card variant="outlined">
                   <CardContent>
                     <Typography variant="h6" gutterBottom>
                       기본 정보
                     </Typography>
-                    <Divider sx={{ mb: 2 }} />
-                    <Box sx={{ mb: 2 }}>
-                      <Typography variant="body2" color="text.secondary">
-                        상태
-                      </Typography>
-                      <Typography variant="body1">
-                        {backtestUtils.formatStatus(backtest.status as any)}
-                      </Typography>
-                    </Box>
-                    <Box sx={{ mb: 2 }}>
-                      <Typography variant="body2" color="text.secondary">
-                        전략
-                      </Typography>
-                      <Typography variant="body1">
-                        {(backtest as any)?.strategy_name || "N/A"}
-                      </Typography>
-                    </Box>
-                    <Box sx={{ mb: 2 }}>
-                      <Typography variant="body2" color="text.secondary">
-                        생성일
-                      </Typography>
-                      <Typography variant="body1">
-                        {new Date(backtest.created_at).toLocaleString("ko-KR")}
-                      </Typography>
-                    </Box>
-                    {(backtest as any)?.completed_at && (
-                      <Box sx={{ mb: 2 }}>
-                        <Typography variant="body2" color="text.secondary">
-                          완료일
-                        </Typography>
-                        <Typography variant="body1">
-                          {new Date(
-                            (backtest as any).completed_at
-                          ).toLocaleString("ko-KR")}
-                        </Typography>
-                      </Box>
-                    )}
-                    {(backtest as any)?.duration && (
-                      <Box sx={{ mb: 2 }}>
-                        <Typography variant="body2" color="text.secondary">
-                          실행 시간
-                        </Typography>
-                        <Typography variant="body1">
-                          {backtestUtils.formatDuration(
-                            backtest.created_at.toString(),
-                            (backtest as any).completed_at
-                          )}
-                        </Typography>
-                      </Box>
-                    )}
+                    <Divider sx={{ my: 2 }} />
+                    <Stack spacing={1.5}>
+                      {overviewItems.map((item) => (
+                        <Box key={item.label}>
+                          <Typography variant="body2" color="text.secondary">
+                            {item.label}
+                          </Typography>
+                          <Typography variant="body1">{item.value}</Typography>
+                        </Box>
+                      ))}
+                    </Stack>
                   </CardContent>
                 </Card>
               </Grid>
-
-              <Grid size={12}>
+              <Grid xs={12} md={6}>
                 <Card variant="outlined">
                   <CardContent>
                     <Typography variant="h6" gutterBottom>
-                      설정 정보
+                      실행 정보
                     </Typography>
-                    <Divider sx={{ mb: 2 }} />
-                    <Box sx={{ mb: 2 }}>
-                      <Typography variant="body2" color="text.secondary">
-                        백테스트 기간
-                      </Typography>
-                      <Typography variant="body1">
-                        {new Date(
-                          (backtest as any)?.start_date || backtest.created_at
-                        ).toLocaleDateString("ko-KR")}{" "}
-                        ~{" "}
-                        {new Date(
-                          (backtest as any)?.end_date || backtest.created_at
-                        ).toLocaleDateString("ko-KR")}
-                      </Typography>
-                    </Box>
-                    <Box sx={{ mb: 2 }}>
-                      <Typography variant="body2" color="text.secondary">
-                        초기 자본
-                      </Typography>
-                      <Typography variant="body1">
-                        {backtestUtils.formatCurrency(
-                          (backtest as any)?.initial_capital || 0
-                        )}
-                      </Typography>
-                    </Box>
-                    <Box sx={{ mb: 2 }}>
-                      <Typography variant="body2" color="text.secondary">
-                        수수료
-                      </Typography>
-                      <Typography variant="body1">
-                        {(((backtest as any)?.commission || 0) * 100).toFixed(
-                          3
-                        )}
-                        %
-                      </Typography>
-                    </Box>
-                    <Box sx={{ mb: 2 }}>
-                      <Typography variant="body2" color="text.secondary">
-                        슬리피지
-                      </Typography>
-                      <Typography variant="body1">
-                        {(((backtest as any)?.slippage || 0) * 100).toFixed(3)}%
-                      </Typography>
-                    </Box>
+                    <Divider sx={{ my: 2 }} />
+                    <Stack spacing={1.5}>
+                      <Box>
+                        <Typography variant="body2" color="text.secondary">
+                          시작 시간
+                        </Typography>
+                        <Typography variant="body1">
+                          {backtestUtils.formatDate(backtest.start_time)}
+                        </Typography>
+                      </Box>
+                      <Box>
+                        <Typography variant="body2" color="text.secondary">
+                          종료 시간
+                        </Typography>
+                        <Typography variant="body1">
+                          {backtestUtils.formatDate(backtest.end_time)}
+                        </Typography>
+                      </Box>
+                      <Box>
+                        <Typography variant="body2" color="text.secondary">
+                          실행 소요 시간
+                        </Typography>
+                        <Typography variant="body1">
+                          {backtestUtils.formatDuration(backtest.start_time, backtest.end_time)}
+                        </Typography>
+                      </Box>
+                    </Stack>
                   </CardContent>
                 </Card>
-              </Grid>
-
-              {/* Action Buttons */}
-              <Grid size={12}>
-                <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
-                  {backtestUtils.isCompleted(backtest.status as any) && (
-                    <Button
-                      variant="contained"
-                      startIcon={<PlayArrow />}
-                      onClick={handleExecute}
-                    >
-                      재실행
-                    </Button>
-                  )}
-                  {backtestUtils.isFailed(backtest.status as any) && (
-                    <Button
-                      variant="contained"
-                      startIcon={<PlayArrow />}
-                      onClick={handleExecute}
-                    >
-                      다시 실행
-                    </Button>
-                  )}
-                  <Button
-                    variant="outlined"
-                    startIcon={<Edit />}
-                    onClick={() => router.push(`/backtests/${backtestId}/edit`)}
-                  >
-                    설정 수정
-                  </Button>
-                </Box>
               </Grid>
             </Grid>
           </TabPanel>
 
-          {/* Performance Analysis Tab */}
           <TabPanel value={activeTab} index={1}>
-            <Typography variant="h6" gutterBottom>
-              성과 분석
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              상세한 성과 분석 차트와 지표들이 여기에 표시됩니다.
-            </Typography>
-            {/* TODO: Add performance charts and detailed metrics */}
+            {performance ? (
+              <Grid container spacing={3}>
+                <Grid xs={12} md={6}>
+                  <Card variant="outlined">
+                    <CardContent>
+                      <Typography variant="subtitle1" gutterBottom>
+                        수익률
+                      </Typography>
+                      <Stack spacing={1}>
+                        <Box>
+                          <Typography variant="body2" color="text.secondary">
+                            연환산 수익률
+                          </Typography>
+                          <Typography variant="body1">
+                            {backtestUtils.formatPercentage(performance.annualized_return)}
+                          </Typography>
+                        </Box>
+                        <Box>
+                          <Typography variant="body2" color="text.secondary">
+                            변동성
+                          </Typography>
+                          <Typography variant="body1">
+                            {backtestUtils.formatPercentage(performance.volatility)}
+                          </Typography>
+                        </Box>
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                <Grid xs={12} md={6}>
+                  <Card variant="outlined">
+                    <CardContent>
+                      <Typography variant="subtitle1" gutterBottom>
+                        거래 통계
+                      </Typography>
+                      <Stack spacing={1}>
+                        <Box>
+                          <Typography variant="body2" color="text.secondary">
+                            총 거래 수
+                          </Typography>
+                          <Typography variant="body1">
+                            {performance.total_trades ?? "-"}
+                          </Typography>
+                        </Box>
+                        <Box>
+                          <Typography variant="body2" color="text.secondary">
+                            승/패 거래
+                          </Typography>
+                          <Typography variant="body1">
+                            {performance.winning_trades} 승 · {performance.losing_trades} 패
+                          </Typography>
+                        </Box>
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              </Grid>
+            ) : (
+              <Alert severity="info">성과 데이터가 아직 생성되지 않았습니다.</Alert>
+            )}
           </TabPanel>
 
-          {/* Trades Tab */}
           <TabPanel value={activeTab} index={2}>
-            <Typography variant="h6" gutterBottom>
-              거래 내역
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              백테스트 기간 동안의 모든 거래 내역이 여기에 표시됩니다.
-            </Typography>
-            {/* TODO: Add trades table */}
+            <Alert severity="info">
+              거래 내역 데이터는 아직 제공되지 않습니다. 백테스트 실행이 완료되면 거래
+              내역이 표시됩니다.
+            </Alert>
           </TabPanel>
         </Paper>
       </Container>

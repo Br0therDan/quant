@@ -76,7 +76,7 @@ service = MarketDataService()
 
 ```typescript
 // ✅ CORRECT
-import { useBacktest } from "@/hooks/useBacktest";
+import { useBacktest } from "@/hooks/useBacktests";
 const { backtestList } = useBacktest();
 
 // ❌ WRONG - violates hook pattern
