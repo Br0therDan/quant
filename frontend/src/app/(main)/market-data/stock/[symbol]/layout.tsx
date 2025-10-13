@@ -9,9 +9,9 @@ export default function SymbolLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: { symbol: string };
+  params: Promise<{ symbol: string }>;
 }) {
-  const symbol = params.symbol as string;
+  const { symbol } = React.use(params);
   const [sidebarWidth, setSidebarWidth] = React.useState(320);
 
   return (

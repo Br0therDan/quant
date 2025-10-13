@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  Add as AddIcon,
-  Close as CloseIcon,
-  Search as SearchIcon,
-} from "@mui/icons-material";
+import { Close as CloseIcon, Search as SearchIcon } from "@mui/icons-material";
 import {
   Autocomplete,
   Box,
@@ -24,6 +20,13 @@ import React from "react";
 import { useStockSearchSymbols } from "@/hooks/useStocks";
 import { useWatchlist } from "@/hooks/useWatchList";
 
+interface SymbolOption {
+  symbol: string;
+  name: string;
+  currency: string;
+  matchScore: string;
+}
+
 interface WatchlistEditDialogProps {
   open: boolean;
   onClose: () => void;
@@ -41,22 +44,71 @@ export default function WatchlistEditDialog({
   const [description, setDescription] = React.useState("");
   const [symbols, setSymbols] = React.useState<string[]>([]);
   const [searchQuery, setSearchQuery] = React.useState("");
-  const [selectedSymbol, setSelectedSymbol] = React.useState<any>(null);
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = React.useState("");
 
   const { createOrUpdateWatchlist, updateWatchlist } = useWatchlist();
 
-  // 심볼 검색
-  const { data: searchResults, isLoading: searchLoading } =
-    useStockSearchSymbols(searchQuery);
+  // 디바운싱: 500ms 지연 후 검색
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 500);
 
-  const symbolOptions = React.useMemo(() => {
-    if (!searchResults || !Array.isArray(searchResults)) return [];
-    return searchResults.map((item: any) => ({
-      symbol: item.symbol,
-      name: item.name,
-      label: `${item.symbol} - ${item.name}`,
-    }));
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  // 심볼 검색 (디바운싱된 검색어 사용)
+  const { data: searchResults, isLoading: searchLoading } =
+    useStockSearchSymbols(debouncedSearchQuery);
+
+  // 검색 결과에서 심볼 정보 추출
+  const symbolDetails = React.useMemo(() => {
+    if (!searchResults) return new Map<string, SymbolOption>();
+
+    const detailsMap = new Map<string, SymbolOption>();
+
+    const processItem = (item: any) => {
+      const symbol = item?.symbol || "";
+      if (!symbol) return;
+
+      detailsMap.set(symbol, {
+        symbol,
+        name: item?.name || symbol,
+        currency: item?.currency || "USD",
+        matchScore:
+          item?.match_score?.toString() ||
+          item?.matchScore?.toString() ||
+          "1.0000",
+      });
+    };
+
+    // API 응답이 { symbols: [...], count: number } 형태일 수 있음
+    if (searchResults && typeof searchResults === "object") {
+      const searchObj = searchResults as any;
+      const symbolsArray = searchObj.symbols || searchObj.data || [];
+
+      if (Array.isArray(symbolsArray)) {
+        symbolsArray.slice(0, 20).forEach(processItem);
+      }
+    } else if (Array.isArray(searchResults)) {
+      (searchResults as any[]).slice(0, 20).forEach(processItem);
+    }
+
+    return detailsMap;
   }, [searchResults]);
+
+  // 검색 결과에서 심볼 배열 추출
+  const availableSymbols = React.useMemo(() => {
+    return Array.from(symbolDetails.keys());
+  }, [symbolDetails]);
+
+  // 최종 옵션 리스트 - 검색어가 최소 2글자 이상일 때만 표시
+  const symbolOptions = React.useMemo(() => {
+    if (debouncedSearchQuery && debouncedSearchQuery.trim().length >= 2) {
+      return availableSymbols;
+    }
+    return [];
+  }, [debouncedSearchQuery, availableSymbols]);
 
   // 워치리스트 데이터로 폼 초기화
   React.useEffect(() => {
@@ -70,18 +122,13 @@ export default function WatchlistEditDialog({
       setDescription("");
       setSymbols([]);
     }
+    // 검색어 초기화
+    setSearchQuery("");
+    setDebouncedSearchQuery("");
   }, [open, watchlist]);
 
-  const handleAddSymbol = () => {
-    if (selectedSymbol && !symbols.includes(selectedSymbol.symbol)) {
-      setSymbols([...symbols, selectedSymbol.symbol]);
-      setSelectedSymbol(null);
-      setSearchQuery("");
-    }
-  };
-
-  const handleRemoveSymbol = (symbolToRemove: string) => {
-    setSymbols(symbols.filter((s) => s !== symbolToRemove));
+  const handleSymbolChange = (_: any, newValue: string[]) => {
+    setSymbols(newValue);
   };
 
   const handleSubmit = () => {
@@ -108,7 +155,7 @@ export default function WatchlistEditDialog({
     setDescription("");
     setSymbols([]);
     setSearchQuery("");
-    setSelectedSymbol(null);
+    setDebouncedSearchQuery("");
     onClose();
   };
 
@@ -151,75 +198,152 @@ export default function WatchlistEditDialog({
           {/* 심볼 검색 및 추가 */}
           <Box>
             <Typography variant="subtitle2" gutterBottom>
-              심볼 추가
+              종목 선택 *
             </Typography>
-            <Box display="flex" gap={1}>
-              <Autocomplete
-                fullWidth
-                options={symbolOptions}
-                value={selectedSymbol}
-                onChange={(_, newValue) => setSelectedSymbol(newValue)}
-                inputValue={searchQuery}
-                onInputChange={(_, newInputValue) =>
-                  setSearchQuery(newInputValue)
-                }
-                loading={searchLoading}
-                filterOptions={(x) => x} // 서버에서 필터링
-                getOptionLabel={(option) => option.label || ""}
-                isOptionEqualToValue={(option, value) =>
-                  option.symbol === value.symbol
-                }
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    placeholder="심볼 또는 회사명 검색..."
-                    InputProps={{
-                      ...params.InputProps,
-                      startAdornment: <SearchIcon sx={{ mr: 1 }} />,
-                    }}
-                  />
-                )}
-                renderOption={(props, option) => (
-                  <li {...props} key={option.symbol}>
-                    <Box>
-                      <Typography variant="body2" fontWeight="medium">
-                        {option.symbol}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {option.name}
-                      </Typography>
+            <Autocomplete
+              multiple
+              fullWidth
+              options={symbolOptions}
+              value={symbols}
+              onChange={handleSymbolChange}
+              inputValue={searchQuery}
+              onInputChange={(_, newInputValue) => {
+                setSearchQuery(newInputValue);
+              }}
+              filterOptions={(options) => options}
+              filterSelectedOptions
+              loading={searchLoading && debouncedSearchQuery.length > 1}
+              freeSolo={false}
+              renderOption={(props, option) => {
+                const details = symbolDetails.get(option);
+                const { key, ...otherProps } = props;
+
+                if (!details) {
+                  return (
+                    <Box component="li" key={key} {...otherProps}>
+                      <Typography variant="body2">{option}</Typography>
                     </Box>
-                  </li>
-                )}
-              />
-              <Button
-                variant="contained"
-                onClick={handleAddSymbol}
-                disabled={!selectedSymbol}
-                sx={{ minWidth: 100 }}
-              >
-                <AddIcon />
-              </Button>
-            </Box>
+                  );
+                }
+
+                return (
+                  <Box
+                    component="li"
+                    key={key}
+                    {...otherProps}
+                    sx={{
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      py: 1,
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        width: "100%",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Box sx={{ flex: 1 }}>
+                        <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+                          {details.symbol}
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          color="text.secondary"
+                          sx={{ display: "block", lineHeight: 1.2 }}
+                        >
+                          {details.name}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ textAlign: "right", ml: 1 }}>
+                        <Typography
+                          variant="caption"
+                          color="primary"
+                          sx={{ fontWeight: "medium" }}
+                        >
+                          {details.currency}
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          color="text.secondary"
+                          sx={{ display: "block", lineHeight: 1.2 }}
+                        >
+                          매치:{" "}
+                          {(parseFloat(details.matchScore) * 100).toFixed(1)}%
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+                );
+              }}
+              renderTags={(value, getTagProps) =>
+                value.map((option, index) => {
+                  const details = symbolDetails.get(option);
+                  const chipLabel = details
+                    ? `${details.symbol} (${details.currency})`
+                    : option;
+
+                  return (
+                    <Chip
+                      variant="outlined"
+                      label={chipLabel}
+                      {...getTagProps({ index })}
+                      key={option}
+                      sx={{
+                        "& .MuiChip-label": {
+                          fontSize: "0.875rem",
+                        },
+                      }}
+                    />
+                  );
+                })
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder={
+                    searchLoading && searchQuery.length > 1
+                      ? "검색 중..."
+                      : "종목 검색 (예: AAPL, Apple, 애플)"
+                  }
+                  helperText={
+                    debouncedSearchQuery.length === 0
+                      ? "종목을 검색하여 선택하세요 (최소 2글자 이상)"
+                      : debouncedSearchQuery.length > 1 &&
+                        availableSymbols.length === 0 &&
+                        !searchLoading
+                      ? "검색 결과가 없습니다. 다른 키워드를 시도해보세요."
+                      : undefined
+                  }
+                  InputProps={{
+                    ...(params.InputProps as any),
+                    startAdornment: (
+                      <>
+                        <SearchIcon sx={{ mr: 1, color: "action.active" }} />
+                        {params.InputProps?.startAdornment}
+                      </>
+                    ),
+                  }}
+                />
+              )}
+              noOptionsText={
+                debouncedSearchQuery.length > 1
+                  ? searchLoading
+                    ? "검색 중..."
+                    : "검색 결과가 없습니다"
+                  : "최소 2글자 이상 입력하여 검색하세요"
+              }
+            />
           </Box>
 
-          {/* 추가된 심볼 목록 */}
+          {/* 선택된 심볼 개수 표시 */}
           {symbols.length > 0 && (
             <Box>
-              <Typography variant="subtitle2" gutterBottom>
-                추가된 심볼 ({symbols.length})
+              <Typography variant="caption" color="text.secondary">
+                선택된 종목: {symbols.length}개
               </Typography>
-              <Box display="flex" flexWrap="wrap" gap={1}>
-                {symbols.map((symbol) => (
-                  <Chip
-                    key={symbol}
-                    label={symbol}
-                    onDelete={() => handleRemoveSymbol(symbol)}
-                    color="primary"
-                    variant="outlined"
-                  />
-                ))}
-              </Box>
             </Box>
           )}
         </Stack>

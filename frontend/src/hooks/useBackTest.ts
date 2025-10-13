@@ -5,7 +5,7 @@
 // Hey-API 기반: @/client/sdk.gen.ts 의 각 엔드포인트별 서비스클래스 및 @/client/types.gen.ts 의 타입정의 활용(엔드포인트의 스키마명칭과 호환)
 // MUI Snackbar 활용 알림(토스트) 기능 포함
 
-import type { BacktestCreateRequest } from "@/client";
+import type { BacktestCreate } from "@/client";
 import { BacktestService } from "@/client";
 import { useSnackbar } from "@/contexts/SnackbarContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -92,7 +92,7 @@ export function useBacktest() {
 
     // Mutations
     const createBacktestMutation = useMutation({
-        mutationFn: async (data: BacktestCreateRequest) => {
+        mutationFn: async (data: BacktestCreate) => {
             const response = await BacktestService.createBacktest({ body: data });
             return response.data;
         },
@@ -107,7 +107,7 @@ export function useBacktest() {
     });
 
     const updateBacktestMutation = useMutation({
-        mutationFn: async (data: { id: string; updateData: Partial<BacktestCreateRequest> }) => {
+        mutationFn: async (data: { id: string; updateData: Partial<BacktestCreate> }) => {
             const response = await BacktestService.updateBacktest({ path: { backtest_id: data.id }, body: data.updateData });
             return response.data;
         },

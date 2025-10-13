@@ -309,7 +309,7 @@ export const colorSchemes = {
 				selected: `${alpha(gray[200], 0.3)}`,
 			},
 			baseShadow:
-				"hsla(220, 30%, 5%, 0.07) 0px 4px 16px 0px, hsla(220, 25%, 10%, 0.07) 0px 8px 16px -5px",
+				"0px 2px 4px -1px rgba(0, 0, 0, 0.06), 0px 4px 8px -2px rgba(0, 0, 0, 0.10)",
 		},
 	},
 	dark: {
@@ -358,7 +358,7 @@ export const colorSchemes = {
 				selected: alpha(gray[600], 0.3),
 			},
 			baseShadow:
-				"hsla(220, 30%, 5%, 0.7) 0px 4px 16px 0px, hsla(220, 25%, 10%, 0.8) 0px 8px 16px -5px",
+				"0px 4px 8px -2px rgba(0, 0, 0, 0.3), 0px 8px 16px -4px rgba(0, 0, 0, 0.4)",
 		},
 	},
 };
@@ -414,7 +414,7 @@ export const typography = {
 };
 
 export const shape = {
-	borderRadius: 8,
+	borderRadius: 6,
 };
 
 // @ts-expect-error

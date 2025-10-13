@@ -29,7 +29,7 @@ router.include_router(management_router, prefix="/management", tags=["Market Dat
 router.include_router(
     technical_indicators_router,
     prefix="/technical-indicators",
-    tags=["Technical Indicators"],
+    tags=["Technical Indicator"],
 )
 
 

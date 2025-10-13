@@ -11,8 +11,8 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import * as React from "react";
-import ThemeSwitcher from "./ThemeSwitcher";
 import UserAvatars from './UserButton';
+import ColorModeIconDropdown from '../shared-theme/ColorModeIconDropdown';
 
 const AppBar = styled(MuiAppBar)(({ theme }) => ({
 	borderWidth: 0,
@@ -120,7 +120,7 @@ export default function Header({
 						sx={{ marginLeft: "auto" }}
 					>
 						<Stack direction="row" alignItems="center">
-							<ThemeSwitcher />
+							<ColorModeIconDropdown />
 						</Stack>
 						<Stack direction="row" alignItems="center">
 							<UserAvatars />

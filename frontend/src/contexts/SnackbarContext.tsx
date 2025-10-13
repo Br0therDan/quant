@@ -95,8 +95,11 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
     showInfo,
   };
 
+  // Workaround for mismatched React type versions in the monorepo: cast Provider to any
+  const Provider: any = SnackbarContext.Provider;
+
   return (
-    <SnackbarContext.Provider value={contextValue}>
+    <Provider value={contextValue}>
       {children}
       {snackbars.map((snackbar) => (
         <Snackbar
@@ -120,6 +123,6 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
           </Alert>
         </Snackbar>
       ))}
-    </SnackbarContext.Provider>
+    </Provider>
   );
 }

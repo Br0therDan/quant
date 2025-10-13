@@ -1428,6 +1428,68 @@ export type IncomeStatementResponse = {
 };
 
 /**
+ * IndicatorDataPoint
+ * 지표 데이터 포인트
+ */
+export type IndicatorDataPoint = {
+	/**
+	 * Date
+	 * 날짜 (daily 이상)
+	 */
+	date?: Date | null;
+	/**
+	 * Timestamp
+	 * 타임스탬프 (intraday)
+	 */
+	timestamp?: Date | null;
+	/**
+	 * Value
+	 * 지표 값
+	 */
+	value?: string | null;
+	/**
+	 * Values
+	 * 복수 지표 값들
+	 */
+	values?: {
+		[key: string]: string;
+	} | null;
+};
+
+/**
+ * IndicatorListResponse
+ * 지원하는 지표 목록 응답
+ */
+export type IndicatorListResponse = {
+	/**
+	 * Success
+	 * 요청 성공 여부
+	 */
+	success?: boolean;
+	/**
+	 * Message
+	 * 응답 메시지
+	 */
+	message?: string | null;
+	/**
+	 * Timestamp
+	 * 응답 시간
+	 */
+	timestamp?: Date;
+	/**
+	 * Data
+	 * 지표 카테고리별 목록 (moving_averages, oscillators, volatility, volume)
+	 */
+	data?: {
+		[key: string]: unknown;
+	} | null;
+	/**
+	 * 메타데이터
+	 */
+	metadata: MetadataInfo;
+};
+
+/**
  * IntegratedBacktestRequest
  * 통합 백테스트 요청
  */
@@ -2616,6 +2678,85 @@ export type TaskResult = {
 	 * Errors
 	 */
 	errors?: Array<string>;
+};
+
+/**
+ * TechnicalIndicatorData
+ * 기술적 지표 응답 데이터 모델
+ */
+export type TechnicalIndicatorData = {
+	/**
+	 * Symbol
+	 * 주식 심볼
+	 */
+	symbol: string;
+	/**
+	 * Indicator Type
+	 * 지표 타입 (SMA, EMA, RSI, etc.)
+	 */
+	indicator_type: string;
+	/**
+	 * Interval
+	 * 시간 간격
+	 */
+	interval: string;
+	/**
+	 * Parameters
+	 * 지표 파라미터
+	 */
+	parameters?: {
+		[key: string]: unknown;
+	};
+	/**
+	 * Data
+	 * 시계열 데이터
+	 */
+	data?: Array<IndicatorDataPoint>;
+	/**
+	 * Data Points Count
+	 * 데이터 포인트 개수
+	 */
+	data_points_count?: number;
+	/**
+	 * Latest Value
+	 * 최신 지표 값
+	 */
+	latest_value?: string | null;
+	/**
+	 * Latest Date
+	 * 최신 데이터 날짜
+	 */
+	latest_date?: Date | null;
+};
+
+/**
+ * TechnicalIndicatorResponse
+ * 단일 기술적 지표 응답
+ */
+export type TechnicalIndicatorResponse = {
+	/**
+	 * Success
+	 * 요청 성공 여부
+	 */
+	success?: boolean;
+	/**
+	 * Message
+	 * 응답 메시지
+	 */
+	message?: string | null;
+	/**
+	 * Timestamp
+	 * 응답 시간
+	 */
+	timestamp?: Date;
+	/**
+	 * 지표 데이터
+	 */
+	data?: TechnicalIndicatorData | null;
+	/**
+	 * 메타데이터
+	 */
+	metadata: MetadataInfo;
 };
 
 /**
@@ -5131,6 +5272,685 @@ export type MarketDataGetSystemStatusResponses = {
 	 */
 	200: unknown;
 };
+
+export type TechnicalIndicatorGetIndicatorListData = {
+	body?: never;
+	path?: never;
+	query?: never;
+	url: "/api/v1/market-data/technical-indicators/indicators";
+};
+
+export type TechnicalIndicatorGetIndicatorListErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type TechnicalIndicatorGetIndicatorListError =
+	TechnicalIndicatorGetIndicatorListErrors[keyof TechnicalIndicatorGetIndicatorListErrors];
+
+export type TechnicalIndicatorGetIndicatorListResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: IndicatorListResponse;
+};
+
+export type TechnicalIndicatorGetIndicatorListResponse =
+	TechnicalIndicatorGetIndicatorListResponses[keyof TechnicalIndicatorGetIndicatorListResponses];
+
+export type TechnicalIndicatorGetSmaData = {
+	body?: never;
+	path: {
+		/**
+		 * Symbol
+		 * 종목 심볼 (예: AAPL, TSLA)
+		 */
+		symbol: string;
+	};
+	query?: {
+		/**
+		 * Interval
+		 * 시간 간격
+		 */
+		interval?:
+			| "1min"
+			| "5min"
+			| "15min"
+			| "30min"
+			| "60min"
+			| "daily"
+			| "weekly"
+			| "monthly";
+		/**
+		 * Time Period
+		 * 이동평균 기간
+		 */
+		time_period?: number;
+		/**
+		 * Series Type
+		 * 계산에 사용할 가격 데이터
+		 */
+		series_type?: "close" | "open" | "high" | "low";
+	};
+	url: "/api/v1/market-data/technical-indicators/{symbol}/sma";
+};
+
+export type TechnicalIndicatorGetSmaErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type TechnicalIndicatorGetSmaError =
+	TechnicalIndicatorGetSmaErrors[keyof TechnicalIndicatorGetSmaErrors];
+
+export type TechnicalIndicatorGetSmaResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: TechnicalIndicatorResponse;
+};
+
+export type TechnicalIndicatorGetSmaResponse =
+	TechnicalIndicatorGetSmaResponses[keyof TechnicalIndicatorGetSmaResponses];
+
+export type TechnicalIndicatorGetWmaData = {
+	body?: never;
+	path: {
+		/**
+		 * Symbol
+		 * 종목 심볼 (예: AAPL, TSLA)
+		 */
+		symbol: string;
+	};
+	query?: {
+		/**
+		 * Interval
+		 * 시간 간격
+		 */
+		interval?:
+			| "1min"
+			| "5min"
+			| "15min"
+			| "30min"
+			| "60min"
+			| "daily"
+			| "weekly"
+			| "monthly";
+		/**
+		 * Time Period
+		 * 이동평균 기간
+		 */
+		time_period?: number;
+		/**
+		 * Series Type
+		 * 계산에 사용할 가격 데이터
+		 */
+		series_type?: "close" | "open" | "high" | "low";
+	};
+	url: "/api/v1/market-data/technical-indicators/{symbol}/wma";
+};
+
+export type TechnicalIndicatorGetWmaErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type TechnicalIndicatorGetWmaError =
+	TechnicalIndicatorGetWmaErrors[keyof TechnicalIndicatorGetWmaErrors];
+
+export type TechnicalIndicatorGetWmaResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: TechnicalIndicatorResponse;
+};
+
+export type TechnicalIndicatorGetWmaResponse =
+	TechnicalIndicatorGetWmaResponses[keyof TechnicalIndicatorGetWmaResponses];
+
+export type TechnicalIndicatorGetDemaData = {
+	body?: never;
+	path: {
+		/**
+		 * Symbol
+		 * 종목 심볼 (예: AAPL, TSLA)
+		 */
+		symbol: string;
+	};
+	query?: {
+		/**
+		 * Interval
+		 * 시간 간격
+		 */
+		interval?:
+			| "1min"
+			| "5min"
+			| "15min"
+			| "30min"
+			| "60min"
+			| "daily"
+			| "weekly"
+			| "monthly";
+		/**
+		 * Time Period
+		 * 이동평균 기간
+		 */
+		time_period?: number;
+		/**
+		 * Series Type
+		 * 계산에 사용할 가격 데이터
+		 */
+		series_type?: "close" | "open" | "high" | "low";
+	};
+	url: "/api/v1/market-data/technical-indicators/{symbol}/dema";
+};
+
+export type TechnicalIndicatorGetDemaErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type TechnicalIndicatorGetDemaError =
+	TechnicalIndicatorGetDemaErrors[keyof TechnicalIndicatorGetDemaErrors];
+
+export type TechnicalIndicatorGetDemaResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: TechnicalIndicatorResponse;
+};
+
+export type TechnicalIndicatorGetDemaResponse =
+	TechnicalIndicatorGetDemaResponses[keyof TechnicalIndicatorGetDemaResponses];
+
+export type TechnicalIndicatorGetTemaData = {
+	body?: never;
+	path: {
+		/**
+		 * Symbol
+		 * 종목 심볼 (예: AAPL, TSLA)
+		 */
+		symbol: string;
+	};
+	query?: {
+		/**
+		 * Interval
+		 * 시간 간격
+		 */
+		interval?:
+			| "1min"
+			| "5min"
+			| "15min"
+			| "30min"
+			| "60min"
+			| "daily"
+			| "weekly"
+			| "monthly";
+		/**
+		 * Time Period
+		 * 이동평균 기간
+		 */
+		time_period?: number;
+		/**
+		 * Series Type
+		 * 계산에 사용할 가격 데이터
+		 */
+		series_type?: "close" | "open" | "high" | "low";
+	};
+	url: "/api/v1/market-data/technical-indicators/{symbol}/tema";
+};
+
+export type TechnicalIndicatorGetTemaErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type TechnicalIndicatorGetTemaError =
+	TechnicalIndicatorGetTemaErrors[keyof TechnicalIndicatorGetTemaErrors];
+
+export type TechnicalIndicatorGetTemaResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: TechnicalIndicatorResponse;
+};
+
+export type TechnicalIndicatorGetTemaResponse =
+	TechnicalIndicatorGetTemaResponses[keyof TechnicalIndicatorGetTemaResponses];
+
+export type TechnicalIndicatorGetEmaData = {
+	body?: never;
+	path: {
+		/**
+		 * Symbol
+		 * 종목 심볼 (예: AAPL, TSLA)
+		 */
+		symbol: string;
+	};
+	query?: {
+		/**
+		 * Interval
+		 * 시간 간격
+		 */
+		interval?:
+			| "1min"
+			| "5min"
+			| "15min"
+			| "30min"
+			| "60min"
+			| "daily"
+			| "weekly"
+			| "monthly";
+		/**
+		 * Time Period
+		 * 이동평균 기간
+		 */
+		time_period?: number;
+		/**
+		 * Series Type
+		 * 계산에 사용할 가격 데이터
+		 */
+		series_type?: "close" | "open" | "high" | "low";
+	};
+	url: "/api/v1/market-data/technical-indicators/{symbol}/ema";
+};
+
+export type TechnicalIndicatorGetEmaErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type TechnicalIndicatorGetEmaError =
+	TechnicalIndicatorGetEmaErrors[keyof TechnicalIndicatorGetEmaErrors];
+
+export type TechnicalIndicatorGetEmaResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: TechnicalIndicatorResponse;
+};
+
+export type TechnicalIndicatorGetEmaResponse =
+	TechnicalIndicatorGetEmaResponses[keyof TechnicalIndicatorGetEmaResponses];
+
+export type TechnicalIndicatorGetRsiData = {
+	body?: never;
+	path: {
+		/**
+		 * Symbol
+		 * 종목 심볼 (예: AAPL, TSLA)
+		 */
+		symbol: string;
+	};
+	query?: {
+		/**
+		 * Interval
+		 * 시간 간격
+		 */
+		interval?:
+			| "1min"
+			| "5min"
+			| "15min"
+			| "30min"
+			| "60min"
+			| "daily"
+			| "weekly"
+			| "monthly";
+		/**
+		 * Time Period
+		 * RSI 계산 기간
+		 */
+		time_period?: number;
+		/**
+		 * Series Type
+		 * 계산에 사용할 가격 데이터
+		 */
+		series_type?: "close" | "open" | "high" | "low";
+	};
+	url: "/api/v1/market-data/technical-indicators/{symbol}/rsi";
+};
+
+export type TechnicalIndicatorGetRsiErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type TechnicalIndicatorGetRsiError =
+	TechnicalIndicatorGetRsiErrors[keyof TechnicalIndicatorGetRsiErrors];
+
+export type TechnicalIndicatorGetRsiResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: TechnicalIndicatorResponse;
+};
+
+export type TechnicalIndicatorGetRsiResponse =
+	TechnicalIndicatorGetRsiResponses[keyof TechnicalIndicatorGetRsiResponses];
+
+export type TechnicalIndicatorGetMacdData = {
+	body?: never;
+	path: {
+		/**
+		 * Symbol
+		 * 종목 심볼 (예: AAPL, TSLA)
+		 */
+		symbol: string;
+	};
+	query?: {
+		/**
+		 * Interval
+		 * 시간 간격
+		 */
+		interval?:
+			| "1min"
+			| "5min"
+			| "15min"
+			| "30min"
+			| "60min"
+			| "daily"
+			| "weekly"
+			| "monthly";
+		/**
+		 * Series Type
+		 * 계산에 사용할 가격 데이터
+		 */
+		series_type?: "close" | "open" | "high" | "low";
+		/**
+		 * Fastperiod
+		 * 빠른 이동평균 기간
+		 */
+		fastperiod?: number;
+		/**
+		 * Slowperiod
+		 * 느린 이동평균 기간
+		 */
+		slowperiod?: number;
+		/**
+		 * Signalperiod
+		 * 시그널 라인 기간
+		 */
+		signalperiod?: number;
+	};
+	url: "/api/v1/market-data/technical-indicators/{symbol}/macd";
+};
+
+export type TechnicalIndicatorGetMacdErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type TechnicalIndicatorGetMacdError =
+	TechnicalIndicatorGetMacdErrors[keyof TechnicalIndicatorGetMacdErrors];
+
+export type TechnicalIndicatorGetMacdResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: TechnicalIndicatorResponse;
+};
+
+export type TechnicalIndicatorGetMacdResponse =
+	TechnicalIndicatorGetMacdResponses[keyof TechnicalIndicatorGetMacdResponses];
+
+export type TechnicalIndicatorGetBbandsData = {
+	body?: never;
+	path: {
+		/**
+		 * Symbol
+		 * 종목 심볼 (예: AAPL, TSLA)
+		 */
+		symbol: string;
+	};
+	query?: {
+		/**
+		 * Interval
+		 * 시간 간격
+		 */
+		interval?:
+			| "1min"
+			| "5min"
+			| "15min"
+			| "30min"
+			| "60min"
+			| "daily"
+			| "weekly"
+			| "monthly";
+		/**
+		 * Time Period
+		 * 이동평균 기간
+		 */
+		time_period?: number;
+		/**
+		 * Series Type
+		 * 계산에 사용할 가격 데이터
+		 */
+		series_type?: "close" | "open" | "high" | "low";
+		/**
+		 * Nbdevup
+		 * 상단 밴드 표준편차 배수
+		 */
+		nbdevup?: number;
+		/**
+		 * Nbdevdn
+		 * 하단 밴드 표준편차 배수
+		 */
+		nbdevdn?: number;
+	};
+	url: "/api/v1/market-data/technical-indicators/{symbol}/bbands";
+};
+
+export type TechnicalIndicatorGetBbandsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type TechnicalIndicatorGetBbandsError =
+	TechnicalIndicatorGetBbandsErrors[keyof TechnicalIndicatorGetBbandsErrors];
+
+export type TechnicalIndicatorGetBbandsResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: TechnicalIndicatorResponse;
+};
+
+export type TechnicalIndicatorGetBbandsResponse =
+	TechnicalIndicatorGetBbandsResponses[keyof TechnicalIndicatorGetBbandsResponses];
+
+export type TechnicalIndicatorGetAdxData = {
+	body?: never;
+	path: {
+		/**
+		 * Symbol
+		 * 종목 심볼 (예: AAPL, TSLA)
+		 */
+		symbol: string;
+	};
+	query?: {
+		/**
+		 * Interval
+		 * 시간 간격
+		 */
+		interval?:
+			| "1min"
+			| "5min"
+			| "15min"
+			| "30min"
+			| "60min"
+			| "daily"
+			| "weekly"
+			| "monthly";
+		/**
+		 * Time Period
+		 * ADX 계산 기간
+		 */
+		time_period?: number;
+	};
+	url: "/api/v1/market-data/technical-indicators/{symbol}/adx";
+};
+
+export type TechnicalIndicatorGetAdxErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type TechnicalIndicatorGetAdxError =
+	TechnicalIndicatorGetAdxErrors[keyof TechnicalIndicatorGetAdxErrors];
+
+export type TechnicalIndicatorGetAdxResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: TechnicalIndicatorResponse;
+};
+
+export type TechnicalIndicatorGetAdxResponse =
+	TechnicalIndicatorGetAdxResponses[keyof TechnicalIndicatorGetAdxResponses];
+
+export type TechnicalIndicatorGetAtrData = {
+	body?: never;
+	path: {
+		/**
+		 * Symbol
+		 * 종목 심볼 (예: AAPL, TSLA)
+		 */
+		symbol: string;
+	};
+	query?: {
+		/**
+		 * Interval
+		 * 시간 간격
+		 */
+		interval?:
+			| "1min"
+			| "5min"
+			| "15min"
+			| "30min"
+			| "60min"
+			| "daily"
+			| "weekly"
+			| "monthly";
+		/**
+		 * Time Period
+		 * ATR 계산 기간
+		 */
+		time_period?: number;
+	};
+	url: "/api/v1/market-data/technical-indicators/{symbol}/atr";
+};
+
+export type TechnicalIndicatorGetAtrErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type TechnicalIndicatorGetAtrError =
+	TechnicalIndicatorGetAtrErrors[keyof TechnicalIndicatorGetAtrErrors];
+
+export type TechnicalIndicatorGetAtrResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: TechnicalIndicatorResponse;
+};
+
+export type TechnicalIndicatorGetAtrResponse =
+	TechnicalIndicatorGetAtrResponses[keyof TechnicalIndicatorGetAtrResponses];
+
+export type TechnicalIndicatorGetStochData = {
+	body?: never;
+	path: {
+		/**
+		 * Symbol
+		 * 종목 심볼 (예: AAPL, TSLA)
+		 */
+		symbol: string;
+	};
+	query?: {
+		/**
+		 * Interval
+		 * 시간 간격
+		 */
+		interval?:
+			| "1min"
+			| "5min"
+			| "15min"
+			| "30min"
+			| "60min"
+			| "daily"
+			| "weekly"
+			| "monthly";
+		/**
+		 * Fastkperiod
+		 * Fast K 기간
+		 */
+		fastkperiod?: number;
+		/**
+		 * Slowkperiod
+		 * Slow K 기간
+		 */
+		slowkperiod?: number;
+		/**
+		 * Slowdperiod
+		 * Slow D 기간
+		 */
+		slowdperiod?: number;
+		/**
+		 * Slowkmatype
+		 * Slow K MA 타입
+		 */
+		slowkmatype?: number;
+		/**
+		 * Slowdmatype
+		 * Slow D MA 타입
+		 */
+		slowdmatype?: number;
+	};
+	url: "/api/v1/market-data/technical-indicators/{symbol}/stoch";
+};
+
+export type TechnicalIndicatorGetStochErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type TechnicalIndicatorGetStochError =
+	TechnicalIndicatorGetStochErrors[keyof TechnicalIndicatorGetStochErrors];
+
+export type TechnicalIndicatorGetStochResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: TechnicalIndicatorResponse;
+};
+
+export type TechnicalIndicatorGetStochResponse =
+	TechnicalIndicatorGetStochResponses[keyof TechnicalIndicatorGetStochResponses];
 
 export type MarketDataGetMarketDataInfoData = {
 	body?: never;

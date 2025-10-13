@@ -148,50 +148,28 @@ export default function Sidebar({
               selected={pathname === "/dashboard" || pathname === "/"}
             />
             <SidebarDividerItem />
-            <SidebarHeaderItem>Data Management</SidebarHeaderItem>
+            <SidebarHeaderItem>Market Data</SidebarHeaderItem>
             <SidebarPageItem
-              id="watchlists"
-              title="Watchlists"
+              id="market-data-stock"
+              title="Stock"
               icon={<WatchlistIcon />}
-              href="/watchlists"
+              href="/market-data/stock"
               selected={
-                pathname === "/watchlists" ||
-                pathname.startsWith("/watchlists/")
+                pathname === "/market-data/stock" ||
+                pathname.startsWith("/market-data/stock/")
               }
             />
             <SidebarPageItem
-              id="market-data"
-              title="Market Data"
+              id="market-data-crypto"
+              title="Crypto"
               icon={<DataObjectIcon />}
-              href="/market-data"
+              href="/market-data/crypto"
               selected={
-                pathname === "/market-data" ||
-                pathname.startsWith("/market-data/")
+                pathname === "/market-data/crypto" ||
+                pathname.startsWith("/market-data/crypto/")
               }
               defaultExpanded={pathname.startsWith("/market-data")}
               expanded={expandedItemIds.includes("market-data")}
-              nestedNavigation={
-                <List
-                  dense
-                  sx={{
-                    padding: 0,
-                    my: 1,
-                    pl: mini ? 0 : 1,
-                    minWidth: 240,
-                  }}
-                >
-                  <SidebarPageItem
-                    id="market-data-chart"
-                    title="Chart Explorer"
-                    icon={<TrendingUpIcon />}
-                    href="/market-data/chart"
-                    selected={
-                      pathname === "/market-data/chart" ||
-                      pathname.startsWith("/market-data/chart/")
-                    }
-                  />
-                </List>
-              }
             />
             <SidebarDividerItem />
             <SidebarHeaderItem>Strategy Center</SidebarHeaderItem>
@@ -206,38 +184,7 @@ export default function Sidebar({
               }
               defaultExpanded={pathname.startsWith("/strategies")}
               expanded={expandedItemIds.includes("strategies")}
-              nestedNavigation={
-                <List
-                  dense
-                  sx={{
-                    padding: 0,
-                    my: 1,
-                    pl: mini ? 0 : 1,
-                    minWidth: 240,
-                  }}
-                >
-                  <SidebarPageItem
-                    id="strategy-templates"
-                    title="Templates"
-                    icon={<AutoFixHighIcon />}
-                    href="/strategies/templates"
-                    selected={
-                      pathname === "/strategies/templates" ||
-                      pathname.startsWith("/strategies/templates/")
-                    }
-                  />
-                  <SidebarPageItem
-                    id="my-strategies"
-                    title="My Strategies"
-                    icon={<TrendingUpIcon />}
-                    href="/strategies/my-strategies"
-                    selected={
-                      pathname === "/strategies/my-strategies" ||
-                      pathname.startsWith("/strategies/my-strategies/")
-                    }
-                  />
-                </List>
-              }
+
             />
             <SidebarDividerItem />
             <SidebarHeaderItem>Backtesting</SidebarHeaderItem>

@@ -40,14 +40,8 @@ import { useQuery } from "@tanstack/react-query";
 import { ko } from "date-fns/locale";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { watchlistsListWatchlistsOptions } from "@/client/@tanstack/react-query.gen";
 import PageContainer from "@/components/layout/PageContainer";
-import {
-	type BacktestConfig,
-	backtestUtils,
-	useBacktestActions,
-} from "@/services/backtestsQuery";
-import { strategiesGetStrategiesOptions } from "@/services/strategiesQuery";
+
 
 const steps = [
 	"기본 설정",

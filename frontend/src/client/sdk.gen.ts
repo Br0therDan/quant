@@ -236,6 +236,42 @@ import type {
 	TasksRunStockDeltaUpdateResponses,
 	TasksRunStockForceUpdateData,
 	TasksRunStockForceUpdateResponses,
+	TechnicalIndicatorGetAdxData,
+	TechnicalIndicatorGetAdxErrors,
+	TechnicalIndicatorGetAdxResponses,
+	TechnicalIndicatorGetAtrData,
+	TechnicalIndicatorGetAtrErrors,
+	TechnicalIndicatorGetAtrResponses,
+	TechnicalIndicatorGetBbandsData,
+	TechnicalIndicatorGetBbandsErrors,
+	TechnicalIndicatorGetBbandsResponses,
+	TechnicalIndicatorGetDemaData,
+	TechnicalIndicatorGetDemaErrors,
+	TechnicalIndicatorGetDemaResponses,
+	TechnicalIndicatorGetEmaData,
+	TechnicalIndicatorGetEmaErrors,
+	TechnicalIndicatorGetEmaResponses,
+	TechnicalIndicatorGetIndicatorListData,
+	TechnicalIndicatorGetIndicatorListErrors,
+	TechnicalIndicatorGetIndicatorListResponses,
+	TechnicalIndicatorGetMacdData,
+	TechnicalIndicatorGetMacdErrors,
+	TechnicalIndicatorGetMacdResponses,
+	TechnicalIndicatorGetRsiData,
+	TechnicalIndicatorGetRsiErrors,
+	TechnicalIndicatorGetRsiResponses,
+	TechnicalIndicatorGetSmaData,
+	TechnicalIndicatorGetSmaErrors,
+	TechnicalIndicatorGetSmaResponses,
+	TechnicalIndicatorGetStochData,
+	TechnicalIndicatorGetStochErrors,
+	TechnicalIndicatorGetStochResponses,
+	TechnicalIndicatorGetTemaData,
+	TechnicalIndicatorGetTemaErrors,
+	TechnicalIndicatorGetTemaResponses,
+	TechnicalIndicatorGetWmaData,
+	TechnicalIndicatorGetWmaErrors,
+	TechnicalIndicatorGetWmaResponses,
 	TemplateCreateStrategyFromTemplateData,
 	TemplateCreateStrategyFromTemplateErrors,
 	TemplateCreateStrategyFromTemplateResponses,
@@ -1570,6 +1606,284 @@ export class MarketDataService {
 				},
 			],
 			url: "/api/v1/market-data/health",
+			...options,
+		});
+	}
+}
+
+export class TechnicalIndicatorService {
+	/**
+	 * Get Indicator List
+	 * 지원하는 기술적 지표 목록을 조회합니다.
+	 */
+	public static getIndicatorList<ThrowOnError extends boolean = false>(
+		options?: Options<TechnicalIndicatorGetIndicatorListData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			TechnicalIndicatorGetIndicatorListResponses,
+			TechnicalIndicatorGetIndicatorListErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/technical-indicators/indicators",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Sma
+	 * 단순이동평균(SMA)을 조회합니다.
+	 */
+	public static getSma<ThrowOnError extends boolean = false>(
+		options: Options<TechnicalIndicatorGetSmaData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			TechnicalIndicatorGetSmaResponses,
+			TechnicalIndicatorGetSmaErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/technical-indicators/{symbol}/sma",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Wma
+	 * 가중이동평균(WMA)을 조회합니다.
+	 */
+	public static getWma<ThrowOnError extends boolean = false>(
+		options: Options<TechnicalIndicatorGetWmaData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			TechnicalIndicatorGetWmaResponses,
+			TechnicalIndicatorGetWmaErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/technical-indicators/{symbol}/wma",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Dema
+	 * 이중지수이동평균(DEMA)을 조회합니다.
+	 */
+	public static getDema<ThrowOnError extends boolean = false>(
+		options: Options<TechnicalIndicatorGetDemaData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			TechnicalIndicatorGetDemaResponses,
+			TechnicalIndicatorGetDemaErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/technical-indicators/{symbol}/dema",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Tema
+	 * 삼중지수이동평균(TEMA)을 조회합니다.
+	 */
+	public static getTema<ThrowOnError extends boolean = false>(
+		options: Options<TechnicalIndicatorGetTemaData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			TechnicalIndicatorGetTemaResponses,
+			TechnicalIndicatorGetTemaErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/technical-indicators/{symbol}/tema",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Ema
+	 * 지수이동평균(EMA)을 조회합니다.
+	 */
+	public static getEma<ThrowOnError extends boolean = false>(
+		options: Options<TechnicalIndicatorGetEmaData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			TechnicalIndicatorGetEmaResponses,
+			TechnicalIndicatorGetEmaErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/technical-indicators/{symbol}/ema",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Rsi
+	 * 상대강도지수(RSI)를 조회합니다.
+	 */
+	public static getRsi<ThrowOnError extends boolean = false>(
+		options: Options<TechnicalIndicatorGetRsiData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			TechnicalIndicatorGetRsiResponses,
+			TechnicalIndicatorGetRsiErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/technical-indicators/{symbol}/rsi",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Macd
+	 * MACD를 조회합니다.
+	 */
+	public static getMacd<ThrowOnError extends boolean = false>(
+		options: Options<TechnicalIndicatorGetMacdData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			TechnicalIndicatorGetMacdResponses,
+			TechnicalIndicatorGetMacdErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/technical-indicators/{symbol}/macd",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Bbands
+	 * 볼린저밴드(BBANDS)를 조회합니다.
+	 */
+	public static getBbands<ThrowOnError extends boolean = false>(
+		options: Options<TechnicalIndicatorGetBbandsData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			TechnicalIndicatorGetBbandsResponses,
+			TechnicalIndicatorGetBbandsErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/technical-indicators/{symbol}/bbands",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Adx
+	 * 평균방향지수(ADX)를 조회합니다.
+	 */
+	public static getAdx<ThrowOnError extends boolean = false>(
+		options: Options<TechnicalIndicatorGetAdxData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			TechnicalIndicatorGetAdxResponses,
+			TechnicalIndicatorGetAdxErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/technical-indicators/{symbol}/adx",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Atr
+	 * 평균진폭(ATR)을 조회합니다.
+	 */
+	public static getAtr<ThrowOnError extends boolean = false>(
+		options: Options<TechnicalIndicatorGetAtrData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			TechnicalIndicatorGetAtrResponses,
+			TechnicalIndicatorGetAtrErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/technical-indicators/{symbol}/atr",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Stoch
+	 * 스토캐스틱 오실레이터(STOCH)를 조회합니다.
+	 */
+	public static getStoch<ThrowOnError extends boolean = false>(
+		options: Options<TechnicalIndicatorGetStochData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			TechnicalIndicatorGetStochResponses,
+			TechnicalIndicatorGetStochErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/technical-indicators/{symbol}/stoch",
 			...options,
 		});
 	}

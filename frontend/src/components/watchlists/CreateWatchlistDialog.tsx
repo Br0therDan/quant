@@ -192,6 +192,7 @@ export default function CreateWatchlistDialog({
         <Box component="form" sx={{ mt: 1 }}>
           <TextField
             fullWidth
+            variant='standard'
             label="워치리스트 이름"
             value={formData.name}
             onChange={handleNameChange}
@@ -205,12 +206,12 @@ export default function CreateWatchlistDialog({
           <TextField
             fullWidth
             label="설명 (선택사항)"
+            variant='standard'
             value={formData.description}
             onChange={(e) =>
               setFormData((prev) => ({ ...prev, description: e.target.value }))
             }
             margin="normal"
-            multiline
             rows={3}
             placeholder="이 워치리스트에 대한 간단한 설명을 입력하세요..."
           />
@@ -321,7 +322,8 @@ export default function CreateWatchlistDialog({
               }
               renderInput={(params) => (
                 <TextField
-                  {...params}
+                  {...(params as any)}
+                  variant="standard"
                   placeholder={
                     isSearching && searchTerm.length > 1
                       ? "검색 중..."

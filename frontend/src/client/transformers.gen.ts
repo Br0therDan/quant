@@ -38,6 +38,18 @@ import type {
 	StrategyGetStrategyPerformanceResponse,
 	StrategyGetStrategyResponse,
 	StrategyUpdateStrategyResponse,
+	TechnicalIndicatorGetAdxResponse,
+	TechnicalIndicatorGetAtrResponse,
+	TechnicalIndicatorGetBbandsResponse,
+	TechnicalIndicatorGetDemaResponse,
+	TechnicalIndicatorGetEmaResponse,
+	TechnicalIndicatorGetIndicatorListResponse,
+	TechnicalIndicatorGetMacdResponse,
+	TechnicalIndicatorGetRsiResponse,
+	TechnicalIndicatorGetSmaResponse,
+	TechnicalIndicatorGetStochResponse,
+	TechnicalIndicatorGetTemaResponse,
+	TechnicalIndicatorGetWmaResponse,
 	TemplateCreateStrategyFromTemplateResponse,
 	TemplateCreateTemplateResponse,
 	TemplateGetTemplateResponse,
@@ -299,6 +311,131 @@ const earningsResponseSchemaResponseTransformer = (data: any) => {
 const earningsDataSchemaResponseTransformer = (data: any) => {
 	data.fiscal_date_ending = new Date(data.fiscal_date_ending);
 	data.reported_date = new Date(data.reported_date);
+	return data;
+};
+
+export const technicalIndicatorGetIndicatorListResponseTransformer = async (
+	data: any,
+): Promise<TechnicalIndicatorGetIndicatorListResponse> => {
+	data = indicatorListResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const indicatorListResponseSchemaResponseTransformer = (data: any) => {
+	if (data.timestamp) {
+		data.timestamp = new Date(data.timestamp);
+	}
+	data.metadata = metadataInfoSchemaResponseTransformer(data.metadata);
+	return data;
+};
+
+export const technicalIndicatorGetSmaResponseTransformer = async (
+	data: any,
+): Promise<TechnicalIndicatorGetSmaResponse> => {
+	data = technicalIndicatorResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const technicalIndicatorResponseSchemaResponseTransformer = (data: any) => {
+	if (data.timestamp) {
+		data.timestamp = new Date(data.timestamp);
+	}
+	if (data.data) {
+		data.data = technicalIndicatorDataSchemaResponseTransformer(data.data);
+	}
+	data.metadata = metadataInfoSchemaResponseTransformer(data.metadata);
+	return data;
+};
+
+const technicalIndicatorDataSchemaResponseTransformer = (data: any) => {
+	if (data.data) {
+		data.data = data.data.map((item: any) => {
+			return indicatorDataPointSchemaResponseTransformer(item);
+		});
+	}
+	if (data.latest_date) {
+		data.latest_date = new Date(data.latest_date);
+	}
+	return data;
+};
+
+const indicatorDataPointSchemaResponseTransformer = (data: any) => {
+	if (data.date) {
+		data.date = new Date(data.date);
+	}
+	if (data.timestamp) {
+		data.timestamp = new Date(data.timestamp);
+	}
+	return data;
+};
+
+export const technicalIndicatorGetWmaResponseTransformer = async (
+	data: any,
+): Promise<TechnicalIndicatorGetWmaResponse> => {
+	data = technicalIndicatorResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const technicalIndicatorGetDemaResponseTransformer = async (
+	data: any,
+): Promise<TechnicalIndicatorGetDemaResponse> => {
+	data = technicalIndicatorResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const technicalIndicatorGetTemaResponseTransformer = async (
+	data: any,
+): Promise<TechnicalIndicatorGetTemaResponse> => {
+	data = technicalIndicatorResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const technicalIndicatorGetEmaResponseTransformer = async (
+	data: any,
+): Promise<TechnicalIndicatorGetEmaResponse> => {
+	data = technicalIndicatorResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const technicalIndicatorGetRsiResponseTransformer = async (
+	data: any,
+): Promise<TechnicalIndicatorGetRsiResponse> => {
+	data = technicalIndicatorResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const technicalIndicatorGetMacdResponseTransformer = async (
+	data: any,
+): Promise<TechnicalIndicatorGetMacdResponse> => {
+	data = technicalIndicatorResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const technicalIndicatorGetBbandsResponseTransformer = async (
+	data: any,
+): Promise<TechnicalIndicatorGetBbandsResponse> => {
+	data = technicalIndicatorResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const technicalIndicatorGetAdxResponseTransformer = async (
+	data: any,
+): Promise<TechnicalIndicatorGetAdxResponse> => {
+	data = technicalIndicatorResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const technicalIndicatorGetAtrResponseTransformer = async (
+	data: any,
+): Promise<TechnicalIndicatorGetAtrResponse> => {
+	data = technicalIndicatorResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const technicalIndicatorGetStochResponseTransformer = async (
+	data: any,
+): Promise<TechnicalIndicatorGetStochResponse> => {
+	data = technicalIndicatorResponseSchemaResponseTransformer(data);
 	return data;
 };
 

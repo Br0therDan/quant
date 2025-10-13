@@ -3997,6 +3997,1439 @@
         }
       }
     },
+    "/api/v1/market-data/technical-indicators/indicators": {
+      "get": {
+        "tags": [
+          "Technical Indicator"
+        ],
+        "summary": "Get Indicator List",
+        "description": "지원하는 기술적 지표 목록을 조회합니다.",
+        "operationId": "Technical Indicator-get_indicator_list",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IndicatorListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/market-data/technical-indicators/{symbol}/sma": {
+      "get": {
+        "tags": [
+          "Technical Indicator"
+        ],
+        "summary": "Get Sma",
+        "description": "단순이동평균(SMA)을 조회합니다.",
+        "operationId": "Technical Indicator-get_sma",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "종목 심볼 (예: AAPL, TSLA)",
+              "title": "Symbol"
+            },
+            "description": "종목 심볼 (예: AAPL, TSLA)"
+          },
+          {
+            "name": "interval",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "1min",
+                "5min",
+                "15min",
+                "30min",
+                "60min",
+                "daily",
+                "weekly",
+                "monthly"
+              ],
+              "type": "string",
+              "description": "시간 간격",
+              "default": "daily",
+              "title": "Interval"
+            },
+            "description": "시간 간격"
+          },
+          {
+            "name": "time_period",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "description": "이동평균 기간",
+              "default": 20,
+              "title": "Time Period"
+            },
+            "description": "이동평균 기간"
+          },
+          {
+            "name": "series_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "close",
+                "open",
+                "high",
+                "low"
+              ],
+              "type": "string",
+              "description": "계산에 사용할 가격 데이터",
+              "default": "close",
+              "title": "Series Type"
+            },
+            "description": "계산에 사용할 가격 데이터"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TechnicalIndicatorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/market-data/technical-indicators/{symbol}/wma": {
+      "get": {
+        "tags": [
+          "Technical Indicator"
+        ],
+        "summary": "Get Wma",
+        "description": "가중이동평균(WMA)을 조회합니다.",
+        "operationId": "Technical Indicator-get_wma",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "종목 심볼 (예: AAPL, TSLA)",
+              "title": "Symbol"
+            },
+            "description": "종목 심볼 (예: AAPL, TSLA)"
+          },
+          {
+            "name": "interval",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "1min",
+                "5min",
+                "15min",
+                "30min",
+                "60min",
+                "daily",
+                "weekly",
+                "monthly"
+              ],
+              "type": "string",
+              "description": "시간 간격",
+              "default": "daily",
+              "title": "Interval"
+            },
+            "description": "시간 간격"
+          },
+          {
+            "name": "time_period",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "description": "이동평균 기간",
+              "default": 20,
+              "title": "Time Period"
+            },
+            "description": "이동평균 기간"
+          },
+          {
+            "name": "series_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "close",
+                "open",
+                "high",
+                "low"
+              ],
+              "type": "string",
+              "description": "계산에 사용할 가격 데이터",
+              "default": "close",
+              "title": "Series Type"
+            },
+            "description": "계산에 사용할 가격 데이터"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TechnicalIndicatorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/market-data/technical-indicators/{symbol}/dema": {
+      "get": {
+        "tags": [
+          "Technical Indicator"
+        ],
+        "summary": "Get Dema",
+        "description": "이중지수이동평균(DEMA)을 조회합니다.",
+        "operationId": "Technical Indicator-get_dema",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "종목 심볼 (예: AAPL, TSLA)",
+              "title": "Symbol"
+            },
+            "description": "종목 심볼 (예: AAPL, TSLA)"
+          },
+          {
+            "name": "interval",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "1min",
+                "5min",
+                "15min",
+                "30min",
+                "60min",
+                "daily",
+                "weekly",
+                "monthly"
+              ],
+              "type": "string",
+              "description": "시간 간격",
+              "default": "daily",
+              "title": "Interval"
+            },
+            "description": "시간 간격"
+          },
+          {
+            "name": "time_period",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "description": "이동평균 기간",
+              "default": 20,
+              "title": "Time Period"
+            },
+            "description": "이동평균 기간"
+          },
+          {
+            "name": "series_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "close",
+                "open",
+                "high",
+                "low"
+              ],
+              "type": "string",
+              "description": "계산에 사용할 가격 데이터",
+              "default": "close",
+              "title": "Series Type"
+            },
+            "description": "계산에 사용할 가격 데이터"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TechnicalIndicatorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/market-data/technical-indicators/{symbol}/tema": {
+      "get": {
+        "tags": [
+          "Technical Indicator"
+        ],
+        "summary": "Get Tema",
+        "description": "삼중지수이동평균(TEMA)을 조회합니다.",
+        "operationId": "Technical Indicator-get_tema",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "종목 심볼 (예: AAPL, TSLA)",
+              "title": "Symbol"
+            },
+            "description": "종목 심볼 (예: AAPL, TSLA)"
+          },
+          {
+            "name": "interval",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "1min",
+                "5min",
+                "15min",
+                "30min",
+                "60min",
+                "daily",
+                "weekly",
+                "monthly"
+              ],
+              "type": "string",
+              "description": "시간 간격",
+              "default": "daily",
+              "title": "Interval"
+            },
+            "description": "시간 간격"
+          },
+          {
+            "name": "time_period",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "description": "이동평균 기간",
+              "default": 20,
+              "title": "Time Period"
+            },
+            "description": "이동평균 기간"
+          },
+          {
+            "name": "series_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "close",
+                "open",
+                "high",
+                "low"
+              ],
+              "type": "string",
+              "description": "계산에 사용할 가격 데이터",
+              "default": "close",
+              "title": "Series Type"
+            },
+            "description": "계산에 사용할 가격 데이터"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TechnicalIndicatorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/market-data/technical-indicators/{symbol}/ema": {
+      "get": {
+        "tags": [
+          "Technical Indicator"
+        ],
+        "summary": "Get Ema",
+        "description": "지수이동평균(EMA)을 조회합니다.",
+        "operationId": "Technical Indicator-get_ema",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "종목 심볼 (예: AAPL, TSLA)",
+              "title": "Symbol"
+            },
+            "description": "종목 심볼 (예: AAPL, TSLA)"
+          },
+          {
+            "name": "interval",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "1min",
+                "5min",
+                "15min",
+                "30min",
+                "60min",
+                "daily",
+                "weekly",
+                "monthly"
+              ],
+              "type": "string",
+              "description": "시간 간격",
+              "default": "daily",
+              "title": "Interval"
+            },
+            "description": "시간 간격"
+          },
+          {
+            "name": "time_period",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "description": "이동평균 기간",
+              "default": 20,
+              "title": "Time Period"
+            },
+            "description": "이동평균 기간"
+          },
+          {
+            "name": "series_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "close",
+                "open",
+                "high",
+                "low"
+              ],
+              "type": "string",
+              "description": "계산에 사용할 가격 데이터",
+              "default": "close",
+              "title": "Series Type"
+            },
+            "description": "계산에 사용할 가격 데이터"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TechnicalIndicatorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/market-data/technical-indicators/{symbol}/rsi": {
+      "get": {
+        "tags": [
+          "Technical Indicator"
+        ],
+        "summary": "Get Rsi",
+        "description": "상대강도지수(RSI)를 조회합니다.",
+        "operationId": "Technical Indicator-get_rsi",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "종목 심볼 (예: AAPL, TSLA)",
+              "title": "Symbol"
+            },
+            "description": "종목 심볼 (예: AAPL, TSLA)"
+          },
+          {
+            "name": "interval",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "1min",
+                "5min",
+                "15min",
+                "30min",
+                "60min",
+                "daily",
+                "weekly",
+                "monthly"
+              ],
+              "type": "string",
+              "description": "시간 간격",
+              "default": "daily",
+              "title": "Interval"
+            },
+            "description": "시간 간격"
+          },
+          {
+            "name": "time_period",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 2,
+              "description": "RSI 계산 기간",
+              "default": 14,
+              "title": "Time Period"
+            },
+            "description": "RSI 계산 기간"
+          },
+          {
+            "name": "series_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "close",
+                "open",
+                "high",
+                "low"
+              ],
+              "type": "string",
+              "description": "계산에 사용할 가격 데이터",
+              "default": "close",
+              "title": "Series Type"
+            },
+            "description": "계산에 사용할 가격 데이터"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TechnicalIndicatorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/market-data/technical-indicators/{symbol}/macd": {
+      "get": {
+        "tags": [
+          "Technical Indicator"
+        ],
+        "summary": "Get Macd",
+        "description": "MACD를 조회합니다.",
+        "operationId": "Technical Indicator-get_macd",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "종목 심볼 (예: AAPL, TSLA)",
+              "title": "Symbol"
+            },
+            "description": "종목 심볼 (예: AAPL, TSLA)"
+          },
+          {
+            "name": "interval",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "1min",
+                "5min",
+                "15min",
+                "30min",
+                "60min",
+                "daily",
+                "weekly",
+                "monthly"
+              ],
+              "type": "string",
+              "description": "시간 간격",
+              "default": "daily",
+              "title": "Interval"
+            },
+            "description": "시간 간격"
+          },
+          {
+            "name": "series_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "close",
+                "open",
+                "high",
+                "low"
+              ],
+              "type": "string",
+              "description": "계산에 사용할 가격 데이터",
+              "default": "close",
+              "title": "Series Type"
+            },
+            "description": "계산에 사용할 가격 데이터"
+          },
+          {
+            "name": "fastperiod",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 2,
+              "description": "빠른 이동평균 기간",
+              "default": 12,
+              "title": "Fastperiod"
+            },
+            "description": "빠른 이동평균 기간"
+          },
+          {
+            "name": "slowperiod",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 2,
+              "description": "느린 이동평균 기간",
+              "default": 26,
+              "title": "Slowperiod"
+            },
+            "description": "느린 이동평균 기간"
+          },
+          {
+            "name": "signalperiod",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "description": "시그널 라인 기간",
+              "default": 9,
+              "title": "Signalperiod"
+            },
+            "description": "시그널 라인 기간"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TechnicalIndicatorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/market-data/technical-indicators/{symbol}/bbands": {
+      "get": {
+        "tags": [
+          "Technical Indicator"
+        ],
+        "summary": "Get Bbands",
+        "description": "볼린저밴드(BBANDS)를 조회합니다.",
+        "operationId": "Technical Indicator-get_bbands",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "종목 심볼 (예: AAPL, TSLA)",
+              "title": "Symbol"
+            },
+            "description": "종목 심볼 (예: AAPL, TSLA)"
+          },
+          {
+            "name": "interval",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "1min",
+                "5min",
+                "15min",
+                "30min",
+                "60min",
+                "daily",
+                "weekly",
+                "monthly"
+              ],
+              "type": "string",
+              "description": "시간 간격",
+              "default": "daily",
+              "title": "Interval"
+            },
+            "description": "시간 간격"
+          },
+          {
+            "name": "time_period",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 2,
+              "description": "이동평균 기간",
+              "default": 20,
+              "title": "Time Period"
+            },
+            "description": "이동평균 기간"
+          },
+          {
+            "name": "series_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "close",
+                "open",
+                "high",
+                "low"
+              ],
+              "type": "string",
+              "description": "계산에 사용할 가격 데이터",
+              "default": "close",
+              "title": "Series Type"
+            },
+            "description": "계산에 사용할 가격 데이터"
+          },
+          {
+            "name": "nbdevup",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 5,
+              "minimum": 1,
+              "description": "상단 밴드 표준편차 배수",
+              "default": 2,
+              "title": "Nbdevup"
+            },
+            "description": "상단 밴드 표준편차 배수"
+          },
+          {
+            "name": "nbdevdn",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 5,
+              "minimum": 1,
+              "description": "하단 밴드 표준편차 배수",
+              "default": 2,
+              "title": "Nbdevdn"
+            },
+            "description": "하단 밴드 표준편차 배수"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TechnicalIndicatorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/market-data/technical-indicators/{symbol}/adx": {
+      "get": {
+        "tags": [
+          "Technical Indicator"
+        ],
+        "summary": "Get Adx",
+        "description": "평균방향지수(ADX)를 조회합니다.",
+        "operationId": "Technical Indicator-get_adx",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "종목 심볼 (예: AAPL, TSLA)",
+              "title": "Symbol"
+            },
+            "description": "종목 심볼 (예: AAPL, TSLA)"
+          },
+          {
+            "name": "interval",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "1min",
+                "5min",
+                "15min",
+                "30min",
+                "60min",
+                "daily",
+                "weekly",
+                "monthly"
+              ],
+              "type": "string",
+              "description": "시간 간격",
+              "default": "daily",
+              "title": "Interval"
+            },
+            "description": "시간 간격"
+          },
+          {
+            "name": "time_period",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 2,
+              "description": "ADX 계산 기간",
+              "default": 14,
+              "title": "Time Period"
+            },
+            "description": "ADX 계산 기간"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TechnicalIndicatorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/market-data/technical-indicators/{symbol}/atr": {
+      "get": {
+        "tags": [
+          "Technical Indicator"
+        ],
+        "summary": "Get Atr",
+        "description": "평균진폭(ATR)을 조회합니다.",
+        "operationId": "Technical Indicator-get_atr",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "종목 심볼 (예: AAPL, TSLA)",
+              "title": "Symbol"
+            },
+            "description": "종목 심볼 (예: AAPL, TSLA)"
+          },
+          {
+            "name": "interval",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "1min",
+                "5min",
+                "15min",
+                "30min",
+                "60min",
+                "daily",
+                "weekly",
+                "monthly"
+              ],
+              "type": "string",
+              "description": "시간 간격",
+              "default": "daily",
+              "title": "Interval"
+            },
+            "description": "시간 간격"
+          },
+          {
+            "name": "time_period",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 2,
+              "description": "ATR 계산 기간",
+              "default": 14,
+              "title": "Time Period"
+            },
+            "description": "ATR 계산 기간"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TechnicalIndicatorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/market-data/technical-indicators/{symbol}/stoch": {
+      "get": {
+        "tags": [
+          "Technical Indicator"
+        ],
+        "summary": "Get Stoch",
+        "description": "스토캐스틱 오실레이터(STOCH)를 조회합니다.",
+        "operationId": "Technical Indicator-get_stoch",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "종목 심볼 (예: AAPL, TSLA)",
+              "title": "Symbol"
+            },
+            "description": "종목 심볼 (예: AAPL, TSLA)"
+          },
+          {
+            "name": "interval",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "1min",
+                "5min",
+                "15min",
+                "30min",
+                "60min",
+                "daily",
+                "weekly",
+                "monthly"
+              ],
+              "type": "string",
+              "description": "시간 간격",
+              "default": "daily",
+              "title": "Interval"
+            },
+            "description": "시간 간격"
+          },
+          {
+            "name": "fastkperiod",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "description": "Fast K 기간",
+              "default": 5,
+              "title": "Fastkperiod"
+            },
+            "description": "Fast K 기간"
+          },
+          {
+            "name": "slowkperiod",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "description": "Slow K 기간",
+              "default": 3,
+              "title": "Slowkperiod"
+            },
+            "description": "Slow K 기간"
+          },
+          {
+            "name": "slowdperiod",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "description": "Slow D 기간",
+              "default": 3,
+              "title": "Slowdperiod"
+            },
+            "description": "Slow D 기간"
+          },
+          {
+            "name": "slowkmatype",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 8,
+              "minimum": 0,
+              "description": "Slow K MA 타입",
+              "default": 0,
+              "title": "Slowkmatype"
+            },
+            "description": "Slow K MA 타입"
+          },
+          {
+            "name": "slowdmatype",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 8,
+              "minimum": 0,
+              "description": "Slow D MA 타입",
+              "default": 0,
+              "title": "Slowdmatype"
+            },
+            "description": "Slow D MA 타입"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TechnicalIndicatorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/market-data/": {
       "get": {
         "tags": [
@@ -9742,6 +11175,117 @@
         "title": "IncomeStatementResponse",
         "description": "손익계산서 조회 응답 스키마"
       },
+      "IndicatorDataPoint": {
+        "properties": {
+          "date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Date",
+            "description": "날짜 (daily 이상)"
+          },
+          "timestamp": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timestamp",
+            "description": "타임스탬프 (intraday)"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value",
+            "description": "지표 값"
+          },
+          "values": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Values",
+            "description": "복수 지표 값들"
+          }
+        },
+        "type": "object",
+        "title": "IndicatorDataPoint",
+        "description": "지표 데이터 포인트"
+      },
+      "IndicatorListResponse": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success",
+            "description": "요청 성공 여부",
+            "default": true
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message",
+            "description": "응답 메시지"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp",
+            "description": "응답 시간"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data",
+            "description": "지표 카테고리별 목록 (moving_averages, oscillators, volatility, volume)"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataInfo",
+            "description": "메타데이터"
+          }
+        },
+        "type": "object",
+        "required": [
+          "metadata"
+        ],
+        "title": "IndicatorListResponse",
+        "description": "지원하는 지표 목록 응답"
+      },
       "IntegratedBacktestRequest": {
         "properties": {
           "user_id": {
@@ -11681,6 +13225,127 @@
         ],
         "title": "TaskResult",
         "description": "작업 실행 결과"
+      },
+      "TechnicalIndicatorData": {
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "title": "Symbol",
+            "description": "주식 심볼"
+          },
+          "indicator_type": {
+            "type": "string",
+            "title": "Indicator Type",
+            "description": "지표 타입 (SMA, EMA, RSI, etc.)"
+          },
+          "interval": {
+            "type": "string",
+            "title": "Interval",
+            "description": "시간 간격"
+          },
+          "parameters": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Parameters",
+            "description": "지표 파라미터"
+          },
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/IndicatorDataPoint"
+            },
+            "type": "array",
+            "title": "Data",
+            "description": "시계열 데이터"
+          },
+          "data_points_count": {
+            "type": "integer",
+            "title": "Data Points Count",
+            "description": "데이터 포인트 개수",
+            "default": 0
+          },
+          "latest_value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latest Value",
+            "description": "최신 지표 값"
+          },
+          "latest_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latest Date",
+            "description": "최신 데이터 날짜"
+          }
+        },
+        "type": "object",
+        "required": [
+          "symbol",
+          "indicator_type",
+          "interval"
+        ],
+        "title": "TechnicalIndicatorData",
+        "description": "기술적 지표 응답 데이터 모델"
+      },
+      "TechnicalIndicatorResponse": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success",
+            "description": "요청 성공 여부",
+            "default": true
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message",
+            "description": "응답 메시지"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp",
+            "description": "응답 시간"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TechnicalIndicatorData"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "지표 데이터"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataInfo",
+            "description": "메타데이터"
+          }
+        },
+        "type": "object",
+        "required": [
+          "metadata"
+        ],
+        "title": "TechnicalIndicatorResponse",
+        "description": "단일 기술적 지표 응답"
       },
       "TemplateCreate": {
         "properties": {

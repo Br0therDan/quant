@@ -165,9 +165,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
     },
   };
 
-  return (
-    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
-  );
+  // Workaround for React type mismatches between @types/react instances:
+  // create an alias and cast to any to satisfy JSX typing.
+  const Provider = AuthContext.Provider as any;
+
+  return <Provider value={contextValue}>{children}</Provider>;
 }
 
 /**

@@ -2424,6 +2424,118 @@ export const IncomeStatementResponseSchema = {
 	description: "손익계산서 조회 응답 스키마",
 } as const;
 
+export const IndicatorDataPointSchema = {
+	properties: {
+		date: {
+			anyOf: [
+				{
+					type: "string",
+					format: "date-time",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Date",
+			description: "날짜 (daily 이상)",
+		},
+		timestamp: {
+			anyOf: [
+				{
+					type: "string",
+					format: "date-time",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Timestamp",
+			description: "타임스탬프 (intraday)",
+		},
+		value: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Value",
+			description: "지표 값",
+		},
+		values: {
+			anyOf: [
+				{
+					additionalProperties: {
+						type: "string",
+					},
+					type: "object",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Values",
+			description: "복수 지표 값들",
+		},
+	},
+	type: "object",
+	title: "IndicatorDataPoint",
+	description: "지표 데이터 포인트",
+} as const;
+
+export const IndicatorListResponseSchema = {
+	properties: {
+		success: {
+			type: "boolean",
+			title: "Success",
+			description: "요청 성공 여부",
+			default: true,
+		},
+		message: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Message",
+			description: "응답 메시지",
+		},
+		timestamp: {
+			type: "string",
+			format: "date-time",
+			title: "Timestamp",
+			description: "응답 시간",
+		},
+		data: {
+			anyOf: [
+				{
+					additionalProperties: true,
+					type: "object",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Data",
+			description:
+				"지표 카테고리별 목록 (moving_averages, oscillators, volatility, volume)",
+		},
+		metadata: {
+			$ref: "#/components/schemas/MetadataInfo",
+			description: "메타데이터",
+		},
+	},
+	type: "object",
+	required: ["metadata"],
+	title: "IndicatorListResponse",
+	description: "지원하는 지표 목록 응답",
+} as const;
+
 export const IntegratedBacktestRequestSchema = {
 	properties: {
 		user_id: {
@@ -4295,6 +4407,123 @@ export const TaskResultSchema = {
 	required: ["status", "message"],
 	title: "TaskResult",
 	description: "작업 실행 결과",
+} as const;
+
+export const TechnicalIndicatorDataSchema = {
+	properties: {
+		symbol: {
+			type: "string",
+			title: "Symbol",
+			description: "주식 심볼",
+		},
+		indicator_type: {
+			type: "string",
+			title: "Indicator Type",
+			description: "지표 타입 (SMA, EMA, RSI, etc.)",
+		},
+		interval: {
+			type: "string",
+			title: "Interval",
+			description: "시간 간격",
+		},
+		parameters: {
+			additionalProperties: true,
+			type: "object",
+			title: "Parameters",
+			description: "지표 파라미터",
+		},
+		data: {
+			items: {
+				$ref: "#/components/schemas/IndicatorDataPoint",
+			},
+			type: "array",
+			title: "Data",
+			description: "시계열 데이터",
+		},
+		data_points_count: {
+			type: "integer",
+			title: "Data Points Count",
+			description: "데이터 포인트 개수",
+			default: 0,
+		},
+		latest_value: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Latest Value",
+			description: "최신 지표 값",
+		},
+		latest_date: {
+			anyOf: [
+				{
+					type: "string",
+					format: "date-time",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Latest Date",
+			description: "최신 데이터 날짜",
+		},
+	},
+	type: "object",
+	required: ["symbol", "indicator_type", "interval"],
+	title: "TechnicalIndicatorData",
+	description: "기술적 지표 응답 데이터 모델",
+} as const;
+
+export const TechnicalIndicatorResponseSchema = {
+	properties: {
+		success: {
+			type: "boolean",
+			title: "Success",
+			description: "요청 성공 여부",
+			default: true,
+		},
+		message: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Message",
+			description: "응답 메시지",
+		},
+		timestamp: {
+			type: "string",
+			format: "date-time",
+			title: "Timestamp",
+			description: "응답 시간",
+		},
+		data: {
+			anyOf: [
+				{
+					$ref: "#/components/schemas/TechnicalIndicatorData",
+				},
+				{
+					type: "null",
+				},
+			],
+			description: "지표 데이터",
+		},
+		metadata: {
+			$ref: "#/components/schemas/MetadataInfo",
+			description: "메타데이터",
+		},
+	},
+	type: "object",
+	required: ["metadata"],
+	title: "TechnicalIndicatorResponse",
+	description: "단일 기술적 지표 응답",
 } as const;
 
 export const TemplateCreateSchema = {
