@@ -931,9 +931,7 @@ class DatabaseManager:
                 timestamp TIMESTAMP,              -- 타임스탬프 (intraday)
                 value DECIMAL(18, 8),             -- 단일 값 (SMA, EMA, RSI 등)
                 values_json TEXT,                 -- 복수 값 JSON (MACD, BBANDS 등)
-                cached_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-                PRIMARY KEY (cache_key, COALESCE(timestamp, date))
+                cached_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         """
         )

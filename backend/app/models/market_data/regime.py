@@ -51,5 +51,8 @@ class MarketRegime(BaseMarketDataDocument):
         indexes = [
             "symbol",
             "as_of",
-            {"fields": ["symbol", "as_of"], "unique": True},
+            [("symbol", 1), ("as_of", -1)],
+        ]
+        unique_indexes = [
+            [("symbol", 1), ("as_of", 1)],
         ]

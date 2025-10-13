@@ -62,8 +62,11 @@ class RegimeDetectionService:
     async def get_latest_regime(self, symbol: str) -> Optional[MarketRegimeSnapshot]:
         """Fetch the most recent regime snapshot from MongoDB."""
 
-        document = await MarketRegime.find_one(MarketRegime.symbol == symbol).sort(
-            "-as_of"
+        document = (
+            await MarketRegime.find(MarketRegime.symbol == symbol)
+            .sort("-as_of")
+            .limit(1)
+            .first_or_none()
         )
         if not document:
             return None
