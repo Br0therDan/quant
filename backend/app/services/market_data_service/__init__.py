@@ -14,6 +14,7 @@ from .fundamental import FundamentalService
 from .economic_indicator import EconomicIndicatorService
 from .intelligence import IntelligenceService
 from app.services.database_manager import DatabaseManager
+from app.services.monitoring.data_quality_sentinel import DataQualitySentinel
 
 logger = logging.getLogger(__name__)
 
@@ -25,8 +26,13 @@ class MarketDataService:
     각 도메인별 서비스에 대한 접근을 제공합니다.
     """
 
-    def __init__(self, database_manager: Optional[DatabaseManager] = None):
+    def __init__(
+        self,
+        database_manager: Optional[DatabaseManager] = None,
+        data_quality_sentinel: Optional[DataQualitySentinel] = None,
+    ):
         self.database_manager = database_manager
+        self._data_quality_sentinel = data_quality_sentinel
 
         # 각 도메인별 서비스 인스턴스
         self._stock_service = None
@@ -39,7 +45,9 @@ class MarketDataService:
     def stock(self) -> StockService:
         """주식 데이터 서비스 접근"""
         if self._stock_service is None:
-            self._stock_service = StockService(self.database_manager)
+            self._stock_service = StockService(
+                self.database_manager, data_quality_sentinel=self._data_quality_sentinel
+            )
         return self._stock_service
 
     @property
@@ -98,9 +106,7 @@ class MarketDataService:
             try:
                 # Intelligence 서비스를 통해 간단한 API 호출 테스트
                 intelligence_service = self.intelligence
-                test_response = (
-                    await intelligence_service.alpha_vantage.intelligence.top_gainers_losers()
-                )
+                test_response = await intelligence_service.alpha_vantage.intelligence.top_gainers_losers()
                 if not test_response:
                     alpha_vantage_status = "error"
             except Exception:

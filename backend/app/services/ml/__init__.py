@@ -7,6 +7,7 @@ Machine Learning components for quantitative trading:
 - ModelRegistry: Model versioning and management
 """
 
+from app.services.ml.anomaly_detector import AnomalyDetectionService, AnomalyResult
 from app.services.ml.feature_engineer import FeatureEngineer
 from app.services.ml.model_registry import ModelRegistry
 from app.services.ml.trainer import (
@@ -19,4 +20,6 @@ __all__ = [
     "MLModelTrainer",
     "ModelRegistry",
     "generate_labels_from_returns",
+    "AnomalyDetectionService",
+    "AnomalyResult",
 ]

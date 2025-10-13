@@ -249,6 +249,19 @@ stateDiagram-v2
     end note
 ```
 
+### 4. 데이터 품질 모니터링 흐름
+
+- MarketDataService의 일별 주가 적재가 `DataQualitySentinel`을 호출하여 Isolation
+  Forest와 Prophet 기반 이상 점수, 거래량 Z-Score를 계산하고 `DailyPrice`
+  다큐먼트의 `iso_anomaly_score`, `prophet_anomaly_score`, `volume_z_score`,
+  `anomaly_severity`, `anomaly_reasons` 필드를 갱신한다.
+- 이상이 감지되면 `DataQualityEvent` 컬렉션에 영속화되며, ServiceFactory에서
+  공유하는 센티널 싱글톤이 심각도 HIGH 이상을 환경 변수(`DATA_QUALITY_WEBHOOK_URL`)
+  기반 웹훅으로 전송한다.
+- DashboardService는 `DataQualitySummary` 구조를 생성해 최근 24시간 경보, 심각도별
+  집계, 상세 메시지를 사용자 대시보드에 노출하여 전략·백테스트 운영자가 데이터 품질을
+  즉시 확인할 수 있다.
+
 ## 로드맵
 
 ### Phase 1 (완료): 의존성 주입 개선
