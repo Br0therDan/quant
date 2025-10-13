@@ -1,68 +1,84 @@
-# Phase 2 Plan – Automation & Optimization Loop
+# 2단계 계획 – 자동화 및 최적화 루프
 
-## 1. Executive Summary
-- **Objective:** Automate strategy optimization and data quality enforcement by embedding Optuna-driven tuning, reinforcement learning experimentation, and anomaly detection into the backtest ecosystem.
-- **Business Value:** Accelerates strategy iteration cycles, adapts to evolving regimes, and protects model integrity through proactive data checks.
-- **Timeframe:** 6 weeks (2025-02-17 → 2025-03-28).
+## 1. 경영 요약
 
-## 2. Scope & Deliverables
-| ID | Deliverable | Description | Acceptance Criteria |
-| -- | ----------- | ----------- | ------------------- |
-| D1 | Backtest Optimizer API | `/backtests/optimize` endpoint orchestrating Optuna/Hyperopt studies against BacktestService. | - Async execution pipeline with progress callbacks<br>- Persisted study metadata in MongoDB<br>- Dashboard leaderboard of top trials |
-| D2 | Reinforcement Learning Executor | `RLEngine` interfacing with TradingSimulator via OpenAI Gym semantics for RL policy evaluation. | - Training loop with Stable-Baselines3 integration<br>- Policy playback via BacktestService for deterministic evaluation<br>- Resource usage guardrails documented |
-| D3 | Data Quality Sentinel | Online anomaly detection integrated into MarketDataService ingestion with alert surfacing. | - Isolation Forest/Prophet scores stored with market data<br>- DashboardService exposes anomaly counts & severity<br>- Alerting webhook for critical issues |
+- **목표:** Optuna 기반 튜닝, 강화학습 실험, 이상 탐지를 백테스트 생태계에
+  내재화하여 전략 최적화와 데이터 품질 보증을 자동화한다.
+- **비즈니스 가치:** 전략 반복 주기를 가속화하고 변화하는 레짐에 적응하며,
+  선제적 데이터 점검을 통해 모델 무결성을 보호한다.
+- **기간:** 6주 (2025-02-17 → 2025-03-28).
 
-### Out of Scope
-- Production deployment of RL agent to live trading.
-- Feature store governance (Phase 4).
+## 2. 범위 및 산출물
 
-## 3. Workstreams & Backlog Mapping
-| Workstream | Backlog Items | Notes |
-| ---------- | ------------- | ----- |
-| Optimization Framework | D1 | Align optimization loop with BacktestService execution order and persistence patterns from Strategy & Backtest architecture.【F:docs/backend/strategy_backtest/ARCHITECTURE.md†L49-L87】 |
-| RL Experimentation | D2 | Extend TradingSimulator to expose step/reset for RL per master plan Section 3.2.【F:docs/backend/ai_integration/master_plan.md†L89-L108】 |
-| Data Quality & Monitoring | D3 | Implement anomaly scoring pipeline per master plan Section 3.3 with outputs feeding DashboardService.【F:docs/backend/ai_integration/master_plan.md†L109-L132】 |
-| Platform Integration | D1, D2, D3 | Ensure ServiceFactory registrations, orchestrator hooks, and telemetry align with Strategy & Backtest workflows.【F:docs/backend/strategy_backtest/ARCHITECTURE.md†L1-L108】 |
+| ID  | 산출물                  | 설명                                                                                                     | 승인 기준                                                                                                                                   |
+| --- | ----------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| D1  | 백테스트 옵티마이저 API | BacktestService를 대상으로 Optuna/Hyperopt 스터디를 오케스트레이션하는 `/backtests/optimize` 엔드포인트. | - 진행 상황 콜백이 있는 비동기 실행 파이프라인<br>- 스터디 메타데이터를 MongoDB에 영속화<br>- 주요 시도 상위권을 보여주는 대시보드 리더보드 |
+| D2  | 강화학습 실행기         | RL 정책 평가를 위해 OpenAI Gym 시맨틱으로 TradingSimulator와 연동하는 `RLEngine`.                        | - Stable-Baselines3 통합 학습 루프<br>- BacktestService를 통한 정책 재생으로 결정적 평가 수행<br>- 리소스 사용 가드레일 문서화              |
+| D3  | 데이터 품질 센티널      | MarketDataService 적재에 온라인 이상 탐지를 통합하고 알림을 노출.                                        | - Isolation Forest/Prophet 점수를 마켓데이터와 함께 저장<br>- DashboardService가 이상 건수와 심각도를 노출<br>- 중대 이슈를 위한 경보 웹훅  |
 
-## 4. Milestones
-| Milestone | Date | Owner | Exit Criteria |
-| --------- | ---- | ----- | ------------- |
-| M1: Optimizer Design Review | 2025-02-21 | Backend Lead | Approved Optuna architecture, background job strategy | 
-| M2: RL Sandbox Ready | 2025-03-07 | Quant Research | RL environment validated with sample policy checkpoints |
-| M3: Data Sentinel Launch | 2025-03-14 | Data Engineering | Ingestion pipeline emitting anomaly events to dashboard |
-| M4: Integrated Demo | 2025-03-28 | Product | Demonstrate optimizer, RL playback, anomaly reporting in a unified workflow |
+### 범위 제외
 
-## 5. Dependencies & Interfaces
-- **Phase 1 Outputs:** Signal and regime services feed optimizer objective functions and RL state features.【F:docs/backend/ai_integration/master_plan.md†L13-L82】
-- **Background Task Runner:** Celery or FastAPI background tasks needed for long-running studies.
-- **DashboardService Enhancements:** Display optimization leaderboards and anomaly metrics.
-- **Compute Resources:** GPU/CPU allocation planning for RL training windows.
+- RL 에이전트의 실거래 배포.
+- 피처 스토어 거버넌스(4단계).
 
-## 6. Risks & Mitigations
-| Risk | Impact | Likelihood | Response |
-| ---- | ------ | ---------- | -------- |
-| Optuna job starvation during market hours | High | Medium | Schedule optimization windows; implement job prioritization by asset class. |
-| RL training instability | Medium | Medium | Start with constrained action spaces; enable deterministic evaluation for acceptance. |
-| False positives in anomaly alerts | Medium | High | Calibrate thresholds using historical backtest data; allow analyst override workflow. |
+## 3. 작업 스트림 및 백로그 매핑
 
-## 7. Metrics & Reporting
-- **Optimization Efficiency:** Trials/hour, best Sharpe improvement vs baseline.
-- **RL Performance:** Policy Sharpe ratio delta, drawdown compliance, episode length stability.
-- **Data Quality:** Number of anomalies per ingest batch, resolution time, false-positive rate.
+| 작업 스트림             | 백로그 항목 | 비고                                                                                                                                                               |
+| ----------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 최적화 프레임워크       | D1          | 최적화 루프를 BacktestService 실행 순서와 Strategy & Backtest 아키텍처의 영속 패턴에 맞춘다.【F:docs/backend/strategy_backtest/ARCHITECTURE.md†L49-L87】           |
+| RL 실험                 | D2          | 마스터 플랜 3.2절에 따라 RL을 위한 step/reset 공개를 위해 TradingSimulator 확장.【F:docs/backend/ai_integration/master_plan.md†L89-L108】                          |
+| 데이터 품질 및 모니터링 | D3          | 마스터 플랜 3.3절의 이상 점수 파이프라인을 구현해 DashboardService로 출력 연결.【F:docs/backend/ai_integration/master_plan.md†L109-L132】                          |
+| 플랫폼 통합             | D1, D2, D3  | ServiceFactory 등록, 오케스트레이터 훅, 텔레메트리가 Strategy & Backtest 워크플로우와 일치하도록 보장.【F:docs/backend/strategy_backtest/ARCHITECTURE.md†L1-L108】 |
 
-## 8. Resource Plan
-| Role | Allocation | Notes |
-| ---- | ---------- | ----- |
-| Backend Engineer | 1.5 FTE | Optuna API, background orchestration, telemetry |
-| Quant Researcher | 1 FTE | RL experimentation, reward shaping |
-| Data Engineer | 0.5 FTE | Anomaly pipeline and monitoring |
-| DevOps Engineer | 0.5 FTE | Compute orchestration, job scheduling |
+## 4. 마일스톤
 
-## 9. Communication Cadence
-- Fortnightly deep-dive with Quant Research on RL progress.
-- Weekly sync with SRE/DevOps on job scheduling and resource usage.
+| 마일스톤                 | 날짜       | 담당              | 종료 기준                                                 |
+| ------------------------ | ---------- | ----------------- | --------------------------------------------------------- |
+| M1: 옵티마이저 설계 리뷰 | 2025-02-21 | 백엔드 리드       | Optuna 아키텍처와 백그라운드 작업 전략 승인               |
+| M2: RL 샌드박스 준비     | 2025-03-07 | 퀀트 리서치       | 샘플 정책 체크포인트로 검증된 RL 환경                     |
+| M3: 데이터 센티널 가동   | 2025-03-14 | 데이터 엔지니어링 | 대시보드에 이상 이벤트를 방출하는 적재 파이프라인         |
+| M4: 통합 데모            | 2025-03-28 | 프로덕트          | 옵티마이저, RL 재생, 이상 리포팅을 통합 워크플로우로 시연 |
 
-## 10. Exit Criteria
-- Optimizer, RL executor, and anomaly sentinel deployed to staging with automated smoke tests.
-- Runbooks and KPI dashboards updated.
-- Post-phase retrospective capturing lessons for generative phase transition.
+## 5. 의존성과 인터페이스
+
+- **1단계 산출물:** 시그널과 레짐 서비스가 옵티마이저 목적 함수와 RL 상태 피처를
+  공급.【F:docs/backend/ai_integration/master_plan.md†L13-L82】
+- **백그라운드 작업 러너:** 장시간 스터디를 위해 Celery 또는 FastAPI 백그라운드
+  작업 필요.
+- **DashboardService 확장:** 최적화 리더보드와 이상 지표를 표시.
+- **컴퓨팅 리소스:** RL 학습 기간을 위한 GPU/CPU 할당 계획.
+
+## 6. 위험 및 대응
+
+| 위험                         | 영향 | 가능성 | 대응                                                                                |
+| ---------------------------- | ---- | ------ | ----------------------------------------------------------------------------------- |
+| 시장 시간대 Optuna 작업 정체 | 높음 | 중간   | 최적화 윈도우를 예약하고 자산군별 작업 우선순위를 도입.                             |
+| RL 학습 불안정성             | 중간 | 중간   | 제한된 액션 공간에서 시작하고 승인용 결정적 평가를 가능케 한다.                     |
+| 이상 알림의 과도한 오탐      | 중간 | 높음   | 과거 백테스트 데이터를 사용해 임계값을 보정하고 분석가 재량 승인 워크플로우를 제공. |
+
+## 7. 지표 및 보고
+
+- **최적화 효율:** 시간당 시도 수, 기준 대비 최고 샤프 개선폭.
+- **RL 성능:** 정책 샤프 지수 변화, 드로다운 준수, 에피소드 길이 안정성.
+- **데이터 품질:** 적재 배치당 이상 건수, 해결 시간, 오탐 비율.
+
+## 8. 리소스 계획
+
+| 역할              | 투입량  | 비고                                              |
+| ----------------- | ------- | ------------------------------------------------- |
+| 백엔드 엔지니어   | 1.5 FTE | Optuna API, 백그라운드 오케스트레이션, 텔레메트리 |
+| 퀀트 리서처       | 1 FTE   | RL 실험, 보상 설계                                |
+| 데이터 엔지니어   | 0.5 FTE | 이상 파이프라인 및 모니터링                       |
+| 데브옵스 엔지니어 | 0.5 FTE | 컴퓨트 오케스트레이션, 작업 스케줄링              |
+
+## 9. 커뮤니케이션 주기
+
+- RL 진행 상황에 대해 격주로 퀀트 리서치 심층 세션.
+- 작업 스케줄링과 리소스 사용을 다루는 주간 SRE/DevOps 정기 sync.
+
+## 10. 종료 기준
+
+- 옵티마이저, RL 실행기, 이상 센티널을 자동 스모크 테스트와 함께 스테이징에
+  배포.
+- 런북과 KPI 대시보드 업데이트.
+- 생성형 단계 전환을 위한 회고록 작성.

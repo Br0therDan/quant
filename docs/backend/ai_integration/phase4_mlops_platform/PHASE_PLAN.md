@@ -1,69 +1,87 @@
-# Phase 4 Plan – MLOps Platform Enablement
+# 4단계 계획 – MLOps 플랫폼 가동
 
-## 1. Executive Summary
-- **Objective:** Establish durable MLOps capabilities—feature store, model lifecycle management, evaluation harness, and prompt governance—to sustain AI services launched in earlier phases.
-- **Business Value:** Ensures reproducibility, compliance, and continuous improvement for AI-driven trading features while enabling scalable collaboration across teams.
-- **Timeframe:** 6 weeks (2025-05-12 → 2025-06-20).
+## 1. 경영 요약
 
-## 2. Scope & Deliverables
-| ID | Deliverable | Description | Acceptance Criteria |
-| -- | ----------- | ----------- | ------------------- |
-| D1 | Feature Store Launch | Version-controlled DuckDB feature views with metadata catalog. | - Feature registry capturing lineage and owners per master plan Section 5.【F:docs/backend/ai_integration/master_plan.md†L208-L232】<br>- CI checks to validate schema changes<br>- Documentation for feature reuse |
-| D2 | Model Lifecycle Management | MLflow/W&B integration with MongoDB metadata sync. | - Experiment tracking templates aligned to Strategy & Backtest models<br>- Deployment checklists covering approval & rollback<br>- Automated drift monitoring alerts |
-| D3 | Evaluation Harness | Benchmark suite with explainability artifacts and compliance reports. | - Backtest replay scenarios with baseline comparisons<br>- SHAP/explainability outputs stored alongside results<br>- Review workflow for compliance sign-off |
-| D4 | Prompt & Policy Governance | Centralized prompt repository with toxicity/fact-check pipelines. | - Versioned prompt library with approval workflow<br>- Automated evaluation for hallucination/toxicity thresholds<br>- Audit-ready policy documentation |
+- **목표:** 피처 스토어, 모델 수명주기 관리, 평가 하니스, 프롬프트 거버넌스를
+  구축하여 앞선 단계에서 출시한 AI 서비스를 지속 가능한 형태로 운영한다.
+- **비즈니스 가치:** 팀 간 확장 가능한 협업을 지원하면서 AI 기반 트레이딩 기능의
+  재현성, 규정 준수, 지속적 개선을 보장한다.
+- **기간:** 6주 (2025-05-12 → 2025-06-20).
 
-### Out of Scope
-- Additional model development beyond maintaining existing catalog.
+## 2. 범위 및 산출물
 
-## 3. Workstreams & Backlog Mapping
-| Workstream | Backlog Items | Notes |
-| ---------- | ------------- | ----- |
-| Data Governance | D1 | Extend DuckDB infrastructure leveraging Strategy & Backtest data models.【F:docs/backend/strategy_backtest/ARCHITECTURE.md†L1-L120】 |
-| Experimentation & Deployment | D2, D3 | Implement lifecycle tooling supporting ML signal, forecasting, and RL models from earlier phases.【F:docs/backend/ai_integration/master_plan.md†L13-L132】 |
-| Compliance & Governance | D3, D4 | Align evaluation outputs and prompt governance with regulatory expectations per Section 5 guidance.【F:docs/backend/ai_integration/master_plan.md†L208-L232】 |
-| Automation | D1, D2, D4 | Integrate CI/CD workflows ensuring schema, model, and prompt changes trigger automated validation. |
+| ID  | 산출물                    | 설명                                                                 | 승인 기준                                                                                                                                                                                    |
+| --- | ------------------------- | -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| D1  | 피처 스토어 론칭          | 메타데이터 카탈로그가 포함된 버전 관리 DuckDB 피처 뷰.               | - 마스터 플랜 5절에 따른 계보와 담당자를 기록하는 피처 레지스트리 구축【F:docs/backend/ai_integration/master_plan.md†L208-L232】<br>- 스키마 변경을 검증하는 CI 점검<br>- 피처 재사용 문서화 |
+| D2  | 모델 수명주기 관리        | MongoDB 메타데이터와 동기화되는 MLflow/W&B 통합.                     | - Strategy & Backtest 모델과 정렬된 실험 추적 템플릿<br>- 승인·롤백을 포함한 배포 체크리스트<br>- 자동 드리프트 모니터링 알림                                                                |
+| D3  | 평가 하니스               | 설명 가능성 아티팩트와 컴플라이언스 리포트를 포함한 벤치마크 스위트. | - 기준과 비교하는 백테스트 재생 시나리오<br>- 결과와 함께 저장되는 SHAP/설명 가능성 출력<br>- 컴플라이언스 승인 워크플로우                                                                   |
+| D4  | 프롬프트 및 정책 거버넌스 | 독성·사실 검증 파이프라인이 붙은 중앙 집중식 프롬프트 저장소.        | - 승인 워크플로우가 있는 버전 관리 프롬프트 라이브러리<br>- 환각/독성 임계값에 대한 자동 평가<br>- 감사 대응이 가능한 정책 문서화                                                            |
 
-## 4. Milestones
-| Milestone | Date | Owner | Exit Criteria |
-| --------- | ---- | ----- | ------------- |
-| M1: Feature Store Schema Freeze | 2025-05-23 | Data Engineering | Core feature tables published with documentation |
-| M2: MLflow/W&B Integration Complete | 2025-06-06 | MLOps Engineer | Experiment tracking and model registry operational |
-| M3: Evaluation Harness Pilot | 2025-06-13 | Quant Research | Benchmark report covering two flagship strategies |
-| M4: Governance Audit Prep | 2025-06-20 | Compliance | Prompt/policy repository reviewed with audit artifacts |
+### 범위 제외
 
-## 5. Dependencies & Interfaces
-- **Phase 1-3 Services:** Need consistent telemetry and metadata to populate feature store and evaluation harness.
-- **Infrastructure:** Secure storage for artifacts, CI/CD pipelines, and monitoring stack.
-- **Compliance Stakeholders:** Provide review cycles and policy inputs for governance deliverables.
+- 기존 카탈로그를 유지하는 수준을 넘어서는 신규 모델 개발.
 
-## 6. Risks & Mitigations
-| Risk | Impact | Likelihood | Response |
-| ---- | ------ | ---------- | -------- |
-| Feature version drift | High | Medium | Enforce semantic versioning and automated schema diff checks. |
-| Tooling integration complexity (MLflow/W&B) | Medium | Medium | Pilot in sandbox; use uv/ServiceFactory aligned patterns for deployment. |
-| Compliance sign-off delays | High | Low | Schedule early reviews; maintain living documentation and audit trails. |
+## 3. 작업 스트림 및 백로그 매핑
 
-## 7. Metrics & Reporting
-- **Feature Store Adoption:** Number of models using shared features, time to provision new feature.
-- **Lifecycle Compliance:** Percentage of models with complete metadata, retraining cadence adherence.
-- **Evaluation Coverage:** Benchmarks executed per release, percentage with explainability artifacts.
-- **Governance Quality:** Prompt approval turnaround time, number of policy violations detected.
+| 작업 스트림           | 백로그 항목 | 비고                                                                                                                         |
+| --------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| 데이터 거버넌스       | D1          | Strategy & Backtest 데이터 모델을 활용해 DuckDB 인프라 확장.【F:docs/backend/strategy_backtest/ARCHITECTURE.md†L1-L120】     |
+| 실험 및 배포          | D2, D3      | 이전 단계의 ML 시그널, 예측, RL 모델을 지원하는 수명주기 도구 구현.【F:docs/backend/ai_integration/master_plan.md†L13-L132】 |
+| 규정 준수 및 거버넌스 | D3, D4      | 평가 출력과 프롬프트 거버넌스를 5절 지침에 따라 규제 기대와 정렬.【F:docs/backend/ai_integration/master_plan.md†L208-L232】  |
+| 자동화                | D1, D2, D4  | 스키마·모델·프롬프트 변경 시 자동 검증이 실행되도록 CI/CD 워크플로우 통합.                                                   |
 
-## 8. Resource Plan
-| Role | Allocation | Notes |
-| ---- | ---------- | ----- |
-| MLOps Engineer | 1.5 FTE | Feature store automation, MLflow integration |
-| Data Engineer | 0.5 FTE | DuckDB schema management |
-| Compliance Lead | 0.5 FTE | Governance workflow ownership |
-| Backend Engineer | 0.5 FTE | CI/CD integrations, ServiceFactory instrumentation |
-| QA Engineer | 0.5 FTE | Automated validation suites |
+## 4. 마일스톤
 
-## 9. Communication Cadence
-- Bi-weekly steering review with compliance and executive sponsors.
-- Weekly ops sync to track tooling rollout and adoption metrics.
+| 마일스톤                    | 날짜       | 담당              | 종료 기준                                        |
+| --------------------------- | ---------- | ----------------- | ------------------------------------------------ |
+| M1: 피처 스토어 스키마 동결 | 2025-05-23 | 데이터 엔지니어링 | 핵심 피처 테이블 공개 및 문서화                  |
+| M2: MLflow/W&B 통합 완료    | 2025-06-06 | MLOps 엔지니어    | 실험 추적과 모델 레지스트리 운영화               |
+| M3: 평가 하니스 파일럿      | 2025-06-13 | 퀀트 리서치       | 대표 전략 2개를 포괄하는 벤치마크 리포트         |
+| M4: 거버넌스 감사 준비      | 2025-06-20 | 컴플라이언스      | 프롬프트/정책 저장소를 감사 아티팩트와 함께 검토 |
 
-## 10. Exit Criteria
-- Feature store, lifecycle tooling, and governance pipelines operational in production.
-- Documentation and runbooks handed off to platform operations.
-- KPI dashboard updated with platform health metrics and adoption stats.
+## 5. 의존성과 인터페이스
+
+- **1~3단계 서비스:** 피처 스토어와 평가 하니스를 채우기 위한 일관된
+  텔레메트리와 메타데이터 필요.
+- **인프라:** 아티팩트 저장소, CI/CD 파이프라인, 모니터링 스택의 보안 확보.
+- **컴플라이언스 이해관계자:** 거버넌스 산출물을 위한 검토 주기와 정책 입력
+  제공.
+
+## 6. 위험 및 대응
+
+| 위험                         | 영향 | 가능성 | 대응                                                                |
+| ---------------------------- | ---- | ------ | ------------------------------------------------------------------- |
+| 피처 버전 드리프트           | 높음 | 중간   | 시맨틱 버저닝과 자동 스키마 차이 점검을 강제.                       |
+| 도구 통합 복잡성(MLflow/W&B) | 중간 | 중간   | 샌드박스에서 파일럿을 진행하고 배포 시 uv/ServiceFactory 패턴 준수. |
+| 컴플라이언스 승인 지연       | 높음 | 낮음   | 조기 리뷰를 일정에 반영하고 살아있는 문서·감사 로그 유지.           |
+
+## 7. 지표 및 보고
+
+- **피처 스토어 활용도:** 공유 피처를 사용하는 모델 수, 신규 피처 제공까지
+  걸리는 시간.
+- **수명주기 준수율:** 완전한 메타데이터를 가진 모델 비율, 재학습 주기 준수
+  여부.
+- **평가 커버리지:** 릴리스당 수행된 벤치마크 수, 설명 가능성 아티팩트를 포함한
+  비율.
+- **거버넌스 품질:** 프롬프트 승인 소요 시간, 탐지된 정책 위반 건수.
+
+## 8. 리소스 계획
+
+| 역할              | 투입량  | 비고                            |
+| ----------------- | ------- | ------------------------------- |
+| MLOps 엔지니어    | 1.5 FTE | 피처 스토어 자동화, MLflow 통합 |
+| 데이터 엔지니어   | 0.5 FTE | DuckDB 스키마 관리              |
+| 컴플라이언스 리드 | 0.5 FTE | 거버넌스 워크플로우 총괄        |
+| 백엔드 엔지니어   | 0.5 FTE | CI/CD 통합, ServiceFactory 계측 |
+| QA 엔지니어       | 0.5 FTE | 자동화 검증 스위트              |
+
+## 9. 커뮤니케이션 주기
+
+- 컴플라이언스 및 경영진 스폰서와 격주 스티어링 리뷰.
+- 도구 롤아웃과 채택 지표를 추적하는 주간 운영 sync.
+
+## 10. 종료 기준
+
+- 피처 스토어, 수명주기 도구, 거버넌스 파이프라인이 프로덕션에서 운영.
+- 문서와 런북을 플랫폼 운영팀에 인계.
+- KPI 대시보드를 플랫폼 건강 지표와 채택 통계로 업데이트.
