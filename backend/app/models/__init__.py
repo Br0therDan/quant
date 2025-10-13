@@ -44,6 +44,7 @@ from .market_data import (
 )
 from .performance import StrategyPerformance
 from .strategy import Strategy, StrategyTemplate, StrategyExecution
+from .data_quality import DataQualityEvent
 from mysingle_quant.auth.models import User, OAuthAccount
 
 collections = [
@@ -91,6 +92,8 @@ collections = [
     IndicatorDataPoint,
     # 예측 인텔리전스
     MarketRegime,
+    # 모니터링
+    DataQualityEvent,
     # 전략 및 성과
     Strategy,
     StrategyTemplate,
@@ -112,6 +115,8 @@ __all__ = [
     "StockDataCoverage",
     "MarketData",
     "MarketRegime",
+    # Monitoring
+    "DataQualityEvent",
     # Market data models - Crypto
     "CryptoExchangeRate",
     "CryptoIntradayPrice",

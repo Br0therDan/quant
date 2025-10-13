@@ -12,6 +12,8 @@ from app.services.market_data_service.base_service import (
     BaseMarketDataService,
     DataQualityValidator,
 )
+from app.services.database_manager import DatabaseManager
+from app.services.monitoring.data_quality_sentinel import DataQualitySentinel
 from app.models.market_data.stock import (
     DailyPrice,
     WeeklyPrice,
@@ -26,6 +28,14 @@ logger = logging.getLogger(__name__)
 
 class StockService(BaseMarketDataService):
     """주식 데이터 서비스"""
+
+    def __init__(
+        self,
+        database_manager: Optional[DatabaseManager] = None,
+        data_quality_sentinel: Optional[DataQualitySentinel] = None,
+    ) -> None:
+        super().__init__(database_manager)
+        self.data_quality_sentinel = data_quality_sentinel
 
     async def get_daily_prices(
         self,
@@ -166,10 +176,13 @@ class StockService(BaseMarketDataService):
             if outputsize not in ["compact", "full"]:
                 outputsize = "compact"
 
-            logger.info(f"Alpha Vantage API 호출 시작: {symbol}, outputsize={outputsize}")
+            logger.info(
+                f"Alpha Vantage API 호출 시작: {symbol}, outputsize={outputsize}"
+            )
 
             response = await self.alpha_vantage.stock.daily_adjusted(
-                symbol=symbol.upper().strip(), outputsize=outputsize  # type: ignore
+                symbol=symbol.upper().strip(),
+                outputsize=outputsize,  # type: ignore
             )
 
             # 응답 데이터 구조 로깅
@@ -860,9 +873,7 @@ class StockService(BaseMarketDataService):
                     # datetime 또는 date 필드 확인
                     date_value = item.get("datetime") or item.get("date")
                     if not date_value:
-                        logger.warning(
-                            f"⚠️ Missing datetime/date field in item: {item}"
-                        )
+                        logger.warning(f"⚠️ Missing datetime/date field in item: {item}")
                         continue
 
                     # datetime 객체로 변환
@@ -909,7 +920,9 @@ class StockService(BaseMarketDataService):
                     logger.warning(f"⚠️ Failed to parse intraday data: {e}")
                     continue
 
-            logger.info(f"✅ Parsed {len(intraday_prices)} intraday prices for {symbol}")
+            logger.info(
+                f"✅ Parsed {len(intraday_prices)} intraday prices for {symbol}"
+            )
             return intraday_prices
 
         except Exception as e:
@@ -931,7 +944,8 @@ class StockService(BaseMarketDataService):
 
             # Alpha Vantage daily adjusted 데이터 호출 (full outputsize)
             response = await self.alpha_vantage.stock.daily_adjusted(
-                symbol=symbol, outputsize="full"  # type: ignore
+                symbol=symbol,
+                outputsize="full",  # type: ignore
             )
 
             if isinstance(response, list) and len(response) > 0:
@@ -1097,14 +1111,27 @@ class StockService(BaseMarketDataService):
             await DailyPrice.find({"symbol": symbol}).delete()
 
         # DailyPrice 객체로 변환 및 저장
-        saved_prices = []
+        price_objects: list[DailyPrice] = []
         for price_data in prices:
             if isinstance(price_data, dict):
-                # dict를 DailyPrice 객체로 변환
                 price_obj = DailyPrice(**price_data)
             else:
                 price_obj = price_data
+            price_objects.append(price_obj)
 
+        # 데이터 품질 센티널 실행 (가능한 경우)
+        if self.data_quality_sentinel:
+            try:
+                await self.data_quality_sentinel.evaluate_daily_prices(
+                    symbol, price_objects, source="alpha_vantage"
+                )
+            except Exception as exc:
+                logger.warning(
+                    "Data quality sentinel evaluation failed for %s: %s", symbol, exc
+                )
+
+        saved_prices: list[DailyPrice] = []
+        for price_obj in price_objects:
             # Upsert (symbol + date로 unique)
             existing = await DailyPrice.find_one(
                 {"symbol": price_obj.symbol, "date": price_obj.date}
@@ -1120,6 +1147,11 @@ class StockService(BaseMarketDataService):
                 existing.adjusted_close = price_obj.adjusted_close
                 existing.dividend_amount = price_obj.dividend_amount
                 existing.split_coefficient = price_obj.split_coefficient
+                existing.iso_anomaly_score = price_obj.iso_anomaly_score
+                existing.prophet_anomaly_score = price_obj.prophet_anomaly_score
+                existing.volume_z_score = price_obj.volume_z_score
+                existing.anomaly_severity = price_obj.anomaly_severity
+                existing.anomaly_reasons = price_obj.anomaly_reasons
                 await existing.save()
                 saved_prices.append(existing)
             else:
