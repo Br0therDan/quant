@@ -5,6 +5,62 @@ export type ClientOptions = {
 };
 
 /**
+ * AutoBacktestRequest
+ * 자동 백테스트 트리거 요청
+ */
+export type AutoBacktestRequest = {
+	/**
+	 * Strategy Config
+	 * 전략 설정 (JSON)
+	 */
+	strategy_config: {
+		[key: string]: unknown;
+	};
+	/**
+	 * Trigger Reason
+	 * 트리거 사유 (예: 'strategy_builder', 'optimization')
+	 */
+	trigger_reason: string;
+	/**
+	 * Generate Report
+	 * 내러티브 리포트 자동 생성
+	 */
+	generate_report?: boolean;
+	/**
+	 * Notify On Completion
+	 * 완료 시 알림
+	 */
+	notify_on_completion?: boolean;
+};
+
+/**
+ * AutoBacktestResponse
+ * 자동 백테스트 응답
+ */
+export type AutoBacktestResponse = {
+	/**
+	 * Backtest Id
+	 * 생성된 백테스트 ID
+	 */
+	backtest_id: string;
+	/**
+	 * Status
+	 * 상태 (pending, running, completed)
+	 */
+	status: string;
+	/**
+	 * Estimated Duration Seconds
+	 * 예상 소요 시간 (초)
+	 */
+	estimated_duration_seconds: number;
+	/**
+	 * Report Url
+	 * 리포트 URL (완료 후)
+	 */
+	report_url?: string | null;
+};
+
+/**
  * BacktestConfig
  * 백테스트 설정 내장 모델
  */
@@ -816,6 +872,16 @@ export type ChatOpsRequest = {
 	 * 질문이 발생한 채널(Slack, Console 등)
 	 */
 	channel?: string | null;
+	/**
+	 * Session Id
+	 * 세션 ID (멀티턴 대화)
+	 */
+	session_id?: string | null;
+	/**
+	 * Include History
+	 * 대화 히스토리 포함 여부
+	 */
+	include_history?: boolean;
 };
 
 /**
@@ -3993,6 +4059,28 @@ export type StrategyComparison = {
 };
 
 /**
+ * StrategyComparisonRequest
+ * 전략 비교 요청
+ */
+export type StrategyComparisonRequest = {
+	/**
+	 * Strategy Ids
+	 * 비교할 전략 ID 목록 (2-5개)
+	 */
+	strategy_ids: Array<string>;
+	/**
+	 * Metrics
+	 * 비교할 메트릭 목록
+	 */
+	metrics?: Array<string>;
+	/**
+	 * Natural Language Query
+	 * 자연어 비교 질의 (예: '가장 안정적인 전략은?')
+	 */
+	natural_language_query?: string | null;
+};
+
+/**
  * StrategyComparisonResponse
  * 전략 비교 응답.
  */
@@ -4006,6 +4094,45 @@ export type StrategyComparisonResponse = {
 	 * 응답 메시지
 	 */
 	message?: string;
+};
+
+/**
+ * StrategyComparisonResult
+ * 전략 비교 결과
+ */
+export type StrategyComparisonResult = {
+	/**
+	 * Query
+	 * 원본 질의
+	 */
+	query: string;
+	/**
+	 * Strategies
+	 * 전략별 메트릭
+	 */
+	strategies: Array<{
+		[key: string]: unknown;
+	}>;
+	/**
+	 * Ranking
+	 * 순위 (전략 ID 목록)
+	 */
+	ranking: Array<string>;
+	/**
+	 * Summary
+	 * LLM 요약
+	 */
+	summary: string;
+	/**
+	 * Recommendation
+	 * 추천 전략 ID
+	 */
+	recommendation: string;
+	/**
+	 * Reasoning
+	 * 추천 근거
+	 */
+	reasoning: string;
 };
 
 /**
@@ -9963,3 +10090,132 @@ export type StrategyBuilderSearchIndicatorsResponses = {
 
 export type StrategyBuilderSearchIndicatorsResponse =
 	StrategyBuilderSearchIndicatorsResponses[keyof StrategyBuilderSearchIndicatorsResponses];
+
+export type ChatOpsAdvancedCreateChatSessionData = {
+	body?: never;
+	path?: never;
+	query: {
+		/**
+		 * User Id
+		 */
+		user_id: string;
+	};
+	url: "/api/v1/chatops-advanced/session/create";
+};
+
+export type ChatOpsAdvancedCreateChatSessionErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type ChatOpsAdvancedCreateChatSessionError =
+	ChatOpsAdvancedCreateChatSessionErrors[keyof ChatOpsAdvancedCreateChatSessionErrors];
+
+export type ChatOpsAdvancedCreateChatSessionResponses = {
+	/**
+	 * Response Chatops Advanced-Create Chat Session
+	 * Successful Response
+	 */
+	200: {
+		[key: string]: string;
+	};
+};
+
+export type ChatOpsAdvancedCreateChatSessionResponse =
+	ChatOpsAdvancedCreateChatSessionResponses[keyof ChatOpsAdvancedCreateChatSessionResponses];
+
+export type ChatOpsAdvancedChatWithSessionData = {
+	body: ChatOpsRequest;
+	path: {
+		/**
+		 * Session Id
+		 */
+		session_id: string;
+	};
+	query?: never;
+	url: "/api/v1/chatops-advanced/session/{session_id}/chat";
+};
+
+export type ChatOpsAdvancedChatWithSessionErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type ChatOpsAdvancedChatWithSessionError =
+	ChatOpsAdvancedChatWithSessionErrors[keyof ChatOpsAdvancedChatWithSessionErrors];
+
+export type ChatOpsAdvancedChatWithSessionResponses = {
+	/**
+	 * Response Chatops Advanced-Chat With Session
+	 * Successful Response
+	 */
+	200: {
+		[key: string]: unknown;
+	};
+};
+
+export type ChatOpsAdvancedChatWithSessionResponse =
+	ChatOpsAdvancedChatWithSessionResponses[keyof ChatOpsAdvancedChatWithSessionResponses];
+
+export type ChatOpsAdvancedCompareStrategiesData = {
+	body: StrategyComparisonRequest;
+	path?: never;
+	query?: never;
+	url: "/api/v1/chatops-advanced/strategies/compare";
+};
+
+export type ChatOpsAdvancedCompareStrategiesErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type ChatOpsAdvancedCompareStrategiesError =
+	ChatOpsAdvancedCompareStrategiesErrors[keyof ChatOpsAdvancedCompareStrategiesErrors];
+
+export type ChatOpsAdvancedCompareStrategiesResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: StrategyComparisonResult;
+};
+
+export type ChatOpsAdvancedCompareStrategiesResponse =
+	ChatOpsAdvancedCompareStrategiesResponses[keyof ChatOpsAdvancedCompareStrategiesResponses];
+
+export type ChatOpsAdvancedTriggerAutoBacktestData = {
+	body: AutoBacktestRequest;
+	path?: never;
+	query?: {
+		/**
+		 * User Id
+		 */
+		user_id?: string;
+	};
+	url: "/api/v1/chatops-advanced/backtest/trigger";
+};
+
+export type ChatOpsAdvancedTriggerAutoBacktestErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type ChatOpsAdvancedTriggerAutoBacktestError =
+	ChatOpsAdvancedTriggerAutoBacktestErrors[keyof ChatOpsAdvancedTriggerAutoBacktestErrors];
+
+export type ChatOpsAdvancedTriggerAutoBacktestResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: AutoBacktestResponse;
+};
+
+export type ChatOpsAdvancedTriggerAutoBacktestResponse =
+	ChatOpsAdvancedTriggerAutoBacktestResponses[keyof ChatOpsAdvancedTriggerAutoBacktestResponses];

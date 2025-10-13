@@ -9681,10 +9681,281 @@
           }
         }
       }
+    },
+    "/api/v1/chatops-advanced/session/create": {
+      "post": {
+        "tags": [
+          "ChatOps Advanced"
+        ],
+        "summary": "Create Chat Session",
+        "description": "새 채팅 세션 생성 (멀티턴 대화용)\n\n**Phase 3 D3**\n\nArgs:\n    user_id: 사용자 ID\n\nReturns:\n    session_id: 생성된 세션 ID",
+        "operationId": "ChatOps Advanced-create_chat_session",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "User Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Chatops Advanced-Create Chat Session"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/chatops-advanced/session/{session_id}/chat": {
+      "post": {
+        "tags": [
+          "ChatOps Advanced"
+        ],
+        "summary": "Chat With Session",
+        "description": "멀티턴 대화 (세션 기반)\n\n**Phase 3 D3**\n\nArgs:\n    session_id: 세션 ID\n    request: ChatOps 요청\n\nReturns:\n    응답 메시지 및 메타데이터",
+        "operationId": "ChatOps Advanced-chat_with_session",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatOpsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Chatops Advanced-Chat With Session"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/chatops-advanced/strategies/compare": {
+      "post": {
+        "tags": [
+          "ChatOps Advanced"
+        ],
+        "summary": "Compare Strategies",
+        "description": "전략 비교 및 LLM 요약\n\n**Phase 3 D3**\n\n자연어 질의를 기반으로 여러 전략을 비교하고 추천을 제공합니다.\n\nExample:\n    ```\n    POST /api/v1/chatops-advanced/strategies/compare\n    {\n        \"strategy_ids\": [\"strategy_1\", \"strategy_2\", \"strategy_3\"],\n        \"metrics\": [\"total_return\", \"sharpe_ratio\", \"max_drawdown\"],\n        \"natural_language_query\": \"가장 안정적인 전략은?\"\n    }\n    ```\n\nArgs:\n    request: 전략 비교 요청\n\nReturns:\n    StrategyComparisonResult: 비교 결과, 순위, 추천",
+        "operationId": "ChatOps Advanced-compare_strategies",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StrategyComparisonRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StrategyComparisonResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/chatops-advanced/backtest/trigger": {
+      "post": {
+        "tags": [
+          "ChatOps Advanced"
+        ],
+        "summary": "Trigger Auto Backtest",
+        "description": "자동 백테스트 트리거\n\n**Phase 3 D3**\n\n전략 빌더 또는 최적화 결과를 기반으로 백테스트를 자동 실행합니다.\n\nExample:\n    ```\n    POST /api/v1/chatops-advanced/backtest/trigger?user_id=user_123\n    {\n        \"strategy_config\": { \"name\": \"RSI Strategy\", \"indicators\": [...] },\n        \"trigger_reason\": \"strategy_builder\",\n        \"generate_report\": true,\n        \"notify_on_completion\": true\n    }\n    ```\n\nArgs:\n    request: 자동 백테스트 요청\n    user_id: 사용자 ID (기본: system)\n\nReturns:\n    AutoBacktestResponse: 백테스트 ID, 상태, 예상 소요 시간",
+        "operationId": "ChatOps Advanced-trigger_auto_backtest",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "system",
+              "title": "User Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AutoBacktestRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutoBacktestResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "AutoBacktestRequest": {
+        "properties": {
+          "strategy_config": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Strategy Config",
+            "description": "전략 설정 (JSON)"
+          },
+          "trigger_reason": {
+            "type": "string",
+            "title": "Trigger Reason",
+            "description": "트리거 사유 (예: 'strategy_builder', 'optimization')"
+          },
+          "generate_report": {
+            "type": "boolean",
+            "title": "Generate Report",
+            "description": "내러티브 리포트 자동 생성",
+            "default": true
+          },
+          "notify_on_completion": {
+            "type": "boolean",
+            "title": "Notify On Completion",
+            "description": "완료 시 알림",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "strategy_config",
+          "trigger_reason"
+        ],
+        "title": "AutoBacktestRequest",
+        "description": "자동 백테스트 트리거 요청"
+      },
+      "AutoBacktestResponse": {
+        "properties": {
+          "backtest_id": {
+            "type": "string",
+            "title": "Backtest Id",
+            "description": "생성된 백테스트 ID"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "상태 (pending, running, completed)"
+          },
+          "estimated_duration_seconds": {
+            "type": "integer",
+            "title": "Estimated Duration Seconds",
+            "description": "예상 소요 시간 (초)"
+          },
+          "report_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Report Url",
+            "description": "리포트 URL (완료 후)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "backtest_id",
+          "status",
+          "estimated_duration_seconds"
+        ],
+        "title": "AutoBacktestResponse",
+        "description": "자동 백테스트 응답"
+      },
       "BacktestConfig": {
         "properties": {
           "name": {
@@ -11110,6 +11381,24 @@
             ],
             "title": "Channel",
             "description": "질문이 발생한 채널(Slack, Console 등)"
+          },
+          "session_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Session Id",
+            "description": "세션 ID (멀티턴 대화)"
+          },
+          "include_history": {
+            "type": "boolean",
+            "title": "Include History",
+            "description": "대화 히스토리 포함 여부",
+            "default": true
           }
         },
         "type": "object",
@@ -16212,6 +16501,46 @@
         "title": "StrategyComparison",
         "description": "전략 비교 데이터."
       },
+      "StrategyComparisonRequest": {
+        "properties": {
+          "strategy_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 5,
+            "minItems": 2,
+            "title": "Strategy Ids",
+            "description": "비교할 전략 ID 목록 (2-5개)"
+          },
+          "metrics": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Metrics",
+            "description": "비교할 메트릭 목록"
+          },
+          "natural_language_query": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Natural Language Query",
+            "description": "자연어 비교 질의 (예: '가장 안정적인 전략은?')"
+          }
+        },
+        "type": "object",
+        "required": [
+          "strategy_ids"
+        ],
+        "title": "StrategyComparisonRequest",
+        "description": "전략 비교 요청"
+      },
       "StrategyComparisonResponse": {
         "properties": {
           "data": {
@@ -16231,6 +16560,62 @@
         ],
         "title": "StrategyComparisonResponse",
         "description": "전략 비교 응답."
+      },
+      "StrategyComparisonResult": {
+        "properties": {
+          "query": {
+            "type": "string",
+            "title": "Query",
+            "description": "원본 질의"
+          },
+          "strategies": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Strategies",
+            "description": "전략별 메트릭"
+          },
+          "ranking": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Ranking",
+            "description": "순위 (전략 ID 목록)"
+          },
+          "summary": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 50,
+            "title": "Summary",
+            "description": "LLM 요약"
+          },
+          "recommendation": {
+            "type": "string",
+            "title": "Recommendation",
+            "description": "추천 전략 ID"
+          },
+          "reasoning": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 50,
+            "title": "Reasoning",
+            "description": "추천 근거"
+          }
+        },
+        "type": "object",
+        "required": [
+          "query",
+          "strategies",
+          "ranking",
+          "summary",
+          "recommendation",
+          "reasoning"
+        ],
+        "title": "StrategyComparisonResult",
+        "description": "전략 비교 결과"
       },
       "StrategyCreate": {
         "properties": {

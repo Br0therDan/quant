@@ -15,6 +15,7 @@ from .routes import (
     chatops_router,
     narrative_router,
     strategy_builder_router,
+    chatops_advanced_router,
 )
 
 # Create main API router
@@ -33,6 +34,9 @@ api_router.include_router(chatops_router, prefix="/chatops", tags=["ChatOps"])
 api_router.include_router(narrative_router, prefix="/narrative", tags=["Narrative"])
 api_router.include_router(
     strategy_builder_router, prefix="/strategy-builder", tags=["Strategy Builder"]
+)
+api_router.include_router(
+    chatops_advanced_router, prefix="/chatops-advanced", tags=["ChatOps Advanced"]
 )
 
 

@@ -13,6 +13,8 @@ from typing import Any, Dict, List, Optional
 
 from openai import AsyncOpenAI
 
+from app.core.config import settings
+
 from app.schemas.strategy_builder import (
     ConfidenceLevel,
     GeneratedStrategyConfig,
@@ -59,7 +61,7 @@ class StrategyBuilderService:
         self.strategy_service = strategy_service
 
         # OpenAI 클라이언트 초기화
-        api_key = openai_api_key or os.getenv("OPENAI_API_KEY")
+        api_key = settings.OPENAI_API_KEY
         if not api_key:
             logger.warning(
                 "OPENAI_API_KEY not found. StrategyBuilderService will not function."

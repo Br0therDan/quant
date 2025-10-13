@@ -27,6 +27,7 @@ from .ml.anomaly_detector import AnomalyDetectionService
 from .optimization_service import OptimizationService
 from .narrative_report_service import NarrativeReportService
 from .strategy_builder_service import StrategyBuilderService
+from .chatops_advanced_service import ChatOpsAdvancedService
 
 logger = logging.getLogger(__name__)
 
@@ -57,6 +58,7 @@ class ServiceFactory:
     _optimization_service: Optional[OptimizationService] = None
     _narrative_report_service: Optional[NarrativeReportService] = None
     _strategy_builder_service: Optional[StrategyBuilderService] = None
+    _chatops_advanced_service: Optional[ChatOpsAdvancedService] = None
 
     def __new__(cls):
         if cls._instance is None:
@@ -298,6 +300,16 @@ class ServiceFactory:
             )
             logger.info("StrategyBuilderService initialized (Phase 3 D2)")
         return self._strategy_builder_service
+
+    def get_chatops_advanced_service(self) -> ChatOpsAdvancedService:
+        """ChatOpsAdvancedService 인스턴스 반환 (Phase 3 D3)"""
+        if self._chatops_advanced_service is None:
+            backtest_service = self.get_backtest_service()
+            self._chatops_advanced_service = ChatOpsAdvancedService(
+                backtest_service=backtest_service
+            )
+            logger.info("ChatOpsAdvancedService initialized (Phase 3 D3)")
+        return self._chatops_advanced_service
 
     async def cleanup(self):
         """모든 서비스 정리"""

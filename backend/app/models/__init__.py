@@ -46,6 +46,7 @@ from .performance import StrategyPerformance
 from .strategy import Strategy, StrategyTemplate, StrategyExecution
 from .data_quality import DataQualityEvent
 from .optimization import OptimizationStudy, OptimizationTrial
+from .chatops import ChatSessionDocument
 from mysingle_quant.auth.models import User, OAuthAccount
 
 collections = [
@@ -98,6 +99,8 @@ collections = [
     # 최적화
     OptimizationStudy,
     OptimizationTrial,
+    # ChatOps
+    ChatSessionDocument,
     # 전략 및 성과
     Strategy,
     StrategyTemplate,
@@ -124,6 +127,8 @@ __all__ = [
     # Optimization
     "OptimizationStudy",
     "OptimizationTrial",
+    # ChatOps
+    "ChatSessionDocument",
     # Market data models - Crypto
     "CryptoExchangeRate",
     "CryptoIntradayPrice",

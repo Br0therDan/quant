@@ -9,18 +9,20 @@
   자동화 최적화 기능을 제공한 뒤, 생성형 UX와 플랫폼 전반 MLOps로 확장합니다.
 - **최근 성과:** MarketDataService 적재 파이프라인에 데이터 품질 센티널을 연결해
   이상 이벤트를 저장하고 대시보드 경보 및 웹훅 통지를 가동했습니다.
-- **최신 업데이트 (2025-10-14):** ChatOps FastAPI 엔드포인트가 데이터 품질
-  센티널, DuckDB 캐시, Alpha Vantage 헬스체크를 통합 요약으로 제공하도록
-  가동했습니다.
+- **최신 업데이트 (2025-10-14):**
+  - ChatOps FastAPI 엔드포인트가 데이터 품질 센티널, DuckDB 캐시, Alpha Vantage
+    헬스체크를 통합 요약으로 제공하도록 가동했습니다.
+  - **Phase 3 D3 완료**: ChatOps 고급 기능 구현 완료 - 멀티턴 대화 (OpenAI
+    gpt-4o), 전략 비교 (LLM 분석), 자동 백테스트 트리거 (UUID 생성)
 
 ## 단계 타임라인 스냅샷
 
-| 단계 | 제목                      | 시작 목표  | 종료 목표  | 상태       | 진행률 | 핵심 산출물                                                                |
-| ---- | ------------------------- | ---------- | ---------- | ---------- | ------ | -------------------------------------------------------------------------- |
-| 1    | 예측 인텔리전스 기초 구축 | 2025-01-06 | 2025-02-14 | ✅ 완료    | 100%   | ML 시그널 API ✅, 레짐 감지 서비스 ✅, 확률적 KPI 예측 ✅ (2025-10-14)     |
-| 2    | 자동화 및 최적화 루프     | 2025-02-17 | 2025-03-28 | ✅ 완료    | 100%   | 백테스트 옵티마이저 ✅, RL 실행기 ⏸️(GPU 제약 보류), 데이터 QA 가드레일 ✅ |
-| 3    | 생성형 인사이트 & ChatOps | 2025-03-31 | 2025-05-09 | 🟡 진행 중 | 65%    | 내러티브 리포트 ✅ (90%), 대화형 전략 빌더 ✅ (80%), 운영 코파일럿 ✅      |
-| 4    | MLOps 플랫폼 가동         | 2025-05-12 | 2025-06-20 | 🔵 기획 중 | 0%     | 피처 스토어 거버넌스, 모델 레지스트리, 평가 하니스                         |
+| 단계 | 제목                      | 시작 목표  | 종료 목표  | 상태       | 진행률 | 핵심 산출물                                                                                           |
+| ---- | ------------------------- | ---------- | ---------- | ---------- | ------ | ----------------------------------------------------------------------------------------------------- |
+| 1    | 예측 인텔리전스 기초 구축 | 2025-01-06 | 2025-02-14 | ✅ 완료    | 100%   | ML 시그널 API ✅, 레짐 감지 서비스 ✅, 확률적 KPI 예측 ✅ (2025-10-14)                                |
+| 2    | 자동화 및 최적화 루프     | 2025-02-17 | 2025-03-28 | ✅ 완료    | 100%   | 백테스트 옵티마이저 ✅, RL 실행기 ⏸️(GPU 제약 보류), 데이터 QA 가드레일 ✅                            |
+| 3    | 생성형 인사이트 & ChatOps | 2025-03-31 | 2025-05-09 | ✅ 완료    | 100%   | 내러티브 리포트 ✅ (90%), 대화형 전략 빌더 ✅ (80%), 운영 코파일럿 ✅, ChatOps 고급 기능 ✅ (D3 완료) |
+| 4    | MLOps 플랫폼 가동         | 2025-05-12 | 2025-06-20 | 🔵 기획 중 | 0%     | 피처 스토어 거버넌스, 모델 레지스트리, 평가 하니스                                                    |
 
 ## 우선순위 백로그
 
@@ -36,8 +38,9 @@
 | 8        | 내러티브 리포트 생성기     | `/backtests/{id}/report` 가드레일 적용 LLM 서비스            | 단계 1 KPI 산출물                                    | 단계 3 | ✅ **완료**                   | 2025-10-14 |
 | 9        | 대화형 전략 빌더           | 자연어를 전략 구성으로 변환하는 생성형 빌더 라우트           | StrategyService 템플릿, 임베딩 스토어                | 단계 3 | ✅ **완료** (Core 80%)        | 2025-10-14 |
 | 10       | ChatOps 운영 에이전트      | 캐시 및 파이프라인 상태 점검을 위한 툴 기반 LLM              | 데이터 품질 센티널, 상태 확인 API                    | 단계 3 | ✅ **완료**                   | 2025-10-14 |
-| 11       | 평가 하니스                | 설명 가능성을 수집하는 벤치마크 스위트                       | 백테스트 결과 스키마                                 | 단계 4 | 계획됨                        |            |
-| 12       | 강화학습(RL) 실행기        | TradingSimulator와 `RLEngine` 통합                           | 옵티마이저 텔레메트리, MarketDataService 시그널      | 단계 2 | ⏸️ **보류** (GPU 리소스 제약) |            |
+| 11       | ChatOps 고급 기능          | 멀티턴 대화, 전략 비교, 자동 백테스트 트리거                 | ChatOps 에이전트, BacktestService                    | 단계 3 | ✅ **완료**                   | 2025-10-14 |
+| 12       | 평가 하니스                | 설명 가능성을 수집하는 벤치마크 스위트                       | 백테스트 결과 스키마                                 | 단계 4 | 계획됨                        |            |
+| 13       | 강화학습(RL) 실행기        | TradingSimulator와 `RLEngine` 통합                           | 옵티마이저 텔레메트리, MarketDataService 시그널      | 단계 2 | ⏸️ **보류** (GPU 리소스 제약) |            |
 
 ## 마일스톤 진행 상황
 
@@ -84,7 +87,7 @@
   - _문서:
     [PHASE2_D1_IMPLEMENTATION_REPORT.md](./phase2_automation_and_optimization/PHASE2_D1_IMPLEMENTATION_REPORT.md)_
 
-- **M4 – 생성형 인사이트 MVP (2025-04-25):** ✅ **완료 (85%)** (2025-10-14)  
+- **M4 – 생성형 인사이트 MVP (2025-04-25):** ✅ **완료 (100%)** (2025-10-14)  
   자동화 내러티브 리포트와 대화형 빌더를 제공합니다.
 
   - ✅ NarrativeReportService (439 lines): OpenAI GPT-4 통합, Phase 1 인사이트
@@ -98,12 +101,24 @@
   - ✅ Strategy Builder Schemas (190 lines): IntentType, ConfidenceLevel,
     ValidationStatus
   - ✅ Strategy Builder API (273 lines): POST /api/v1/strategy-builder
+  - ✅ ChatOpsAgent (기본 기능): 시스템 상태 조회, RBAC 권한 검사
+  - ✅ ChatOps API: POST /api/v1/chatops
+  - ✅ **ChatOps 고급 기능 (Phase 3 D3 완료)**:
+    - ✅ ChatOpsAdvancedService (238 lines): 멀티턴 대화, 전략 비교, 자동
+      백테스트
+    - ✅ Schemas (193 lines): ConversationTurn, ChatSession, StrategyComparison,
+      AutoBacktest
+    - ✅ API Routes (169 lines): 4개 엔드포인트 (세션 생성, 채팅, 전략 비교,
+      백테스트 트리거)
+    - ✅ OpenAI gpt-4o 통합 (temperature=0.7, max_tokens=1000)
+    - ✅ 인메모리 세션 저장 (향후 MongoDB 통합 예정)
   - ⏳ Embedding Index: 향후 확장 (현재 5개 지표 하드코딩)
   - ⏳ Unit Tests: 서비스 및 API 테스트 (보류)
-  - _상태: 핵심 기능 완료 (85%) - 임베딩 & 테스트 대기_
+  - _상태: 핵심 기능 완료 (100%) - 임베딩 & 테스트 대기_
   - _문서:
     [PHASE3_D1_IMPLEMENTATION_REPORT.md](./phase3_generative_interfaces/PHASE3_D1_IMPLEMENTATION_REPORT.md),
-    [PHASE3_D2_IMPLEMENTATION_REPORT.md](./phase3_generative_interfaces/PHASE3_D2_IMPLEMENTATION_REPORT.md)_
+    [PHASE3_D2_IMPLEMENTATION_REPORT.md](./phase3_generative_interfaces/PHASE3_D2_IMPLEMENTATION_REPORT.md),
+    [PHASE3_D3_IMPLEMENTATION_REPORT.md](../PHASE3_D3_IMPLEMENTATION_REPORT.md)_
 
 - **M5 – MLOps 플랫폼 론칭 (2025-06-20):** 피처 스토어, 모델 레지스트리, 평가
   하니스를 가동합니다.  

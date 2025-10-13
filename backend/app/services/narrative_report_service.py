@@ -24,6 +24,7 @@ from app.schemas.narrative import (
     Recommendations,
 )
 from app.services.backtest_service import BacktestService
+from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -52,7 +53,7 @@ class NarrativeReportService:
         self.probabilistic_service = probabilistic_service
 
         # OpenAI 클라이언트 초기화
-        api_key = os.getenv("OPENAI_API_KEY")
+        api_key = settings.OPENAI_API_KEY
         if not api_key:
             logger.warning(
                 "OPENAI_API_KEY not set. NarrativeReportService will not function."

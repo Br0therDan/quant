@@ -25,6 +25,8 @@ class Settings(CommonSettings):
     DUCKDB_PATH: str = getenv("DUCKDB_PATH", "./app/data/quant.duckdb")
     DATA_QUALITY_WEBHOOK_URL: str | None = getenv("DATA_QUALITY_WEBHOOK_URL", None)
 
+    OPENAI_API_KEY: str | None = getenv("OPENAI_API_KEY", "your-openai-api-key")
+
 
 settings = Settings()
 

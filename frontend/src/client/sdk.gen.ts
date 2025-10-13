@@ -83,6 +83,18 @@ import type {
 	BacktestUpdateBacktestData,
 	BacktestUpdateBacktestErrors,
 	BacktestUpdateBacktestResponses,
+	ChatOpsAdvancedChatWithSessionData,
+	ChatOpsAdvancedChatWithSessionErrors,
+	ChatOpsAdvancedChatWithSessionResponses,
+	ChatOpsAdvancedCompareStrategiesData,
+	ChatOpsAdvancedCompareStrategiesErrors,
+	ChatOpsAdvancedCompareStrategiesResponses,
+	ChatOpsAdvancedCreateChatSessionData,
+	ChatOpsAdvancedCreateChatSessionErrors,
+	ChatOpsAdvancedCreateChatSessionResponses,
+	ChatOpsAdvancedTriggerAutoBacktestData,
+	ChatOpsAdvancedTriggerAutoBacktestErrors,
+	ChatOpsAdvancedTriggerAutoBacktestResponses,
 	ChatOpsExecuteChatopsData,
 	ChatOpsExecuteChatopsErrors,
 	ChatOpsExecuteChatopsResponses,
@@ -3720,6 +3732,147 @@ export class StrategyBuilderService {
 			ThrowOnError
 		>({
 			url: "/api/v1/strategy-builder/search-indicators",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+}
+
+export class ChatOpsAdvancedService {
+	/**
+	 * Create Chat Session
+	 * 새 채팅 세션 생성 (멀티턴 대화용)
+	 *
+	 * **Phase 3 D3**
+	 *
+	 * Args:
+	 * user_id: 사용자 ID
+	 *
+	 * Returns:
+	 * session_id: 생성된 세션 ID
+	 */
+	public static createChatSession<ThrowOnError extends boolean = false>(
+		options: Options<ChatOpsAdvancedCreateChatSessionData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			ChatOpsAdvancedCreateChatSessionResponses,
+			ChatOpsAdvancedCreateChatSessionErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/chatops-advanced/session/create",
+			...options,
+		});
+	}
+
+	/**
+	 * Chat With Session
+	 * 멀티턴 대화 (세션 기반)
+	 *
+	 * **Phase 3 D3**
+	 *
+	 * Args:
+	 * session_id: 세션 ID
+	 * request: ChatOps 요청
+	 *
+	 * Returns:
+	 * 응답 메시지 및 메타데이터
+	 */
+	public static chatWithSession<ThrowOnError extends boolean = false>(
+		options: Options<ChatOpsAdvancedChatWithSessionData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			ChatOpsAdvancedChatWithSessionResponses,
+			ChatOpsAdvancedChatWithSessionErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/chatops-advanced/session/{session_id}/chat",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Compare Strategies
+	 * 전략 비교 및 LLM 요약
+	 *
+	 * **Phase 3 D3**
+	 *
+	 * 자연어 질의를 기반으로 여러 전략을 비교하고 추천을 제공합니다.
+	 *
+	 * Example:
+	 * ```
+	 * POST /api/v1/chatops-advanced/strategies/compare
+	 * {
+	 * "strategy_ids": ["strategy_1", "strategy_2", "strategy_3"],
+	 * "metrics": ["total_return", "sharpe_ratio", "max_drawdown"],
+	 * "natural_language_query": "가장 안정적인 전략은?"
+	 * }
+	 * ```
+	 *
+	 * Args:
+	 * request: 전략 비교 요청
+	 *
+	 * Returns:
+	 * StrategyComparisonResult: 비교 결과, 순위, 추천
+	 */
+	public static compareStrategies<ThrowOnError extends boolean = false>(
+		options: Options<ChatOpsAdvancedCompareStrategiesData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			ChatOpsAdvancedCompareStrategiesResponses,
+			ChatOpsAdvancedCompareStrategiesErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/chatops-advanced/strategies/compare",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Trigger Auto Backtest
+	 * 자동 백테스트 트리거
+	 *
+	 * **Phase 3 D3**
+	 *
+	 * 전략 빌더 또는 최적화 결과를 기반으로 백테스트를 자동 실행합니다.
+	 *
+	 * Example:
+	 * ```
+	 * POST /api/v1/chatops-advanced/backtest/trigger?user_id=user_123
+	 * {
+	 * "strategy_config": { "name": "RSI Strategy", "indicators": [...] },
+	 * "trigger_reason": "strategy_builder",
+	 * "generate_report": true,
+	 * "notify_on_completion": true
+	 * }
+	 * ```
+	 *
+	 * Args:
+	 * request: 자동 백테스트 요청
+	 * user_id: 사용자 ID (기본: system)
+	 *
+	 * Returns:
+	 * AutoBacktestResponse: 백테스트 ID, 상태, 예상 소요 시간
+	 */
+	public static triggerAutoBacktest<ThrowOnError extends boolean = false>(
+		options: Options<ChatOpsAdvancedTriggerAutoBacktestData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			ChatOpsAdvancedTriggerAutoBacktestResponses,
+			ChatOpsAdvancedTriggerAutoBacktestErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/chatops-advanced/backtest/trigger",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
