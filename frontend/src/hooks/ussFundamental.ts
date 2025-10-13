@@ -9,97 +9,107 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 
 export const fundamentalQueryKeys = {
-    all: ["fundamental"] as const,
-    companyOverview: () => [...fundamentalQueryKeys.all, "companyOverview"] as const,
-    companyOverviewSymbol: (symbol: string) => [...fundamentalQueryKeys.companyOverview(), symbol] as const,
-    incomeStatement: () => [...fundamentalQueryKeys.all, "incomeStatement"] as const,
-    incomeStatementSymbol: (symbol: string) => [...fundamentalQueryKeys.incomeStatement(), symbol] as const,
-    balanceSheet: () => [...fundamentalQueryKeys.all, "balanceSheet"] as const,
-    balanceSheetSymbol: (symbol: string) => [...fundamentalQueryKeys.balanceSheet(), symbol] as const,
-    cashFlow: () => [...fundamentalQueryKeys.all, "cashFlow"] as const,
-    cashFlowSymbol: (symbol: string) => [...fundamentalQueryKeys.cashFlow(), symbol] as const,
-    earnings: () => [...fundamentalQueryKeys.all, "earnings"] as const,
-    earningsSymbol: (symbol: string) => [...fundamentalQueryKeys.earnings(), symbol] as const,
+	all: ["fundamental"] as const,
+	companyOverview: () =>
+		[...fundamentalQueryKeys.all, "companyOverview"] as const,
+	companyOverviewSymbol: (symbol: string) =>
+		[...fundamentalQueryKeys.companyOverview(), symbol] as const,
+	incomeStatement: () =>
+		[...fundamentalQueryKeys.all, "incomeStatement"] as const,
+	incomeStatementSymbol: (symbol: string) =>
+		[...fundamentalQueryKeys.incomeStatement(), symbol] as const,
+	balanceSheet: () => [...fundamentalQueryKeys.all, "balanceSheet"] as const,
+	balanceSheetSymbol: (symbol: string) =>
+		[...fundamentalQueryKeys.balanceSheet(), symbol] as const,
+	cashFlow: () => [...fundamentalQueryKeys.all, "cashFlow"] as const,
+	cashFlowSymbol: (symbol: string) =>
+		[...fundamentalQueryKeys.cashFlow(), symbol] as const,
+	earnings: () => [...fundamentalQueryKeys.all, "earnings"] as const,
+	earningsSymbol: (symbol: string) =>
+		[...fundamentalQueryKeys.earnings(), symbol] as const,
 };
 
 export function useFundamental() {
-    return useMemo(() => ({
-        queryKeys: fundamentalQueryKeys,
-    }), []);
+	return useMemo(
+		() => ({
+			queryKeys: fundamentalQueryKeys,
+		}),
+		[],
+	);
 }
 
 // Individual hook functions for specific symbols
 export const useFundamentalCompanyOverview = (symbol: string) => {
-    return useQuery({
-        queryKey: fundamentalQueryKeys.companyOverviewSymbol(symbol),
-        queryFn: async () => {
-            const response = await FundamentalService.getCompanyOverview({
-                path: { symbol }
-            });
-            return response.data;
-        },
-        enabled: !!symbol,
-        staleTime: 1000 * 60 * 60 * 24, // 24 hours (company overview doesn't change frequently)
-        gcTime: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
+	return useQuery({
+		queryKey: fundamentalQueryKeys.companyOverviewSymbol(symbol),
+		queryFn: async () => {
+			const response = await FundamentalService.getCompanyOverview({
+				path: { symbol },
+			});
+			return response.data;
+		},
+		enabled: !!symbol,
+		staleTime: 1000 * 60 * 60 * 24, // 24 hours (company overview doesn't change frequently)
+		gcTime: 7 * 24 * 60 * 60 * 1000, // 7 days
+	});
 };
 
 export const useFundamentalIncomeStatement = (symbol: string) => {
-    return useQuery({
-        queryKey: fundamentalQueryKeys.incomeStatementSymbol(symbol),
-        queryFn: async () => {
-            const response = await FundamentalService.getIncomeStatement({
-                path: { symbol }
-            });
-            return response.data;
-        },
-        enabled: !!symbol,
-        staleTime: 1000 * 60 * 60 * 6, // 6 hours (financial statements update quarterly)
-        gcTime: 24 * 60 * 60 * 1000, // 24 hours
-    });
+	return useQuery({
+		queryKey: fundamentalQueryKeys.incomeStatementSymbol(symbol),
+		queryFn: async () => {
+			const response = await FundamentalService.getIncomeStatement({
+				path: { symbol },
+			});
+			return response.data;
+		},
+		enabled: !!symbol,
+		staleTime: 1000 * 60 * 60 * 6, // 6 hours (financial statements update quarterly)
+		gcTime: 24 * 60 * 60 * 1000, // 24 hours
+	});
 };
 
 export const useFundamentalBalanceSheet = (symbol: string) => {
-    return useQuery({
-        queryKey: fundamentalQueryKeys.balanceSheetSymbol(symbol),
-        queryFn: async () => {
-            const response = await FundamentalService.getBalanceSheet({
-                path: { symbol }
-            });
-            return response.data;
-        },
-        enabled: !!symbol,
-        staleTime: 1000 * 60 * 60 * 6, // 6 hours
-        gcTime: 24 * 60 * 60 * 1000, // 24 hours
-    });
+	return useQuery({
+		queryKey: fundamentalQueryKeys.balanceSheetSymbol(symbol),
+		queryFn: async () => {
+			const response = await FundamentalService.getBalanceSheet({
+				path: { symbol },
+			});
+			return response.data;
+		},
+		enabled: !!symbol,
+		staleTime: 1000 * 60 * 60 * 6, // 6 hours
+		gcTime: 24 * 60 * 60 * 1000, // 24 hours
+	});
 };
 
 export const useFundamentalCashFlow = (symbol: string) => {
-    return useQuery({
-        queryKey: fundamentalQueryKeys.cashFlowSymbol(symbol),
-        queryFn: async () => {
-            const response = await FundamentalService.getCashFlow({
-                path: { symbol }
-            });
-            return response.data;
-        },
-        enabled: !!symbol,
-        staleTime: 1000 * 60 * 60 * 6, // 6 hours
-        gcTime: 24 * 60 * 60 * 1000, // 24 hours
-    });
+	return useQuery({
+		queryKey: fundamentalQueryKeys.cashFlowSymbol(symbol),
+		queryFn: async () => {
+			const response = await FundamentalService.getCashFlow({
+				path: { symbol },
+			});
+			return response.data;
+		},
+		enabled: !!symbol,
+		staleTime: 1000 * 60 * 60 * 6, // 6 hours
+		gcTime: 24 * 60 * 60 * 1000, // 24 hours
+	});
 };
 
 export const useFundamentalEarnings = (symbol: string) => {
-    return useQuery({
-        queryKey: fundamentalQueryKeys.earningsSymbol(symbol),
-        queryFn: async () => {
-            const response = await FundamentalService.getEarnings({
-                path: { symbol }
-            });
-            return response.data;
-        },
-        enabled: !!symbol,
-        staleTime: 1000 * 60 * 60 * 2, // 2 hours (earnings can change more frequently)
-        gcTime: 12 * 60 * 60 * 1000, // 12 hours
-    });
+	return useQuery({
+		queryKey: fundamentalQueryKeys.earningsSymbol(symbol),
+		queryFn: async () => {
+			const response = await FundamentalService.getEarnings({
+				path: { symbol },
+			});
+			return response.data;
+		},
+		enabled: !!symbol,
+		staleTime: 1000 * 60 * 60 * 2, // 2 hours (earnings can change more frequently)
+		gcTime: 12 * 60 * 60 * 1000, // 12 hours
+	});
 };

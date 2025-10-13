@@ -5,9 +5,9 @@ import type { ChartSettings } from "./chartStorage";
 import { loadChartSettings, saveChartSettings } from "./chartStorage";
 
 interface UseChartSettingsOptions {
-    symbol: string;
-    autoSave?: boolean;
-    debounceMs?: number;
+	symbol: string;
+	autoSave?: boolean;
+	debounceMs?: number;
 }
 
 /**
@@ -35,52 +35,52 @@ interface UseChartSettingsOptions {
  * ```
  */
 export function useChartSettings(options: UseChartSettingsOptions) {
-    const { symbol, autoSave = true, debounceMs = 500 } = options;
-    const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
+	const { symbol, autoSave = true, debounceMs = 500 } = options;
+	const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-    /**
-     * 설정 불러오기 (즉시 실행)
-     */
-    const loadSettings = useCallback((): ChartSettings | null => {
-        return loadChartSettings(symbol);
-    }, [symbol]);
+	/**
+	 * 설정 불러오기 (즉시 실행)
+	 */
+	const loadSettings = useCallback((): ChartSettings | null => {
+		return loadChartSettings(symbol);
+	}, [symbol]);
 
-    /**
-     * 설정 저장하기 (디바운싱 적용)
-     */
-    const saveSettings = useCallback(
-        (settings: ChartSettings) => {
-            if (!autoSave) {
-                saveChartSettings(symbol, settings);
-                return;
-            }
+	/**
+	 * 설정 저장하기 (디바운싱 적용)
+	 */
+	const saveSettings = useCallback(
+		(settings: ChartSettings) => {
+			if (!autoSave) {
+				saveChartSettings(symbol, settings);
+				return;
+			}
 
-            // 기존 타이머 취소
-            if (saveTimerRef.current) {
-                clearTimeout(saveTimerRef.current);
-            }
+			// 기존 타이머 취소
+			if (saveTimerRef.current) {
+				clearTimeout(saveTimerRef.current);
+			}
 
-            // 디바운싱된 저장
-            saveTimerRef.current = setTimeout(() => {
-                saveChartSettings(symbol, settings);
-            }, debounceMs);
-        },
-        [symbol, autoSave, debounceMs]
-    );
+			// 디바운싱된 저장
+			saveTimerRef.current = setTimeout(() => {
+				saveChartSettings(symbol, settings);
+			}, debounceMs);
+		},
+		[symbol, autoSave, debounceMs],
+	);
 
-    /**
-     * 컴포넌트 언마운트 시 타이머 정리
-     */
-    useEffect(() => {
-        return () => {
-            if (saveTimerRef.current) {
-                clearTimeout(saveTimerRef.current);
-            }
-        };
-    }, []);
+	/**
+	 * 컴포넌트 언마운트 시 타이머 정리
+	 */
+	useEffect(() => {
+		return () => {
+			if (saveTimerRef.current) {
+				clearTimeout(saveTimerRef.current);
+			}
+		};
+	}, []);
 
-    return {
-        loadSettings,
-        saveSettings,
-    };
+	return {
+		loadSettings,
+		saveSettings,
+	};
 }

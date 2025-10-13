@@ -9,164 +9,169 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 
 export const dashboardQueryKeys = {
-    all: ["dashboard"] as const,
-    summary: () => [...dashboardQueryKeys.all, "summary"] as const,
-    portfolio: () => [...dashboardQueryKeys.all, "portfolio"] as const,
-    portfolioPerformance: (period?: string) => [...dashboardQueryKeys.portfolio(), "performance", { period }] as const,
-    strategies: () => [...dashboardQueryKeys.all, "strategies"] as const,
-    strategyComparison: () => [...dashboardQueryKeys.strategies(), "comparison"] as const,
-    trades: () => [...dashboardQueryKeys.all, "trades"] as const,
-    recentTrades: (limit?: number) => [...dashboardQueryKeys.trades(), "recent", { limit }] as const,
-    watchlist: () => [...dashboardQueryKeys.all, "watchlist"] as const,
-    watchlistQuotes: () => [...dashboardQueryKeys.watchlist(), "quotes"] as const,
-    news: () => [...dashboardQueryKeys.all, "news"] as const,
-    newsFeed: (limit?: number) => [...dashboardQueryKeys.news(), "feed", { limit }] as const,
-    economic: () => [...dashboardQueryKeys.all, "economic"] as const,
-    economicCalendar: (days?: number) => [...dashboardQueryKeys.economic(), "calendar", { days }] as const,
+	all: ["dashboard"] as const,
+	summary: () => [...dashboardQueryKeys.all, "summary"] as const,
+	portfolio: () => [...dashboardQueryKeys.all, "portfolio"] as const,
+	portfolioPerformance: (period?: string) =>
+		[...dashboardQueryKeys.portfolio(), "performance", { period }] as const,
+	strategies: () => [...dashboardQueryKeys.all, "strategies"] as const,
+	strategyComparison: () =>
+		[...dashboardQueryKeys.strategies(), "comparison"] as const,
+	trades: () => [...dashboardQueryKeys.all, "trades"] as const,
+	recentTrades: (limit?: number) =>
+		[...dashboardQueryKeys.trades(), "recent", { limit }] as const,
+	watchlist: () => [...dashboardQueryKeys.all, "watchlist"] as const,
+	watchlistQuotes: () => [...dashboardQueryKeys.watchlist(), "quotes"] as const,
+	news: () => [...dashboardQueryKeys.all, "news"] as const,
+	newsFeed: (limit?: number) =>
+		[...dashboardQueryKeys.news(), "feed", { limit }] as const,
+	economic: () => [...dashboardQueryKeys.all, "economic"] as const,
+	economicCalendar: (days?: number) =>
+		[...dashboardQueryKeys.economic(), "calendar", { days }] as const,
 };
 
 export function useDashboard() {
+	// Queries
+	const dashboardSummaryQuery = useQuery({
+		queryKey: dashboardQueryKeys.summary(),
+		queryFn: async () => {
+			const response = await DashboardService.getDashboardSummary();
+			return response.data;
+		},
+		staleTime: 1000 * 60 * 5, // 5 minutes
+		gcTime: 30 * 60 * 1000, // 30 minutes
+	});
 
-    // Queries
-    const dashboardSummaryQuery = useQuery({
-        queryKey: dashboardQueryKeys.summary(),
-        queryFn: async () => {
-            const response = await DashboardService.getDashboardSummary();
-            return response.data;
-        },
-        staleTime: 1000 * 60 * 5, // 5 minutes
-        gcTime: 30 * 60 * 1000, // 30 minutes
-    });
+	const portfolioPerformanceQuery = useQuery({
+		queryKey: dashboardQueryKeys.portfolioPerformance(),
+		queryFn: async () => {
+			const response = await DashboardService.getPortfolioPerformance();
+			return response.data;
+		},
+		staleTime: 1000 * 60 * 5, // 5 minutes
+		gcTime: 30 * 60 * 1000, // 30 minutes
+	});
 
-    const portfolioPerformanceQuery = useQuery({
-        queryKey: dashboardQueryKeys.portfolioPerformance(),
-        queryFn: async () => {
-            const response = await DashboardService.getPortfolioPerformance();
-            return response.data;
-        },
-        staleTime: 1000 * 60 * 5, // 5 minutes
-        gcTime: 30 * 60 * 1000, // 30 minutes
-    });
+	const strategyComparisonQuery = useQuery({
+		queryKey: dashboardQueryKeys.strategyComparison(),
+		queryFn: async () => {
+			const response = await DashboardService.getStrategyComparison();
+			return response.data;
+		},
+		staleTime: 1000 * 60 * 5, // 5 minutes
+		gcTime: 30 * 60 * 1000, // 30 minutes
+	});
 
-    const strategyComparisonQuery = useQuery({
-        queryKey: dashboardQueryKeys.strategyComparison(),
-        queryFn: async () => {
-            const response = await DashboardService.getStrategyComparison();
-            return response.data;
-        },
-        staleTime: 1000 * 60 * 5, // 5 minutes
-        gcTime: 30 * 60 * 1000, // 30 minutes
-    });
+	const recentTradesQuery = useQuery({
+		queryKey: dashboardQueryKeys.recentTrades(),
+		queryFn: async () => {
+			const response = await DashboardService.getRecentTrades();
+			return response.data;
+		},
+		staleTime: 1000 * 60 * 5, // 5 minutes
+		gcTime: 30 * 60 * 1000, // 30 minutes
+	});
 
-    const recentTradesQuery = useQuery({
-        queryKey: dashboardQueryKeys.recentTrades(),
-        queryFn: async () => {
-            const response = await DashboardService.getRecentTrades();
-            return response.data;
-        },
-        staleTime: 1000 * 60 * 5, // 5 minutes
-        gcTime: 30 * 60 * 1000, // 30 minutes
-    });
+	const watchlistQuotesQuery = useQuery({
+		queryKey: dashboardQueryKeys.watchlistQuotes(),
+		queryFn: async () => {
+			const response = await DashboardService.getWatchlistQuotes();
+			return response.data;
+		},
+		staleTime: 1000 * 30, // 30 seconds (real-time data)
+		gcTime: 5 * 60 * 1000, // 5 minutes
+	});
 
-    const watchlistQuotesQuery = useQuery({
-        queryKey: dashboardQueryKeys.watchlistQuotes(),
-        queryFn: async () => {
-            const response = await DashboardService.getWatchlistQuotes();
-            return response.data;
-        },
-        staleTime: 1000 * 30, // 30 seconds (real-time data)
-        gcTime: 5 * 60 * 1000, // 5 minutes
-    });
+	const newsFeedQuery = useQuery({
+		queryKey: dashboardQueryKeys.newsFeed(),
+		queryFn: async () => {
+			const response = await DashboardService.getNewsFeed();
+			return response.data;
+		},
+		staleTime: 1000 * 60 * 10, // 10 minutes
+		gcTime: 30 * 60 * 1000, // 30 minutes
+	});
 
-    const newsFeedQuery = useQuery({
-        queryKey: dashboardQueryKeys.newsFeed(),
-        queryFn: async () => {
-            const response = await DashboardService.getNewsFeed();
-            return response.data;
-        },
-        staleTime: 1000 * 60 * 10, // 10 minutes
-        gcTime: 30 * 60 * 1000, // 30 minutes
-    });
+	const economicCalendarQuery = useQuery({
+		queryKey: dashboardQueryKeys.economicCalendar(),
+		queryFn: async () => {
+			const response = await DashboardService.getEconomicCalendar();
+			return response.data;
+		},
+		staleTime: 1000 * 60 * 30, // 30 minutes
+		gcTime: 15 * 60 * 1000, // 1 hour
+	});
 
-    const economicCalendarQuery = useQuery({
-        queryKey: dashboardQueryKeys.economicCalendar(),
-        queryFn: async () => {
-            const response = await DashboardService.getEconomicCalendar();
-            return response.data;
-        },
-        staleTime: 1000 * 60 * 30, // 30 minutes
-        gcTime: 15 * 60 * 1000, // 1 hour
-    });
+	return useMemo(
+		() => ({
+			// Data
+			dashboardSummary: dashboardSummaryQuery.data,
+			portfolioPerformance: portfolioPerformanceQuery.data,
+			strategyComparison: strategyComparisonQuery.data,
+			recentTrades: recentTradesQuery.data,
+			watchlistQuotes: watchlistQuotesQuery.data,
+			newsFeed: newsFeedQuery.data,
+			economicCalendar: economicCalendarQuery.data,
 
-    return useMemo(() => ({
+			// Status
+			isError: {
+				dashboardSummary: dashboardSummaryQuery.isError,
+				portfolioPerformance: portfolioPerformanceQuery.isError,
+				strategyComparison: strategyComparisonQuery.isError,
+				recentTrades: recentTradesQuery.isError,
+				watchlistQuotes: watchlistQuotesQuery.isError,
+				newsFeed: newsFeedQuery.isError,
+				economicCalendar: economicCalendarQuery.isError,
+			},
+			isLoading: {
+				dashboardSummary: dashboardSummaryQuery.isLoading,
+				portfolioPerformance: portfolioPerformanceQuery.isLoading,
+				strategyComparison: strategyComparisonQuery.isLoading,
+				recentTrades: recentTradesQuery.isLoading,
+				watchlistQuotes: watchlistQuotesQuery.isLoading,
+				newsFeed: newsFeedQuery.isLoading,
+				economicCalendar: economicCalendarQuery.isLoading,
+			},
+			error: {
+				dashboardSummary: dashboardSummaryQuery.error,
+				portfolioPerformance: portfolioPerformanceQuery.error,
+				strategyComparison: strategyComparisonQuery.error,
+				recentTrades: recentTradesQuery.error,
+				watchlistQuotes: watchlistQuotesQuery.error,
+				newsFeed: newsFeedQuery.error,
+				economicCalendar: economicCalendarQuery.error,
+			},
 
-        // Data
-        dashboardSummary: dashboardSummaryQuery.data,
-        portfolioPerformance: portfolioPerformanceQuery.data,
-        strategyComparison: strategyComparisonQuery.data,
-        recentTrades: recentTradesQuery.data,
-        watchlistQuotes: watchlistQuotesQuery.data,
-        newsFeed: newsFeedQuery.data,
-        economicCalendar: economicCalendarQuery.data,
+			// Actions
+			refetch: {
+				dashboardSummary: dashboardSummaryQuery.refetch,
+				portfolioPerformance: portfolioPerformanceQuery.refetch,
+				strategyComparison: strategyComparisonQuery.refetch,
+				recentTrades: recentTradesQuery.refetch,
+				watchlistQuotes: watchlistQuotesQuery.refetch,
+				newsFeed: newsFeedQuery.refetch,
+				economicCalendar: economicCalendarQuery.refetch,
+			},
 
-        // Status
-        isError: {
-            dashboardSummary: dashboardSummaryQuery.isError,
-            portfolioPerformance: portfolioPerformanceQuery.isError,
-            strategyComparison: strategyComparisonQuery.isError,
-            recentTrades: recentTradesQuery.isError,
-            watchlistQuotes: watchlistQuotesQuery.isError,
-            newsFeed: newsFeedQuery.isError,
-            economicCalendar: economicCalendarQuery.isError,
-        },
-        isLoading: {
-            dashboardSummary: dashboardSummaryQuery.isLoading,
-            portfolioPerformance: portfolioPerformanceQuery.isLoading,
-            strategyComparison: strategyComparisonQuery.isLoading,
-            recentTrades: recentTradesQuery.isLoading,
-            watchlistQuotes: watchlistQuotesQuery.isLoading,
-            newsFeed: newsFeedQuery.isLoading,
-            economicCalendar: economicCalendarQuery.isLoading,
-        },
-        error: {
-            dashboardSummary: dashboardSummaryQuery.error,
-            portfolioPerformance: portfolioPerformanceQuery.error,
-            strategyComparison: strategyComparisonQuery.error,
-            recentTrades: recentTradesQuery.error,
-            watchlistQuotes: watchlistQuotesQuery.error,
-            newsFeed: newsFeedQuery.error,
-            economicCalendar: economicCalendarQuery.error,
-        },
-
-        // Actions
-        refetch: {
-            dashboardSummary: dashboardSummaryQuery.refetch,
-            portfolioPerformance: portfolioPerformanceQuery.refetch,
-            strategyComparison: strategyComparisonQuery.refetch,
-            recentTrades: recentTradesQuery.refetch,
-            watchlistQuotes: watchlistQuotesQuery.refetch,
-            newsFeed: newsFeedQuery.refetch,
-            economicCalendar: economicCalendarQuery.refetch,
-        },
-
-        // Query Objects (if needed for advanced usage)
-        queries: {
-            dashboardSummaryQuery,
-            portfolioPerformanceQuery,
-            strategyComparisonQuery,
-            recentTradesQuery,
-            watchlistQuotesQuery,
-            newsFeedQuery,
-            economicCalendarQuery,
-        },
-
-    }), [
-        dashboardSummaryQuery,
-        portfolioPerformanceQuery,
-        strategyComparisonQuery,
-        recentTradesQuery,
-        watchlistQuotesQuery,
-        newsFeedQuery,
-        economicCalendarQuery,
-    ]);
+			// Query Objects (if needed for advanced usage)
+			queries: {
+				dashboardSummaryQuery,
+				portfolioPerformanceQuery,
+				strategyComparisonQuery,
+				recentTradesQuery,
+				watchlistQuotesQuery,
+				newsFeedQuery,
+				economicCalendarQuery,
+			},
+		}),
+		[
+			dashboardSummaryQuery,
+			portfolioPerformanceQuery,
+			strategyComparisonQuery,
+			recentTradesQuery,
+			watchlistQuotesQuery,
+			newsFeedQuery,
+			economicCalendarQuery,
+		],
+	);
 }

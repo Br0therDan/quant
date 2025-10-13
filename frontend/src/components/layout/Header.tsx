@@ -11,8 +11,8 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import * as React from "react";
-import UserAvatars from './UserButton';
-import ColorModeIconDropdown from '../shared-theme/ColorModeIconDropdown';
+import UserAvatars from "./UserButton";
+import ColorModeIconDropdown from "../shared-theme/ColorModeIconDropdown";
 
 const AppBar = styled(MuiAppBar)(({ theme }) => ({
 	borderWidth: 0,
@@ -29,7 +29,7 @@ const LogoContainer = styled(Box)({
 	alignItems: "center",
 	"& img": {
 		maxHeight: 45,
-		width: 100
+		width: 100,
 	},
 });
 
@@ -82,7 +82,11 @@ export default function Header({
 	);
 
 	return (
-		<AppBar color="inherit" position="fixed" sx={{ displayPrint: "none", height: 60 }}>
+		<AppBar
+			color="inherit"
+			position="fixed"
+			sx={{ displayPrint: "none", height: 60 }}
+		>
 			<Toolbar sx={{ mx: { xs: -0.75, sm: -1 } }}>
 				<Stack
 					direction="row"

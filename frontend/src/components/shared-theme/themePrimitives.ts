@@ -24,7 +24,7 @@ declare module "@mui/material/styles" {
 		900: string;
 	}
 
-	interface PaletteColor extends ColorRange { }
+	interface PaletteColor extends ColorRange {}
 
 	interface Palette {
 		baseShadow: string;
@@ -36,16 +36,16 @@ const defaultTheme = createTheme();
 const customShadows: Shadows = [...defaultTheme.shadows];
 
 export const brand = {
-  50: "hsl(220, 60%, 97%)",
-  100: "hsl(220, 58%, 94%)",
-  200: "hsl(220, 60%, 86%)",
-  300: "hsl(220, 61%, 73%)",
-  400: "hsl(220, 59%, 61%)",
-  500: "hsl(220, 61%, 48%)",
-  600: "hsl(220, 65%, 39%)",
-  700: "hsl(220, 70%, 31%)",
-  800: "hsl(220, 75%, 23%)",
-  900: "hsl(220, 80%, 15%)",
+	50: "hsl(220, 60%, 97%)",
+	100: "hsl(220, 58%, 94%)",
+	200: "hsl(220, 60%, 86%)",
+	300: "hsl(220, 61%, 73%)",
+	400: "hsl(220, 59%, 61%)",
+	500: "hsl(220, 61%, 48%)",
+	600: "hsl(220, 65%, 39%)",
+	700: "hsl(220, 70%, 31%)",
+	800: "hsl(220, 75%, 23%)",
+	900: "hsl(220, 80%, 15%)",
 };
 
 export const gray = {
@@ -61,16 +61,16 @@ export const gray = {
 	900: "hsl(220, 35%, 3%)",
 };
 export const gold = {
-  50: "hsl(45, 100%, 97%)",
-  100: "hsl(45, 95%, 90%)",
-  200: "hsl(45, 90%, 80%)",
-  300: "hsl(45, 85%, 65%)",
-  400: "hsl(45, 80%, 55%)",
-  500: "hsl(45, 75%, 45%)",
-  600: "hsl(45, 70%, 35%)",
-  700: "hsl(45, 65%, 25%)",
-  800: "hsl(45, 60%, 15%)",
-  900: "hsl(45, 55%, 10%)",
+	50: "hsl(45, 100%, 97%)",
+	100: "hsl(45, 95%, 90%)",
+	200: "hsl(45, 90%, 80%)",
+	300: "hsl(45, 85%, 65%)",
+	400: "hsl(45, 80%, 55%)",
+	500: "hsl(45, 75%, 45%)",
+	600: "hsl(45, 70%, 35%)",
+	700: "hsl(45, 65%, 25%)",
+	800: "hsl(45, 60%, 15%)",
+	900: "hsl(45, 55%, 10%)",
 };
 
 export const green = {
@@ -206,7 +206,8 @@ export const getDesignTokens = (mode: PaletteMode) => {
 			},
 		},
 		typography: {
-			fontFamily: "var(--font-roboto), Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+			fontFamily:
+				"var(--font-roboto), Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
 			h1: {
 				fontSize: defaultTheme.typography.pxToRem(48),
 				fontWeight: 600,
@@ -364,7 +365,8 @@ export const colorSchemes = {
 };
 
 export const typography = {
-	fontFamily: "var(--font-roboto), Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+	fontFamily:
+		"var(--font-roboto), Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
 	h1: {
 		fontSize: defaultTheme.typography.pxToRem(48),
 		fontWeight: 600,

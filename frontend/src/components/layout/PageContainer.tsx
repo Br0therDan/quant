@@ -50,7 +50,10 @@ export default function PageContainer(props: PageContainerProps) {
 	const { children, breadcrumbs, title, actions = null } = props;
 
 	return (
-		<Container sx={{ flex: 1, display: "flex", flexDirection: "column" }} maxWidth="xl">
+		<Container
+			sx={{ flex: 1, display: "flex", flexDirection: "column" }}
+			maxWidth="xl"
+		>
 			<Stack sx={{ flex: 1, my: 2 }} spacing={2}>
 				<Stack>
 					<PageHeaderBreadcrumbs

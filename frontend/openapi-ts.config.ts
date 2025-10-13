@@ -1,7 +1,6 @@
 import { defineConfig } from "@hey-api/openapi-ts";
 
 export default defineConfig({
-
 	input: "./src/openapi.json",
 	output: {
 		format: "prettier",
@@ -15,7 +14,7 @@ export default defineConfig({
 			runtimeConfigPath: "../runtimeConfig",
 		},
 		{
-			name: '@hey-api/transformers',
+			name: "@hey-api/transformers",
 		},
 		{
 			name: "@hey-api/sdk",
@@ -26,9 +25,10 @@ export default defineConfig({
 			methodNameBuilder: (operation) => {
 				let name = operation.summary;
 				if (name) {
-					name = name.toLowerCase()
-					.replace(/[\s\-_]+(\w)/g, (_, c) => c.toUpperCase())
-					.replace(/[\s\-_]+/g, "");
+					name = name
+						.toLowerCase()
+						.replace(/[\s\-_]+(\w)/g, (_, c) => c.toUpperCase())
+						.replace(/[\s\-_]+/g, "");
 				}
 				return name || "defaultMethodName";
 			},
