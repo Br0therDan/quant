@@ -48,6 +48,22 @@ from .data_quality import DataQualityEvent
 from .optimization import OptimizationStudy, OptimizationTrial
 from .chatops import ChatSessionDocument
 from .feature_store import FeatureDefinition, FeatureVersion, FeatureUsage
+from .model_lifecycle import (
+    DriftEvent,
+    ModelExperiment,
+    ModelRun,
+    ModelStage,
+    ModelVersion,
+)
+from .evaluation import EvaluationRun, EvaluationScenario
+from .prompt_governance import (
+    PromptAuditLog,
+    PromptEvaluationSummary,
+    PromptRiskLevel,
+    PromptStatus,
+    PromptTemplate,
+    PromptUsageLog,
+)
 from mysingle_quant.auth.models import User, OAuthAccount
 
 collections = [
@@ -106,6 +122,18 @@ collections = [
     FeatureDefinition,
     FeatureVersion,
     FeatureUsage,
+    # Model lifecycle & MLOps
+    ModelExperiment,
+    ModelRun,
+    ModelVersion,
+    DriftEvent,
+    # Evaluation harness
+    EvaluationScenario,
+    EvaluationRun,
+    # Prompt governance
+    PromptTemplate,
+    PromptAuditLog,
+    PromptUsageLog,
     # 전략 및 성과
     Strategy,
     StrategyTemplate,
@@ -138,6 +166,23 @@ __all__ = [
     "FeatureDefinition",
     "FeatureVersion",
     "FeatureUsage",
+    # Model lifecycle enums
+    "ModelStage",
+    # Model lifecycle & MLOps
+    "ModelExperiment",
+    "ModelRun",
+    "ModelVersion",
+    "DriftEvent",
+    # Evaluation harness
+    "EvaluationScenario",
+    "EvaluationRun",
+    # Prompt governance
+    "PromptStatus",
+    "PromptRiskLevel",
+    "PromptEvaluationSummary",
+    "PromptTemplate",
+    "PromptAuditLog",
+    "PromptUsageLog",
     # Market data models - Crypto
     "CryptoExchangeRate",
     "CryptoIntradayPrice",

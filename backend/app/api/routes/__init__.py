@@ -16,6 +16,7 @@ from .narrative import router as narrative_router
 from .strategy_builder import router as strategy_builder_router
 from .chatops_advanced import router as chatops_advanced_router
 from .feature_store import router as feature_store_router
+from .prompt_governance import router as prompt_governance_router
 
 
 __all__ = [
@@ -33,4 +34,5 @@ __all__ = [
     "strategy_builder_router",
     "chatops_advanced_router",
     "feature_store_router",
+    "prompt_governance_router",
 ]
