@@ -47,6 +47,7 @@ from .strategy import Strategy, StrategyTemplate, StrategyExecution
 from .data_quality import DataQualityEvent
 from .optimization import OptimizationStudy, OptimizationTrial
 from .chatops import ChatSessionDocument
+from .feature_store import FeatureDefinition, FeatureVersion, FeatureUsage
 from mysingle_quant.auth.models import User, OAuthAccount
 
 collections = [
@@ -101,6 +102,10 @@ collections = [
     OptimizationTrial,
     # ChatOps
     ChatSessionDocument,
+    # Feature Store
+    FeatureDefinition,
+    FeatureVersion,
+    FeatureUsage,
     # 전략 및 성과
     Strategy,
     StrategyTemplate,
@@ -129,6 +134,10 @@ __all__ = [
     "OptimizationTrial",
     # ChatOps
     "ChatSessionDocument",
+    # Feature Store
+    "FeatureDefinition",
+    "FeatureVersion",
+    "FeatureUsage",
     # Market data models - Crypto
     "CryptoExchangeRate",
     "CryptoIntradayPrice",

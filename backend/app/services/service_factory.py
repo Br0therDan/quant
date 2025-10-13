@@ -28,6 +28,7 @@ from .optimization_service import OptimizationService
 from .narrative_report_service import NarrativeReportService
 from .strategy_builder_service import StrategyBuilderService
 from .chatops_advanced_service import ChatOpsAdvancedService
+from .feature_store_service import FeatureStoreService
 
 logger = logging.getLogger(__name__)
 
@@ -59,6 +60,7 @@ class ServiceFactory:
     _narrative_report_service: Optional[NarrativeReportService] = None
     _strategy_builder_service: Optional[StrategyBuilderService] = None
     _chatops_advanced_service: Optional[ChatOpsAdvancedService] = None
+    _feature_store_service: Optional[FeatureStoreService] = None
 
     def __new__(cls):
         if cls._instance is None:
@@ -310,6 +312,13 @@ class ServiceFactory:
             )
             logger.info("ChatOpsAdvancedService initialized (Phase 3 D3)")
         return self._chatops_advanced_service
+
+    def get_feature_store_service(self) -> FeatureStoreService:
+        """FeatureStoreService 인스턴스 반환 (Phase 4 D1)"""
+        if self._feature_store_service is None:
+            self._feature_store_service = FeatureStoreService()
+            logger.info("FeatureStoreService initialized (Phase 4 D1)")
+        return self._feature_store_service
 
     async def cleanup(self):
         """모든 서비스 정리"""

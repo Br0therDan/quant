@@ -180,25 +180,68 @@ class ChatOpsAdvancedService:
         if not self.client:
             raise Exception("OpenAI client not initialized. Check OPENAI_API_KEY.")
 
-        # 1. 전략 데이터 수집
+        # 1. 전략 데이터 수집 (실제 MongoDB 조회)
+        from app.models.strategy import Strategy
+        from app.models.backtest import Backtest, BacktestResult
+
         strategies_data = []
         for strategy_id in request.strategy_ids:
-            # 향후: 실제 전략 데이터 조회
-            # strategy = await self.backtest_service.get_strategy(strategy_id)
-            # 임시 데이터
+            # 전략 조회
+            strategy = await Strategy.get(strategy_id)
+            if not strategy:
+                strategies_data.append(
+                    {
+                        "strategy_id": strategy_id,
+                        "name": "Unknown Strategy",
+                        "error": "전략을 찾을 수 없습니다",
+                    }
+                )
+                continue
+
+            # 최신 백테스트 결과 조회
+            backtest = await Backtest.find_one(
+                Backtest.strategy_id == strategy_id,
+                Backtest.status == "completed",
+                sort=[("created_at", -1)],
+            )
+
+            if not backtest:
+                strategies_data.append(
+                    {
+                        "strategy_id": strategy_id,
+                        "name": strategy.name,
+                        "error": "완료된 백테스트 결과가 없습니다",
+                    }
+                )
+                continue
+
+            # 백테스트 결과 조회
+            result = await BacktestResult.find_one(
+                BacktestResult.backtest_id == str(backtest.id)
+            )
+
+            if not result:
+                strategies_data.append(
+                    {
+                        "strategy_id": strategy_id,
+                        "name": strategy.name,
+                        "error": "백테스트 결과를 찾을 수 없습니다",
+                    }
+                )
+                continue
+
+            # 실제 데이터 추가
             strategies_data.append(
                 {
                     "strategy_id": strategy_id,
-                    "name": f"Strategy {strategy_id}",
-                    "total_return": (
-                        15.5 if strategy_id == request.strategy_ids[0] else 12.3
-                    ),
-                    "sharpe_ratio": (
-                        1.8 if strategy_id == request.strategy_ids[0] else 1.5
-                    ),
-                    "max_drawdown": (
-                        -12.5 if strategy_id == request.strategy_ids[0] else -15.2
-                    ),
+                    "name": strategy.name,
+                    "total_return": result.performance.total_return,
+                    "sharpe_ratio": result.performance.sharpe_ratio,
+                    "max_drawdown": result.performance.max_drawdown,
+                    "backtest_period": {
+                        "start": backtest.config.start_date.isoformat(),
+                        "end": backtest.config.end_date.isoformat(),
+                    },
                 }
             )
 
@@ -248,7 +291,7 @@ class ChatOpsAdvancedService:
         self, request: AutoBacktestRequest, user_id: str
     ) -> AutoBacktestResponse:
         """
-        자동 백테스트 트리거
+        자동 백테스트 트리거 (실제 백테스트 생성)
 
         Args:
             request: 자동 백테스트 요청
@@ -257,21 +300,64 @@ class ChatOpsAdvancedService:
         Returns:
             AutoBacktestResponse: 백테스트 응답
         """
-        # 1. 백테스트 생성
-        # 향후: BacktestService.create_backtest() 호출
-        backtest_id = str(uuid.uuid4())
+        try:
+            # 1. 백테스트 설정 생성
+            from app.models.backtest import BacktestConfig
+            from datetime import datetime, timedelta
 
-        logger.info(
-            f"Auto backtest triggered by {user_id}",
-            extra={"backtest_id": backtest_id, "reason": request.trigger_reason},
-        )
+            # strategy_config에서 필요한 정보 추출
+            strategy_name = request.strategy_config.get(
+                "name", "Auto Generated Strategy"
+            )
+            symbols = request.strategy_config.get("symbols", ["AAPL"])
 
-        # 2. 예상 소요 시간 계산 (간단한 로직)
-        estimated_duration = 60  # 기본 60초
+            # 백테스트 기간 설정 (기본: 최근 1년)
+            end_date = datetime.now()
+            start_date = end_date - timedelta(days=365)
 
-        return AutoBacktestResponse(
-            backtest_id=backtest_id,
-            status="pending",
-            estimated_duration_seconds=estimated_duration,
-            report_url=None,  # 완료 후 업데이트
-        )
+            config = BacktestConfig(
+                name=f"Auto: {strategy_name}",
+                description=f"Triggered by {request.trigger_reason}",
+                start_date=start_date,
+                end_date=end_date,
+                symbols=symbols,
+                initial_cash=request.strategy_config.get("initial_cash", 100000.0),
+                max_position_size=request.strategy_config.get("max_position_size", 0.2),
+                commission_rate=request.strategy_config.get("commission_rate", 0.001),
+                slippage_rate=request.strategy_config.get("slippage_rate", 0.0005),
+                rebalance_frequency=request.strategy_config.get("rebalance_frequency"),
+                tags=[request.trigger_reason, "auto_generated"],
+            )
+
+            # 2. 백테스트 생성
+            backtest = await self.backtest_service.create_backtest(
+                name=config.name,
+                description=config.description,
+                config=config,
+                user_id=user_id,
+            )
+
+            logger.info(
+                f"Auto backtest created: {backtest.id} by {user_id}",
+                extra={
+                    "backtest_id": str(backtest.id),
+                    "reason": request.trigger_reason,
+                    "symbols": symbols,
+                },
+            )
+
+            # 3. 예상 소요 시간 계산 (심볼 개수와 기간에 따라)
+            days = (end_date - start_date).days
+            estimated_duration = 30 + (len(symbols) * 10) + (days // 30)  # 초 단위
+
+            # 4. 백그라운드 실행은 FastAPI BackgroundTasks를 통해 라우터에서 처리
+            return AutoBacktestResponse(
+                backtest_id=str(backtest.id),
+                status="pending",
+                estimated_duration_seconds=estimated_duration,
+                report_url=None,  # 완료 후 업데이트
+            )
+
+        except Exception as e:
+            logger.error(f"Failed to trigger auto backtest: {e}", exc_info=True)
+            raise ValueError(f"Auto backtest trigger failed: {str(e)}")
