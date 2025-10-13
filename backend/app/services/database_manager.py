@@ -201,6 +201,41 @@ class DatabaseManager:
         """
         )
 
+        # 백테스트 포트폴리오 히스토리 테이블 (P3.2)
+        self.connection.execute(
+            """
+            CREATE TABLE IF NOT EXISTS backtest_portfolio_history (
+                backtest_id VARCHAR,
+                timestamp TIMESTAMP,
+                total_value DECIMAL(15, 2),
+                cash DECIMAL(15, 2),
+                positions_value DECIMAL(15, 2),
+                return_pct DECIMAL(8, 4),
+                PRIMARY KEY (backtest_id, timestamp),
+                FOREIGN KEY (backtest_id) REFERENCES backtest_results(id)
+            )
+        """
+        )
+
+        # 백테스트 거래 내역 테이블 (P3.2)
+        self.connection.execute(
+            """
+            CREATE TABLE IF NOT EXISTS backtest_trades (
+                backtest_id VARCHAR,
+                trade_id VARCHAR,
+                timestamp TIMESTAMP,
+                symbol VARCHAR,
+                side VARCHAR,  -- 'BUY' or 'SELL'
+                quantity DECIMAL(12, 4),
+                price DECIMAL(12, 4),
+                commission DECIMAL(12, 4),
+                total_amount DECIMAL(15, 2),
+                PRIMARY KEY (backtest_id, trade_id),
+                FOREIGN KEY (backtest_id) REFERENCES backtest_results(id)
+            )
+        """
+        )
+
         # 거래 기록 테이블
         self.connection.execute(
             """
@@ -512,6 +547,139 @@ class DatabaseManager:
 
         logger.info(f"백테스트 결과 저장됨: {result_id}")
         return result_id
+
+    def save_portfolio_history(
+        self, backtest_id: str, portfolio_history: list[dict]
+    ) -> int:
+        """백테스트 포트폴리오 히스토리 저장 (P3.2)"""
+        self._ensure_connected()
+        if not self.connection:
+            raise RuntimeError("데이터베이스에 연결되지 않음")
+
+        if not portfolio_history:
+            logger.warning(f"No portfolio history to save for {backtest_id}")
+            return 0
+
+        try:
+            # DataFrame으로 변환하여 배치 삽입
+            df = pd.DataFrame(portfolio_history)
+            df["backtest_id"] = backtest_id
+
+            self.connection.execute(
+                """
+                INSERT INTO backtest_portfolio_history
+                (backtest_id, timestamp, total_value, cash, positions_value, return_pct)
+                SELECT backtest_id, timestamp, total_value, cash, positions_value, return_pct
+                FROM df
+            """
+            )
+
+            count = len(portfolio_history)
+            logger.info(f"포트폴리오 히스토리 {count}건 저장됨: {backtest_id}")
+            return count
+
+        except Exception as e:
+            logger.error(f"포트폴리오 히스토리 저장 실패: {e}")
+            return 0
+
+    def save_trades_history(self, backtest_id: str, trades: list[dict]) -> int:
+        """백테스트 거래 내역 저장 (P3.2)"""
+        self._ensure_connected()
+        if not self.connection:
+            raise RuntimeError("데이터베이스에 연결되지 않음")
+
+        if not trades:
+            logger.warning(f"No trades to save for {backtest_id}")
+            return 0
+
+        try:
+            import uuid
+
+            # 거래 내역에 ID 추가
+            trades_with_id = []
+            for trade in trades:
+                trade_copy = trade.copy()
+                trade_copy["backtest_id"] = backtest_id
+                trade_copy["trade_id"] = str(uuid.uuid4())
+                trades_with_id.append(trade_copy)
+
+            # DataFrame으로 변환하여 배치 삽입
+            # DuckDB는 Python DataFrame을 SQL에서 직접 참조 가능
+            trades_df = pd.DataFrame(trades_with_id)  # noqa: F841
+
+            self.connection.execute(
+                """
+                INSERT INTO backtest_trades
+                (backtest_id, trade_id, timestamp, symbol, side, quantity,
+                 price, commission, total_amount)
+                SELECT backtest_id, trade_id, timestamp, symbol, side, quantity,
+                       price, commission, total_amount
+                FROM trades_df
+            """
+            )
+
+            count = len(trades)
+            logger.info(f"거래 내역 {count}건 저장됨: {backtest_id}")
+            return count
+
+        except Exception as e:
+            logger.error(f"거래 내역 저장 실패: {e}")
+            return 0
+
+    def get_portfolio_history(self, backtest_id: str) -> pd.DataFrame | None:
+        """백테스트 포트폴리오 히스토리 조회 (P3.2)"""
+        self._ensure_connected()
+        if not self.connection:
+            raise RuntimeError("데이터베이스에 연결되지 않음")
+
+        try:
+            df = self.connection.execute(
+                """
+                SELECT timestamp, total_value, cash, positions_value, return_pct
+                FROM backtest_portfolio_history
+                WHERE backtest_id = ?
+                ORDER BY timestamp
+            """,
+                [backtest_id],
+            ).df()
+
+            if df.empty:
+                logger.warning(f"No portfolio history found for {backtest_id}")
+                return None
+
+            return df
+
+        except Exception as e:
+            logger.error(f"포트폴리오 히스토리 조회 실패: {e}")
+            return None
+
+    def get_trades_history(self, backtest_id: str) -> pd.DataFrame | None:
+        """백테스트 거래 내역 조회 (P3.2)"""
+        self._ensure_connected()
+        if not self.connection:
+            raise RuntimeError("데이터베이스에 연결되지 않음")
+
+        try:
+            df = self.connection.execute(
+                """
+                SELECT trade_id, timestamp, symbol, side, quantity,
+                       price, commission, total_amount
+                FROM backtest_trades
+                WHERE backtest_id = ?
+                ORDER BY timestamp
+            """,
+                [backtest_id],
+            ).df()
+
+            if df.empty:
+                logger.warning(f"No trades found for {backtest_id}")
+                return None
+
+            return df
+
+        except Exception as e:
+            logger.error(f"거래 내역 조회 실패: {e}")
+            return None
 
     # ===== 캐시 관련 메서드들 =====
 

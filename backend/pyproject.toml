@@ -24,6 +24,8 @@ dependencies = [
     "pwdlib[argon2,bcrypt]>=0.1.7",
     "httpx-auth>=0.16.1",
     "fastapi[standard]>=0.117.1",
+    "tenacity>=9.1.2",
+    "structlog>=25.4.0",
 ]
 
 [project.optional-dependencies]
@@ -59,6 +61,10 @@ python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
 asyncio_mode = "auto"
+markers = [
+    "e2e: End-to-end integration tests (deselect with '-m \"not e2e\"')",
+    "slow: Slow-running tests (deselect with '-m \"not slow\"')",
+]
 
 [tool.mypy]
 python_version = "3.12"

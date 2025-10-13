@@ -545,3 +545,68 @@ async def get_trades_analytics(
 #         }
 #     except Exception as e:
 #         raise HTTPException(status_code=500, detail=f"요약 분석 실패: {str(e)}")
+
+
+# ===== P3.2: DuckDB 조회 API =====
+
+
+@router.get("/{backtest_id}/portfolio-history")
+async def get_portfolio_history(
+    backtest_id: str,
+):
+    """백테스트 포트폴리오 히스토리 조회 (DuckDB)
+
+    P3.2: 고성능 시계열 조회를 위한 DuckDB 조회
+    """
+    try:
+        db_manager = service_factory.get_database_manager()
+        df = db_manager.get_portfolio_history(backtest_id)
+
+        if df is None or df.empty:
+            raise HTTPException(
+                status_code=404, detail=f"Portfolio history not found: {backtest_id}"
+            )
+
+        return {
+            "status": "success",
+            "backtest_id": backtest_id,
+            "count": len(df),
+            "data": df.to_dict(orient="records"),
+            "source": "duckdb",
+            "queried_at": datetime.now().isoformat(),
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"포트폴리오 히스토리 조회 실패: {str(e)}")
+
+
+@router.get("/{backtest_id}/trades-history")
+async def get_trades_history(
+    backtest_id: str,
+):
+    """백테스트 거래 내역 조회 (DuckDB)
+
+    P3.2: 고성능 거래 내역 조회를 위한 DuckDB 조회
+    """
+    try:
+        db_manager = service_factory.get_database_manager()
+        df = db_manager.get_trades_history(backtest_id)
+
+        if df is None or df.empty:
+            raise HTTPException(
+                status_code=404, detail=f"Trades history not found: {backtest_id}"
+            )
+
+        return {
+            "status": "success",
+            "backtest_id": backtest_id,
+            "count": len(df),
+            "data": df.to_dict(orient="records"),
+            "source": "duckdb",
+            "queried_at": datetime.now().isoformat(),
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"거래 내역 조회 실패: {str(e)}")
