@@ -605,7 +605,7 @@ class DatabaseManager:
 
             # DataFrame으로 변환하여 배치 삽입
             # DuckDB는 Python DataFrame을 SQL에서 직접 참조 가능
-            trades_df = pd.DataFrame(trades_with_id)  # noqa: F841
+            trades_df = pd.DataFrame(trades_with_id)  # type: ignore # noqa: F841
 
             self.connection.execute(
                 """
