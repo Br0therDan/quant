@@ -1,21 +1,218 @@
 "use client";
 
 import PageContainer from "@/components/layout/PageContainer";
+import { useBacktest } from "@/hooks/useBacktests";
+import {
+  Alert,
+  Button,
+  Container,
+  InputAdornment,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import Grid from "@mui/material/Unstable_Grid2";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { ko } from "date-fns/locale";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
+type IntegratedFormState = {
+  name: string;
+  description: string;
+  symbols: string;
+  strategyType: string;
+  startDate: Date;
+  endDate: Date;
+  initialCapital: number;
+};
+
+const defaultState: IntegratedFormState = {
+  name: "통합 백테스트",
+  description: "다중 서비스 통합 백테스트",
+  symbols: "AAPL, MSFT, NVDA",
+  strategyType: "momentum",
+  startDate: new Date(Date.now() - 180 * 24 * 60 * 60 * 1000),
+  endDate: new Date(),
+  initialCapital: 500000,
+};
 
 export default function RunBacktestPage() {
-	return (
-		<PageContainer
-			title="Run Backtest"
-			breadcrumbs={[
-				{ title: "Backtesting" },
-				{ title: "Backtests" },
-				{ title: "Run" },
-			]}
-		>
-			<div>
-				<h1>백테스트 실행</h1>
-				<p>워치리스트, 전략, 기간을 선택하여 백테스트를 실행할 수 있습니다.</p>
-			</div>
-		</PageContainer>
-	);
+  const router = useRouter();
+  const [formState, setFormState] = useState(defaultState);
+  const [error, setError] = useState<string | null>(null);
+  const {
+    runIntegratedBacktestAsync,
+    isMutating: { runIntegratedBacktest: running },
+  } = useBacktest();
+
+  const handleSubmit = async () => {
+    if (!formState.name.trim()) {
+      setError("백테스트 이름을 입력해주세요.");
+      return;
+    }
+    if (formState.startDate >= formState.endDate) {
+      setError("종료일은 시작일 이후여야 합니다.");
+      return;
+    }
+    const symbols = formState.symbols
+      .split(",")
+      .map((symbol) => symbol.trim().toUpperCase())
+      .filter((symbol) => symbol.length > 0);
+    if (!symbols.length) {
+      setError("최소 한 개 이상의 심볼을 입력해주세요.");
+      return;
+    }
+
+    setError(null);
+    try {
+      await runIntegratedBacktestAsync({
+        name: formState.name,
+        description: formState.description || undefined,
+        symbols,
+        strategy_type: formState.strategyType || "custom",
+        start_date: formState.startDate,
+        end_date: formState.endDate,
+        initial_capital: formState.initialCapital,
+      });
+      router.push("/backtests");
+    } catch (err) {
+      console.error("Failed to run integrated backtest", err);
+      setError("통합 백테스트 실행에 실패했습니다. 다시 시도해주세요.");
+    }
+  };
+
+  return (
+    <PageContainer
+      title="통합 백테스트 실행"
+      breadcrumbs={[{ title: "백테스트" }, { title: "실행" }]}
+    >
+      <Container maxWidth="md">
+        <Stack spacing={3} sx={{ mb: 4 }}>
+          <Typography variant="body1" color="text.secondary">
+            전략과 자산을 선택하여 통합 백테스트를 즉시 실행합니다. 생성된 백테스트는
+            목록에서 확인할 수 있습니다.
+          </Typography>
+        </Stack>
+
+        {error && (
+          <Alert severity="error" sx={{ mb: 3 }}>
+            {error}
+          </Alert>
+        )}
+
+        <Paper sx={{ p: 4 }}>
+          <Stack spacing={3}>
+            <TextField
+              label="백테스트 이름"
+              value={formState.name}
+              onChange={(event) =>
+                setFormState((prev) => ({ ...prev, name: event.target.value }))
+              }
+              fullWidth
+            />
+            <TextField
+              label="설명"
+              value={formState.description}
+              onChange={(event) =>
+                setFormState((prev) => ({
+                  ...prev,
+                  description: event.target.value,
+                }))
+              }
+              fullWidth
+              multiline
+              minRows={2}
+            />
+            <TextField
+              label="전략 타입"
+              helperText="예: momentum, mean_reversion 등"
+              value={formState.strategyType}
+              onChange={(event) =>
+                setFormState((prev) => ({
+                  ...prev,
+                  strategyType: event.target.value,
+                }))
+              }
+              fullWidth
+            />
+            <TextField
+              label="심볼 목록"
+              helperText="쉼표로 구분하여 입력하세요"
+              value={formState.symbols}
+              onChange={(event) =>
+                setFormState((prev) => ({
+                  ...prev,
+                  symbols: event.target.value,
+                }))
+              }
+              fullWidth
+            />
+            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ko}>
+              <Grid container spacing={2}>
+                <Grid xs={12} md={6}>
+                  <DatePicker
+                    label="시작일"
+                    value={formState.startDate}
+                    onChange={(date) =>
+                      setFormState((prev) => ({
+                        ...prev,
+                        startDate: date ?? prev.startDate,
+                      }))
+                    }
+                    slotProps={{ textField: { fullWidth: true } }}
+                  />
+                </Grid>
+                <Grid xs={12} md={6}>
+                  <DatePicker
+                    label="종료일"
+                    value={formState.endDate}
+                    onChange={(date) =>
+                      setFormState((prev) => ({
+                        ...prev,
+                        endDate: date ?? prev.endDate,
+                      }))
+                    }
+                    slotProps={{ textField: { fullWidth: true } }}
+                  />
+                </Grid>
+              </Grid>
+            </LocalizationProvider>
+            <TextField
+              label="초기 자본"
+              type="number"
+              value={formState.initialCapital}
+              onChange={(event) =>
+                setFormState((prev) => ({
+                  ...prev,
+                  initialCapital: Number(event.target.value),
+                }))
+              }
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">$</InputAdornment>
+                ),
+              }}
+              fullWidth
+            />
+            <Button
+              variant="contained"
+              size="large"
+              onClick={handleSubmit}
+              disabled={running}
+            >
+              통합 백테스트 실행
+            </Button>
+            <Typography variant="caption" color="text.secondary">
+              실행된 백테스트는 백테스트 목록에서 확인할 수 있으며, 실행이 완료되면
+              상세 페이지에서 성과를 분석할 수 있습니다.
+            </Typography>
+          </Stack>
+        </Paper>
+      </Container>
+    </PageContainer>
+  );
 }

@@ -590,7 +590,7 @@ function MyComponent() {
 }
 
 // ✅ 좋은 예
-import { useBacktest } from "@/hooks/useBacktest";
+import { useBacktest } from "@/hooks/useBacktests";
 
 function MyComponent() {
   const { backtestList, isLoading } = useBacktest();
