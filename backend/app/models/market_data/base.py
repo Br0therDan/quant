@@ -19,7 +19,9 @@ class BaseMarketDataDocument(Document):
         default_factory=lambda: datetime.now(timezone.utc), description="수정 시간"
     )
     source: str = Field(default="alpha_vantage", description="데이터 소스")
-    data_quality_score: Optional[float] = Field(None, description="데이터 품질 점수 (0-100)")
+    data_quality_score: Optional[float] = Field(
+        None, description="데이터 품질 점수 (0-100)"
+    )
 
     class Settings:
         # 모든 하위 클래스에서 이 인덱스들이 적용됨
@@ -118,3 +120,18 @@ class DataQualityScore(BaseModel):
     consistency_score: float = Field(..., ge=0, le=100, description="일관성 점수")
     timeliness_score: float = Field(..., ge=0, le=100, description="적시성 점수")
     issues: List[str] = Field(default_factory=list, description="발견된 문제점들")
+
+
+class MarketData(BaseMarketDataDocument):
+    """Generic market data record used for compatibility and aggregation tests."""
+
+    symbol: str = Field(..., description="자산 심볼")
+    date: datetime = Field(..., description="데이터 날짜")
+    open_price: float = Field(..., description="시가")
+    high_price: float = Field(..., description="고가")
+    low_price: float = Field(..., description="저가")
+    close_price: float = Field(..., description="종가")
+    volume: int = Field(0, ge=0, description="거래량")
+
+    class Settings:
+        name = "market_data"
