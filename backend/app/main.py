@@ -12,6 +12,7 @@ from app.core.logging_config import setup_logging
 from mysingle_quant import create_fastapi_app
 from mysingle_quant.core import get_mongodb_url
 from app.utils import seed_strategy_templates
+from app.core.init_test_user import ensure_dev_test_superuser
 
 # 로깅 설정 초기화
 setup_logging()
@@ -47,6 +48,14 @@ async def lifespan(app: FastAPI):
         logger.info("🌱 Seeding strategy templates...")
         await seed_strategy_templates()
         logger.info("✅ Strategy templates seeded")
+
+        # Ensure development test superuser exists
+        test_user, test_token = await ensure_dev_test_superuser()
+        if test_user and test_token:
+            app.state.dev_test_superuser = test_user
+            app.state.dev_test_superuser_token = test_token
+            app.state.dev_test_user_token = test_token
+            logger.info("🧪 Development test superuser ready: %s", test_user.email)
 
     except Exception as e:
         logger.error(f"❌ Startup failed: {e}")
