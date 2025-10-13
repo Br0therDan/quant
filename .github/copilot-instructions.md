@@ -152,6 +152,33 @@ const createBacktestMutation = useMutation({
 });
 ```
 
+### Material-UI Grid 레이아웃 (v7+ 업데이트)
+
+```typescript
+import Grid from '@mui/material/Grid';  // Grid2 아님!
+import { Box } from '@mui/material';
+
+// ✅ CORRECT - 새 Grid API
+<Box sx={{ flexGrow: 1 }}>
+  <Grid container spacing={2}>
+    <Grid size={8}>내용</Grid>
+    <Grid size={4}>사이드바</Grid>
+    <Grid size={{ xs: 12, md: 6 }}>반응형</Grid>
+  </Grid>
+</Box>
+
+// ❌ WRONG - 구버전 패턴 (사용 금지)
+<Grid container>
+  <Grid item xs={12} md={6}>...</Grid>  // item 프롭 사용 금지
+</Grid>
+```
+
+**핵심 규칙:**
+
+- `size` 프롭 사용 (xs/md/lg 아님)
+- `item` 프롭 불필요
+- 반응형: `size={{ xs: 12, md: 6 }}`
+
 ### Material-UI 스낵바 패턴
 
 ```typescript

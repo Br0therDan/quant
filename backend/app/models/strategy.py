@@ -16,7 +16,7 @@ from app.strategies.configs import (
 )
 
 
-# Config 타입 Union
+# Config 타입 Union with discriminator
 StrategyConfigUnion = Union[
     SMACrossoverConfig,
     RSIMeanReversionConfig,
@@ -49,8 +49,10 @@ class Strategy(BaseDocument):
     strategy_type: StrategyType = Field(..., description="전략 타입")
     description: str | None = Field(None, description="전략 설명")
 
-    # ✅ 타입 안전한 설정
-    config: StrategyConfigUnion = Field(..., description="전략 설정")
+    # ✅ 타입 안전한 설정 (discriminator 필드 사용)
+    config: StrategyConfigUnion = Field(
+        ..., description="전략 설정", discriminator="config_type"
+    )
 
     # 상태 정보
     is_active: bool = Field(default=True, description="활성화 상태")
@@ -80,8 +82,10 @@ class StrategyTemplate(BaseDocument):
     strategy_type: StrategyType = Field(..., description="전략 타입")
     description: str = Field(..., description="템플릿 설명")
 
-    # ✅ 타입 안전한 기본 설정
-    default_config: StrategyConfigUnion = Field(..., description="기본 설정")
+    # ✅ 타입 안전한 기본 설정 (discriminator 필드 사용)
+    default_config: StrategyConfigUnion = Field(
+        ..., description="기본 설정", discriminator="config_type"
+    )
 
     # 사용 통계
     usage_count: int = Field(default=0, description="사용 횟수")

@@ -424,6 +424,51 @@ pnpm gen:client
 
 ## Material-UI Patterns
 
+### Grid Layout (IMPORTANT: Updated Pattern)
+
+**MUI Grid v7+ uses new `size` prop instead of `xs`, `sm`, `md`, `lg`, `xl`**
+
+```typescript
+import Grid from '@mui/material/Grid';  // NOT Grid2
+import { Box } from '@mui/material';
+
+// ✅ CORRECT - New Grid API (v7+)
+function MyLayout() {
+  return (
+    <Box sx={{ flexGrow: 1 }}>
+      <Grid container spacing={2}>
+        <Grid size={8}>
+          <Item>size=8 (66.67%)</Item>
+        </Grid>
+        <Grid size={4}>
+          <Item>size=4 (33.33%)</Item>
+        </Grid>
+        <Grid size={{ xs: 12, md: 6, lg: 4 }}>
+          <Item>Responsive sizing</Item>
+        </Grid>
+      </Grid>
+    </Box>
+  );
+}
+
+// ❌ WRONG - Old Grid API (deprecated)
+<Grid container>
+  <Grid item xs={12} md={6}>  {/* Don't use 'item' prop */}
+    <Item>Old pattern</Item>
+  </Grid>
+</Grid>
+
+// ❌ WRONG - Don't use Grid2 import
+import Grid from '@mui/material/Grid2';  // Incorrect
+```
+
+**Key Rules:**
+
+1. Use `size` prop, NOT `xs`/`md`/`lg` props
+2. NO `item` prop needed
+3. Responsive: `size={{ xs: 12, md: 6 }}`
+4. Import from `@mui/material/Grid`, NOT `Grid2`
+
 ### Theme Customization
 
 ```typescript

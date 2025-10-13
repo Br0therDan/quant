@@ -17,7 +17,9 @@ class StrategyCreate(BaseSchema):
     name: str = Field(..., description="전략 이름")
     strategy_type: StrategyType = Field(..., description="전략 타입")
     description: str | None = Field(None, description="전략 설명")
-    config: StrategyConfigUnion = Field(..., description="전략 설정 (타입 안전)")
+    config: StrategyConfigUnion = Field(
+        ..., description="전략 설정 (타입 안전)", discriminator="config_type"
+    )
     tags: list[str] = Field(default_factory=list, description="태그")
 
 
@@ -26,7 +28,9 @@ class StrategyUpdate(BaseSchema):
 
     name: str | None = Field(None, description="전략 이름")
     description: str | None = Field(None, description="전략 설명")
-    config: StrategyConfigUnion | None = Field(None, description="전략 설정")
+    config: StrategyConfigUnion | None = Field(
+        None, description="전략 설정", discriminator="config_type"
+    )
     is_active: bool | None = Field(None, description="활성화 상태")
     tags: list[str | None] | None = Field(None, description="태그")
 
@@ -44,7 +48,9 @@ class TemplateCreate(BaseSchema):
     name: str = Field(..., description="템플릿 이름")
     strategy_type: StrategyType = Field(..., description="전략 타입")
     description: str = Field(..., description="템플릿 설명")
-    default_config: StrategyConfigUnion = Field(..., description="기본 설정 타입 안전")
+    default_config: StrategyConfigUnion = Field(
+        ..., description="기본 설정 타입 안전", discriminator="config_type"
+    )
     category: str = Field(..., description="카테고리")
     tags: list[str] = Field(default_factory=list, description="태그")
 
@@ -54,7 +60,9 @@ class TemplateUpdate(BaseSchema):
 
     name: str | None = Field(None, description="템플릿 이름")
     description: str | None = Field(None, description="템플릿 설명")
-    default_config: StrategyConfigUnion | None = Field(None, description="기본 설정")
+    default_config: StrategyConfigUnion | None = Field(
+        None, description="기본 설정", discriminator="config_type"
+    )
     tags: list[str] | None = Field(None, description="태그")
 
 
@@ -62,7 +70,9 @@ class StrategyCreateFromTemplate(BaseSchema):
     """Create strategy from template request"""
 
     name: str = Field(..., description="전략 이름")
-    config_overrides: StrategyConfigUnion | None = Field(None, description="설정 오버라이드")
+    config_overrides: StrategyConfigUnion | None = Field(
+        None, description="설정 오버라이드", discriminator="config_type"
+    )
 
 
 # Response Schemas
@@ -73,7 +83,9 @@ class StrategyResponse(BaseSchema):
     name: str = Field(..., description="전략 이름")
     strategy_type: StrategyType = Field(..., description="전략 타입")
     description: str | None = Field(None, description="전략 설명")
-    config: StrategyConfigUnion = Field(..., description="전략 설정 (타입 안전)")
+    config: StrategyConfigUnion = Field(
+        ..., description="전략 설정 (타입 안전)", discriminator="config_type"
+    )
     is_active: bool = Field(..., description="활성화 상태")
     is_template: bool = Field(..., description="템플릿 여부")
     created_by: str | None = Field(None, description="생성자")
@@ -92,7 +104,9 @@ class TemplateResponse(BaseSchema):
     name: str = Field(..., description="템플릿 이름")
     strategy_type: StrategyType = Field(..., description="전략 타입")
     description: str = Field(..., description="템플릿 설명")
-    default_config: StrategyConfigUnion = Field(..., description="기본 설정 (타입 안전)")
+    default_config: StrategyConfigUnion = Field(
+        ..., description="기본 설정", discriminator="config_type"
+    )
     category: str = Field(..., description="카테고리")
     usage_count: int = Field(..., description="사용 횟수")
     created_at: datetime = Field(..., description="생성 시간")

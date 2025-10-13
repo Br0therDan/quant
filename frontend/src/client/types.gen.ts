@@ -545,6 +545,11 @@ export type BodyAuthVerify = {
  */
 export type BuyAndHoldConfig = {
 	/**
+	 * Config Type
+	 * 설정 타입
+	 */
+	config_type?: "buy_and_hold";
+	/**
 	 * Lookback Period
 	 * 조회 기간 (일)
 	 */
@@ -1775,6 +1780,11 @@ export type MetadataInfo = {
  */
 export type MomentumConfig = {
 	/**
+	 * Config Type
+	 * 설정 타입
+	 */
+	config_type?: "momentum";
+	/**
 	 * Lookback Period
 	 * 조회 기간 (일)
 	 */
@@ -2501,6 +2511,11 @@ export type QuoteResponse = {
  */
 export type RsiMeanReversionConfig = {
 	/**
+	 * Config Type
+	 * 설정 타입
+	 */
+	config_type?: "rsi_mean_reversion";
+	/**
 	 * Lookback Period
 	 * 조회 기간 (일)
 	 */
@@ -2633,6 +2648,11 @@ export type RegimeMetrics = {
  * SMA 크로스오버 전략 설정
  */
 export type SmaCrossoverConfig = {
+	/**
+	 * Config Type
+	 * 설정 타입
+	 */
+	config_type?: "sma_crossover";
 	/**
 	 * Lookback Period
 	 * 조회 기간 (일)
@@ -2772,10 +2792,18 @@ export type StrategyCreate = {
 	 * 전략 설정 (타입 안전)
 	 */
 	config:
-		| SmaCrossoverConfig
-		| RsiMeanReversionConfig
-		| MomentumConfig
-		| BuyAndHoldConfig;
+		| ({
+				config_type: "sma_crossover";
+		  } & SmaCrossoverConfig)
+		| ({
+				config_type: "rsi_mean_reversion";
+		  } & RsiMeanReversionConfig)
+		| ({
+				config_type: "momentum";
+		  } & MomentumConfig)
+		| ({
+				config_type: "buy_and_hold";
+		  } & BuyAndHoldConfig);
 	/**
 	 * Tags
 	 * 태그
@@ -2802,10 +2830,18 @@ export type StrategyCreateFromTemplate = {
 	 * 설정 오버라이드
 	 */
 	config_overrides?:
-		| SmaCrossoverConfig
-		| RsiMeanReversionConfig
-		| MomentumConfig
-		| BuyAndHoldConfig
+		| ({
+				config_type: "sma_crossover";
+		  } & SmaCrossoverConfig)
+		| ({
+				config_type: "rsi_mean_reversion";
+		  } & RsiMeanReversionConfig)
+		| ({
+				config_type: "momentum";
+		  } & MomentumConfig)
+		| ({
+				config_type: "buy_and_hold";
+		  } & BuyAndHoldConfig)
 		| null;
 };
 
@@ -2937,10 +2973,18 @@ export type StrategyResponse = {
 	 * 전략 설정 (타입 안전)
 	 */
 	config:
-		| SmaCrossoverConfig
-		| RsiMeanReversionConfig
-		| MomentumConfig
-		| BuyAndHoldConfig;
+		| ({
+				config_type: "sma_crossover";
+		  } & SmaCrossoverConfig)
+		| ({
+				config_type: "rsi_mean_reversion";
+		  } & RsiMeanReversionConfig)
+		| ({
+				config_type: "momentum";
+		  } & MomentumConfig)
+		| ({
+				config_type: "buy_and_hold";
+		  } & BuyAndHoldConfig);
 	/**
 	 * Is Active
 	 * 활성화 상태
@@ -3040,10 +3084,18 @@ export type StrategyUpdate = {
 	 * 전략 설정
 	 */
 	config?:
-		| SmaCrossoverConfig
-		| RsiMeanReversionConfig
-		| MomentumConfig
-		| BuyAndHoldConfig
+		| ({
+				config_type: "sma_crossover";
+		  } & SmaCrossoverConfig)
+		| ({
+				config_type: "rsi_mean_reversion";
+		  } & RsiMeanReversionConfig)
+		| ({
+				config_type: "momentum";
+		  } & MomentumConfig)
+		| ({
+				config_type: "buy_and_hold";
+		  } & BuyAndHoldConfig)
 		| null;
 	/**
 	 * Is Active
@@ -3237,10 +3289,18 @@ export type TemplateCreate = {
 	 * 기본 설정 타입 안전
 	 */
 	default_config:
-		| SmaCrossoverConfig
-		| RsiMeanReversionConfig
-		| MomentumConfig
-		| BuyAndHoldConfig;
+		| ({
+				config_type: "sma_crossover";
+		  } & SmaCrossoverConfig)
+		| ({
+				config_type: "rsi_mean_reversion";
+		  } & RsiMeanReversionConfig)
+		| ({
+				config_type: "momentum";
+		  } & MomentumConfig)
+		| ({
+				config_type: "buy_and_hold";
+		  } & BuyAndHoldConfig);
 	/**
 	 * Category
 	 * 카테고리
@@ -3304,13 +3364,21 @@ export type TemplateResponse = {
 	description: string;
 	/**
 	 * Default Config
-	 * 기본 설정 (타입 안전)
+	 * 기본 설정
 	 */
 	default_config:
-		| SmaCrossoverConfig
-		| RsiMeanReversionConfig
-		| MomentumConfig
-		| BuyAndHoldConfig;
+		| ({
+				config_type: "sma_crossover";
+		  } & SmaCrossoverConfig)
+		| ({
+				config_type: "rsi_mean_reversion";
+		  } & RsiMeanReversionConfig)
+		| ({
+				config_type: "momentum";
+		  } & MomentumConfig)
+		| ({
+				config_type: "buy_and_hold";
+		  } & BuyAndHoldConfig);
 	/**
 	 * Category
 	 * 카테고리
@@ -3362,10 +3430,18 @@ export type TemplateUpdate = {
 	 * 기본 설정
 	 */
 	default_config?:
-		| SmaCrossoverConfig
-		| RsiMeanReversionConfig
-		| MomentumConfig
-		| BuyAndHoldConfig
+		| ({
+				config_type: "sma_crossover";
+		  } & SmaCrossoverConfig)
+		| ({
+				config_type: "rsi_mean_reversion";
+		  } & RsiMeanReversionConfig)
+		| ({
+				config_type: "momentum";
+		  } & MomentumConfig)
+		| ({
+				config_type: "buy_and_hold";
+		  } & BuyAndHoldConfig)
 		| null;
 	/**
 	 * Tags

@@ -3,11 +3,14 @@
 """
 
 from pydantic import BaseModel, Field, field_validator
-from typing import Optional
+from typing import Optional, Literal
 
 
 class StrategyConfigBase(BaseModel):
     """전략 설정 기본 클래스"""
+
+    # Discriminator 필드 (OpenAPI 스키마 개선)
+    config_type: str = Field(..., description="설정 타입 (discriminator)")
 
     # 공통 설정
     lookback_period: int = Field(default=252, ge=30, description="조회 기간 (일)")
@@ -25,6 +28,10 @@ class StrategyConfigBase(BaseModel):
 
 class SMACrossoverConfig(StrategyConfigBase):
     """SMA 크로스오버 전략 설정"""
+
+    config_type: Literal["sma_crossover"] = Field(
+        default="sma_crossover", description="설정 타입"
+    )
 
     short_window: int = Field(default=10, ge=2, le=50, description="단기 이동평균 기간")
     long_window: int = Field(default=30, ge=10, le=200, description="장기 이동평균 기간")
@@ -45,6 +52,10 @@ class SMACrossoverConfig(StrategyConfigBase):
 
 class RSIMeanReversionConfig(StrategyConfigBase):
     """RSI 평균회귀 전략 설정"""
+
+    config_type: Literal["rsi_mean_reversion"] = Field(
+        default="rsi_mean_reversion", description="설정 타입"
+    )
 
     rsi_period: int = Field(default=14, ge=2, le=50, description="RSI 계산 기간")
     oversold_threshold: float = Field(
@@ -69,6 +80,8 @@ class RSIMeanReversionConfig(StrategyConfigBase):
 class MomentumConfig(StrategyConfigBase):
     """모멘텀 전략 설정"""
 
+    config_type: Literal["momentum"] = Field(default="momentum", description="설정 타입")
+
     momentum_period: int = Field(default=20, ge=5, le=100, description="모멘텀 계산 기간")
     buy_threshold: float = Field(default=0.02, description="매수 신호 임계값")
     sell_threshold: float = Field(default=-0.02, description="매도 신호 임계값")
@@ -91,6 +104,10 @@ class MomentumConfig(StrategyConfigBase):
 
 class BuyAndHoldConfig(StrategyConfigBase):
     """바이앤홀드 전략 설정"""
+
+    config_type: Literal["buy_and_hold"] = Field(
+        default="buy_and_hold", description="설정 타입"
+    )
 
     allocation: dict[str, float] = Field(default_factory=dict, description="종목별 할당 비율")
 

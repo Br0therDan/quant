@@ -917,6 +917,13 @@ export const Body_Auth_verifySchema = {
 
 export const BuyAndHoldConfigSchema = {
 	properties: {
+		config_type: {
+			type: "string",
+			const: "buy_and_hold",
+			title: "Config Type",
+			description: "설정 타입",
+			default: "buy_and_hold",
+		},
 		lookback_period: {
 			type: "integer",
 			minimum: 30,
@@ -2973,6 +2980,13 @@ export const MetadataInfoSchema = {
 
 export const MomentumConfigSchema = {
 	properties: {
+		config_type: {
+			type: "string",
+			const: "momentum",
+			title: "Config Type",
+			description: "설정 타입",
+			default: "momentum",
+		},
 		lookback_period: {
 			type: "integer",
 			minimum: 30,
@@ -4068,6 +4082,13 @@ export const QuoteResponseSchema = {
 
 export const RSIMeanReversionConfigSchema = {
 	properties: {
+		config_type: {
+			type: "string",
+			const: "rsi_mean_reversion",
+			title: "Config Type",
+			description: "설정 타입",
+			default: "rsi_mean_reversion",
+		},
 		lookback_period: {
 			type: "integer",
 			minimum: 30,
@@ -4263,6 +4284,13 @@ export const RegimeMetricsSchema = {
 
 export const SMACrossoverConfigSchema = {
 	properties: {
+		config_type: {
+			type: "string",
+			const: "sma_crossover",
+			title: "Config Type",
+			description: "설정 타입",
+			default: "sma_crossover",
+		},
 		lookback_period: {
 			type: "integer",
 			minimum: 30,
@@ -4464,7 +4492,7 @@ export const StrategyCreateSchema = {
 			description: "전략 설명",
 		},
 		config: {
-			anyOf: [
+			oneOf: [
 				{
 					$ref: "#/components/schemas/SMACrossoverConfig",
 				},
@@ -4480,6 +4508,15 @@ export const StrategyCreateSchema = {
 			],
 			title: "Config",
 			description: "전략 설정 (타입 안전)",
+			discriminator: {
+				propertyName: "config_type",
+				mapping: {
+					buy_and_hold: "#/components/schemas/BuyAndHoldConfig",
+					momentum: "#/components/schemas/MomentumConfig",
+					rsi_mean_reversion: "#/components/schemas/RSIMeanReversionConfig",
+					sma_crossover: "#/components/schemas/SMACrossoverConfig",
+				},
+			},
 		},
 		tags: {
 			items: {
@@ -4517,16 +4554,29 @@ export const StrategyCreateFromTemplateSchema = {
 		config_overrides: {
 			anyOf: [
 				{
-					$ref: "#/components/schemas/SMACrossoverConfig",
-				},
-				{
-					$ref: "#/components/schemas/RSIMeanReversionConfig",
-				},
-				{
-					$ref: "#/components/schemas/MomentumConfig",
-				},
-				{
-					$ref: "#/components/schemas/BuyAndHoldConfig",
+					oneOf: [
+						{
+							$ref: "#/components/schemas/SMACrossoverConfig",
+						},
+						{
+							$ref: "#/components/schemas/RSIMeanReversionConfig",
+						},
+						{
+							$ref: "#/components/schemas/MomentumConfig",
+						},
+						{
+							$ref: "#/components/schemas/BuyAndHoldConfig",
+						},
+					],
+					discriminator: {
+						propertyName: "config_type",
+						mapping: {
+							buy_and_hold: "#/components/schemas/BuyAndHoldConfig",
+							momentum: "#/components/schemas/MomentumConfig",
+							rsi_mean_reversion: "#/components/schemas/RSIMeanReversionConfig",
+							sma_crossover: "#/components/schemas/SMACrossoverConfig",
+						},
+					},
 				},
 				{
 					type: "null",
@@ -4716,7 +4766,7 @@ export const StrategyResponseSchema = {
 			description: "전략 설명",
 		},
 		config: {
-			anyOf: [
+			oneOf: [
 				{
 					$ref: "#/components/schemas/SMACrossoverConfig",
 				},
@@ -4732,6 +4782,15 @@ export const StrategyResponseSchema = {
 			],
 			title: "Config",
 			description: "전략 설정 (타입 안전)",
+			discriminator: {
+				propertyName: "config_type",
+				mapping: {
+					buy_and_hold: "#/components/schemas/BuyAndHoldConfig",
+					momentum: "#/components/schemas/MomentumConfig",
+					rsi_mean_reversion: "#/components/schemas/RSIMeanReversionConfig",
+					sma_crossover: "#/components/schemas/SMACrossoverConfig",
+				},
+			},
 		},
 		is_active: {
 			type: "boolean",
@@ -4881,16 +4940,29 @@ export const StrategyUpdateSchema = {
 		config: {
 			anyOf: [
 				{
-					$ref: "#/components/schemas/SMACrossoverConfig",
-				},
-				{
-					$ref: "#/components/schemas/RSIMeanReversionConfig",
-				},
-				{
-					$ref: "#/components/schemas/MomentumConfig",
-				},
-				{
-					$ref: "#/components/schemas/BuyAndHoldConfig",
+					oneOf: [
+						{
+							$ref: "#/components/schemas/SMACrossoverConfig",
+						},
+						{
+							$ref: "#/components/schemas/RSIMeanReversionConfig",
+						},
+						{
+							$ref: "#/components/schemas/MomentumConfig",
+						},
+						{
+							$ref: "#/components/schemas/BuyAndHoldConfig",
+						},
+					],
+					discriminator: {
+						propertyName: "config_type",
+						mapping: {
+							buy_and_hold: "#/components/schemas/BuyAndHoldConfig",
+							momentum: "#/components/schemas/MomentumConfig",
+							rsi_mean_reversion: "#/components/schemas/RSIMeanReversionConfig",
+							sma_crossover: "#/components/schemas/SMACrossoverConfig",
+						},
+					},
 				},
 				{
 					type: "null",
@@ -5203,7 +5275,7 @@ export const TemplateCreateSchema = {
 			description: "템플릿 설명",
 		},
 		default_config: {
-			anyOf: [
+			oneOf: [
 				{
 					$ref: "#/components/schemas/SMACrossoverConfig",
 				},
@@ -5219,6 +5291,15 @@ export const TemplateCreateSchema = {
 			],
 			title: "Default Config",
 			description: "기본 설정 타입 안전",
+			discriminator: {
+				propertyName: "config_type",
+				mapping: {
+					buy_and_hold: "#/components/schemas/BuyAndHoldConfig",
+					momentum: "#/components/schemas/MomentumConfig",
+					rsi_mean_reversion: "#/components/schemas/RSIMeanReversionConfig",
+					sma_crossover: "#/components/schemas/SMACrossoverConfig",
+				},
+			},
 		},
 		category: {
 			type: "string",
@@ -5312,7 +5393,7 @@ export const TemplateResponseSchema = {
 			description: "템플릿 설명",
 		},
 		default_config: {
-			anyOf: [
+			oneOf: [
 				{
 					$ref: "#/components/schemas/SMACrossoverConfig",
 				},
@@ -5327,7 +5408,16 @@ export const TemplateResponseSchema = {
 				},
 			],
 			title: "Default Config",
-			description: "기본 설정 (타입 안전)",
+			description: "기본 설정",
+			discriminator: {
+				propertyName: "config_type",
+				mapping: {
+					buy_and_hold: "#/components/schemas/BuyAndHoldConfig",
+					momentum: "#/components/schemas/MomentumConfig",
+					rsi_mean_reversion: "#/components/schemas/RSIMeanReversionConfig",
+					sma_crossover: "#/components/schemas/SMACrossoverConfig",
+				},
+			},
 		},
 		category: {
 			type: "string",
@@ -5416,16 +5506,29 @@ export const TemplateUpdateSchema = {
 		default_config: {
 			anyOf: [
 				{
-					$ref: "#/components/schemas/SMACrossoverConfig",
-				},
-				{
-					$ref: "#/components/schemas/RSIMeanReversionConfig",
-				},
-				{
-					$ref: "#/components/schemas/MomentumConfig",
-				},
-				{
-					$ref: "#/components/schemas/BuyAndHoldConfig",
+					oneOf: [
+						{
+							$ref: "#/components/schemas/SMACrossoverConfig",
+						},
+						{
+							$ref: "#/components/schemas/RSIMeanReversionConfig",
+						},
+						{
+							$ref: "#/components/schemas/MomentumConfig",
+						},
+						{
+							$ref: "#/components/schemas/BuyAndHoldConfig",
+						},
+					],
+					discriminator: {
+						propertyName: "config_type",
+						mapping: {
+							buy_and_hold: "#/components/schemas/BuyAndHoldConfig",
+							momentum: "#/components/schemas/MomentumConfig",
+							rsi_mean_reversion: "#/components/schemas/RSIMeanReversionConfig",
+							sma_crossover: "#/components/schemas/SMACrossoverConfig",
+						},
+					},
 				},
 				{
 					type: "null",
