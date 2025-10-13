@@ -18,6 +18,9 @@ from .database_manager import DatabaseManager
 from .watchlist_service import WatchlistService
 from .portfolio_service import PortfolioService
 from .dashboard_service import DashboardService
+from .ml_signal_service import MLSignalService
+from .regime_detection_service import RegimeDetectionService
+from .probabilistic_kpi_service import ProbabilisticKPIService
 
 logger = logging.getLogger(__name__)
 
@@ -39,6 +42,9 @@ class ServiceFactory:
     _watchlist_service: Optional[WatchlistService] = None
     _portfolio_service: Optional[PortfolioService] = None
     _dashboard_service: Optional[DashboardService] = None
+    _ml_signal_service: Optional[MLSignalService] = None
+    _regime_detection_service: Optional[RegimeDetectionService] = None
+    _probabilistic_kpi_service: Optional[ProbabilisticKPIService] = None
 
     def __new__(cls):
         if cls._instance is None:
@@ -121,11 +127,13 @@ class ServiceFactory:
             market_data_service = self.get_market_data_service()
             strategy_service = self.get_strategy_service()
             database_manager = self.get_database_manager()
+            ml_signal_service = self.get_ml_signal_service()
 
             self._backtest_orchestrator = BacktestOrchestrator(
                 market_data_service=market_data_service,
                 strategy_service=strategy_service,
                 database_manager=database_manager,
+                ml_signal_service=ml_signal_service,
             )
             logger.info("Created BacktestOrchestrator instance (Phase 2)")
         return self._backtest_orchestrator
@@ -141,7 +149,10 @@ class ServiceFactory:
         """포트폴리오 서비스 인스턴스 반환"""
         if self._portfolio_service is None:
             database_manager = self.get_database_manager()
-            self._portfolio_service = PortfolioService(database_manager)
+            probabilistic_service = self.get_probabilistic_kpi_service()
+            self._portfolio_service = PortfolioService(
+                database_manager, probabilistic_service=probabilistic_service
+            )
             logger.info("Created PortfolioService instance")
         return self._portfolio_service
 
@@ -154,6 +165,9 @@ class ServiceFactory:
             backtest_service = self.get_backtest_service()  # CRUD 서비스만 사용
             market_data_service = self.get_market_data_service()
             watchlist_service = self.get_watchlist_service()
+            ml_signal_service = self.get_ml_signal_service()
+            regime_service = self.get_regime_detection_service()
+            probabilistic_service = self.get_probabilistic_kpi_service()
 
             self._dashboard_service = DashboardService(
                 database_manager=database_manager,
@@ -162,9 +176,36 @@ class ServiceFactory:
                 backtest_service=backtest_service,
                 market_data_service=market_data_service,
                 watchlist_service=watchlist_service,
+                ml_signal_service=ml_signal_service,
+                regime_service=regime_service,
+                probabilistic_service=probabilistic_service,
             )
             logger.info("Created DashboardService instance")
         return self._dashboard_service
+
+    def get_ml_signal_service(self) -> MLSignalService:
+        """MLSignalService 인스턴스 반환"""
+        if self._ml_signal_service is None:
+            database_manager = self.get_database_manager()
+            self._ml_signal_service = MLSignalService(database_manager)
+            logger.info("Created MLSignalService instance")
+        return self._ml_signal_service
+
+    def get_regime_detection_service(self) -> RegimeDetectionService:
+        """RegimeDetectionService 인스턴스 반환"""
+        if self._regime_detection_service is None:
+            database_manager = self.get_database_manager()
+            self._regime_detection_service = RegimeDetectionService(database_manager)
+            logger.info("Created RegimeDetectionService instance")
+        return self._regime_detection_service
+
+    def get_probabilistic_kpi_service(self) -> ProbabilisticKPIService:
+        """ProbabilisticKPIService 인스턴스 반환"""
+        if self._probabilistic_kpi_service is None:
+            database_manager = self.get_database_manager()
+            self._probabilistic_kpi_service = ProbabilisticKPIService(database_manager)
+            logger.info("Created ProbabilisticKPIService instance")
+        return self._probabilistic_kpi_service
 
     async def cleanup(self):
         """모든 서비스 정리"""

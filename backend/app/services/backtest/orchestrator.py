@@ -5,7 +5,7 @@
 import logging
 import uuid
 from datetime import datetime, timezone
-from typing import Optional, TYPE_CHECKING, Any
+from typing import Optional, TYPE_CHECKING, Any, Dict
 
 from beanie import PydanticObjectId
 from tenacity import (
@@ -28,6 +28,8 @@ if TYPE_CHECKING:
     from app.services.market_data_service import MarketDataService
     from app.services.strategy_service import StrategyService
     from app.services.database_manager import DatabaseManager
+    from app.services.ml_signal_service import MLSignalService
+    from app.schemas.predictive import MLSignalInsight
 
 from app.models.backtest import (
     Backtest,
@@ -110,10 +112,12 @@ class BacktestOrchestrator:
         market_data_service: "MarketDataService",
         strategy_service: "StrategyService",
         database_manager: "DatabaseManager",
+        ml_signal_service: "MLSignalService | None" = None,
     ):
         self.market_data_service = market_data_service
         self.strategy_service = strategy_service
         self.database_manager = database_manager
+        self.ml_signal_service = ml_signal_service
 
         # Phase 2 컴포넌트
         self.data_processor = DataProcessor()
@@ -199,6 +203,9 @@ class BacktestOrchestrator:
                     market_data=market_data,
                     config=backtest.config,
                 )
+                signals = await self.strategy_executor.validate_signals(
+                    signals, market_data
+                )
                 self.metrics.stop_timer("signal_generation")
 
                 log_backtest_event(
@@ -206,6 +213,24 @@ class BacktestOrchestrator:
                     backtest_id=backtest_id,
                     signal_count=len(signals),
                 )
+
+                signal_scores: Dict[str, "MLSignalInsight"] = {}
+                if self.ml_signal_service and backtest.config.symbols:
+                    signal_scores = await self.ml_signal_service.score_symbols(
+                        backtest.config.symbols
+                    )
+                    for signal in signals:
+                        ml_signal = signal_scores.get(signal.get("symbol"))
+                        if ml_signal:
+                            signal["ml_probability"] = ml_signal.probability
+                            signal["ml_recommendation"] = ml_signal.recommendation.value
+
+                    if signal_scores:
+                        log_backtest_event(
+                            "ml_signals_generated",
+                            backtest_id=backtest_id,
+                            signal_count=len(signal_scores),
+                        )
 
                 # 시뮬레이션
                 self.metrics.start_timer("simulation")

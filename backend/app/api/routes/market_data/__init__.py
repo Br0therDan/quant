@@ -13,6 +13,7 @@ from .economic_indicator import router as economic_indicator_router
 from .intelligence import router as intelligence_router
 from .management import router as management_router
 from .technical_indicators import router as technical_indicators_router
+from .regime import router as regime_router
 
 # 메인 마켓 데이터 라우터
 router = APIRouter(dependencies=[Depends(get_current_active_verified_user)])
@@ -31,6 +32,7 @@ router.include_router(
     prefix="/technical-indicators",
     tags=["Technical Indicator"],
 )
+router.include_router(regime_router, prefix="/regime", tags=["Market Regime"])
 
 
 @router.get("/", tags=["Market Data"])

@@ -1,7 +1,7 @@
 """Dashboard service for aggregating user dashboard data."""
 
-from datetime import datetime, timedelta
-from typing import List, Optional
+from datetime import UTC, datetime, timedelta
+from typing import List, Optional, TYPE_CHECKING
 from app.services.database_manager import DatabaseManager
 from app.services.portfolio_service import PortfolioService
 from app.services.strategy_service import StrategyService
@@ -27,7 +27,14 @@ from app.schemas.dashboard import (
     EconomicEvent,
     ImportanceLevel,
 )
+from app.schemas.predictive import PredictiveDashboardInsights
 import random
+
+
+if TYPE_CHECKING:
+    from app.services.ml_signal_service import MLSignalService
+    from app.services.regime_detection_service import RegimeDetectionService
+    from app.services.probabilistic_kpi_service import ProbabilisticKPIService
 
 
 class DashboardService:
@@ -41,6 +48,9 @@ class DashboardService:
         backtest_service: BacktestService,
         market_data_service: MarketDataService,
         watchlist_service: WatchlistService,
+        ml_signal_service: "MLSignalService",
+        regime_service: "RegimeDetectionService",
+        probabilistic_service: "ProbabilisticKPIService",
     ):
         """대시보드 서비스 초기화.
 
@@ -51,6 +61,9 @@ class DashboardService:
             backtest_service: 백테스트 서비스
             market_data_service: 시장 데이터 서비스
             watchlist_service: 관심종목 서비스
+            ml_signal_service: ML 시그널 서비스
+            regime_service: 시장 레짐 감지 서비스
+            probabilistic_service: 확률 KPI 서비스
         """
         self.db_manager = database_manager
         self.portfolio_service = portfolio_service
@@ -58,6 +71,9 @@ class DashboardService:
         self.backtest_service = backtest_service
         self.market_data_service = market_data_service
         self.watchlist_service = watchlist_service
+        self.ml_signal_service = ml_signal_service
+        self.regime_service = regime_service
+        self.probabilistic_service = probabilistic_service
 
     async def get_dashboard_summary(self, user_id: str) -> DashboardSummary:
         """대시보드 요약 데이터를 조회합니다.
@@ -124,8 +140,8 @@ class DashboardService:
             for i in range(min(limit, 5)):
                 strategies.append(
                     StrategyPerformanceItem(
-                        strategy_id=f"strategy_{i+1}",
-                        name=f"{random.choice(strategy_types)}_Strategy_{i+1}",
+                        strategy_id=f"strategy_{i + 1}",
+                        name=f"{random.choice(strategy_types)}_Strategy_{i + 1}",
                         type=random.choice(strategy_types),
                         total_return=round(random.uniform(-5, 25), 2),
                         win_rate=round(random.uniform(45, 85), 1),
@@ -270,7 +286,7 @@ class DashboardService:
                         title=template["title"],
                         summary=f"Summary of {template['title']}...",
                         source=template["source"],
-                        url=f"https://example.com/news/{i+1}",
+                        url=f"https://example.com/news/{i + 1}",
                         published_at=datetime.now()
                         - timedelta(hours=random.randint(1, 24)),
                         sentiment=random.choice(
@@ -342,6 +358,27 @@ class DashboardService:
             return EconomicCalendar(events=events)
         except Exception as e:
             raise Exception(f"경제 캘린더 조회 실패: {str(e)}")
+
+    async def get_predictive_snapshot(
+        self, user_id: str, symbol: str, horizon_days: int = 30
+    ) -> PredictiveDashboardInsights:
+        """ML 시그널, 레짐, 확률 KPI를 묶어서 제공합니다."""
+
+        signal = await self.ml_signal_service.score_symbol(symbol)
+
+        regime = await self.regime_service.get_latest_regime(symbol)
+        if not regime or (datetime.now(UTC) - regime.as_of).days > 1:
+            regime = await self.regime_service.refresh_regime(symbol)
+
+        forecast = await self.portfolio_service.get_probabilistic_forecast(
+            user_id, horizon_days=horizon_days
+        )
+
+        return PredictiveDashboardInsights(
+            signal=signal,
+            regime=regime,
+            forecast=forecast,
+        )
 
     async def _get_strategies_summary(self, user_id: str) -> StrategySummary:
         """전략 요약 정보를 조회합니다.

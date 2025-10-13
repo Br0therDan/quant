@@ -9,6 +9,7 @@ from .health import router as health_router
 from .watchlists import router as watchlists_router
 from .dashboard import router as dashboard_router
 from .tasks import router as tasks_router
+from .signals import router as signals_router
 
 
 __all__ = [
@@ -19,4 +20,5 @@ __all__ = [
     "watchlists_router",
     "dashboard_router",
     "tasks_router",
+    "signals_router",
 ]

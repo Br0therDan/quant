@@ -10,6 +10,8 @@ from .market_data import (
     MonthlyPrice,
     IntradayPrice,
     StockDataCoverage,
+    MarketRegime,
+    MarketData,
     # Crypto data
     CryptoExchangeRate,
     CryptoIntradayPrice,
@@ -57,6 +59,7 @@ collections = [
     MonthlyPrice,
     IntradayPrice,
     StockDataCoverage,
+    MarketData,
     # 시장 데이터 - 암호화폐
     CryptoExchangeRate,
     CryptoIntradayPrice,
@@ -86,6 +89,8 @@ collections = [
     # 기술적 지표
     TechnicalIndicator,
     IndicatorDataPoint,
+    # 예측 인텔리전스
+    MarketRegime,
     # 전략 및 성과
     Strategy,
     StrategyTemplate,
@@ -105,6 +110,8 @@ __all__ = [
     "MonthlyPrice",
     "IntradayPrice",
     "StockDataCoverage",
+    "MarketData",
+    "MarketRegime",
     # Market data models - Crypto
     "CryptoExchangeRate",
     "CryptoIntradayPrice",

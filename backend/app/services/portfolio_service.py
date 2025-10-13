@@ -1,7 +1,7 @@
 """Portfolio service for managing user portfolios and performance tracking."""
 
 from datetime import datetime, timedelta
-from typing import List
+from typing import List, Optional, TYPE_CHECKING
 from app.services.database_manager import DatabaseManager
 from app.schemas.dashboard import (
     PortfolioSummary,
@@ -11,19 +11,29 @@ from app.schemas.dashboard import (
     TradeItem,
     TradeSide,
 )
+from app.schemas.predictive import PortfolioForecastDistribution
 import random
+
+
+if TYPE_CHECKING:
+    from app.services.probabilistic_kpi_service import ProbabilisticKPIService
 
 
 class PortfolioService:
     """포트폴리오 관리 서비스."""
 
-    def __init__(self, database_manager: DatabaseManager):
+    def __init__(
+        self,
+        database_manager: DatabaseManager,
+        probabilistic_service: Optional["ProbabilisticKPIService"] = None,
+    ):
         """포트폴리오 서비스 초기화.
 
         Args:
             database_manager: 데이터베이스 매니저
         """
         self.db_manager = database_manager
+        self.probabilistic_service = probabilistic_service
 
     async def get_portfolio_summary(self, user_id: str) -> PortfolioSummary:
         """사용자의 포트폴리오 요약 정보를 조회합니다.
@@ -95,7 +105,7 @@ class PortfolioService:
             for i in range(min(limit, 10)):
                 trades.append(
                     TradeItem(
-                        trade_id=f"trade_{i+1}",
+                        trade_id=f"trade_{i + 1}",
                         symbol=random.choice(symbols),
                         side=random.choice([TradeSide.BUY, TradeSide.SELL]),
                         quantity=random.randint(1, 100),
@@ -111,6 +121,21 @@ class PortfolioService:
             return trades
         except Exception as e:
             raise Exception(f"최근 거래 조회 실패: {str(e)}")
+
+    async def get_probabilistic_forecast(
+        self, user_id: str, horizon_days: int = 30
+    ) -> PortfolioForecastDistribution:
+        """포트폴리오 확률적 KPI 예측을 생성합니다."""
+
+        if not self.probabilistic_service:
+            raise RuntimeError("Probabilistic KPI service is not configured")
+
+        performance = await self.get_portfolio_performance(
+            user_id, period="3M", granularity="day"
+        )
+        return await self.probabilistic_service.forecast_from_history(
+            performance.data_points, horizon_days=horizon_days
+        )
 
     async def _generate_performance_data(
         self, period: str, granularity: str
@@ -160,7 +185,9 @@ class PortfolioService:
                     portfolio_value=round(portfolio_value, 2),
                     pnl=round(pnl, 2),
                     pnl_percentage=round(pnl_percentage, 4),
-                    benchmark_value=round(base_value * 1.001, 2),  # 벤치마크는 약간의 성장
+                    benchmark_value=round(
+                        base_value * 1.001, 2
+                    ),  # 벤치마크는 약간의 성장
                 )
             )
 

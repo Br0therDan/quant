@@ -2,7 +2,7 @@
 Market data models package
 """
 
-from .base import BaseMarketDataDocument, DataQualityMixin
+from .base import BaseMarketDataDocument, DataQualityMixin, MarketData
 from .stock import (
     IntradayPrice,
     DailyPrice,
@@ -44,12 +44,14 @@ from .technical_indicator import (
     TechnicalIndicator,
     IndicatorDataPoint,
 )
+from .regime import MarketRegime, MarketRegimeType
 
 
 __all__ = [
     # Base classes
     "BaseMarketDataDocument",
     "DataQualityMixin",
+    "MarketData",
     # Stock models
     "DailyPrice",
     "WeeklyPrice",
@@ -85,4 +87,7 @@ __all__ = [
     # Technical indicator models
     "TechnicalIndicator",
     "IndicatorDataPoint",
+    # Predictive intelligence models
+    "MarketRegime",
+    "MarketRegimeType",
 ]

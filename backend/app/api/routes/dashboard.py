@@ -1,5 +1,6 @@
 """Dashboard API routes."""
 
+from decimal import Decimal
 from typing import List, Optional
 from fastapi import APIRouter, Depends, Query
 from mysingle_quant.auth import get_current_active_verified_user, User
@@ -13,6 +14,7 @@ from app.schemas.dashboard import (
     NewsFeedResponse,
     EconomicCalendarResponse,
 )
+from app.schemas.predictive import PredictiveInsightsResponse
 
 
 router = APIRouter()
@@ -43,7 +45,9 @@ async def get_portfolio_performance(
     performance = await dashboard_service.get_portfolio_performance(
         str(user.id), period, granularity
     )
-    return PortfolioPerformanceResponse(data=performance, message="포트폴리오 성과 조회 성공")
+    return PortfolioPerformanceResponse(
+        data=performance, message="포트폴리오 성과 조회 성공"
+    )
 
 
 @router.get("/strategies/comparison", response_model=StrategyComparisonResponse)
@@ -124,3 +128,34 @@ async def get_economic_calendar(
         str(user.id), days, importance
     )
     return EconomicCalendarResponse(data=calendar, message="경제 캘린더 조회 성공")
+
+
+@router.get(
+    "/predictive/overview",
+    response_model=PredictiveInsightsResponse,
+)
+async def get_predictive_overview(
+    symbol: str = Query(..., description="예측 인텔리전스를 요청할 심볼"),
+    horizon_days: int = Query(30, ge=7, le=120, description="예측 기간 (일)"),
+    user: User = Depends(get_current_active_verified_user),
+):
+    """Predictive intelligence bundle combining signal, regime, and forecast."""
+
+    dashboard_service = service_factory.get_dashboard_service()
+    insights = await dashboard_service.get_predictive_snapshot(
+        str(user.id), symbol.upper(), horizon_days=horizon_days
+    )
+
+    response = PredictiveInsightsResponse(
+        data=insights,
+        message="Predictive insights retrieved",
+    )
+    response.metadata.data_quality.quality_score = Decimal(
+        str(round(insights.signal.confidence * 100, 2))
+    )
+    response.metadata.data_quality.last_updated = insights.signal.as_of
+    response.metadata.cache_info.cache_hit = False
+    response.metadata.cache_info.cached = False
+    response.metadata.cache_info.cache_timestamp = insights.regime.as_of
+    response.metadata.processing_time_ms = None
+    return response

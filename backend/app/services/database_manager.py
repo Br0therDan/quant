@@ -6,7 +6,7 @@
 from typing import Any
 import logging
 from pathlib import Path
-from datetime import UTC
+from datetime import UTC, datetime
 
 import duckdb
 import pandas as pd
@@ -255,6 +255,22 @@ class DatabaseManager:
         """
         )
 
+        # 포트폴리오 확률 예측 기록 테이블
+        self.connection.execute(
+            """
+            CREATE TABLE IF NOT EXISTS portfolio_forecast_history (
+                as_of TIMESTAMP,
+                horizon_days INTEGER,
+                p05 DECIMAL(18, 4),
+                p50 DECIMAL(18, 4),
+                p95 DECIMAL(18, 4),
+                expected_return_pct DECIMAL(9, 4),
+                expected_volatility_pct DECIMAL(9, 4),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """
+        )
+
         # 통합 캐시 테이블 생성
         self._create_unified_cache_table()
 
@@ -290,6 +306,8 @@ class DatabaseManager:
             "CREATE INDEX IF NOT EXISTS idx_ti_symbol ON technical_indicators_cache(symbol)",
             "CREATE INDEX IF NOT EXISTS idx_ti_indicator_type ON technical_indicators_cache(indicator_type)",
             "CREATE INDEX IF NOT EXISTS idx_ti_cached_at ON technical_indicators_cache(cached_at)",
+            "CREATE INDEX IF NOT EXISTS idx_portfolio_forecast_as_of ON portfolio_forecast_history(as_of)",
+            "CREATE INDEX IF NOT EXISTS idx_portfolio_forecast_horizon ON portfolio_forecast_history(horizon_days)",
         ]
 
         for index_sql in indexes:
@@ -429,6 +447,47 @@ class DatabaseManager:
 
         logger.info(f"인트라데이 주가 데이터 {rows_inserted}건 저장됨")
         return rows_inserted
+
+    def record_portfolio_forecast(
+        self,
+        *,
+        as_of: datetime,
+        horizon_days: int,
+        p05: float,
+        p50: float,
+        p95: float,
+        expected_return_pct: float,
+        expected_volatility_pct: float,
+    ) -> None:
+        """Persist probabilistic KPI forecasts for analytics."""
+
+        self._ensure_connected()
+        if not self.connection:
+            raise RuntimeError("데이터베이스에 연결되지 않음")
+
+        self.connection.execute(
+            """
+            INSERT INTO portfolio_forecast_history (
+                as_of,
+                horizon_days,
+                p05,
+                p50,
+                p95,
+                expected_return_pct,
+                expected_volatility_pct,
+                created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+        """,
+            [
+                as_of,
+                horizon_days,
+                p05,
+                p50,
+                p95,
+                expected_return_pct,
+                expected_volatility_pct,
+            ],
+        )
 
     def get_daily_prices(
         self,
