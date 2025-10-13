@@ -26,6 +26,9 @@ dependencies = [
     "fastapi[standard]>=0.117.1",
     "tenacity>=9.1.2",
     "structlog>=25.4.0",
+    "lightgbm>=4.6.0",
+    "optuna>=4.5.0",
+    "scikit-learn>=1.7.2",
 ]
 
 [project.optional-dependencies]

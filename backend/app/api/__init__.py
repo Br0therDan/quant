@@ -11,6 +11,7 @@ from .routes import (
     dashboard_router,
     tasks_router,
     signals_router,
+    ml_router,
 )
 
 # Create main API router
@@ -24,6 +25,7 @@ api_router.include_router(watchlists_router, prefix="/watchlists", tags=["Watchl
 api_router.include_router(dashboard_router, prefix="/dashboard", tags=["Dashboard"])
 api_router.include_router(tasks_router, prefix="/tasks", tags=["Tasks"])
 api_router.include_router(signals_router, prefix="/signals", tags=["Signals"])
+api_router.include_router(ml_router, prefix="/ml", tags=["ML"])
 
 
 __all__ = ["api_router"]
