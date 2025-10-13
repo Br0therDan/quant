@@ -4,10 +4,25 @@ Strategy Models using Beanie (MongoDB ODM)
 
 from datetime import datetime, UTC
 from enum import Enum
-from typing import Any
+from typing import Union, Any
 
 from .base_model import BaseDocument
 from pydantic import Field
+from app.strategies.configs import (
+    SMACrossoverConfig,
+    RSIMeanReversionConfig,
+    MomentumConfig,
+    BuyAndHoldConfig,
+)
+
+
+# Config 타입 Union
+StrategyConfigUnion = Union[
+    SMACrossoverConfig,
+    RSIMeanReversionConfig,
+    MomentumConfig,
+    BuyAndHoldConfig,
+]
 
 
 class StrategyType(str, Enum):
@@ -34,8 +49,8 @@ class Strategy(BaseDocument):
     strategy_type: StrategyType = Field(..., description="전략 타입")
     description: str | None = Field(None, description="전략 설명")
 
-    # 전략 파라미터
-    parameters: dict[str, Any] = Field(default_factory=dict, description="전략 파라미터")
+    # ✅ 타입 안전한 설정
+    config: StrategyConfigUnion = Field(..., description="전략 설정")
 
     # 상태 정보
     is_active: bool = Field(default=True, description="활성화 상태")
@@ -65,11 +80,8 @@ class StrategyTemplate(BaseDocument):
     strategy_type: StrategyType = Field(..., description="전략 타입")
     description: str = Field(..., description="템플릿 설명")
 
-    # 템플릿 설정
-    default_parameters: dict[str, Any] = Field(
-        default_factory=dict, description="기본 파라미터"
-    )
-    parameter_schema: dict[str, Any] | None = Field(None, description="파라미터 스키마")
+    # ✅ 타입 안전한 기본 설정
+    default_config: StrategyConfigUnion = Field(..., description="기본 설정")
 
     # 사용 통계
     usage_count: int = Field(default=0, description="사용 횟수")

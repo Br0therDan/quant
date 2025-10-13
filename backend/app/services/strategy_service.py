@@ -14,6 +14,7 @@ from app.models.strategy import (
     StrategyExecution,
     StrategyTemplate,
     StrategyType,
+    StrategyConfigUnion,
 )
 
 try:
@@ -21,6 +22,12 @@ try:
     from app.strategies.momentum import MomentumStrategy
     from app.strategies.rsi_mean_reversion import RSIMeanReversionStrategy
     from app.strategies.sma_crossover import SMACrossoverStrategy
+    from app.strategies.configs import (
+        SMACrossoverConfig,
+        RSIMeanReversionConfig,
+        MomentumConfig,
+        BuyAndHoldConfig,
+    )
 
     STRATEGY_IMPORTS_AVAILABLE = True
 except ImportError as e:
@@ -51,7 +58,7 @@ class StrategyService:
         name: str,
         strategy_type: StrategyType,
         description: str | None = None,
-        parameters: dict[str, Any] | None = None,
+        config: StrategyConfigUnion | None = None,
         tags: list[str] | None = None,
         user_id: str | None = None,
     ) -> Strategy:
@@ -61,7 +68,7 @@ class StrategyService:
             name=name,
             strategy_type=strategy_type,
             description=description or "",
-            parameters=parameters or {},
+            config=config or self._get_default_config(strategy_type),
             tags=tags or [],
             user_id=user_id,
             created_by="system",  # 시스템 기본값
@@ -70,6 +77,21 @@ class StrategyService:
         await strategy.insert()
         logger.info(f"Created strategy: {name} ({strategy_type})")
         return strategy
+
+    def _get_default_config(self, strategy_type: StrategyType) -> StrategyConfigUnion:
+        """전략 타입에 맞는 기본 설정 반환"""
+        if strategy_type == StrategyType.SMA_CROSSOVER:
+            return SMACrossoverConfig(short_window=20, long_window=50)
+        elif strategy_type == StrategyType.RSI_MEAN_REVERSION:
+            return RSIMeanReversionConfig(
+                rsi_period=14, oversold_threshold=30, overbought_threshold=70
+            )
+        elif strategy_type == StrategyType.MOMENTUM:
+            return MomentumConfig(momentum_period=20, top_n_stocks=5)
+        elif strategy_type == StrategyType.BUY_AND_HOLD:
+            return BuyAndHoldConfig(allocation={})
+        else:
+            raise ValueError(f"Unknown strategy type: {strategy_type}")
 
     async def get_strategy(self, strategy_id: str) -> Strategy | None:
         """Get strategy by ID"""
@@ -108,7 +130,7 @@ class StrategyService:
         strategy_id: str,
         name: str | None = None,
         description: str | None = None,
-        parameters: dict[str, Any] | None = None,
+        config: StrategyConfigUnion | None = None,
         is_active: bool | None = None,
         tags: list[str] | None = None,
     ) -> Strategy | None:
@@ -122,8 +144,8 @@ class StrategyService:
             strategy.name = name
         if description is not None:
             strategy.description = description
-        if parameters is not None:
-            strategy.parameters = parameters
+        if config is not None:
+            strategy.config = config
         if is_active is not None:
             strategy.is_active = is_active
         if tags is not None:
@@ -235,8 +257,8 @@ class StrategyService:
         name: str,
         strategy_type: StrategyType,
         description: str,
-        default_parameters: dict[str, Any],
-        parameter_schema: dict[str, Any] | None = None,
+        default_config: StrategyConfigUnion,
+        category: str = "general",
         tags: list[str] | None = None,
     ) -> StrategyTemplate:
         """Create strategy template"""
@@ -245,8 +267,8 @@ class StrategyService:
             name=name,
             strategy_type=strategy_type,
             description=description,
-            default_parameters=default_parameters,
-            parameter_schema=parameter_schema,
+            default_config=default_config,
+            category=category,
             tags=tags or [],
         )
 
@@ -295,8 +317,8 @@ class StrategyService:
         template_id: str,
         name: str | None = None,
         description: str | None = None,
-        default_parameters: dict[str, Any] | None = None,
-        parameter_schema: dict[str, Any] | None = None,
+        default_config: StrategyConfigUnion | None = None,
+        category: str | None = None,
         tags: list[str] | None = None,
     ) -> StrategyTemplate | None:
         """Update template by ID"""
@@ -310,10 +332,10 @@ class StrategyService:
                 template.name = name
             if description is not None:
                 template.description = description
-            if default_parameters is not None:
-                template.default_parameters = default_parameters
-            if parameter_schema is not None:
-                template.parameter_schema = parameter_schema
+            if default_config is not None:
+                template.default_config = default_config
+            if category is not None:
+                template.category = category
             if tags is not None:
                 template.tags = tags
 
@@ -341,10 +363,12 @@ class StrategyService:
             if not template:
                 return None
 
-            # Merge template parameters with overrides
-            parameters = template.default_parameters.copy()
+            # Use template config or merge with overrides
+            config = template.default_config
             if parameter_overrides:
-                parameters.update(parameter_overrides)
+                # parameter_overrides가 딕셔너리라면 config를 업데이트
+                # Pydantic model_copy를 사용하여 업데이트
+                config = template.default_config.model_copy(update=parameter_overrides)
 
             # Increment template usage
             template.usage_count += 1
@@ -355,7 +379,7 @@ class StrategyService:
                 name=name,
                 strategy_type=template.strategy_type,
                 description=f"Created from template: {template.name}",
-                parameters=parameters,
+                config=config,
                 tags=template.tags,
                 user_id=user_id,
             )
@@ -452,10 +476,19 @@ class StrategyService:
             return None
 
     async def get_strategy_instance(
-        self, strategy_type: StrategyType, parameters: dict[str, Any] | None = None
+        self,
+        strategy_type: StrategyType,
+        config: StrategyConfigUnion,
     ):
-        """전략 타입에 따른 전략 인스턴스 생성"""
+        """전략 타입과 Config로 전략 인스턴스 생성
 
+        Args:
+            strategy_type: 전략 타입
+            config: 타입 안전한 전략 설정 (SMACrossoverConfig, RSIMeanReversionConfig, etc.)
+
+        Returns:
+            전략 인스턴스 또는 None
+        """
         if not STRATEGY_IMPORTS_AVAILABLE:
             logger.error("Strategy classes not available")
             return None
@@ -467,34 +500,28 @@ class StrategyService:
         try:
             strategy_class = self.strategy_classes[strategy_type]
 
-            # 기본 파라미터와 사용자 파라미터 병합
-            default_params = self._get_default_parameters(strategy_type)
-            final_params = {**default_params, **(parameters or {})}
+            # Config 타입 검증
+            expected_configs = {
+                StrategyType.SMA_CROSSOVER: SMACrossoverConfig,
+                StrategyType.RSI_MEAN_REVERSION: RSIMeanReversionConfig,
+                StrategyType.MOMENTUM: MomentumConfig,
+                StrategyType.BUY_AND_HOLD: BuyAndHoldConfig,
+            }
+
+            expected_config_type = expected_configs.get(strategy_type)
+            if expected_config_type and not isinstance(config, expected_config_type):
+                raise TypeError(
+                    f"Invalid config type for {strategy_type}: "
+                    f"expected {expected_config_type.__name__}, "
+                    f"got {type(config).__name__}"
+                )
 
             # 전략 인스턴스 생성
-            instance = strategy_class(**final_params)
+            instance = strategy_class(config=config)
 
-            logger.info(
-                f"Created strategy instance: {strategy_type} with params: {final_params}"
-            )
+            logger.info(f"Created strategy instance: {strategy_type}")
             return instance
 
         except Exception as e:
             logger.error(f"Failed to create strategy instance {strategy_type}: {e}")
             return None
-
-    def _get_default_parameters(self, strategy_type: StrategyType) -> dict:
-        """전략 타입별 기본 파라미터 반환"""
-
-        defaults = {
-            StrategyType.BUY_AND_HOLD: {},
-            StrategyType.SMA_CROSSOVER: {"short_window": 20, "long_window": 50},
-            StrategyType.RSI_MEAN_REVERSION: {
-                "period": 14,
-                "oversold": 30,
-                "overbought": 70,
-            },
-            StrategyType.MOMENTUM: {"lookback_period": 20, "threshold": 0.02},
-        }
-
-        return defaults.get(strategy_type, {})

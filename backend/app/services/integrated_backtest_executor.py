@@ -17,10 +17,18 @@ from app.models.backtest import (
     PerformanceMetrics,
     Trade,
     TradeType,
+    BacktestConfig,
 )
-from app.models.strategy import StrategyType
+from app.models.strategy import StrategyType, StrategyConfigUnion
 from app.services.market_data_service import MarketDataService
 from app.services.strategy_service import StrategyService
+from app.services.backtest.trade_engine import TradeEngine
+from app.strategies.configs import (
+    SMACrossoverConfig,
+    RSIMeanReversionConfig,
+    MomentumConfig,
+    BuyAndHoldConfig,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +41,21 @@ class IntegratedBacktestExecutor:
     ):
         self.market_data_service = market_data_service
         self.strategy_service = strategy_service
+
+    def _dict_to_config(
+        self, strategy_type: StrategyType, params: Dict[str, Any]
+    ) -> StrategyConfigUnion:
+        """딕셔너리를 전략 Config 객체로 변환"""
+        if strategy_type == StrategyType.SMA_CROSSOVER:
+            return SMACrossoverConfig(**params)
+        elif strategy_type == StrategyType.RSI_MEAN_REVERSION:
+            return RSIMeanReversionConfig(**params)
+        elif strategy_type == StrategyType.MOMENTUM:
+            return MomentumConfig(**params)
+        elif strategy_type == StrategyType.BUY_AND_HOLD:
+            return BuyAndHoldConfig(**params)
+        else:
+            raise ValueError(f"Unknown strategy type: {strategy_type}")
 
     async def execute_integrated_backtest(
         self,
@@ -92,8 +115,9 @@ class IntegratedBacktestExecutor:
                 raise Exception("No market data collected")
 
             # 4. 전략 인스턴스 생성
+            config = self._dict_to_config(strategy_type, strategy_params)
             strategy_instance = await self.strategy_service.get_strategy_instance(
-                strategy_type=strategy_type, parameters=strategy_params
+                strategy_type=strategy_type, config=config
             )
 
             if not strategy_instance:
@@ -177,12 +201,24 @@ class IntegratedBacktestExecutor:
         initial_capital: float,
         symbols: List[str],
     ) -> tuple[List[Trade], List[float]]:
-        """백테스트 시뮬레이션 실행"""
+        """백테스트 시뮬레이션 실행 (TradeEngine 사용)"""
 
+        # BacktestConfig 생성
+        config = BacktestConfig(
+            name="simulation",
+            symbols=symbols,
+            start_date=datetime.now(timezone.utc),
+            end_date=datetime.now(timezone.utc),
+            initial_cash=initial_capital,
+            commission_rate=0.001,
+            slippage_rate=0.0005,
+            rebalance_frequency=None,
+        )
+
+        # TradeEngine 초기화
+        trade_engine = TradeEngine(config)
         trades = []
         portfolio_values = [initial_capital]
-        current_capital = initial_capital
-        positions = {}  # symbol -> quantity
 
         # 가장 짧은 데이터 길이에 맞춤
         min_length = min(len(data) for data in market_data.values() if data)
@@ -204,32 +240,35 @@ class IntegratedBacktestExecutor:
             try:
                 signals = await strategy_instance.generate_signals(day_data)
 
-                # 신호 기반 거래 실행
-                day_trades = self._execute_trades(
-                    signals=signals,
-                    day_data=day_data,
-                    positions=positions,
-                    current_capital=current_capital,
-                )
+                # 신호 기반 거래 실행 (TradeEngine 사용)
+                for symbol, signal in signals.items():
+                    if symbol not in day_data:
+                        continue
 
-                trades.extend(day_trades)
+                    price = day_data[symbol].get("close", 0)
+                    if price <= 0:
+                        continue
 
-                # 거래 후 자본 업데이트
-                for trade in day_trades:
-                    if trade.trade_type == TradeType.BUY:
-                        current_capital -= (
-                            trade.price * trade.quantity + trade.commission
+                    action = signal.get("action")
+                    quantity = signal.get("quantity", 0)
+
+                    if action and quantity > 0:
+                        timestamp = day_data[symbol].get(
+                            "date", datetime.now(timezone.utc)
                         )
-                    else:
-                        current_capital += (
-                            trade.price * trade.quantity - trade.commission
+                        trade = trade_engine.execute_signal(
+                            symbol=symbol,
+                            action=action,
+                            quantity=quantity,
+                            price=price,
+                            timestamp=timestamp,
                         )
+
+                        if trade:
+                            trades.append(trade)
 
                 # 포트폴리오 가치 계산
-                portfolio_value = self._calculate_portfolio_value(
-                    positions=positions, day_data=day_data, cash=current_capital
-                )
-
+                portfolio_value = trade_engine.portfolio.total_value
                 portfolio_values.append(portfolio_value)
 
             except Exception as e:
@@ -237,92 +276,6 @@ class IntegratedBacktestExecutor:
                 portfolio_values.append(portfolio_values[-1])  # 이전 값 유지
 
         return trades, portfolio_values
-
-    def _execute_trades(
-        self,
-        signals: Dict[str, Any],
-        day_data: Dict[str, Any],
-        positions: Dict[str, int],
-        current_capital: float,
-    ) -> List[Trade]:
-        """거래 신호 기반 실제 거래 실행"""
-
-        trades = []
-
-        for symbol, signal in signals.items():
-            if symbol not in day_data:
-                continue
-
-            price = day_data[symbol].get("close", 0)
-            if price <= 0:
-                continue
-
-            signal_type = signal.get("action")
-            quantity = signal.get("quantity", 0)
-
-            if signal_type == "BUY" and quantity > 0:
-                cost = price * quantity
-                commission = cost * 0.001  # 0.1% 수수료
-                total_cost = cost + commission
-
-                if total_cost <= current_capital:
-                    # 매수 실행
-                    trade = Trade(
-                        trade_id=f"trade_{datetime.now(timezone.utc).timestamp()}_{symbol}_BUY",
-                        symbol=symbol,
-                        trade_type=TradeType.BUY,
-                        quantity=quantity,
-                        price=price,
-                        timestamp=day_data[symbol].get(
-                            "date", datetime.now(timezone.utc)
-                        ),
-                        commission=commission,
-                        strategy_signal_id=None,
-                        notes=None,
-                    )
-                    trades.append(trade)
-                    positions[symbol] = positions.get(symbol, 0) + quantity
-
-            elif signal_type == "SELL" and quantity > 0:
-                current_position = positions.get(symbol, 0)
-                sell_quantity = min(quantity, current_position)
-
-                if sell_quantity > 0:
-                    # 매도 실행
-                    revenue = price * sell_quantity
-                    commission = revenue * 0.001  # 0.1% 수수료
-
-                    trade = Trade(
-                        trade_id=f"trade_{datetime.now(timezone.utc).timestamp()}_{symbol}_SELL",
-                        symbol=symbol,
-                        trade_type=TradeType.SELL,
-                        quantity=sell_quantity,
-                        price=price,
-                        timestamp=day_data[symbol].get(
-                            "date", datetime.now(timezone.utc)
-                        ),
-                        commission=commission,
-                        strategy_signal_id=None,
-                        notes=None,
-                    )
-                    trades.append(trade)
-                    positions[symbol] -= sell_quantity
-
-        return trades
-
-    def _calculate_portfolio_value(
-        self, positions: Dict[str, int], day_data: Dict[str, Any], cash: float
-    ) -> float:
-        """포트폴리오 총 가치 계산"""
-
-        total_value = cash
-
-        for symbol, quantity in positions.items():
-            if symbol in day_data and quantity > 0:
-                price = day_data[symbol].get("close", 0)
-                total_value += price * quantity
-
-        return total_value
 
     def _calculate_performance_metrics(
         self, portfolio_values: List[float], initial_capital: float, trades: List[Trade]

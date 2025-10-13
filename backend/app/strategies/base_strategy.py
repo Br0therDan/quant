@@ -71,11 +71,16 @@ class BaseStrategy(ABC):
     모든 전략은 이 클래스를 상속받아 구현해야 합니다.
     """
 
-    def __init__(self, config: StrategyConfig):
+    def __init__(self, config: Any):
+        """전략 초기화
+
+        Args:
+            config: 전략 설정 (StrategyConfigBase 또는 하위 클래스)
+        """
         self.config = config
-        self.name = config.name
-        self.description = config.description
-        self.parameters = config.parameters
+        self.name = getattr(config, "name", type(self).__name__)
+        self.description = getattr(config, "description", "")
+        self.parameters = getattr(config, "parameters", {})
 
         # 내부 상태
         self._is_initialized = False
@@ -259,7 +264,9 @@ class TechnicalIndicators:
     @staticmethod
     def rsi(data: pd.Series, window: int = 14) -> pd.Series:
         """RSI (Relative Strength Index)"""
-        delta = data.diff()
+        # Ensure the input series is numeric to avoid object-dtype comparison errors
+        numeric = pd.to_numeric(data, errors="coerce").astype(float)
+        delta = numeric.diff()
         gain = delta.where(delta > 0, 0.0).rolling(window=window).mean()
         loss = (-delta.where(delta < 0, 0.0)).rolling(window=window).mean()
         rs = gain / loss

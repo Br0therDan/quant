@@ -6,39 +6,25 @@
 from datetime import datetime
 
 import pandas as pd
-from pydantic import Field
 
 from .base_strategy import (
     BaseStrategy,
     SignalType,
-    StrategyConfig,
     StrategySignal,
     TechnicalIndicators,
 )
-
-
-class SMAConfig(StrategyConfig):
-    """SMA 크로스오버 전략 설정"""
-
-    # 이동평균 설정
-    short_window: int = Field(default=10, ge=2, le=50, description="단기 이동평균 기간")
-    long_window: int = Field(default=30, ge=10, le=200, description="장기 이동평균 기간")
-
-    # 신호 필터
-    min_crossover_strength: float = Field(default=0.01, description="최소 교차 강도")
+from .configs import SMACrossoverConfig
 
 
 class SMACrossoverStrategy(BaseStrategy):
     """SMA 크로스오버 전략"""
 
-    def __init__(self, config: SMAConfig):
+    def __init__(self, config: SMACrossoverConfig):
         super().__init__(config)
-        self.config: SMAConfig = config
+        self.config: SMACrossoverConfig = config
         self._current_position = SignalType.HOLD
 
-        # 설정 검증
-        if config.short_window >= config.long_window:
-            raise ValueError("단기 이동평균 기간은 장기 이동평균 기간보다 작아야 합니다")
+        # 설정은 이미 Pydantic에 의해 검증됨
 
     def initialize(self, data: pd.DataFrame) -> None:
         """전략 초기화"""

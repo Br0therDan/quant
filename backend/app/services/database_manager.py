@@ -26,6 +26,15 @@ class DatabaseManager:
         # 데이터베이스 디렉토리 생성
         Path(self.db_path).parent.mkdir(parents=True, exist_ok=True)
 
+    @property
+    def duckdb_conn(self) -> duckdb.DuckDBPyConnection:
+        """DuckDB 연결 객체 반환 (alias for compatibility)"""
+        if self.connection is None:
+            self.connect()
+        if self.connection is None:
+            raise RuntimeError("DuckDB connection not established")
+        return self.connection
+
     def __enter__(self):
         """컨텍스트 매니저 진입"""
         self.connect()

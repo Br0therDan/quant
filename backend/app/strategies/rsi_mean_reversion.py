@@ -6,35 +6,22 @@ RSI 지표를 사용한 평균회귀 전략
 from datetime import datetime
 
 import pandas as pd
-from pydantic import Field
 
 from .base_strategy import (
     BaseStrategy,
     SignalType,
-    StrategyConfig,
     StrategySignal,
     TechnicalIndicators,
 )
-
-
-class RSIConfig(StrategyConfig):
-    """RSI 전략 설정"""
-
-    # RSI 설정
-    rsi_period: int = Field(default=14, ge=2, le=50, description="RSI 계산 기간")
-    oversold_threshold: float = Field(default=30.0, description="과매도 임계값")
-    overbought_threshold: float = Field(default=70.0, description="과매수 임계값")
-
-    # 확인 설정
-    confirmation_periods: int = Field(default=2, description="신호 확인 기간")
+from .configs import RSIMeanReversionConfig
 
 
 class RSIMeanReversionStrategy(BaseStrategy):
     """RSI 평균회귀 전략"""
 
-    def __init__(self, config: RSIConfig):
+    def __init__(self, config: RSIMeanReversionConfig):
         super().__init__(config)
-        self.config: RSIConfig = config
+        self.config: RSIMeanReversionConfig = config
         self._current_position = SignalType.HOLD
 
     def initialize(self, data: pd.DataFrame) -> None:

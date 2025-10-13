@@ -13,6 +13,7 @@ from beanie import PydanticObjectId
 if TYPE_CHECKING:
     from app.services.market_data_service import MarketDataService
     from app.services.strategy_service import StrategyService
+    from app.services.database_manager import DatabaseManager
 
 from app.models.backtest import (
     Backtest,
@@ -21,9 +22,7 @@ from app.models.backtest import (
     BacktestResult,
     BacktestStatus,
     PerformanceMetrics,
-    Position,
     Trade,
-    TradeType,
 )
 from app.services.integrated_backtest_executor import IntegratedBacktestExecutor
 
@@ -98,127 +97,44 @@ class PerformanceCalculator:
         return max_dd
 
 
-class TradingSimulator:
-    """거래 시뮬레이터"""
-
-    def __init__(self, config: BacktestConfig):
-        self.config = config
-        self.portfolio_values: list[float] = []
-
-    def simulate_trades(
-        self, signals: list[dict[str, Any]]
-    ) -> tuple[list[float], list[Trade]]:
-        """거래 시뮬레이션"""
-        current_cash = self.config.initial_cash
-        positions: dict[str, float] = {}  # symbol -> shares
-        portfolio_values = [current_cash]
-        trades: list[Trade] = []
-
-        # 임시 가격 데이터 (실제로는 외부 데이터 소스에서 가져와야 함)
-        price_data = {symbol: 100.0 for symbol in self.config.symbols}
-
-        for _, signal in enumerate(signals):
-            try:
-                symbol = signal.get(
-                    "symbol", self.config.symbols[0] if self.config.symbols else "AAPL"
-                )
-                action = signal.get("action", "BUY")
-                quantity = signal.get("quantity", 10)
-
-                # 가격 변동 시뮬레이션 (간단한 랜덤 워크)
-                price_change = np.random.normal(0, 0.02)  # 2% 표준편차
-                price_data[symbol] *= 1 + price_change
-                current_price = price_data[symbol]
-
-                if action == "BUY":
-                    cost = quantity * current_price * (1 + self.config.commission_rate)
-                    if current_cash >= cost:
-                        current_cash -= cost
-                        positions[symbol] = positions.get(symbol, 0) + quantity
-
-                        # 거래 기록
-                        trade = Trade(
-                            trade_id=str(uuid.uuid4()),
-                            symbol=symbol,
-                            trade_type=TradeType.BUY,
-                            quantity=quantity,
-                            price=current_price,
-                            timestamp=datetime.now(),
-                            commission=quantity
-                            * current_price
-                            * self.config.commission_rate,
-                            strategy_signal_id=None,
-                            notes=None,
-                        )
-                        trades.append(trade)
-
-                elif action == "SELL":
-                    if positions.get(symbol, 0) >= quantity:
-                        revenue = (
-                            quantity * current_price * (1 - self.config.commission_rate)
-                        )
-                        current_cash += revenue
-                        positions[symbol] -= quantity
-
-                        # 거래 기록
-                        trade = Trade(
-                            trade_id=str(uuid.uuid4()),
-                            symbol=symbol,
-                            trade_type=TradeType.SELL,
-                            quantity=quantity,
-                            price=current_price,
-                            timestamp=datetime.now(),
-                            commission=quantity
-                            * current_price
-                            * self.config.commission_rate,
-                            strategy_signal_id=None,
-                            notes=None,
-                        )
-                        trades.append(trade)
-
-                # 포트폴리오 가치 계산
-                portfolio_value = current_cash
-                for sym, shares in positions.items():
-                    portfolio_value += shares * price_data[sym]
-
-                portfolio_values.append(portfolio_value)
-
-            except Exception as e:
-                logger.error(f"거래 시뮬레이션 오류: {e}")
-                continue
-
-        return portfolio_values, trades
-
-
 class BacktestService:
     """백테스트 서비스 with DuckDB Integration"""
 
     def __init__(
-        self, market_data_service=None, strategy_service=None, database_manager=None
+        self,
+        market_data_service: "MarketDataService",
+        strategy_service: "StrategyService",
+        database_manager: "DatabaseManager",
     ):
+        """백테스트 서비스 초기화
+
+        Args:
+            market_data_service: 시장 데이터 서비스
+            strategy_service: 전략 서비스
+            database_manager: 데이터베이스 매니저 (DuckDB)
+
+        Raises:
+            ValueError: 필수 의존성이 None인 경우
+        """
+        if market_data_service is None:
+            raise ValueError("market_data_service는 필수입니다")
+        if strategy_service is None:
+            raise ValueError("strategy_service는 필수입니다")
+        if database_manager is None:
+            raise ValueError("database_manager는 필수입니다")
+
         self.performance_calculator = PerformanceCalculator()
         self.market_data_service = market_data_service
         self.strategy_service = strategy_service
         self.database_manager = database_manager
-        self.integrated_executor = None
 
-    def set_dependencies(
-        self,
-        market_data_service: "MarketDataService",
-        strategy_service: "StrategyService",
-    ):
-        """서비스 의존성 설정"""
-        self.market_data_service = market_data_service
-        self.strategy_service = strategy_service
+        # 통합 실행기 즉시 생성
+        self.integrated_executor = IntegratedBacktestExecutor(
+            market_data_service=market_data_service,
+            strategy_service=strategy_service,
+        )
 
-        # 통합 실행기 생성
-        if market_data_service and strategy_service:
-            self.integrated_executor = IntegratedBacktestExecutor(
-                market_data_service=market_data_service,
-                strategy_service=strategy_service,
-            )
-        else:
-            self.integrated_executor = None
+        logger.info("BacktestService initialized with all dependencies")
 
     async def create_backtest(
         self,
@@ -320,7 +236,7 @@ class BacktestService:
         backtest_id: str,
         signals: list[dict[str, Any]],
     ) -> BacktestExecution | None:
-        """백테스트 실행"""
+        """백테스트 실행 (IntegratedBacktestExecutor 사용)"""
         backtest = await self.get_backtest(backtest_id)
         if not backtest:
             return None
@@ -334,41 +250,31 @@ class BacktestService:
             backtest.start_time = start_time
             await backtest.save()
 
-            # 거래 시뮬레이션
-            simulator = TradingSimulator(backtest.config)
-            portfolio_values, trades = simulator.simulate_trades(signals)
-
-            # 성과 지표 계산
-            metrics = self.performance_calculator.calculate_metrics(
-                portfolio_values, backtest.config.initial_cash
+            # ✅ IntegratedBacktestExecutor로 백테스트 실행
+            executor = IntegratedBacktestExecutor(
+                market_data_service=self.market_data_service,
+                strategy_service=self.strategy_service,
             )
 
-            # 포지션 계산 (최종 상태)
-            positions = {}
-            for trade in trades:
-                if trade.symbol not in positions:
-                    positions[trade.symbol] = Position(
-                        symbol=trade.symbol,
-                        quantity=0,
-                        avg_price=0.0,
-                        current_price=0.0,
-                        unrealized_pnl=0.0,
-                        first_buy_date=datetime.now(),
-                    )
+            # execute_integrated_backtest 메서드 사용
+            result = await executor.execute_integrated_backtest(
+                backtest_id=backtest_id,
+                symbols=backtest.config.symbols,
+                start_date=backtest.config.start_date,
+                end_date=backtest.config.end_date,
+                strategy_type=backtest.strategy_id,  # strategy_id가 StrategyType
+                strategy_params={},  # 빈 딕셔너리 전달 (기본값 사용)
+                initial_capital=backtest.config.initial_cash,
+            )
 
-                if trade.trade_type == TradeType.BUY:
-                    old_qty = positions[trade.symbol].quantity
-                    old_avg = positions[trade.symbol].average_price
-                    new_qty = old_qty + trade.quantity
-                    new_avg = (
-                        ((old_qty * old_avg) + (trade.quantity * trade.price)) / new_qty
-                        if new_qty > 0
-                        else 0
-                    )
-                    positions[trade.symbol].quantity = new_qty
-                    positions[trade.symbol].avg_price = new_avg
-                else:  # SELL
-                    positions[trade.symbol].quantity -= trade.quantity
+            if not result:
+                raise Exception("Backtest execution failed")
+
+            # BacktestResult에서 데이터 추출
+            trades_list = result.trades if hasattr(result, "trades") else []
+            portfolio_values_list = (
+                result.portfolio_values if hasattr(result, "portfolio_values") else []
+            )
 
             end_time = datetime.now()
 
@@ -379,43 +285,21 @@ class BacktestService:
                 start_time=start_time,
                 end_time=end_time,
                 status=BacktestStatus.COMPLETED,
-                portfolio_values=portfolio_values,
-                trades=trades,
-                positions=positions,
+                portfolio_values=portfolio_values_list,
+                trades=trades_list,
+                positions={},
                 error_message=None,
                 created_at=datetime.now(),
-            )
-
-            # 성과 지표 업데이트
-            performance = PerformanceMetrics(
-                total_return=metrics["total_return"],
-                annualized_return=metrics["annualized_return"],
-                volatility=metrics["volatility"],
-                sharpe_ratio=metrics["sharpe_ratio"],
-                max_drawdown=metrics["max_drawdown"],
-                total_trades=len(trades),
-                winning_trades=len(
-                    [t for t in trades if t.trade_type == TradeType.BUY]
-                ),
-                losing_trades=len(
-                    [t for t in trades if t.trade_type == TradeType.SELL]
-                ),
-                win_rate=(
-                    len([t for t in trades if t.trade_type == TradeType.BUY])
-                    / len(trades)
-                    if trades
-                    else 0.0
-                ),
             )
 
             # 백테스트 완료 상태 업데이트
             backtest.status = BacktestStatus.COMPLETED
             backtest.end_time = end_time
             backtest.duration_seconds = (end_time - start_time).total_seconds()
-            backtest.performance = performance
             await backtest.save()
 
             await execution.insert()
+            logger.info(f"Backtest execution completed: {backtest_id}")
             return execution
 
         except Exception as e:
@@ -439,6 +323,7 @@ class BacktestService:
                 created_at=datetime.now(),
             )
             await execution.insert()
+            return execution
             return execution
 
     async def get_backtest_executions(
@@ -557,7 +442,7 @@ class BacktestService:
                 ORDER BY created_at DESC
                 LIMIT 50
             """
-            result = self.database_manager.connection.execute(query).fetchall()
+            result = self.database_manager.duckdb_conn.execute(query).fetchall()
 
             columns = [
                 "id",
@@ -587,7 +472,7 @@ class BacktestService:
 
         try:
             for trade in trades:
-                self.database_manager.connection.execute(
+                self.database_manager.duckdb_conn.execute(
                     """
                     INSERT INTO trades
                     (id, backtest_id, symbol, datetime, action, quantity,
@@ -624,7 +509,7 @@ class BacktestService:
                 WHERE backtest_id = ?
                 ORDER BY datetime
             """
-            result = self.database_manager.connection.execute(
+            result = self.database_manager.duckdb_conn.execute(
                 query, [execution_id]
             ).fetchall()
 
@@ -661,7 +546,7 @@ class BacktestService:
                     MIN(total_return) as worst_return
                 FROM backtest_results
             """
-            overall_stats = self.database_manager.connection.execute(
+            overall_stats = self.database_manager.duckdb_conn.execute(
                 overall_query
             ).fetchone()
 
@@ -677,29 +562,43 @@ class BacktestService:
                 ORDER BY avg_return DESC
                 LIMIT 10
             """
-            strategy_stats = self.database_manager.connection.execute(
+            strategy_stats = self.database_manager.duckdb_conn.execute(
                 strategy_query
             ).fetchall()
 
-            return {
-                "overall": {
-                    "total_backtests": overall_stats[0] if overall_stats else 0,
-                    "avg_return": round(overall_stats[1] or 0, 4),
-                    "avg_sharpe": round(overall_stats[2] or 0, 4),
-                    "avg_drawdown": round(overall_stats[3] or 0, 4),
-                    "best_return": round(overall_stats[4] or 0, 4),
-                    "worst_return": round(overall_stats[5] or 0, 4),
-                },
-                "by_strategy": [
-                    {
-                        "strategy_name": row[0],
-                        "count": row[1],
-                        "avg_return": round(row[2] or 0, 4),
-                        "avg_sharpe": round(row[3] or 0, 4),
-                    }
-                    for row in strategy_stats
-                ],
-            }
+            # overall_stats가 None이 아닐 때만 처리
+            if overall_stats:
+                return {
+                    "overall": {
+                        "total_backtests": overall_stats[0] or 0,
+                        "avg_return": round(overall_stats[1] or 0, 4),
+                        "avg_sharpe": round(overall_stats[2] or 0, 4),
+                        "avg_drawdown": round(overall_stats[3] or 0, 4),
+                        "best_return": round(overall_stats[4] or 0, 4),
+                        "worst_return": round(overall_stats[5] or 0, 4),
+                    },
+                    "by_strategy": [
+                        {
+                            "strategy_name": row[0],
+                            "count": row[1],
+                            "avg_return": round(row[2] or 0, 4),
+                            "avg_sharpe": round(row[3] or 0, 4),
+                        }
+                        for row in strategy_stats
+                    ],
+                }
+            else:
+                return {
+                    "overall": {
+                        "total_backtests": 0,
+                        "avg_return": 0.0,
+                        "avg_sharpe": 0.0,
+                        "avg_drawdown": 0.0,
+                        "best_return": 0.0,
+                        "worst_return": 0.0,
+                    },
+                    "by_strategy": [],
+                }
 
         except Exception as e:
             logger.error(f"DuckDB 성과 통계 조회 실패: {e}")

@@ -6,29 +6,13 @@
 from datetime import datetime
 
 import pandas as pd
-from pydantic import Field
 
 from .base_strategy import (
     BaseStrategy,
     SignalType,
-    StrategyConfig,
     StrategySignal,
 )
-
-
-class MomentumConfig(StrategyConfig):
-    """모멘텀 전략 설정"""
-
-    # 모멘텀 계산 기간
-    momentum_period: int = Field(default=20, ge=5, le=100, description="모멘텀 계산 기간")
-
-    # 신호 임계값
-    buy_threshold: float = Field(default=0.02, description="매수 신호 임계값")
-    sell_threshold: float = Field(default=-0.02, description="매도 신호 임계값")
-
-    # 필터
-    volume_filter: bool = Field(default=True, description="거래량 필터 사용 여부")
-    min_volume_ratio: float = Field(default=1.5, description="최소 거래량 비율")
+from .configs import MomentumConfig
 
 
 class MomentumStrategy(BaseStrategy):
