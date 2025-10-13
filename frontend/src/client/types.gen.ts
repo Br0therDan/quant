@@ -1775,6 +1775,62 @@ export type MetadataInfo = {
 };
 
 /**
+ * ModelInfoResponse
+ * Response schema for model info.
+ */
+export type ModelInfoResponse = {
+	/**
+	 * Version
+	 */
+	version: string;
+	/**
+	 * Model Type
+	 */
+	model_type: string;
+	/**
+	 * Created At
+	 */
+	created_at: string;
+	/**
+	 * Metrics
+	 */
+	metrics: {
+		[key: string]: number;
+	};
+	/**
+	 * Feature Count
+	 */
+	feature_count: number;
+	/**
+	 * Num Iterations
+	 */
+	num_iterations: number;
+	/**
+	 * Feature Names
+	 */
+	feature_names: Array<string>;
+};
+
+/**
+ * ModelListResponse
+ * Response schema for model list.
+ */
+export type ModelListResponse = {
+	/**
+	 * Models
+	 */
+	models: Array<ModelInfoResponse>;
+	/**
+	 * Total
+	 */
+	total: number;
+	/**
+	 * Latest Version
+	 */
+	latest_version: string | null;
+};
+
+/**
  * MomentumConfig
  * 모멘텀 전략 설정
  */
@@ -3587,6 +3643,60 @@ export type TradesSummary = {
 	 * 총 손익
 	 */
 	total_pnl: number;
+};
+
+/**
+ * TrainModelRequest
+ * Request schema for model training.
+ */
+export type TrainModelRequest = {
+	/**
+	 * Symbols
+	 * List of stock symbols to train on
+	 */
+	symbols: Array<string>;
+	/**
+	 * Lookback Days
+	 * Number of days of historical data to use
+	 */
+	lookback_days?: number;
+	/**
+	 * Test Size
+	 * Test set ratio
+	 */
+	test_size?: number;
+	/**
+	 * Num Boost Round
+	 * Number of boosting iterations
+	 */
+	num_boost_round?: number;
+	/**
+	 * Threshold
+	 * Return threshold for buy signal (2% = 0.02)
+	 */
+	threshold?: number;
+};
+
+/**
+ * TrainModelResponse
+ * Response schema for model training.
+ */
+export type TrainModelResponse = {
+	/**
+	 * Status
+	 * Training status
+	 */
+	status: string;
+	/**
+	 * Message
+	 * Status message
+	 */
+	message: string;
+	/**
+	 * Task Id
+	 * Background task ID
+	 */
+	task_id?: string | null;
 };
 
 /**
@@ -7044,6 +7154,30 @@ export type TemplateGetTemplateUsageStatsResponses = {
 	200: unknown;
 };
 
+export type BacktestHealthCheckData = {
+	body?: never;
+	path?: never;
+	query?: never;
+	url: "/api/v1/backtests/health";
+};
+
+export type BacktestHealthCheckErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type BacktestHealthCheckError =
+	BacktestHealthCheckErrors[keyof BacktestHealthCheckErrors];
+
+export type BacktestHealthCheckResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: unknown;
+};
+
 export type BacktestGetBacktestsData = {
 	body?: never;
 	path?: never;
@@ -7281,30 +7415,6 @@ export type BacktestGetBacktestExecutionsResponses = {
 
 export type BacktestGetBacktestExecutionsResponse =
 	BacktestGetBacktestExecutionsResponses[keyof BacktestGetBacktestExecutionsResponses];
-
-export type BacktestHealthCheckData = {
-	body?: never;
-	path?: never;
-	query?: never;
-	url: "/api/v1/backtests/health";
-};
-
-export type BacktestHealthCheckErrors = {
-	/**
-	 * Validation Error
-	 */
-	422: HttpValidationError;
-};
-
-export type BacktestHealthCheckError =
-	BacktestHealthCheckErrors[keyof BacktestHealthCheckErrors];
-
-export type BacktestHealthCheckResponses = {
-	/**
-	 * Successful Response
-	 */
-	200: unknown;
-};
 
 export type BacktestGetPerformanceAnalyticsData = {
 	body?: never;
@@ -8026,3 +8136,166 @@ export type SignalsGetMlSignalResponses = {
 
 export type SignalsGetMlSignalResponse =
 	SignalsGetMlSignalResponses[keyof SignalsGetMlSignalResponses];
+
+export type MlTrainModelData = {
+	body: TrainModelRequest;
+	path?: never;
+	query?: never;
+	url: "/api/v1/ml/train";
+};
+
+export type MlTrainModelErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlTrainModelError = MlTrainModelErrors[keyof MlTrainModelErrors];
+
+export type MlTrainModelResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: TrainModelResponse;
+};
+
+export type MlTrainModelResponse =
+	MlTrainModelResponses[keyof MlTrainModelResponses];
+
+export type MlListModelsData = {
+	body?: never;
+	path?: never;
+	query?: {
+		/**
+		 * Model Type
+		 */
+		model_type?: string;
+	};
+	url: "/api/v1/ml/models";
+};
+
+export type MlListModelsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlListModelsError = MlListModelsErrors[keyof MlListModelsErrors];
+
+export type MlListModelsResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: ModelListResponse;
+};
+
+export type MlListModelsResponse =
+	MlListModelsResponses[keyof MlListModelsResponses];
+
+export type MlDeleteModelData = {
+	body?: never;
+	path: {
+		/**
+		 * Version
+		 */
+		version: string;
+	};
+	query?: never;
+	url: "/api/v1/ml/models/{version}";
+};
+
+export type MlDeleteModelErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlDeleteModelError = MlDeleteModelErrors[keyof MlDeleteModelErrors];
+
+export type MlDeleteModelResponses = {
+	/**
+	 * Response Ml-Delete Model
+	 * Successful Response
+	 */
+	200: {
+		[key: string]: string;
+	};
+};
+
+export type MlDeleteModelResponse =
+	MlDeleteModelResponses[keyof MlDeleteModelResponses];
+
+export type MlGetModelInfoData = {
+	body?: never;
+	path: {
+		/**
+		 * Version
+		 */
+		version: string;
+	};
+	query?: never;
+	url: "/api/v1/ml/models/{version}";
+};
+
+export type MlGetModelInfoErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlGetModelInfoError =
+	MlGetModelInfoErrors[keyof MlGetModelInfoErrors];
+
+export type MlGetModelInfoResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: ModelInfoResponse;
+};
+
+export type MlGetModelInfoResponse =
+	MlGetModelInfoResponses[keyof MlGetModelInfoResponses];
+
+export type MlCompareModelsData = {
+	body?: never;
+	path: {
+		/**
+		 * Metric
+		 */
+		metric: string;
+	};
+	query?: {
+		/**
+		 * Versions
+		 */
+		versions?: string;
+	};
+	url: "/api/v1/ml/models/compare/{metric}";
+};
+
+export type MlCompareModelsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlCompareModelsError =
+	MlCompareModelsErrors[keyof MlCompareModelsErrors];
+
+export type MlCompareModelsResponses = {
+	/**
+	 * Response Ml-Compare Models
+	 * Successful Response
+	 */
+	200: {
+		[key: string]: number;
+	};
+};
+
+export type MlCompareModelsResponse =
+	MlCompareModelsResponses[keyof MlCompareModelsResponses];

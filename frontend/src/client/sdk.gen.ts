@@ -185,6 +185,21 @@ import type {
 	MarketRegimeGetMarketRegimeData,
 	MarketRegimeGetMarketRegimeErrors,
 	MarketRegimeGetMarketRegimeResponses,
+	MlCompareModelsData,
+	MlCompareModelsErrors,
+	MlCompareModelsResponses,
+	MlDeleteModelData,
+	MlDeleteModelErrors,
+	MlDeleteModelResponses,
+	MlGetModelInfoData,
+	MlGetModelInfoErrors,
+	MlGetModelInfoResponses,
+	MlListModelsData,
+	MlListModelsErrors,
+	MlListModelsResponses,
+	MlTrainModelData,
+	MlTrainModelErrors,
+	MlTrainModelResponses,
 	OAuth2AuthorizeData,
 	OAuth2AuthorizeErrors,
 	OAuth2AuthorizeResponses,
@@ -2295,6 +2310,29 @@ export class TemplateService {
 
 export class BacktestService {
 	/**
+	 * Health Check
+	 * 백테스트 시스템 상태 확인 (Phase 2)
+	 */
+	public static healthCheck<ThrowOnError extends boolean = false>(
+		options?: Options<BacktestHealthCheckData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			BacktestHealthCheckResponses,
+			BacktestHealthCheckErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/backtests/health",
+			...options,
+		});
+	}
+
+	/**
 	 * Get Backtests
 	 * Get list of backtests
 	 */
@@ -2463,29 +2501,6 @@ export class BacktestService {
 				},
 			],
 			url: "/api/v1/backtests/{backtest_id}/executions",
-			...options,
-		});
-	}
-
-	/**
-	 * Health Check
-	 * 백테스트 시스템 상태 확인 (Phase 2)
-	 */
-	public static healthCheck<ThrowOnError extends boolean = false>(
-		options?: Options<BacktestHealthCheckData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			BacktestHealthCheckResponses,
-			BacktestHealthCheckErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/health",
 			...options,
 		});
 	}
@@ -3072,6 +3087,138 @@ export class SignalsService {
 				},
 			],
 			url: "/api/v1/signals/{symbol}",
+			...options,
+		});
+	}
+}
+
+export class MlService {
+	/**
+	 * Train Model
+	 * Train a new ML model for signal prediction.
+	 *
+	 * This endpoint trains a LightGBM model on historical price data
+	 * and saves it to the model registry. Training runs in the background.
+	 *
+	 * **Training Process:**
+	 * 1. Load historical data for specified symbols
+	 * 2. Calculate technical indicators (RSI, MACD, etc.)
+	 * 3. Generate buy/hold labels based on future returns
+	 * 4. Train LightGBM classifier
+	 * 5. Evaluate on test set
+	 * 6. Save to model registry with versioning
+	 *
+	 * **Example:**
+	 * ```json
+	 * {
+	 * "symbols": ["AAPL", "MSFT", "GOOGL"],
+	 * "lookback_days": 500,
+	 * "test_size": 0.2,
+	 * "num_boost_round": 100,
+	 * "threshold": 0.02
+	 * }
+	 * ```
+	 */
+	public static trainModel<ThrowOnError extends boolean = false>(
+		options: Options<MlTrainModelData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlTrainModelResponses,
+			MlTrainModelErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/train",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * List Models
+	 * List all trained models.
+	 *
+	 * Returns a list of all models with their metadata including
+	 * version, accuracy, creation date, and feature information.
+	 */
+	public static listModels<ThrowOnError extends boolean = false>(
+		options?: Options<MlListModelsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListModelsResponses,
+			MlListModelsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/models",
+			...options,
+		});
+	}
+
+	/**
+	 * Delete Model
+	 * Delete a specific model version.
+	 *
+	 * **Warning:** This action cannot be undone.
+	 */
+	public static deleteModel<ThrowOnError extends boolean = false>(
+		options: Options<MlDeleteModelData, ThrowOnError>,
+	) {
+		return (options.client ?? client).delete<
+			MlDeleteModelResponses,
+			MlDeleteModelErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/models/{version}",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Model Info
+	 * Get detailed information about a specific model version.
+	 *
+	 * Returns metadata including accuracy, training parameters,
+	 * feature names, and creation date.
+	 */
+	public static getModelInfo<ThrowOnError extends boolean = false>(
+		options: Options<MlGetModelInfoData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MlGetModelInfoResponses,
+			MlGetModelInfoErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/models/{version}",
+			...options,
+		});
+	}
+
+	/**
+	 * Compare Models
+	 * Compare multiple model versions by a specific metric.
+	 *
+	 * **Supported metrics:**
+	 * - accuracy
+	 * - precision
+	 * - recall
+	 * - f1_score
+	 *
+	 * **Example:**
+	 * ```
+	 * GET /api/v1/ml/models/compare/accuracy?versions=v1,v2,v3
+	 * ```
+	 */
+	public static compareModels<ThrowOnError extends boolean = false>(
+		options: Options<MlCompareModelsData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MlCompareModelsResponses,
+			MlCompareModelsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/models/compare/{metric}",
 			...options,
 		});
 	}

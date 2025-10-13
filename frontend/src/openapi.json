@@ -6686,6 +6686,59 @@
         }
       }
     },
+    "/api/v1/backtests/health": {
+      "get": {
+        "tags": [
+          "Backtest"
+        ],
+        "summary": "Health Check",
+        "description": "백테스트 시스템 상태 확인 (Phase 2)",
+        "operationId": "Backtest-health_check",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/backtests/": {
       "post": {
         "tags": [
@@ -7194,59 +7247,6 @@
                 "schema": {
                   "$ref": "#/components/schemas/BacktestExecutionListResponse"
                 }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/backtests/health": {
-      "get": {
-        "tags": [
-          "Backtest"
-        ],
-        "summary": "Health Check",
-        "description": "백테스트 시스템 상태 확인 (Phase 2)",
-        "operationId": "Backtest-health_check",
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "access_token",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Access Token"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
               }
             }
           },
@@ -8781,6 +8781,237 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MLSignalResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ml/train": {
+      "post": {
+        "tags": [
+          "ML"
+        ],
+        "summary": "Train Model",
+        "description": "Train a new ML model for signal prediction.\n\nThis endpoint trains a LightGBM model on historical price data\nand saves it to the model registry. Training runs in the background.\n\n**Training Process:**\n1. Load historical data for specified symbols\n2. Calculate technical indicators (RSI, MACD, etc.)\n3. Generate buy/hold labels based on future returns\n4. Train LightGBM classifier\n5. Evaluate on test set\n6. Save to model registry with versioning\n\n**Example:**\n```json\n{\n    \"symbols\": [\"AAPL\", \"MSFT\", \"GOOGL\"],\n    \"lookback_days\": 500,\n    \"test_size\": 0.2,\n    \"num_boost_round\": 100,\n    \"threshold\": 0.02\n}\n```",
+        "operationId": "ML-train_model",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrainModelRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainModelResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ml/models": {
+      "get": {
+        "tags": [
+          "ML"
+        ],
+        "summary": "List Models",
+        "description": "List all trained models.\n\nReturns a list of all models with their metadata including\nversion, accuracy, creation date, and feature information.",
+        "operationId": "ML-list_models",
+        "parameters": [
+          {
+            "name": "model_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "signal",
+              "title": "Model Type"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ml/models/{version}": {
+      "get": {
+        "tags": [
+          "ML"
+        ],
+        "summary": "Get Model Info",
+        "description": "Get detailed information about a specific model version.\n\nReturns metadata including accuracy, training parameters,\nfeature names, and creation date.",
+        "operationId": "ML-get_model_info",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Version"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelInfoResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ML"
+        ],
+        "summary": "Delete Model",
+        "description": "Delete a specific model version.\n\n**Warning:** This action cannot be undone.",
+        "operationId": "ML-delete_model",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Version"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Ml-Delete Model"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ml/models/compare/{metric}": {
+      "get": {
+        "tags": [
+          "ML"
+        ],
+        "summary": "Compare Models",
+        "description": "Compare multiple model versions by a specific metric.\n\n**Supported metrics:**\n- accuracy\n- precision\n- recall\n- f1_score\n\n**Example:**\n```\nGET /api/v1/ml/models/compare/accuracy?versions=v1,v2,v3\n```",
+        "operationId": "ML-compare_models",
+        "parameters": [
+          {
+            "name": "metric",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Metric"
+            }
+          },
+          {
+            "name": "versions",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Versions"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "number"
+                  },
+                  "title": "Response Ml-Compare Models"
                 }
               }
             }
@@ -11879,6 +12110,90 @@
         "title": "MetadataInfo",
         "description": "메타데이터 정보"
       },
+      "ModelInfoResponse": {
+        "properties": {
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "model_type": {
+            "type": "string",
+            "title": "Model Type"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          },
+          "metrics": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Metrics"
+          },
+          "feature_count": {
+            "type": "integer",
+            "title": "Feature Count"
+          },
+          "num_iterations": {
+            "type": "integer",
+            "title": "Num Iterations"
+          },
+          "feature_names": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Feature Names"
+          }
+        },
+        "type": "object",
+        "required": [
+          "version",
+          "model_type",
+          "created_at",
+          "metrics",
+          "feature_count",
+          "num_iterations",
+          "feature_names"
+        ],
+        "title": "ModelInfoResponse",
+        "description": "Response schema for model info."
+      },
+      "ModelListResponse": {
+        "properties": {
+          "models": {
+            "items": {
+              "$ref": "#/components/schemas/ModelInfoResponse"
+            },
+            "type": "array",
+            "title": "Models"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "latest_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latest Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "models",
+          "total",
+          "latest_version"
+        ],
+        "title": "ModelListResponse",
+        "description": "Response schema for model list."
+      },
       "MomentumConfig": {
         "properties": {
           "config_type": {
@@ -14713,6 +15028,91 @@
         ],
         "title": "TradesSummary",
         "description": "거래 요약."
+      },
+      "TrainModelRequest": {
+        "properties": {
+          "symbols": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 100,
+            "minItems": 1,
+            "title": "Symbols",
+            "description": "List of stock symbols to train on"
+          },
+          "lookback_days": {
+            "type": "integer",
+            "maximum": 2000.0,
+            "minimum": 100.0,
+            "title": "Lookback Days",
+            "description": "Number of days of historical data to use",
+            "default": 500
+          },
+          "test_size": {
+            "type": "number",
+            "maximum": 0.5,
+            "minimum": 0.1,
+            "title": "Test Size",
+            "description": "Test set ratio",
+            "default": 0.2
+          },
+          "num_boost_round": {
+            "type": "integer",
+            "maximum": 1000.0,
+            "minimum": 10.0,
+            "title": "Num Boost Round",
+            "description": "Number of boosting iterations",
+            "default": 100
+          },
+          "threshold": {
+            "type": "number",
+            "maximum": 0.5,
+            "minimum": 0.001,
+            "title": "Threshold",
+            "description": "Return threshold for buy signal (2% = 0.02)",
+            "default": 0.02
+          }
+        },
+        "type": "object",
+        "required": [
+          "symbols"
+        ],
+        "title": "TrainModelRequest",
+        "description": "Request schema for model training."
+      },
+      "TrainModelResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "Training status"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "description": "Status message"
+          },
+          "task_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Task Id",
+            "description": "Background task ID"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "message"
+        ],
+        "title": "TrainModelResponse",
+        "description": "Response schema for model training."
       },
       "UserCreate": {
         "properties": {

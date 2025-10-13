@@ -2978,6 +2978,88 @@ export const MetadataInfoSchema = {
 	description: "메타데이터 정보",
 } as const;
 
+export const ModelInfoResponseSchema = {
+	properties: {
+		version: {
+			type: "string",
+			title: "Version",
+		},
+		model_type: {
+			type: "string",
+			title: "Model Type",
+		},
+		created_at: {
+			type: "string",
+			title: "Created At",
+		},
+		metrics: {
+			additionalProperties: {
+				type: "number",
+			},
+			type: "object",
+			title: "Metrics",
+		},
+		feature_count: {
+			type: "integer",
+			title: "Feature Count",
+		},
+		num_iterations: {
+			type: "integer",
+			title: "Num Iterations",
+		},
+		feature_names: {
+			items: {
+				type: "string",
+			},
+			type: "array",
+			title: "Feature Names",
+		},
+	},
+	type: "object",
+	required: [
+		"version",
+		"model_type",
+		"created_at",
+		"metrics",
+		"feature_count",
+		"num_iterations",
+		"feature_names",
+	],
+	title: "ModelInfoResponse",
+	description: "Response schema for model info.",
+} as const;
+
+export const ModelListResponseSchema = {
+	properties: {
+		models: {
+			items: {
+				$ref: "#/components/schemas/ModelInfoResponse",
+			},
+			type: "array",
+			title: "Models",
+		},
+		total: {
+			type: "integer",
+			title: "Total",
+		},
+		latest_version: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Latest Version",
+		},
+	},
+	type: "object",
+	required: ["models", "total", "latest_version"],
+	title: "ModelListResponse",
+	description: "Response schema for model list.",
+} as const;
+
 export const MomentumConfigSchema = {
 	properties: {
 		config_type: {
@@ -5743,6 +5825,88 @@ export const TradesSummarySchema = {
 	required: ["total_trades", "winning_trades", "total_pnl"],
 	title: "TradesSummary",
 	description: "거래 요약.",
+} as const;
+
+export const TrainModelRequestSchema = {
+	properties: {
+		symbols: {
+			items: {
+				type: "string",
+			},
+			type: "array",
+			maxItems: 100,
+			minItems: 1,
+			title: "Symbols",
+			description: "List of stock symbols to train on",
+		},
+		lookback_days: {
+			type: "integer",
+			maximum: 2000,
+			minimum: 100,
+			title: "Lookback Days",
+			description: "Number of days of historical data to use",
+			default: 500,
+		},
+		test_size: {
+			type: "number",
+			maximum: 0.5,
+			minimum: 0.1,
+			title: "Test Size",
+			description: "Test set ratio",
+			default: 0.2,
+		},
+		num_boost_round: {
+			type: "integer",
+			maximum: 1000,
+			minimum: 10,
+			title: "Num Boost Round",
+			description: "Number of boosting iterations",
+			default: 100,
+		},
+		threshold: {
+			type: "number",
+			maximum: 0.5,
+			minimum: 0.001,
+			title: "Threshold",
+			description: "Return threshold for buy signal (2% = 0.02)",
+			default: 0.02,
+		},
+	},
+	type: "object",
+	required: ["symbols"],
+	title: "TrainModelRequest",
+	description: "Request schema for model training.",
+} as const;
+
+export const TrainModelResponseSchema = {
+	properties: {
+		status: {
+			type: "string",
+			title: "Status",
+			description: "Training status",
+		},
+		message: {
+			type: "string",
+			title: "Message",
+			description: "Status message",
+		},
+		task_id: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Task Id",
+			description: "Background task ID",
+		},
+	},
+	type: "object",
+	required: ["status", "message"],
+	title: "TrainModelResponse",
+	description: "Response schema for model training.",
 } as const;
 
 export const UserCreateSchema = {
