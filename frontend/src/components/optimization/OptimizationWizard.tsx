@@ -1,4 +1,5 @@
-import type { OptimizationRequest } from "@/client/types.gen";
+'use client';
+import type { OptimizationRequest, ParameterSpace } from "@/client";
 import { useOptimization } from "@/hooks/useOptimization";
 import { useStrategy } from "@/hooks/useStrategy";
 import {
@@ -30,11 +31,13 @@ interface WizardFormData {
   strategy_name: string;
   symbol: string;
   search_space: {
-    [key: string]: [number, number];
+    [key: string]: ParameterSpace;
   };
   n_trials: number;
-  timeout_seconds?: number;
+  start_date: string;
+  end_date: string;
   direction: "maximize" | "minimize";
+  initial_capital?: number;
 }
 
 const steps = [
@@ -81,8 +84,10 @@ export function OptimizationWizard({ open, onClose }: OptimizationWizardProps) {
       symbol: "AAPL",
       search_space: {},
       n_trials: 100,
-      timeout_seconds: 3600,
+      start_date: "2023-01-01",
+      end_date: "2024-01-01",
       direction: "maximize",
+      initial_capital: 10000,
     },
   });
 
@@ -120,8 +125,10 @@ export function OptimizationWizard({ open, onClose }: OptimizationWizardProps) {
       symbol: data.symbol,
       search_space: data.search_space,
       n_trials: data.n_trials,
-      timeout_seconds: data.timeout_seconds,
+      start_date: data.start_date,
+      end_date: data.end_date,
       direction: data.direction,
+      initial_capital: data.initial_capital,
     };
 
     createOptimization(request, {
@@ -133,7 +140,12 @@ export function OptimizationWizard({ open, onClose }: OptimizationWizardProps) {
 
   // Add parameter to search space
   const addParameter = (paramName: string, min: number, max: number) => {
-    setValue(`search_space.${paramName}`, [min, max]);
+    const paramSpace: ParameterSpace = {
+      type: "float",
+      low: min,
+      high: max,
+    };
+    setValue(`search_space.${paramName}`, paramSpace);
   };
 
   // Remove parameter from search space
@@ -168,9 +180,6 @@ export function OptimizationWizard({ open, onClose }: OptimizationWizardProps) {
                   label="전략"
                   error={!!errors.strategy_name}
                   helperText={errors.strategy_name?.message}
-                  SelectProps={{
-                    native: true,
-                  }}
                 >
                   <option value="">전략 선택</option>
                   {strategyList?.map((strategy) => (
@@ -306,10 +315,10 @@ export function OptimizationWizard({ open, onClose }: OptimizationWizardProps) {
               </Typography>
             ) : (
               <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-                {Object.entries(searchSpace).map(([name, range]) => (
+                {Object.entries(searchSpace).map(([name, space]) => (
                   <Chip
                     key={name}
-                    label={`${name}: [${range[0]}, ${range[1]}]`}
+                    label={`${name}: [${space.low}, ${space.high}]`}
                     onDelete={() => removeParameter(name)}
                     color="primary"
                     variant="outlined"
@@ -355,17 +364,39 @@ export function OptimizationWizard({ open, onClose }: OptimizationWizardProps) {
                 />
               </Grid>
 
-              <Grid size={12}>
+              <Grid size={6}>
                 <Controller
-                  name="timeout_seconds"
+                  name="start_date"
                   control={control}
+                  rules={{ required: "시작 날짜를 입력해주세요" }}
                   render={({ field }) => (
                     <TextField
                       {...field}
                       fullWidth
-                      label="타임아웃 (초)"
-                      type="number"
-                      helperText="최대 실행 시간 (초 단위, 선택사항)"
+                      label="시작 날짜"
+                      type="date"
+                      error={!!errors.start_date}
+                      helperText={errors.start_date?.message}
+                      InputLabelProps={{ shrink: true }}
+                    />
+                  )}
+                />
+              </Grid>
+
+              <Grid size={6}>
+                <Controller
+                  name="end_date"
+                  control={control}
+                  rules={{ required: "종료 날짜를 입력해주세요" }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label="종료 날짜"
+                      type="date"
+                      error={!!errors.end_date}
+                      helperText={errors.end_date?.message}
+                      InputLabelProps={{ shrink: true }}
                     />
                   )}
                 />
@@ -381,9 +412,6 @@ export function OptimizationWizard({ open, onClose }: OptimizationWizardProps) {
                       select
                       fullWidth
                       label="최적화 방향"
-                      SelectProps={{
-                        native: true,
-                      }}
                       helperText="Sharpe Ratio는 최대화, Drawdown은 최소화"
                     >
                       <option value="maximize">최대화 (Maximize)</option>
@@ -434,10 +462,10 @@ export function OptimizationWizard({ open, onClose }: OptimizationWizardProps) {
                     <Box
                       sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 1 }}
                     >
-                      {Object.entries(searchSpace).map(([name, range]) => (
+                      {Object.entries(searchSpace).map(([name, space]) => (
                         <Chip
                           key={name}
-                          label={`${name}: [${range[0]}, ${range[1]}]`}
+                          label={`${name}: [${space.low}, ${space.high}]`}
                           size="small"
                           color="primary"
                         />
@@ -454,11 +482,18 @@ export function OptimizationWizard({ open, onClose }: OptimizationWizardProps) {
 
                   <Grid size={4}>
                     <Typography variant="caption" color="text.secondary">
-                      타임아웃
+                      시작 날짜
                     </Typography>
                     <Typography variant="body1">
-                      {watch("timeout_seconds") || "없음"}초
+                      {watch("start_date")}
                     </Typography>
+                  </Grid>
+
+                  <Grid size={4}>
+                    <Typography variant="caption" color="text.secondary">
+                      종료 날짜
+                    </Typography>
+                    <Typography variant="body1">{watch("end_date")}</Typography>
                   </Grid>
 
                   <Grid size={4}>

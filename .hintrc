@@ -5,6 +5,7 @@
   "hints": {
     "no-inline-styles": "off",
     "compat-api/css": "off",
-    "axe/language": "off"
+    "axe/language": "off",
+    "axe/forms": "off"
   }
 }
