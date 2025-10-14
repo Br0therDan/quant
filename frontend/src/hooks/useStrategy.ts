@@ -1,4 +1,4 @@
-import { StrategyService } from "@/client";
+import { MarketRegimeService, StrategyService } from "@/client";
 import type { StrategyCreate, StrategyExecute } from "@/client/types.gen";
 import { useSnackbar } from "@/contexts/SnackbarContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -174,9 +174,12 @@ export function useStrategy() {
 	);
 }
 
-// Individual hook for strategy detail
-export const useStrategyDetail = (id: string) => {
-	return useQuery({
+// Individual hook for strategy details
+export const useStrategyDetail = (
+	id: string,
+	options?: { includeRegime?: boolean },
+) => {
+	const strategyQuery = useQuery({
 		queryKey: strategyQueryKeys.detail(id),
 		queryFn: async () => {
 			const response = await StrategyService.getStrategy({
@@ -188,6 +191,66 @@ export const useStrategyDetail = (id: string) => {
 		staleTime: 1000 * 60 * 5, // 5 minutes
 		gcTime: 30 * 60 * 1000, // 30 minutes
 	});
+
+	// 시장 국면 조회 (옵션) - 전략명 기반
+	const regimeEnabled = options?.includeRegime ?? false;
+	const regimeQuery = useQuery({
+		queryKey: ["market-data", "regime", id],
+		queryFn: async () => {
+			const response = await MarketRegimeService.getMarketRegime({
+				query: {
+					symbol: strategyQuery.data?.name || "AAPL", // 전략명 또는 기본값
+					lookback_days: 60,
+				},
+			});
+			return response.data;
+		},
+		enabled: regimeEnabled && !!strategyQuery.data,
+		staleTime: 1000 * 60 * 5, // 5 minutes
+		gcTime: 30 * 60 * 1000, // 30 minutes
+	});
+
+	// 국면별 전략 추천
+	const regimeBasedRecommendations = useMemo(() => {
+		if (!regimeQuery.data?.data) return null;
+
+		const currentRegime = regimeQuery.data.data.regime;
+		const recommendations: Record<string, string[]> = {
+			bullish: ["추세 추종 전략 강화", "레버리지 고려"],
+			bearish: ["방어적 포지션", "헤지 전략 활성화"],
+			volatile: ["변동성 돌파 전략", "스톱로스 강화"],
+			sideways: ["레인지 트레이딩", "옵션 전략"],
+		};
+
+		return recommendations[currentRegime] || null;
+	}, [regimeQuery.data]);
+
+	return useMemo(
+		() => ({
+			strategy: strategyQuery.data,
+			currentRegime: regimeQuery.data?.data,
+			regimeBasedRecommendations,
+			isLoading:
+				strategyQuery.isLoading || (regimeEnabled && regimeQuery.isLoading),
+			error: strategyQuery.error || regimeQuery.error,
+			refetch: {
+				strategy: strategyQuery.refetch,
+				regime: regimeQuery.refetch,
+			},
+		}),
+		[
+			strategyQuery.data,
+			strategyQuery.isLoading,
+			strategyQuery.error,
+			strategyQuery.refetch,
+			regimeQuery.data,
+			regimeQuery.isLoading,
+			regimeQuery.error,
+			regimeQuery.refetch,
+			regimeBasedRecommendations,
+			regimeEnabled,
+		],
+	);
 };
 
 // Individual hook for strategy executions

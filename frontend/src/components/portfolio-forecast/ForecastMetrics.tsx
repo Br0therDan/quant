@@ -17,21 +17,21 @@
 
 import { usePortfolioForecast } from "@/hooks/usePortfolioForecast";
 import {
-  AccountBalance as PortfolioIcon,
-  Speed as SharpeIcon,
-  TrendingDown as TrendingDownIcon,
-  TrendingUp as TrendingUpIcon,
-  ShowChart as VolatilityIcon,
+	AccountBalance as PortfolioIcon,
+	Speed as SharpeIcon,
+	TrendingDown as TrendingDownIcon,
+	TrendingUp as TrendingUpIcon,
+	ShowChart as VolatilityIcon,
 } from "@mui/icons-material";
 import {
-  Alert,
-  Box,
-  Card,
-  CardContent,
-  Chip,
-  Grid,
-  Skeleton,
-  Typography,
+	Alert,
+	Box,
+	Card,
+	CardContent,
+	Chip,
+	Grid,
+	Skeleton,
+	Typography,
 } from "@mui/material";
 
 // ============================================================================
@@ -39,21 +39,21 @@ import {
 // ============================================================================
 
 export interface ForecastMetricsProps {
-  /** 예측 기간 (일, 7-120일) */
-  horizonDays?: number;
-  /** 자동 조회 활성화 */
-  enabled?: boolean;
+	/** 예측 기간 (일, 7-120일) */
+	horizonDays?: number;
+	/** 자동 조회 활성화 */
+	enabled?: boolean;
 }
 
 /**
  * 메트릭 카드 Props
  */
 interface MetricCardProps {
-  title: string;
-  value: string | number;
-  subtitle?: string;
-  icon: React.ReactElement;
-  color: "success" | "error" | "info" | "warning" | "default";
+	title: string;
+	value: string | number;
+	subtitle?: string;
+	icon: React.ReactElement;
+	color: "success" | "error" | "info" | "warning" | "default";
 }
 
 // ============================================================================
@@ -64,23 +64,23 @@ interface MetricCardProps {
  * 통화 포맷팅 (천 단위 콤마)
  */
 function formatCurrency(value: number): string {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(value);
+	return new Intl.NumberFormat("en-US", {
+		style: "currency",
+		currency: "USD",
+		minimumFractionDigits: 0,
+		maximumFractionDigits: 0,
+	}).format(value);
 }
 
 /**
  * 신뢰도 레벨 색상
  */
 function getConfidenceLevelColor(
-  level: "high" | "medium" | "low"
+	level: "high" | "medium" | "low",
 ): "success" | "warning" | "error" {
-  if (level === "high") return "success";
-  if (level === "medium") return "warning";
-  return "error";
+	if (level === "high") return "success";
+	if (level === "medium") return "warning";
+	return "error";
 }
 
 // ============================================================================
@@ -91,41 +91,41 @@ function getConfidenceLevelColor(
  * MetricCard - 단일 지표 카드
  */
 function MetricCard({ title, value, subtitle, icon, color }: MetricCardProps) {
-  return (
-    <Card>
-      <CardContent>
-        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-          <Box
-            sx={{
-              mr: 2,
-              p: 1,
-              borderRadius: 2,
-              bgcolor: `${color}.lighter`,
-              color: `${color}.main`,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            {icon}
-          </Box>
-          <Typography variant="h6" color="text.secondary">
-            {title}
-          </Typography>
-        </Box>
+	return (
+		<Card>
+			<CardContent>
+				<Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+					<Box
+						sx={{
+							mr: 2,
+							p: 1,
+							borderRadius: 2,
+							bgcolor: `${color}.lighter`,
+							color: `${color}.main`,
+							display: "flex",
+							alignItems: "center",
+							justifyContent: "center",
+						}}
+					>
+						{icon}
+					</Box>
+					<Typography variant="h6" color="text.secondary">
+						{title}
+					</Typography>
+				</Box>
 
-        <Typography variant="h4" fontWeight="bold" color={`${color}.main`}>
-          {value}
-        </Typography>
+				<Typography variant="h4" fontWeight="bold" color={`${color}.main`}>
+					{value}
+				</Typography>
 
-        {subtitle && (
-          <Typography variant="caption" color="text.secondary" sx={{ mt: 1 }}>
-            {subtitle}
-          </Typography>
-        )}
-      </CardContent>
-    </Card>
-  );
+				{subtitle && (
+					<Typography variant="caption" color="text.secondary" sx={{ mt: 1 }}>
+						{subtitle}
+					</Typography>
+				)}
+			</CardContent>
+		</Card>
+	);
 }
 
 // ============================================================================
@@ -141,157 +141,157 @@ function MetricCard({ title, value, subtitle, icon, color }: MetricCardProps) {
  * ```
  */
 export default function ForecastMetrics({
-  horizonDays = 30,
-  enabled = true,
+	horizonDays = 30,
+	enabled = true,
 }: ForecastMetricsProps) {
-  const {
-    forecastData,
-    isLoading,
-    isError,
-    error,
-    calculateRiskAdjustedReturn,
-    getConfidenceLevel,
-  } = usePortfolioForecast({
-    horizonDays,
-    enabled,
-  });
+	const {
+		forecastData,
+		isLoading,
+		isError,
+		error,
+		calculateRiskAdjustedReturn,
+		getConfidenceLevel,
+	} = usePortfolioForecast({
+		horizonDays,
+		enabled,
+	});
 
-  // ============================================================================
-  // Render: Loading State
-  // ============================================================================
+	// ============================================================================
+	// Render: Loading State
+	// ============================================================================
 
-  if (isLoading) {
-    return (
-      <Box sx={{ flexGrow: 1 }}>
-        <Grid container spacing={2}>
-          {[1, 2, 3, 4].map((i) => (
-            <Grid size={{ xs: 12, sm: 6, md: 3 }} key={i}>
-              <Card>
-                <CardContent>
-                  <Skeleton variant="text" width="60%" />
-                  <Skeleton variant="text" width="80%" height={40} />
-                  <Skeleton variant="text" width="40%" />
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
-    );
-  }
+	if (isLoading) {
+		return (
+			<Box sx={{ flexGrow: 1 }}>
+				<Grid container spacing={2}>
+					{[1, 2, 3, 4].map((i) => (
+						<Grid size={{ xs: 12, sm: 6, md: 3 }} key={i}>
+							<Card>
+								<CardContent>
+									<Skeleton variant="text" width="60%" />
+									<Skeleton variant="text" width="80%" height={40} />
+									<Skeleton variant="text" width="40%" />
+								</CardContent>
+							</Card>
+						</Grid>
+					))}
+				</Grid>
+			</Box>
+		);
+	}
 
-  // ============================================================================
-  // Render: Error State
-  // ============================================================================
+	// ============================================================================
+	// Render: Error State
+	// ============================================================================
 
-  if (isError) {
-    return (
-      <Alert severity="error">
-        {error?.message || "포트폴리오 예측 데이터를 불러오는데 실패했습니다."}
-      </Alert>
-    );
-  }
+	if (isError) {
+		return (
+			<Alert severity="error">
+				{error?.message || "포트폴리오 예측 데이터를 불러오는데 실패했습니다."}
+			</Alert>
+		);
+	}
 
-  // ============================================================================
-  // Render: No Data State
-  // ============================================================================
+	// ============================================================================
+	// Render: No Data State
+	// ============================================================================
 
-  if (!forecastData) {
-    return <Alert severity="info">포트폴리오 예측 데이터가 없습니다.</Alert>;
-  }
+	if (!forecastData) {
+		return <Alert severity="info">포트폴리오 예측 데이터가 없습니다.</Alert>;
+	}
 
-  // ============================================================================
-  // Data Preparation
-  // ============================================================================
+	// ============================================================================
+	// Data Preparation
+	// ============================================================================
 
-  const {
-    last_portfolio_value,
-    expected_return_pct,
-    expected_volatility_pct,
-    horizon_days,
-  } = forecastData;
+	const {
+		last_portfolio_value,
+		expected_return_pct,
+		expected_volatility_pct,
+		horizon_days,
+	} = forecastData;
 
-  // 샤프 비율 계산
-  const sharpeRatio = calculateRiskAdjustedReturn(
-    expected_return_pct,
-    expected_volatility_pct
-  );
+	// 샤프 비율 계산
+	const sharpeRatio = calculateRiskAdjustedReturn(
+		expected_return_pct,
+		expected_volatility_pct,
+	);
 
-  // 신뢰도 레벨
-  const confidenceLevel = getConfidenceLevel();
-  const confidenceLevelColor = getConfidenceLevelColor(confidenceLevel);
-  const confidenceLevelLabel =
-    confidenceLevel === "high"
-      ? "높음"
-      : confidenceLevel === "medium"
-      ? "중간"
-      : "낮음";
+	// 신뢰도 레벨
+	const confidenceLevel = getConfidenceLevel();
+	const confidenceLevelColor = getConfidenceLevelColor(confidenceLevel);
+	const confidenceLevelLabel =
+		confidenceLevel === "high"
+			? "높음"
+			: confidenceLevel === "medium"
+				? "중간"
+				: "낮음";
 
-  // 메트릭 카드 데이터
-  const metrics: MetricCardProps[] = [
-    {
-      title: "예상 수익률",
-      value: `${
-        expected_return_pct >= 0 ? "+" : ""
-      }${expected_return_pct.toFixed(2)}%`,
-      subtitle: `${horizon_days}일 후 예상 수익률`,
-      icon:
-        expected_return_pct >= 0 ? <TrendingUpIcon /> : <TrendingDownIcon />,
-      color: expected_return_pct >= 0 ? "success" : "error",
-    },
-    {
-      title: "예상 변동성",
-      value: `${expected_volatility_pct.toFixed(2)}%`,
-      subtitle: `${horizon_days}일 기간 예상 변동성`,
-      icon: <VolatilityIcon />,
-      color: expected_volatility_pct > 20 ? "warning" : "info",
-    },
-    {
-      title: "샤프 비율",
-      value: sharpeRatio.toFixed(2),
-      subtitle: "리스크 조정 수익률",
-      icon: <SharpeIcon />,
-      color:
-        sharpeRatio > 1 ? "success" : sharpeRatio > 0.5 ? "warning" : "error",
-    },
-    {
-      title: "현재 포트폴리오 가치",
-      value: formatCurrency(last_portfolio_value),
-      subtitle: `기준 시점 포트폴리오 가치`,
-      icon: <PortfolioIcon />,
-      color: "info",
-    },
-  ];
+	// 메트릭 카드 데이터
+	const metrics: MetricCardProps[] = [
+		{
+			title: "예상 수익률",
+			value: `${
+				expected_return_pct >= 0 ? "+" : ""
+			}${expected_return_pct.toFixed(2)}%`,
+			subtitle: `${horizon_days}일 후 예상 수익률`,
+			icon:
+				expected_return_pct >= 0 ? <TrendingUpIcon /> : <TrendingDownIcon />,
+			color: expected_return_pct >= 0 ? "success" : "error",
+		},
+		{
+			title: "예상 변동성",
+			value: `${expected_volatility_pct.toFixed(2)}%`,
+			subtitle: `${horizon_days}일 기간 예상 변동성`,
+			icon: <VolatilityIcon />,
+			color: expected_volatility_pct > 20 ? "warning" : "info",
+		},
+		{
+			title: "샤프 비율",
+			value: sharpeRatio.toFixed(2),
+			subtitle: "리스크 조정 수익률",
+			icon: <SharpeIcon />,
+			color:
+				sharpeRatio > 1 ? "success" : sharpeRatio > 0.5 ? "warning" : "error",
+		},
+		{
+			title: "현재 포트폴리오 가치",
+			value: formatCurrency(last_portfolio_value),
+			subtitle: `기준 시점 포트폴리오 가치`,
+			icon: <PortfolioIcon />,
+			color: "info",
+		},
+	];
 
-  // ============================================================================
-  // Render: Metrics Grid
-  // ============================================================================
+	// ============================================================================
+	// Render: Metrics Grid
+	// ============================================================================
 
-  return (
-    <Box sx={{ flexGrow: 1 }}>
-      <Grid container spacing={2}>
-        {/* 메트릭 카드 4개 */}
-        {metrics.map((metric, index) => (
-          <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
-            <MetricCard {...metric} />
-          </Grid>
-        ))}
-      </Grid>
+	return (
+		<Box sx={{ flexGrow: 1 }}>
+			<Grid container spacing={2}>
+				{/* 메트릭 카드 4개 */}
+				{metrics.map((metric, index) => (
+					<Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
+						<MetricCard {...metric} />
+					</Grid>
+				))}
+			</Grid>
 
-      {/* 신뢰도 레벨 Chip */}
-      <Box sx={{ mt: 2, display: "flex", alignItems: "center", gap: 1 }}>
-        <Typography variant="body2" color="text.secondary">
-          예측 신뢰도:
-        </Typography>
-        <Chip
-          label={confidenceLevelLabel}
-          color={confidenceLevelColor}
-          size="small"
-        />
-        <Typography variant="caption" color="text.secondary">
-          (샤프 비율 기반)
-        </Typography>
-      </Box>
-    </Box>
-  );
+			{/* 신뢰도 레벨 Chip */}
+			<Box sx={{ mt: 2, display: "flex", alignItems: "center", gap: 1 }}>
+				<Typography variant="body2" color="text.secondary">
+					예측 신뢰도:
+				</Typography>
+				<Chip
+					label={confidenceLevelLabel}
+					color={confidenceLevelColor}
+					size="small"
+				/>
+				<Typography variant="caption" color="text.secondary">
+					(샤프 비율 기반)
+				</Typography>
+			</Box>
+		</Box>
+	);
 }

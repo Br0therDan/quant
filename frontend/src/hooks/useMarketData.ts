@@ -4,7 +4,7 @@
 // Hook은 useMarketData 단일/통합 사용 (별도의 추가 훅 생성 불필요)
 // Hey-API 기반: @/client/sdk.gen.ts 의 각 엔드포인트별 서비스클래스 및 @/client/types.gen.ts 의 타입정의 활용(엔드포인트의 스키마명칭과 호환)
 
-import { MarketDataService } from "@/client";
+import { DashboardService, MarketDataService } from "@/client";
 import { useSnackbar } from "@/contexts/SnackbarContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
@@ -201,8 +201,11 @@ export function useMarketData() {
 }
 
 // Individual hook for data coverage by symbol
-export const useMarketDataCoverage = (symbol: string) => {
-	return useQuery({
+export const useMarketDataCoverage = (
+	symbol: string,
+	options?: { includeForecast?: boolean },
+) => {
+	const coverageQuery = useQuery({
 		queryKey: marketDataQueryKeys.coverageSymbol(symbol),
 		queryFn: async () => {
 			const response = await MarketDataService.getDataCoverage({
@@ -214,4 +217,59 @@ export const useMarketDataCoverage = (symbol: string) => {
 		staleTime: 1000 * 60 * 5, // 5 minutes
 		gcTime: 30 * 60 * 1000, // 30 minutes
 	});
+
+	// 포트폴리오 예측 조회 (옵션)
+	const forecastEnabled = options?.includeForecast ?? false;
+	const forecastQuery = useQuery({
+		queryKey: ["portfolio", "forecast", symbol],
+		queryFn: async () => {
+			const response = await DashboardService.getPortfolioForecast({
+				query: { horizon_days: 30 },
+			});
+			return response.data;
+		},
+		enabled: forecastEnabled,
+		staleTime: 1000 * 60 * 5, // 5 minutes
+		gcTime: 30 * 60 * 1000, // 30 minutes
+	});
+
+	// 예측 요약 계산
+	const forecastSummary = useMemo(() => {
+		if (!forecastQuery.data?.data) return null;
+
+		const forecast = forecastQuery.data.data;
+		return {
+			expectedReturn: forecast.expected_return_pct,
+			expectedVolatility: forecast.expected_volatility_pct,
+			horizonDays: forecast.horizon_days,
+			lastValue: forecast.last_portfolio_value,
+		};
+	}, [forecastQuery.data]);
+
+	return useMemo(
+		() => ({
+			coverage: coverageQuery.data,
+			forecast: forecastQuery.data?.data,
+			forecastSummary,
+			isLoading:
+				coverageQuery.isLoading || (forecastEnabled && forecastQuery.isLoading),
+			error: coverageQuery.error || forecastQuery.error,
+			refetch: {
+				coverage: coverageQuery.refetch,
+				forecast: forecastQuery.refetch,
+			},
+		}),
+		[
+			coverageQuery.data,
+			coverageQuery.isLoading,
+			coverageQuery.error,
+			coverageQuery.refetch,
+			forecastQuery.data,
+			forecastQuery.isLoading,
+			forecastQuery.error,
+			forecastQuery.refetch,
+			forecastSummary,
+			forecastEnabled,
+		],
+	);
 };

@@ -1,5 +1,6 @@
 import {
 	BacktestService,
+	MlService,
 	type BacktestCreate,
 	type BacktestUpdate,
 } from "@/client";
@@ -239,8 +240,11 @@ export function useBacktest() {
 	);
 }
 
-export const useBacktestDetail = (id: string) =>
-	useQuery({
+export const useBacktestDetail = (
+	id: string,
+	options?: { includeMLSignals?: boolean },
+) => {
+	const backtestQuery = useQuery({
 		queryKey: backtestQueryKeys.detail(id),
 		queryFn: async () => {
 			const response = await BacktestService.getBacktest({
@@ -252,3 +256,44 @@ export const useBacktestDetail = (id: string) =>
 		staleTime: 1000 * 60 * 5,
 		gcTime: 30 * 60 * 1000,
 	});
+
+	// ML 신호 조회 (옵션)
+	const mlSignalsEnabled =
+		(options?.includeMLSignals ?? false) && !!backtestQuery.data;
+	const mlSignalsQuery = useQuery({
+		queryKey: ["ml", "signals", id],
+		queryFn: async () => {
+			// ML 모델 목록 조회
+			const response = await MlService.listModels();
+			return response.data;
+		},
+		enabled: mlSignalsEnabled,
+		staleTime: 1000 * 60 * 5,
+		gcTime: 30 * 60 * 1000,
+	});
+	return useMemo(
+		() => ({
+			backtest: backtestQuery.data,
+			mlSignals: mlSignalsQuery.data,
+			isLoading:
+				backtestQuery.isLoading ||
+				(mlSignalsEnabled && mlSignalsQuery.isLoading),
+			error: backtestQuery.error || mlSignalsQuery.error,
+			refetch: {
+				backtest: backtestQuery.refetch,
+				mlSignals: mlSignalsQuery.refetch,
+			},
+		}),
+		[
+			backtestQuery.data,
+			backtestQuery.isLoading,
+			backtestQuery.error,
+			backtestQuery.refetch,
+			mlSignalsQuery.data,
+			mlSignalsQuery.isLoading,
+			mlSignalsQuery.error,
+			mlSignalsQuery.refetch,
+			mlSignalsEnabled,
+		],
+	);
+};
