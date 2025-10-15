@@ -5563,6 +5563,23 @@ export const HTTPValidationErrorSchema = {
 	title: "HTTPValidationError",
 } as const;
 
+export const HealthCheckResponseSchema = {
+	properties: {
+		status: {
+			type: "string",
+			title: "Status",
+		},
+		timestamp: {
+			type: "string",
+			format: "date-time",
+			title: "Timestamp",
+		},
+	},
+	type: "object",
+	required: ["status", "timestamp"],
+	title: "HealthCheckResponse",
+} as const;
+
 export const HealthResponseSchema = {
 	properties: {
 		status: {

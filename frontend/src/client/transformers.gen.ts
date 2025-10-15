@@ -8,7 +8,6 @@ import type {
 	BacktestGetBacktestsResponse,
 	BacktestListOptimizationStudiesResponse,
 	BacktestUpdateBacktestResponse,
-	ChatOpsExecuteChatopsResponse,
 	DashboardGetDashboardSummaryResponse,
 	DashboardGetEconomicCalendarResponse,
 	DashboardGetNewsFeedResponse,
@@ -18,54 +17,63 @@ import type {
 	DashboardGetRecentTradesResponse,
 	DashboardGetStrategyComparisonResponse,
 	DashboardGetWatchlistQuotesResponse,
-	FeatureStoreActivateFeatureResponse,
-	FeatureStoreCreateFeatureResponse,
-	FeatureStoreCreateVersionResponse,
-	FeatureStoreDeprecateFeatureResponse,
-	FeatureStoreGetFeatureResponse,
-	FeatureStoreGetFeatureStatisticsResponse,
-	FeatureStoreGetFeatureVersionsResponse,
-	FeatureStoreListFeaturesResponse,
-	FeatureStoreRecordFeatureUsageResponse,
-	FeatureStoreRollbackVersionResponse,
-	FeatureStoreUpdateFeatureResponse,
+	GenAiApprovePromptResponse,
+	GenAiApproveStrategyResponse,
+	GenAiCreatePromptTemplateResponse,
+	GenAiEvaluatePromptResponse,
+	GenAiExecuteChatopsResponse,
+	GenAiGenerateNarrativeReportResponse,
+	GenAiGenerateStrategyResponse,
+	GenAiListPromptAuditLogsResponse,
+	GenAiListPromptTemplatesResponse,
+	GenAiLogPromptUsageResponse,
+	GenAiRejectPromptResponse,
+	GenAiSubmitPromptForReviewResponse,
+	GenAiUpdatePromptTemplateResponse,
 	HealthHealthCheckResponse,
-	MarketDataCryptoGetBitcoinPriceResponse,
-	MarketDataCryptoGetDailyPricesResponse,
-	MarketDataCryptoGetEthereumPriceResponse,
-	MarketDataCryptoGetMonthlyPricesResponse,
-	MarketDataCryptoGetWeeklyPricesResponse,
-	MarketDataFundamentalGetBalanceSheetResponse,
-	MarketDataFundamentalGetCashFlowResponse,
-	MarketDataFundamentalGetCompanyOverviewResponse,
-	MarketDataFundamentalGetEarningsResponse,
-	MarketDataFundamentalGetIncomeStatementResponse,
-	MarketDataRegimeGetMarketRegimeResponse,
-	MarketDataStockGetDailyPricesResponse,
-	MarketDataStockGetIntradayDataResponse,
-	MarketDataStockGetMonthlyPricesResponse,
-	MarketDataStockGetQuoteResponse,
-	MarketDataStockGetWeeklyPricesResponse,
-	MarketDataTechnicalIndicatorGetAdxResponse,
-	MarketDataTechnicalIndicatorGetAtrResponse,
-	MarketDataTechnicalIndicatorGetBbandsResponse,
-	MarketDataTechnicalIndicatorGetDemaResponse,
-	MarketDataTechnicalIndicatorGetEmaResponse,
-	MarketDataTechnicalIndicatorGetIndicatorListResponse,
-	MarketDataTechnicalIndicatorGetMacdResponse,
-	MarketDataTechnicalIndicatorGetRsiResponse,
-	MarketDataTechnicalIndicatorGetSmaResponse,
-	MarketDataTechnicalIndicatorGetStochResponse,
-	MarketDataTechnicalIndicatorGetTemaResponse,
-	MarketDataTechnicalIndicatorGetWmaResponse,
+	MarketDataGetAdxResponse,
+	MarketDataGetAtrResponse,
+	MarketDataGetBalanceSheetResponse,
+	MarketDataGetBbandsResponse,
+	MarketDataGetBitcoinPriceResponse,
+	MarketDataGetCashFlowResponse,
+	MarketDataGetCompanyOverviewResponse,
+	MarketDataGetDailyPrices2Response,
+	MarketDataGetDailyPricesResponse,
+	MarketDataGetDemaResponse,
+	MarketDataGetEarningsResponse,
+	MarketDataGetEmaResponse,
+	MarketDataGetEthereumPriceResponse,
+	MarketDataGetIncomeStatementResponse,
+	MarketDataGetIndicatorListResponse,
+	MarketDataGetIntradayDataResponse,
+	MarketDataGetMacdResponse,
+	MarketDataGetMarketRegimeResponse,
+	MarketDataGetMonthlyPrices2Response,
+	MarketDataGetMonthlyPricesResponse,
+	MarketDataGetQuoteResponse,
+	MarketDataGetRsiResponse,
+	MarketDataGetSmaResponse,
+	MarketDataGetStochResponse,
+	MarketDataGetTemaResponse,
+	MarketDataGetWeeklyPrices2Response,
+	MarketDataGetWeeklyPricesResponse,
+	MarketDataGetWmaResponse,
+	MlActivateFeatureResponse,
 	MlCreateAbTestResponse,
 	MlCreateBenchmarkResponse,
 	MlCreateDeploymentResponse,
 	MlCreateExperimentResponse,
+	MlCreateFeatureResponse,
+	MlCreateVersionResponse,
+	MlDeprecateFeatureResponse,
 	MlGetAbTestResponse,
 	MlGetDeploymentResponse,
 	MlGetExperimentResponse,
 	MlGetFairnessReportResponse,
+	MlGetFeatureResponse,
+	MlGetFeatureStatisticsResponse,
+	MlGetFeatureVersionsResponse,
 	MlGetModelVersionResponse,
 	MlGetRunResponse,
 	MlListAbTestsResponse,
@@ -75,46 +83,39 @@ import type {
 	MlListEvaluationRunsResponse,
 	MlListExperimentsResponse,
 	MlListFairnessReportsResponse,
+	MlListFeaturesResponse,
 	MlListModelVersionsResponse,
 	MlListRunsResponse,
 	MlListScenariosResponse,
 	MlLogRunResponse,
 	MlRecordDriftEventResponse,
+	MlRecordFeatureUsageResponse,
 	MlRegisterModelVersionResponse,
 	MlRegisterScenarioResponse,
 	MlRequestFairnessAuditResponse,
+	MlRollbackVersionResponse,
 	MlRunBenchmarkResponse,
 	MlRunEvaluationResponse,
 	MlUpdateDeploymentResponse,
 	MlUpdateExperimentResponse,
+	MlUpdateFeatureResponse,
 	MlUpdateModelVersionResponse,
 	MlUpdateRunResponse,
 	MlUpdateScenarioResponse,
-	NarrativeGenerateNarrativeReportResponse,
-	PromptGovernanceApprovePromptResponse,
-	PromptGovernanceCreatePromptTemplateResponse,
-	PromptGovernanceEvaluatePromptResponse,
-	PromptGovernanceListPromptAuditLogsResponse,
-	PromptGovernanceListPromptTemplatesResponse,
-	PromptGovernanceLogPromptUsageResponse,
-	PromptGovernanceRejectPromptResponse,
-	PromptGovernanceSubmitPromptForReviewResponse,
-	PromptGovernanceUpdatePromptTemplateResponse,
 	SignalsGetMlSignalResponse,
-	StrategyBuilderApproveStrategyResponse,
-	StrategyBuilderGenerateStrategyResponse,
+	StrategyCreateStrategyFromTemplateResponse,
 	StrategyCreateStrategyResponse,
+	StrategyCreateTemplateResponse,
 	StrategyExecuteStrategyResponse,
 	StrategyGetStrategiesResponse,
 	StrategyGetStrategyExecutionsResponse,
 	StrategyGetStrategyPerformanceResponse,
 	StrategyGetStrategyResponse,
+	StrategyGetTemplateResponse,
+	StrategyGetTemplatesResponse,
 	StrategyUpdateStrategyResponse,
-	TemplateCreateStrategyFromTemplateResponse,
-	TemplateCreateTemplateResponse,
-	TemplateGetTemplateResponse,
-	TemplateGetTemplatesResponse,
-	TemplateUpdateTemplateResponse,
+	StrategyUpdateTemplateResponse,
+	SystemServiceHealthCheckResponse,
 	WatchlistCreateOrUpdateWatchlistResponse,
 	WatchlistCreateWatchlistResponse,
 	WatchlistGetWatchlistResponse,
@@ -134,9 +135,9 @@ const healthResponseSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const marketDataStockGetDailyPricesResponseTransformer = async (
+export const marketDataGetDailyPricesResponseTransformer = async (
 	data: any,
-): Promise<MarketDataStockGetDailyPricesResponse> => {
+): Promise<MarketDataGetDailyPricesResponse> => {
 	data = historicalDataResponseSchemaResponseTransformer(data);
 	return data;
 };
@@ -151,23 +152,23 @@ const historicalDataResponseSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const marketDataStockGetWeeklyPricesResponseTransformer = async (
+export const marketDataGetWeeklyPricesResponseTransformer = async (
 	data: any,
-): Promise<MarketDataStockGetWeeklyPricesResponse> => {
+): Promise<MarketDataGetWeeklyPricesResponse> => {
 	data = historicalDataResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const marketDataStockGetMonthlyPricesResponseTransformer = async (
+export const marketDataGetMonthlyPricesResponseTransformer = async (
 	data: any,
-): Promise<MarketDataStockGetMonthlyPricesResponse> => {
+): Promise<MarketDataGetMonthlyPricesResponse> => {
 	data = historicalDataResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const marketDataStockGetQuoteResponseTransformer = async (
+export const marketDataGetQuoteResponseTransformer = async (
 	data: any,
-): Promise<MarketDataStockGetQuoteResponse> => {
+): Promise<MarketDataGetQuoteResponse> => {
 	data = quoteResponseSchemaResponseTransformer(data);
 	return data;
 };
@@ -206,16 +207,16 @@ const cacheInfoSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const marketDataStockGetIntradayDataResponseTransformer = async (
+export const marketDataGetIntradayDataResponseTransformer = async (
 	data: any,
-): Promise<MarketDataStockGetIntradayDataResponse> => {
+): Promise<MarketDataGetIntradayDataResponse> => {
 	data = historicalDataResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const marketDataCryptoGetDailyPricesResponseTransformer = async (
+export const marketDataGetDailyPrices2ResponseTransformer = async (
 	data: any,
-): Promise<MarketDataCryptoGetDailyPricesResponse> => {
+): Promise<MarketDataGetDailyPrices2Response> => {
 	data = cryptoHistoricalDataResponseSchemaResponseTransformer(data);
 	return data;
 };
@@ -230,41 +231,40 @@ const cryptoHistoricalDataResponseSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const marketDataCryptoGetWeeklyPricesResponseTransformer = async (
+export const marketDataGetWeeklyPrices2ResponseTransformer = async (
 	data: any,
-): Promise<MarketDataCryptoGetWeeklyPricesResponse> => {
+): Promise<MarketDataGetWeeklyPrices2Response> => {
 	data = cryptoHistoricalDataResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const marketDataCryptoGetMonthlyPricesResponseTransformer = async (
+export const marketDataGetMonthlyPrices2ResponseTransformer = async (
 	data: any,
-): Promise<MarketDataCryptoGetMonthlyPricesResponse> => {
+): Promise<MarketDataGetMonthlyPrices2Response> => {
 	data = cryptoHistoricalDataResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const marketDataCryptoGetBitcoinPriceResponseTransformer = async (
+export const marketDataGetBitcoinPriceResponseTransformer = async (
 	data: any,
-): Promise<MarketDataCryptoGetBitcoinPriceResponse> => {
+): Promise<MarketDataGetBitcoinPriceResponse> => {
 	data = cryptoHistoricalDataResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const marketDataCryptoGetEthereumPriceResponseTransformer = async (
+export const marketDataGetEthereumPriceResponseTransformer = async (
 	data: any,
-): Promise<MarketDataCryptoGetEthereumPriceResponse> => {
+): Promise<MarketDataGetEthereumPriceResponse> => {
 	data = cryptoHistoricalDataResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const marketDataFundamentalGetCompanyOverviewResponseTransformer =
-	async (
-		data: any,
-	): Promise<MarketDataFundamentalGetCompanyOverviewResponse> => {
-		data = companyOverviewResponseSchemaResponseTransformer(data);
-		return data;
-	};
+export const marketDataGetCompanyOverviewResponseTransformer = async (
+	data: any,
+): Promise<MarketDataGetCompanyOverviewResponse> => {
+	data = companyOverviewResponseSchemaResponseTransformer(data);
+	return data;
+};
 
 const companyOverviewResponseSchemaResponseTransformer = (data: any) => {
 	if (data.timestamp) {
@@ -282,13 +282,12 @@ const companyOverviewDataSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const marketDataFundamentalGetIncomeStatementResponseTransformer =
-	async (
-		data: any,
-	): Promise<MarketDataFundamentalGetIncomeStatementResponse> => {
-		data = incomeStatementResponseSchemaResponseTransformer(data);
-		return data;
-	};
+export const marketDataGetIncomeStatementResponseTransformer = async (
+	data: any,
+): Promise<MarketDataGetIncomeStatementResponse> => {
+	data = incomeStatementResponseSchemaResponseTransformer(data);
+	return data;
+};
 
 const incomeStatementResponseSchemaResponseTransformer = (data: any) => {
 	if (data.timestamp) {
@@ -306,9 +305,9 @@ const incomeStatementDataSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const marketDataFundamentalGetBalanceSheetResponseTransformer = async (
+export const marketDataGetBalanceSheetResponseTransformer = async (
 	data: any,
-): Promise<MarketDataFundamentalGetBalanceSheetResponse> => {
+): Promise<MarketDataGetBalanceSheetResponse> => {
 	data = balanceSheetResponseSchemaResponseTransformer(data);
 	return data;
 };
@@ -329,9 +328,9 @@ const balanceSheetDataSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const marketDataFundamentalGetCashFlowResponseTransformer = async (
+export const marketDataGetCashFlowResponseTransformer = async (
 	data: any,
-): Promise<MarketDataFundamentalGetCashFlowResponse> => {
+): Promise<MarketDataGetCashFlowResponse> => {
 	data = cashFlowResponseSchemaResponseTransformer(data);
 	return data;
 };
@@ -352,9 +351,9 @@ const cashFlowDataSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const marketDataFundamentalGetEarningsResponseTransformer = async (
+export const marketDataGetEarningsResponseTransformer = async (
 	data: any,
-): Promise<MarketDataFundamentalGetEarningsResponse> => {
+): Promise<MarketDataGetEarningsResponse> => {
 	data = earningsResponseSchemaResponseTransformer(data);
 	return data;
 };
@@ -376,13 +375,12 @@ const earningsDataSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const marketDataTechnicalIndicatorGetIndicatorListResponseTransformer =
-	async (
-		data: any,
-	): Promise<MarketDataTechnicalIndicatorGetIndicatorListResponse> => {
-		data = indicatorListResponseSchemaResponseTransformer(data);
-		return data;
-	};
+export const marketDataGetIndicatorListResponseTransformer = async (
+	data: any,
+): Promise<MarketDataGetIndicatorListResponse> => {
+	data = indicatorListResponseSchemaResponseTransformer(data);
+	return data;
+};
 
 const indicatorListResponseSchemaResponseTransformer = (data: any) => {
 	if (data.timestamp) {
@@ -392,9 +390,9 @@ const indicatorListResponseSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const marketDataTechnicalIndicatorGetSmaResponseTransformer = async (
+export const marketDataGetSmaResponseTransformer = async (
 	data: any,
-): Promise<MarketDataTechnicalIndicatorGetSmaResponse> => {
+): Promise<MarketDataGetSmaResponse> => {
 	data = technicalIndicatorResponseSchemaResponseTransformer(data);
 	return data;
 };
@@ -432,79 +430,79 @@ const indicatorDataPointSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const marketDataTechnicalIndicatorGetWmaResponseTransformer = async (
+export const marketDataGetWmaResponseTransformer = async (
 	data: any,
-): Promise<MarketDataTechnicalIndicatorGetWmaResponse> => {
+): Promise<MarketDataGetWmaResponse> => {
 	data = technicalIndicatorResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const marketDataTechnicalIndicatorGetDemaResponseTransformer = async (
+export const marketDataGetDemaResponseTransformer = async (
 	data: any,
-): Promise<MarketDataTechnicalIndicatorGetDemaResponse> => {
+): Promise<MarketDataGetDemaResponse> => {
 	data = technicalIndicatorResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const marketDataTechnicalIndicatorGetTemaResponseTransformer = async (
+export const marketDataGetTemaResponseTransformer = async (
 	data: any,
-): Promise<MarketDataTechnicalIndicatorGetTemaResponse> => {
+): Promise<MarketDataGetTemaResponse> => {
 	data = technicalIndicatorResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const marketDataTechnicalIndicatorGetEmaResponseTransformer = async (
+export const marketDataGetEmaResponseTransformer = async (
 	data: any,
-): Promise<MarketDataTechnicalIndicatorGetEmaResponse> => {
+): Promise<MarketDataGetEmaResponse> => {
 	data = technicalIndicatorResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const marketDataTechnicalIndicatorGetRsiResponseTransformer = async (
+export const marketDataGetRsiResponseTransformer = async (
 	data: any,
-): Promise<MarketDataTechnicalIndicatorGetRsiResponse> => {
+): Promise<MarketDataGetRsiResponse> => {
 	data = technicalIndicatorResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const marketDataTechnicalIndicatorGetMacdResponseTransformer = async (
+export const marketDataGetMacdResponseTransformer = async (
 	data: any,
-): Promise<MarketDataTechnicalIndicatorGetMacdResponse> => {
+): Promise<MarketDataGetMacdResponse> => {
 	data = technicalIndicatorResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const marketDataTechnicalIndicatorGetBbandsResponseTransformer = async (
+export const marketDataGetBbandsResponseTransformer = async (
 	data: any,
-): Promise<MarketDataTechnicalIndicatorGetBbandsResponse> => {
+): Promise<MarketDataGetBbandsResponse> => {
 	data = technicalIndicatorResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const marketDataTechnicalIndicatorGetAdxResponseTransformer = async (
+export const marketDataGetAdxResponseTransformer = async (
 	data: any,
-): Promise<MarketDataTechnicalIndicatorGetAdxResponse> => {
+): Promise<MarketDataGetAdxResponse> => {
 	data = technicalIndicatorResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const marketDataTechnicalIndicatorGetAtrResponseTransformer = async (
+export const marketDataGetAtrResponseTransformer = async (
 	data: any,
-): Promise<MarketDataTechnicalIndicatorGetAtrResponse> => {
+): Promise<MarketDataGetAtrResponse> => {
 	data = technicalIndicatorResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const marketDataTechnicalIndicatorGetStochResponseTransformer = async (
+export const marketDataGetStochResponseTransformer = async (
 	data: any,
-): Promise<MarketDataTechnicalIndicatorGetStochResponse> => {
+): Promise<MarketDataGetStochResponse> => {
 	data = technicalIndicatorResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const marketDataRegimeGetMarketRegimeResponseTransformer = async (
+export const marketDataGetMarketRegimeResponseTransformer = async (
 	data: any,
-): Promise<MarketDataRegimeGetMarketRegimeResponse> => {
+): Promise<MarketDataGetMarketRegimeResponse> => {
 	data = marketRegimeResponseSchemaResponseTransformer(data);
 	return data;
 };
@@ -520,257 +518,6 @@ const marketRegimeResponseSchemaResponseTransformer = (data: any) => {
 
 const marketRegimeSnapshotSchemaResponseTransformer = (data: any) => {
 	data.as_of = new Date(data.as_of);
-	return data;
-};
-
-export const strategyGetStrategiesResponseTransformer = async (
-	data: any,
-): Promise<StrategyGetStrategiesResponse> => {
-	data = strategyListResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-const strategyListResponseSchemaResponseTransformer = (data: any) => {
-	data.strategies = data.strategies.map((item: any) => {
-		return strategyResponseSchemaResponseTransformer(item);
-	});
-	return data;
-};
-
-const strategyResponseSchemaResponseTransformer = (data: any) => {
-	data.created_at = new Date(data.created_at);
-	data.updated_at = new Date(data.updated_at);
-	return data;
-};
-
-export const strategyCreateStrategyResponseTransformer = async (
-	data: any,
-): Promise<StrategyCreateStrategyResponse> => {
-	data = strategyResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-export const strategyGetStrategyResponseTransformer = async (
-	data: any,
-): Promise<StrategyGetStrategyResponse> => {
-	data = strategyResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-export const strategyUpdateStrategyResponseTransformer = async (
-	data: any,
-): Promise<StrategyUpdateStrategyResponse> => {
-	data = strategyResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-export const strategyExecuteStrategyResponseTransformer = async (
-	data: any,
-): Promise<StrategyExecuteStrategyResponse> => {
-	data = executionResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-const executionResponseSchemaResponseTransformer = (data: any) => {
-	data.timestamp = new Date(data.timestamp);
-	data.created_at = new Date(data.created_at);
-	return data;
-};
-
-export const strategyGetStrategyExecutionsResponseTransformer = async (
-	data: any,
-): Promise<StrategyGetStrategyExecutionsResponse> => {
-	data = executionListResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-const executionListResponseSchemaResponseTransformer = (data: any) => {
-	data.executions = data.executions.map((item: any) => {
-		return executionResponseSchemaResponseTransformer(item);
-	});
-	return data;
-};
-
-export const strategyGetStrategyPerformanceResponseTransformer = async (
-	data: any,
-): Promise<StrategyGetStrategyPerformanceResponse> => {
-	data = performanceResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-const performanceResponseSchemaResponseTransformer = (data: any) => {
-	if (data.start_date) {
-		data.start_date = new Date(data.start_date);
-	}
-	if (data.end_date) {
-		data.end_date = new Date(data.end_date);
-	}
-	data.created_at = new Date(data.created_at);
-	data.updated_at = new Date(data.updated_at);
-	return data;
-};
-
-export const templateGetTemplatesResponseTransformer = async (
-	data: any,
-): Promise<TemplateGetTemplatesResponse> => {
-	data = templateListResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-const templateListResponseSchemaResponseTransformer = (data: any) => {
-	data.templates = data.templates.map((item: any) => {
-		return templateResponseSchemaResponseTransformer(item);
-	});
-	return data;
-};
-
-const templateResponseSchemaResponseTransformer = (data: any) => {
-	data.created_at = new Date(data.created_at);
-	data.updated_at = new Date(data.updated_at);
-	return data;
-};
-
-export const templateCreateTemplateResponseTransformer = async (
-	data: any,
-): Promise<TemplateCreateTemplateResponse> => {
-	data = templateResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-export const templateGetTemplateResponseTransformer = async (
-	data: any,
-): Promise<TemplateGetTemplateResponse> => {
-	data = templateResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-export const templateUpdateTemplateResponseTransformer = async (
-	data: any,
-): Promise<TemplateUpdateTemplateResponse> => {
-	data = templateResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-export const templateCreateStrategyFromTemplateResponseTransformer = async (
-	data: any,
-): Promise<TemplateCreateStrategyFromTemplateResponse> => {
-	data = strategyResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-export const backtestGetBacktestsResponseTransformer = async (
-	data: any,
-): Promise<BacktestGetBacktestsResponse> => {
-	data = backtestListResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-const backtestListResponseSchemaResponseTransformer = (data: any) => {
-	data.backtests = data.backtests.map((item: any) => {
-		return backtestResponseSchemaResponseTransformer(item);
-	});
-	return data;
-};
-
-const backtestResponseSchemaResponseTransformer = (data: any) => {
-	data.config = backtestConfigSchemaResponseTransformer(data.config);
-	if (data.start_time) {
-		data.start_time = new Date(data.start_time);
-	}
-	if (data.end_time) {
-		data.end_time = new Date(data.end_time);
-	}
-	data.created_at = new Date(data.created_at);
-	if (data.updated_at) {
-		data.updated_at = new Date(data.updated_at);
-	}
-	return data;
-};
-
-const backtestConfigSchemaResponseTransformer = (data: any) => {
-	data.start_date = new Date(data.start_date);
-	data.end_date = new Date(data.end_date);
-	return data;
-};
-
-export const backtestCreateBacktestResponseTransformer = async (
-	data: any,
-): Promise<BacktestCreateBacktestResponse> => {
-	data = backtestResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-export const backtestGetBacktestResponseTransformer = async (
-	data: any,
-): Promise<BacktestGetBacktestResponse> => {
-	data = backtestResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-export const backtestUpdateBacktestResponseTransformer = async (
-	data: any,
-): Promise<BacktestUpdateBacktestResponse> => {
-	data = backtestResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-export const backtestExecuteBacktestResponseTransformer = async (
-	data: any,
-): Promise<BacktestExecuteBacktestResponse> => {
-	data = backtestExecutionResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-const backtestExecutionResponseSchemaResponseTransformer = (data: any) => {
-	data.start_time = new Date(data.start_time);
-	if (data.end_time) {
-		data.end_time = new Date(data.end_time);
-	}
-	data.trades = data.trades.map((item: any) => {
-		return tradeSchemaResponseTransformer(item);
-	});
-	data.created_at = new Date(data.created_at);
-	return data;
-};
-
-const tradeSchemaResponseTransformer = (data: any) => {
-	data.timestamp = new Date(data.timestamp);
-	return data;
-};
-
-export const backtestGetBacktestExecutionsResponseTransformer = async (
-	data: any,
-): Promise<BacktestGetBacktestExecutionsResponse> => {
-	data = backtestExecutionListResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-const backtestExecutionListResponseSchemaResponseTransformer = (data: any) => {
-	data.executions = data.executions.map((item: any) => {
-		return backtestExecutionResponseSchemaResponseTransformer(item);
-	});
-	return data;
-};
-
-export const backtestListOptimizationStudiesResponseTransformer = async (
-	data: any,
-): Promise<BacktestListOptimizationStudiesResponse> => {
-	data = studyListResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-const studyListResponseSchemaResponseTransformer = (data: any) => {
-	data.studies = data.studies.map((item: any) => {
-		return studyListItemSchemaResponseTransformer(item);
-	});
-	return data;
-};
-
-const studyListItemSchemaResponseTransformer = (data: any) => {
-	data.created_at = new Date(data.created_at);
-	if (data.completed_at) {
-		data.completed_at = new Date(data.completed_at);
-	}
 	return data;
 };
 
@@ -1066,6 +813,257 @@ const portfolioForecastResponseSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
+export const backtestGetBacktestsResponseTransformer = async (
+	data: any,
+): Promise<BacktestGetBacktestsResponse> => {
+	data = backtestListResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const backtestListResponseSchemaResponseTransformer = (data: any) => {
+	data.backtests = data.backtests.map((item: any) => {
+		return backtestResponseSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+const backtestResponseSchemaResponseTransformer = (data: any) => {
+	data.config = backtestConfigSchemaResponseTransformer(data.config);
+	if (data.start_time) {
+		data.start_time = new Date(data.start_time);
+	}
+	if (data.end_time) {
+		data.end_time = new Date(data.end_time);
+	}
+	data.created_at = new Date(data.created_at);
+	if (data.updated_at) {
+		data.updated_at = new Date(data.updated_at);
+	}
+	return data;
+};
+
+const backtestConfigSchemaResponseTransformer = (data: any) => {
+	data.start_date = new Date(data.start_date);
+	data.end_date = new Date(data.end_date);
+	return data;
+};
+
+export const backtestCreateBacktestResponseTransformer = async (
+	data: any,
+): Promise<BacktestCreateBacktestResponse> => {
+	data = backtestResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const backtestGetBacktestResponseTransformer = async (
+	data: any,
+): Promise<BacktestGetBacktestResponse> => {
+	data = backtestResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const backtestUpdateBacktestResponseTransformer = async (
+	data: any,
+): Promise<BacktestUpdateBacktestResponse> => {
+	data = backtestResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const backtestExecuteBacktestResponseTransformer = async (
+	data: any,
+): Promise<BacktestExecuteBacktestResponse> => {
+	data = backtestExecutionResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const backtestExecutionResponseSchemaResponseTransformer = (data: any) => {
+	data.start_time = new Date(data.start_time);
+	if (data.end_time) {
+		data.end_time = new Date(data.end_time);
+	}
+	data.trades = data.trades.map((item: any) => {
+		return tradeSchemaResponseTransformer(item);
+	});
+	data.created_at = new Date(data.created_at);
+	return data;
+};
+
+const tradeSchemaResponseTransformer = (data: any) => {
+	data.timestamp = new Date(data.timestamp);
+	return data;
+};
+
+export const backtestGetBacktestExecutionsResponseTransformer = async (
+	data: any,
+): Promise<BacktestGetBacktestExecutionsResponse> => {
+	data = backtestExecutionListResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const backtestExecutionListResponseSchemaResponseTransformer = (data: any) => {
+	data.executions = data.executions.map((item: any) => {
+		return backtestExecutionResponseSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+export const backtestListOptimizationStudiesResponseTransformer = async (
+	data: any,
+): Promise<BacktestListOptimizationStudiesResponse> => {
+	data = studyListResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const studyListResponseSchemaResponseTransformer = (data: any) => {
+	data.studies = data.studies.map((item: any) => {
+		return studyListItemSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+const studyListItemSchemaResponseTransformer = (data: any) => {
+	data.created_at = new Date(data.created_at);
+	if (data.completed_at) {
+		data.completed_at = new Date(data.completed_at);
+	}
+	return data;
+};
+
+export const strategyGetStrategiesResponseTransformer = async (
+	data: any,
+): Promise<StrategyGetStrategiesResponse> => {
+	data = strategyListResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const strategyListResponseSchemaResponseTransformer = (data: any) => {
+	data.strategies = data.strategies.map((item: any) => {
+		return strategyResponseSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+const strategyResponseSchemaResponseTransformer = (data: any) => {
+	data.created_at = new Date(data.created_at);
+	data.updated_at = new Date(data.updated_at);
+	return data;
+};
+
+export const strategyCreateStrategyResponseTransformer = async (
+	data: any,
+): Promise<StrategyCreateStrategyResponse> => {
+	data = strategyResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const strategyGetStrategyResponseTransformer = async (
+	data: any,
+): Promise<StrategyGetStrategyResponse> => {
+	data = strategyResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const strategyUpdateStrategyResponseTransformer = async (
+	data: any,
+): Promise<StrategyUpdateStrategyResponse> => {
+	data = strategyResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const strategyExecuteStrategyResponseTransformer = async (
+	data: any,
+): Promise<StrategyExecuteStrategyResponse> => {
+	data = executionResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const executionResponseSchemaResponseTransformer = (data: any) => {
+	data.timestamp = new Date(data.timestamp);
+	data.created_at = new Date(data.created_at);
+	return data;
+};
+
+export const strategyGetStrategyExecutionsResponseTransformer = async (
+	data: any,
+): Promise<StrategyGetStrategyExecutionsResponse> => {
+	data = executionListResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const executionListResponseSchemaResponseTransformer = (data: any) => {
+	data.executions = data.executions.map((item: any) => {
+		return executionResponseSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+export const strategyGetStrategyPerformanceResponseTransformer = async (
+	data: any,
+): Promise<StrategyGetStrategyPerformanceResponse> => {
+	data = performanceResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const performanceResponseSchemaResponseTransformer = (data: any) => {
+	if (data.start_date) {
+		data.start_date = new Date(data.start_date);
+	}
+	if (data.end_date) {
+		data.end_date = new Date(data.end_date);
+	}
+	data.created_at = new Date(data.created_at);
+	data.updated_at = new Date(data.updated_at);
+	return data;
+};
+
+export const strategyGetTemplatesResponseTransformer = async (
+	data: any,
+): Promise<StrategyGetTemplatesResponse> => {
+	data = templateListResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const templateListResponseSchemaResponseTransformer = (data: any) => {
+	data.templates = data.templates.map((item: any) => {
+		return templateResponseSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+const templateResponseSchemaResponseTransformer = (data: any) => {
+	data.created_at = new Date(data.created_at);
+	data.updated_at = new Date(data.updated_at);
+	return data;
+};
+
+export const strategyCreateTemplateResponseTransformer = async (
+	data: any,
+): Promise<StrategyCreateTemplateResponse> => {
+	data = templateResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const strategyGetTemplateResponseTransformer = async (
+	data: any,
+): Promise<StrategyGetTemplateResponse> => {
+	data = templateResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const strategyUpdateTemplateResponseTransformer = async (
+	data: any,
+): Promise<StrategyUpdateTemplateResponse> => {
+	data = templateResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const strategyCreateStrategyFromTemplateResponseTransformer = async (
+	data: any,
+): Promise<StrategyCreateStrategyFromTemplateResponse> => {
+	data = strategyResponseSchemaResponseTransformer(data);
+	return data;
+};
+
 export const signalsGetMlSignalResponseTransformer = async (
 	data: any,
 ): Promise<SignalsGetMlSignalResponse> => {
@@ -1079,6 +1077,170 @@ const mlSignalResponseSchemaResponseTransformer = (data: any) => {
 	}
 	data.data = mlSignalInsightSchemaResponseTransformer(data.data);
 	data.metadata = metadataInfoSchemaResponseTransformer(data.metadata);
+	return data;
+};
+
+export const mlListScenariosResponseTransformer = async (
+	data: any,
+): Promise<MlListScenariosResponse> => {
+	data = data.map((item: any) => {
+		return scenarioResponseSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+const scenarioResponseSchemaResponseTransformer = (data: any) => {
+	if (data.start_date) {
+		data.start_date = new Date(data.start_date);
+	}
+	if (data.end_date) {
+		data.end_date = new Date(data.end_date);
+	}
+	data.stress_events = data.stress_events.map((item: any) => {
+		return scenarioEventSchemaResponseTransformer(item);
+	});
+	data.created_at = new Date(data.created_at);
+	data.updated_at = new Date(data.updated_at);
+	return data;
+};
+
+const scenarioEventSchemaResponseTransformer = (data: any) => {
+	data.start = new Date(data.start);
+	data.end = new Date(data.end);
+	return data;
+};
+
+export const mlRegisterScenarioResponseTransformer = async (
+	data: any,
+): Promise<MlRegisterScenarioResponse> => {
+	data = scenarioResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const mlUpdateScenarioResponseTransformer = async (
+	data: any,
+): Promise<MlUpdateScenarioResponse> => {
+	data = scenarioResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const mlListEvaluationRunsResponseTransformer = async (
+	data: any,
+): Promise<MlListEvaluationRunsResponse> => {
+	data = data.map((item: any) => {
+		return evaluationRunResponseSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+const evaluationRunResponseSchemaResponseTransformer = (data: any) => {
+	data.started_at = new Date(data.started_at);
+	if (data.completed_at) {
+		data.completed_at = new Date(data.completed_at);
+	}
+	return data;
+};
+
+export const mlRunEvaluationResponseTransformer = async (
+	data: any,
+): Promise<MlRunEvaluationResponse> => {
+	data = evaluationRunResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const mlListBenchmarksResponseTransformer = async (
+	data: any,
+): Promise<MlListBenchmarksResponse> => {
+	data = data.map((item: any) => {
+		return benchmarkResponseSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+const benchmarkResponseSchemaResponseTransformer = (data: any) => {
+	data.created_at = new Date(data.created_at);
+	data.updated_at = new Date(data.updated_at);
+	return data;
+};
+
+export const mlCreateBenchmarkResponseTransformer = async (
+	data: any,
+): Promise<MlCreateBenchmarkResponse> => {
+	data = benchmarkResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const mlRunBenchmarkResponseTransformer = async (
+	data: any,
+): Promise<MlRunBenchmarkResponse> => {
+	data = benchmarkRunResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const benchmarkRunResponseSchemaResponseTransformer = (data: any) => {
+	data.started_at = new Date(data.started_at);
+	if (data.completed_at) {
+		data.completed_at = new Date(data.completed_at);
+	}
+	return data;
+};
+
+export const mlListAbTestsResponseTransformer = async (
+	data: any,
+): Promise<MlListAbTestsResponse> => {
+	data = data.map((item: any) => {
+		return abTestResponseSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+const abTestResponseSchemaResponseTransformer = (data: any) => {
+	data.created_at = new Date(data.created_at);
+	if (data.completed_at) {
+		data.completed_at = new Date(data.completed_at);
+	}
+	return data;
+};
+
+export const mlCreateAbTestResponseTransformer = async (
+	data: any,
+): Promise<MlCreateAbTestResponse> => {
+	data = abTestResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const mlGetAbTestResponseTransformer = async (
+	data: any,
+): Promise<MlGetAbTestResponse> => {
+	data = abTestResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const mlRequestFairnessAuditResponseTransformer = async (
+	data: any,
+): Promise<MlRequestFairnessAuditResponse> => {
+	data = fairnessReportResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const fairnessReportResponseSchemaResponseTransformer = (data: any) => {
+	data.created_at = new Date(data.created_at);
+	return data;
+};
+
+export const mlListFairnessReportsResponseTransformer = async (
+	data: any,
+): Promise<MlListFairnessReportsResponse> => {
+	data = data.map((item: any) => {
+		return fairnessReportResponseSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+export const mlGetFairnessReportResponseTransformer = async (
+	data: any,
+): Promise<MlGetFairnessReportResponse> => {
+	data = fairnessReportResponseSchemaResponseTransformer(data);
 	return data;
 };
 
@@ -1274,173 +1436,142 @@ export const mlUpdateDeploymentResponseTransformer = async (
 	return data;
 };
 
-export const mlListScenariosResponseTransformer = async (
+export const mlListFeaturesResponseTransformer = async (
 	data: any,
-): Promise<MlListScenariosResponse> => {
-	data = data.map((item: any) => {
-		return scenarioResponseSchemaResponseTransformer(item);
+): Promise<MlListFeaturesResponse> => {
+	data = featureListResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const featureListResponseSchemaResponseTransformer = (data: any) => {
+	data.features = data.features.map((item: any) => {
+		return featureResponseSchemaResponseTransformer(item);
 	});
 	return data;
 };
 
-const scenarioResponseSchemaResponseTransformer = (data: any) => {
-	if (data.start_date) {
-		data.start_date = new Date(data.start_date);
+const featureResponseSchemaResponseTransformer = (data: any) => {
+	if (data.statistics) {
+		data.statistics = featureStatisticsSchemaResponseTransformer(
+			data.statistics,
+		);
 	}
-	if (data.end_date) {
-		data.end_date = new Date(data.end_date);
+	if (data.last_used_at) {
+		data.last_used_at = new Date(data.last_used_at);
 	}
-	data.stress_events = data.stress_events.map((item: any) => {
-		return scenarioEventSchemaResponseTransformer(item);
-	});
 	data.created_at = new Date(data.created_at);
 	data.updated_at = new Date(data.updated_at);
-	return data;
-};
-
-const scenarioEventSchemaResponseTransformer = (data: any) => {
-	data.start = new Date(data.start);
-	data.end = new Date(data.end);
-	return data;
-};
-
-export const mlRegisterScenarioResponseTransformer = async (
-	data: any,
-): Promise<MlRegisterScenarioResponse> => {
-	data = scenarioResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-export const mlUpdateScenarioResponseTransformer = async (
-	data: any,
-): Promise<MlUpdateScenarioResponse> => {
-	data = scenarioResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-export const mlListEvaluationRunsResponseTransformer = async (
-	data: any,
-): Promise<MlListEvaluationRunsResponse> => {
-	data = data.map((item: any) => {
-		return evaluationRunResponseSchemaResponseTransformer(item);
-	});
-	return data;
-};
-
-const evaluationRunResponseSchemaResponseTransformer = (data: any) => {
-	data.started_at = new Date(data.started_at);
-	if (data.completed_at) {
-		data.completed_at = new Date(data.completed_at);
+	if (data.deprecated_at) {
+		data.deprecated_at = new Date(data.deprecated_at);
 	}
 	return data;
 };
 
-export const mlRunEvaluationResponseTransformer = async (
-	data: any,
-): Promise<MlRunEvaluationResponse> => {
-	data = evaluationRunResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-export const mlListBenchmarksResponseTransformer = async (
-	data: any,
-): Promise<MlListBenchmarksResponse> => {
-	data = data.map((item: any) => {
-		return benchmarkResponseSchemaResponseTransformer(item);
-	});
-	return data;
-};
-
-const benchmarkResponseSchemaResponseTransformer = (data: any) => {
-	data.created_at = new Date(data.created_at);
-	data.updated_at = new Date(data.updated_at);
-	return data;
-};
-
-export const mlCreateBenchmarkResponseTransformer = async (
-	data: any,
-): Promise<MlCreateBenchmarkResponse> => {
-	data = benchmarkResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-export const mlRunBenchmarkResponseTransformer = async (
-	data: any,
-): Promise<MlRunBenchmarkResponse> => {
-	data = benchmarkRunResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-const benchmarkRunResponseSchemaResponseTransformer = (data: any) => {
-	data.started_at = new Date(data.started_at);
-	if (data.completed_at) {
-		data.completed_at = new Date(data.completed_at);
+const featureStatisticsSchemaResponseTransformer = (data: any) => {
+	if (data.calculated_at) {
+		data.calculated_at = new Date(data.calculated_at);
 	}
 	return data;
 };
 
-export const mlListAbTestsResponseTransformer = async (
+export const mlCreateFeatureResponseTransformer = async (
 	data: any,
-): Promise<MlListAbTestsResponse> => {
-	data = data.map((item: any) => {
-		return abTestResponseSchemaResponseTransformer(item);
+): Promise<MlCreateFeatureResponse> => {
+	data = featureResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const mlGetFeatureResponseTransformer = async (
+	data: any,
+): Promise<MlGetFeatureResponse> => {
+	data = featureResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const mlUpdateFeatureResponseTransformer = async (
+	data: any,
+): Promise<MlUpdateFeatureResponse> => {
+	data = featureResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const mlActivateFeatureResponseTransformer = async (
+	data: any,
+): Promise<MlActivateFeatureResponse> => {
+	data = featureResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const mlDeprecateFeatureResponseTransformer = async (
+	data: any,
+): Promise<MlDeprecateFeatureResponse> => {
+	data = featureResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const mlGetFeatureVersionsResponseTransformer = async (
+	data: any,
+): Promise<MlGetFeatureVersionsResponse> => {
+	data = featureVersionListResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const featureVersionListResponseSchemaResponseTransformer = (data: any) => {
+	data.versions = data.versions.map((item: any) => {
+		return featureVersionResponseSchemaResponseTransformer(item);
 	});
 	return data;
 };
 
-const abTestResponseSchemaResponseTransformer = (data: any) => {
+const featureVersionResponseSchemaResponseTransformer = (data: any) => {
 	data.created_at = new Date(data.created_at);
-	if (data.completed_at) {
-		data.completed_at = new Date(data.completed_at);
+	if (data.rolled_back_at) {
+		data.rolled_back_at = new Date(data.rolled_back_at);
 	}
 	return data;
 };
 
-export const mlCreateAbTestResponseTransformer = async (
+export const mlCreateVersionResponseTransformer = async (
 	data: any,
-): Promise<MlCreateAbTestResponse> => {
-	data = abTestResponseSchemaResponseTransformer(data);
+): Promise<MlCreateVersionResponse> => {
+	data = featureVersionResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const mlGetAbTestResponseTransformer = async (
+export const mlRollbackVersionResponseTransformer = async (
 	data: any,
-): Promise<MlGetAbTestResponse> => {
-	data = abTestResponseSchemaResponseTransformer(data);
+): Promise<MlRollbackVersionResponse> => {
+	data = featureVersionResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const mlRequestFairnessAuditResponseTransformer = async (
+export const mlRecordFeatureUsageResponseTransformer = async (
 	data: any,
-): Promise<MlRequestFairnessAuditResponse> => {
-	data = fairnessReportResponseSchemaResponseTransformer(data);
+): Promise<MlRecordFeatureUsageResponse> => {
+	data = featureUsageResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-const fairnessReportResponseSchemaResponseTransformer = (data: any) => {
-	data.created_at = new Date(data.created_at);
+const featureUsageResponseSchemaResponseTransformer = (data: any) => {
+	data.usage_timestamp = new Date(data.usage_timestamp);
 	return data;
 };
 
-export const mlListFairnessReportsResponseTransformer = async (
+export const mlGetFeatureStatisticsResponseTransformer = async (
 	data: any,
-): Promise<MlListFairnessReportsResponse> => {
-	data = data.map((item: any) => {
-		return fairnessReportResponseSchemaResponseTransformer(item);
-	});
+): Promise<MlGetFeatureStatisticsResponse> => {
+	data = featureStatisticsResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const mlGetFairnessReportResponseTransformer = async (
-	data: any,
-): Promise<MlGetFairnessReportResponse> => {
-	data = fairnessReportResponseSchemaResponseTransformer(data);
+const featureStatisticsResponseSchemaResponseTransformer = (data: any) => {
+	data.generated_at = new Date(data.generated_at);
 	return data;
 };
 
-export const chatOpsExecuteChatopsResponseTransformer = async (
+export const genAiExecuteChatopsResponseTransformer = async (
 	data: any,
-): Promise<ChatOpsExecuteChatopsResponse> => {
+): Promise<GenAiExecuteChatopsResponse> => {
 	data = chatOpsResponseSchemaResponseTransformer(data);
 	return data;
 };
@@ -1479,9 +1610,9 @@ const failureInsightSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const narrativeGenerateNarrativeReportResponseTransformer = async (
+export const genAiGenerateNarrativeReportResponseTransformer = async (
 	data: any,
-): Promise<NarrativeGenerateNarrativeReportResponse> => {
+): Promise<GenAiGenerateNarrativeReportResponse> => {
 	data = narrativeReportResponseSchemaResponseTransformer(data);
 	return data;
 };
@@ -1501,180 +1632,9 @@ const backtestNarrativeReportSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const strategyBuilderGenerateStrategyResponseTransformer = async (
+export const genAiListPromptTemplatesResponseTransformer = async (
 	data: any,
-): Promise<StrategyBuilderGenerateStrategyResponse> => {
-	data = strategyBuilderResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-const strategyBuilderResponseSchemaResponseTransformer = (data: any) => {
-	data.human_approval = humanApprovalRequestSchemaResponseTransformer(
-		data.human_approval,
-	);
-	if (data.generated_at) {
-		data.generated_at = new Date(data.generated_at);
-	}
-	return data;
-};
-
-const humanApprovalRequestSchemaResponseTransformer = (data: any) => {
-	if (data.approval_deadline) {
-		data.approval_deadline = new Date(data.approval_deadline);
-	}
-	return data;
-};
-
-export const strategyBuilderApproveStrategyResponseTransformer = async (
-	data: any,
-): Promise<StrategyBuilderApproveStrategyResponse> => {
-	data = strategyApprovalResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-const strategyApprovalResponseSchemaResponseTransformer = (data: any) => {
-	if (data.approved_at) {
-		data.approved_at = new Date(data.approved_at);
-	}
-	return data;
-};
-
-export const featureStoreListFeaturesResponseTransformer = async (
-	data: any,
-): Promise<FeatureStoreListFeaturesResponse> => {
-	data = featureListResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-const featureListResponseSchemaResponseTransformer = (data: any) => {
-	data.features = data.features.map((item: any) => {
-		return featureResponseSchemaResponseTransformer(item);
-	});
-	return data;
-};
-
-const featureResponseSchemaResponseTransformer = (data: any) => {
-	if (data.statistics) {
-		data.statistics = featureStatisticsSchemaResponseTransformer(
-			data.statistics,
-		);
-	}
-	if (data.last_used_at) {
-		data.last_used_at = new Date(data.last_used_at);
-	}
-	data.created_at = new Date(data.created_at);
-	data.updated_at = new Date(data.updated_at);
-	if (data.deprecated_at) {
-		data.deprecated_at = new Date(data.deprecated_at);
-	}
-	return data;
-};
-
-const featureStatisticsSchemaResponseTransformer = (data: any) => {
-	if (data.calculated_at) {
-		data.calculated_at = new Date(data.calculated_at);
-	}
-	return data;
-};
-
-export const featureStoreCreateFeatureResponseTransformer = async (
-	data: any,
-): Promise<FeatureStoreCreateFeatureResponse> => {
-	data = featureResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-export const featureStoreGetFeatureResponseTransformer = async (
-	data: any,
-): Promise<FeatureStoreGetFeatureResponse> => {
-	data = featureResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-export const featureStoreUpdateFeatureResponseTransformer = async (
-	data: any,
-): Promise<FeatureStoreUpdateFeatureResponse> => {
-	data = featureResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-export const featureStoreActivateFeatureResponseTransformer = async (
-	data: any,
-): Promise<FeatureStoreActivateFeatureResponse> => {
-	data = featureResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-export const featureStoreDeprecateFeatureResponseTransformer = async (
-	data: any,
-): Promise<FeatureStoreDeprecateFeatureResponse> => {
-	data = featureResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-export const featureStoreGetFeatureVersionsResponseTransformer = async (
-	data: any,
-): Promise<FeatureStoreGetFeatureVersionsResponse> => {
-	data = featureVersionListResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-const featureVersionListResponseSchemaResponseTransformer = (data: any) => {
-	data.versions = data.versions.map((item: any) => {
-		return featureVersionResponseSchemaResponseTransformer(item);
-	});
-	return data;
-};
-
-const featureVersionResponseSchemaResponseTransformer = (data: any) => {
-	data.created_at = new Date(data.created_at);
-	if (data.rolled_back_at) {
-		data.rolled_back_at = new Date(data.rolled_back_at);
-	}
-	return data;
-};
-
-export const featureStoreCreateVersionResponseTransformer = async (
-	data: any,
-): Promise<FeatureStoreCreateVersionResponse> => {
-	data = featureVersionResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-export const featureStoreRollbackVersionResponseTransformer = async (
-	data: any,
-): Promise<FeatureStoreRollbackVersionResponse> => {
-	data = featureVersionResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-export const featureStoreRecordFeatureUsageResponseTransformer = async (
-	data: any,
-): Promise<FeatureStoreRecordFeatureUsageResponse> => {
-	data = featureUsageResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-const featureUsageResponseSchemaResponseTransformer = (data: any) => {
-	data.usage_timestamp = new Date(data.usage_timestamp);
-	return data;
-};
-
-export const featureStoreGetFeatureStatisticsResponseTransformer = async (
-	data: any,
-): Promise<FeatureStoreGetFeatureStatisticsResponse> => {
-	data = featureStatisticsResponseSchemaResponseTransformer(data);
-	return data;
-};
-
-const featureStatisticsResponseSchemaResponseTransformer = (data: any) => {
-	data.generated_at = new Date(data.generated_at);
-	return data;
-};
-
-export const promptGovernanceListPromptTemplatesResponseTransformer = async (
-	data: any,
-): Promise<PromptGovernanceListPromptTemplatesResponse> => {
+): Promise<GenAiListPromptTemplatesResponse> => {
 	data = data.map((item: any) => {
 		return promptTemplateResponseSchemaResponseTransformer(item);
 	});
@@ -1699,44 +1659,44 @@ const promptEvaluationSummarySchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const promptGovernanceCreatePromptTemplateResponseTransformer = async (
+export const genAiCreatePromptTemplateResponseTransformer = async (
 	data: any,
-): Promise<PromptGovernanceCreatePromptTemplateResponse> => {
+): Promise<GenAiCreatePromptTemplateResponse> => {
 	data = promptTemplateResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const promptGovernanceUpdatePromptTemplateResponseTransformer = async (
+export const genAiUpdatePromptTemplateResponseTransformer = async (
 	data: any,
-): Promise<PromptGovernanceUpdatePromptTemplateResponse> => {
+): Promise<GenAiUpdatePromptTemplateResponse> => {
 	data = promptTemplateResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const promptGovernanceSubmitPromptForReviewResponseTransformer = async (
+export const genAiSubmitPromptForReviewResponseTransformer = async (
 	data: any,
-): Promise<PromptGovernanceSubmitPromptForReviewResponse> => {
+): Promise<GenAiSubmitPromptForReviewResponse> => {
 	data = promptTemplateResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const promptGovernanceApprovePromptResponseTransformer = async (
+export const genAiApprovePromptResponseTransformer = async (
 	data: any,
-): Promise<PromptGovernanceApprovePromptResponse> => {
+): Promise<GenAiApprovePromptResponse> => {
 	data = promptTemplateResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const promptGovernanceRejectPromptResponseTransformer = async (
+export const genAiRejectPromptResponseTransformer = async (
 	data: any,
-): Promise<PromptGovernanceRejectPromptResponse> => {
+): Promise<GenAiRejectPromptResponse> => {
 	data = promptTemplateResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const promptGovernanceEvaluatePromptResponseTransformer = async (
+export const genAiEvaluatePromptResponseTransformer = async (
 	data: any,
-): Promise<PromptGovernanceEvaluatePromptResponse> => {
+): Promise<GenAiEvaluatePromptResponse> => {
 	data = promptEvaluationResponseSchemaResponseTransformer(data);
 	return data;
 };
@@ -1748,9 +1708,9 @@ const promptEvaluationResponseSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const promptGovernanceLogPromptUsageResponseTransformer = async (
+export const genAiLogPromptUsageResponseTransformer = async (
 	data: any,
-): Promise<PromptGovernanceLogPromptUsageResponse> => {
+): Promise<GenAiLogPromptUsageResponse> => {
 	data = promptUsageLogResponseSchemaResponseTransformer(data);
 	return data;
 };
@@ -1760,9 +1720,9 @@ const promptUsageLogResponseSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const promptGovernanceListPromptAuditLogsResponseTransformer = async (
+export const genAiListPromptAuditLogsResponseTransformer = async (
 	data: any,
-): Promise<PromptGovernanceListPromptAuditLogsResponse> => {
+): Promise<GenAiListPromptAuditLogsResponse> => {
 	data = data.map((item: any) => {
 		return promptAuditLogResponseSchemaResponseTransformer(item);
 	});
@@ -1771,5 +1731,55 @@ export const promptGovernanceListPromptAuditLogsResponseTransformer = async (
 
 const promptAuditLogResponseSchemaResponseTransformer = (data: any) => {
 	data.created_at = new Date(data.created_at);
+	return data;
+};
+
+export const genAiGenerateStrategyResponseTransformer = async (
+	data: any,
+): Promise<GenAiGenerateStrategyResponse> => {
+	data = strategyBuilderResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const strategyBuilderResponseSchemaResponseTransformer = (data: any) => {
+	data.human_approval = humanApprovalRequestSchemaResponseTransformer(
+		data.human_approval,
+	);
+	if (data.generated_at) {
+		data.generated_at = new Date(data.generated_at);
+	}
+	return data;
+};
+
+const humanApprovalRequestSchemaResponseTransformer = (data: any) => {
+	if (data.approval_deadline) {
+		data.approval_deadline = new Date(data.approval_deadline);
+	}
+	return data;
+};
+
+export const genAiApproveStrategyResponseTransformer = async (
+	data: any,
+): Promise<GenAiApproveStrategyResponse> => {
+	data = strategyApprovalResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const strategyApprovalResponseSchemaResponseTransformer = (data: any) => {
+	if (data.approved_at) {
+		data.approved_at = new Date(data.approved_at);
+	}
+	return data;
+};
+
+export const systemServiceHealthCheckResponseTransformer = async (
+	data: any,
+): Promise<SystemServiceHealthCheckResponse> => {
+	data = healthCheckResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const healthCheckResponseSchemaResponseTransformer = (data: any) => {
+	data.timestamp = new Date(data.timestamp);
 	return data;
 };

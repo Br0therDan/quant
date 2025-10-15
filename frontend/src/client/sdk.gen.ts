@@ -83,24 +83,6 @@ import type {
 	BacktestUpdateBacktestData,
 	BacktestUpdateBacktestErrors,
 	BacktestUpdateBacktestResponses,
-	ChatOpsAdvancedChatWithSessionData,
-	ChatOpsAdvancedChatWithSessionErrors,
-	ChatOpsAdvancedChatWithSessionResponses,
-	ChatOpsAdvancedCompareStrategiesData,
-	ChatOpsAdvancedCompareStrategiesErrors,
-	ChatOpsAdvancedCompareStrategiesResponses,
-	ChatOpsAdvancedCreateChatSessionData,
-	ChatOpsAdvancedCreateChatSessionErrors,
-	ChatOpsAdvancedCreateChatSessionResponses,
-	ChatOpsAdvancedDebugCompareStrategiesData,
-	ChatOpsAdvancedDebugCompareStrategiesErrors,
-	ChatOpsAdvancedDebugCompareStrategiesResponses,
-	ChatOpsAdvancedTriggerAutoBacktestData,
-	ChatOpsAdvancedTriggerAutoBacktestErrors,
-	ChatOpsAdvancedTriggerAutoBacktestResponses,
-	ChatOpsExecuteChatopsData,
-	ChatOpsExecuteChatopsErrors,
-	ChatOpsExecuteChatopsResponses,
 	DashboardGetDashboardSummaryData,
 	DashboardGetDashboardSummaryErrors,
 	DashboardGetDashboardSummaryResponses,
@@ -128,194 +110,201 @@ import type {
 	DashboardGetWatchlistQuotesData,
 	DashboardGetWatchlistQuotesErrors,
 	DashboardGetWatchlistQuotesResponses,
-	FeatureStoreActivateFeatureData,
-	FeatureStoreActivateFeatureErrors,
-	FeatureStoreActivateFeatureResponses,
-	FeatureStoreCreateFeatureData,
-	FeatureStoreCreateFeatureErrors,
-	FeatureStoreCreateFeatureResponses,
-	FeatureStoreCreateVersionData,
-	FeatureStoreCreateVersionErrors,
-	FeatureStoreCreateVersionResponses,
-	FeatureStoreDeleteFeatureData,
-	FeatureStoreDeleteFeatureErrors,
-	FeatureStoreDeleteFeatureResponses,
-	FeatureStoreDeprecateFeatureData,
-	FeatureStoreDeprecateFeatureErrors,
-	FeatureStoreDeprecateFeatureResponses,
-	FeatureStoreGetDatasetData,
-	FeatureStoreGetDatasetErrors,
-	FeatureStoreGetDatasetResponses,
-	FeatureStoreGetFeatureData,
-	FeatureStoreGetFeatureErrors,
-	FeatureStoreGetFeatureLineageData,
-	FeatureStoreGetFeatureLineageErrors,
-	FeatureStoreGetFeatureLineageResponses,
-	FeatureStoreGetFeatureResponses,
-	FeatureStoreGetFeatureStatisticsData,
-	FeatureStoreGetFeatureStatisticsErrors,
-	FeatureStoreGetFeatureStatisticsResponses,
-	FeatureStoreGetFeatureVersionsData,
-	FeatureStoreGetFeatureVersionsErrors,
-	FeatureStoreGetFeatureVersionsResponses,
-	FeatureStoreListDatasetsData,
-	FeatureStoreListDatasetsResponses,
-	FeatureStoreListFeaturesData,
-	FeatureStoreListFeaturesErrors,
-	FeatureStoreListFeaturesResponses,
-	FeatureStoreRecordFeatureUsageData,
-	FeatureStoreRecordFeatureUsageErrors,
-	FeatureStoreRecordFeatureUsageResponses,
-	FeatureStoreRollbackVersionData,
-	FeatureStoreRollbackVersionErrors,
-	FeatureStoreRollbackVersionResponses,
-	FeatureStoreUpdateFeatureData,
-	FeatureStoreUpdateFeatureErrors,
-	FeatureStoreUpdateFeatureResponses,
+	GenAiApprovePromptData,
+	GenAiApprovePromptErrors,
+	GenAiApprovePromptResponses,
+	GenAiApproveStrategyData,
+	GenAiApproveStrategyErrors,
+	GenAiApproveStrategyResponses,
+	GenAiChatWithSessionData,
+	GenAiChatWithSessionErrors,
+	GenAiChatWithSessionResponses,
+	GenAiCompareStrategiesData,
+	GenAiCompareStrategiesErrors,
+	GenAiCompareStrategiesResponses,
+	GenAiCreateChatSessionData,
+	GenAiCreateChatSessionErrors,
+	GenAiCreateChatSessionResponses,
+	GenAiCreatePromptTemplateData,
+	GenAiCreatePromptTemplateErrors,
+	GenAiCreatePromptTemplateResponses,
+	GenAiDebugCompareStrategiesData,
+	GenAiDebugCompareStrategiesErrors,
+	GenAiDebugCompareStrategiesResponses,
+	GenAiEvaluatePromptData,
+	GenAiEvaluatePromptErrors,
+	GenAiEvaluatePromptResponses,
+	GenAiExecuteChatopsData,
+	GenAiExecuteChatopsErrors,
+	GenAiExecuteChatopsResponses,
+	GenAiGenerateNarrativeReportData,
+	GenAiGenerateNarrativeReportErrors,
+	GenAiGenerateNarrativeReportResponses,
+	GenAiGenerateStrategyData,
+	GenAiGenerateStrategyErrors,
+	GenAiGenerateStrategyResponses,
+	GenAiListPromptAuditLogsData,
+	GenAiListPromptAuditLogsErrors,
+	GenAiListPromptAuditLogsResponses,
+	GenAiListPromptTemplatesData,
+	GenAiListPromptTemplatesErrors,
+	GenAiListPromptTemplatesResponses,
+	GenAiLogPromptUsageData,
+	GenAiLogPromptUsageErrors,
+	GenAiLogPromptUsageResponses,
+	GenAiRejectPromptData,
+	GenAiRejectPromptErrors,
+	GenAiRejectPromptResponses,
+	GenAiSearchIndicatorsData,
+	GenAiSearchIndicatorsErrors,
+	GenAiSearchIndicatorsResponses,
+	GenAiSubmitPromptForReviewData,
+	GenAiSubmitPromptForReviewErrors,
+	GenAiSubmitPromptForReviewResponses,
+	GenAiTriggerAutoBacktestData,
+	GenAiTriggerAutoBacktestErrors,
+	GenAiTriggerAutoBacktestResponses,
+	GenAiUpdatePromptTemplateData,
+	GenAiUpdatePromptTemplateErrors,
+	GenAiUpdatePromptTemplateResponses,
 	HealthHealthCheckData,
 	HealthHealthCheckResponses,
 	HealthLivenessProbeData,
 	HealthLivenessProbeResponses,
 	HealthReadinessProbeData,
 	HealthReadinessProbeResponses,
-	MarketDataCryptoGetBitcoinPriceData,
-	MarketDataCryptoGetBitcoinPriceErrors,
-	MarketDataCryptoGetBitcoinPriceResponses,
-	MarketDataCryptoGetBulkExchangeRatesData,
-	MarketDataCryptoGetBulkExchangeRatesErrors,
-	MarketDataCryptoGetBulkExchangeRatesResponses,
-	MarketDataCryptoGetDailyPricesData,
-	MarketDataCryptoGetDailyPricesErrors,
-	MarketDataCryptoGetDailyPricesResponses,
-	MarketDataCryptoGetEthereumPriceData,
-	MarketDataCryptoGetEthereumPriceErrors,
-	MarketDataCryptoGetEthereumPriceResponses,
-	MarketDataCryptoGetExchangeRateData,
-	MarketDataCryptoGetExchangeRateErrors,
-	MarketDataCryptoGetExchangeRateResponses,
-	MarketDataCryptoGetMonthlyPricesData,
-	MarketDataCryptoGetMonthlyPricesErrors,
-	MarketDataCryptoGetMonthlyPricesResponses,
-	MarketDataCryptoGetWeeklyPricesData,
-	MarketDataCryptoGetWeeklyPricesErrors,
-	MarketDataCryptoGetWeeklyPricesResponses,
-	MarketDataEconomicIndicatorGetEmploymentDataData,
-	MarketDataEconomicIndicatorGetEmploymentDataErrors,
-	MarketDataEconomicIndicatorGetEmploymentDataResponses,
-	MarketDataEconomicIndicatorGetGdpDataData,
-	MarketDataEconomicIndicatorGetGdpDataErrors,
-	MarketDataEconomicIndicatorGetGdpDataResponses,
-	MarketDataEconomicIndicatorGetInflationDataData,
-	MarketDataEconomicIndicatorGetInflationDataErrors,
-	MarketDataEconomicIndicatorGetInflationDataResponses,
-	MarketDataEconomicIndicatorGetInterestRatesData,
-	MarketDataEconomicIndicatorGetInterestRatesErrors,
-	MarketDataEconomicIndicatorGetInterestRatesResponses,
-	MarketDataFundamentalGetBalanceSheetData,
-	MarketDataFundamentalGetBalanceSheetErrors,
-	MarketDataFundamentalGetBalanceSheetResponses,
-	MarketDataFundamentalGetCashFlowData,
-	MarketDataFundamentalGetCashFlowErrors,
-	MarketDataFundamentalGetCashFlowResponses,
-	MarketDataFundamentalGetCompanyOverviewData,
-	MarketDataFundamentalGetCompanyOverviewErrors,
-	MarketDataFundamentalGetCompanyOverviewResponses,
-	MarketDataFundamentalGetEarningsData,
-	MarketDataFundamentalGetEarningsErrors,
-	MarketDataFundamentalGetEarningsResponses,
-	MarketDataFundamentalGetIncomeStatementData,
-	MarketDataFundamentalGetIncomeStatementErrors,
-	MarketDataFundamentalGetIncomeStatementResponses,
+	MarketDataCollectBulkDataData,
+	MarketDataCollectBulkDataErrors,
+	MarketDataCollectBulkDataResponses,
+	MarketDataCollectCompanyInfoData,
+	MarketDataCollectCompanyInfoErrors,
+	MarketDataCollectCompanyInfoResponses,
+	MarketDataCollectMarketDataData,
+	MarketDataCollectMarketDataErrors,
+	MarketDataCollectMarketDataResponses,
+	MarketDataGetAdxData,
+	MarketDataGetAdxErrors,
+	MarketDataGetAdxResponses,
+	MarketDataGetAnalystRecommendationsData,
+	MarketDataGetAnalystRecommendationsErrors,
+	MarketDataGetAnalystRecommendationsResponses,
+	MarketDataGetAtrData,
+	MarketDataGetAtrErrors,
+	MarketDataGetAtrResponses,
+	MarketDataGetBalanceSheetData,
+	MarketDataGetBalanceSheetErrors,
+	MarketDataGetBalanceSheetResponses,
+	MarketDataGetBbandsData,
+	MarketDataGetBbandsErrors,
+	MarketDataGetBbandsResponses,
+	MarketDataGetBitcoinPriceData,
+	MarketDataGetBitcoinPriceErrors,
+	MarketDataGetBitcoinPriceResponses,
+	MarketDataGetBulkExchangeRatesData,
+	MarketDataGetBulkExchangeRatesErrors,
+	MarketDataGetBulkExchangeRatesResponses,
+	MarketDataGetCashFlowData,
+	MarketDataGetCashFlowErrors,
+	MarketDataGetCashFlowResponses,
+	MarketDataGetCompanyOverviewData,
+	MarketDataGetCompanyOverviewErrors,
+	MarketDataGetCompanyOverviewResponses,
+	MarketDataGetDailyPricesData,
+	MarketDataGetDailyPricesErrors,
+	MarketDataGetDailyPricesResponses,
+	MarketDataGetDataCoverageData,
+	MarketDataGetDataCoverageErrors,
+	MarketDataGetDataCoverageResponses,
+	MarketDataGetDemaData,
+	MarketDataGetDemaErrors,
+	MarketDataGetDemaResponses,
+	MarketDataGetEarningsData,
+	MarketDataGetEarningsErrors,
+	MarketDataGetEarningsResponses,
+	MarketDataGetEmaData,
+	MarketDataGetEmaErrors,
+	MarketDataGetEmaResponses,
+	MarketDataGetEmploymentDataData,
+	MarketDataGetEmploymentDataErrors,
+	MarketDataGetEmploymentDataResponses,
+	MarketDataGetEthereumPriceData,
+	MarketDataGetEthereumPriceErrors,
+	MarketDataGetEthereumPriceResponses,
+	MarketDataGetExchangeRateData,
+	MarketDataGetExchangeRateErrors,
+	MarketDataGetExchangeRateResponses,
+	MarketDataGetGdpDataData,
+	MarketDataGetGdpDataErrors,
+	MarketDataGetGdpDataResponses,
+	MarketDataGetIncomeStatementData,
+	MarketDataGetIncomeStatementErrors,
+	MarketDataGetIncomeStatementResponses,
+	MarketDataGetIndicatorListData,
+	MarketDataGetIndicatorListErrors,
+	MarketDataGetIndicatorListResponses,
+	MarketDataGetInflationDataData,
+	MarketDataGetInflationDataErrors,
+	MarketDataGetInflationDataResponses,
+	MarketDataGetInterestRatesData,
+	MarketDataGetInterestRatesErrors,
+	MarketDataGetInterestRatesResponses,
+	MarketDataGetIntradayDataData,
+	MarketDataGetIntradayDataErrors,
+	MarketDataGetIntradayDataResponses,
+	MarketDataGetMacdData,
+	MarketDataGetMacdErrors,
+	MarketDataGetMacdResponses,
 	MarketDataGetMarketDataInfoData,
 	MarketDataGetMarketDataInfoErrors,
 	MarketDataGetMarketDataInfoResponses,
+	MarketDataGetMarketRegimeData,
+	MarketDataGetMarketRegimeErrors,
+	MarketDataGetMarketRegimeResponses,
+	MarketDataGetMonthlyPricesData,
+	MarketDataGetMonthlyPricesErrors,
+	MarketDataGetMonthlyPricesResponses,
+	MarketDataGetNewsData,
+	MarketDataGetNewsErrors,
+	MarketDataGetNewsResponses,
+	MarketDataGetQuoteData,
+	MarketDataGetQuoteErrors,
+	MarketDataGetQuoteResponses,
+	MarketDataGetRsiData,
+	MarketDataGetRsiErrors,
+	MarketDataGetRsiResponses,
+	MarketDataGetSentimentAnalysisData,
+	MarketDataGetSentimentAnalysisErrors,
+	MarketDataGetSentimentAnalysisResponses,
+	MarketDataGetSmaData,
+	MarketDataGetSmaErrors,
+	MarketDataGetSmaResponses,
+	MarketDataGetSocialSentimentData,
+	MarketDataGetSocialSentimentErrors,
+	MarketDataGetSocialSentimentResponses,
+	MarketDataGetStochData,
+	MarketDataGetStochErrors,
+	MarketDataGetStochResponses,
+	MarketDataGetSystemStatusData,
+	MarketDataGetSystemStatusErrors,
+	MarketDataGetSystemStatusResponses,
+	MarketDataGetTemaData,
+	MarketDataGetTemaErrors,
+	MarketDataGetTemaResponses,
+	MarketDataGetWeeklyPricesData,
+	MarketDataGetWeeklyPricesErrors,
+	MarketDataGetWeeklyPricesResponses,
+	MarketDataGetWmaData,
+	MarketDataGetWmaErrors,
+	MarketDataGetWmaResponses,
 	MarketDataHealthCheckData,
 	MarketDataHealthCheckErrors,
 	MarketDataHealthCheckResponses,
-	MarketDataIntelligenceGetAnalystRecommendationsData,
-	MarketDataIntelligenceGetAnalystRecommendationsErrors,
-	MarketDataIntelligenceGetAnalystRecommendationsResponses,
-	MarketDataIntelligenceGetNewsData,
-	MarketDataIntelligenceGetNewsErrors,
-	MarketDataIntelligenceGetNewsResponses,
-	MarketDataIntelligenceGetSentimentAnalysisData,
-	MarketDataIntelligenceGetSentimentAnalysisErrors,
-	MarketDataIntelligenceGetSentimentAnalysisResponses,
-	MarketDataIntelligenceGetSocialSentimentData,
-	MarketDataIntelligenceGetSocialSentimentErrors,
-	MarketDataIntelligenceGetSocialSentimentResponses,
-	MarketDataManagementCollectBulkDataData,
-	MarketDataManagementCollectBulkDataErrors,
-	MarketDataManagementCollectBulkDataResponses,
-	MarketDataManagementCollectCompanyInfoData,
-	MarketDataManagementCollectCompanyInfoErrors,
-	MarketDataManagementCollectCompanyInfoResponses,
-	MarketDataManagementCollectMarketDataData,
-	MarketDataManagementCollectMarketDataErrors,
-	MarketDataManagementCollectMarketDataResponses,
-	MarketDataManagementGetDataCoverageData,
-	MarketDataManagementGetDataCoverageErrors,
-	MarketDataManagementGetDataCoverageResponses,
-	MarketDataManagementGetSystemStatusData,
-	MarketDataManagementGetSystemStatusErrors,
-	MarketDataManagementGetSystemStatusResponses,
-	MarketDataRegimeGetMarketRegimeData,
-	MarketDataRegimeGetMarketRegimeErrors,
-	MarketDataRegimeGetMarketRegimeResponses,
-	MarketDataStockGetDailyPricesData,
-	MarketDataStockGetDailyPricesErrors,
-	MarketDataStockGetDailyPricesResponses,
-	MarketDataStockGetIntradayDataData,
-	MarketDataStockGetIntradayDataErrors,
-	MarketDataStockGetIntradayDataResponses,
-	MarketDataStockGetMonthlyPricesData,
-	MarketDataStockGetMonthlyPricesErrors,
-	MarketDataStockGetMonthlyPricesResponses,
-	MarketDataStockGetQuoteData,
-	MarketDataStockGetQuoteErrors,
-	MarketDataStockGetQuoteResponses,
-	MarketDataStockGetWeeklyPricesData,
-	MarketDataStockGetWeeklyPricesErrors,
-	MarketDataStockGetWeeklyPricesResponses,
-	MarketDataStockSearchStockSymbolsData,
-	MarketDataStockSearchStockSymbolsErrors,
-	MarketDataStockSearchStockSymbolsResponses,
-	MarketDataTechnicalIndicatorGetAdxData,
-	MarketDataTechnicalIndicatorGetAdxErrors,
-	MarketDataTechnicalIndicatorGetAdxResponses,
-	MarketDataTechnicalIndicatorGetAtrData,
-	MarketDataTechnicalIndicatorGetAtrErrors,
-	MarketDataTechnicalIndicatorGetAtrResponses,
-	MarketDataTechnicalIndicatorGetBbandsData,
-	MarketDataTechnicalIndicatorGetBbandsErrors,
-	MarketDataTechnicalIndicatorGetBbandsResponses,
-	MarketDataTechnicalIndicatorGetDemaData,
-	MarketDataTechnicalIndicatorGetDemaErrors,
-	MarketDataTechnicalIndicatorGetDemaResponses,
-	MarketDataTechnicalIndicatorGetEmaData,
-	MarketDataTechnicalIndicatorGetEmaErrors,
-	MarketDataTechnicalIndicatorGetEmaResponses,
-	MarketDataTechnicalIndicatorGetIndicatorListData,
-	MarketDataTechnicalIndicatorGetIndicatorListErrors,
-	MarketDataTechnicalIndicatorGetIndicatorListResponses,
-	MarketDataTechnicalIndicatorGetMacdData,
-	MarketDataTechnicalIndicatorGetMacdErrors,
-	MarketDataTechnicalIndicatorGetMacdResponses,
-	MarketDataTechnicalIndicatorGetRsiData,
-	MarketDataTechnicalIndicatorGetRsiErrors,
-	MarketDataTechnicalIndicatorGetRsiResponses,
-	MarketDataTechnicalIndicatorGetSmaData,
-	MarketDataTechnicalIndicatorGetSmaErrors,
-	MarketDataTechnicalIndicatorGetSmaResponses,
-	MarketDataTechnicalIndicatorGetStochData,
-	MarketDataTechnicalIndicatorGetStochErrors,
-	MarketDataTechnicalIndicatorGetStochResponses,
-	MarketDataTechnicalIndicatorGetTemaData,
-	MarketDataTechnicalIndicatorGetTemaErrors,
-	MarketDataTechnicalIndicatorGetTemaResponses,
-	MarketDataTechnicalIndicatorGetWmaData,
-	MarketDataTechnicalIndicatorGetWmaErrors,
-	MarketDataTechnicalIndicatorGetWmaResponses,
+	MarketDataSearchStockSymbolsData,
+	MarketDataSearchStockSymbolsErrors,
+	MarketDataSearchStockSymbolsResponses,
+	MlActivateFeatureData,
+	MlActivateFeatureErrors,
+	MlActivateFeatureResponses,
 	MlCompareModelsData,
 	MlCompareModelsErrors,
 	MlCompareModelsResponses,
@@ -334,12 +323,27 @@ import type {
 	MlCreateExperimentData,
 	MlCreateExperimentErrors,
 	MlCreateExperimentResponses,
+	MlCreateFeatureData,
+	MlCreateFeatureErrors,
+	MlCreateFeatureResponses,
+	MlCreateVersionData,
+	MlCreateVersionErrors,
+	MlCreateVersionResponses,
+	MlDeleteFeatureData,
+	MlDeleteFeatureErrors,
+	MlDeleteFeatureResponses,
 	MlDeleteModelData,
 	MlDeleteModelErrors,
 	MlDeleteModelResponses,
+	MlDeprecateFeatureData,
+	MlDeprecateFeatureErrors,
+	MlDeprecateFeatureResponses,
 	MlGetAbTestData,
 	MlGetAbTestErrors,
 	MlGetAbTestResponses,
+	MlGetDatasetData,
+	MlGetDatasetErrors,
+	MlGetDatasetResponses,
 	MlGetDeploymentData,
 	MlGetDeploymentErrors,
 	MlGetDeploymentResponses,
@@ -355,6 +359,18 @@ import type {
 	MlGetFairnessReportData,
 	MlGetFairnessReportErrors,
 	MlGetFairnessReportResponses,
+	MlGetFeatureData,
+	MlGetFeatureErrors,
+	MlGetFeatureLineageData,
+	MlGetFeatureLineageErrors,
+	MlGetFeatureLineageResponses,
+	MlGetFeatureResponses,
+	MlGetFeatureStatisticsData,
+	MlGetFeatureStatisticsErrors,
+	MlGetFeatureStatisticsResponses,
+	MlGetFeatureVersionsData,
+	MlGetFeatureVersionsErrors,
+	MlGetFeatureVersionsResponses,
 	MlGetModelInfoData,
 	MlGetModelInfoErrors,
 	MlGetModelInfoResponses,
@@ -368,6 +384,8 @@ import type {
 	MlListAbTestsResponses,
 	MlListBenchmarksData,
 	MlListBenchmarksResponses,
+	MlListDatasetsData,
+	MlListDatasetsResponses,
 	MlListDeploymentsData,
 	MlListDeploymentsErrors,
 	MlListDeploymentsResponses,
@@ -383,6 +401,9 @@ import type {
 	MlListFairnessReportsData,
 	MlListFairnessReportsErrors,
 	MlListFairnessReportsResponses,
+	MlListFeaturesData,
+	MlListFeaturesErrors,
+	MlListFeaturesResponses,
 	MlListModelsData,
 	MlListModelsErrors,
 	MlListModelsResponses,
@@ -400,6 +421,9 @@ import type {
 	MlRecordDriftEventData,
 	MlRecordDriftEventErrors,
 	MlRecordDriftEventResponses,
+	MlRecordFeatureUsageData,
+	MlRecordFeatureUsageErrors,
+	MlRecordFeatureUsageResponses,
 	MlRegisterModelVersionData,
 	MlRegisterModelVersionErrors,
 	MlRegisterModelVersionResponses,
@@ -409,6 +433,9 @@ import type {
 	MlRequestFairnessAuditData,
 	MlRequestFairnessAuditErrors,
 	MlRequestFairnessAuditResponses,
+	MlRollbackVersionData,
+	MlRollbackVersionErrors,
+	MlRollbackVersionResponses,
 	MlRunBenchmarkData,
 	MlRunBenchmarkErrors,
 	MlRunBenchmarkResponses,
@@ -424,6 +451,9 @@ import type {
 	MlUpdateExperimentData,
 	MlUpdateExperimentErrors,
 	MlUpdateExperimentResponses,
+	MlUpdateFeatureData,
+	MlUpdateFeatureErrors,
+	MlUpdateFeatureResponses,
 	MlUpdateModelVersionData,
 	MlUpdateModelVersionErrors,
 	MlUpdateModelVersionResponses,
@@ -433,60 +463,30 @@ import type {
 	MlUpdateScenarioData,
 	MlUpdateScenarioErrors,
 	MlUpdateScenarioResponses,
-	NarrativeGenerateNarrativeReportData,
-	NarrativeGenerateNarrativeReportErrors,
-	NarrativeGenerateNarrativeReportResponses,
 	OAuth2AuthorizeData,
 	OAuth2AuthorizeErrors,
 	OAuth2AuthorizeResponses,
 	OAuth2CallbackData,
 	OAuth2CallbackErrors,
 	OAuth2CallbackResponses,
-	PromptGovernanceApprovePromptData,
-	PromptGovernanceApprovePromptErrors,
-	PromptGovernanceApprovePromptResponses,
-	PromptGovernanceCreatePromptTemplateData,
-	PromptGovernanceCreatePromptTemplateErrors,
-	PromptGovernanceCreatePromptTemplateResponses,
-	PromptGovernanceEvaluatePromptData,
-	PromptGovernanceEvaluatePromptErrors,
-	PromptGovernanceEvaluatePromptResponses,
-	PromptGovernanceListPromptAuditLogsData,
-	PromptGovernanceListPromptAuditLogsErrors,
-	PromptGovernanceListPromptAuditLogsResponses,
-	PromptGovernanceListPromptTemplatesData,
-	PromptGovernanceListPromptTemplatesErrors,
-	PromptGovernanceListPromptTemplatesResponses,
-	PromptGovernanceLogPromptUsageData,
-	PromptGovernanceLogPromptUsageErrors,
-	PromptGovernanceLogPromptUsageResponses,
-	PromptGovernanceRejectPromptData,
-	PromptGovernanceRejectPromptErrors,
-	PromptGovernanceRejectPromptResponses,
-	PromptGovernanceSubmitPromptForReviewData,
-	PromptGovernanceSubmitPromptForReviewErrors,
-	PromptGovernanceSubmitPromptForReviewResponses,
-	PromptGovernanceUpdatePromptTemplateData,
-	PromptGovernanceUpdatePromptTemplateErrors,
-	PromptGovernanceUpdatePromptTemplateResponses,
 	SignalsGetMlSignalData,
 	SignalsGetMlSignalErrors,
 	SignalsGetMlSignalResponses,
-	StrategyBuilderApproveStrategyData,
-	StrategyBuilderApproveStrategyErrors,
-	StrategyBuilderApproveStrategyResponses,
-	StrategyBuilderGenerateStrategyData,
-	StrategyBuilderGenerateStrategyErrors,
-	StrategyBuilderGenerateStrategyResponses,
-	StrategyBuilderSearchIndicatorsData,
-	StrategyBuilderSearchIndicatorsErrors,
-	StrategyBuilderSearchIndicatorsResponses,
 	StrategyCreateStrategyData,
 	StrategyCreateStrategyErrors,
+	StrategyCreateStrategyFromTemplateData,
+	StrategyCreateStrategyFromTemplateErrors,
+	StrategyCreateStrategyFromTemplateResponses,
 	StrategyCreateStrategyResponses,
+	StrategyCreateTemplateData,
+	StrategyCreateTemplateErrors,
+	StrategyCreateTemplateResponses,
 	StrategyDeleteStrategyData,
 	StrategyDeleteStrategyErrors,
 	StrategyDeleteStrategyResponses,
+	StrategyDeleteTemplateData,
+	StrategyDeleteTemplateErrors,
+	StrategyDeleteTemplateResponses,
 	StrategyExecuteStrategyData,
 	StrategyExecuteStrategyErrors,
 	StrategyExecuteStrategyResponses,
@@ -502,36 +502,29 @@ import type {
 	StrategyGetStrategyPerformanceErrors,
 	StrategyGetStrategyPerformanceResponses,
 	StrategyGetStrategyResponses,
+	StrategyGetTemplateData,
+	StrategyGetTemplateErrors,
+	StrategyGetTemplateResponses,
+	StrategyGetTemplatesData,
+	StrategyGetTemplatesErrors,
+	StrategyGetTemplatesResponses,
+	StrategyGetTemplateUsageStatsData,
+	StrategyGetTemplateUsageStatsErrors,
+	StrategyGetTemplateUsageStatsResponses,
 	StrategyUpdateStrategyData,
 	StrategyUpdateStrategyErrors,
 	StrategyUpdateStrategyResponses,
-	TasksGetStockUpdateStatusData,
-	TasksGetStockUpdateStatusResponses,
-	TasksRunStockDeltaUpdateData,
-	TasksRunStockDeltaUpdateResponses,
-	TasksRunStockForceUpdateData,
-	TasksRunStockForceUpdateResponses,
-	TemplateCreateStrategyFromTemplateData,
-	TemplateCreateStrategyFromTemplateErrors,
-	TemplateCreateStrategyFromTemplateResponses,
-	TemplateCreateTemplateData,
-	TemplateCreateTemplateErrors,
-	TemplateCreateTemplateResponses,
-	TemplateDeleteTemplateData,
-	TemplateDeleteTemplateErrors,
-	TemplateDeleteTemplateResponses,
-	TemplateGetTemplateData,
-	TemplateGetTemplateErrors,
-	TemplateGetTemplateResponses,
-	TemplateGetTemplatesData,
-	TemplateGetTemplatesErrors,
-	TemplateGetTemplatesResponses,
-	TemplateGetTemplateUsageStatsData,
-	TemplateGetTemplateUsageStatsErrors,
-	TemplateGetTemplateUsageStatsResponses,
-	TemplateUpdateTemplateData,
-	TemplateUpdateTemplateErrors,
-	TemplateUpdateTemplateResponses,
+	StrategyUpdateTemplateData,
+	StrategyUpdateTemplateErrors,
+	StrategyUpdateTemplateResponses,
+	SystemGetStockUpdateStatusData,
+	SystemGetStockUpdateStatusResponses,
+	SystemRunStockDeltaUpdateData,
+	SystemRunStockDeltaUpdateResponses,
+	SystemRunStockForceUpdateData,
+	SystemRunStockForceUpdateResponses,
+	SystemServiceHealthCheckData,
+	SystemServiceHealthCheckResponses,
 	UserDeleteUserData,
 	UserDeleteUserErrors,
 	UserDeleteUserResponses,
@@ -1066,17 +1059,17 @@ export class OAuth2Service {
 	}
 }
 
-export class MarketDataStockService {
+export class MarketDataService {
 	/**
 	 * Get Daily Prices
 	 * 지정된 종목의 일일 주가 데이터(OHLCV)를 조회합니다.
 	 */
 	public static getDailyPrices<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataStockGetDailyPricesData, ThrowOnError>,
+		options: Options<MarketDataGetDailyPricesData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataStockGetDailyPricesResponses,
-			MarketDataStockGetDailyPricesErrors,
+			MarketDataGetDailyPricesResponses,
+			MarketDataGetDailyPricesErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1095,11 +1088,11 @@ export class MarketDataStockService {
 	 * 지정된 종목의 주간 주가 데이터(OHLCV)를 조회합니다.
 	 */
 	public static getWeeklyPrices<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataStockGetWeeklyPricesData, ThrowOnError>,
+		options: Options<MarketDataGetWeeklyPricesData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataStockGetWeeklyPricesResponses,
-			MarketDataStockGetWeeklyPricesErrors,
+			MarketDataGetWeeklyPricesResponses,
+			MarketDataGetWeeklyPricesErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1118,11 +1111,11 @@ export class MarketDataStockService {
 	 * 지정된 종목의 월간 주가 데이터(OHLCV)를 조회합니다.
 	 */
 	public static getMonthlyPrices<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataStockGetMonthlyPricesData, ThrowOnError>,
+		options: Options<MarketDataGetMonthlyPricesData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataStockGetMonthlyPricesResponses,
-			MarketDataStockGetMonthlyPricesErrors,
+			MarketDataGetMonthlyPricesResponses,
+			MarketDataGetMonthlyPricesErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1141,11 +1134,11 @@ export class MarketDataStockService {
 	 * 지정된 종목의 실시간 호가 정보를 조회합니다.
 	 */
 	public static getQuote<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataStockGetQuoteData, ThrowOnError>,
+		options: Options<MarketDataGetQuoteData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataStockGetQuoteResponses,
-			MarketDataStockGetQuoteErrors,
+			MarketDataGetQuoteResponses,
+			MarketDataGetQuoteErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1164,11 +1157,11 @@ export class MarketDataStockService {
 	 * 지정된 종목의 실시간 또는 분봉 데이터를 조회합니다.
 	 */
 	public static getIntradayData<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataStockGetIntradayDataData, ThrowOnError>,
+		options: Options<MarketDataGetIntradayDataData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataStockGetIntradayDataResponses,
-			MarketDataStockGetIntradayDataErrors,
+			MarketDataGetIntradayDataResponses,
+			MarketDataGetIntradayDataErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1187,11 +1180,11 @@ export class MarketDataStockService {
 	 * 주식 심볼 검색 (Alpha Vantage의 심볼 서치 기능 활용)
 	 */
 	public static searchStockSymbols<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataStockSearchStockSymbolsData, ThrowOnError>,
+		options: Options<MarketDataSearchStockSymbolsData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataStockSearchStockSymbolsResponses,
-			MarketDataStockSearchStockSymbolsErrors,
+			MarketDataSearchStockSymbolsResponses,
+			MarketDataSearchStockSymbolsErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1204,19 +1197,17 @@ export class MarketDataStockService {
 			...options,
 		});
 	}
-}
 
-export class MarketDataCryptoService {
 	/**
 	 * Get Exchange Rate
 	 * 암호화폐/법정화폐 간의 실시간 환율을 조회합니다.
 	 */
 	public static getExchangeRate<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataCryptoGetExchangeRateData, ThrowOnError>,
+		options: Options<MarketDataGetExchangeRateData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataCryptoGetExchangeRateResponses,
-			MarketDataCryptoGetExchangeRateErrors,
+			MarketDataGetExchangeRateResponses,
+			MarketDataGetExchangeRateErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1235,11 +1226,11 @@ export class MarketDataCryptoService {
 	 * 여러 암호화폐의 환율을 일괄 조회합니다.
 	 */
 	public static getBulkExchangeRates<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataCryptoGetBulkExchangeRatesData, ThrowOnError>,
+		options: Options<MarketDataGetBulkExchangeRatesData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			MarketDataCryptoGetBulkExchangeRatesResponses,
-			MarketDataCryptoGetBulkExchangeRatesErrors,
+			MarketDataGetBulkExchangeRatesResponses,
+			MarketDataGetBulkExchangeRatesErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1254,84 +1245,15 @@ export class MarketDataCryptoService {
 	}
 
 	/**
-	 * Get Daily Prices
-	 * 암호화폐의 일일 가격 데이터(OHLCV)를 조회합니다.
-	 */
-	public static getDailyPrices<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataCryptoGetDailyPricesData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			MarketDataCryptoGetDailyPricesResponses,
-			MarketDataCryptoGetDailyPricesErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/market-data/crypto/daily/{symbol}",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Weekly Prices
-	 * 암호화폐의 주간 가격 데이터(OHLCV)를 조회합니다.
-	 */
-	public static getWeeklyPrices<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataCryptoGetWeeklyPricesData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			MarketDataCryptoGetWeeklyPricesResponses,
-			MarketDataCryptoGetWeeklyPricesErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/market-data/crypto/weekly/{symbol}",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Monthly Prices
-	 * 암호화폐의 월간 가격 데이터(OHLCV)를 조회합니다.
-	 */
-	public static getMonthlyPrices<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataCryptoGetMonthlyPricesData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			MarketDataCryptoGetMonthlyPricesResponses,
-			MarketDataCryptoGetMonthlyPricesErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/market-data/crypto/monthly/{symbol}",
-			...options,
-		});
-	}
-
-	/**
 	 * Get Bitcoin Price
 	 * 비트코인 가격 데이터를 조회합니다.
 	 */
 	public static getBitcoinPrice<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataCryptoGetBitcoinPriceData, ThrowOnError>,
+		options: Options<MarketDataGetBitcoinPriceData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataCryptoGetBitcoinPriceResponses,
-			MarketDataCryptoGetBitcoinPriceErrors,
+			MarketDataGetBitcoinPriceResponses,
+			MarketDataGetBitcoinPriceErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1350,11 +1272,11 @@ export class MarketDataCryptoService {
 	 * 이더리움 가격 데이터를 조회합니다.
 	 */
 	public static getEthereumPrice<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataCryptoGetEthereumPriceData, ThrowOnError>,
+		options: Options<MarketDataGetEthereumPriceData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataCryptoGetEthereumPriceResponses,
-			MarketDataCryptoGetEthereumPriceErrors,
+			MarketDataGetEthereumPriceResponses,
+			MarketDataGetEthereumPriceErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1367,19 +1289,17 @@ export class MarketDataCryptoService {
 			...options,
 		});
 	}
-}
 
-export class MarketDataFundamentalService {
 	/**
 	 * Get Company Overview
 	 * 지정된 종목의 기업 개요 정보를 조회합니다.
 	 */
 	public static getCompanyOverview<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataFundamentalGetCompanyOverviewData, ThrowOnError>,
+		options: Options<MarketDataGetCompanyOverviewData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataFundamentalGetCompanyOverviewResponses,
-			MarketDataFundamentalGetCompanyOverviewErrors,
+			MarketDataGetCompanyOverviewResponses,
+			MarketDataGetCompanyOverviewErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1398,11 +1318,11 @@ export class MarketDataFundamentalService {
 	 * 지정된 종목의 손익계산서를 조회합니다.
 	 */
 	public static getIncomeStatement<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataFundamentalGetIncomeStatementData, ThrowOnError>,
+		options: Options<MarketDataGetIncomeStatementData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataFundamentalGetIncomeStatementResponses,
-			MarketDataFundamentalGetIncomeStatementErrors,
+			MarketDataGetIncomeStatementResponses,
+			MarketDataGetIncomeStatementErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1421,11 +1341,11 @@ export class MarketDataFundamentalService {
 	 * 지정된 종목의 재무상태표를 조회합니다.
 	 */
 	public static getBalanceSheet<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataFundamentalGetBalanceSheetData, ThrowOnError>,
+		options: Options<MarketDataGetBalanceSheetData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataFundamentalGetBalanceSheetResponses,
-			MarketDataFundamentalGetBalanceSheetErrors,
+			MarketDataGetBalanceSheetResponses,
+			MarketDataGetBalanceSheetErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1444,11 +1364,11 @@ export class MarketDataFundamentalService {
 	 * 지정된 종목의 현금흐름표를 조회합니다.
 	 */
 	public static getCashFlow<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataFundamentalGetCashFlowData, ThrowOnError>,
+		options: Options<MarketDataGetCashFlowData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataFundamentalGetCashFlowResponses,
-			MarketDataFundamentalGetCashFlowErrors,
+			MarketDataGetCashFlowResponses,
+			MarketDataGetCashFlowErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1467,11 +1387,11 @@ export class MarketDataFundamentalService {
 	 * 지정된 종목의 실적 데이터를 조회합니다.
 	 */
 	public static getEarnings<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataFundamentalGetEarningsData, ThrowOnError>,
+		options: Options<MarketDataGetEarningsData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataFundamentalGetEarningsResponses,
-			MarketDataFundamentalGetEarningsErrors,
+			MarketDataGetEarningsResponses,
+			MarketDataGetEarningsErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1484,19 +1404,17 @@ export class MarketDataFundamentalService {
 			...options,
 		});
 	}
-}
 
-export class MarketDataEconomicIndicatorService {
 	/**
 	 * Get Gdp Data
 	 * 미국 GDP 데이터를 조회합니다.
 	 */
 	public static getGdpData<ThrowOnError extends boolean = false>(
-		options?: Options<MarketDataEconomicIndicatorGetGdpDataData, ThrowOnError>,
+		options?: Options<MarketDataGetGdpDataData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
-			MarketDataEconomicIndicatorGetGdpDataResponses,
-			MarketDataEconomicIndicatorGetGdpDataErrors,
+			MarketDataGetGdpDataResponses,
+			MarketDataGetGdpDataErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1515,14 +1433,11 @@ export class MarketDataEconomicIndicatorService {
 	 * 미국 인플레이션 지표 데이터를 조회합니다.
 	 */
 	public static getInflationData<ThrowOnError extends boolean = false>(
-		options?: Options<
-			MarketDataEconomicIndicatorGetInflationDataData,
-			ThrowOnError
-		>,
+		options?: Options<MarketDataGetInflationDataData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
-			MarketDataEconomicIndicatorGetInflationDataResponses,
-			MarketDataEconomicIndicatorGetInflationDataErrors,
+			MarketDataGetInflationDataResponses,
+			MarketDataGetInflationDataErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1541,14 +1456,11 @@ export class MarketDataEconomicIndicatorService {
 	 * 미국 기준금리 및 채권 수익률 데이터를 조회합니다.
 	 */
 	public static getInterestRates<ThrowOnError extends boolean = false>(
-		options?: Options<
-			MarketDataEconomicIndicatorGetInterestRatesData,
-			ThrowOnError
-		>,
+		options?: Options<MarketDataGetInterestRatesData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
-			MarketDataEconomicIndicatorGetInterestRatesResponses,
-			MarketDataEconomicIndicatorGetInterestRatesErrors,
+			MarketDataGetInterestRatesResponses,
+			MarketDataGetInterestRatesErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1567,14 +1479,11 @@ export class MarketDataEconomicIndicatorService {
 	 * 미국 실업률 및 고용 관련 지표를 조회합니다.
 	 */
 	public static getEmploymentData<ThrowOnError extends boolean = false>(
-		options?: Options<
-			MarketDataEconomicIndicatorGetEmploymentDataData,
-			ThrowOnError
-		>,
+		options?: Options<MarketDataGetEmploymentDataData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
-			MarketDataEconomicIndicatorGetEmploymentDataResponses,
-			MarketDataEconomicIndicatorGetEmploymentDataErrors,
+			MarketDataGetEmploymentDataResponses,
+			MarketDataGetEmploymentDataErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1587,19 +1496,17 @@ export class MarketDataEconomicIndicatorService {
 			...options,
 		});
 	}
-}
 
-export class MarketDataIntelligenceService {
 	/**
 	 * Get News
 	 * 지정된 종목 관련 뉴스를 조회합니다.
 	 */
 	public static getNews<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataIntelligenceGetNewsData, ThrowOnError>,
+		options: Options<MarketDataGetNewsData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataIntelligenceGetNewsResponses,
-			MarketDataIntelligenceGetNewsErrors,
+			MarketDataGetNewsResponses,
+			MarketDataGetNewsErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1618,14 +1525,11 @@ export class MarketDataIntelligenceService {
 	 * 지정된 종목의 감정 분석 결과를 조회합니다.
 	 */
 	public static getSentimentAnalysis<ThrowOnError extends boolean = false>(
-		options: Options<
-			MarketDataIntelligenceGetSentimentAnalysisData,
-			ThrowOnError
-		>,
+		options: Options<MarketDataGetSentimentAnalysisData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataIntelligenceGetSentimentAnalysisResponses,
-			MarketDataIntelligenceGetSentimentAnalysisErrors,
+			MarketDataGetSentimentAnalysisResponses,
+			MarketDataGetSentimentAnalysisErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1644,14 +1548,11 @@ export class MarketDataIntelligenceService {
 	 * 지정된 종목의 분석가 추천 정보를 조회합니다.
 	 */
 	public static getAnalystRecommendations<ThrowOnError extends boolean = false>(
-		options: Options<
-			MarketDataIntelligenceGetAnalystRecommendationsData,
-			ThrowOnError
-		>,
+		options: Options<MarketDataGetAnalystRecommendationsData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataIntelligenceGetAnalystRecommendationsResponses,
-			MarketDataIntelligenceGetAnalystRecommendationsErrors,
+			MarketDataGetAnalystRecommendationsResponses,
+			MarketDataGetAnalystRecommendationsErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1670,14 +1571,11 @@ export class MarketDataIntelligenceService {
 	 * 지정된 종목의 소셜 미디어 감정 분석을 조회합니다.
 	 */
 	public static getSocialSentiment<ThrowOnError extends boolean = false>(
-		options: Options<
-			MarketDataIntelligenceGetSocialSentimentData,
-			ThrowOnError
-		>,
+		options: Options<MarketDataGetSocialSentimentData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataIntelligenceGetSocialSentimentResponses,
-			MarketDataIntelligenceGetSocialSentimentErrors,
+			MarketDataGetSocialSentimentResponses,
+			MarketDataGetSocialSentimentErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1690,9 +1588,7 @@ export class MarketDataIntelligenceService {
 			...options,
 		});
 	}
-}
 
-export class MarketDataManagementService {
 	/**
 	 * Collect Company Info
 	 * 지정된 심볼의 기업 정보를 수집하여 저장
@@ -1701,11 +1597,11 @@ export class MarketDataManagementService {
 	 * 업종 분류 등을 수집하고 데이터베이스에 저장합니다.
 	 */
 	public static collectCompanyInfo<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataManagementCollectCompanyInfoData, ThrowOnError>,
+		options: Options<MarketDataCollectCompanyInfoData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			MarketDataManagementCollectCompanyInfoResponses,
-			MarketDataManagementCollectCompanyInfoErrors,
+			MarketDataCollectCompanyInfoResponses,
+			MarketDataCollectCompanyInfoErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1727,11 +1623,11 @@ export class MarketDataManagementService {
 	 * DuckDB 캐시 및 MongoDB에 저장합니다.
 	 */
 	public static collectMarketData<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataManagementCollectMarketDataData, ThrowOnError>,
+		options: Options<MarketDataCollectMarketDataData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			MarketDataManagementCollectMarketDataResponses,
-			MarketDataManagementCollectMarketDataErrors,
+			MarketDataCollectMarketDataResponses,
+			MarketDataCollectMarketDataErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1753,11 +1649,11 @@ export class MarketDataManagementService {
 	 * 기업 정보와 주가 데이터를 순차적으로 수집합니다.
 	 */
 	public static collectBulkData<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataManagementCollectBulkDataData, ThrowOnError>,
+		options: Options<MarketDataCollectBulkDataData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			MarketDataManagementCollectBulkDataResponses,
-			MarketDataManagementCollectBulkDataErrors,
+			MarketDataCollectBulkDataResponses,
+			MarketDataCollectBulkDataErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1778,11 +1674,11 @@ export class MarketDataManagementService {
 	 * 기업 정보, 주가 데이터의 수집 상태와 품질을 확인합니다.
 	 */
 	public static getDataCoverage<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataManagementGetDataCoverageData, ThrowOnError>,
+		options: Options<MarketDataGetDataCoverageData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataManagementGetDataCoverageResponses,
-			MarketDataManagementGetDataCoverageErrors,
+			MarketDataGetDataCoverageResponses,
+			MarketDataGetDataCoverageErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1803,11 +1699,11 @@ export class MarketDataManagementService {
 	 * API 연결 상태, 캐시 성능, 수집 통계 등을 확인합니다.
 	 */
 	public static getSystemStatus<ThrowOnError extends boolean = false>(
-		options?: Options<MarketDataManagementGetSystemStatusData, ThrowOnError>,
+		options?: Options<MarketDataGetSystemStatusData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
-			MarketDataManagementGetSystemStatusResponses,
-			MarketDataManagementGetSystemStatusErrors,
+			MarketDataGetSystemStatusResponses,
+			MarketDataGetSystemStatusErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1820,22 +1716,17 @@ export class MarketDataManagementService {
 			...options,
 		});
 	}
-}
 
-export class MarketDataTechnicalIndicatorService {
 	/**
 	 * Get Indicator List
 	 * 지원하는 기술적 지표 목록을 조회합니다.
 	 */
 	public static getIndicatorList<ThrowOnError extends boolean = false>(
-		options?: Options<
-			MarketDataTechnicalIndicatorGetIndicatorListData,
-			ThrowOnError
-		>,
+		options?: Options<MarketDataGetIndicatorListData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
-			MarketDataTechnicalIndicatorGetIndicatorListResponses,
-			MarketDataTechnicalIndicatorGetIndicatorListErrors,
+			MarketDataGetIndicatorListResponses,
+			MarketDataGetIndicatorListErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1854,11 +1745,11 @@ export class MarketDataTechnicalIndicatorService {
 	 * 단순이동평균(SMA)을 조회합니다.
 	 */
 	public static getSma<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataTechnicalIndicatorGetSmaData, ThrowOnError>,
+		options: Options<MarketDataGetSmaData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataTechnicalIndicatorGetSmaResponses,
-			MarketDataTechnicalIndicatorGetSmaErrors,
+			MarketDataGetSmaResponses,
+			MarketDataGetSmaErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1877,11 +1768,11 @@ export class MarketDataTechnicalIndicatorService {
 	 * 가중이동평균(WMA)을 조회합니다.
 	 */
 	public static getWma<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataTechnicalIndicatorGetWmaData, ThrowOnError>,
+		options: Options<MarketDataGetWmaData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataTechnicalIndicatorGetWmaResponses,
-			MarketDataTechnicalIndicatorGetWmaErrors,
+			MarketDataGetWmaResponses,
+			MarketDataGetWmaErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1900,11 +1791,11 @@ export class MarketDataTechnicalIndicatorService {
 	 * 이중지수이동평균(DEMA)을 조회합니다.
 	 */
 	public static getDema<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataTechnicalIndicatorGetDemaData, ThrowOnError>,
+		options: Options<MarketDataGetDemaData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataTechnicalIndicatorGetDemaResponses,
-			MarketDataTechnicalIndicatorGetDemaErrors,
+			MarketDataGetDemaResponses,
+			MarketDataGetDemaErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1923,11 +1814,11 @@ export class MarketDataTechnicalIndicatorService {
 	 * 삼중지수이동평균(TEMA)을 조회합니다.
 	 */
 	public static getTema<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataTechnicalIndicatorGetTemaData, ThrowOnError>,
+		options: Options<MarketDataGetTemaData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataTechnicalIndicatorGetTemaResponses,
-			MarketDataTechnicalIndicatorGetTemaErrors,
+			MarketDataGetTemaResponses,
+			MarketDataGetTemaErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1946,11 +1837,11 @@ export class MarketDataTechnicalIndicatorService {
 	 * 지수이동평균(EMA)을 조회합니다.
 	 */
 	public static getEma<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataTechnicalIndicatorGetEmaData, ThrowOnError>,
+		options: Options<MarketDataGetEmaData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataTechnicalIndicatorGetEmaResponses,
-			MarketDataTechnicalIndicatorGetEmaErrors,
+			MarketDataGetEmaResponses,
+			MarketDataGetEmaErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1969,11 +1860,11 @@ export class MarketDataTechnicalIndicatorService {
 	 * 상대강도지수(RSI)를 조회합니다.
 	 */
 	public static getRsi<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataTechnicalIndicatorGetRsiData, ThrowOnError>,
+		options: Options<MarketDataGetRsiData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataTechnicalIndicatorGetRsiResponses,
-			MarketDataTechnicalIndicatorGetRsiErrors,
+			MarketDataGetRsiResponses,
+			MarketDataGetRsiErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1992,11 +1883,11 @@ export class MarketDataTechnicalIndicatorService {
 	 * MACD를 조회합니다.
 	 */
 	public static getMacd<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataTechnicalIndicatorGetMacdData, ThrowOnError>,
+		options: Options<MarketDataGetMacdData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataTechnicalIndicatorGetMacdResponses,
-			MarketDataTechnicalIndicatorGetMacdErrors,
+			MarketDataGetMacdResponses,
+			MarketDataGetMacdErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -2015,11 +1906,11 @@ export class MarketDataTechnicalIndicatorService {
 	 * 볼린저밴드(BBANDS)를 조회합니다.
 	 */
 	public static getBbands<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataTechnicalIndicatorGetBbandsData, ThrowOnError>,
+		options: Options<MarketDataGetBbandsData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataTechnicalIndicatorGetBbandsResponses,
-			MarketDataTechnicalIndicatorGetBbandsErrors,
+			MarketDataGetBbandsResponses,
+			MarketDataGetBbandsErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -2038,11 +1929,11 @@ export class MarketDataTechnicalIndicatorService {
 	 * 평균방향지수(ADX)를 조회합니다.
 	 */
 	public static getAdx<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataTechnicalIndicatorGetAdxData, ThrowOnError>,
+		options: Options<MarketDataGetAdxData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataTechnicalIndicatorGetAdxResponses,
-			MarketDataTechnicalIndicatorGetAdxErrors,
+			MarketDataGetAdxResponses,
+			MarketDataGetAdxErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -2061,11 +1952,11 @@ export class MarketDataTechnicalIndicatorService {
 	 * 평균진폭(ATR)을 조회합니다.
 	 */
 	public static getAtr<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataTechnicalIndicatorGetAtrData, ThrowOnError>,
+		options: Options<MarketDataGetAtrData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataTechnicalIndicatorGetAtrResponses,
-			MarketDataTechnicalIndicatorGetAtrErrors,
+			MarketDataGetAtrResponses,
+			MarketDataGetAtrErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -2084,11 +1975,11 @@ export class MarketDataTechnicalIndicatorService {
 	 * 스토캐스틱 오실레이터(STOCH)를 조회합니다.
 	 */
 	public static getStoch<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataTechnicalIndicatorGetStochData, ThrowOnError>,
+		options: Options<MarketDataGetStochData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataTechnicalIndicatorGetStochResponses,
-			MarketDataTechnicalIndicatorGetStochErrors,
+			MarketDataGetStochResponses,
+			MarketDataGetStochErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -2101,19 +1992,17 @@ export class MarketDataTechnicalIndicatorService {
 			...options,
 		});
 	}
-}
 
-export class MarketDataRegimeService {
 	/**
 	 * Get Market Regime
 	 * Return the latest market regime snapshot.
 	 */
 	public static getMarketRegime<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataRegimeGetMarketRegimeData, ThrowOnError>,
+		options: Options<MarketDataGetMarketRegimeData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataRegimeGetMarketRegimeResponses,
-			MarketDataRegimeGetMarketRegimeErrors,
+			MarketDataGetMarketRegimeResponses,
+			MarketDataGetMarketRegimeErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -2126,34 +2015,7 @@ export class MarketDataRegimeService {
 			...options,
 		});
 	}
-}
 
-export class MarketRegimeService {
-	/**
-	 * Get Market Regime
-	 * Return the latest market regime snapshot.
-	 */
-	public static getMarketRegime<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataRegimeGetMarketRegimeData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			MarketDataRegimeGetMarketRegimeResponses,
-			MarketDataRegimeGetMarketRegimeErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/market-data/regime/",
-			...options,
-		});
-	}
-}
-
-export class MarketDataService {
 	/**
 	 * Get Market Data Info
 	 * 마켓 데이터 API 정보 및 사용 가능한 엔드포인트 목록
@@ -2201,90 +2063,17 @@ export class MarketDataService {
 	}
 }
 
-export class StrategyService {
+export class MarketRegimeService {
 	/**
-	 * Get Strategies
-	 * Get list of strategies
+	 * Get Market Regime
+	 * Return the latest market regime snapshot.
 	 */
-	public static getStrategies<ThrowOnError extends boolean = false>(
-		options?: Options<StrategyGetStrategiesData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			StrategyGetStrategiesResponses,
-			StrategyGetStrategiesErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/strategies/",
-			...options,
-		});
-	}
-
-	/**
-	 * Create Strategy
-	 * Create a new strategy
-	 */
-	public static createStrategy<ThrowOnError extends boolean = false>(
-		options: Options<StrategyCreateStrategyData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			StrategyCreateStrategyResponses,
-			StrategyCreateStrategyErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/strategies/",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Delete Strategy
-	 * Delete strategy (soft delete)
-	 */
-	public static deleteStrategy<ThrowOnError extends boolean = false>(
-		options: Options<StrategyDeleteStrategyData, ThrowOnError>,
-	) {
-		return (options.client ?? client).delete<
-			StrategyDeleteStrategyResponses,
-			StrategyDeleteStrategyErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/strategies/{strategy_id}",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Strategy
-	 * Get strategy by ID
-	 */
-	public static getStrategy<ThrowOnError extends boolean = false>(
-		options: Options<StrategyGetStrategyData, ThrowOnError>,
+	public static getMarketRegime<ThrowOnError extends boolean = false>(
+		options: Options<MarketDataGetMarketRegimeData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			StrategyGetStrategyResponses,
-			StrategyGetStrategyErrors,
+			MarketDataGetMarketRegimeResponses,
+			MarketDataGetMarketRegimeErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -2293,826 +2082,7 @@ export class StrategyService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/strategies/{strategy_id}",
-			...options,
-		});
-	}
-
-	/**
-	 * Update Strategy
-	 * Update strategy
-	 */
-	public static updateStrategy<ThrowOnError extends boolean = false>(
-		options: Options<StrategyUpdateStrategyData, ThrowOnError>,
-	) {
-		return (options.client ?? client).put<
-			StrategyUpdateStrategyResponses,
-			StrategyUpdateStrategyErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/strategies/{strategy_id}",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Execute Strategy
-	 * Execute strategy and generate signal
-	 */
-	public static executeStrategy<ThrowOnError extends boolean = false>(
-		options: Options<StrategyExecuteStrategyData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			StrategyExecuteStrategyResponses,
-			StrategyExecuteStrategyErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/strategies/{strategy_id}/execute",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Get Strategy Executions
-	 * Get strategy execution history
-	 */
-	public static getStrategyExecutions<ThrowOnError extends boolean = false>(
-		options: Options<StrategyGetStrategyExecutionsData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			StrategyGetStrategyExecutionsResponses,
-			StrategyGetStrategyExecutionsErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/strategies/{strategy_id}/executions",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Strategy Performance
-	 * Get strategy performance metrics
-	 */
-	public static getStrategyPerformance<ThrowOnError extends boolean = false>(
-		options: Options<StrategyGetStrategyPerformanceData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			StrategyGetStrategyPerformanceResponses,
-			StrategyGetStrategyPerformanceErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/strategies/{strategy_id}/performance",
-			...options,
-		});
-	}
-}
-
-export class TemplateService {
-	/**
-	 * Get Templates
-	 * Get list of strategy templates
-	 */
-	public static getTemplates<ThrowOnError extends boolean = false>(
-		options?: Options<TemplateGetTemplatesData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			TemplateGetTemplatesResponses,
-			TemplateGetTemplatesErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/strategies/templates/",
-			...options,
-		});
-	}
-
-	/**
-	 * Create Template
-	 * Create a new strategy template (Superuser only)
-	 */
-	public static createTemplate<ThrowOnError extends boolean = false>(
-		options: Options<TemplateCreateTemplateData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			TemplateCreateTemplateResponses,
-			TemplateCreateTemplateErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/strategies/templates/",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Delete Template
-	 * Delete template by ID (Superuser only)
-	 */
-	public static deleteTemplate<ThrowOnError extends boolean = false>(
-		options: Options<TemplateDeleteTemplateData, ThrowOnError>,
-	) {
-		return (options.client ?? client).delete<
-			TemplateDeleteTemplateResponses,
-			TemplateDeleteTemplateErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/strategies/templates/{template_id}",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Template
-	 * Get template by ID
-	 */
-	public static getTemplate<ThrowOnError extends boolean = false>(
-		options: Options<TemplateGetTemplateData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			TemplateGetTemplateResponses,
-			TemplateGetTemplateErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/strategies/templates/{template_id}",
-			...options,
-		});
-	}
-
-	/**
-	 * Update Template
-	 * Update template by ID (Superuser only)
-	 */
-	public static updateTemplate<ThrowOnError extends boolean = false>(
-		options: Options<TemplateUpdateTemplateData, ThrowOnError>,
-	) {
-		return (options.client ?? client).patch<
-			TemplateUpdateTemplateResponses,
-			TemplateUpdateTemplateErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/strategies/templates/{template_id}",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Create Strategy From Template
-	 * Create a strategy instance from template
-	 */
-	public static createStrategyFromTemplate<
-		ThrowOnError extends boolean = false,
-	>(options: Options<TemplateCreateStrategyFromTemplateData, ThrowOnError>) {
-		return (options.client ?? client).post<
-			TemplateCreateStrategyFromTemplateResponses,
-			TemplateCreateStrategyFromTemplateErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/strategies/templates/{template_id}/create-strategy",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Get Template Usage Stats
-	 * Get template usage statistics
-	 */
-	public static getTemplateUsageStats<ThrowOnError extends boolean = false>(
-		options?: Options<TemplateGetTemplateUsageStatsData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			TemplateGetTemplateUsageStatsResponses,
-			TemplateGetTemplateUsageStatsErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/strategies/templates/analytics/usage-stats",
-			...options,
-		});
-	}
-}
-
-export class BacktestService {
-	/**
-	 * Health Check
-	 * 백테스트 시스템 상태 확인 (Phase 2)
-	 */
-	public static healthCheck<ThrowOnError extends boolean = false>(
-		options?: Options<BacktestHealthCheckData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			BacktestHealthCheckResponses,
-			BacktestHealthCheckErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/health",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Backtests
-	 * Get list of backtests
-	 */
-	public static getBacktests<ThrowOnError extends boolean = false>(
-		options?: Options<BacktestGetBacktestsData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			BacktestGetBacktestsResponses,
-			BacktestGetBacktestsErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/",
-			...options,
-		});
-	}
-
-	/**
-	 * Create Backtest
-	 * Create a new backtest
-	 */
-	public static createBacktest<ThrowOnError extends boolean = false>(
-		options: Options<BacktestCreateBacktestData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			BacktestCreateBacktestResponses,
-			BacktestCreateBacktestErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Delete Backtest
-	 * Delete backtest
-	 */
-	public static deleteBacktest<ThrowOnError extends boolean = false>(
-		options: Options<BacktestDeleteBacktestData, ThrowOnError>,
-	) {
-		return (options.client ?? client).delete<
-			BacktestDeleteBacktestResponses,
-			BacktestDeleteBacktestErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/{backtest_id}",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Backtest
-	 * Get backtest by ID
-	 */
-	public static getBacktest<ThrowOnError extends boolean = false>(
-		options: Options<BacktestGetBacktestData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			BacktestGetBacktestResponses,
-			BacktestGetBacktestErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/{backtest_id}",
-			...options,
-		});
-	}
-
-	/**
-	 * Update Backtest
-	 * Update backtest
-	 */
-	public static updateBacktest<ThrowOnError extends boolean = false>(
-		options: Options<BacktestUpdateBacktestData, ThrowOnError>,
-	) {
-		return (options.client ?? client).put<
-			BacktestUpdateBacktestResponses,
-			BacktestUpdateBacktestErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/{backtest_id}",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Execute Backtest
-	 * Execute backtest with trading signals (Phase 2)
-	 */
-	public static executeBacktest<ThrowOnError extends boolean = false>(
-		options: Options<BacktestExecuteBacktestData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			BacktestExecuteBacktestResponses,
-			BacktestExecuteBacktestErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/{backtest_id}/execute",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Get Backtest Executions
-	 * Get execution history for a backtest
-	 */
-	public static getBacktestExecutions<ThrowOnError extends boolean = false>(
-		options: Options<BacktestGetBacktestExecutionsData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			BacktestGetBacktestExecutionsResponses,
-			BacktestGetBacktestExecutionsErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/{backtest_id}/executions",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Performance Analytics
-	 * 백테스트 성과 분석 (MongoDB 기반 - Phase 2)
-	 */
-	public static getPerformanceAnalytics<ThrowOnError extends boolean = false>(
-		options?: Options<BacktestGetPerformanceAnalyticsData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			BacktestGetPerformanceAnalyticsResponses,
-			BacktestGetPerformanceAnalyticsErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/analytics/performance-stats",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Trades Analytics
-	 * 거래 기록 분석 (MongoDB 기반)
-	 */
-	public static getTradesAnalytics<ThrowOnError extends boolean = false>(
-		options?: Options<BacktestGetTradesAnalyticsData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			BacktestGetTradesAnalyticsResponses,
-			BacktestGetTradesAnalyticsErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/analytics/trades",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Portfolio History
-	 * 백테스트 포트폴리오 히스토리 조회 (DuckDB)
-	 *
-	 * P3.2: 고성능 시계열 조회를 위한 DuckDB 조회
-	 */
-	public static getPortfolioHistory<ThrowOnError extends boolean = false>(
-		options: Options<BacktestGetPortfolioHistoryData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			BacktestGetPortfolioHistoryResponses,
-			BacktestGetPortfolioHistoryErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/{backtest_id}/portfolio-history",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Trades History
-	 * 백테스트 거래 내역 조회 (DuckDB)
-	 *
-	 * P3.2: 고성능 거래 내역 조회를 위한 DuckDB 조회
-	 */
-	public static getTradesHistory<ThrowOnError extends boolean = false>(
-		options: Options<BacktestGetTradesHistoryData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			BacktestGetTradesHistoryResponses,
-			BacktestGetTradesHistoryErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/{backtest_id}/trades-history",
-			...options,
-		});
-	}
-
-	/**
-	 * List Optimization Studies
-	 * List optimization studies with optional filters.
-	 *
-	 * Args:
-	 * symbol: Filter by symbol
-	 * strategy_name: Filter by strategy name
-	 * status: Filter by status (pending/running/completed/failed)
-	 * limit: Maximum number of studies to return
-	 *
-	 * Returns:
-	 * StudyListResponse with list of studies
-	 */
-	public static listOptimizationStudies<ThrowOnError extends boolean = false>(
-		options?: Options<BacktestListOptimizationStudiesData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			BacktestListOptimizationStudiesResponses,
-			BacktestListOptimizationStudiesErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/optimize/",
-			...options,
-		});
-	}
-
-	/**
-	 * Create Optimization Study
-	 * Create and start a new optimization study.
-	 *
-	 * Args:
-	 * request: Optimization configuration
-	 * background_tasks: FastAPI background tasks for async execution
-	 *
-	 * Returns:
-	 * OptimizationResponse with study name and status
-	 */
-	public static createOptimizationStudy<ThrowOnError extends boolean = false>(
-		options: Options<BacktestCreateOptimizationStudyData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			BacktestCreateOptimizationStudyResponses,
-			BacktestCreateOptimizationStudyErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/optimize/",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Get Optimization Progress
-	 * Get current progress of an optimization study.
-	 *
-	 * Args:
-	 * study_name: Study identifier
-	 *
-	 * Returns:
-	 * OptimizationResponse with progress information
-	 */
-	public static getOptimizationProgress<ThrowOnError extends boolean = false>(
-		options: Options<BacktestGetOptimizationProgressData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			BacktestGetOptimizationProgressResponses,
-			BacktestGetOptimizationProgressErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/optimize/{study_name}",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Optimization Result
-	 * Get final result of a completed optimization study.
-	 *
-	 * Args:
-	 * study_name: Study identifier
-	 *
-	 * Returns:
-	 * OptimizationResponse with optimization result
-	 */
-	public static getOptimizationResult<ThrowOnError extends boolean = false>(
-		options: Options<BacktestGetOptimizationResultData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			BacktestGetOptimizationResultResponses,
-			BacktestGetOptimizationResultErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/optimize/{study_name}/result",
-			...options,
-		});
-	}
-}
-
-export class OptimizationService {
-	/**
-	 * List Optimization Studies
-	 * List optimization studies with optional filters.
-	 *
-	 * Args:
-	 * symbol: Filter by symbol
-	 * strategy_name: Filter by strategy name
-	 * status: Filter by status (pending/running/completed/failed)
-	 * limit: Maximum number of studies to return
-	 *
-	 * Returns:
-	 * StudyListResponse with list of studies
-	 */
-	public static listOptimizationStudies<ThrowOnError extends boolean = false>(
-		options?: Options<BacktestListOptimizationStudiesData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			BacktestListOptimizationStudiesResponses,
-			BacktestListOptimizationStudiesErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/optimize/",
-			...options,
-		});
-	}
-
-	/**
-	 * Create Optimization Study
-	 * Create and start a new optimization study.
-	 *
-	 * Args:
-	 * request: Optimization configuration
-	 * background_tasks: FastAPI background tasks for async execution
-	 *
-	 * Returns:
-	 * OptimizationResponse with study name and status
-	 */
-	public static createOptimizationStudy<ThrowOnError extends boolean = false>(
-		options: Options<BacktestCreateOptimizationStudyData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			BacktestCreateOptimizationStudyResponses,
-			BacktestCreateOptimizationStudyErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/optimize/",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Get Optimization Progress
-	 * Get current progress of an optimization study.
-	 *
-	 * Args:
-	 * study_name: Study identifier
-	 *
-	 * Returns:
-	 * OptimizationResponse with progress information
-	 */
-	public static getOptimizationProgress<ThrowOnError extends boolean = false>(
-		options: Options<BacktestGetOptimizationProgressData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			BacktestGetOptimizationProgressResponses,
-			BacktestGetOptimizationProgressErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/optimize/{study_name}",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Optimization Result
-	 * Get final result of a completed optimization study.
-	 *
-	 * Args:
-	 * study_name: Study identifier
-	 *
-	 * Returns:
-	 * OptimizationResponse with optimization result
-	 */
-	public static getOptimizationResult<ThrowOnError extends boolean = false>(
-		options: Options<BacktestGetOptimizationResultData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			BacktestGetOptimizationResultResponses,
-			BacktestGetOptimizationResultErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/backtests/optimize/{study_name}/result",
+			url: "/api/v1/market-data/regime/",
 			...options,
 		});
 	}
@@ -3566,54 +2536,868 @@ export class DashboardService {
 	}
 }
 
-export class TasksService {
+export class BacktestService {
 	/**
-	 * Run Stock Delta Update
-	 * 만료된 주식 데이터를 증분 업데이트합니다.
+	 * Health Check
+	 * 백테스트 시스템 상태 확인 (Phase 2)
 	 */
-	public static runStockDeltaUpdate<ThrowOnError extends boolean = false>(
-		options?: Options<TasksRunStockDeltaUpdateData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).post<
-			TasksRunStockDeltaUpdateResponses,
-			unknown,
-			ThrowOnError
-		>({
-			url: "/api/v1/tasks/stock-update/delta",
-			...options,
-		});
-	}
-
-	/**
-	 * Run Stock Force Update
-	 * 모든 활성 심볼의 주식 데이터를 강제 전체 업데이트합니다.
-	 */
-	public static runStockForceUpdate<ThrowOnError extends boolean = false>(
-		options?: Options<TasksRunStockForceUpdateData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).post<
-			TasksRunStockForceUpdateResponses,
-			unknown,
-			ThrowOnError
-		>({
-			url: "/api/v1/tasks/stock-update/force-all",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Stock Update Status
-	 * 주식 데이터 업데이트 상태를 조회합니다.
-	 */
-	public static getStockUpdateStatus<ThrowOnError extends boolean = false>(
-		options?: Options<TasksGetStockUpdateStatusData, ThrowOnError>,
+	public static healthCheck<ThrowOnError extends boolean = false>(
+		options?: Options<BacktestHealthCheckData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
-			TasksGetStockUpdateStatusResponses,
-			unknown,
+			BacktestHealthCheckResponses,
+			BacktestHealthCheckErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/tasks/stock-update/status",
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/backtests/health",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Backtests
+	 * Get list of backtests
+	 */
+	public static getBacktests<ThrowOnError extends boolean = false>(
+		options?: Options<BacktestGetBacktestsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			BacktestGetBacktestsResponses,
+			BacktestGetBacktestsErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/backtests/",
+			...options,
+		});
+	}
+
+	/**
+	 * Create Backtest
+	 * Create a new backtest
+	 */
+	public static createBacktest<ThrowOnError extends boolean = false>(
+		options: Options<BacktestCreateBacktestData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			BacktestCreateBacktestResponses,
+			BacktestCreateBacktestErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/backtests/",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Delete Backtest
+	 * Delete backtest
+	 */
+	public static deleteBacktest<ThrowOnError extends boolean = false>(
+		options: Options<BacktestDeleteBacktestData, ThrowOnError>,
+	) {
+		return (options.client ?? client).delete<
+			BacktestDeleteBacktestResponses,
+			BacktestDeleteBacktestErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/backtests/{backtest_id}",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Backtest
+	 * Get backtest by ID
+	 */
+	public static getBacktest<ThrowOnError extends boolean = false>(
+		options: Options<BacktestGetBacktestData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			BacktestGetBacktestResponses,
+			BacktestGetBacktestErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/backtests/{backtest_id}",
+			...options,
+		});
+	}
+
+	/**
+	 * Update Backtest
+	 * Update backtest
+	 */
+	public static updateBacktest<ThrowOnError extends boolean = false>(
+		options: Options<BacktestUpdateBacktestData, ThrowOnError>,
+	) {
+		return (options.client ?? client).put<
+			BacktestUpdateBacktestResponses,
+			BacktestUpdateBacktestErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/backtests/{backtest_id}",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Execute Backtest
+	 * Execute backtest with trading signals (Phase 2)
+	 */
+	public static executeBacktest<ThrowOnError extends boolean = false>(
+		options: Options<BacktestExecuteBacktestData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			BacktestExecuteBacktestResponses,
+			BacktestExecuteBacktestErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/backtests/{backtest_id}/execute",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Get Backtest Executions
+	 * Get execution history for a backtest
+	 */
+	public static getBacktestExecutions<ThrowOnError extends boolean = false>(
+		options: Options<BacktestGetBacktestExecutionsData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			BacktestGetBacktestExecutionsResponses,
+			BacktestGetBacktestExecutionsErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/backtests/{backtest_id}/executions",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Performance Analytics
+	 * 백테스트 성과 분석 (MongoDB 기반 - Phase 2)
+	 */
+	public static getPerformanceAnalytics<ThrowOnError extends boolean = false>(
+		options?: Options<BacktestGetPerformanceAnalyticsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			BacktestGetPerformanceAnalyticsResponses,
+			BacktestGetPerformanceAnalyticsErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/backtests/analytics/performance-stats",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Trades Analytics
+	 * 거래 기록 분석 (MongoDB 기반)
+	 */
+	public static getTradesAnalytics<ThrowOnError extends boolean = false>(
+		options?: Options<BacktestGetTradesAnalyticsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			BacktestGetTradesAnalyticsResponses,
+			BacktestGetTradesAnalyticsErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/backtests/analytics/trades",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Portfolio History
+	 * 백테스트 포트폴리오 히스토리 조회 (DuckDB)
+	 *
+	 * P3.2: 고성능 시계열 조회를 위한 DuckDB 조회
+	 */
+	public static getPortfolioHistory<ThrowOnError extends boolean = false>(
+		options: Options<BacktestGetPortfolioHistoryData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			BacktestGetPortfolioHistoryResponses,
+			BacktestGetPortfolioHistoryErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/backtests/{backtest_id}/portfolio-history",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Trades History
+	 * 백테스트 거래 내역 조회 (DuckDB)
+	 *
+	 * P3.2: 고성능 거래 내역 조회를 위한 DuckDB 조회
+	 */
+	public static getTradesHistory<ThrowOnError extends boolean = false>(
+		options: Options<BacktestGetTradesHistoryData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			BacktestGetTradesHistoryResponses,
+			BacktestGetTradesHistoryErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/backtests/{backtest_id}/trades-history",
+			...options,
+		});
+	}
+
+	/**
+	 * List Optimization Studies
+	 * List optimization studies with optional filters.
+	 *
+	 * Args:
+	 * symbol: Filter by symbol
+	 * strategy_name: Filter by strategy name
+	 * status: Filter by status (pending/running/completed/failed)
+	 * limit: Maximum number of studies to return
+	 *
+	 * Returns:
+	 * StudyListResponse with list of studies
+	 */
+	public static listOptimizationStudies<ThrowOnError extends boolean = false>(
+		options?: Options<BacktestListOptimizationStudiesData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			BacktestListOptimizationStudiesResponses,
+			BacktestListOptimizationStudiesErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/optimize/",
+			...options,
+		});
+	}
+
+	/**
+	 * Create Optimization Study
+	 * Create and start a new optimization study.
+	 *
+	 * Args:
+	 * request: Optimization configuration
+	 * background_tasks: FastAPI background tasks for async execution
+	 *
+	 * Returns:
+	 * OptimizationResponse with study name and status
+	 */
+	public static createOptimizationStudy<ThrowOnError extends boolean = false>(
+		options: Options<BacktestCreateOptimizationStudyData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			BacktestCreateOptimizationStudyResponses,
+			BacktestCreateOptimizationStudyErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/optimize/",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Get Optimization Progress
+	 * Get current progress of an optimization study.
+	 *
+	 * Args:
+	 * study_name: Study identifier
+	 *
+	 * Returns:
+	 * OptimizationResponse with progress information
+	 */
+	public static getOptimizationProgress<ThrowOnError extends boolean = false>(
+		options: Options<BacktestGetOptimizationProgressData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			BacktestGetOptimizationProgressResponses,
+			BacktestGetOptimizationProgressErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/optimize/{study_name}",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Optimization Result
+	 * Get final result of a completed optimization study.
+	 *
+	 * Args:
+	 * study_name: Study identifier
+	 *
+	 * Returns:
+	 * OptimizationResponse with optimization result
+	 */
+	public static getOptimizationResult<ThrowOnError extends boolean = false>(
+		options: Options<BacktestGetOptimizationResultData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			BacktestGetOptimizationResultResponses,
+			BacktestGetOptimizationResultErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/optimize/{study_name}/result",
+			...options,
+		});
+	}
+}
+
+export class OptimizationService {
+	/**
+	 * List Optimization Studies
+	 * List optimization studies with optional filters.
+	 *
+	 * Args:
+	 * symbol: Filter by symbol
+	 * strategy_name: Filter by strategy name
+	 * status: Filter by status (pending/running/completed/failed)
+	 * limit: Maximum number of studies to return
+	 *
+	 * Returns:
+	 * StudyListResponse with list of studies
+	 */
+	public static listOptimizationStudies<ThrowOnError extends boolean = false>(
+		options?: Options<BacktestListOptimizationStudiesData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			BacktestListOptimizationStudiesResponses,
+			BacktestListOptimizationStudiesErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/optimize/",
+			...options,
+		});
+	}
+
+	/**
+	 * Create Optimization Study
+	 * Create and start a new optimization study.
+	 *
+	 * Args:
+	 * request: Optimization configuration
+	 * background_tasks: FastAPI background tasks for async execution
+	 *
+	 * Returns:
+	 * OptimizationResponse with study name and status
+	 */
+	public static createOptimizationStudy<ThrowOnError extends boolean = false>(
+		options: Options<BacktestCreateOptimizationStudyData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			BacktestCreateOptimizationStudyResponses,
+			BacktestCreateOptimizationStudyErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/optimize/",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Get Optimization Progress
+	 * Get current progress of an optimization study.
+	 *
+	 * Args:
+	 * study_name: Study identifier
+	 *
+	 * Returns:
+	 * OptimizationResponse with progress information
+	 */
+	public static getOptimizationProgress<ThrowOnError extends boolean = false>(
+		options: Options<BacktestGetOptimizationProgressData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			BacktestGetOptimizationProgressResponses,
+			BacktestGetOptimizationProgressErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/optimize/{study_name}",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Optimization Result
+	 * Get final result of a completed optimization study.
+	 *
+	 * Args:
+	 * study_name: Study identifier
+	 *
+	 * Returns:
+	 * OptimizationResponse with optimization result
+	 */
+	public static getOptimizationResult<ThrowOnError extends boolean = false>(
+		options: Options<BacktestGetOptimizationResultData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			BacktestGetOptimizationResultResponses,
+			BacktestGetOptimizationResultErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/backtests/optimize/{study_name}/result",
+			...options,
+		});
+	}
+}
+
+export class StrategyService {
+	/**
+	 * Get Strategies
+	 * Get list of strategies
+	 */
+	public static getStrategies<ThrowOnError extends boolean = false>(
+		options?: Options<StrategyGetStrategiesData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			StrategyGetStrategiesResponses,
+			StrategyGetStrategiesErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/",
+			...options,
+		});
+	}
+
+	/**
+	 * Create Strategy
+	 * Create a new strategy
+	 */
+	public static createStrategy<ThrowOnError extends boolean = false>(
+		options: Options<StrategyCreateStrategyData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			StrategyCreateStrategyResponses,
+			StrategyCreateStrategyErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Delete Strategy
+	 * Delete strategy (soft delete)
+	 */
+	public static deleteStrategy<ThrowOnError extends boolean = false>(
+		options: Options<StrategyDeleteStrategyData, ThrowOnError>,
+	) {
+		return (options.client ?? client).delete<
+			StrategyDeleteStrategyResponses,
+			StrategyDeleteStrategyErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/{strategy_id}",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Strategy
+	 * Get strategy by ID
+	 */
+	public static getStrategy<ThrowOnError extends boolean = false>(
+		options: Options<StrategyGetStrategyData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			StrategyGetStrategyResponses,
+			StrategyGetStrategyErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/{strategy_id}",
+			...options,
+		});
+	}
+
+	/**
+	 * Update Strategy
+	 * Update strategy
+	 */
+	public static updateStrategy<ThrowOnError extends boolean = false>(
+		options: Options<StrategyUpdateStrategyData, ThrowOnError>,
+	) {
+		return (options.client ?? client).put<
+			StrategyUpdateStrategyResponses,
+			StrategyUpdateStrategyErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/{strategy_id}",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Execute Strategy
+	 * Execute strategy and generate signal
+	 */
+	public static executeStrategy<ThrowOnError extends boolean = false>(
+		options: Options<StrategyExecuteStrategyData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			StrategyExecuteStrategyResponses,
+			StrategyExecuteStrategyErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/{strategy_id}/execute",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Get Strategy Executions
+	 * Get strategy execution history
+	 */
+	public static getStrategyExecutions<ThrowOnError extends boolean = false>(
+		options: Options<StrategyGetStrategyExecutionsData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			StrategyGetStrategyExecutionsResponses,
+			StrategyGetStrategyExecutionsErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/{strategy_id}/executions",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Strategy Performance
+	 * Get strategy performance metrics
+	 */
+	public static getStrategyPerformance<ThrowOnError extends boolean = false>(
+		options: Options<StrategyGetStrategyPerformanceData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			StrategyGetStrategyPerformanceResponses,
+			StrategyGetStrategyPerformanceErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/{strategy_id}/performance",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Templates
+	 * Get list of strategy templates
+	 */
+	public static getTemplates<ThrowOnError extends boolean = false>(
+		options?: Options<StrategyGetTemplatesData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			StrategyGetTemplatesResponses,
+			StrategyGetTemplatesErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/templates/",
+			...options,
+		});
+	}
+
+	/**
+	 * Create Template
+	 * Create a new strategy template (Superuser only)
+	 */
+	public static createTemplate<ThrowOnError extends boolean = false>(
+		options: Options<StrategyCreateTemplateData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			StrategyCreateTemplateResponses,
+			StrategyCreateTemplateErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/templates/",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Delete Template
+	 * Delete template by ID (Superuser only)
+	 */
+	public static deleteTemplate<ThrowOnError extends boolean = false>(
+		options: Options<StrategyDeleteTemplateData, ThrowOnError>,
+	) {
+		return (options.client ?? client).delete<
+			StrategyDeleteTemplateResponses,
+			StrategyDeleteTemplateErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/templates/{template_id}",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Template
+	 * Get template by ID
+	 */
+	public static getTemplate<ThrowOnError extends boolean = false>(
+		options: Options<StrategyGetTemplateData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			StrategyGetTemplateResponses,
+			StrategyGetTemplateErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/templates/{template_id}",
+			...options,
+		});
+	}
+
+	/**
+	 * Update Template
+	 * Update template by ID (Superuser only)
+	 */
+	public static updateTemplate<ThrowOnError extends boolean = false>(
+		options: Options<StrategyUpdateTemplateData, ThrowOnError>,
+	) {
+		return (options.client ?? client).patch<
+			StrategyUpdateTemplateResponses,
+			StrategyUpdateTemplateErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/templates/{template_id}",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Create Strategy From Template
+	 * Create a strategy instance from template
+	 */
+	public static createStrategyFromTemplate<
+		ThrowOnError extends boolean = false,
+	>(options: Options<StrategyCreateStrategyFromTemplateData, ThrowOnError>) {
+		return (options.client ?? client).post<
+			StrategyCreateStrategyFromTemplateResponses,
+			StrategyCreateStrategyFromTemplateErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/templates/{template_id}/create-strategy",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Get Template Usage Stats
+	 * Get template usage statistics
+	 */
+	public static getTemplateUsageStats<ThrowOnError extends boolean = false>(
+		options?: Options<StrategyGetTemplateUsageStatsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			StrategyGetTemplateUsageStatsResponses,
+			StrategyGetTemplateUsageStatsErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/strategies/templates/analytics/usage-stats",
 			...options,
 		});
 	}
@@ -3645,6 +3429,650 @@ export class SignalsService {
 }
 
 export class MlService {
+	/**
+	 * List Scenarios
+	 */
+	public static listScenarios<ThrowOnError extends boolean = false>(
+		options?: Options<MlListScenariosData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListScenariosResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/evaluation/scenarios",
+			...options,
+		});
+	}
+
+	/**
+	 * Register Scenario
+	 */
+	public static registerScenario<ThrowOnError extends boolean = false>(
+		options: Options<MlRegisterScenarioData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlRegisterScenarioResponses,
+			MlRegisterScenarioErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/evaluation/scenarios",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Update Scenario
+	 */
+	public static updateScenario<ThrowOnError extends boolean = false>(
+		options: Options<MlUpdateScenarioData, ThrowOnError>,
+	) {
+		return (options.client ?? client).patch<
+			MlUpdateScenarioResponses,
+			MlUpdateScenarioErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/evaluation/scenarios/{name}",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * List Evaluation Runs
+	 */
+	public static listEvaluationRuns<ThrowOnError extends boolean = false>(
+		options?: Options<MlListEvaluationRunsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListEvaluationRunsResponses,
+			MlListEvaluationRunsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/evaluation/runs",
+			...options,
+		});
+	}
+
+	/**
+	 * Run Evaluation
+	 */
+	public static runEvaluation<ThrowOnError extends boolean = false>(
+		options: Options<MlRunEvaluationData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlRunEvaluationResponses,
+			MlRunEvaluationErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/evaluation/runs",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Get Evaluation Report
+	 */
+	public static getEvaluationReport<ThrowOnError extends boolean = false>(
+		options: Options<MlGetEvaluationReportData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MlGetEvaluationReportResponses,
+			MlGetEvaluationReportErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/evaluation/runs/{run_id}/report",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Detailed Metrics
+	 * 상세 평가 메트릭 조회 (confusion matrix, ROC curve 등)
+	 */
+	public static getDetailedMetrics<ThrowOnError extends boolean = false>(
+		options: Options<MlGetDetailedMetricsData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MlGetDetailedMetricsResponses,
+			MlGetDetailedMetricsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/evaluation/runs/{run_id}/metrics",
+			...options,
+		});
+	}
+
+	/**
+	 * List Benchmarks
+	 * 벤치마크 스위트 목록 조회
+	 */
+	public static listBenchmarks<ThrowOnError extends boolean = false>(
+		options?: Options<MlListBenchmarksData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListBenchmarksResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/evaluation/benchmarks",
+			...options,
+		});
+	}
+
+	/**
+	 * Create Benchmark
+	 * 벤치마크 스위트 생성
+	 */
+	public static createBenchmark<ThrowOnError extends boolean = false>(
+		options: Options<MlCreateBenchmarkData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlCreateBenchmarkResponses,
+			MlCreateBenchmarkErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/evaluation/benchmarks",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Run Benchmark
+	 * 벤치마크 실행
+	 */
+	public static runBenchmark<ThrowOnError extends boolean = false>(
+		options: Options<MlRunBenchmarkData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlRunBenchmarkResponses,
+			MlRunBenchmarkErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/evaluation/benchmarks/run",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * List Ab Tests
+	 * A/B 테스트 목록 조회
+	 */
+	public static listAbTests<ThrowOnError extends boolean = false>(
+		options?: Options<MlListAbTestsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListAbTestsResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/evaluation/ab-tests",
+			...options,
+		});
+	}
+
+	/**
+	 * Create Ab Test
+	 * A/B 테스트 생성
+	 */
+	public static createAbTest<ThrowOnError extends boolean = false>(
+		options: Options<MlCreateAbTestData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlCreateAbTestResponses,
+			MlCreateAbTestErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/evaluation/ab-tests",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Get Ab Test
+	 * A/B 테스트 상세 조회
+	 */
+	public static getAbTest<ThrowOnError extends boolean = false>(
+		options: Options<MlGetAbTestData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MlGetAbTestResponses,
+			MlGetAbTestErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/evaluation/ab-tests/{test_id}",
+			...options,
+		});
+	}
+
+	/**
+	 * Request Fairness Audit
+	 * 공정성 감사 요청
+	 */
+	public static requestFairnessAudit<ThrowOnError extends boolean = false>(
+		options: Options<MlRequestFairnessAuditData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlRequestFairnessAuditResponses,
+			MlRequestFairnessAuditErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/evaluation/fairness/audit",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * List Fairness Reports
+	 * 공정성 감사 보고서 목록 조회
+	 */
+	public static listFairnessReports<ThrowOnError extends boolean = false>(
+		options?: Options<MlListFairnessReportsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListFairnessReportsResponses,
+			MlListFairnessReportsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/evaluation/fairness/reports",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Fairness Report
+	 * 공정성 감사 보고서 상세 조회
+	 */
+	public static getFairnessReport<ThrowOnError extends boolean = false>(
+		options: Options<MlGetFairnessReportData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MlGetFairnessReportResponses,
+			MlGetFairnessReportErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/evaluation/fairness/reports/{report_id}",
+			...options,
+		});
+	}
+
+	/**
+	 * List Experiments
+	 */
+	public static listExperiments<ThrowOnError extends boolean = false>(
+		options?: Options<MlListExperimentsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListExperimentsResponses,
+			MlListExperimentsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/lifecycle/experiments",
+			...options,
+		});
+	}
+
+	/**
+	 * Create Experiment
+	 */
+	public static createExperiment<ThrowOnError extends boolean = false>(
+		options: Options<MlCreateExperimentData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlCreateExperimentResponses,
+			MlCreateExperimentErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/lifecycle/experiments",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Get Experiment
+	 * Get experiment by name.
+	 */
+	public static getExperiment<ThrowOnError extends boolean = false>(
+		options: Options<MlGetExperimentData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MlGetExperimentResponses,
+			MlGetExperimentErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/lifecycle/experiments/{name}",
+			...options,
+		});
+	}
+
+	/**
+	 * Update Experiment
+	 */
+	public static updateExperiment<ThrowOnError extends boolean = false>(
+		options: Options<MlUpdateExperimentData, ThrowOnError>,
+	) {
+		return (options.client ?? client).patch<
+			MlUpdateExperimentResponses,
+			MlUpdateExperimentErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/lifecycle/experiments/{name}",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * List Runs
+	 */
+	public static listRuns<ThrowOnError extends boolean = false>(
+		options?: Options<MlListRunsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListRunsResponses,
+			MlListRunsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/lifecycle/runs",
+			...options,
+		});
+	}
+
+	/**
+	 * Log Run
+	 */
+	public static logRun<ThrowOnError extends boolean = false>(
+		options: Options<MlLogRunData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlLogRunResponses,
+			MlLogRunErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/lifecycle/runs",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Get Run
+	 */
+	public static getRun<ThrowOnError extends boolean = false>(
+		options: Options<MlGetRunData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MlGetRunResponses,
+			MlGetRunErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/lifecycle/runs/{run_id}",
+			...options,
+		});
+	}
+
+	/**
+	 * Update Run
+	 */
+	public static updateRun<ThrowOnError extends boolean = false>(
+		options: Options<MlUpdateRunData, ThrowOnError>,
+	) {
+		return (options.client ?? client).patch<
+			MlUpdateRunResponses,
+			MlUpdateRunErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/lifecycle/runs/{run_id}",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * List Model Versions
+	 */
+	public static listModelVersions<ThrowOnError extends boolean = false>(
+		options?: Options<MlListModelVersionsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListModelVersionsResponses,
+			MlListModelVersionsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/lifecycle/models",
+			...options,
+		});
+	}
+
+	/**
+	 * Register Model Version
+	 */
+	public static registerModelVersion<ThrowOnError extends boolean = false>(
+		options: Options<MlRegisterModelVersionData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlRegisterModelVersionResponses,
+			MlRegisterModelVersionErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/lifecycle/models",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Get Model Version
+	 * Get model version by name and version.
+	 */
+	public static getModelVersion<ThrowOnError extends boolean = false>(
+		options: Options<MlGetModelVersionData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MlGetModelVersionResponses,
+			MlGetModelVersionErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/lifecycle/models/{model_name}/{version}",
+			...options,
+		});
+	}
+
+	/**
+	 * Update Model Version
+	 */
+	public static updateModelVersion<ThrowOnError extends boolean = false>(
+		options: Options<MlUpdateModelVersionData, ThrowOnError>,
+	) {
+		return (options.client ?? client).patch<
+			MlUpdateModelVersionResponses,
+			MlUpdateModelVersionErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/lifecycle/models/{model_name}/{version}",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Compare Model Versions
+	 */
+	public static compareModelVersions<ThrowOnError extends boolean = false>(
+		options: Options<MlCompareModelVersionsData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlCompareModelVersionsResponses,
+			MlCompareModelVersionsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/lifecycle/models/{model_name}/compare",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * List Drift Events
+	 */
+	public static listDriftEvents<ThrowOnError extends boolean = false>(
+		options?: Options<MlListDriftEventsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListDriftEventsResponses,
+			MlListDriftEventsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/lifecycle/drift-events",
+			...options,
+		});
+	}
+
+	/**
+	 * Record Drift Event
+	 */
+	public static recordDriftEvent<ThrowOnError extends boolean = false>(
+		options: Options<MlRecordDriftEventData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlRecordDriftEventResponses,
+			MlRecordDriftEventErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/lifecycle/drift-events",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * List Deployments
+	 * List deployments with optional filters.
+	 */
+	public static listDeployments<ThrowOnError extends boolean = false>(
+		options?: Options<MlListDeploymentsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListDeploymentsResponses,
+			MlListDeploymentsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/lifecycle/deployments",
+			...options,
+		});
+	}
+
+	/**
+	 * Create Deployment
+	 * Create a new deployment.
+	 */
+	public static createDeployment<ThrowOnError extends boolean = false>(
+		options: Options<MlCreateDeploymentData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlCreateDeploymentResponses,
+			MlCreateDeploymentErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/lifecycle/deployments",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Get Deployment
+	 * Get deployment details.
+	 */
+	public static getDeployment<ThrowOnError extends boolean = false>(
+		options: Options<MlGetDeploymentData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MlGetDeploymentResponses,
+			MlGetDeploymentErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/lifecycle/deployments/{deployment_id}",
+			...options,
+		});
+	}
+
+	/**
+	 * Update Deployment
+	 * Update deployment status and metrics.
+	 */
+	public static updateDeployment<ThrowOnError extends boolean = false>(
+		options: Options<MlUpdateDeploymentData, ThrowOnError>,
+	) {
+		return (options.client ?? client).patch<
+			MlUpdateDeploymentResponses,
+			MlUpdateDeploymentErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/lifecycle/deployments/{deployment_id}",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
 	/**
 	 * Train Model
 	 * Train a new ML model for signal prediction.
@@ -3679,7 +4107,7 @@ export class MlService {
 			MlTrainModelErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/train",
+			url: "/api/v1/ml/train/train",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -3703,7 +4131,7 @@ export class MlService {
 			MlListModelsErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/models",
+			url: "/api/v1/ml/train/models",
 			...options,
 		});
 	}
@@ -3722,7 +4150,7 @@ export class MlService {
 			MlDeleteModelErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/models/{version}",
+			url: "/api/v1/ml/train/models/{version}",
 			...options,
 		});
 	}
@@ -3742,7 +4170,7 @@ export class MlService {
 			MlGetModelInfoErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/models/{version}",
+			url: "/api/v1/ml/train/models/{version}",
 			...options,
 		});
 	}
@@ -3770,39 +4198,54 @@ export class MlService {
 			MlCompareModelsErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/models/compare/{metric}",
+			url: "/api/v1/ml/train/models/compare/{metric}",
 			...options,
 		});
 	}
 
 	/**
-	 * List Experiments
+	 * List Features
+	 * 피처 목록 조회 (필터링/페이지네이션)
+	 *
+	 * - **owner**: 소유자 필터
+	 * - **feature_type**: 피처 타입 필터 (RAW, DERIVED, AGGREGATED)
+	 * - **status**: 상태 필터 (DRAFT, ACTIVE, DEPRECATED)
+	 * - **tags**: 태그 필터 (comma-separated: "financial,risk")
+	 * - **skip/limit**: 페이지네이션
 	 */
-	public static listExperiments<ThrowOnError extends boolean = false>(
-		options?: Options<MlListExperimentsData, ThrowOnError>,
+	public static listFeatures<ThrowOnError extends boolean = false>(
+		options?: Options<MlListFeaturesData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
-			MlListExperimentsResponses,
-			MlListExperimentsErrors,
+			MlListFeaturesResponses,
+			MlListFeaturesErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/experiments",
+			url: "/api/v1/ml/features",
 			...options,
 		});
 	}
 
 	/**
-	 * Create Experiment
+	 * Create Feature
+	 * 새 피처 생성
+	 *
+	 * - **feature_name**: 피처 고유 식별자 (중복 불가)
+	 * - **feature_type**: RAW, DERIVED, AGGREGATED
+	 * - **data_type**: numeric, categorical, text, datetime, boolean
+	 * - **transformation**: 변환 로직 (SQL, Python 등)
+	 * - **validation_rules**: 검증 규칙 (타입, 범위, 제약조건)
+	 * - **upstream_features**: 의존하는 상위 피처 목록
 	 */
-	public static createExperiment<ThrowOnError extends boolean = false>(
-		options: Options<MlCreateExperimentData, ThrowOnError>,
+	public static createFeature<ThrowOnError extends boolean = false>(
+		options: Options<MlCreateFeatureData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			MlCreateExperimentResponses,
-			MlCreateExperimentErrors,
+			MlCreateFeatureResponses,
+			MlCreateFeatureErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/experiments",
+			url: "/api/v1/ml/features",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -3812,34 +4255,58 @@ export class MlService {
 	}
 
 	/**
-	 * Get Experiment
-	 * Get experiment by name.
+	 * Delete Feature
+	 * 피처 삭제 (소프트 삭제)
+	 *
+	 * - 실제 데이터는 유지되며 상태만 DEPRECATED로 변경
+	 * - 하위 피처(downstream_features)가 있으면 삭제 불가
 	 */
-	public static getExperiment<ThrowOnError extends boolean = false>(
-		options: Options<MlGetExperimentData, ThrowOnError>,
+	public static deleteFeature<ThrowOnError extends boolean = false>(
+		options: Options<MlDeleteFeatureData, ThrowOnError>,
+	) {
+		return (options.client ?? client).delete<
+			MlDeleteFeatureResponses,
+			MlDeleteFeatureErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/features/{feature_name}",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Feature
+	 * 피처 상세 조회
+	 */
+	public static getFeature<ThrowOnError extends boolean = false>(
+		options: Options<MlGetFeatureData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MlGetExperimentResponses,
-			MlGetExperimentErrors,
+			MlGetFeatureResponses,
+			MlGetFeatureErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/experiments/{name}",
+			url: "/api/v1/ml/features/{feature_name}",
 			...options,
 		});
 	}
 
 	/**
-	 * Update Experiment
+	 * Update Feature
+	 * 피처 업데이트
+	 *
+	 * - 변환 로직이나 검증 규칙 변경 시 새 버전 생성 권장
+	 * - 메타데이터(description, tags)만 업데이트 시 버전 증가 없음
 	 */
-	public static updateExperiment<ThrowOnError extends boolean = false>(
-		options: Options<MlUpdateExperimentData, ThrowOnError>,
+	public static updateFeature<ThrowOnError extends boolean = false>(
+		options: Options<MlUpdateFeatureData, ThrowOnError>,
 	) {
-		return (options.client ?? client).patch<
-			MlUpdateExperimentResponses,
-			MlUpdateExperimentErrors,
+		return (options.client ?? client).put<
+			MlUpdateFeatureResponses,
+			MlUpdateFeatureErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/experiments/{name}",
+			url: "/api/v1/ml/features/{feature_name}",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -3849,105 +4316,80 @@ export class MlService {
 	}
 
 	/**
-	 * List Runs
+	 * Activate Feature
+	 * 피처 활성화 (DRAFT → ACTIVE)
+	 *
+	 * - 검증 규칙을 통과해야 활성화 가능
+	 * - 활성화 후 프로덕션 환경에서 사용 가능
 	 */
-	public static listRuns<ThrowOnError extends boolean = false>(
-		options?: Options<MlListRunsData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			MlListRunsResponses,
-			MlListRunsErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/ml/lifecycle/runs",
-			...options,
-		});
-	}
-
-	/**
-	 * Log Run
-	 */
-	public static logRun<ThrowOnError extends boolean = false>(
-		options: Options<MlLogRunData, ThrowOnError>,
+	public static activateFeature<ThrowOnError extends boolean = false>(
+		options: Options<MlActivateFeatureData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			MlLogRunResponses,
-			MlLogRunErrors,
+			MlActivateFeatureResponses,
+			MlActivateFeatureErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/runs",
+			url: "/api/v1/ml/features/{feature_name}/activate",
 			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
 		});
 	}
 
 	/**
-	 * Get Run
+	 * Deprecate Feature
+	 * 피처 폐기 (ACTIVE → DEPRECATED)
+	 *
+	 * - 더 이상 사용하지 않는 피처 표시
+	 * - 하위 피처(downstream_features)가 있으면 폐기 불가
+	 * - 기존 사용처는 계속 작동하지만 신규 사용 불가
 	 */
-	public static getRun<ThrowOnError extends boolean = false>(
-		options: Options<MlGetRunData, ThrowOnError>,
+	public static deprecateFeature<ThrowOnError extends boolean = false>(
+		options: Options<MlDeprecateFeatureData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlDeprecateFeatureResponses,
+			MlDeprecateFeatureErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/features/{feature_name}/deprecate",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Feature Versions
+	 * 피처의 모든 버전 조회 (최신순)
+	 */
+	public static getFeatureVersions<ThrowOnError extends boolean = false>(
+		options: Options<MlGetFeatureVersionsData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MlGetRunResponses,
-			MlGetRunErrors,
+			MlGetFeatureVersionsResponses,
+			MlGetFeatureVersionsErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/runs/{run_id}",
+			url: "/api/v1/ml/features/{feature_name}/versions",
 			...options,
 		});
 	}
 
 	/**
-	 * Update Run
+	 * Create Version
+	 * 새 버전 생성
+	 *
+	 * - 변환 로직이나 검증 규칙 변경 시 필수
+	 * - Semantic Versioning 권장 (1.0.0 → 1.1.0 → 2.0.0)
+	 * - breaking_changes=True면 Major 버전 증가 (1.x.x → 2.0.0)
 	 */
-	public static updateRun<ThrowOnError extends boolean = false>(
-		options: Options<MlUpdateRunData, ThrowOnError>,
-	) {
-		return (options.client ?? client).patch<
-			MlUpdateRunResponses,
-			MlUpdateRunErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/ml/lifecycle/runs/{run_id}",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * List Model Versions
-	 */
-	public static listModelVersions<ThrowOnError extends boolean = false>(
-		options?: Options<MlListModelVersionsData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			MlListModelVersionsResponses,
-			MlListModelVersionsErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/ml/lifecycle/models",
-			...options,
-		});
-	}
-
-	/**
-	 * Register Model Version
-	 */
-	public static registerModelVersion<ThrowOnError extends boolean = false>(
-		options: Options<MlRegisterModelVersionData, ThrowOnError>,
+	public static createVersion<ThrowOnError extends boolean = false>(
+		options: Options<MlCreateVersionData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			MlRegisterModelVersionResponses,
-			MlRegisterModelVersionErrors,
+			MlCreateVersionResponses,
+			MlCreateVersionErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/models",
+			url: "/api/v1/ml/features/{feature_name}/versions",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -3957,54 +4399,64 @@ export class MlService {
 	}
 
 	/**
-	 * Get Model Version
-	 * Get model version by name and version.
+	 * Rollback Version
+	 * 버전 롤백
+	 *
+	 * - 이전 버전으로 복원 (변환 로직, 검증 규칙 스냅샷 복원)
+	 * - 현재 버전에 `is_rolled_back=True` 표시
+	 * - 새 버전이 생성되며 current_version 업데이트
 	 */
-	public static getModelVersion<ThrowOnError extends boolean = false>(
-		options: Options<MlGetModelVersionData, ThrowOnError>,
+	public static rollbackVersion<ThrowOnError extends boolean = false>(
+		options: Options<MlRollbackVersionData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlRollbackVersionResponses,
+			MlRollbackVersionErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/features/{feature_name}/rollback",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Feature Lineage
+	 * 피처 계보 추적
+	 *
+	 * - upstream_features: 이 피처가 의존하는 상위 피처들
+	 * - downstream_features: 이 피처를 사용하는 하위 피처들
+	 * - recursive=True: 재귀적으로 전체 의존성 트리 추적
+	 */
+	public static getFeatureLineage<ThrowOnError extends boolean = false>(
+		options: Options<MlGetFeatureLineageData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MlGetModelVersionResponses,
-			MlGetModelVersionErrors,
+			MlGetFeatureLineageResponses,
+			MlGetFeatureLineageErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/models/{model_name}/{version}",
+			url: "/api/v1/ml/features/{feature_name}/lineage",
 			...options,
 		});
 	}
 
 	/**
-	 * Update Model Version
+	 * Record Feature Usage
+	 * 피처 사용 기록
+	 *
+	 * - 모델이 피처를 사용할 때마다 호출
+	 * - feature_importance: 모델에서의 중요도 (0.0 ~ 1.0)
+	 * - correlation_with_target: 타겟과의 상관관계 (-1.0 ~ 1.0)
 	 */
-	public static updateModelVersion<ThrowOnError extends boolean = false>(
-		options: Options<MlUpdateModelVersionData, ThrowOnError>,
-	) {
-		return (options.client ?? client).patch<
-			MlUpdateModelVersionResponses,
-			MlUpdateModelVersionErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/ml/lifecycle/models/{model_name}/{version}",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Compare Model Versions
-	 */
-	public static compareModelVersions<ThrowOnError extends boolean = false>(
-		options: Options<MlCompareModelVersionsData, ThrowOnError>,
+	public static recordFeatureUsage<ThrowOnError extends boolean = false>(
+		options: Options<MlRecordFeatureUsageData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			MlCompareModelVersionsResponses,
-			MlCompareModelVersionsErrors,
+			MlRecordFeatureUsageResponses,
+			MlRecordFeatureUsageErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/models/{model_name}/compare",
+			url: "/api/v1/ml/features/usage",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -4014,117 +4466,73 @@ export class MlService {
 	}
 
 	/**
-	 * List Drift Events
+	 * Get Feature Statistics
+	 * 피처 사용 통계 조회
+	 *
+	 * - total_usage: 총 사용 횟수
+	 * - unique_models: 사용한 고유 모델 수
+	 * - environments: 사용 환경 분포 (dev, staging, production)
+	 * - avg_importance: 평균 feature importance
+	 * - avg_correlation: 평균 상관관계
+	 * - last_used_at: 마지막 사용 시각
 	 */
-	public static listDriftEvents<ThrowOnError extends boolean = false>(
-		options?: Options<MlListDriftEventsData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			MlListDriftEventsResponses,
-			MlListDriftEventsErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/ml/lifecycle/drift-events",
-			...options,
-		});
-	}
-
-	/**
-	 * Record Drift Event
-	 */
-	public static recordDriftEvent<ThrowOnError extends boolean = false>(
-		options: Options<MlRecordDriftEventData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			MlRecordDriftEventResponses,
-			MlRecordDriftEventErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/ml/lifecycle/drift-events",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * List Deployments
-	 * List deployments with optional filters.
-	 */
-	public static listDeployments<ThrowOnError extends boolean = false>(
-		options?: Options<MlListDeploymentsData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			MlListDeploymentsResponses,
-			MlListDeploymentsErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/ml/lifecycle/deployments",
-			...options,
-		});
-	}
-
-	/**
-	 * Create Deployment
-	 * Create a new deployment.
-	 */
-	public static createDeployment<ThrowOnError extends boolean = false>(
-		options: Options<MlCreateDeploymentData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			MlCreateDeploymentResponses,
-			MlCreateDeploymentErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/ml/lifecycle/deployments",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Get Deployment
-	 * Get deployment details.
-	 */
-	public static getDeployment<ThrowOnError extends boolean = false>(
-		options: Options<MlGetDeploymentData, ThrowOnError>,
+	public static getFeatureStatistics<ThrowOnError extends boolean = false>(
+		options: Options<MlGetFeatureStatisticsData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MlGetDeploymentResponses,
-			MlGetDeploymentErrors,
+			MlGetFeatureStatisticsResponses,
+			MlGetFeatureStatisticsErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/deployments/{deployment_id}",
+			url: "/api/v1/ml/features/{feature_name}/statistics",
 			...options,
 		});
 	}
 
 	/**
-	 * Update Deployment
-	 * Update deployment status and metrics.
+	 * List Datasets
+	 * 데이터셋 목록 조회
+	 *
+	 * MongoDB에 저장된 데이터셋 메타데이터 목록 반환
 	 */
-	public static updateDeployment<ThrowOnError extends boolean = false>(
-		options: Options<MlUpdateDeploymentData, ThrowOnError>,
+	public static listDatasets<ThrowOnError extends boolean = false>(
+		options?: Options<MlListDatasetsData, ThrowOnError>,
 	) {
-		return (options.client ?? client).patch<
-			MlUpdateDeploymentResponses,
-			MlUpdateDeploymentErrors,
+		return (options?.client ?? client).get<
+			MlListDatasetsResponses,
+			unknown,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/deployments/{deployment_id}",
+			url: "/api/v1/ml/features/datasets",
 			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
 		});
 	}
 
+	/**
+	 * Get Dataset
+	 * 데이터셋 상세 조회
+	 *
+	 * Args:
+	 * dataset_id: Dataset ID (MongoDB ObjectId)
+	 *
+	 * Returns:
+	 * Dataset 상세 정보 (마지막 접근 시간 자동 업데이트)
+	 */
+	public static getDataset<ThrowOnError extends boolean = false>(
+		options: Options<MlGetDatasetData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MlGetDatasetResponses,
+			MlGetDatasetErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/features/datasets/{dataset_id}",
+			...options,
+		});
+	}
+}
+
+export class EvaluationHarnessService {
 	/**
 	 * List Scenarios
 	 */
@@ -4136,7 +4544,7 @@ export class MlService {
 			unknown,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/evaluation/scenarios",
+			url: "/api/v1/ml/evaluation/evaluation/scenarios",
 			...options,
 		});
 	}
@@ -4152,7 +4560,7 @@ export class MlService {
 			MlRegisterScenarioErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/evaluation/scenarios",
+			url: "/api/v1/ml/evaluation/evaluation/scenarios",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -4172,7 +4580,7 @@ export class MlService {
 			MlUpdateScenarioErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/evaluation/scenarios/{name}",
+			url: "/api/v1/ml/evaluation/evaluation/scenarios/{name}",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -4192,7 +4600,7 @@ export class MlService {
 			MlListEvaluationRunsErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/evaluation/runs",
+			url: "/api/v1/ml/evaluation/evaluation/runs",
 			...options,
 		});
 	}
@@ -4208,7 +4616,7 @@ export class MlService {
 			MlRunEvaluationErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/evaluation/runs",
+			url: "/api/v1/ml/evaluation/evaluation/runs",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -4228,7 +4636,7 @@ export class MlService {
 			MlGetEvaluationReportErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/evaluation/runs/{run_id}/report",
+			url: "/api/v1/ml/evaluation/evaluation/runs/{run_id}/report",
 			...options,
 		});
 	}
@@ -4245,7 +4653,7 @@ export class MlService {
 			MlGetDetailedMetricsErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/evaluation/runs/{run_id}/metrics",
+			url: "/api/v1/ml/evaluation/evaluation/runs/{run_id}/metrics",
 			...options,
 		});
 	}
@@ -4262,7 +4670,7 @@ export class MlService {
 			unknown,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/evaluation/benchmarks",
+			url: "/api/v1/ml/evaluation/evaluation/benchmarks",
 			...options,
 		});
 	}
@@ -4279,7 +4687,7 @@ export class MlService {
 			MlCreateBenchmarkErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/evaluation/benchmarks",
+			url: "/api/v1/ml/evaluation/evaluation/benchmarks",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -4300,7 +4708,7 @@ export class MlService {
 			MlRunBenchmarkErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/evaluation/benchmarks/run",
+			url: "/api/v1/ml/evaluation/evaluation/benchmarks/run",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -4321,7 +4729,7 @@ export class MlService {
 			unknown,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/evaluation/ab-tests",
+			url: "/api/v1/ml/evaluation/evaluation/ab-tests",
 			...options,
 		});
 	}
@@ -4338,7 +4746,7 @@ export class MlService {
 			MlCreateAbTestErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/evaluation/ab-tests",
+			url: "/api/v1/ml/evaluation/evaluation/ab-tests",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -4359,7 +4767,7 @@ export class MlService {
 			MlGetAbTestErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/evaluation/ab-tests/{test_id}",
+			url: "/api/v1/ml/evaluation/evaluation/ab-tests/{test_id}",
 			...options,
 		});
 	}
@@ -4376,7 +4784,7 @@ export class MlService {
 			MlRequestFairnessAuditErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/evaluation/fairness/audit",
+			url: "/api/v1/ml/evaluation/evaluation/fairness/audit",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -4397,7 +4805,7 @@ export class MlService {
 			MlListFairnessReportsErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/evaluation/fairness/reports",
+			url: "/api/v1/ml/evaluation/evaluation/fairness/reports",
 			...options,
 		});
 	}
@@ -4414,7 +4822,7 @@ export class MlService {
 			MlGetFairnessReportErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/evaluation/fairness/reports/{report_id}",
+			url: "/api/v1/ml/evaluation/evaluation/fairness/reports/{report_id}",
 			...options,
 		});
 	}
@@ -4432,7 +4840,7 @@ export class ModelLifecycleService {
 			MlListExperimentsErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/experiments",
+			url: "/api/v1/ml/lifecycle/lifecycle/experiments",
 			...options,
 		});
 	}
@@ -4448,7 +4856,7 @@ export class ModelLifecycleService {
 			MlCreateExperimentErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/experiments",
+			url: "/api/v1/ml/lifecycle/lifecycle/experiments",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -4469,7 +4877,7 @@ export class ModelLifecycleService {
 			MlGetExperimentErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/experiments/{name}",
+			url: "/api/v1/ml/lifecycle/lifecycle/experiments/{name}",
 			...options,
 		});
 	}
@@ -4485,7 +4893,7 @@ export class ModelLifecycleService {
 			MlUpdateExperimentErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/experiments/{name}",
+			url: "/api/v1/ml/lifecycle/lifecycle/experiments/{name}",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -4505,7 +4913,7 @@ export class ModelLifecycleService {
 			MlListRunsErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/runs",
+			url: "/api/v1/ml/lifecycle/lifecycle/runs",
 			...options,
 		});
 	}
@@ -4521,7 +4929,7 @@ export class ModelLifecycleService {
 			MlLogRunErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/runs",
+			url: "/api/v1/ml/lifecycle/lifecycle/runs",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -4541,7 +4949,7 @@ export class ModelLifecycleService {
 			MlGetRunErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/runs/{run_id}",
+			url: "/api/v1/ml/lifecycle/lifecycle/runs/{run_id}",
 			...options,
 		});
 	}
@@ -4557,7 +4965,7 @@ export class ModelLifecycleService {
 			MlUpdateRunErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/runs/{run_id}",
+			url: "/api/v1/ml/lifecycle/lifecycle/runs/{run_id}",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -4577,7 +4985,7 @@ export class ModelLifecycleService {
 			MlListModelVersionsErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/models",
+			url: "/api/v1/ml/lifecycle/lifecycle/models",
 			...options,
 		});
 	}
@@ -4593,7 +5001,7 @@ export class ModelLifecycleService {
 			MlRegisterModelVersionErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/models",
+			url: "/api/v1/ml/lifecycle/lifecycle/models",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -4614,7 +5022,7 @@ export class ModelLifecycleService {
 			MlGetModelVersionErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/models/{model_name}/{version}",
+			url: "/api/v1/ml/lifecycle/lifecycle/models/{model_name}/{version}",
 			...options,
 		});
 	}
@@ -4630,7 +5038,7 @@ export class ModelLifecycleService {
 			MlUpdateModelVersionErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/models/{model_name}/{version}",
+			url: "/api/v1/ml/lifecycle/lifecycle/models/{model_name}/{version}",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -4650,7 +5058,7 @@ export class ModelLifecycleService {
 			MlCompareModelVersionsErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/models/{model_name}/compare",
+			url: "/api/v1/ml/lifecycle/lifecycle/models/{model_name}/compare",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -4670,7 +5078,7 @@ export class ModelLifecycleService {
 			MlListDriftEventsErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/drift-events",
+			url: "/api/v1/ml/lifecycle/lifecycle/drift-events",
 			...options,
 		});
 	}
@@ -4686,7 +5094,7 @@ export class ModelLifecycleService {
 			MlRecordDriftEventErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/drift-events",
+			url: "/api/v1/ml/lifecycle/lifecycle/drift-events",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -4707,7 +5115,7 @@ export class ModelLifecycleService {
 			MlListDeploymentsErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/deployments",
+			url: "/api/v1/ml/lifecycle/lifecycle/deployments",
 			...options,
 		});
 	}
@@ -4724,7 +5132,7 @@ export class ModelLifecycleService {
 			MlCreateDeploymentErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/deployments",
+			url: "/api/v1/ml/lifecycle/lifecycle/deployments",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -4745,7 +5153,7 @@ export class ModelLifecycleService {
 			MlGetDeploymentErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/deployments/{deployment_id}",
+			url: "/api/v1/ml/lifecycle/lifecycle/deployments/{deployment_id}",
 			...options,
 		});
 	}
@@ -4762,7 +5170,7 @@ export class ModelLifecycleService {
 			MlUpdateDeploymentErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/ml/lifecycle/deployments/{deployment_id}",
+			url: "/api/v1/ml/lifecycle/lifecycle/deployments/{deployment_id}",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -4772,316 +5180,20 @@ export class ModelLifecycleService {
 	}
 }
 
-export class EvaluationHarnessService {
-	/**
-	 * List Scenarios
-	 */
-	public static listScenarios<ThrowOnError extends boolean = false>(
-		options?: Options<MlListScenariosData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			MlListScenariosResponses,
-			unknown,
-			ThrowOnError
-		>({
-			url: "/api/v1/ml/evaluation/scenarios",
-			...options,
-		});
-	}
-
-	/**
-	 * Register Scenario
-	 */
-	public static registerScenario<ThrowOnError extends boolean = false>(
-		options: Options<MlRegisterScenarioData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			MlRegisterScenarioResponses,
-			MlRegisterScenarioErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/ml/evaluation/scenarios",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Update Scenario
-	 */
-	public static updateScenario<ThrowOnError extends boolean = false>(
-		options: Options<MlUpdateScenarioData, ThrowOnError>,
-	) {
-		return (options.client ?? client).patch<
-			MlUpdateScenarioResponses,
-			MlUpdateScenarioErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/ml/evaluation/scenarios/{name}",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * List Evaluation Runs
-	 */
-	public static listEvaluationRuns<ThrowOnError extends boolean = false>(
-		options?: Options<MlListEvaluationRunsData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			MlListEvaluationRunsResponses,
-			MlListEvaluationRunsErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/ml/evaluation/runs",
-			...options,
-		});
-	}
-
-	/**
-	 * Run Evaluation
-	 */
-	public static runEvaluation<ThrowOnError extends boolean = false>(
-		options: Options<MlRunEvaluationData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			MlRunEvaluationResponses,
-			MlRunEvaluationErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/ml/evaluation/runs",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Get Evaluation Report
-	 */
-	public static getEvaluationReport<ThrowOnError extends boolean = false>(
-		options: Options<MlGetEvaluationReportData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			MlGetEvaluationReportResponses,
-			MlGetEvaluationReportErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/ml/evaluation/runs/{run_id}/report",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Detailed Metrics
-	 * 상세 평가 메트릭 조회 (confusion matrix, ROC curve 등)
-	 */
-	public static getDetailedMetrics<ThrowOnError extends boolean = false>(
-		options: Options<MlGetDetailedMetricsData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			MlGetDetailedMetricsResponses,
-			MlGetDetailedMetricsErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/ml/evaluation/runs/{run_id}/metrics",
-			...options,
-		});
-	}
-
-	/**
-	 * List Benchmarks
-	 * 벤치마크 스위트 목록 조회
-	 */
-	public static listBenchmarks<ThrowOnError extends boolean = false>(
-		options?: Options<MlListBenchmarksData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			MlListBenchmarksResponses,
-			unknown,
-			ThrowOnError
-		>({
-			url: "/api/v1/ml/evaluation/benchmarks",
-			...options,
-		});
-	}
-
-	/**
-	 * Create Benchmark
-	 * 벤치마크 스위트 생성
-	 */
-	public static createBenchmark<ThrowOnError extends boolean = false>(
-		options: Options<MlCreateBenchmarkData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			MlCreateBenchmarkResponses,
-			MlCreateBenchmarkErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/ml/evaluation/benchmarks",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Run Benchmark
-	 * 벤치마크 실행
-	 */
-	public static runBenchmark<ThrowOnError extends boolean = false>(
-		options: Options<MlRunBenchmarkData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			MlRunBenchmarkResponses,
-			MlRunBenchmarkErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/ml/evaluation/benchmarks/run",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * List Ab Tests
-	 * A/B 테스트 목록 조회
-	 */
-	public static listAbTests<ThrowOnError extends boolean = false>(
-		options?: Options<MlListAbTestsData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			MlListAbTestsResponses,
-			unknown,
-			ThrowOnError
-		>({
-			url: "/api/v1/ml/evaluation/ab-tests",
-			...options,
-		});
-	}
-
-	/**
-	 * Create Ab Test
-	 * A/B 테스트 생성
-	 */
-	public static createAbTest<ThrowOnError extends boolean = false>(
-		options: Options<MlCreateAbTestData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			MlCreateAbTestResponses,
-			MlCreateAbTestErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/ml/evaluation/ab-tests",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Get Ab Test
-	 * A/B 테스트 상세 조회
-	 */
-	public static getAbTest<ThrowOnError extends boolean = false>(
-		options: Options<MlGetAbTestData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			MlGetAbTestResponses,
-			MlGetAbTestErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/ml/evaluation/ab-tests/{test_id}",
-			...options,
-		});
-	}
-
-	/**
-	 * Request Fairness Audit
-	 * 공정성 감사 요청
-	 */
-	public static requestFairnessAudit<ThrowOnError extends boolean = false>(
-		options: Options<MlRequestFairnessAuditData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			MlRequestFairnessAuditResponses,
-			MlRequestFairnessAuditErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/ml/evaluation/fairness/audit",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * List Fairness Reports
-	 * 공정성 감사 보고서 목록 조회
-	 */
-	public static listFairnessReports<ThrowOnError extends boolean = false>(
-		options?: Options<MlListFairnessReportsData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			MlListFairnessReportsResponses,
-			MlListFairnessReportsErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/ml/evaluation/fairness/reports",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Fairness Report
-	 * 공정성 감사 보고서 상세 조회
-	 */
-	public static getFairnessReport<ThrowOnError extends boolean = false>(
-		options: Options<MlGetFairnessReportData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			MlGetFairnessReportResponses,
-			MlGetFairnessReportErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/ml/evaluation/fairness/reports/{report_id}",
-			...options,
-		});
-	}
-}
-
-export class ChatOpsService {
+export class GenAiService {
 	/**
 	 * Execute Chatops
 	 * Execute the ChatOps agent with the provided request payload.
 	 */
 	public static executeChatops<ThrowOnError extends boolean = false>(
-		options: Options<ChatOpsExecuteChatopsData, ThrowOnError>,
+		options: Options<GenAiExecuteChatopsData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			ChatOpsExecuteChatopsResponses,
-			ChatOpsExecuteChatopsErrors,
+			GenAiExecuteChatopsResponses,
+			GenAiExecuteChatopsErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/chatops/",
+			url: "/api/v1/gen-ai/chatops/",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -5089,28 +5201,372 @@ export class ChatOpsService {
 			},
 		});
 	}
-}
 
-export class NarrativeService {
+	/**
+	 * Create Chat Session
+	 * 새 채팅 세션 생성 (멀티턴 대화용, MongoDB 저장)
+	 *
+	 * **Phase 3 D3**
+	 *
+	 * Args:
+	 * user_id: 사용자 ID
+	 *
+	 * Returns:
+	 * session_id: 생성된 세션 ID
+	 */
+	public static createChatSession<ThrowOnError extends boolean = false>(
+		options: Options<GenAiCreateChatSessionData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			GenAiCreateChatSessionResponses,
+			GenAiCreateChatSessionErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/gen-ai/chatops-advanced/session/create",
+			...options,
+		});
+	}
+
+	/**
+	 * Chat With Session
+	 * 멀티턴 대화 (세션 기반)
+	 *
+	 * **Phase 3 D3**
+	 *
+	 * Args:
+	 * session_id: 세션 ID
+	 * request: ChatOps 요청
+	 *
+	 * Returns:
+	 * 응답 메시지 및 메타데이터
+	 */
+	public static chatWithSession<ThrowOnError extends boolean = false>(
+		options: Options<GenAiChatWithSessionData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			GenAiChatWithSessionResponses,
+			GenAiChatWithSessionErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/gen-ai/chatops-advanced/session/{session_id}/chat",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Compare Strategies
+	 * 전략 비교 및 LLM 요약
+	 *
+	 * **Phase 3 D3**
+	 *
+	 * 자연어 질의를 기반으로 여러 전략을 비교하고 추천을 제공합니다.
+	 *
+	 * Example:
+	 * ```
+	 * POST /api/v1/chatops-advanced/strategies/compare
+	 * {
+	 * "strategy_ids": ["strategy_1", "strategy_2", "strategy_3"],
+	 * "metrics": ["total_return", "sharpe_ratio", "max_drawdown"],
+	 * "natural_language_query": "가장 안정적인 전략은?"
+	 * }
+	 * ```
+	 *
+	 * Args:
+	 * request: 전략 비교 요청
+	 *
+	 * Returns:
+	 * StrategyComparisonResult: 비교 결과, 순위, 추천
+	 */
+	public static compareStrategies<ThrowOnError extends boolean = false>(
+		options: Options<GenAiCompareStrategiesData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			GenAiCompareStrategiesResponses,
+			GenAiCompareStrategiesErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/gen-ai/chatops-advanced/strategies/compare",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Debug Compare Strategies
+	 * 전략 비교 디버그 (LLM 없이 데이터만 조회)
+	 *
+	 * **Phase 3 D3 Debug**
+	 *
+	 * MongoDB에서 실제 데이터를 조회하는 로직을 테스트합니다.
+	 * LLM 호출 없이 전략 데이터만 반환합니다.
+	 *
+	 * Args:
+	 * request: 전략 비교 요청
+	 *
+	 * Returns:
+	 * 조회된 전략 데이터 목록
+	 */
+	public static debugCompareStrategies<ThrowOnError extends boolean = false>(
+		options: Options<GenAiDebugCompareStrategiesData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			GenAiDebugCompareStrategiesResponses,
+			GenAiDebugCompareStrategiesErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/gen-ai/chatops-advanced/strategies/compare/debug",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Trigger Auto Backtest
+	 * 자동 백테스트 트리거 (백그라운드 실행)
+	 *
+	 * **Phase 3 D3**
+	 *
+	 * 전략 빌더 또는 최적화 결과를 기반으로 백테스트를 자동 생성하고 백그라운드에서 실행합니다.
+	 *
+	 * Example:
+	 * ```
+	 * POST /api/v1/chatops-advanced/backtest/trigger?user_id=user_123
+	 * {
+	 * "strategy_config": {
+	 * "name": "RSI Strategy",
+	 * "symbols": ["AAPL", "MSFT"],
+	 * "initial_cash": 100000.0
+	 * },
+	 * "trigger_reason": "strategy_builder",
+	 * "generate_report": true,
+	 * "notify_on_completion": true
+	 * }
+	 * ```
+	 *
+	 * Args:
+	 * request: 자동 백테스트 요청
+	 * background_tasks: FastAPI 백그라운드 태스크
+	 * user_id: 사용자 ID (기본: system)
+	 *
+	 * Returns:
+	 * AutoBacktestResponse: 백테스트 ID, 상태, 예상 소요 시간
+	 */
+	public static triggerAutoBacktest<ThrowOnError extends boolean = false>(
+		options: Options<GenAiTriggerAutoBacktestData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			GenAiTriggerAutoBacktestResponses,
+			GenAiTriggerAutoBacktestErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/gen-ai/chatops-advanced/backtest/trigger",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
 	/**
 	 * Generate Narrative Report
 	 * 백테스트 결과에 대한 LLM 기반 내러티브 리포트 생성
 	 */
 	public static generateNarrativeReport<ThrowOnError extends boolean = false>(
-		options: Options<NarrativeGenerateNarrativeReportData, ThrowOnError>,
+		options: Options<GenAiGenerateNarrativeReportData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			NarrativeGenerateNarrativeReportResponses,
-			NarrativeGenerateNarrativeReportErrors,
+			GenAiGenerateNarrativeReportResponses,
+			GenAiGenerateNarrativeReportErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/narrative/backtests/{backtest_id}/report",
+			url: "/api/v1/gen-ai/narrative/backtests/{backtest_id}/report",
 			...options,
 		});
 	}
-}
 
-export class StrategyBuilderService {
+	/**
+	 * List Prompt Templates
+	 */
+	public static listPromptTemplates<ThrowOnError extends boolean = false>(
+		options?: Options<GenAiListPromptTemplatesData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			GenAiListPromptTemplatesResponses,
+			GenAiListPromptTemplatesErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/gen-ai/prompt-governance/prompts/templates",
+			...options,
+		});
+	}
+
+	/**
+	 * Create Prompt Template
+	 */
+	public static createPromptTemplate<ThrowOnError extends boolean = false>(
+		options: Options<GenAiCreatePromptTemplateData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			GenAiCreatePromptTemplateResponses,
+			GenAiCreatePromptTemplateErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/gen-ai/prompt-governance/prompts/templates",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Update Prompt Template
+	 */
+	public static updatePromptTemplate<ThrowOnError extends boolean = false>(
+		options: Options<GenAiUpdatePromptTemplateData, ThrowOnError>,
+	) {
+		return (options.client ?? client).patch<
+			GenAiUpdatePromptTemplateResponses,
+			GenAiUpdatePromptTemplateErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/gen-ai/prompt-governance/prompts/templates/{prompt_id}/{version}",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Submit Prompt For Review
+	 */
+	public static submitPromptForReview<ThrowOnError extends boolean = false>(
+		options: Options<GenAiSubmitPromptForReviewData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			GenAiSubmitPromptForReviewResponses,
+			GenAiSubmitPromptForReviewErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/gen-ai/prompt-governance/prompts/templates/{prompt_id}/{version}/submit",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Approve Prompt
+	 */
+	public static approvePrompt<ThrowOnError extends boolean = false>(
+		options: Options<GenAiApprovePromptData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			GenAiApprovePromptResponses,
+			GenAiApprovePromptErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/gen-ai/prompt-governance/prompts/templates/{prompt_id}/{version}/approve",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Reject Prompt
+	 */
+	public static rejectPrompt<ThrowOnError extends boolean = false>(
+		options: Options<GenAiRejectPromptData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			GenAiRejectPromptResponses,
+			GenAiRejectPromptErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/gen-ai/prompt-governance/prompts/templates/{prompt_id}/{version}/reject",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Evaluate Prompt
+	 */
+	public static evaluatePrompt<ThrowOnError extends boolean = false>(
+		options: Options<GenAiEvaluatePromptData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			GenAiEvaluatePromptResponses,
+			GenAiEvaluatePromptErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/gen-ai/prompt-governance/prompts/evaluate",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Log Prompt Usage
+	 */
+	public static logPromptUsage<ThrowOnError extends boolean = false>(
+		options: Options<GenAiLogPromptUsageData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			GenAiLogPromptUsageResponses,
+			GenAiLogPromptUsageErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/gen-ai/prompt-governance/prompts/templates/{prompt_id}/{version}/usage",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * List Prompt Audit Logs
+	 */
+	public static listPromptAuditLogs<ThrowOnError extends boolean = false>(
+		options: Options<GenAiListPromptAuditLogsData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			GenAiListPromptAuditLogsResponses,
+			GenAiListPromptAuditLogsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/gen-ai/prompt-governance/prompts/templates/{prompt_id}/{version}/audit",
+			...options,
+		});
+	}
+
 	/**
 	 * Generate Strategy
 	 * 자연어 입력으로 트레이딩 전략 생성
@@ -5142,14 +5598,14 @@ export class StrategyBuilderService {
 	 * - 낮은 신뢰도 (<0.5) 시 대안 제안 제공
 	 */
 	public static generateStrategy<ThrowOnError extends boolean = false>(
-		options: Options<StrategyBuilderGenerateStrategyData, ThrowOnError>,
+		options: Options<GenAiGenerateStrategyData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			StrategyBuilderGenerateStrategyResponses,
-			StrategyBuilderGenerateStrategyErrors,
+			GenAiGenerateStrategyResponses,
+			GenAiGenerateStrategyErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/strategy-builder",
+			url: "/api/v1/gen-ai/strategy-builder",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -5194,14 +5650,14 @@ export class StrategyBuilderService {
 	 * ```
 	 */
 	public static approveStrategy<ThrowOnError extends boolean = false>(
-		options: Options<StrategyBuilderApproveStrategyData, ThrowOnError>,
+		options: Options<GenAiApproveStrategyData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			StrategyBuilderApproveStrategyResponses,
-			StrategyBuilderApproveStrategyErrors,
+			GenAiApproveStrategyResponses,
+			GenAiApproveStrategyErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/strategy-builder/approve",
+			url: "/api/v1/gen-ai/strategy-builder/approve",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -5240,14 +5696,14 @@ export class StrategyBuilderService {
 	 * ```
 	 */
 	public static searchIndicators<ThrowOnError extends boolean = false>(
-		options: Options<StrategyBuilderSearchIndicatorsData, ThrowOnError>,
+		options: Options<GenAiSearchIndicatorsData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			StrategyBuilderSearchIndicatorsResponses,
-			StrategyBuilderSearchIndicatorsErrors,
+			GenAiSearchIndicatorsResponses,
+			GenAiSearchIndicatorsErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/strategy-builder/search-indicators",
+			url: "/api/v1/gen-ai/strategy-builder/search-indicators",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -5257,510 +5713,25 @@ export class StrategyBuilderService {
 	}
 }
 
-export class ChatOpsAdvancedService {
+export class ChatOpsService {
 	/**
-	 * Create Chat Session
-	 * 새 채팅 세션 생성 (멀티턴 대화용, MongoDB 저장)
-	 *
-	 * **Phase 3 D3**
-	 *
-	 * Args:
-	 * user_id: 사용자 ID
-	 *
-	 * Returns:
-	 * session_id: 생성된 세션 ID
+	 * Execute Chatops
+	 * Execute the ChatOps agent with the provided request payload.
 	 */
-	public static createChatSession<ThrowOnError extends boolean = false>(
-		options: Options<ChatOpsAdvancedCreateChatSessionData, ThrowOnError>,
+	public static executeChatops<ThrowOnError extends boolean = false>(
+		options: Options<GenAiExecuteChatopsData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			ChatOpsAdvancedCreateChatSessionResponses,
-			ChatOpsAdvancedCreateChatSessionErrors,
+			GenAiExecuteChatopsResponses,
+			GenAiExecuteChatopsErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/chatops-advanced/session/create",
-			...options,
-		});
-	}
-
-	/**
-	 * Chat With Session
-	 * 멀티턴 대화 (세션 기반)
-	 *
-	 * **Phase 3 D3**
-	 *
-	 * Args:
-	 * session_id: 세션 ID
-	 * request: ChatOps 요청
-	 *
-	 * Returns:
-	 * 응답 메시지 및 메타데이터
-	 */
-	public static chatWithSession<ThrowOnError extends boolean = false>(
-		options: Options<ChatOpsAdvancedChatWithSessionData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			ChatOpsAdvancedChatWithSessionResponses,
-			ChatOpsAdvancedChatWithSessionErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/chatops-advanced/session/{session_id}/chat",
+			url: "/api/v1/gen-ai/chatops/",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
 				...options.headers,
 			},
-		});
-	}
-
-	/**
-	 * Compare Strategies
-	 * 전략 비교 및 LLM 요약
-	 *
-	 * **Phase 3 D3**
-	 *
-	 * 자연어 질의를 기반으로 여러 전략을 비교하고 추천을 제공합니다.
-	 *
-	 * Example:
-	 * ```
-	 * POST /api/v1/chatops-advanced/strategies/compare
-	 * {
-	 * "strategy_ids": ["strategy_1", "strategy_2", "strategy_3"],
-	 * "metrics": ["total_return", "sharpe_ratio", "max_drawdown"],
-	 * "natural_language_query": "가장 안정적인 전략은?"
-	 * }
-	 * ```
-	 *
-	 * Args:
-	 * request: 전략 비교 요청
-	 *
-	 * Returns:
-	 * StrategyComparisonResult: 비교 결과, 순위, 추천
-	 */
-	public static compareStrategies<ThrowOnError extends boolean = false>(
-		options: Options<ChatOpsAdvancedCompareStrategiesData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			ChatOpsAdvancedCompareStrategiesResponses,
-			ChatOpsAdvancedCompareStrategiesErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/chatops-advanced/strategies/compare",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Debug Compare Strategies
-	 * 전략 비교 디버그 (LLM 없이 데이터만 조회)
-	 *
-	 * **Phase 3 D3 Debug**
-	 *
-	 * MongoDB에서 실제 데이터를 조회하는 로직을 테스트합니다.
-	 * LLM 호출 없이 전략 데이터만 반환합니다.
-	 *
-	 * Args:
-	 * request: 전략 비교 요청
-	 *
-	 * Returns:
-	 * 조회된 전략 데이터 목록
-	 */
-	public static debugCompareStrategies<ThrowOnError extends boolean = false>(
-		options: Options<ChatOpsAdvancedDebugCompareStrategiesData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			ChatOpsAdvancedDebugCompareStrategiesResponses,
-			ChatOpsAdvancedDebugCompareStrategiesErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/chatops-advanced/strategies/compare/debug",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Trigger Auto Backtest
-	 * 자동 백테스트 트리거 (백그라운드 실행)
-	 *
-	 * **Phase 3 D3**
-	 *
-	 * 전략 빌더 또는 최적화 결과를 기반으로 백테스트를 자동 생성하고 백그라운드에서 실행합니다.
-	 *
-	 * Example:
-	 * ```
-	 * POST /api/v1/chatops-advanced/backtest/trigger?user_id=user_123
-	 * {
-	 * "strategy_config": {
-	 * "name": "RSI Strategy",
-	 * "symbols": ["AAPL", "MSFT"],
-	 * "initial_cash": 100000.0
-	 * },
-	 * "trigger_reason": "strategy_builder",
-	 * "generate_report": true,
-	 * "notify_on_completion": true
-	 * }
-	 * ```
-	 *
-	 * Args:
-	 * request: 자동 백테스트 요청
-	 * background_tasks: FastAPI 백그라운드 태스크
-	 * user_id: 사용자 ID (기본: system)
-	 *
-	 * Returns:
-	 * AutoBacktestResponse: 백테스트 ID, 상태, 예상 소요 시간
-	 */
-	public static triggerAutoBacktest<ThrowOnError extends boolean = false>(
-		options: Options<ChatOpsAdvancedTriggerAutoBacktestData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			ChatOpsAdvancedTriggerAutoBacktestResponses,
-			ChatOpsAdvancedTriggerAutoBacktestErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/chatops-advanced/backtest/trigger",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-}
-
-export class FeatureStoreService {
-	/**
-	 * List Features
-	 * 피처 목록 조회 (필터링/페이지네이션)
-	 *
-	 * - **owner**: 소유자 필터
-	 * - **feature_type**: 피처 타입 필터 (RAW, DERIVED, AGGREGATED)
-	 * - **status**: 상태 필터 (DRAFT, ACTIVE, DEPRECATED)
-	 * - **tags**: 태그 필터 (comma-separated: "financial,risk")
-	 * - **skip/limit**: 페이지네이션
-	 */
-	public static listFeatures<ThrowOnError extends boolean = false>(
-		options?: Options<FeatureStoreListFeaturesData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			FeatureStoreListFeaturesResponses,
-			FeatureStoreListFeaturesErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/features",
-			...options,
-		});
-	}
-
-	/**
-	 * Create Feature
-	 * 새 피처 생성
-	 *
-	 * - **feature_name**: 피처 고유 식별자 (중복 불가)
-	 * - **feature_type**: RAW, DERIVED, AGGREGATED
-	 * - **data_type**: numeric, categorical, text, datetime, boolean
-	 * - **transformation**: 변환 로직 (SQL, Python 등)
-	 * - **validation_rules**: 검증 규칙 (타입, 범위, 제약조건)
-	 * - **upstream_features**: 의존하는 상위 피처 목록
-	 */
-	public static createFeature<ThrowOnError extends boolean = false>(
-		options: Options<FeatureStoreCreateFeatureData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			FeatureStoreCreateFeatureResponses,
-			FeatureStoreCreateFeatureErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/features",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Delete Feature
-	 * 피처 삭제 (소프트 삭제)
-	 *
-	 * - 실제 데이터는 유지되며 상태만 DEPRECATED로 변경
-	 * - 하위 피처(downstream_features)가 있으면 삭제 불가
-	 */
-	public static deleteFeature<ThrowOnError extends boolean = false>(
-		options: Options<FeatureStoreDeleteFeatureData, ThrowOnError>,
-	) {
-		return (options.client ?? client).delete<
-			FeatureStoreDeleteFeatureResponses,
-			FeatureStoreDeleteFeatureErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/features/{feature_name}",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Feature
-	 * 피처 상세 조회
-	 */
-	public static getFeature<ThrowOnError extends boolean = false>(
-		options: Options<FeatureStoreGetFeatureData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			FeatureStoreGetFeatureResponses,
-			FeatureStoreGetFeatureErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/features/{feature_name}",
-			...options,
-		});
-	}
-
-	/**
-	 * Update Feature
-	 * 피처 업데이트
-	 *
-	 * - 변환 로직이나 검증 규칙 변경 시 새 버전 생성 권장
-	 * - 메타데이터(description, tags)만 업데이트 시 버전 증가 없음
-	 */
-	public static updateFeature<ThrowOnError extends boolean = false>(
-		options: Options<FeatureStoreUpdateFeatureData, ThrowOnError>,
-	) {
-		return (options.client ?? client).put<
-			FeatureStoreUpdateFeatureResponses,
-			FeatureStoreUpdateFeatureErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/features/{feature_name}",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Activate Feature
-	 * 피처 활성화 (DRAFT → ACTIVE)
-	 *
-	 * - 검증 규칙을 통과해야 활성화 가능
-	 * - 활성화 후 프로덕션 환경에서 사용 가능
-	 */
-	public static activateFeature<ThrowOnError extends boolean = false>(
-		options: Options<FeatureStoreActivateFeatureData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			FeatureStoreActivateFeatureResponses,
-			FeatureStoreActivateFeatureErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/features/{feature_name}/activate",
-			...options,
-		});
-	}
-
-	/**
-	 * Deprecate Feature
-	 * 피처 폐기 (ACTIVE → DEPRECATED)
-	 *
-	 * - 더 이상 사용하지 않는 피처 표시
-	 * - 하위 피처(downstream_features)가 있으면 폐기 불가
-	 * - 기존 사용처는 계속 작동하지만 신규 사용 불가
-	 */
-	public static deprecateFeature<ThrowOnError extends boolean = false>(
-		options: Options<FeatureStoreDeprecateFeatureData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			FeatureStoreDeprecateFeatureResponses,
-			FeatureStoreDeprecateFeatureErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/features/{feature_name}/deprecate",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Feature Versions
-	 * 피처의 모든 버전 조회 (최신순)
-	 */
-	public static getFeatureVersions<ThrowOnError extends boolean = false>(
-		options: Options<FeatureStoreGetFeatureVersionsData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			FeatureStoreGetFeatureVersionsResponses,
-			FeatureStoreGetFeatureVersionsErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/features/{feature_name}/versions",
-			...options,
-		});
-	}
-
-	/**
-	 * Create Version
-	 * 새 버전 생성
-	 *
-	 * - 변환 로직이나 검증 규칙 변경 시 필수
-	 * - Semantic Versioning 권장 (1.0.0 → 1.1.0 → 2.0.0)
-	 * - breaking_changes=True면 Major 버전 증가 (1.x.x → 2.0.0)
-	 */
-	public static createVersion<ThrowOnError extends boolean = false>(
-		options: Options<FeatureStoreCreateVersionData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			FeatureStoreCreateVersionResponses,
-			FeatureStoreCreateVersionErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/features/{feature_name}/versions",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Rollback Version
-	 * 버전 롤백
-	 *
-	 * - 이전 버전으로 복원 (변환 로직, 검증 규칙 스냅샷 복원)
-	 * - 현재 버전에 `is_rolled_back=True` 표시
-	 * - 새 버전이 생성되며 current_version 업데이트
-	 */
-	public static rollbackVersion<ThrowOnError extends boolean = false>(
-		options: Options<FeatureStoreRollbackVersionData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			FeatureStoreRollbackVersionResponses,
-			FeatureStoreRollbackVersionErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/features/{feature_name}/rollback",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Feature Lineage
-	 * 피처 계보 추적
-	 *
-	 * - upstream_features: 이 피처가 의존하는 상위 피처들
-	 * - downstream_features: 이 피처를 사용하는 하위 피처들
-	 * - recursive=True: 재귀적으로 전체 의존성 트리 추적
-	 */
-	public static getFeatureLineage<ThrowOnError extends boolean = false>(
-		options: Options<FeatureStoreGetFeatureLineageData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			FeatureStoreGetFeatureLineageResponses,
-			FeatureStoreGetFeatureLineageErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/features/{feature_name}/lineage",
-			...options,
-		});
-	}
-
-	/**
-	 * Record Feature Usage
-	 * 피처 사용 기록
-	 *
-	 * - 모델이 피처를 사용할 때마다 호출
-	 * - feature_importance: 모델에서의 중요도 (0.0 ~ 1.0)
-	 * - correlation_with_target: 타겟과의 상관관계 (-1.0 ~ 1.0)
-	 */
-	public static recordFeatureUsage<ThrowOnError extends boolean = false>(
-		options: Options<FeatureStoreRecordFeatureUsageData, ThrowOnError>,
-	) {
-		return (options.client ?? client).post<
-			FeatureStoreRecordFeatureUsageResponses,
-			FeatureStoreRecordFeatureUsageErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/features/usage",
-			...options,
-			headers: {
-				"Content-Type": "application/json",
-				...options.headers,
-			},
-		});
-	}
-
-	/**
-	 * Get Feature Statistics
-	 * 피처 사용 통계 조회
-	 *
-	 * - total_usage: 총 사용 횟수
-	 * - unique_models: 사용한 고유 모델 수
-	 * - environments: 사용 환경 분포 (dev, staging, production)
-	 * - avg_importance: 평균 feature importance
-	 * - avg_correlation: 평균 상관관계
-	 * - last_used_at: 마지막 사용 시각
-	 */
-	public static getFeatureStatistics<ThrowOnError extends boolean = false>(
-		options: Options<FeatureStoreGetFeatureStatisticsData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			FeatureStoreGetFeatureStatisticsResponses,
-			FeatureStoreGetFeatureStatisticsErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/features/{feature_name}/statistics",
-			...options,
-		});
-	}
-
-	/**
-	 * List Datasets
-	 * 데이터셋 목록 조회
-	 *
-	 * MongoDB에 저장된 데이터셋 메타데이터 목록 반환
-	 */
-	public static listDatasets<ThrowOnError extends boolean = false>(
-		options?: Options<FeatureStoreListDatasetsData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			FeatureStoreListDatasetsResponses,
-			unknown,
-			ThrowOnError
-		>({
-			url: "/api/v1/features/datasets",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Dataset
-	 * 데이터셋 상세 조회
-	 *
-	 * Args:
-	 * dataset_id: Dataset ID (MongoDB ObjectId)
-	 *
-	 * Returns:
-	 * Dataset 상세 정보 (마지막 접근 시간 자동 업데이트)
-	 */
-	public static getDataset<ThrowOnError extends boolean = false>(
-		options: Options<FeatureStoreGetDatasetData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			FeatureStoreGetDatasetResponses,
-			FeatureStoreGetDatasetErrors,
-			ThrowOnError
-		>({
-			url: "/api/v1/features/datasets/{dataset_id}",
-			...options,
 		});
 	}
 }
@@ -5770,14 +5741,14 @@ export class PromptGovernanceService {
 	 * List Prompt Templates
 	 */
 	public static listPromptTemplates<ThrowOnError extends boolean = false>(
-		options?: Options<PromptGovernanceListPromptTemplatesData, ThrowOnError>,
+		options?: Options<GenAiListPromptTemplatesData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
-			PromptGovernanceListPromptTemplatesResponses,
-			PromptGovernanceListPromptTemplatesErrors,
+			GenAiListPromptTemplatesResponses,
+			GenAiListPromptTemplatesErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/prompt-governance/prompts/templates",
+			url: "/api/v1/gen-ai/prompt-governance/prompts/templates",
 			...options,
 		});
 	}
@@ -5786,14 +5757,14 @@ export class PromptGovernanceService {
 	 * Create Prompt Template
 	 */
 	public static createPromptTemplate<ThrowOnError extends boolean = false>(
-		options: Options<PromptGovernanceCreatePromptTemplateData, ThrowOnError>,
+		options: Options<GenAiCreatePromptTemplateData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			PromptGovernanceCreatePromptTemplateResponses,
-			PromptGovernanceCreatePromptTemplateErrors,
+			GenAiCreatePromptTemplateResponses,
+			GenAiCreatePromptTemplateErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/prompt-governance/prompts/templates",
+			url: "/api/v1/gen-ai/prompt-governance/prompts/templates",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -5806,14 +5777,14 @@ export class PromptGovernanceService {
 	 * Update Prompt Template
 	 */
 	public static updatePromptTemplate<ThrowOnError extends boolean = false>(
-		options: Options<PromptGovernanceUpdatePromptTemplateData, ThrowOnError>,
+		options: Options<GenAiUpdatePromptTemplateData, ThrowOnError>,
 	) {
 		return (options.client ?? client).patch<
-			PromptGovernanceUpdatePromptTemplateResponses,
-			PromptGovernanceUpdatePromptTemplateErrors,
+			GenAiUpdatePromptTemplateResponses,
+			GenAiUpdatePromptTemplateErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/prompt-governance/prompts/templates/{prompt_id}/{version}",
+			url: "/api/v1/gen-ai/prompt-governance/prompts/templates/{prompt_id}/{version}",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -5826,14 +5797,14 @@ export class PromptGovernanceService {
 	 * Submit Prompt For Review
 	 */
 	public static submitPromptForReview<ThrowOnError extends boolean = false>(
-		options: Options<PromptGovernanceSubmitPromptForReviewData, ThrowOnError>,
+		options: Options<GenAiSubmitPromptForReviewData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			PromptGovernanceSubmitPromptForReviewResponses,
-			PromptGovernanceSubmitPromptForReviewErrors,
+			GenAiSubmitPromptForReviewResponses,
+			GenAiSubmitPromptForReviewErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/prompt-governance/prompts/templates/{prompt_id}/{version}/submit",
+			url: "/api/v1/gen-ai/prompt-governance/prompts/templates/{prompt_id}/{version}/submit",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -5846,14 +5817,14 @@ export class PromptGovernanceService {
 	 * Approve Prompt
 	 */
 	public static approvePrompt<ThrowOnError extends boolean = false>(
-		options: Options<PromptGovernanceApprovePromptData, ThrowOnError>,
+		options: Options<GenAiApprovePromptData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			PromptGovernanceApprovePromptResponses,
-			PromptGovernanceApprovePromptErrors,
+			GenAiApprovePromptResponses,
+			GenAiApprovePromptErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/prompt-governance/prompts/templates/{prompt_id}/{version}/approve",
+			url: "/api/v1/gen-ai/prompt-governance/prompts/templates/{prompt_id}/{version}/approve",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -5866,14 +5837,14 @@ export class PromptGovernanceService {
 	 * Reject Prompt
 	 */
 	public static rejectPrompt<ThrowOnError extends boolean = false>(
-		options: Options<PromptGovernanceRejectPromptData, ThrowOnError>,
+		options: Options<GenAiRejectPromptData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			PromptGovernanceRejectPromptResponses,
-			PromptGovernanceRejectPromptErrors,
+			GenAiRejectPromptResponses,
+			GenAiRejectPromptErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/prompt-governance/prompts/templates/{prompt_id}/{version}/reject",
+			url: "/api/v1/gen-ai/prompt-governance/prompts/templates/{prompt_id}/{version}/reject",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -5886,14 +5857,14 @@ export class PromptGovernanceService {
 	 * Evaluate Prompt
 	 */
 	public static evaluatePrompt<ThrowOnError extends boolean = false>(
-		options: Options<PromptGovernanceEvaluatePromptData, ThrowOnError>,
+		options: Options<GenAiEvaluatePromptData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			PromptGovernanceEvaluatePromptResponses,
-			PromptGovernanceEvaluatePromptErrors,
+			GenAiEvaluatePromptResponses,
+			GenAiEvaluatePromptErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/prompt-governance/prompts/evaluate",
+			url: "/api/v1/gen-ai/prompt-governance/prompts/evaluate",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -5906,14 +5877,14 @@ export class PromptGovernanceService {
 	 * Log Prompt Usage
 	 */
 	public static logPromptUsage<ThrowOnError extends boolean = false>(
-		options: Options<PromptGovernanceLogPromptUsageData, ThrowOnError>,
+		options: Options<GenAiLogPromptUsageData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			PromptGovernanceLogPromptUsageResponses,
-			PromptGovernanceLogPromptUsageErrors,
+			GenAiLogPromptUsageResponses,
+			GenAiLogPromptUsageErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/prompt-governance/prompts/templates/{prompt_id}/{version}/usage",
+			url: "/api/v1/gen-ai/prompt-governance/prompts/templates/{prompt_id}/{version}/usage",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -5926,14 +5897,84 @@ export class PromptGovernanceService {
 	 * List Prompt Audit Logs
 	 */
 	public static listPromptAuditLogs<ThrowOnError extends boolean = false>(
-		options: Options<PromptGovernanceListPromptAuditLogsData, ThrowOnError>,
+		options: Options<GenAiListPromptAuditLogsData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			PromptGovernanceListPromptAuditLogsResponses,
-			PromptGovernanceListPromptAuditLogsErrors,
+			GenAiListPromptAuditLogsResponses,
+			GenAiListPromptAuditLogsErrors,
 			ThrowOnError
 		>({
-			url: "/api/v1/prompt-governance/prompts/templates/{prompt_id}/{version}/audit",
+			url: "/api/v1/gen-ai/prompt-governance/prompts/templates/{prompt_id}/{version}/audit",
+			...options,
+		});
+	}
+}
+
+export class SystemService {
+	/**
+	 * Service Health Check
+	 * Health check endpoint
+	 */
+	public static serviceHealthCheck<ThrowOnError extends boolean = false>(
+		options?: Options<SystemServiceHealthCheckData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			SystemServiceHealthCheckResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/system/health/",
+			...options,
+		});
+	}
+
+	/**
+	 * Run Stock Delta Update
+	 * 만료된 주식 데이터를 증분 업데이트합니다.
+	 */
+	public static runStockDeltaUpdate<ThrowOnError extends boolean = false>(
+		options?: Options<SystemRunStockDeltaUpdateData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).post<
+			SystemRunStockDeltaUpdateResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/system/tasks/stock-update/delta",
+			...options,
+		});
+	}
+
+	/**
+	 * Run Stock Force Update
+	 * 모든 활성 심볼의 주식 데이터를 강제 전체 업데이트합니다.
+	 */
+	public static runStockForceUpdate<ThrowOnError extends boolean = false>(
+		options?: Options<SystemRunStockForceUpdateData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).post<
+			SystemRunStockForceUpdateResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/system/tasks/stock-update/force-all",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Stock Update Status
+	 * 주식 데이터 업데이트 상태를 조회합니다.
+	 */
+	public static getStockUpdateStatus<ThrowOnError extends boolean = false>(
+		options?: Options<SystemGetStockUpdateStatusData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			SystemGetStockUpdateStatusResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/system/tasks/stock-update/status",
 			...options,
 		});
 	}
