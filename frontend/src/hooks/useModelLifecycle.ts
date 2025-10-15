@@ -7,66 +7,61 @@
  * @module hooks/useModelLifecycle
  */
 
+import type {
+    DriftEventCreate,
+    DriftEventResponse,
+    DriftSeverity,
+    ExperimentCreate,
+    ExperimentResponse,
+    ExperimentStatus,
+    ExperimentUpdate,
+    ModelStage,
+    ModelVersionCreate,
+    ModelVersionResponse,
+    RunCreate,
+    RunResponse,
+    RunStatus,
+    RunUpdate
+} from "@/client";
+import { ModelLifecycleService } from "@/client";
 import { useSnackbar } from "@/contexts/SnackbarContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 // ============================================================================
-// Types (temporary - will be replaced by generated client types)
+// Types (using backend-generated types)
 // ============================================================================
 
-export interface Experiment {
-    id: string;
-    name: string;
-    description: string;
-    status: "running" | "completed" | "failed" | "cancelled";
-    metrics: Record<string, number>;
-    hyperparameters: Record<string, unknown>;
-    created_by: string;
-    created_at: string;
-    completed_at?: string;
-    duration_seconds?: number;
-}
+export type Experiment = ExperimentResponse;
+export type ExperimentDetail = ExperimentResponse; // Backend provides full detail
+export type Run = RunResponse;
+export type Model = ModelVersionResponse;
+export type ModelDetail = ModelVersionResponse; // Backend provides full detail
+export type DriftEvent = DriftEventResponse;
 
-export interface ExperimentDetail extends Experiment {
-    logs: string[];
-    artifacts: {
-        name: string;
-        type: string;
-        size: number;
-        path: string;
-    }[];
-    model_id?: string;
-}
+// Create/Update DTOs aligned with backend
+export type ExperimentCreateDTO = ExperimentCreate;
+export type ExperimentUpdateDTO = ExperimentUpdate;
+export type RunCreateDTO = RunCreate;
+export type RunUpdateDTO = RunUpdate;
+export type ModelCreateDTO = ModelVersionCreate;
+export type DriftEventCreateDTO = DriftEventCreate;
 
-export interface Model {
-    id: string;
-    name: string;
-    version: string;
-    experiment_id: string;
-    status: "draft" | "registered" | "staging" | "production" | "archived";
-    accuracy: number;
-    created_by: string;
-    created_at: string;
-    updated_at: string;
-    tags: string[];
-}
+// Re-export enums for convenience
+export type { DriftSeverity, ExperimentStatus, ModelStage, RunStatus };
 
-export interface ModelDetail extends Model {
-    description: string;
-    framework: string;
-    hyperparameters: Record<string, unknown>;
-    metrics: Record<string, number>;
-    size_mb: number;
-    artifact_path: string;
-    deployment_count: number;
-}
-
+// Deployment interface (if not in backend types, keep custom)
 export interface Deployment {
     id: string;
     model_id: string;
     model_name: string;
     model_version: string;
-    status: "pending" | "validating" | "deploying" | "active" | "failed" | "rollback";
+    status:
+    | "pending"
+    | "validating"
+    | "deploying"
+    | "active"
+    | "failed"
+    | "rollback";
     environment: "development" | "staging" | "production";
     endpoint: string;
     created_by: string;
@@ -82,45 +77,35 @@ export interface DeploymentDetail extends Deployment {
     avg_latency_ms: number;
 }
 
-export interface ExperimentCreate {
-    name: string;
-    description: string;
-    hyperparameters: Record<string, unknown>;
-}
-
-export interface ModelRegister {
-    experiment_id: string;
-    name: string;
-    version: string;
-    description: string;
-    tags: string[];
-}
-
-export interface ModelDeploy {
-    model_id: string;
-    environment: Deployment["environment"];
-}
-
+// Query parameters aligned with backend
 export interface ExperimentsQueryParams {
-    status?: Experiment["status"];
-    date_from?: string;
-    date_to?: string;
-    sort_by?: "created_at" | "name" | "duration";
+    status?: ExperimentStatus;
+    owner?: string;
+    tags?: string[];
+    sort_by?: "created_at" | "name";
     sort_order?: "asc" | "desc";
     page?: number;
     limit?: number;
 }
 
 export interface ModelsQueryParams {
-    status?: Model["status"];
+    stage?: ModelStage;
+    experiment_id?: string;
     tags?: string[];
-    sort_by?: "created_at" | "name" | "accuracy";
+    sort_by?: "created_at" | "name";
     sort_order?: "asc" | "desc";
     page?: number;
     limit?: number;
 }
 
-// ============================================================================
+export interface RunsQueryParams {
+    experiment_id?: string;
+    status?: RunStatus;
+    sort_by?: "created_at" | "start_time";
+    sort_order?: "asc" | "desc";
+    page?: number;
+    limit?: number;
+}// ============================================================================
 // Query Keys
 // ============================================================================
 
@@ -136,8 +121,7 @@ export const modelLifecycleQueryKeys = {
         [...modelLifecycleQueryKeys.models(), "list", params] as const,
     modelDetail: (modelId: string) =>
         [...modelLifecycleQueryKeys.models(), "detail", modelId] as const,
-    deployments: () =>
-        [...modelLifecycleQueryKeys.all, "deployments"] as const,
+    deployments: () => [...modelLifecycleQueryKeys.all, "deployments"] as const,
     deploymentsList: () =>
         [...modelLifecycleQueryKeys.deployments(), "list"] as const,
     deploymentDetail: (deploymentId: string) =>
@@ -162,19 +146,17 @@ export const useModelLifecycle = (params?: ExperimentsQueryParams) => {
      */
     const experimentsQuery = useQuery({
         queryKey: modelLifecycleQueryKeys.experimentsList(params),
-        queryFn: async (): Promise<{
-            experiments: Experiment[];
-            total: number;
-        }> => {
-            // TODO: Replace with actual API call after pnpm gen:client
-            // const response = await ModelLifecycleService.getExperiments({ query: params });
-            // return response.data;
-
-            // Mock data for now
-            await new Promise((resolve) => setTimeout(resolve, 500));
+        queryFn: async () => {
+            const response = await ModelLifecycleService.listExperiments({
+                query: {
+                    owner: params?.owner,
+                    status: params?.status,
+                },
+            });
+            const experiments = response.data ?? [];
             return {
-                experiments: [],
-                total: 0,
+                experiments,
+                total: experiments.length,
             };
         },
         staleTime: 1000 * 60 * 5, // 5 minutes
@@ -203,25 +185,17 @@ export const useModelLifecycle = (params?: ExperimentsQueryParams) => {
 
     /**
      * Mutation: Create Experiment
-     * Creates a new ML experiment
+     * Creates a new ML experiment for tracking
      */
     const createExperimentMutation = useMutation({
         mutationFn: async (data: ExperimentCreate): Promise<Experiment> => {
-            // TODO: Replace with actual API call
-            // const response = await ModelLifecycleService.createExperiment({ body: data });
-            // return response.data;
-
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            return {
-                id: `exp_${Date.now()}`,
-                name: data.name,
-                description: data.description,
-                status: "running",
-                metrics: {},
-                hyperparameters: data.hyperparameters,
-                created_by: "current_user",
-                created_at: new Date().toISOString(),
-            };
+            const response = await ModelLifecycleService.createExperiment({
+                body: data,
+            });
+            if (!response.data) {
+                throw new Error("Experiment creation failed");
+            }
+            return response.data;
         },
         onSuccess: () => {
             queryClient.invalidateQueries({
@@ -236,27 +210,17 @@ export const useModelLifecycle = (params?: ExperimentsQueryParams) => {
 
     /**
      * Mutation: Register Model
-     * Registers a model from an experiment to the model registry
+     * Registers a model version to the model registry
      */
     const registerModelMutation = useMutation({
-        mutationFn: async (data: ModelRegister): Promise<Model> => {
-            // TODO: Replace with actual API call
-            // const response = await ModelLifecycleService.registerModel({ body: data });
-            // return response.data;
-
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            return {
-                id: `model_${Date.now()}`,
-                name: data.name,
-                version: data.version,
-                experiment_id: data.experiment_id,
-                status: "registered",
-                accuracy: 0.85,
-                created_by: "current_user",
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-                tags: data.tags,
-            };
+        mutationFn: async (data: ModelVersionCreate): Promise<Model> => {
+            const response = await ModelLifecycleService.registerModelVersion({
+                body: data,
+            });
+            if (!response.data) {
+                throw new Error("Model registration failed");
+            }
+            return response.data;
         },
         onSuccess: () => {
             queryClient.invalidateQueries({
@@ -398,14 +362,15 @@ export const useModels = (params?: ModelsQueryParams) => {
     const modelsQuery = useQuery({
         queryKey: modelLifecycleQueryKeys.modelsList(params),
         queryFn: async (): Promise<{ models: Model[]; total: number }> => {
-            // TODO: Replace with actual API call
-            // const response = await ModelLifecycleService.getModels({ query: params });
-            // return response.data;
-
-            await new Promise((resolve) => setTimeout(resolve, 500));
+            const response = await ModelLifecycleService.listModelVersions({
+                query: {
+                    stage: params?.stage,
+                },
+            });
+            const models = response.data ?? [];
             return {
-                models: [],
-                total: 0,
+                models,
+                total: models.length,
             };
         },
         staleTime: 1000 * 60 * 5,
@@ -500,7 +465,11 @@ export const useDeploymentDetail = (deploymentId: string | null) => {
                 created_by: "user123",
                 deployed_at: new Date().toISOString(),
                 created_at: new Date().toISOString(),
-                logs: ["Deployment started", "Validation passed", "Deployed successfully"],
+                logs: [
+                    "Deployment started",
+                    "Validation passed",
+                    "Deployed successfully",
+                ],
                 health_status: "healthy",
                 request_count: 10523,
                 error_rate: 0.02,

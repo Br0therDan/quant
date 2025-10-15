@@ -5,6 +5,6 @@
  * 작성일: 2025-10-15
  */
 
-export { ChatInterface } from './ChatInterface';
+export { ChatInterface } from "./ChatInterface";
 
-export type { ChatInterfaceProps } from './ChatInterface';
+export type { ChatInterfaceProps } from "./ChatInterface";

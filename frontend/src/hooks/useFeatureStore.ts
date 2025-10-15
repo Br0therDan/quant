@@ -7,53 +7,43 @@
  * @module hooks/useFeatureStore
  */
 
+import type {
+	DataType,
+	FeatureCreate,
+	FeatureLineageResponse,
+	FeatureResponse,
+	FeatureStatisticsResponse,
+	FeatureStatus,
+	FeatureType,
+	FeatureUpdate,
+	FeatureUsageCreate,
+	FeatureVersionCreate,
+	FeatureVersionResponse,
+} from "@/client";
+import { FeatureStoreService } from "@/client";
 import { useSnackbar } from "@/contexts/SnackbarContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 // ============================================================================
-// Types (temporary - will be replaced by generated client types)
+// Types (using backend-generated types)
 // ============================================================================
 
-export interface Feature {
-	id: string;
-	name: string;
-	type: "numerical" | "categorical" | "binary" | "text" | "datetime";
-	description: string;
-	tags: string[];
-	created_by: string;
-	created_at: string;
-	updated_at: string;
-	usage_count: number;
-	version: number;
-}
+export type Feature = FeatureResponse;
+export type FeatureDetail = FeatureResponse; // Backend provides full detail
+export type FeatureVersion = FeatureVersionResponse;
+export type FeatureLineage = FeatureLineageResponse;
+export type FeatureStatistics = FeatureStatisticsResponse;
 
-export interface FeatureDetail extends Feature {
-	statistics: {
-		mean?: number;
-		median?: number;
-		std?: number;
-		min?: number;
-		max?: number;
-		missing_ratio?: number;
-		unique_count?: number;
-		distribution?: { value: string | number; count: number }[];
-	};
-	source_dataset: string;
-	transformation_code: string;
-	dependencies: string[];
-}
+// Create/Update DTOs
+export type FeatureCreateDTO = FeatureCreate;
+export type FeatureUpdateDTO = FeatureUpdate;
+export type FeatureVersionCreateDTO = FeatureVersionCreate;
+export type FeatureUsageDTO = FeatureUsageCreate;
 
-export interface FeatureVersion {
-	id: string;
-	version: number;
-	feature_id: string;
-	description: string;
-	changes: string;
-	created_by: string;
-	created_at: string;
-	transformation_code: string;
-}
+// Re-export enums for convenience
+export type { DataType, FeatureStatus, FeatureType };
 
+// Dataset interface (if not in backend types, keep custom)
 export interface Dataset {
 	id: string;
 	name: string;
@@ -70,28 +60,16 @@ export interface Dataset {
 	}[];
 }
 
-export interface FeatureCreate {
-	name: string;
-	type: Feature["type"];
-	description: string;
-	tags: string[];
-	source_dataset: string;
-	transformation_code: string;
-}
-
-export interface FeatureUpdate {
-	description?: string;
-	tags?: string[];
-	transformation_code?: string;
-}
-
+// Query parameters (frontend-specific)
 export interface FeaturesQueryParams {
-	type?: Feature["type"];
+	feature_type?: FeatureType;
+	status?: FeatureStatus;
+	owner?: string;
 	tags?: string[];
 	search?: string;
-	sort_by?: "name" | "created_at" | "usage_count";
+	sort_by?: "feature_name" | "created_at" | "usage_count";
 	sort_order?: "asc" | "desc";
-	page?: number;
+	skip?: number;
 	limit?: number;
 }
 
@@ -132,15 +110,22 @@ export const useFeatureStore = (params?: FeaturesQueryParams) => {
 	const featuresQuery = useQuery({
 		queryKey: featureStoreQueryKeys.featuresList(params),
 		queryFn: async (): Promise<{ features: Feature[]; total: number }> => {
-			// TODO: Replace with actual API call after pnpm gen:client
-			// const response = await FeatureStoreService.getFeatures({ query: params });
-			// return response.data;
-
-			// Mock data for now
-			await new Promise((resolve) => setTimeout(resolve, 500));
+			const response = await FeatureStoreService.listFeatures({
+				query: {
+					owner: params?.owner,
+					feature_type: params?.feature_type,
+					status: params?.status,
+					tags: params?.tags?.join(","),
+					skip: params?.skip,
+					limit: params?.limit,
+				},
+			});
+			if (!response.data) {
+				return { features: [], total: 0 };
+			}
 			return {
-				features: [],
-				total: 0,
+				features: response.data.features,
+				total: response.data.total,
 			};
 		},
 		staleTime: 1000 * 60 * 5, // 5 minutes
@@ -173,23 +158,13 @@ export const useFeatureStore = (params?: FeaturesQueryParams) => {
 	 */
 	const createFeatureMutation = useMutation({
 		mutationFn: async (data: FeatureCreate): Promise<Feature> => {
-			// TODO: Replace with actual API call
-			// const response = await FeatureStoreService.createFeature({ body: data });
-			// return response.data;
-
-			await new Promise((resolve) => setTimeout(resolve, 1000));
-			return {
-				id: `feature_${Date.now()}`,
-				name: data.name,
-				type: data.type,
-				description: data.description,
-				tags: data.tags,
-				created_by: "current_user",
-				created_at: new Date().toISOString(),
-				updated_at: new Date().toISOString(),
-				usage_count: 0,
-				version: 1,
-			};
+			const response = await FeatureStoreService.createFeature({
+				body: data,
+			});
+			if (!response.data) {
+				throw new Error("Feature creation failed");
+			}
+			return response.data;
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({
@@ -208,39 +183,27 @@ export const useFeatureStore = (params?: FeaturesQueryParams) => {
 	 */
 	const updateFeatureMutation = useMutation({
 		mutationFn: async ({
-			featureId,
+			feature_name,
 			data,
 		}: {
-			featureId: string;
+			feature_name: string;
 			data: FeatureUpdate;
 		}): Promise<Feature> => {
-			// TODO: Replace with actual API call
-			// const response = await FeatureStoreService.updateFeature({
-			//   path: { feature_id: featureId },
-			//   body: data
-			// });
-			// return response.data;
-
-			await new Promise((resolve) => setTimeout(resolve, 1000));
-			return {
-				id: featureId,
-				name: "Updated Feature",
-				type: "numerical",
-				description: data.description || "",
-				tags: data.tags || [],
-				created_by: "current_user",
-				created_at: new Date().toISOString(),
-				updated_at: new Date().toISOString(),
-				usage_count: 0,
-				version: 2,
-			};
+			const response = await FeatureStoreService.updateFeature({
+				path: { feature_name },
+				body: data,
+			});
+			if (!response.data) {
+				throw new Error("Feature update failed");
+			}
+			return response.data;
 		},
 		onSuccess: (_, variables) => {
 			queryClient.invalidateQueries({
 				queryKey: featureStoreQueryKeys.features(),
 			});
 			queryClient.invalidateQueries({
-				queryKey: featureStoreQueryKeys.featureDetail(variables.featureId),
+				queryKey: featureStoreQueryKeys.featureDetail(variables.feature_name),
 			});
 			showSuccess("피처가 성공적으로 업데이트되었습니다");
 		},
@@ -254,11 +217,10 @@ export const useFeatureStore = (params?: FeaturesQueryParams) => {
 	 * Deletes a feature from the store
 	 */
 	const deleteFeatureMutation = useMutation({
-		mutationFn: async (_featureId: string): Promise<void> => {
-			// TODO: Replace with actual API call
-			// await FeatureStoreService.deleteFeature({ path: { feature_id: featureId } });
-
-			await new Promise((resolve) => setTimeout(resolve, 1000));
+		mutationFn: async (feature_name: string): Promise<void> => {
+			await FeatureStoreService.deleteFeature({
+				path: { feature_name },
+			});
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({
@@ -291,8 +253,8 @@ export const useFeatureStore = (params?: FeaturesQueryParams) => {
 		createFeature: createFeatureMutation.mutateAsync,
 		isCreatingFeature: createFeatureMutation.isPending,
 
-		updateFeature: (featureId: string, data: FeatureUpdate) =>
-			updateFeatureMutation.mutateAsync({ featureId, data }),
+		updateFeature: (feature_name: string, data: FeatureUpdate) =>
+			updateFeatureMutation.mutateAsync({ feature_name, data }),
 		isUpdatingFeature: updateFeatureMutation.isPending,
 
 		deleteFeature: deleteFeatureMutation.mutateAsync,
@@ -312,44 +274,22 @@ export const useFeatureStore = (params?: FeaturesQueryParams) => {
  * Hook: Feature Detail
  * Fetches detailed information for a specific feature
  */
-export const useFeatureDetail = (featureId: string | null) => {
+export const useFeatureDetail = (feature_name: string | null) => {
 	const featureDetailQuery = useQuery({
-		queryKey: featureStoreQueryKeys.featureDetail(featureId || ""),
+		queryKey: featureStoreQueryKeys.featureDetail(feature_name || ""),
 		queryFn: async (): Promise<FeatureDetail> => {
-			// TODO: Replace with actual API call
-			// const response = await FeatureStoreService.getFeature({
-			//   path: { feature_id: featureId! }
-			// });
-			// return response.data;
-
-			await new Promise((resolve) => setTimeout(resolve, 500));
-			return {
-				id: featureId || "",
-				name: "Sample Feature",
-				type: "numerical",
-				description: "Sample feature description",
-				tags: ["technical", "price"],
-				created_by: "user123",
-				created_at: new Date().toISOString(),
-				updated_at: new Date().toISOString(),
-				usage_count: 10,
-				version: 1,
-				statistics: {
-					mean: 50.5,
-					median: 48.2,
-					std: 12.3,
-					min: 10.0,
-					max: 100.0,
-					missing_ratio: 0.05,
-					unique_count: 85,
-				},
-				source_dataset: "dataset_123",
-				transformation_code:
-					"df['new_feature'] = df['price'].rolling(20).mean()",
-				dependencies: ["price"],
-			};
+			if (!feature_name) {
+				throw new Error("Feature name is required");
+			}
+			const response = await FeatureStoreService.getFeature({
+				path: { feature_name },
+			});
+			if (!response.data) {
+				throw new Error("Feature not found");
+			}
+			return response.data;
 		},
-		enabled: !!featureId,
+		enabled: !!feature_name,
 		staleTime: 1000 * 60 * 5,
 	});
 
@@ -365,20 +305,19 @@ export const useFeatureDetail = (featureId: string | null) => {
  * Hook: Feature Versions
  * Fetches version history for a specific feature
  */
-export const useFeatureVersions = (featureId: string | null) => {
+export const useFeatureVersions = (feature_name: string | null) => {
 	const versionsQuery = useQuery({
-		queryKey: featureStoreQueryKeys.versions(featureId || ""),
+		queryKey: featureStoreQueryKeys.versions(feature_name || ""),
 		queryFn: async (): Promise<FeatureVersion[]> => {
-			// TODO: Replace with actual API call
-			// const response = await FeatureStoreService.getFeatureVersions({
-			//   path: { feature_id: featureId! }
-			// });
-			// return response.data;
-
-			await new Promise((resolve) => setTimeout(resolve, 500));
-			return [];
+			if (!feature_name) {
+				return [];
+			}
+			const response = await FeatureStoreService.getFeatureVersions({
+				path: { feature_name },
+			});
+			return response.data?.versions ?? [];
 		},
-		enabled: !!featureId,
+		enabled: !!feature_name,
 		staleTime: 1000 * 60 * 10,
 	});
 

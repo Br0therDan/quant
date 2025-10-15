@@ -21,12 +21,12 @@ import type React from "react";
 // ========================================================================================
 
 export interface RegenerationButtonProps {
-  backtestId: string;
-  onRegenerate: () => void;
-  isGenerating: boolean;
-  label?: string;
-  variant?: "text" | "outlined" | "contained";
-  disabled?: boolean;
+	backtestId: string;
+	onRegenerate: () => void;
+	isGenerating: boolean;
+	label?: string;
+	variant?: "text" | "outlined" | "contained";
+	disabled?: boolean;
 }
 
 // ========================================================================================
@@ -34,22 +34,22 @@ export interface RegenerationButtonProps {
 // ========================================================================================
 
 export const RegenerationButton: React.FC<RegenerationButtonProps> = ({
-  onRegenerate,
-  isGenerating,
-  label = "재생성",
-  variant = "outlined",
-  disabled = false,
+	onRegenerate,
+	isGenerating,
+	label = "재생성",
+	variant = "outlined",
+	disabled = false,
 }) => {
-  return (
-    <Button
-      variant={variant}
-      startIcon={
-        isGenerating ? <CircularProgress size={16} /> : <RefreshIcon />
-      }
-      onClick={onRegenerate}
-      disabled={disabled || isGenerating}
-    >
-      {isGenerating ? "LLM 생성 중..." : label}
-    </Button>
-  );
+	return (
+		<Button
+			variant={variant}
+			startIcon={
+				isGenerating ? <CircularProgress size={16} /> : <RefreshIcon />
+			}
+			onClick={onRegenerate}
+			disabled={disabled || isGenerating}
+		>
+			{isGenerating ? "LLM 생성 중..." : label}
+		</Button>
+	);
 };
