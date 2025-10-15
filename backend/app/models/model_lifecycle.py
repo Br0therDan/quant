@@ -99,6 +99,13 @@ class ModelExperiment(BaseDocument):
     )
     tags: list[str] = Field(default_factory=list, description="태그")
     metadata: dict[str, Any] = Field(default_factory=dict, description="추가 메타데이터")
+
+    # Phase 4 Enhancement: 메트릭 추적
+    metrics: dict[str, float] = Field(
+        default_factory=dict, description="실험 메트릭 (accuracy, f1_score 등)"
+    )
+    duration_seconds: float | None = Field(None, description="실행 시간 (초)")
+
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(UTC), description="생성 시간"
     )

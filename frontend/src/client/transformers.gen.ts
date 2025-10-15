@@ -1551,6 +1551,11 @@ const featureListResponseSchemaResponseTransformer = (data: any) => {
 };
 
 const featureResponseSchemaResponseTransformer = (data: any) => {
+	if (data.statistics) {
+		data.statistics = featureStatisticsSchemaResponseTransformer(
+			data.statistics,
+		);
+	}
 	if (data.last_used_at) {
 		data.last_used_at = new Date(data.last_used_at);
 	}
@@ -1558,6 +1563,13 @@ const featureResponseSchemaResponseTransformer = (data: any) => {
 	data.updated_at = new Date(data.updated_at);
 	if (data.deprecated_at) {
 		data.deprecated_at = new Date(data.deprecated_at);
+	}
+	return data;
+};
+
+const featureStatisticsSchemaResponseTransformer = (data: any) => {
+	if (data.calculated_at) {
+		data.calculated_at = new Date(data.calculated_at);
 	}
 	return data;
 };

@@ -75,33 +75,27 @@ const getStatusColor = (
 		Experiment["status"],
 		"success" | "warning" | "error" | "info"
 	> = {
-		running: "info",
-		completed: "success",
-		failed: "error",
-		cancelled: "warning",
+		active: "info",
+		archived: "warning",
 	};
 	return colorMap[status] || "default";
 };
 
 const getStatusLabel = (status: Experiment["status"]): string => {
 	const labelMap: Record<Experiment["status"], string> = {
-		running: "실행 중",
-		completed: "완료",
-		failed: "실패",
-		cancelled: "취소됨",
+		active: "활성",
+		archived: "보관됨",
 	};
 	return labelMap[status] || status;
 };
 
-const formatDuration = (seconds?: number): string => {
+const formatDuration = (seconds?: number | null): string => {
 	if (!seconds) return "-";
 	const hours = Math.floor(seconds / 3600);
 	const minutes = Math.floor((seconds % 3600) / 60);
 	if (hours > 0) return `${hours}시간 ${minutes}분`;
 	return `${minutes}분`;
-};
-
-// ============================================================================
+}; // ============================================================================
 // Component Implementation
 // ============================================================================
 
@@ -337,7 +331,7 @@ export const ExperimentList: React.FC<ExperimentListProps> = ({
 									<TableCell align="right">F1 점수</TableCell>
 									<TableCell align="right">실행 시간</TableCell>
 									<TableCell>생성일</TableCell>
-									<TableCell>작성자</TableCell>
+									<TableCell>생성시간</TableCell>
 								</TableRow>
 							</TableHead>
 							<TableBody>
@@ -371,12 +365,12 @@ export const ExperimentList: React.FC<ExperimentListProps> = ({
 											/>
 										</TableCell>
 										<TableCell align="right">
-											{experiment.metrics.accuracy
+											{experiment.metrics?.accuracy
 												? (experiment.metrics.accuracy * 100).toFixed(2) + "%"
 												: "-"}
 										</TableCell>
 										<TableCell align="right">
-											{experiment.metrics.f1_score
+											{experiment.metrics?.f1_score
 												? (experiment.metrics.f1_score * 100).toFixed(2) + "%"
 												: "-"}
 										</TableCell>
@@ -388,7 +382,11 @@ export const ExperimentList: React.FC<ExperimentListProps> = ({
 												"ko-KR",
 											)}
 										</TableCell>
-										<TableCell>{experiment.created_by}</TableCell>
+										<TableCell>
+											{new Date(experiment.created_at).toLocaleTimeString(
+												"ko-KR",
+											)}
+										</TableCell>
 									</TableRow>
 								))}
 							</TableBody>

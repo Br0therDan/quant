@@ -10,12 +10,8 @@
  * @module components/mlops/feature-store/FeatureDetail
  */
 
-import {
-	useFeatureDetail,
-	useFeatureStore,
-	type Feature,
-	type FeatureUpdate,
-} from "@/hooks/useFeatureStore";
+import type { FeatureType, FeatureUpdate } from "@/client";
+import { useFeatureDetail, useFeatureStore } from "@/hooks/useFeatureStore";
 import CancelIcon from "@mui/icons-material/Cancel";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -74,16 +70,17 @@ interface FeatureDetailProps {
 // Type Color Mapping
 // ============================================================================
 
-const getTypeColor = (type: Feature["type"]) => {
+const getTypeColor = (type: FeatureType) => {
 	const colorMap: Record<
-		Feature["type"],
+		FeatureType,
 		"primary" | "success" | "warning" | "error" | "info"
 	> = {
-		numerical: "primary",
-		categorical: "success",
-		binary: "warning",
-		text: "info",
-		datetime: "error",
+		technical_indicator: "primary",
+		fundamental: "success",
+		sentiment: "warning",
+		macro_economic: "info",
+		derived: "error",
+		raw: "info",
 	};
 	return colorMap[type] || "default";
 };
@@ -106,7 +103,6 @@ export const FeatureDetail: React.FC<FeatureDetailProps> = ({
 	const [editFormData, setEditFormData] = useState<FeatureUpdate>({
 		description: "",
 		tags: [],
-		transformation_code: "",
 	});
 
 	// ============================================================================
@@ -127,7 +123,6 @@ export const FeatureDetail: React.FC<FeatureDetailProps> = ({
 			setEditFormData({
 				description: featureDetail.description,
 				tags: featureDetail.tags,
-				transformation_code: featureDetail.transformation_code,
 			});
 		}
 	});
@@ -141,12 +136,10 @@ export const FeatureDetail: React.FC<FeatureDetailProps> = ({
 			setEditFormData({
 				description: featureDetail.description,
 				tags: featureDetail.tags,
-				transformation_code: featureDetail.transformation_code,
 			});
 			setIsEditing(true);
 		}
 	};
-
 	const handleCancelEdit = () => {
 		setIsEditing(false);
 	};
@@ -187,13 +180,11 @@ export const FeatureDetail: React.FC<FeatureDetailProps> = ({
 				| React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 				| SelectChangeEvent<string>,
 		) => {
-			setEditFormData((prev) => ({
+			setEditFormData((prev: FeatureUpdate) => ({
 				...prev,
 				[field]: event.target.value,
 			}));
-		};
-
-	// ============================================================================
+		}; // ============================================================================
 	// Render Loading State
 	// ============================================================================
 
@@ -263,18 +254,18 @@ export const FeatureDetail: React.FC<FeatureDetailProps> = ({
 					>
 						<Box>
 							<Typography variant="h5" component="h2" gutterBottom>
-								{featureDetail.name}
+								{featureDetail.feature_name}
 							</Typography>
 							<Box
 								sx={{ display: "flex", gap: 1, alignItems: "center", mt: 1 }}
 							>
 								<Chip
-									label={featureDetail.type}
-									color={getTypeColor(featureDetail.type)}
+									label={featureDetail.feature_type}
+									color={getTypeColor(featureDetail.feature_type)}
 									size="small"
 								/>
 								<Typography variant="body2" color="text.secondary">
-									버전 {featureDetail.version}
+									버전 {featureDetail.current_version}
 								</Typography>
 								<Typography variant="body2" color="text.secondary">
 									•
@@ -315,7 +306,7 @@ export const FeatureDetail: React.FC<FeatureDetailProps> = ({
 								label="태그 (쉼표로 구분)"
 								value={editFormData.tags?.join(", ") || ""}
 								onChange={(e) =>
-									setEditFormData((prev) => ({
+									setEditFormData((prev: FeatureUpdate) => ({
 										...prev,
 										tags: e.target.value
 											.split(",")
@@ -334,7 +325,7 @@ export const FeatureDetail: React.FC<FeatureDetailProps> = ({
 					</Box>
 
 					{/* Statistics */}
-					{featureDetail.type === "numerical" && featureDetail.statistics && (
+					{featureDetail.statistics && (
 						<Box sx={{ mb: 3 }}>
 							<Typography variant="subtitle2" gutterBottom>
 								통계
@@ -418,46 +409,31 @@ export const FeatureDetail: React.FC<FeatureDetailProps> = ({
 						</Box>
 					)}
 
-					{/* Transformation Code */}
+					{/* Transformation Code (Read-only) */}
 					<Box sx={{ mb: 2 }}>
 						<Typography variant="subtitle2" gutterBottom>
 							변환 코드
 						</Typography>
-						{isEditing ? (
-							<TextField
-								fullWidth
-								multiline
-								rows={4}
-								value={editFormData.transformation_code}
-								onChange={handleFormChange("transformation_code")}
-								slotProps={{
-									htmlInput: {
-										style: { fontFamily: "monospace", fontSize: "0.875rem" },
-									},
-								}}
-							/>
-						) : (
-							<Box
-								sx={{
-									p: 2,
-									bgcolor: "grey.100",
-									borderRadius: 1,
-									fontFamily: "monospace",
-									fontSize: "0.875rem",
-									overflowX: "auto",
-								}}
-							>
-								<pre style={{ margin: 0 }}>
-									{featureDetail.transformation_code}
-								</pre>
-							</Box>
-						)}
+						<Box
+							sx={{
+								p: 2,
+								bgcolor: "grey.100",
+								borderRadius: 1,
+								fontFamily: "monospace",
+								fontSize: "0.875rem",
+								overflowX: "auto",
+							}}
+						>
+							<pre style={{ margin: 0 }}>
+								{featureDetail.transformation?.code}
+							</pre>
+						</Box>
 					</Box>
 
 					{/* Metadata */}
 					<Box>
 						<Typography variant="caption" color="text.secondary">
-							생성자: {featureDetail.created_by} | 생성일:{" "}
+							생성자: {featureDetail.owner} | 생성일:{" "}
 							{new Date(featureDetail.created_at).toLocaleString("ko-KR")} |
 							최종 수정:{" "}
 							{new Date(featureDetail.updated_at).toLocaleString("ko-KR")}
@@ -514,7 +490,7 @@ export const FeatureDetail: React.FC<FeatureDetailProps> = ({
 				<DialogTitle>피처 삭제</DialogTitle>
 				<DialogContent>
 					<Typography>
-						정말로 <strong>{featureDetail.name}</strong> 피처를
+						정말로 <strong>{featureDetail.feature_name}</strong> 피처를
 						삭제하시겠습니까?
 					</Typography>
 					<Typography variant="body2" color="error" sx={{ mt: 2 }}>

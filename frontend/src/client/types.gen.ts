@@ -2404,6 +2404,11 @@ export type ExperimentCreate = {
  */
 export type ExperimentResponse = {
 	/**
+	 * Id
+	 * MongoDB ObjectId
+	 */
+	id: string;
+	/**
 	 * Name
 	 */
 	name: string;
@@ -2426,6 +2431,18 @@ export type ExperimentResponse = {
 	metadata: {
 		[key: string]: unknown;
 	};
+	/**
+	 * Metrics
+	 * 실험 메트릭
+	 */
+	metrics?: {
+		[key: string]: number;
+	};
+	/**
+	 * Duration Seconds
+	 * 실행 시간 (초)
+	 */
+	duration_seconds?: number | null;
 	/**
 	 * Created At
 	 */
@@ -2828,6 +2845,10 @@ export type FeatureResponse = {
 	 */
 	duckdb_view?: string | null;
 	/**
+	 * 피처 통계 정보
+	 */
+	statistics?: FeatureStatistics | null;
+	/**
 	 * Usage Count
 	 * 사용 횟수
 	 */
@@ -2852,6 +2873,55 @@ export type FeatureResponse = {
 	 * 폐기 시간
 	 */
 	deprecated_at?: Date | null;
+};
+
+/**
+ * FeatureStatistics
+ * 피처 통계 정보 (Phase 4 Enhancement)
+ */
+export type FeatureStatistics = {
+	/**
+	 * Mean
+	 * 평균값
+	 */
+	mean?: number | null;
+	/**
+	 * Median
+	 * 중앙값
+	 */
+	median?: number | null;
+	/**
+	 * Std
+	 * 표준편차
+	 */
+	std?: number | null;
+	/**
+	 * Min
+	 * 최소값
+	 */
+	min?: number | null;
+	/**
+	 * Max
+	 * 최대값
+	 */
+	max?: number | null;
+	/**
+	 * Missing Ratio
+	 * 결측치 비율 (0.0 ~ 1.0)
+	 */
+	missing_ratio?: number;
+	/**
+	 * Distribution
+	 * 분포 데이터 [{value, count}, ...]
+	 */
+	distribution?: Array<{
+		[key: string]: unknown;
+	}>;
+	/**
+	 * Calculated At
+	 * 계산 시간
+	 */
+	calculated_at?: Date;
 };
 
 /**

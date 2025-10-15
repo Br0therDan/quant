@@ -299,16 +299,17 @@ export const VersionHistory: React.FC<VersionHistoryProps> = ({
 											</Box>
 
 											<Typography variant="body2" paragraph>
-												{version.description}
+												{version.changelog}
 											</Typography>
 
-											{version.changes && (
+											{version.breaking_changes && (
 												<Box
 													sx={{
 														p: 1,
-														bgcolor: "grey.100",
+														bgcolor: "warning.light",
 														borderRadius: 1,
 														fontSize: "0.75rem",
+														mb: 1,
 													}}
 												>
 													<Typography
@@ -316,17 +317,10 @@ export const VersionHistory: React.FC<VersionHistoryProps> = ({
 														sx={{
 															fontWeight: "bold",
 															display: "block",
-															mb: 0.5,
+															color: "warning.dark",
 														}}
 													>
-														변경 사항:
-													</Typography>
-													<Typography
-														variant="caption"
-														component="pre"
-														sx={{ margin: 0, whiteSpace: "pre-wrap" }}
-													>
-														{version.changes}
+														⚠️ Breaking Changes
 													</Typography>
 												</Box>
 											)}
@@ -376,7 +370,7 @@ export const VersionHistory: React.FC<VersionHistoryProps> = ({
 									}}
 								>
 									<pre style={{ margin: 0, whiteSpace: "pre-wrap" }}>
-										{version1.transformation_code}
+										{version1.transformation_snapshot?.code || "변환 코드 없음"}
 									</pre>
 								</Box>
 							</Box>
@@ -399,7 +393,7 @@ export const VersionHistory: React.FC<VersionHistoryProps> = ({
 									}}
 								>
 									<pre style={{ margin: 0, whiteSpace: "pre-wrap" }}>
-										{version2.transformation_code}
+										{version2.transformation_snapshot?.code || "변환 코드 없음"}
 									</pre>
 								</Box>
 							</Box>

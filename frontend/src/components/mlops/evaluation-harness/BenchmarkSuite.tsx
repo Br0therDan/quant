@@ -78,7 +78,6 @@ export const BenchmarkSuite: React.FC<BenchmarkSuiteProps> = ({
 		null,
 	);
 	const [runDialogOpen, setRunDialogOpen] = useState(false);
-	const [activeRunId, setActiveRunId] = useState<string | null>(null);
 
 	// Form state for creating benchmarks
 	const [newBenchmark, setNewBenchmark] = useState<BenchmarkCreate>({
@@ -166,13 +165,13 @@ export const BenchmarkSuite: React.FC<BenchmarkSuiteProps> = ({
 		if (!selectedBenchmarkId || !modelId) return;
 
 		try {
-			const run = await runBenchmark({
+			await runBenchmark({
 				benchmark_name: selectedBenchmarkId,
 				model_id: modelId,
 				model_version: undefined,
 			});
-			// BenchmarkRunResponse doesn't have id field, use benchmark_name + model_id
-			setActiveRunId(`${run.benchmark_name}-${run.model_id}`);
+			// Note: BenchmarkRunResponse tracking not implemented yet
+			// TODO: Backend doesn't have GET /benchmarks/runs/{id} endpoint => vlidate if needed
 			setRunDialogOpen(false);
 		} catch (error) {
 			console.error("Run benchmark error:", error);

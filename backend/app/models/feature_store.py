@@ -68,6 +68,23 @@ class FeatureValidation(BaseModel):
     is_blocking: bool = Field(default=False, description="블로킹 여부")
 
 
+class FeatureStatistics(BaseModel):
+    """피처 통계 정보 (Phase 4 Enhancement)"""
+
+    mean: float | None = Field(None, description="평균값")
+    median: float | None = Field(None, description="중앙값")
+    std: float | None = Field(None, description="표준편차")
+    min: float | None = Field(None, description="최소값")
+    max: float | None = Field(None, description="최대값")
+    missing_ratio: float = Field(default=0.0, description="결측치 비율 (0.0 ~ 1.0)")
+    distribution: list[dict[str, Any]] = Field(
+        default_factory=list, description="분포 데이터 [{value, count}, ...]"
+    )
+    calculated_at: datetime = Field(
+        default_factory=lambda: datetime.now(UTC), description="계산 시간"
+    )
+
+
 class FeatureUsageRecord(BaseModel):
     """피처 사용 기록"""
 
@@ -116,6 +133,9 @@ class FeatureDefinition(Document):
     # 스토리지 정보
     duckdb_table: str | None = Field(None, description="DuckDB 테이블 이름")
     duckdb_view: str | None = Field(None, description="DuckDB 뷰 이름")
+
+    # 통계 (Phase 4 Enhancement)
+    statistics: FeatureStatistics | None = Field(None, description="피처 통계 정보")
 
     # 통계
     usage_count: int = Field(default=0, description="사용 횟수")

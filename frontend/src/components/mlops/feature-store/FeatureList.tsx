@@ -11,6 +11,7 @@ import {
 	useFeatureStore,
 	type Feature,
 	type FeaturesQueryParams,
+	type FeatureType,
 } from "@/hooks/useFeatureStore";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
@@ -53,21 +54,20 @@ interface FeatureListProps {
 // Type Color Mapping
 // ============================================================================
 
-const getTypeColor = (type: Feature["type"]) => {
+const getTypeColor = (type: FeatureType) => {
 	const colorMap: Record<
-		Feature["type"],
+		FeatureType,
 		"primary" | "success" | "warning" | "error" | "info"
 	> = {
-		numerical: "primary",
-		categorical: "success",
-		binary: "warning",
-		text: "info",
-		datetime: "error",
+		technical_indicator: "primary",
+		fundamental: "success",
+		sentiment: "warning",
+		macro_economic: "info",
+		derived: "error",
+		raw: "info",
 	};
 	return colorMap[type] || "default";
-};
-
-// ============================================================================
+}; // ============================================================================
 // Component Implementation
 // ============================================================================
 
@@ -80,12 +80,11 @@ export const FeatureList: React.FC<FeatureListProps> = ({
 	// ============================================================================
 
 	const [queryParams, setQueryParams] = useState<FeaturesQueryParams>({
-		page: 1,
+		skip: 0,
 		limit: 10,
 		sort_by: "created_at",
 		sort_order: "desc",
 	});
-
 	const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
 		page: 0,
 		pageSize: 10,
@@ -107,19 +106,19 @@ export const FeatureList: React.FC<FeatureListProps> = ({
 		setQueryParams((prev) => ({
 			...prev,
 			search: search || undefined,
-			page: 1,
+			skip: 0,
 		}));
 		setPaginationModel((prev) => ({ ...prev, page: 0 }));
 	};
 
 	const handleTypeFilterChange = (
-		event: SelectChangeEvent<Feature["type"] | "">,
+		event: SelectChangeEvent<FeatureType | "">,
 	) => {
-		const value = event.target.value as Feature["type"] | "";
+		const value = event.target.value as FeatureType | "";
 		setQueryParams((prev) => ({
 			...prev,
-			type: value || undefined,
-			page: 1,
+			feature_type: value || undefined,
+			skip: 0,
 		}));
 		setPaginationModel((prev) => ({ ...prev, page: 0 }));
 	};
@@ -137,7 +136,7 @@ export const FeatureList: React.FC<FeatureListProps> = ({
 		setPaginationModel(model);
 		setQueryParams((prev) => ({
 			...prev,
-			page: model.page + 1,
+			skip: model.page * model.pageSize,
 			limit: model.pageSize,
 		}));
 	};
@@ -152,19 +151,19 @@ export const FeatureList: React.FC<FeatureListProps> = ({
 
 	const columns: GridColDef<Feature>[] = [
 		{
-			field: "name",
+			field: "feature_name",
 			headerName: "이름",
 			flex: 1.5,
 			minWidth: 200,
 		},
 		{
-			field: "type",
+			field: "feature_type",
 			headerName: "타입",
 			width: 130,
 			renderCell: (params) => (
 				<Chip
 					label={params.value}
-					color={getTypeColor(params.value as Feature["type"])}
+					color={getTypeColor(params.value as FeatureType)}
 					size="small"
 				/>
 			),
@@ -197,7 +196,7 @@ export const FeatureList: React.FC<FeatureListProps> = ({
 			headerAlign: "right",
 		},
 		{
-			field: "version",
+			field: "current_version",
 			headerName: "버전",
 			width: 80,
 			align: "center",
@@ -207,7 +206,7 @@ export const FeatureList: React.FC<FeatureListProps> = ({
 			field: "created_at",
 			headerName: "생성일",
 			width: 180,
-			valueFormatter: (value: string) => {
+			valueFormatter: (value: Date) => {
 				return new Date(value).toLocaleString("ko-KR", {
 					year: "numeric",
 					month: "short",
@@ -265,19 +264,22 @@ export const FeatureList: React.FC<FeatureListProps> = ({
 					/>
 
 					{/* Type Filter */}
-					<FormControl size="small" sx={{ minWidth: 150 }}>
+					<FormControl size="small" sx={{ minWidth: 180 }}>
 						<InputLabel>타입</InputLabel>
 						<Select
-							value={queryParams.type || ""}
+							value={queryParams.feature_type || ""}
 							label="타입"
 							onChange={handleTypeFilterChange}
 						>
 							<MenuItem value="">전체</MenuItem>
-							<MenuItem value="numerical">Numerical</MenuItem>
-							<MenuItem value="categorical">Categorical</MenuItem>
-							<MenuItem value="binary">Binary</MenuItem>
-							<MenuItem value="text">Text</MenuItem>
-							<MenuItem value="datetime">Datetime</MenuItem>
+							<MenuItem value="technical_indicator">
+								Technical Indicator
+							</MenuItem>
+							<MenuItem value="fundamental">Fundamental</MenuItem>
+							<MenuItem value="sentiment">Sentiment</MenuItem>
+							<MenuItem value="macro_economic">Macro Economic</MenuItem>
+							<MenuItem value="derived">Derived</MenuItem>
+							<MenuItem value="raw">Raw</MenuItem>
 						</Select>
 					</FormControl>
 
@@ -289,8 +291,8 @@ export const FeatureList: React.FC<FeatureListProps> = ({
 							label="정렬"
 							onChange={handleSortChange}
 						>
-							<MenuItem value="name:asc">이름 (오름차순)</MenuItem>
-							<MenuItem value="name:desc">이름 (내림차순)</MenuItem>
+							<MenuItem value="feature_name:asc">이름 (오름차순)</MenuItem>
+							<MenuItem value="feature_name:desc">이름 (내림차순)</MenuItem>
 							<MenuItem value="created_at:desc">최신순</MenuItem>
 							<MenuItem value="created_at:asc">오래된순</MenuItem>
 							<MenuItem value="usage_count:desc">사용 빈도순</MenuItem>

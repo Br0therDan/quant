@@ -15,6 +15,7 @@ from app.models.feature_store import (
     FeatureLineageNode,
     FeatureTransformation,
     FeatureValidation,
+    FeatureStatistics,
 )
 
 
@@ -111,6 +112,9 @@ class FeatureResponse(BaseModel):
     # 스토리지
     duckdb_table: str | None = Field(None, description="DuckDB 테이블")
     duckdb_view: str | None = Field(None, description="DuckDB 뷰")
+
+    # 통계 (Phase 4 Enhancement)
+    statistics: FeatureStatistics | None = Field(None, description="피처 통계 정보")
 
     # 통계
     usage_count: int = Field(..., description="사용 횟수")

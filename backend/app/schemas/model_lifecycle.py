@@ -42,12 +42,18 @@ class ExperimentUpdate(BaseModel):
 class ExperimentResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
+    id: str = Field(..., description="MongoDB ObjectId")
     name: str
     description: str
     owner: str
     status: ExperimentStatus
     tags: list[str]
     metadata: dict[str, Any]
+
+    # Phase 4 Enhancement: 메트릭 추적
+    metrics: dict[str, float] = Field(default_factory=dict, description="실험 메트릭")
+    duration_seconds: float | None = Field(None, description="실행 시간 (초)")
+
     created_at: datetime
     updated_at: datetime
 

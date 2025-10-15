@@ -4021,6 +4021,11 @@ export const ExperimentCreateSchema = {
 
 export const ExperimentResponseSchema = {
 	properties: {
+		id: {
+			type: "string",
+			title: "Id",
+			description: "MongoDB ObjectId",
+		},
 		name: {
 			type: "string",
 			title: "Name",
@@ -4048,6 +4053,26 @@ export const ExperimentResponseSchema = {
 			type: "object",
 			title: "Metadata",
 		},
+		metrics: {
+			additionalProperties: {
+				type: "number",
+			},
+			type: "object",
+			title: "Metrics",
+			description: "실험 메트릭",
+		},
+		duration_seconds: {
+			anyOf: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Duration Seconds",
+			description: "실행 시간 (초)",
+		},
 		created_at: {
 			type: "string",
 			format: "date-time",
@@ -4061,6 +4086,7 @@ export const ExperimentResponseSchema = {
 	},
 	type: "object",
 	required: [
+		"id",
 		"name",
 		"description",
 		"owner",
@@ -4672,6 +4698,17 @@ export const FeatureResponseSchema = {
 			title: "Duckdb View",
 			description: "DuckDB 뷰",
 		},
+		statistics: {
+			anyOf: [
+				{
+					$ref: "#/components/schemas/FeatureStatistics",
+				},
+				{
+					type: "null",
+				},
+			],
+			description: "피처 통계 정보",
+		},
 		usage_count: {
 			type: "integer",
 			title: "Usage Count",
@@ -4736,6 +4773,95 @@ export const FeatureResponseSchema = {
 	],
 	title: "FeatureResponse",
 	description: "피처 조회 응답",
+} as const;
+
+export const FeatureStatisticsSchema = {
+	properties: {
+		mean: {
+			anyOf: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Mean",
+			description: "평균값",
+		},
+		median: {
+			anyOf: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Median",
+			description: "중앙값",
+		},
+		std: {
+			anyOf: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Std",
+			description: "표준편차",
+		},
+		min: {
+			anyOf: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Min",
+			description: "최소값",
+		},
+		max: {
+			anyOf: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Max",
+			description: "최대값",
+		},
+		missing_ratio: {
+			type: "number",
+			title: "Missing Ratio",
+			description: "결측치 비율 (0.0 ~ 1.0)",
+			default: 0,
+		},
+		distribution: {
+			items: {
+				additionalProperties: true,
+				type: "object",
+			},
+			type: "array",
+			title: "Distribution",
+			description: "분포 데이터 [{value, count}, ...]",
+		},
+		calculated_at: {
+			type: "string",
+			format: "date-time",
+			title: "Calculated At",
+			description: "계산 시간",
+		},
+	},
+	type: "object",
+	title: "FeatureStatistics",
+	description: "피처 통계 정보 (Phase 4 Enhancement)",
 } as const;
 
 export const FeatureStatisticsResponseSchema = {
