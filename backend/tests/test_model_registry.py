@@ -9,8 +9,11 @@ from pathlib import Path
 
 import pandas as pd
 
-from app.services.ml import MLModelTrainer, generate_labels_from_returns
-from app.services.ml.model_registry import ModelRegistry
+from app.services.ml_platform.infrastructure import (
+    MLModelTrainer,
+    generate_labels_from_returns,
+)
+from app.services.ml_platform.infrastructure.model_registry import ModelRegistry
 
 
 def test_model_registry():

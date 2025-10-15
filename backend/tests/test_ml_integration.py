@@ -16,7 +16,7 @@ from pathlib import Path
 import pandas as pd
 
 from app.services.database_manager import DatabaseManager
-from app.services.ml import (
+from app.services.ml_platform.infrastructure import (
     MLModelTrainer,
     ModelRegistry,
     generate_labels_from_returns,

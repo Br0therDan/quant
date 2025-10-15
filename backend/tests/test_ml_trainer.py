@@ -6,7 +6,7 @@ End-to-end test: Feature engineering → Model training → Evaluation
 
 import pandas as pd
 
-from app.services.ml.trainer import (
+from app.services.ml_platform.infrastructure.trainer import (
     MLModelTrainer,
     generate_labels_from_returns,
 )

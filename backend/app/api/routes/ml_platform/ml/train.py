@@ -13,7 +13,7 @@ from fastapi import APIRouter, BackgroundTasks, HTTPException
 from pydantic import BaseModel, Field
 
 from app.services.database_manager import DatabaseManager
-from app.services.ml import (
+from app.services.ml_platform.infrastructure import (
     MLModelTrainer,
     ModelRegistry,
     generate_labels_from_returns,

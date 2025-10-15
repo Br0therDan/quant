@@ -25,7 +25,7 @@ from sklearn.metrics import (
 )
 from sklearn.model_selection import train_test_split
 
-from app.services.ml.feature_engineer import FeatureEngineer
+from app.services.ml_platform.infrastructure.feature_engineer import FeatureEngineer
 
 
 class MLModelTrainer:

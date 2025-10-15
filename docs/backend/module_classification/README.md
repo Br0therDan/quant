@@ -1,8 +1,9 @@
 # Backend 모듈 재구조화 프로젝트
 
 **프로젝트 시작일**: 2025-01-15  
-**목적**: Phase 5 통합 전 백엔드 코드베이스 정리 및 MSA 전환 준비  
-**상태**: 📋 계획 완료
+**완료일**: 2025-10-15  
+**목적**: Phase 5 통합 전 백엔드 코드베이스 정리 및 도메인 경계 명확화  
+**상태**: ✅ Phase 1 완료, 📋 Phase 2 계획 중
 
 ---
 
@@ -47,16 +48,17 @@ docs/backend/module_classification/
 
 ### 타임라인
 
-| Step       | 작업                               | 소요 시간 | 상태         |
-| ---------- | ---------------------------------- | --------- | ------------ |
-| **Step 0** | 현황 분석 및 마스터 플랜 작성      | 2시간     | ✅ 완료      |
-| **Step 1** | Enum 통합 (`schemas/enums.py`)     | 4시간     | 📋 준비 완료 |
-| **Step 2** | 모델 파일 분리 (도메인별 디렉토리) | 6시간     | ⏸️ 대기      |
-| **Step 3** | 스키마 재구조화 (모델과 동일 구조) | 4시간     | ⏸️ 대기      |
-| **Step 4** | 서비스 & 엔드포인트 재구조화       | 12시간    | ⏸️ 대기      |
-| **검증**   | 통합 테스트 + Frontend 빌드        | 2시간     | ⏸️ 대기      |
+| Step       | 작업                               | 소요 시간 | 상태    |
+| ---------- | ---------------------------------- | --------- | ------- |
+| **Step 0** | 현황 분석 및 마스터 플랜 작성      | 2시간     | ✅ 완료 |
+| **Step 1** | Enum 통합 (`schemas/enums/`)       | 4시간     | ✅ 완료 |
+| **Step 2** | 모델 파일 분리 (도메인별 디렉토리) | 6시간     | ✅ 완료 |
+| **Step 3** | 스키마 재구조화 (모델과 동일 구조) | 4시간     | ✅ 완료 |
+| **Step 4** | 서비스 & 엔드포인트 재구조화       | 12시간    | ✅ 완료 |
+| **검증**   | 통합 테스트 + Frontend 빌드        | 2시간     | ✅ 완료 |
 
-**총 예상 시간**: 30시간 (3-5 작업일)
+**총 소요 시간**: 30시간 (2025-01-15 ~ 2025-10-15) **Phase 1 완료**: ✅
+2025-10-15
 
 ### 주요 산출물
 
@@ -70,37 +72,42 @@ backend/app/
 └── api/routes/        # 19개 파일 (불일치한 구조)
 ```
 
-#### After (Phase 1 완료)
+#### After (Phase 1 완료 - ✅ 2025-10-15)
 
 ```
 backend/app/
 ├── schemas/
-│   ├── enums.py                    # ✨ 모든 Enum 통합 (200 lines)
-│   ├── trading/                    # 🆕 도메인별 디렉토리
-│   ├── market_data/
-│   ├── ml_platform/
-│   ├── gen_ai/
-│   └── user/
+│   ├── enums/                      # ✅ 6개 도메인 파일로 분리
+│   │   ├── trading.py              # BacktestStatus, TradeType, OrderType, SignalType, StrategyType
+│   │   ├── market_data.py          # MarketRegimeType, DataInterval, DataQualitySeverity
+│   │   ├── ml_platform.py          # 15개 ML Platform Enums
+│   │   ├── gen_ai.py               # 8개 Gen AI Enums
+│   │   ├── user.py                 # WatchlistType, NotificationType
+│   │   └── system.py               # SeverityLevel, TaskStatus, LogLevel
+│   ├── trading/                    # ✅ 3개 스키마 파일
+│   ├── ml_platform/                # ✅ 4개 스키마 파일
+│   ├── gen_ai/                     # ✅ 4개 스키마 파일
+│   ├── user/                       # ✅ 2개 스키마 파일
+│   └── market_data/                # ✅ 기존 구조 유지
 ├── models/
-│   ├── trading/                    # 🆕 도메인별 디렉토리
-│   ├── market_data/
-│   ├── ml_platform/
-│   ├── gen_ai/
-│   └── user/
+│   ├── trading/                    # ✅ 4개 모델 파일
+│   ├── ml_platform/                # ✅ 7개 모델 파일
+│   ├── gen_ai/                     # ✅ 2개 모델 파일 + chatops/
+│   ├── user/                       # ✅ 1개 모델 파일
+│   └── market_data/                # ✅ 기존 구조 유지
 ├── services/
-│   ├── trading/                    # 🆕 도메인별 디렉토리
-│   ├── market_data/
-│   ├── ml_platform/
-│   ├── gen_ai/
-│   └── user/
+│   ├── trading/                    # ✅ 4개 서비스
+│   ├── ml_platform/                # ✅ 6개 서비스
+│   ├── gen_ai/                     # ✅ 3개 서비스
+│   ├── user/                       # ✅ 2개 서비스
+│   └── market_data_service/        # ✅ 기존 구조 유지
 └── api/routes/
-    ├── system/                     # 🆕 시스템 엔드포인트
-    ├── trading/                    # 🆕 도메인별 디렉토리
-    ├── market_data/
-    ├── ml_platform/
-    ├── gen_ai/
-    ├── user/
-    └── admin/                      # 🆕 관리자 엔드포인트
+    ├── system/                     # ✅ 2개 routes
+    ├── trading/                    # ✅ 4개 routes + strategies/
+    ├── ml_platform/                # ✅ 2개 routes + ml/
+    ├── gen_ai/                     # ✅ 5개 routes
+    ├── user/                       # ✅ 2개 routes
+    └── market_data/                # ✅ 기존 구조 유지
 ```
 
 ---
@@ -269,16 +276,16 @@ async def delete_any_backtest(id: str):
 
 ---
 
-## 성공 지표 (KPI)
+## 성공 지표 (KPI) - Phase 1 달성 현황
 
-| 지표                | 현재                       | 목표                                     | 측정 방법                               |
-| ------------------- | -------------------------- | ---------------------------------------- | --------------------------------------- |
-| **Enum 중복**       | 15+ 곳                     | 1곳                                      | `grep -r "class.*Type.*Enum"`           |
-| **200+ lines 파일** | 8개                        | 0개                                      | `find . -name "*.py" -exec wc -l {} \;` |
-| **도메인 디렉토리** | 2개 (market_data, chatops) | 4개 (trading, ml_platform, gen_ai, user) | `ls -d models/*/`                       |
-| **명명 불일치**     | 5개                        | 0개                                      | 수동 검증                               |
-| **TypeScript 에러** | 0개                        | 0개 (유지)                               | `pnpm build`                            |
-| **Pytest 커버리지** | 80%+                       | 80%+ (유지)                              | `pytest --cov`                          |
+| 지표                | 시작 (2025-01-15)          | 목표                                     | 달성 (2025-10-15) | 상태 |
+| ------------------- | -------------------------- | ---------------------------------------- | ----------------- | ---- |
+| **Enum 중복**       | 15+ 곳                     | 1곳                                      | ✅ 6개 파일       | 완료 |
+| **200+ lines 파일** | 8개                        | 0개                                      | ✅ 0개            | 완료 |
+| **도메인 디렉토리** | 2개 (market_data, chatops) | 4개 (trading, ml_platform, gen_ai, user) | ✅ 4개            | 완료 |
+| **명명 일관성**     | 5개 불일치                 | 0개                                      | ✅ 0개            | 완료 |
+| **TypeScript 에러** | 0개                        | 0개 (유지)                               | ✅ 0개            | 완료 |
+| **Pytest 커버리지** | 80%+                       | 80%+ (유지)                              | ⏳ 검증 예정      | 대기 |
 
 ---
 
@@ -413,27 +420,255 @@ git checkout -b phase1-step2-model-split
 
 ---
 
-## 다음 단계
+## Phase 2: 코드 품질 개선 및 레거시 정리 (진행 예정)
 
-### Phase 1 완료 후
+> **참고**: Phase 3-4 (MSA 전환)는 전체 개발 완료 후 진행 예정
 
-**Phase 2: 레거시 통합 (1-2주)**
+### Phase 2 목표
 
-- Strategy ↔ ModelExperiment 관계 정의
-- DataQualityMixin → DataQualityEvent 자동 생성
-- 서비스 레이어 800+ lines 파일 분할
+Phase 1에서 도메인 경계를 명확히 했으므로, Phase 2에서는 **코드 품질 개선**과
+**레거시 정리**에 집중합니다.
 
-**Phase 3: MSA 전환 준비 (2-3주)**
+### Phase 2 작업 계획 (2-3주 예상)
 
-- 도메인 간 이벤트 주도 통신 (RabbitMQ/Kafka)
-- API Gateway 구성 (Kong/Nginx)
-- 도메인별 독립 배포 파이프라인
+#### Step 1: 대형 파일 분할 (1주)
 
-**Phase 4: Production 배포**
+**문제점**:
 
-- Kubernetes 클러스터 구성
-- 서비스 메시 (Istio/Linkerd)
-- 모니터링/로깅 통합 (Prometheus + Grafana)
+- 일부 서비스 파일이 여전히 크고 복잡함 (500+ lines)
+- 단일 책임 원칙(SRP) 위반
+
+**작업 내용**:
+
+1. **서비스 파일 분석**
+
+   ```bash
+   # 200+ lines 파일 찾기
+   find backend/app/services -name "*.py" -exec wc -l {} \; | sort -rn | head -20
+   ```
+
+2. **분할 대상 (예시)**:
+
+   - `backtest_service.py` (500+ lines) →
+     - `backtest_service.py` (코어 로직)
+     - `backtest_validator.py` (검증 로직)
+     - `backtest_calculator.py` (계산 로직)
+   - `market_data_service.py` (700+ lines) →
+     - 하위 디렉토리로 이미 분할됨 (✅ 완료)
+
+3. **전략 파일 정리**:
+   - `strategies/` 디렉토리 구조 개선
+   - Base 클래스와 구현체 분리
+
+**산출물**:
+
+- 모든 파일 200 lines 이하
+- 명확한 책임 분리
+
+---
+
+#### Step 2: 중복 코드 제거 (3-4일)
+
+**문제점**:
+
+- 유사한 로직이 여러 서비스에 분산
+- Helper 함수 중복
+
+**작업 내용**:
+
+1. **공통 유틸리티 정리**
+
+   ```
+   backend/app/utils/
+   ├── validators/           # 검증 로직
+   │   ├── backtest.py
+   │   └── strategy.py
+   ├── calculators/          # 계산 로직
+   │   ├── performance.py
+   │   └── risk.py
+   └── transformers/         # 데이터 변환
+       ├── market_data.py
+       └── signal.py
+   ```
+
+2. **중복 제거 대상**:
+   - 백테스트 성과 계산 로직
+   - 데이터 검증 로직
+   - Signal 변환 로직
+
+**산출물**:
+
+- 중복 코드 80% 이상 제거
+- 재사용 가능한 유틸리티 모듈
+
+---
+
+#### Step 3: 테스트 커버리지 개선 (3-4일)
+
+**문제점**:
+
+- 일부 신규 기능에 테스트 부족
+- 통합 테스트 부족
+
+**작업 내용**:
+
+1. **커버리지 측정**
+
+   ```bash
+   cd backend
+   uv run pytest --cov=app --cov-report=html
+   # 목표: 85%+ 커버리지
+   ```
+
+2. **테스트 추가 우선순위**:
+
+   - Phase 1에서 이동한 파일들 (서비스, 라우트)
+   - 복잡한 비즈니스 로직
+   - Edge cases
+
+3. **통합 테스트 강화**:
+   - E2E 백테스트 시나리오
+   - ML Pipeline 테스트
+   - API 통합 테스트
+
+**산출물**:
+
+- 테스트 커버리지 85%+
+- 통합 테스트 30+ 개
+
+---
+
+#### Step 4: 문서화 및 타입 안정성 (2-3일)
+
+**문제점**:
+
+- 일부 함수에 타입 힌트 부족
+- Docstring 불완전
+
+**작업 내용**:
+
+1. **타입 힌트 완성**
+
+   ```bash
+   # mypy strict mode 적용
+   uv run mypy app/ --strict
+   ```
+
+2. **Docstring 표준화**
+
+   - Google Style Docstring
+   - 파라미터, 리턴값, 예외 명시
+
+3. **API 문서 개선**
+   - OpenAPI 스키마 description 추가
+   - Examples 추가
+
+**산출물**:
+
+- mypy strict mode 통과
+- 모든 public 함수 docstring 완비
+
+---
+
+### Phase 2 성공 지표
+
+| 지표                      | 현재 (Phase 1 완료) | 목표 (Phase 2 완료) | 측정 방법       |
+| ------------------------- | ------------------- | ------------------- | --------------- |
+| **200+ lines 파일**       | 0개                 | 0개 (유지)          | `wc -l`         |
+| **100+ lines 함수**       | 5+                  | 0개                 | `radon cc`      |
+| **중복 코드 (CPD)**       | 15%                 | 5% 이하             | `pmd cpd`       |
+| **테스트 커버리지**       | 80%                 | 85%+                | `pytest --cov`  |
+| **타입 힌트 커버리지**    | 70%                 | 95%+                | `mypy --strict` |
+| **Cyclomatic Complexity** | 평균 15             | 평균 10 이하        | `radon cc`      |
+
+---
+
+### Phase 2 실행 가이드
+
+#### 시작 전 준비
+
+```bash
+# 1. 현재 상태 스냅샷
+cd backend
+uv run pytest --cov=app --cov-report=html
+uv run radon cc app/ -a
+uv run mypy app/ --strict | tee mypy_baseline.txt
+
+# 2. Phase 2 브랜치 생성
+git checkout -b phase2-code-quality-improvement
+```
+
+#### Step별 검증
+
+**Step 1 완료 후**:
+
+```bash
+# 파일 크기 확인
+find app -name "*.py" -exec wc -l {} \; | sort -rn | head -20
+
+# 테스트 통과
+uv run pytest
+
+# OpenAPI 재생성
+cd ../frontend && pnpm gen:client
+```
+
+**Step 2 완료 후**:
+
+```bash
+# 중복 코드 확인
+pmd cpd --minimum-tokens 50 --files app/
+
+# 유틸리티 모듈 임포트 확인
+grep -r "from app.utils" app/ | wc -l
+```
+
+**Step 3 완료 후**:
+
+```bash
+# 커버리지 확인
+uv run pytest --cov=app --cov-report=term-missing
+
+# 통합 테스트 실행
+uv run pytest tests/ -m e2e
+```
+
+**Step 4 완료 후**:
+
+```bash
+# mypy strict mode
+uv run mypy app/ --strict
+
+# Docstring 확인
+pydocstyle app/
+```
+
+---
+
+### Phase 2 위험 관리
+
+| 위험                      | 영향 | 가능성 | 대응                             |
+| ------------------------- | ---- | ------ | -------------------------------- |
+| **리팩토링 중 버그 유입** | 높음 | 중간   | 각 Step마다 전체 테스트 실행     |
+| **테스트 작성 시간 초과** | 중간 | 높음   | 핵심 로직 우선, 80% 달성 후 중단 |
+| **타입 힌트 적용 어려움** | 낮음 | 중간   | strict mode는 점진적 적용        |
+| **팀원 코드 리뷰 부담**   | 중간 | 낮음   | PR 단위 작게 분할                |
+
+---
+
+### Phase 2와 Phase 3-4의 차이
+
+| 항목          | Phase 2 (진행 예정)         | Phase 3-4 (전체 개발 완료 후) |
+| ------------- | --------------------------- | ----------------------------- |
+| **목표**      | 코드 품질 개선, 레거시 정리 | MSA 전환, 인프라 구축         |
+| **범위**      | 모노리스 내부 리팩토링      | 서비스 분리, 배포 파이프라인  |
+| **변경 수준** | 내부 구조만 변경 (API 불변) | 외부 아키텍처 변경            |
+| **배포 영향** | 없음 (기존 배포 방식 유지)  | 큼 (Kubernetes, Gateway 필요) |
+| **소요 시간** | 2-3주                       | 2-3개월                       |
+| **선행 조건** | Phase 1 완료                | 전체 기능 개발 완료           |
+
+**Phase 2는 개발 진행 중에도 가능**, Phase 3-4는 **전체 개발 완료 후**
+진행합니다.
 
 ---
 

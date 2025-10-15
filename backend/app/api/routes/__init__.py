@@ -23,6 +23,7 @@ from .gen_ai.chatops import router as chatops_router
 from .gen_ai.narrative import router as narrative_router
 from .gen_ai.strategy_builder import router as strategy_builder_router
 from .gen_ai.chatops_advanced import router as chatops_advanced_router
+
 from .gen_ai.prompt_governance import router as prompt_governance_router
 
 # User routes

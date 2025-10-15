@@ -6,7 +6,7 @@ Quick test to verify technical indicator calculations
 
 import pandas as pd
 
-from app.services.ml import FeatureEngineer
+from app.services.ml_platform.infrastructure import FeatureEngineer
 
 
 def test_feature_engineer():

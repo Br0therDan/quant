@@ -26,7 +26,7 @@ from app.schemas.ml_platform.predictive import (
     SignalRecommendation,
 )
 from app.services.database_manager import DatabaseManager
-from app.services.ml import FeatureEngineer, ModelRegistry
+from app.services.ml_platform.infrastructure import FeatureEngineer, ModelRegistry
 
 logger = logging.getLogger(__name__)
 

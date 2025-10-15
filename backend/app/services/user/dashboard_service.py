@@ -38,9 +38,11 @@ from app.services.monitoring.data_quality_sentinel import DataQualitySentinel
 
 
 if TYPE_CHECKING:
-    from app.services.ml_platform.ml_signal_service import MLSignalService
-    from app.services.ml_platform.regime_detection_service import RegimeDetectionService
-    from app.services.ml_platform.probabilistic_kpi_service import (
+    from app.services.ml_platform.services.ml_signal_service import MLSignalService
+    from app.services.ml_platform.services.regime_detection_service import (
+        RegimeDetectionService,
+    )
+    from app.services.ml_platform.services.probabilistic_kpi_service import (
         ProbabilisticKPIService,
     )
 

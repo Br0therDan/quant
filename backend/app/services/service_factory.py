@@ -18,20 +18,20 @@ from .database_manager import DatabaseManager
 from .user.watchlist_service import WatchlistService
 from .trading.portfolio_service import PortfolioService
 from .user.dashboard_service import DashboardService
-from .ml_platform.ml_signal_service import MLSignalService
-from .ml_platform.regime_detection_service import RegimeDetectionService
-from .ml_platform.probabilistic_kpi_service import ProbabilisticKPIService
+from .ml_platform.services.ml_signal_service import MLSignalService
+from .ml_platform.services.regime_detection_service import RegimeDetectionService
+from .ml_platform.services.probabilistic_kpi_service import ProbabilisticKPIService
 from .monitoring.data_quality_sentinel import DataQualitySentinel
-from .llm.chatops_agent import ChatOpsAgent
-from .ml.anomaly_detector import AnomalyDetectionService
+from .gen_ai.agents.chatops_agent import ChatOpsAgent
+from .ml_platform.infrastructure.anomaly_detector import AnomalyDetectionService
 from .trading.optimization_service import OptimizationService
-from .gen_ai.narrative_report_service import NarrativeReportService
-from .gen_ai.strategy_builder_service import StrategyBuilderService
-from .gen_ai.chatops_advanced_service import ChatOpsAdvancedService
-from .ml_platform.feature_store_service import FeatureStoreService
-from .ml_platform.model_lifecycle_service import ModelLifecycleService
-from .ml_platform.evaluation_harness_service import EvaluationHarnessService
-from .llm.prompt_governance_service import PromptGovernanceService
+from .gen_ai.applications.narrative_report_service import NarrativeReportService
+from .gen_ai.applications.strategy_builder_service import StrategyBuilderService
+from .gen_ai.applications.chatops_advanced_service import ChatOpsAdvancedService
+from .ml_platform.services.feature_store_service import FeatureStoreService
+from .ml_platform.services.model_lifecycle_service import ModelLifecycleService
+from .ml_platform.services.evaluation_harness_service import EvaluationHarnessService
+from .gen_ai.agents.prompt_governance_service import PromptGovernanceService
 
 logger = logging.getLogger(__name__)
 

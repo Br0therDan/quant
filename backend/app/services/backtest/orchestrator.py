@@ -40,7 +40,7 @@ if TYPE_CHECKING:
     from app.services.market_data_service import MarketDataService
     from app.services.trading.strategy_service import StrategyService
     from app.services.database_manager import DatabaseManager
-    from app.services.ml_platform.ml_signal_service import MLSignalService
+    from app.services.ml_platform.services.ml_signal_service import MLSignalService
     from app.schemas.ml_platform.predictive import MLSignalInsight
 
 from app.models.trading.backtest import (

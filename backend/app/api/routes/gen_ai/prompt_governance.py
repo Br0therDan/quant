@@ -7,17 +7,19 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 
 from app.schemas.gen_ai.prompt_governance import (
-    PromptAuditLogResponse,
+    PromptTemplateCreate,
+    PromptTemplateUpdate,
+    PromptTemplateResponse,
     PromptEvaluationRequest,
     PromptEvaluationResponse,
-    PromptTemplateCreate,
-    PromptTemplateResponse,
-    PromptTemplateUpdate,
+    PromptAuditLogResponse,
     PromptUsageLogCreate,
     PromptUsageLogResponse,
     PromptWorkflowAction,
 )
-from app.services.llm.prompt_governance_service import PromptGovernanceService
+from app.services.gen_ai.agents.prompt_governance_service import (
+    PromptGovernanceService,
+)
 from app.services.service_factory import service_factory
 
 router = APIRouter(prefix="/prompts", tags=["Prompt Governance"])

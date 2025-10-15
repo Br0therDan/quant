@@ -16,7 +16,7 @@ import random
 
 
 if TYPE_CHECKING:
-    from app.services.ml_platform.probabilistic_kpi_service import (
+    from app.services.ml_platform.services.probabilistic_kpi_service import (
         ProbabilisticKPIService,
     )
 

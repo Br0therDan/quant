@@ -14,7 +14,10 @@ from app.core.config import settings
 from app.models.ml_platform.data_quality import DataQualityEvent
 from app.schemas.enums import SeverityLevel
 from app.models.market_data.stock import DailyPrice
-from app.services.ml.anomaly_detector import AnomalyDetectionService, AnomalyResult
+from app.services.ml_platform.infrastructure.anomaly_detector import (
+    AnomalyDetectionService,
+    AnomalyResult,
+)
 
 
 logger = logging.getLogger(__name__)

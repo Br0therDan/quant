@@ -3,7 +3,9 @@ from datetime import datetime, timedelta
 import numpy as np
 
 from app.models.data_quality import SeverityLevel
-from app.services.ml.anomaly_detector import AnomalyDetectionService
+from app.services.ml_platform.infrastructure.anomaly_detector import (
+    AnomalyDetectionService,
+)
 
 
 def test_anomaly_detector_flags_terminal_spike() -> None:
