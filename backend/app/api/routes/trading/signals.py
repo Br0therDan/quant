@@ -12,7 +12,7 @@ from app.schemas.ml_platform.predictive import MLSignalResponse
 from app.services.service_factory import service_factory
 
 
-router = APIRouter(tags=["Signals"])
+router = APIRouter()
 
 
 @router.get("/{symbol}", response_model=MLSignalResponse)

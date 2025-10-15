@@ -5433,8 +5433,7 @@
     "/api/v1/market-data/regime/": {
       "get": {
         "tags": [
-          "Market Data",
-          "Market Regime"
+          "Market Data"
         ],
         "summary": "Get Market Regime",
         "description": "Return the latest market regime snapshot.",
@@ -8960,7 +8959,6 @@
     "/api/v1/signals/{symbol}": {
       "get": {
         "tags": [
-          "Signals",
           "Signals"
         ],
         "summary": "Get Ml Signal",
@@ -9037,30 +9035,6 @@
       }
     },
     "/api/v1/ml/evaluation/evaluation/scenarios": {
-      "get": {
-        "tags": [
-          "ML",
-          "Evaluation Harness"
-        ],
-        "summary": "List Scenarios",
-        "operationId": "ML-list_scenarios",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "$ref": "#/components/schemas/ScenarioResponse"
-                  },
-                  "type": "array",
-                  "title": "Response Ml-List Scenarios"
-                }
-              }
-            }
-          }
-        }
-      },
       "post": {
         "tags": [
           "ML",
@@ -9068,15 +9042,38 @@
         ],
         "summary": "Register Scenario",
         "operationId": "ML-register_scenario",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ScenarioCreate"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "201": {
@@ -9085,6 +9082,63 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ScenarioResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "ML",
+          "Evaluation Harness"
+        ],
+        "summary": "List Scenarios",
+        "operationId": "ML-list_scenarios",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ScenarioResponse"
+                  },
+                  "title": "Response Ml-List Scenarios"
                 }
               }
             }
@@ -9110,6 +9164,11 @@
         ],
         "summary": "Update Scenario",
         "operationId": "ML-update_scenario",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "name",
@@ -9118,6 +9177,22 @@
             "schema": {
               "type": "string",
               "title": "Name"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -9163,6 +9238,29 @@
         ],
         "summary": "Run Evaluation",
         "operationId": "ML-run_evaluation",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -9203,6 +9301,11 @@
         ],
         "summary": "List Evaluation Runs",
         "operationId": "ML-list_evaluation_runs",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "scenario_name",
@@ -9218,6 +9321,22 @@
                 }
               ],
               "title": "Scenario Name"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -9257,6 +9376,11 @@
         ],
         "summary": "Get Evaluation Report",
         "operationId": "ML-get_evaluation_report",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "run_id",
@@ -9265,6 +9389,22 @@
             "schema": {
               "type": "string",
               "title": "Run Id"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -9301,6 +9441,11 @@
         "summary": "Get Detailed Metrics",
         "description": "상세 평가 메트릭 조회 (confusion matrix, ROC curve 등)",
         "operationId": "ML-get_detailed_metrics",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "run_id",
@@ -9309,6 +9454,22 @@
             "schema": {
               "type": "string",
               "title": "Run Id"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -9337,31 +9498,6 @@
       }
     },
     "/api/v1/ml/evaluation/evaluation/benchmarks": {
-      "get": {
-        "tags": [
-          "ML",
-          "Evaluation Harness"
-        ],
-        "summary": "List Benchmarks",
-        "description": "벤치마크 스위트 목록 조회",
-        "operationId": "ML-list_benchmarks",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "$ref": "#/components/schemas/BenchmarkResponse"
-                  },
-                  "type": "array",
-                  "title": "Response Ml-List Benchmarks"
-                }
-              }
-            }
-          }
-        }
-      },
       "post": {
         "tags": [
           "ML",
@@ -9370,15 +9506,38 @@
         "summary": "Create Benchmark",
         "description": "벤치마크 스위트 생성",
         "operationId": "ML-create_benchmark",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/BenchmarkCreate"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "201": {
@@ -9387,6 +9546,64 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/BenchmarkResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "ML",
+          "Evaluation Harness"
+        ],
+        "summary": "List Benchmarks",
+        "description": "벤치마크 스위트 목록 조회",
+        "operationId": "ML-list_benchmarks",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BenchmarkResponse"
+                  },
+                  "title": "Response Ml-List Benchmarks"
                 }
               }
             }
@@ -9413,15 +9630,38 @@
         "summary": "Run Benchmark",
         "description": "벤치마크 실행",
         "operationId": "ML-run_benchmark",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/BenchmarkRunRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -9448,31 +9688,6 @@
       }
     },
     "/api/v1/ml/evaluation/evaluation/ab-tests": {
-      "get": {
-        "tags": [
-          "ML",
-          "Evaluation Harness"
-        ],
-        "summary": "List Ab Tests",
-        "description": "A/B 테스트 목록 조회",
-        "operationId": "ML-list_ab_tests",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "$ref": "#/components/schemas/ABTestResponse"
-                  },
-                  "type": "array",
-                  "title": "Response Ml-List Ab Tests"
-                }
-              }
-            }
-          }
-        }
-      },
       "post": {
         "tags": [
           "ML",
@@ -9481,15 +9696,38 @@
         "summary": "Create Ab Test",
         "description": "A/B 테스트 생성",
         "operationId": "ML-create_ab_test",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ABTestCreate"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "201": {
@@ -9498,6 +9736,64 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ABTestResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "ML",
+          "Evaluation Harness"
+        ],
+        "summary": "List Ab Tests",
+        "description": "A/B 테스트 목록 조회",
+        "operationId": "ML-list_ab_tests",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ABTestResponse"
+                  },
+                  "title": "Response Ml-List Ab Tests"
                 }
               }
             }
@@ -9524,6 +9820,11 @@
         "summary": "Get Ab Test",
         "description": "A/B 테스트 상세 조회",
         "operationId": "ML-get_ab_test",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "test_id",
@@ -9532,6 +9833,22 @@
             "schema": {
               "type": "string",
               "title": "Test Id"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -9568,15 +9885,38 @@
         "summary": "Request Fairness Audit",
         "description": "공정성 감사 요청",
         "operationId": "ML-request_fairness_audit",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/FairnessAuditRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "201": {
@@ -9611,6 +9951,11 @@
         "summary": "List Fairness Reports",
         "description": "공정성 감사 보고서 목록 조회",
         "operationId": "ML-list_fairness_reports",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "model_id",
@@ -9626,6 +9971,22 @@
                 }
               ],
               "title": "Model Id"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -9666,6 +10027,11 @@
         "summary": "Get Fairness Report",
         "description": "공정성 감사 보고서 상세 조회",
         "operationId": "ML-get_fairness_report",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "report_id",
@@ -9674,6 +10040,22 @@
             "schema": {
               "type": "string",
               "title": "Report Id"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -9709,6 +10091,29 @@
         ],
         "summary": "Create Experiment",
         "operationId": "ML-create_experiment",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -9749,6 +10154,11 @@
         ],
         "summary": "List Experiments",
         "operationId": "ML-list_experiments",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "owner",
@@ -9780,6 +10190,22 @@
                 }
               ],
               "title": "Status"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -9820,6 +10246,11 @@
         "summary": "Get Experiment",
         "description": "Get experiment by name.",
         "operationId": "ML-get_experiment",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "name",
@@ -9828,6 +10259,22 @@
             "schema": {
               "type": "string",
               "title": "Name"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -9861,6 +10308,11 @@
         ],
         "summary": "Update Experiment",
         "operationId": "ML-update_experiment",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "name",
@@ -9869,6 +10321,22 @@
             "schema": {
               "type": "string",
               "title": "Name"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -9914,6 +10382,29 @@
         ],
         "summary": "Log Run",
         "operationId": "ML-log_run",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -9954,6 +10445,11 @@
         ],
         "summary": "List Runs",
         "operationId": "ML-list_runs",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "experiment_name",
@@ -9988,6 +10484,22 @@
                 }
               ],
               "title": "Statuses"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -10027,6 +10539,11 @@
         ],
         "summary": "Update Run",
         "operationId": "ML-update_run",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "run_id",
@@ -10035,6 +10552,22 @@
             "schema": {
               "type": "string",
               "title": "Run Id"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -10078,6 +10611,11 @@
         ],
         "summary": "Get Run",
         "operationId": "ML-get_run",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "run_id",
@@ -10086,6 +10624,22 @@
             "schema": {
               "type": "string",
               "title": "Run Id"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -10121,6 +10675,29 @@
         ],
         "summary": "Register Model Version",
         "operationId": "ML-register_model_version",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -10161,6 +10738,11 @@
         ],
         "summary": "List Model Versions",
         "operationId": "ML-list_model_versions",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "model_name",
@@ -10192,6 +10774,22 @@
                 }
               ],
               "title": "Stage"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -10231,6 +10829,11 @@
         ],
         "summary": "Update Model Version",
         "operationId": "ML-update_model_version",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "model_name",
@@ -10248,6 +10851,22 @@
             "schema": {
               "type": "string",
               "title": "Version"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -10292,6 +10911,11 @@
         "summary": "Get Model Version",
         "description": "Get model version by name and version.",
         "operationId": "ML-get_model_version",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "model_name",
@@ -10309,6 +10933,22 @@
             "schema": {
               "type": "string",
               "title": "Version"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -10344,6 +10984,11 @@
         ],
         "summary": "Compare Model Versions",
         "operationId": "ML-compare_model_versions",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "model_name",
@@ -10352,6 +10997,22 @@
             "schema": {
               "type": "string",
               "title": "Model Name"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -10397,6 +11058,29 @@
         ],
         "summary": "Record Drift Event",
         "operationId": "ML-record_drift_event",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -10437,6 +11121,11 @@
         ],
         "summary": "List Drift Events",
         "operationId": "ML-list_drift_events",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "model_name",
@@ -10468,6 +11157,22 @@
                 }
               ],
               "title": "Severity"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -10508,6 +11213,29 @@
         "summary": "Create Deployment",
         "description": "Create a new deployment.",
         "operationId": "ML-create_deployment",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -10549,6 +11277,11 @@
         "summary": "List Deployments",
         "description": "List deployments with optional filters.",
         "operationId": "ML-list_deployments",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "model_name",
@@ -10597,6 +11330,22 @@
               ],
               "title": "Status"
             }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
           }
         ],
         "responses": {
@@ -10636,6 +11385,11 @@
         "summary": "Get Deployment",
         "description": "Get deployment details.",
         "operationId": "ML-get_deployment",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "deployment_id",
@@ -10644,6 +11398,22 @@
             "schema": {
               "type": "string",
               "title": "Deployment Id"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -10678,6 +11448,11 @@
         "summary": "Update Deployment",
         "description": "Update deployment status and metrics.",
         "operationId": "ML-update_deployment",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "deployment_id",
@@ -10686,6 +11461,22 @@
             "schema": {
               "type": "string",
               "title": "Deployment Id"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -10731,15 +11522,38 @@
         "summary": "Train Model",
         "description": "Train a new ML model for signal prediction.\n\nThis endpoint trains a LightGBM model on historical price data\nand saves it to the model registry. Training runs in the background.\n\n**Training Process:**\n1. Load historical data for specified symbols\n2. Calculate technical indicators (RSI, MACD, etc.)\n3. Generate buy/hold labels based on future returns\n4. Train LightGBM classifier\n5. Evaluate on test set\n6. Save to model registry with versioning\n\n**Example:**\n```json\n{\n    \"symbols\": [\"AAPL\", \"MSFT\", \"GOOGL\"],\n    \"lookback_days\": 500,\n    \"test_size\": 0.2,\n    \"num_boost_round\": 100,\n    \"threshold\": 0.02\n}\n```",
         "operationId": "ML-train_model",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/TrainModelRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -10773,6 +11587,11 @@
         "summary": "List Models",
         "description": "List all trained models.\n\nReturns a list of all models with their metadata including\nversion, accuracy, creation date, and feature information.",
         "operationId": "ML-list_models",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "model_type",
@@ -10782,6 +11601,22 @@
               "type": "string",
               "default": "signal",
               "title": "Model Type"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -10817,6 +11652,11 @@
         "summary": "Get Model Info",
         "description": "Get detailed information about a specific model version.\n\nReturns metadata including accuracy, training parameters,\nfeature names, and creation date.",
         "operationId": "ML-get_model_info",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "version",
@@ -10825,6 +11665,22 @@
             "schema": {
               "type": "string",
               "title": "Version"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -10858,6 +11714,11 @@
         "summary": "Delete Model",
         "description": "Delete a specific model version.\n\n**Warning:** This action cannot be undone.",
         "operationId": "ML-delete_model",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "version",
@@ -10866,6 +11727,22 @@
             "schema": {
               "type": "string",
               "title": "Version"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -10905,6 +11782,11 @@
         "summary": "Compare Models",
         "description": "Compare multiple model versions by a specific metric.\n\n**Supported metrics:**\n- accuracy\n- precision\n- recall\n- f1_score\n\n**Example:**\n```\nGET /api/v1/ml/models/compare/accuracy?versions=v1,v2,v3\n```",
         "operationId": "ML-compare_models",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "metric",
@@ -10923,6 +11805,22 @@
               "type": "string",
               "default": "",
               "title": "Versions"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -10962,6 +11860,29 @@
         "summary": "Create Feature",
         "description": "새 피처 생성\n\n- **feature_name**: 피처 고유 식별자 (중복 불가)\n- **feature_type**: RAW, DERIVED, AGGREGATED\n- **data_type**: numeric, categorical, text, datetime, boolean\n- **transformation**: 변환 로직 (SQL, Python 등)\n- **validation_rules**: 검증 규칙 (타입, 범위, 제약조건)\n- **upstream_features**: 의존하는 상위 피처 목록",
         "operationId": "ML-create_feature",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -11002,6 +11923,11 @@
         "summary": "List Features",
         "description": "피처 목록 조회 (필터링/페이지네이션)\n\n- **owner**: 소유자 필터\n- **feature_type**: 피처 타입 필터 (RAW, DERIVED, AGGREGATED)\n- **status**: 상태 필터 (DRAFT, ACTIVE, DEPRECATED)\n- **tags**: 태그 필터 (comma-separated: \"financial,risk\")\n- **skip/limit**: 페이지네이션",
         "operationId": "ML-list_features",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "owner",
@@ -11091,6 +12017,22 @@
               "default": 50,
               "title": "Limit"
             }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
           }
         ],
         "responses": {
@@ -11125,6 +12067,11 @@
         "summary": "Get Feature",
         "description": "피처 상세 조회",
         "operationId": "ML-get_feature",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "feature_name",
@@ -11133,6 +12080,22 @@
             "schema": {
               "type": "string",
               "title": "Feature Name"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -11166,6 +12129,11 @@
         "summary": "Update Feature",
         "description": "피처 업데이트\n\n- 변환 로직이나 검증 규칙 변경 시 새 버전 생성 권장\n- 메타데이터(description, tags)만 업데이트 시 버전 증가 없음",
         "operationId": "ML-update_feature",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "feature_name",
@@ -11174,6 +12142,22 @@
             "schema": {
               "type": "string",
               "title": "Feature Name"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -11217,6 +12201,11 @@
         "summary": "Delete Feature",
         "description": "피처 삭제 (소프트 삭제)\n\n- 실제 데이터는 유지되며 상태만 DEPRECATED로 변경\n- 하위 피처(downstream_features)가 있으면 삭제 불가",
         "operationId": "ML-delete_feature",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "feature_name",
@@ -11225,6 +12214,22 @@
             "schema": {
               "type": "string",
               "title": "Feature Name"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -11253,6 +12258,11 @@
         "summary": "Activate Feature",
         "description": "피처 활성화 (DRAFT → ACTIVE)\n\n- 검증 규칙을 통과해야 활성화 가능\n- 활성화 후 프로덕션 환경에서 사용 가능",
         "operationId": "ML-activate_feature",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "feature_name",
@@ -11261,6 +12271,22 @@
             "schema": {
               "type": "string",
               "title": "Feature Name"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -11296,6 +12322,11 @@
         "summary": "Deprecate Feature",
         "description": "피처 폐기 (ACTIVE → DEPRECATED)\n\n- 더 이상 사용하지 않는 피처 표시\n- 하위 피처(downstream_features)가 있으면 폐기 불가\n- 기존 사용처는 계속 작동하지만 신규 사용 불가",
         "operationId": "ML-deprecate_feature",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "feature_name",
@@ -11304,6 +12335,22 @@
             "schema": {
               "type": "string",
               "title": "Feature Name"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -11339,6 +12386,11 @@
         "summary": "Create Version",
         "description": "새 버전 생성\n\n- 변환 로직이나 검증 규칙 변경 시 필수\n- Semantic Versioning 권장 (1.0.0 → 1.1.0 → 2.0.0)\n- breaking_changes=True면 Major 버전 증가 (1.x.x → 2.0.0)",
         "operationId": "ML-create_version",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "feature_name",
@@ -11347,6 +12399,22 @@
             "schema": {
               "type": "string",
               "title": "Feature Name"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -11390,6 +12458,11 @@
         "summary": "Get Feature Versions",
         "description": "피처의 모든 버전 조회 (최신순)",
         "operationId": "ML-get_feature_versions",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "feature_name",
@@ -11398,6 +12471,22 @@
             "schema": {
               "type": "string",
               "title": "Feature Name"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -11433,6 +12522,11 @@
         "summary": "Rollback Version",
         "description": "버전 롤백\n\n- 이전 버전으로 복원 (변환 로직, 검증 규칙 스냅샷 복원)\n- 현재 버전에 `is_rolled_back=True` 표시\n- 새 버전이 생성되며 current_version 업데이트",
         "operationId": "ML-rollback_version",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "feature_name",
@@ -11453,6 +12547,22 @@
               "title": "Target Version"
             },
             "description": "롤백할 버전"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
           }
         ],
         "responses": {
@@ -11487,6 +12597,11 @@
         "summary": "Get Feature Lineage",
         "description": "피처 계보 추적\n\n- upstream_features: 이 피처가 의존하는 상위 피처들\n- downstream_features: 이 피처를 사용하는 하위 피처들\n- recursive=True: 재귀적으로 전체 의존성 트리 추적",
         "operationId": "ML-get_feature_lineage",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "feature_name",
@@ -11508,6 +12623,22 @@
               "title": "Recursive"
             },
             "description": "재귀적 의존성 추적"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
           }
         ],
         "responses": {
@@ -11542,15 +12673,38 @@
         "summary": "Record Feature Usage",
         "description": "피처 사용 기록\n\n- 모델이 피처를 사용할 때마다 호출\n- feature_importance: 모델에서의 중요도 (0.0 ~ 1.0)\n- correlation_with_target: 타겟과의 상관관계 (-1.0 ~ 1.0)",
         "operationId": "ML-record_feature_usage",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/FeatureUsageCreate"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "201": {
@@ -11584,6 +12738,11 @@
         "summary": "Get Feature Statistics",
         "description": "피처 사용 통계 조회\n\n- total_usage: 총 사용 횟수\n- unique_models: 사용한 고유 모델 수\n- environments: 사용 환경 분포 (dev, staging, production)\n- avg_importance: 평균 feature importance\n- avg_correlation: 평균 상관관계\n- last_used_at: 마지막 사용 시각",
         "operationId": "ML-get_feature_statistics",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "feature_name",
@@ -11592,6 +12751,22 @@
             "schema": {
               "type": "string",
               "title": "Feature Name"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -11627,15 +12802,48 @@
         "summary": "List Datasets",
         "description": "데이터셋 목록 조회\n\nMongoDB에 저장된 데이터셋 메타데이터 목록 반환",
         "operationId": "ML-list_datasets",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "additionalProperties": true,
                   "type": "object",
+                  "additionalProperties": true,
                   "title": "Response Ml-List Datasets"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
@@ -11651,6 +12859,11 @@
         "summary": "Get Dataset",
         "description": "데이터셋 상세 조회\n\nArgs:\n    dataset_id: Dataset ID (MongoDB ObjectId)\n\nReturns:\n    Dataset 상세 정보 (마지막 접근 시간 자동 업데이트)",
         "operationId": "ML-get_dataset",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "dataset_id",
@@ -11659,6 +12872,22 @@
             "schema": {
               "type": "string",
               "title": "Dataset Id"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -11697,15 +12926,38 @@
         "summary": "Execute Chatops",
         "description": "Execute the ChatOps agent with the provided request payload.",
         "operationId": "Gen AI-execute_chatops",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ChatOpsRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -11739,6 +12991,11 @@
         "summary": "Create Chat Session",
         "description": "새 채팅 세션 생성 (멀티턴 대화용, MongoDB 저장)\n\n**Phase 3 D3**\n\nArgs:\n    user_id: 사용자 ID\n\nReturns:\n    session_id: 생성된 세션 ID",
         "operationId": "Gen AI-create_chat_session",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "user_id",
@@ -11747,6 +13004,22 @@
             "schema": {
               "type": "string",
               "title": "User Id"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -11786,6 +13059,11 @@
         "summary": "Chat With Session",
         "description": "멀티턴 대화 (세션 기반)\n\n**Phase 3 D3**\n\nArgs:\n    session_id: 세션 ID\n    request: ChatOps 요청\n\nReturns:\n    응답 메시지 및 메타데이터",
         "operationId": "Gen AI-chat_with_session",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "session_id",
@@ -11794,6 +13072,22 @@
             "schema": {
               "type": "string",
               "title": "Session Id"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -11841,15 +13135,38 @@
         "summary": "Compare Strategies",
         "description": "전략 비교 및 LLM 요약\n\n**Phase 3 D3**\n\n자연어 질의를 기반으로 여러 전략을 비교하고 추천을 제공합니다.\n\nExample:\n    ```\n    POST /api/v1/chatops-advanced/strategies/compare\n    {\n        \"strategy_ids\": [\"strategy_1\", \"strategy_2\", \"strategy_3\"],\n        \"metrics\": [\"total_return\", \"sharpe_ratio\", \"max_drawdown\"],\n        \"natural_language_query\": \"가장 안정적인 전략은?\"\n    }\n    ```\n\nArgs:\n    request: 전략 비교 요청\n\nReturns:\n    StrategyComparisonResult: 비교 결과, 순위, 추천",
         "operationId": "Gen AI-compare_strategies",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/StrategyComparisonRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -11883,15 +13200,38 @@
         "summary": "Debug Compare Strategies",
         "description": "전략 비교 디버그 (LLM 없이 데이터만 조회)\n\n**Phase 3 D3 Debug**\n\nMongoDB에서 실제 데이터를 조회하는 로직을 테스트합니다.\nLLM 호출 없이 전략 데이터만 반환합니다.\n\nArgs:\n    request: 전략 비교 요청\n\nReturns:\n    조회된 전략 데이터 목록",
         "operationId": "Gen AI-debug_compare_strategies",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/StrategyComparisonRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -11899,8 +13239,8 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "additionalProperties": true,
                   "type": "object",
+                  "additionalProperties": true,
                   "title": "Response Gen Ai-Debug Compare Strategies"
                 }
               }
@@ -11927,6 +13267,11 @@
         "summary": "Trigger Auto Backtest",
         "description": "자동 백테스트 트리거 (백그라운드 실행)\n\n**Phase 3 D3**\n\n전략 빌더 또는 최적화 결과를 기반으로 백테스트를 자동 생성하고 백그라운드에서 실행합니다.\n\nExample:\n    ```\n    POST /api/v1/chatops-advanced/backtest/trigger?user_id=user_123\n    {\n        \"strategy_config\": {\n            \"name\": \"RSI Strategy\",\n            \"symbols\": [\"AAPL\", \"MSFT\"],\n            \"initial_cash\": 100000.0\n        },\n        \"trigger_reason\": \"strategy_builder\",\n        \"generate_report\": true,\n        \"notify_on_completion\": true\n    }\n    ```\n\nArgs:\n    request: 자동 백테스트 요청\n    background_tasks: FastAPI 백그라운드 태스크\n    user_id: 사용자 ID (기본: system)\n\nReturns:\n    AutoBacktestResponse: 백테스트 ID, 상태, 예상 소요 시간",
         "operationId": "Gen AI-trigger_auto_backtest",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "user_id",
@@ -11936,6 +13281,22 @@
               "type": "string",
               "default": "system",
               "title": "User Id"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -11981,6 +13342,11 @@
         "summary": "Generate Narrative Report",
         "description": "백테스트 결과에 대한 LLM 기반 내러티브 리포트 생성",
         "operationId": "Gen AI-generate_narrative_report",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "backtest_id",
@@ -12040,6 +13406,22 @@
               "title": "Detail Level"
             },
             "description": "상세도 수준 (brief/standard/detailed)"
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
           }
         ],
         "responses": {
@@ -12074,6 +13456,29 @@
         ],
         "summary": "Create Prompt Template",
         "operationId": "Gen AI-create_prompt_template",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -12114,6 +13519,11 @@
         ],
         "summary": "List Prompt Templates",
         "operationId": "Gen AI-list_prompt_templates",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "status",
@@ -12145,6 +13555,22 @@
                 }
               ],
               "title": "Tag"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -12184,6 +13610,11 @@
         ],
         "summary": "Update Prompt Template",
         "operationId": "Gen AI-update_prompt_template",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "prompt_id",
@@ -12201,6 +13632,22 @@
             "schema": {
               "type": "string",
               "title": "Version"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -12246,6 +13693,11 @@
         ],
         "summary": "Submit Prompt For Review",
         "operationId": "Gen AI-submit_prompt_for_review",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "prompt_id",
@@ -12263,6 +13715,22 @@
             "schema": {
               "type": "string",
               "title": "Version"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -12308,6 +13776,11 @@
         ],
         "summary": "Approve Prompt",
         "operationId": "Gen AI-approve_prompt",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "prompt_id",
@@ -12325,6 +13798,22 @@
             "schema": {
               "type": "string",
               "title": "Version"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -12370,6 +13859,11 @@
         ],
         "summary": "Reject Prompt",
         "operationId": "Gen AI-reject_prompt",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "prompt_id",
@@ -12387,6 +13881,22 @@
             "schema": {
               "type": "string",
               "title": "Version"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -12432,15 +13942,38 @@
         ],
         "summary": "Evaluate Prompt",
         "operationId": "Gen AI-evaluate_prompt",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/PromptEvaluationRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -12474,6 +14007,11 @@
         ],
         "summary": "Log Prompt Usage",
         "operationId": "Gen AI-log_prompt_usage",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "prompt_id",
@@ -12491,6 +14029,22 @@
             "schema": {
               "type": "string",
               "title": "Version"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -12536,6 +14090,11 @@
         ],
         "summary": "List Prompt Audit Logs",
         "operationId": "Gen AI-list_prompt_audit_logs",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "prompt_id",
@@ -12553,6 +14112,22 @@
             "schema": {
               "type": "string",
               "title": "Version"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
@@ -12592,15 +14167,38 @@
         "summary": "Generate Strategy",
         "description": "자연어 입력으로 트레이딩 전략 생성\n\n**워크플로우:**\n1. 자연어 쿼리 → LLM 의도 파싱 (IntentType 분류)\n2. 엔티티 추출 (지표, 파라미터, 심볼 등)\n3. 지표 추천 (임베딩 기반 유사도 매칭)\n4. 파라미터 검증 (범위, 타입 체크)\n5. 전략 설정 생성 (GeneratedStrategyConfig)\n6. 휴먼 승인 필요성 평가\n\n**예시 요청:**\n- \"RSI가 30 이하일 때 매수하고, 70 이상일 때 매도하는 전략을 만들어줘\"\n- \"MACD와 Bollinger Bands를 사용한 추세 추종 전략 추천해줘\"\n- \"단기 매매에 적합한 EMA 크로스오버 전략을 테스트하고 싶어\"\n\n**응답:**\n- `status`: \"success\" | \"warning\" | \"error\"\n- `parsed_intent`: LLM이 파싱한 사용자 의도 (IntentType, 신뢰도, 추출된 엔티티)\n- `generated_strategy`: 생성된 전략 설정 (지표, 파라미터, 진입/청산 조건)\n- `human_approval`: 승인 필요 여부 + 이유 + 수정 제안\n- `overall_confidence`: 전체 신뢰도 (0.0-1.0)\n\n**주의사항:**\n- OpenAI API 키 필요 (`OPENAI_API_KEY` 환경변수)\n- 자연어 쿼리는 10-1000자 제한\n- 생성된 전략은 기본적으로 승인 필요 (`require_human_approval=True`)\n- 낮은 신뢰도 (<0.5) 시 대안 제안 제공",
         "operationId": "Gen AI-generate_strategy",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/StrategyBuilderRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -12634,15 +14232,38 @@
         "summary": "Approve Strategy",
         "description": "생성된 전략 승인 처리 (Human-in-the-Loop)\n\n**워크플로우:**\n1. 생성된 전략 ID 조회 (`strategy_builder_response_id`)\n2. 승인 여부 확인 (`approved`: true/false)\n3. 수정 사항 적용 (`modifications`: Dict)\n4. 실제 전략 생성 (StrategyService)\n5. 승인 로그 기록 (audit trail)\n\n**승인 시나리오:**\n- **승인 (approved=true)**: 수정 없이 전략 생성\n- **수정 후 승인 (approved=true + modifications)**: 파라미터 수정 후 생성\n- **거부 (approved=false)**: 전략 생성 취소, 사유 기록\n\n**응답:**\n- `status`: \"approved\" | \"modified\" | \"rejected\"\n- `message`: 승인 결과 메시지\n- `strategy_id`: 생성된 전략 ID (승인 시)\n- `approved_at`: 승인 시각 (ISO 8601)\n\n**예시:**\n```json\n{\n    \"strategy_builder_response_id\": \"abc123\",\n    \"approved\": true,\n    \"modifications\": {\n        \"rsi_period\": 21,\n        \"rsi_oversold\": 25\n    },\n    \"approval_notes\": \"RSI 기간을 21로 조정하여 시장 변동성 반영\"\n}\n```",
         "operationId": "Gen AI-approve_strategy",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/StrategyApprovalRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -12676,15 +14297,38 @@
         "summary": "Search Indicators",
         "description": "임베딩 기반 지표 검색\n\n**기능:**\n- 자연어 쿼리 → 임베딩 변환\n- 지표 지식 베이스와 코사인 유사도 계산\n- 상위 K개 지표 추천 (기본 5개)\n\n**사용 사례:**\n- \"변동성을 측정하는 지표를 찾아줘\" → Bollinger Bands, ATR\n- \"추세 전환을 포착하는 지표\" → MACD, EMA Crossover\n- \"모멘텀 지표\" → RSI, Stochastic, CCI\n\n**응답:**\n- `status`: \"success\" | \"error\"\n- `indicators`: 추천 지표 목록 (유사도 순)\n- `total`: 반환된 지표 수\n- `query_embedding`: (디버깅용) 쿼리 임베딩 벡터\n\n**예시:**\n```json\n{\n    \"query\": \"변동성 측정 지표\",\n    \"top_k\": 3,\n    \"filters\": {\"type\": \"volatility\"}\n}\n```",
         "operationId": "Gen AI-search_indicators",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/IndicatorSearchRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {

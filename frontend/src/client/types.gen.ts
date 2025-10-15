@@ -12155,6 +12155,16 @@ export type MlListScenariosData = {
 	url: "/api/v1/ml/evaluation/evaluation/scenarios";
 };
 
+export type MlListScenariosErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlListScenariosError =
+	MlListScenariosErrors[keyof MlListScenariosErrors];
+
 export type MlListScenariosResponses = {
 	/**
 	 * Response Ml-List Scenarios
@@ -12356,6 +12366,16 @@ export type MlListBenchmarksData = {
 	url: "/api/v1/ml/evaluation/evaluation/benchmarks";
 };
 
+export type MlListBenchmarksErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlListBenchmarksError =
+	MlListBenchmarksErrors[keyof MlListBenchmarksErrors];
+
 export type MlListBenchmarksResponses = {
 	/**
 	 * Response Ml-List Benchmarks
@@ -12427,6 +12447,15 @@ export type MlListAbTestsData = {
 	query?: never;
 	url: "/api/v1/ml/evaluation/evaluation/ab-tests";
 };
+
+export type MlListAbTestsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlListAbTestsError = MlListAbTestsErrors[keyof MlListAbTestsErrors];
 
 export type MlListAbTestsResponses = {
 	/**
@@ -13809,6 +13838,16 @@ export type MlListDatasetsData = {
 	query?: never;
 	url: "/api/v1/ml/features/datasets";
 };
+
+export type MlListDatasetsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlListDatasetsError =
+	MlListDatasetsErrors[keyof MlListDatasetsErrors];
 
 export type MlListDatasetsResponses = {
 	/**

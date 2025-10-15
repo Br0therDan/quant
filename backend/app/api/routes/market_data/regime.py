@@ -12,7 +12,7 @@ from app.schemas.ml_platform.predictive import MarketRegimeResponse
 from app.services.service_factory import service_factory
 
 
-router = APIRouter(tags=["Market Regime"])
+router = APIRouter()
 
 
 @router.get("/", response_model=MarketRegimeResponse)

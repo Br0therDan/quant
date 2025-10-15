@@ -381,10 +381,13 @@ import type {
 	MlGetRunErrors,
 	MlGetRunResponses,
 	MlListAbTestsData,
+	MlListAbTestsErrors,
 	MlListAbTestsResponses,
 	MlListBenchmarksData,
+	MlListBenchmarksErrors,
 	MlListBenchmarksResponses,
 	MlListDatasetsData,
+	MlListDatasetsErrors,
 	MlListDatasetsResponses,
 	MlListDeploymentsData,
 	MlListDeploymentsErrors,
@@ -414,6 +417,7 @@ import type {
 	MlListRunsErrors,
 	MlListRunsResponses,
 	MlListScenariosData,
+	MlListScenariosErrors,
 	MlListScenariosResponses,
 	MlLogRunData,
 	MlLogRunErrors,
@@ -2063,31 +2067,6 @@ export class MarketDataService {
 	}
 }
 
-export class MarketRegimeService {
-	/**
-	 * Get Market Regime
-	 * Return the latest market regime snapshot.
-	 */
-	public static getMarketRegime<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataGetMarketRegimeData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			MarketDataGetMarketRegimeResponses,
-			MarketDataGetMarketRegimeErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/market-data/regime/",
-			...options,
-		});
-	}
-}
-
 export class WatchlistService {
 	/**
 	 * List Watchlists
@@ -3437,9 +3416,15 @@ export class MlService {
 	) {
 		return (options?.client ?? client).get<
 			MlListScenariosResponses,
-			unknown,
+			MlListScenariosErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/scenarios",
 			...options,
 		});
@@ -3456,6 +3441,12 @@ export class MlService {
 			MlRegisterScenarioErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/scenarios",
 			...options,
 			headers: {
@@ -3476,6 +3467,12 @@ export class MlService {
 			MlUpdateScenarioErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/scenarios/{name}",
 			...options,
 			headers: {
@@ -3496,6 +3493,12 @@ export class MlService {
 			MlListEvaluationRunsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/runs",
 			...options,
 		});
@@ -3512,6 +3515,12 @@ export class MlService {
 			MlRunEvaluationErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/runs",
 			...options,
 			headers: {
@@ -3532,6 +3541,12 @@ export class MlService {
 			MlGetEvaluationReportErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/runs/{run_id}/report",
 			...options,
 		});
@@ -3549,6 +3564,12 @@ export class MlService {
 			MlGetDetailedMetricsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/runs/{run_id}/metrics",
 			...options,
 		});
@@ -3563,9 +3584,15 @@ export class MlService {
 	) {
 		return (options?.client ?? client).get<
 			MlListBenchmarksResponses,
-			unknown,
+			MlListBenchmarksErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/benchmarks",
 			...options,
 		});
@@ -3583,6 +3610,12 @@ export class MlService {
 			MlCreateBenchmarkErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/benchmarks",
 			...options,
 			headers: {
@@ -3604,6 +3637,12 @@ export class MlService {
 			MlRunBenchmarkErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/benchmarks/run",
 			...options,
 			headers: {
@@ -3622,9 +3661,15 @@ export class MlService {
 	) {
 		return (options?.client ?? client).get<
 			MlListAbTestsResponses,
-			unknown,
+			MlListAbTestsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/ab-tests",
 			...options,
 		});
@@ -3642,6 +3687,12 @@ export class MlService {
 			MlCreateAbTestErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/ab-tests",
 			...options,
 			headers: {
@@ -3663,6 +3714,12 @@ export class MlService {
 			MlGetAbTestErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/ab-tests/{test_id}",
 			...options,
 		});
@@ -3680,6 +3737,12 @@ export class MlService {
 			MlRequestFairnessAuditErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/fairness/audit",
 			...options,
 			headers: {
@@ -3701,6 +3764,12 @@ export class MlService {
 			MlListFairnessReportsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/fairness/reports",
 			...options,
 		});
@@ -3718,6 +3787,12 @@ export class MlService {
 			MlGetFairnessReportErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/fairness/reports/{report_id}",
 			...options,
 		});
@@ -3734,6 +3809,12 @@ export class MlService {
 			MlListExperimentsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/experiments",
 			...options,
 		});
@@ -3750,6 +3831,12 @@ export class MlService {
 			MlCreateExperimentErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/experiments",
 			...options,
 			headers: {
@@ -3771,6 +3858,12 @@ export class MlService {
 			MlGetExperimentErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/experiments/{name}",
 			...options,
 		});
@@ -3787,6 +3880,12 @@ export class MlService {
 			MlUpdateExperimentErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/experiments/{name}",
 			...options,
 			headers: {
@@ -3807,6 +3906,12 @@ export class MlService {
 			MlListRunsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/runs",
 			...options,
 		});
@@ -3823,6 +3928,12 @@ export class MlService {
 			MlLogRunErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/runs",
 			...options,
 			headers: {
@@ -3843,6 +3954,12 @@ export class MlService {
 			MlGetRunErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/runs/{run_id}",
 			...options,
 		});
@@ -3859,6 +3976,12 @@ export class MlService {
 			MlUpdateRunErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/runs/{run_id}",
 			...options,
 			headers: {
@@ -3879,6 +4002,12 @@ export class MlService {
 			MlListModelVersionsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/models",
 			...options,
 		});
@@ -3895,6 +4024,12 @@ export class MlService {
 			MlRegisterModelVersionErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/models",
 			...options,
 			headers: {
@@ -3916,6 +4051,12 @@ export class MlService {
 			MlGetModelVersionErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/models/{model_name}/{version}",
 			...options,
 		});
@@ -3932,6 +4073,12 @@ export class MlService {
 			MlUpdateModelVersionErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/models/{model_name}/{version}",
 			...options,
 			headers: {
@@ -3952,6 +4099,12 @@ export class MlService {
 			MlCompareModelVersionsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/models/{model_name}/compare",
 			...options,
 			headers: {
@@ -3972,6 +4125,12 @@ export class MlService {
 			MlListDriftEventsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/drift-events",
 			...options,
 		});
@@ -3988,6 +4147,12 @@ export class MlService {
 			MlRecordDriftEventErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/drift-events",
 			...options,
 			headers: {
@@ -4009,6 +4174,12 @@ export class MlService {
 			MlListDeploymentsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/deployments",
 			...options,
 		});
@@ -4026,6 +4197,12 @@ export class MlService {
 			MlCreateDeploymentErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/deployments",
 			...options,
 			headers: {
@@ -4047,6 +4224,12 @@ export class MlService {
 			MlGetDeploymentErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/deployments/{deployment_id}",
 			...options,
 		});
@@ -4064,6 +4247,12 @@ export class MlService {
 			MlUpdateDeploymentErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/deployments/{deployment_id}",
 			...options,
 			headers: {
@@ -4107,6 +4296,12 @@ export class MlService {
 			MlTrainModelErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/train/train",
 			...options,
 			headers: {
@@ -4131,6 +4326,12 @@ export class MlService {
 			MlListModelsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/train/models",
 			...options,
 		});
@@ -4150,6 +4351,12 @@ export class MlService {
 			MlDeleteModelErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/train/models/{version}",
 			...options,
 		});
@@ -4170,6 +4377,12 @@ export class MlService {
 			MlGetModelInfoErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/train/models/{version}",
 			...options,
 		});
@@ -4198,6 +4411,12 @@ export class MlService {
 			MlCompareModelsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/train/models/compare/{metric}",
 			...options,
 		});
@@ -4221,6 +4440,12 @@ export class MlService {
 			MlListFeaturesErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/features",
 			...options,
 		});
@@ -4245,6 +4470,12 @@ export class MlService {
 			MlCreateFeatureErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/features",
 			...options,
 			headers: {
@@ -4269,6 +4500,12 @@ export class MlService {
 			MlDeleteFeatureErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/features/{feature_name}",
 			...options,
 		});
@@ -4286,6 +4523,12 @@ export class MlService {
 			MlGetFeatureErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/features/{feature_name}",
 			...options,
 		});
@@ -4306,6 +4549,12 @@ export class MlService {
 			MlUpdateFeatureErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/features/{feature_name}",
 			...options,
 			headers: {
@@ -4330,6 +4579,12 @@ export class MlService {
 			MlActivateFeatureErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/features/{feature_name}/activate",
 			...options,
 		});
@@ -4351,6 +4606,12 @@ export class MlService {
 			MlDeprecateFeatureErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/features/{feature_name}/deprecate",
 			...options,
 		});
@@ -4368,6 +4629,12 @@ export class MlService {
 			MlGetFeatureVersionsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/features/{feature_name}/versions",
 			...options,
 		});
@@ -4389,6 +4656,12 @@ export class MlService {
 			MlCreateVersionErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/features/{feature_name}/versions",
 			...options,
 			headers: {
@@ -4414,6 +4687,12 @@ export class MlService {
 			MlRollbackVersionErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/features/{feature_name}/rollback",
 			...options,
 		});
@@ -4435,6 +4714,12 @@ export class MlService {
 			MlGetFeatureLineageErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/features/{feature_name}/lineage",
 			...options,
 		});
@@ -4456,6 +4741,12 @@ export class MlService {
 			MlRecordFeatureUsageErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/features/usage",
 			...options,
 			headers: {
@@ -4484,6 +4775,12 @@ export class MlService {
 			MlGetFeatureStatisticsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/features/{feature_name}/statistics",
 			...options,
 		});
@@ -4500,9 +4797,15 @@ export class MlService {
 	) {
 		return (options?.client ?? client).get<
 			MlListDatasetsResponses,
-			unknown,
+			MlListDatasetsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/features/datasets",
 			...options,
 		});
@@ -4526,6 +4829,12 @@ export class MlService {
 			MlGetDatasetErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/features/datasets/{dataset_id}",
 			...options,
 		});
@@ -4541,9 +4850,15 @@ export class EvaluationHarnessService {
 	) {
 		return (options?.client ?? client).get<
 			MlListScenariosResponses,
-			unknown,
+			MlListScenariosErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/scenarios",
 			...options,
 		});
@@ -4560,6 +4875,12 @@ export class EvaluationHarnessService {
 			MlRegisterScenarioErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/scenarios",
 			...options,
 			headers: {
@@ -4580,6 +4901,12 @@ export class EvaluationHarnessService {
 			MlUpdateScenarioErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/scenarios/{name}",
 			...options,
 			headers: {
@@ -4600,6 +4927,12 @@ export class EvaluationHarnessService {
 			MlListEvaluationRunsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/runs",
 			...options,
 		});
@@ -4616,6 +4949,12 @@ export class EvaluationHarnessService {
 			MlRunEvaluationErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/runs",
 			...options,
 			headers: {
@@ -4636,6 +4975,12 @@ export class EvaluationHarnessService {
 			MlGetEvaluationReportErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/runs/{run_id}/report",
 			...options,
 		});
@@ -4653,6 +4998,12 @@ export class EvaluationHarnessService {
 			MlGetDetailedMetricsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/runs/{run_id}/metrics",
 			...options,
 		});
@@ -4667,9 +5018,15 @@ export class EvaluationHarnessService {
 	) {
 		return (options?.client ?? client).get<
 			MlListBenchmarksResponses,
-			unknown,
+			MlListBenchmarksErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/benchmarks",
 			...options,
 		});
@@ -4687,6 +5044,12 @@ export class EvaluationHarnessService {
 			MlCreateBenchmarkErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/benchmarks",
 			...options,
 			headers: {
@@ -4708,6 +5071,12 @@ export class EvaluationHarnessService {
 			MlRunBenchmarkErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/benchmarks/run",
 			...options,
 			headers: {
@@ -4726,9 +5095,15 @@ export class EvaluationHarnessService {
 	) {
 		return (options?.client ?? client).get<
 			MlListAbTestsResponses,
-			unknown,
+			MlListAbTestsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/ab-tests",
 			...options,
 		});
@@ -4746,6 +5121,12 @@ export class EvaluationHarnessService {
 			MlCreateAbTestErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/ab-tests",
 			...options,
 			headers: {
@@ -4767,6 +5148,12 @@ export class EvaluationHarnessService {
 			MlGetAbTestErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/ab-tests/{test_id}",
 			...options,
 		});
@@ -4784,6 +5171,12 @@ export class EvaluationHarnessService {
 			MlRequestFairnessAuditErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/fairness/audit",
 			...options,
 			headers: {
@@ -4805,6 +5198,12 @@ export class EvaluationHarnessService {
 			MlListFairnessReportsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/fairness/reports",
 			...options,
 		});
@@ -4822,6 +5221,12 @@ export class EvaluationHarnessService {
 			MlGetFairnessReportErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/evaluation/evaluation/fairness/reports/{report_id}",
 			...options,
 		});
@@ -4840,6 +5245,12 @@ export class ModelLifecycleService {
 			MlListExperimentsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/experiments",
 			...options,
 		});
@@ -4856,6 +5267,12 @@ export class ModelLifecycleService {
 			MlCreateExperimentErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/experiments",
 			...options,
 			headers: {
@@ -4877,6 +5294,12 @@ export class ModelLifecycleService {
 			MlGetExperimentErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/experiments/{name}",
 			...options,
 		});
@@ -4893,6 +5316,12 @@ export class ModelLifecycleService {
 			MlUpdateExperimentErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/experiments/{name}",
 			...options,
 			headers: {
@@ -4913,6 +5342,12 @@ export class ModelLifecycleService {
 			MlListRunsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/runs",
 			...options,
 		});
@@ -4929,6 +5364,12 @@ export class ModelLifecycleService {
 			MlLogRunErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/runs",
 			...options,
 			headers: {
@@ -4949,6 +5390,12 @@ export class ModelLifecycleService {
 			MlGetRunErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/runs/{run_id}",
 			...options,
 		});
@@ -4965,6 +5412,12 @@ export class ModelLifecycleService {
 			MlUpdateRunErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/runs/{run_id}",
 			...options,
 			headers: {
@@ -4985,6 +5438,12 @@ export class ModelLifecycleService {
 			MlListModelVersionsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/models",
 			...options,
 		});
@@ -5001,6 +5460,12 @@ export class ModelLifecycleService {
 			MlRegisterModelVersionErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/models",
 			...options,
 			headers: {
@@ -5022,6 +5487,12 @@ export class ModelLifecycleService {
 			MlGetModelVersionErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/models/{model_name}/{version}",
 			...options,
 		});
@@ -5038,6 +5509,12 @@ export class ModelLifecycleService {
 			MlUpdateModelVersionErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/models/{model_name}/{version}",
 			...options,
 			headers: {
@@ -5058,6 +5535,12 @@ export class ModelLifecycleService {
 			MlCompareModelVersionsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/models/{model_name}/compare",
 			...options,
 			headers: {
@@ -5078,6 +5561,12 @@ export class ModelLifecycleService {
 			MlListDriftEventsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/drift-events",
 			...options,
 		});
@@ -5094,6 +5583,12 @@ export class ModelLifecycleService {
 			MlRecordDriftEventErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/drift-events",
 			...options,
 			headers: {
@@ -5115,6 +5610,12 @@ export class ModelLifecycleService {
 			MlListDeploymentsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/deployments",
 			...options,
 		});
@@ -5132,6 +5633,12 @@ export class ModelLifecycleService {
 			MlCreateDeploymentErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/deployments",
 			...options,
 			headers: {
@@ -5153,6 +5660,12 @@ export class ModelLifecycleService {
 			MlGetDeploymentErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/deployments/{deployment_id}",
 			...options,
 		});
@@ -5170,6 +5683,12 @@ export class ModelLifecycleService {
 			MlUpdateDeploymentErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/ml/lifecycle/lifecycle/deployments/{deployment_id}",
 			...options,
 			headers: {
@@ -5193,6 +5712,12 @@ export class GenAiService {
 			GenAiExecuteChatopsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/gen-ai/chatops/",
 			...options,
 			headers: {
@@ -5222,6 +5747,12 @@ export class GenAiService {
 			GenAiCreateChatSessionErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/gen-ai/chatops-advanced/session/create",
 			...options,
 		});
@@ -5248,6 +5779,12 @@ export class GenAiService {
 			GenAiChatWithSessionErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/gen-ai/chatops-advanced/session/{session_id}/chat",
 			...options,
 			headers: {
@@ -5289,6 +5826,12 @@ export class GenAiService {
 			GenAiCompareStrategiesErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/gen-ai/chatops-advanced/strategies/compare",
 			...options,
 			headers: {
@@ -5321,6 +5864,12 @@ export class GenAiService {
 			GenAiDebugCompareStrategiesErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/gen-ai/chatops-advanced/strategies/compare/debug",
 			...options,
 			headers: {
@@ -5369,6 +5918,12 @@ export class GenAiService {
 			GenAiTriggerAutoBacktestErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/gen-ai/chatops-advanced/backtest/trigger",
 			...options,
 			headers: {
@@ -5390,6 +5945,12 @@ export class GenAiService {
 			GenAiGenerateNarrativeReportErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/gen-ai/narrative/backtests/{backtest_id}/report",
 			...options,
 		});
@@ -5406,6 +5967,12 @@ export class GenAiService {
 			GenAiListPromptTemplatesErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/gen-ai/prompt-governance/prompts/templates",
 			...options,
 		});
@@ -5422,6 +5989,12 @@ export class GenAiService {
 			GenAiCreatePromptTemplateErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/gen-ai/prompt-governance/prompts/templates",
 			...options,
 			headers: {
@@ -5442,6 +6015,12 @@ export class GenAiService {
 			GenAiUpdatePromptTemplateErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/gen-ai/prompt-governance/prompts/templates/{prompt_id}/{version}",
 			...options,
 			headers: {
@@ -5462,6 +6041,12 @@ export class GenAiService {
 			GenAiSubmitPromptForReviewErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/gen-ai/prompt-governance/prompts/templates/{prompt_id}/{version}/submit",
 			...options,
 			headers: {
@@ -5482,6 +6067,12 @@ export class GenAiService {
 			GenAiApprovePromptErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/gen-ai/prompt-governance/prompts/templates/{prompt_id}/{version}/approve",
 			...options,
 			headers: {
@@ -5502,6 +6093,12 @@ export class GenAiService {
 			GenAiRejectPromptErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/gen-ai/prompt-governance/prompts/templates/{prompt_id}/{version}/reject",
 			...options,
 			headers: {
@@ -5522,6 +6119,12 @@ export class GenAiService {
 			GenAiEvaluatePromptErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/gen-ai/prompt-governance/prompts/evaluate",
 			...options,
 			headers: {
@@ -5542,6 +6145,12 @@ export class GenAiService {
 			GenAiLogPromptUsageErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/gen-ai/prompt-governance/prompts/templates/{prompt_id}/{version}/usage",
 			...options,
 			headers: {
@@ -5562,6 +6171,12 @@ export class GenAiService {
 			GenAiListPromptAuditLogsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/gen-ai/prompt-governance/prompts/templates/{prompt_id}/{version}/audit",
 			...options,
 		});
@@ -5605,6 +6220,12 @@ export class GenAiService {
 			GenAiGenerateStrategyErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/gen-ai/strategy-builder",
 			...options,
 			headers: {
@@ -5657,6 +6278,12 @@ export class GenAiService {
 			GenAiApproveStrategyErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/gen-ai/strategy-builder/approve",
 			...options,
 			headers: {
@@ -5703,6 +6330,12 @@ export class GenAiService {
 			GenAiSearchIndicatorsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/gen-ai/strategy-builder/search-indicators",
 			...options,
 			headers: {
@@ -5726,6 +6359,12 @@ export class ChatOpsService {
 			GenAiExecuteChatopsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/gen-ai/chatops/",
 			...options,
 			headers: {
@@ -5748,6 +6387,12 @@ export class PromptGovernanceService {
 			GenAiListPromptTemplatesErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/gen-ai/prompt-governance/prompts/templates",
 			...options,
 		});
@@ -5764,6 +6409,12 @@ export class PromptGovernanceService {
 			GenAiCreatePromptTemplateErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/gen-ai/prompt-governance/prompts/templates",
 			...options,
 			headers: {
@@ -5784,6 +6435,12 @@ export class PromptGovernanceService {
 			GenAiUpdatePromptTemplateErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/gen-ai/prompt-governance/prompts/templates/{prompt_id}/{version}",
 			...options,
 			headers: {
@@ -5804,6 +6461,12 @@ export class PromptGovernanceService {
 			GenAiSubmitPromptForReviewErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/gen-ai/prompt-governance/prompts/templates/{prompt_id}/{version}/submit",
 			...options,
 			headers: {
@@ -5824,6 +6487,12 @@ export class PromptGovernanceService {
 			GenAiApprovePromptErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/gen-ai/prompt-governance/prompts/templates/{prompt_id}/{version}/approve",
 			...options,
 			headers: {
@@ -5844,6 +6513,12 @@ export class PromptGovernanceService {
 			GenAiRejectPromptErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/gen-ai/prompt-governance/prompts/templates/{prompt_id}/{version}/reject",
 			...options,
 			headers: {
@@ -5864,6 +6539,12 @@ export class PromptGovernanceService {
 			GenAiEvaluatePromptErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/gen-ai/prompt-governance/prompts/evaluate",
 			...options,
 			headers: {
@@ -5884,6 +6565,12 @@ export class PromptGovernanceService {
 			GenAiLogPromptUsageErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/gen-ai/prompt-governance/prompts/templates/{prompt_id}/{version}/usage",
 			...options,
 			headers: {
@@ -5904,6 +6591,12 @@ export class PromptGovernanceService {
 			GenAiListPromptAuditLogsErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/gen-ai/prompt-governance/prompts/templates/{prompt_id}/{version}/audit",
 			...options,
 		});
