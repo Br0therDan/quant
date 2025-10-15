@@ -2,15 +2,15 @@
 
 from __future__ import annotations
 
-import time
 from datetime import datetime, timedelta
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from app.models.backtest import BacktestStatus
+from app.models.trading.backtest import BacktestStatus
 from app.services.backtest.orchestrator import BacktestOrchestrator
 from app.services.service_factory import service_factory
+
 
 @pytest.fixture
 def mock_services():
@@ -123,6 +123,7 @@ class TestOrchestratorIntegration:
         """전체 백테스트 파이프라인 (E2E)"""
         # TODO: MongoDB 연결 후 구현
         pass
+
 
 @pytest.mark.asyncio
 @pytest.mark.e2e

@@ -7,7 +7,7 @@ from unittest.mock import AsyncMock
 
 import pytest
 
-from app.services.watchlist_service import WatchlistService
+from app.services.user.watchlist_service import WatchlistService
 
 
 class FakeWatchlist:
@@ -46,7 +46,9 @@ def service(monkeypatch: pytest.MonkeyPatch) -> WatchlistService:
 
 
 @pytest.mark.asyncio
-async def test_create_watchlist_inserts_document(service: WatchlistService, monkeypatch: pytest.MonkeyPatch) -> None:
+async def test_create_watchlist_inserts_document(
+    service: WatchlistService, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """`create_watchlist` should insert a new document and normalize symbols."""
 
     monkeypatch.setattr(service, "get_watchlist", AsyncMock(return_value=None))
@@ -65,10 +67,14 @@ async def test_create_watchlist_inserts_document(service: WatchlistService, monk
 
 
 @pytest.mark.asyncio
-async def test_create_watchlist_returns_none_when_duplicate(service: WatchlistService, monkeypatch: pytest.MonkeyPatch) -> None:
+async def test_create_watchlist_returns_none_when_duplicate(
+    service: WatchlistService, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """Duplicate watchlist names should return ``None`` without inserting."""
 
-    monkeypatch.setattr(service, "get_watchlist", AsyncMock(return_value=FakeWatchlist(name="tech")))
+    monkeypatch.setattr(
+        service, "get_watchlist", AsyncMock(return_value=FakeWatchlist(name="tech"))
+    )
 
     result = await service.create_watchlist(
         name="tech",
@@ -82,7 +88,9 @@ async def test_create_watchlist_returns_none_when_duplicate(service: WatchlistSe
 
 
 @pytest.mark.asyncio
-async def test_update_watchlist_persists_changes(service: WatchlistService, monkeypatch: pytest.MonkeyPatch) -> None:
+async def test_update_watchlist_persists_changes(
+    service: WatchlistService, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """Updating an existing watchlist should persist updates and normalize symbols."""
 
     existing = FakeWatchlist(
@@ -112,7 +120,9 @@ async def test_update_watchlist_persists_changes(service: WatchlistService, monk
 
 
 @pytest.mark.asyncio
-async def test_update_watchlist_returns_none_when_missing(service: WatchlistService, monkeypatch: pytest.MonkeyPatch) -> None:
+async def test_update_watchlist_returns_none_when_missing(
+    service: WatchlistService, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """Attempting to update a missing watchlist should return ``None``."""
 
     monkeypatch.setattr(service, "get_watchlist", AsyncMock(return_value=None))
@@ -124,7 +134,9 @@ async def test_update_watchlist_returns_none_when_missing(service: WatchlistServ
 
 
 @pytest.mark.asyncio
-async def test_delete_watchlist_deletes_document(service: WatchlistService, monkeypatch: pytest.MonkeyPatch) -> None:
+async def test_delete_watchlist_deletes_document(
+    service: WatchlistService, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """Deleting a watchlist should call the ODM delete helper."""
 
     existing = FakeWatchlist(name="tech")
@@ -135,7 +147,9 @@ async def test_delete_watchlist_deletes_document(service: WatchlistService, monk
 
 
 @pytest.mark.asyncio
-async def test_delete_watchlist_returns_false_when_missing(service: WatchlistService, monkeypatch: pytest.MonkeyPatch) -> None:
+async def test_delete_watchlist_returns_false_when_missing(
+    service: WatchlistService, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """Deleting a missing watchlist should return ``False``."""
 
     monkeypatch.setattr(service, "get_watchlist", AsyncMock(return_value=None))
@@ -144,7 +158,9 @@ async def test_delete_watchlist_returns_false_when_missing(service: WatchlistSer
 
 
 @pytest.mark.asyncio
-async def test_get_watchlist_coverage_success(service: WatchlistService, monkeypatch: pytest.MonkeyPatch) -> None:
+async def test_get_watchlist_coverage_success(
+    service: WatchlistService, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """Coverage information should merge results from the market data service."""
 
     watchlist = FakeWatchlist(
@@ -154,10 +170,14 @@ async def test_get_watchlist_coverage_success(service: WatchlistService, monkeyp
     )
     monkeypatch.setattr(service, "get_watchlist", AsyncMock(return_value=watchlist))
 
-    fundamental = SimpleNamespace(get_company_overview=AsyncMock(return_value={"symbol": "AAPL"}))
+    fundamental = SimpleNamespace(
+        get_company_overview=AsyncMock(return_value={"symbol": "AAPL"})
+    )
     stock = SimpleNamespace(get_daily_prices=AsyncMock(return_value=[{"close": 1.0}]))
     market_service = SimpleNamespace(fundamental=fundamental, stock=stock)
-    monkeypatch.setattr(service, "_get_market_service", AsyncMock(return_value=market_service))
+    monkeypatch.setattr(
+        service, "_get_market_service", AsyncMock(return_value=market_service)
+    )
 
     coverage = await service.get_watchlist_coverage("tech", "user-1")
 
@@ -169,7 +189,9 @@ async def test_get_watchlist_coverage_success(service: WatchlistService, monkeyp
 
 
 @pytest.mark.asyncio
-async def test_get_watchlist_coverage_handles_missing(service: WatchlistService, monkeypatch: pytest.MonkeyPatch) -> None:
+async def test_get_watchlist_coverage_handles_missing(
+    service: WatchlistService, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """Missing watchlists should return an error payload."""
 
     monkeypatch.setattr(service, "get_watchlist", AsyncMock(return_value=None))
@@ -180,10 +202,14 @@ async def test_get_watchlist_coverage_handles_missing(service: WatchlistService,
 
 
 @pytest.mark.asyncio
-async def test_setup_default_watchlist_uses_defaults(service: WatchlistService, monkeypatch: pytest.MonkeyPatch) -> None:
+async def test_setup_default_watchlist_uses_defaults(
+    service: WatchlistService, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """The default watchlist helper should reuse `create_watchlist` with default symbols."""
 
-    monkeypatch.setattr(service, "get_default_symbols", AsyncMock(return_value=["AAPL", "MSFT"]))
+    monkeypatch.setattr(
+        service, "get_default_symbols", AsyncMock(return_value=["AAPL", "MSFT"])
+    )
     created = FakeWatchlist(name="default", symbols=["AAPL", "MSFT"])
     monkeypatch.setattr(service, "create_watchlist", AsyncMock(return_value=created))
 

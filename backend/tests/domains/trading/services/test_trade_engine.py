@@ -4,7 +4,7 @@ TradeEngine 테스트
 
 from datetime import datetime
 from app.services.backtest.trade_engine import TradeEngine, Portfolio, TradeCosts
-from app.models.backtest import BacktestConfig, TradeType, OrderType
+from app.models.trading.backtest import BacktestConfig, TradeType, OrderType
 
 
 def test_portfolio_initialization():
