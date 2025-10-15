@@ -16,6 +16,7 @@ from app.models.trading.backtest import (
 
 if TYPE_CHECKING:
     from app.services.database_manager import DatabaseManager
+    from app.services.gen_ai.core.rag_service import RAGService
 
 
 logger = logging.getLogger(__name__)
@@ -36,13 +37,18 @@ class ResultStorage:
         database_manager: 데이터베이스 매니저 (DuckDB)
     """
 
-    def __init__(self, database_manager: Optional["DatabaseManager"] = None):
+    def __init__(
+        self,
+        database_manager: Optional["DatabaseManager"] = None,
+        rag_service: Optional["RAGService"] = None,
+    ):
         """ResultStorage 초기화
 
         Args:
             database_manager: 데이터베이스 매니저 (DuckDB)
         """
         self.database_manager = database_manager
+        self.rag_service = rag_service
 
     async def save_results(
         self,
@@ -67,6 +73,7 @@ class ResultStorage:
         result = BacktestResult(
             backtest_id=str(backtest.id),
             execution_id=str(execution.id),
+            user_id=backtest.user_id,
             performance=performance,
             final_portfolio_value=(
                 portfolio_values[-1]
@@ -84,6 +91,16 @@ class ResultStorage:
             beta=None,
         )
         await result.insert()
+
+        if self.rag_service:
+            try:
+                await self.rag_service.index_backtest_result(backtest, result)
+            except Exception as exc:  # pragma: no cover - external services
+                logger.warning(
+                    "RAG indexing failed",
+                    exc_info=True,
+                    extra={"backtest_id": str(backtest.id), "error": str(exc)},
+                )
 
         # DuckDB 고성능 저장 (Phase 3.2 선행 구현)
         # MongoDB는 메타데이터 저장에 적합하지만, 대용량 시계열 데이터는 DuckDB가 10-100배 빠름

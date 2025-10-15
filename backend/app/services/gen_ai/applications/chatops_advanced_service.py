@@ -8,7 +8,7 @@ import json
 import logging
 import uuid
 from datetime import datetime, timezone
-from typing import Any, Optional
+from typing import Any, Dict, List, Optional
 
 from app.models.gen_ai.chatops.session import ChatSessionDocument
 from app.schemas.gen_ai.chatops import (
@@ -26,6 +26,8 @@ from app.services.gen_ai.core.openai_client_manager import (
     ModelConfig,
     OpenAIClientManager,
 )
+from app.services.gen_ai.core.rag_service import RAGService
+from app.schemas.gen_ai.rag import RAGContext
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +39,7 @@ class ChatOpsAdvancedService:
         self,
         backtest_service: BacktestService,
         openai_manager: OpenAIClientManager,
+        rag_service: Optional[RAGService] = None,
     ):
         """
         Initialize ChatOps Advanced Service
@@ -47,6 +50,7 @@ class ChatOpsAdvancedService:
         self.backtest_service = backtest_service
         self.openai_manager = openai_manager
         self.service_name = "chatops_advanced"
+        self.rag_service = rag_service
 
         self._client: Optional[Any] = None
         try:
@@ -54,9 +58,9 @@ class ChatOpsAdvancedService:
         except RuntimeError as exc:
             logger.warning("OpenAI client initialization failed: %s", exc)
 
-        self.default_model = (
-            self.openai_manager.get_service_policy(self.service_name).default_model
-        )
+        self.default_model = self.openai_manager.get_service_policy(
+            self.service_name
+        ).default_model
 
     def _get_client(self) -> Any:
         """Return the shared OpenAI client."""
@@ -74,6 +78,43 @@ class ChatOpsAdvancedService:
             )
         except InvalidModelError as exc:
             raise ValueError(str(exc)) from exc
+
+    @staticmethod
+    def _format_rag_instruction(contexts: List[RAGContext]) -> str:
+        """Render retrieved contexts into a system instruction."""
+
+        if not contexts:
+            return ""
+
+        lines = []
+        for idx, context in enumerate(contexts, start=1):
+            metadata = context.metadata or {}
+            strategy = metadata.get("strategy_name", "전략")
+            start_date = metadata.get("start_date", "?")
+            end_date = metadata.get("end_date", "?")
+            total_return = metadata.get("total_return")
+            sharpe_ratio = metadata.get("sharpe_ratio")
+            win_rate = metadata.get("win_rate")
+
+            metrics: List[str] = []
+            if isinstance(total_return, (int, float)):
+                metrics.append(f"총 수익률 {total_return:.2%}")
+            if isinstance(sharpe_ratio, (int, float)):
+                metrics.append(f"샤프 {sharpe_ratio:.2f}")
+            if isinstance(win_rate, (int, float)):
+                metrics.append(f"승률 {win_rate:.2%}")
+
+            metrics_text = ", ".join(metrics)
+            summary = context.content.splitlines()[0] if context.content else ""
+            lines.append(
+                f"[참고 {idx}] {strategy} ({start_date} ~ {end_date}) — {metrics_text}\n{summary}"
+            )
+
+        return (
+            "사용자의 과거 백테스트 결과를 참고하세요:\n"
+            + "\n\n".join(lines)
+            + "\n필요하다면 위 결과를 바탕으로 개인화된 조언을 제공하세요."
+        )
 
     async def create_session(self, user_id: str) -> ChatSession:
         """새 채팅 세션 생성 (MongoDB 저장)"""
@@ -131,6 +172,8 @@ class ChatOpsAdvancedService:
         user_query: str,
         include_history: bool = True,
         model_id: Optional[str] = None,
+        use_rag: bool = True,
+        rag_top_k: int = 3,
     ) -> str:
         """
         멀티턴 대화 처리 (MongoDB 저장)
@@ -151,11 +194,36 @@ class ChatOpsAdvancedService:
         if not session_doc:
             raise ValueError(f"Session {session_id} not found")
 
+        rag_contexts: List[RAGContext] = []
+        if use_rag and self.rag_service and session_doc.user_id:
+            try:
+                rag_contexts = await self.rag_service.search_similar_backtests(
+                    user_id=session_doc.user_id,
+                    query=user_query,
+                    top_k=rag_top_k,
+                )
+            except Exception as exc:  # pragma: no cover - network interaction
+                logger.warning(
+                    "ChatOps RAG retrieval failed",
+                    exc_info=True,
+                    extra={"session_id": session_id, "error": str(exc)},
+                )
+                rag_contexts = []
+
         model_config = self._resolve_model_config(model_id)
+        if rag_contexts and not model_config.supports_rag:
+            logger.info(
+                "Model %s not RAG optimised; falling back to default %s",
+                model_config.model_id,
+                self.default_model,
+            )
+            model_config = self._resolve_model_config(None)
         try:
             client = self._get_client()
         except RuntimeError as exc:
-            raise Exception("OpenAI client not initialized. Check OPENAI_API_KEY.") from exc
+            raise Exception(
+                "OpenAI client not initialized. Check OPENAI_API_KEY."
+            ) from exc
 
         # 사용자 턴 추가
         user_turn = ConversationTurn(
@@ -164,14 +232,22 @@ class ChatOpsAdvancedService:
         session_doc.conversation_history.append(user_turn)
 
         # 메시지 준비
-        messages = []
+        messages: List[Dict[str, str]] = []
         if include_history:
-            # 히스토리 포함 (최근 10턴)
-            for turn in session_doc.conversation_history[-10:]:
+            recent_turns = session_doc.conversation_history[-10:]
+            prior_turns = recent_turns[:-1]
+            for turn in prior_turns:
                 messages.append({"role": turn.role.value, "content": turn.content})
-        else:
-            # 현재 질문만
-            messages.append({"role": "user", "content": user_query})
+
+        if rag_contexts:
+            messages.append(
+                {
+                    "role": "system",
+                    "content": self._format_rag_instruction(rag_contexts),
+                }
+            )
+
+        messages.append({"role": "user", "content": user_query})
 
         # LLM 호출
         response = await client.chat.completions.create(
@@ -191,7 +267,15 @@ class ChatOpsAdvancedService:
 
         # 어시스턴트 턴 추가
         assistant_turn = ConversationTurn(
-            role=ConversationRole.ASSISTANT, content=answer, metadata=None
+            role=ConversationRole.ASSISTANT,
+            content=answer,
+            metadata={
+                "rag_applied": bool(rag_contexts) and use_rag,
+                "rag_contexts": self.rag_service.serialise_contexts(rag_contexts)
+                if self.rag_service and rag_contexts
+                else [],
+                "model_id": model_config.model_id,
+            },
         )
         session_doc.conversation_history.append(assistant_turn)
         session_doc.updated_at = datetime.now(timezone.utc)
@@ -313,7 +397,10 @@ class ChatOpsAdvancedService:
             max_tokens=1500,
         )
 
-        summary = response.choices[0].message.content or "전략 비교 결과를 생성할 수 없습니다."
+        summary = (
+            response.choices[0].message.content
+            or "전략 비교 결과를 생성할 수 없습니다."
+        )
 
         self.openai_manager.track_usage(
             service_name=self.service_name,

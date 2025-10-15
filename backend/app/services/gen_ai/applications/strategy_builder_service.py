@@ -16,7 +16,8 @@ from app.services.gen_ai.core.openai_client_manager import (
     ModelConfig,
     OpenAIClientManager,
 )
-
+from app.services.gen_ai.core.rag_service import RAGService
+from app.schemas.gen_ai.rag import RAGAugmentedPrompt, RAGContext
 from app.schemas.gen_ai.strategy_builder import (
     ConfidenceLevel,
     GeneratedStrategyConfig,
@@ -25,6 +26,7 @@ from app.schemas.gen_ai.strategy_builder import (
     IntentType,
     ParameterValidation,
     ParsedIntent,
+    StrategyBuilderRAGRequest,
     StrategyBuilderRequest,
     StrategyBuilderResponse,
     ValidationStatus,
@@ -52,6 +54,7 @@ class StrategyBuilderService:
         self,
         strategy_service: StrategyService,
         openai_manager: OpenAIClientManager,
+        rag_service: Optional[RAGService] = None,
     ):
         """
         Initialize Strategy Builder Service
@@ -63,6 +66,7 @@ class StrategyBuilderService:
         self.strategy_service = strategy_service
         self.openai_manager = openai_manager
         self.service_name = "strategy_builder"
+        self.rag_service = rag_service
 
         self._client: Optional[Any] = None
         try:
@@ -70,9 +74,9 @@ class StrategyBuilderService:
         except RuntimeError as exc:
             logger.warning("OpenAI client initialization failed: %s", exc)
 
-        self.default_model = (
-            self.openai_manager.get_service_policy(self.service_name).default_model
-        )
+        self.default_model = self.openai_manager.get_service_policy(
+            self.service_name
+        ).default_model
         self.temperature = float(os.getenv("OPENAI_TEMPERATURE", "0.5"))
         self.max_tokens = int(os.getenv("OPENAI_MAX_TOKENS", "3000"))
 
@@ -162,7 +166,9 @@ class StrategyBuilderService:
         try:
             self._get_client()
         except RuntimeError as exc:
-            raise Exception("OpenAI client not initialized. Check OPENAI_API_KEY.") from exc
+            raise Exception(
+                "OpenAI client not initialized. Check OPENAI_API_KEY."
+            ) from exc
 
         start_time = datetime.now(timezone.utc)
 
@@ -227,6 +233,9 @@ class StrategyBuilderService:
             llm_model=model_config.model_id,
             validation_errors=validation_errors if validation_errors else None,
             overall_confidence=overall_confidence,
+            rag_applied=False,
+            rag_contexts=None,
+            rag_prompt_preview=None,
         )
 
         logger.info(
@@ -240,6 +249,85 @@ class StrategyBuilderService:
         )
 
         return response
+
+    async def build_strategy_with_rag(
+        self, request: StrategyBuilderRAGRequest
+    ) -> StrategyBuilderResponse:
+        """Generate a strategy with optional RAG augmentation."""
+
+        if not request.use_rag or self.rag_service is None:
+            logger.info(
+                "RAG disabled or unavailable; falling back to standard strategy builder",
+                extra={
+                    "use_rag": request.use_rag,
+                    "rag_service": bool(self.rag_service),
+                },
+            )
+            return await self.build_strategy(request)
+
+        contexts: List[RAGContext] = []
+        augmented_prompt: Optional[RAGAugmentedPrompt] = None
+        try:
+            contexts = await self.rag_service.search_similar_backtests(
+                user_id=request.user_id,
+                query=request.query,
+                top_k=request.top_k,
+            )
+            augmented_prompt = self.rag_service.build_augmented_prompt(
+                request.query, contexts
+            )
+        except Exception as exc:  # pragma: no cover - network interaction
+            logger.warning(
+                "RAG retrieval failed; proceeding without augmentation",
+                exc_info=True,
+                extra={"error": str(exc)},
+            )
+            contexts = []
+            augmented_prompt = None
+
+        base_payload = request.model_dump()
+        for field in ("user_id", "use_rag", "top_k"):
+            base_payload.pop(field, None)
+
+        context_payload = dict(base_payload.get("context") or {})
+        if contexts:
+            context_payload["rag_references"] = self.rag_service.serialise_contexts(
+                contexts
+            )
+            context_payload["rag_prompt"] = augmented_prompt.prompt
+        base_payload["context"] = context_payload or None
+
+        if contexts and base_payload.get("model_id"):
+            try:
+                model_config = self.openai_manager.get_model_config(
+                    base_payload["model_id"]
+                )
+                if not model_config.supports_rag:
+                    logger.info(
+                        "Model %s is not optimised for RAG; reverting to default %s",
+                        base_payload["model_id"],
+                        self.default_model,
+                    )
+                    base_payload["model_id"] = None
+            except KeyError:
+                logger.warning(
+                    "Unknown model %s requested for RAG; using default",
+                    base_payload.get("model_id"),
+                )
+                base_payload["model_id"] = None
+
+        base_request = StrategyBuilderRequest.model_validate(base_payload)
+        response = await self.build_strategy(base_request)
+
+        return response.model_copy(
+            update={
+                "rag_applied": bool(contexts),
+                "rag_contexts": contexts or None,
+                "rag_prompt_preview": augmented_prompt.prompt
+                if augmented_prompt and contexts
+                else None,
+            }
+        )
 
     async def _parse_intent(
         self, request: StrategyBuilderRequest, model_config: ModelConfig
@@ -567,7 +655,9 @@ JSON 형식으로 응답하세요:
 
         # 검증 오류가 있는 경우
         if validation_errors:
-            approval_reasons.append(f"{len(validation_errors)}개 파라미터 검증 오류 발견")
+            approval_reasons.append(
+                f"{len(validation_errors)}개 파라미터 검증 오류 발견"
+            )
             suggested_modifications.extend(
                 [f"파라미터 수정: {err}" for err in validation_errors]
             )

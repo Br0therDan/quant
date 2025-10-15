@@ -11,6 +11,7 @@ from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field
 
 from app.schemas.enums import IntentType
+from app.schemas.gen_ai.rag import RAGContext
 
 
 class ConfidenceLevel(str, Enum):
@@ -50,6 +51,21 @@ class StrategyBuilderRequest(BaseModel):
     model_id: Optional[str] = Field(
         default=None,
         description="사용할 OpenAI 모델 ID (미지정 시 서비스 기본값 사용)",
+    )
+
+
+class StrategyBuilderRAGRequest(StrategyBuilderRequest):
+    """RAG가 적용된 전략 생성 요청."""
+
+    user_id: str = Field(..., description="개인화 컨텍스트를 조회할 사용자 ID")
+    use_rag: bool = Field(
+        default=True, description="RAG 컨텍스트를 사용할지 여부 (기본값: 사용)"
+    )
+    top_k: int = Field(
+        default=3,
+        ge=1,
+        le=10,
+        description="검색할 유사 백테스트 최대 개수",
     )
 
 
@@ -155,6 +171,15 @@ class StrategyBuilderResponse(BaseModel):
     validation_errors: Optional[List[str]] = Field(None, description="검증 오류 목록")
     overall_confidence: float = Field(
         ..., ge=0.0, le=1.0, description="전체 신뢰도 (의도 + 전략 생성)"
+    )
+    rag_applied: bool = Field(
+        default=False, description="RAG 컨텍스트가 적용되었는지 여부"
+    )
+    rag_contexts: Optional[List[RAGContext]] = Field(
+        None, description="전략 생성 시 사용된 RAG 컨텍스트 목록"
+    )
+    rag_prompt_preview: Optional[str] = Field(
+        None, description="LLM에 전달된 RAG 프롬프트 미리보기"
     )
 
 

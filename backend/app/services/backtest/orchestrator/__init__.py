@@ -34,6 +34,7 @@ if TYPE_CHECKING:
     from app.services.database_manager import DatabaseManager
     from app.services.ml_platform.services.ml_signal_service import MLSignalService
     from app.schemas.ml_platform.predictive import MLSignalInsight
+    from app.services.gen_ai.core.rag_service import RAGService
 
 from app.models.trading.backtest import (
     Backtest,
@@ -74,6 +75,7 @@ class BacktestOrchestrator:
         strategy_service: "StrategyService",
         database_manager: "DatabaseManager",
         ml_signal_service: "MLSignalService | None" = None,
+        rag_service: "RAGService | None" = None,
     ):
         self.market_data_service = market_data_service
         self.strategy_service = strategy_service
@@ -92,7 +94,7 @@ class BacktestOrchestrator:
         self._initializer = BacktestInitializer()
         self._data_collector = DataCollector(market_data_service, self.circuit_breaker)
         self._simulator = SimulationRunner()
-        self._storage = ResultStorage(database_manager)
+        self._storage = ResultStorage(database_manager, rag_service=rag_service)
 
         # Phase 3 선행 구현: 모니터링 (메트릭 수집)
         self.metrics = get_global_metrics()
