@@ -276,7 +276,7 @@ def assert_performance_metrics(
 # import numpy as np
 
 # from app.models.trading.backtest import Backtest, BacktestConfig, BacktestStatus
-# from app.models.strategy import Strategy
+# from app.models.trading.strategy import Strategy
 
 
 # def create_mock_backtest(
