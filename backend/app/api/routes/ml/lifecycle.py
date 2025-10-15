@@ -6,7 +6,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 
-from app.schemas.model_lifecycle import (
+from app.schemas.ml_platform.model_lifecycle import (
     ChecklistUpdateRequest,
     DeploymentCreate,
     DeploymentResponse,
@@ -206,7 +206,7 @@ async def list_model_versions(
 ) -> list[ModelVersionResponse]:
     stage_enum = None
     if stage:
-        from app.models.model_lifecycle import ModelStage
+        from app.models.ml_platform.model_lifecycle import ModelStage
 
         try:
             stage_enum = ModelStage(stage)
@@ -265,7 +265,7 @@ async def list_drift_events(
 ) -> list[DriftEventResponse]:
     severity_enum = None
     if severity:
-        from app.models.model_lifecycle import DriftSeverity
+        from app.models.ml_platform.model_lifecycle import DriftSeverity
 
         try:
             severity_enum = DriftSeverity(severity)

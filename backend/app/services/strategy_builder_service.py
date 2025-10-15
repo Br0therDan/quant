@@ -15,7 +15,7 @@ from openai import AsyncOpenAI
 
 from app.core.config import settings
 
-from app.schemas.strategy_builder import (
+from app.schemas.gen_ai.strategy_builder import (
     ConfidenceLevel,
     GeneratedStrategyConfig,
     HumanApprovalRequest,

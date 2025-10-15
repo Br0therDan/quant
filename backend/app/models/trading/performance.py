@@ -4,7 +4,7 @@ Performance Models using Beanie (MongoDB ODM)
 
 from datetime import datetime, UTC
 
-from .base_model import BaseDocument
+from app.models.base_model import BaseDocument
 from pydantic import Field
 
 

@@ -6,8 +6,8 @@ from datetime import datetime
 from typing import Any
 
 from pydantic import ConfigDict, Field
-from .base_schema import BaseSchema
-from app.models.strategy import SignalType, StrategyType, StrategyConfigUnion
+from app.schemas.base_schema import BaseSchema
+from app.models.trading.strategy import SignalType, StrategyType, StrategyConfigUnion
 
 
 # Request Schemas

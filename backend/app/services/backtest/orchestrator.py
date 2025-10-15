@@ -41,9 +41,9 @@ if TYPE_CHECKING:
     from app.services.strategy_service import StrategyService
     from app.services.database_manager import DatabaseManager
     from app.services.ml_signal_service import MLSignalService
-    from app.schemas.predictive import MLSignalInsight
+    from app.schemas.ml_platform.predictive import MLSignalInsight
 
-from app.models.backtest import (
+from app.models.trading.backtest import (
     Backtest,
     BacktestResult,
     BacktestStatus,

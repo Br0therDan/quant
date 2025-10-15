@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List, Optional
 from pydantic import ConfigDict
-from .base_schema import BaseSchema
+from app.schemas.base_schema import BaseSchema
 
 
 class WatchlistUpdate(BaseSchema):

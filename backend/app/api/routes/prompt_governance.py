@@ -6,7 +6,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 
-from app.schemas.prompt_governance import (
+from app.schemas.gen_ai.prompt_governance import (
     PromptAuditLogResponse,
     PromptEvaluationRequest,
     PromptEvaluationResponse,

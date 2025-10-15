@@ -9,7 +9,7 @@ from pydantic import Field, field_validator
 from decimal import Decimal, InvalidOperation
 
 from .base import BaseMarketDataDocument, DataQualityMixin
-from app.models.data_quality import SeverityLevel
+from app.models.ml_platform.data_quality import SeverityLevel
 
 
 class IntradayPrice(BaseMarketDataDocument, DataQualityMixin):
@@ -66,9 +66,7 @@ class DailyPrice(BaseMarketDataDocument, DataQualityMixin):
     prophet_anomaly_score: Optional[float] = Field(
         None, description="Prophet 잔차 기반 이상 점수 (z-score)"
     )
-    volume_z_score: Optional[float] = Field(
-        None, description="최근 거래량 대비 표준화된 편차"
-    )
+    volume_z_score: Optional[float] = Field(None, description="최근 거래량 대비 표준화된 편차")
     anomaly_severity: Optional[SeverityLevel] = Field(
         None, description="데이터 품질 센티널 심각도"
     )

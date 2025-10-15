@@ -19,7 +19,7 @@ from app.schemas.enums import (
     RunStatus,
 )
 
-from .base_model import BaseDocument
+from app.models.base_model import BaseDocument
 
 
 class DeploymentChecklistItem(BaseModel):

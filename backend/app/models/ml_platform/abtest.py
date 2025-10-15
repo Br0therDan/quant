@@ -8,7 +8,7 @@ from typing import Any
 from pymongo import IndexModel
 from pydantic import Field
 
-from .base_model import BaseDocument
+from app.models.base_model import BaseDocument
 
 
 class ABTest(BaseDocument):

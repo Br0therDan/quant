@@ -74,6 +74,7 @@ target-version = "py312"
 select = ["F"] # pyflakes (문법 오류, import 오류 등 필수적인 것만)
 ignore = [
     "F401", # unused imports
+    "F403", # forbidden import
     "F841", # unused variables
     "F811", # redefined name
     "F821", # undefined name (일부 dynamic imports)

@@ -2,8 +2,8 @@
 Initialize models package
 """
 
-from .backtest import Backtest, BacktestExecution, BacktestResult
-from .watchlist import Watchlist
+from .trading.backtest import Backtest, BacktestExecution, BacktestResult
+from .user.watchlist import Watchlist
 from .market_data import (
     DailyPrice,
     WeeklyPrice,
@@ -42,13 +42,18 @@ from .market_data import (
     TechnicalIndicator,
     IndicatorDataPoint,
 )
-from .performance import StrategyPerformance
-from .strategy import Strategy, StrategyTemplate, StrategyExecution
-from .data_quality import DataQualityEvent
-from .optimization import OptimizationStudy, OptimizationTrial
-from .chatops import ChatSessionDocument
-from .feature_store import FeatureDefinition, FeatureVersion, FeatureUsage, Dataset
-from .model_lifecycle import (
+from .trading.performance import StrategyPerformance
+from .trading.strategy import Strategy, StrategyTemplate, StrategyExecution
+from .ml_platform.data_quality import DataQualityEvent
+from .trading.optimization import OptimizationStudy, OptimizationTrial
+from .gen_ai.chatops.session import ChatSessionDocument
+from .ml_platform.feature_store import (
+    FeatureDefinition,
+    FeatureVersion,
+    FeatureUsage,
+    Dataset,
+)
+from .ml_platform.model_lifecycle import (
     Deployment,
     DriftEvent,
     ModelExperiment,
@@ -56,11 +61,11 @@ from .model_lifecycle import (
     ModelStage,
     ModelVersion,
 )
-from .evaluation import EvaluationRun, EvaluationScenario
-from .benchmark import Benchmark, BenchmarkRun
-from .abtest import ABTest
-from .fairness import FairnessReport
-from .prompt_governance import (
+from .ml_platform.evaluation import EvaluationRun, EvaluationScenario
+from .ml_platform.benchmark import Benchmark, BenchmarkRun
+from .ml_platform.abtest import ABTest
+from .ml_platform.fairness import FairnessReport
+from .gen_ai.prompt_governance import (
     PromptAuditLog,
     PromptEvaluationSummary,
     PromptRiskLevel,

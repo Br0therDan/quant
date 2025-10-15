@@ -7,7 +7,7 @@ import logging
 from pathlib import Path
 from typing import Any
 
-from app.models.strategy import StrategyTemplate, StrategyType
+from app.models.trading.strategy import StrategyTemplate, StrategyType
 
 logger = logging.getLogger(__name__)
 

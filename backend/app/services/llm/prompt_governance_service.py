@@ -10,7 +10,7 @@ from typing import Any
 from beanie import SortDirection
 from beanie.operators import In
 
-from app.models.prompt_governance import (
+from app.models.gen_ai.prompt_governance import (
     PromptAuditLog,
     PromptEvaluationSummary,
     PromptRiskLevel,
@@ -37,8 +37,8 @@ class PromptGovernanceService:
 
     async def create_template(self, payload: dict[str, Any]) -> PromptTemplate:
         existing = await PromptTemplate.find_one(
-            (PromptTemplate.prompt_id == payload["prompt_id"]) &
-            (PromptTemplate.version == payload["version"])
+            (PromptTemplate.prompt_id == payload["prompt_id"])
+            & (PromptTemplate.version == payload["version"])
         )
         if existing:
             raise ValueError(
@@ -56,7 +56,9 @@ class PromptGovernanceService:
             "created",
             payload.get("owner", "system"),
         )
-        logger.info("Created prompt template %s v%s", template.prompt_id, template.version)
+        logger.info(
+            "Created prompt template %s v%s", template.prompt_id, template.version
+        )
         return template
 
     async def update_template(
@@ -74,7 +76,15 @@ class PromptGovernanceService:
             template.evaluation = self._evaluate_content(
                 template.content, evaluator=payload.get("owner", "automated")
             )
-        for field in ("name", "description", "tags", "risk_level", "policies", "status", "approval_notes"):
+        for field in (
+            "name",
+            "description",
+            "tags",
+            "risk_level",
+            "policies",
+            "status",
+            "approval_notes",
+        ):
             if field in payload and payload[field] is not None:
                 setattr(template, field, payload[field])
         template.updated_at = datetime.now(UTC)
@@ -100,9 +110,7 @@ class PromptGovernanceService:
         if tag:
             filters.append(In(PromptTemplate.tags, [tag]))
 
-        cursor = (
-            PromptTemplate.find(*filters) if filters else PromptTemplate.find_all()
-        )
+        cursor = PromptTemplate.find(*filters) if filters else PromptTemplate.find_all()
         return await cursor.sort(
             (PromptTemplate.updated_at, SortDirection.DESCENDING)
         ).to_list()
@@ -113,7 +121,11 @@ class PromptGovernanceService:
         template = await self.update_template(
             prompt_id,
             version,
-            {"status": PromptStatus.IN_REVIEW, "approval_notes": None, "owner": reviewer},
+            {
+                "status": PromptStatus.IN_REVIEW,
+                "approval_notes": None,
+                "owner": reviewer,
+            },
         )
         if template:
             await self._log_audit(
@@ -184,12 +196,18 @@ class PromptGovernanceService:
     async def list_audit_logs(
         self, prompt_id: str, version: str
     ) -> list[PromptAuditLog]:
-        return await PromptAuditLog.find(
-            (PromptAuditLog.prompt_id == prompt_id)
-            & (PromptAuditLog.version == version)
-        ).sort((PromptAuditLog.created_at, SortDirection.DESCENDING)).to_list()
+        return (
+            await PromptAuditLog.find(
+                (PromptAuditLog.prompt_id == prompt_id)
+                & (PromptAuditLog.version == version)
+            )
+            .sort((PromptAuditLog.created_at, SortDirection.DESCENDING))
+            .to_list()
+        )
 
-    def evaluate_prompt(self, content: str, evaluator: str = "automated") -> PromptEvaluationSummary:
+    def evaluate_prompt(
+        self, content: str, evaluator: str = "automated"
+    ) -> PromptEvaluationSummary:
         return self._evaluate_content(content, evaluator=evaluator)
 
     def _evaluate_content(
@@ -238,6 +256,4 @@ class PromptGovernanceService:
             details=extra or {},
         )
         await audit.insert()
-        logger.debug(
-            "Prompt audit logged: %s %s v%s", action, prompt_id, version
-        )
+        logger.debug("Prompt audit logged: %s %s v%s", action, prompt_id, version)

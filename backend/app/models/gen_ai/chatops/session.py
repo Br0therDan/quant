@@ -7,7 +7,7 @@ from beanie import Document
 from pymongo import IndexModel, ASCENDING, DESCENDING
 from pydantic import ConfigDict, Field
 
-from app.schemas.chatops import ConversationTurn
+from app.schemas.gen_ai.chatops import ConversationTurn
 
 
 class ChatSessionDocument(Document):

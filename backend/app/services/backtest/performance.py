@@ -7,7 +7,7 @@ from typing import Any
 
 import numpy as np
 
-from app.models.backtest import PerformanceMetrics, Trade
+from app.models.trading.backtest import PerformanceMetrics, Trade
 
 logger = logging.getLogger(__name__)
 

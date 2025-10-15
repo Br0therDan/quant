@@ -13,8 +13,8 @@ from typing import Any, Dict, Optional
 
 from openai import AsyncOpenAI
 
-from app.models.backtest import Backtest
-from app.schemas.narrative import (
+from app.models.trading.backtest import Backtest
+from app.schemas.gen_ai.narrative import (
     BacktestNarrativeReport,
     ExecutiveSummary,
     PerformanceAnalysis,

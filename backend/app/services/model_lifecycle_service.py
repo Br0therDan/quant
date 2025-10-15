@@ -10,7 +10,7 @@ from typing import Any, Iterable
 from beanie import SortDirection
 from beanie.operators import In
 
-from app.models.model_lifecycle import (
+from app.models.ml_platform.model_lifecycle import (
     ChecklistStatus,
     Deployment,
     DeploymentChecklistItem,

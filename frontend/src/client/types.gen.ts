@@ -2137,7 +2137,7 @@ export type EvaluationReport = {
 	/**
 	 * Metrics
 	 */
-	metrics: Array<AppModelsEvaluationMetricComparison>;
+	metrics: Array<AppModelsMlPlatformEvaluationMetricComparison>;
 	/**
 	 * Notes
 	 */
@@ -2239,7 +2239,7 @@ export type EvaluationSummary = {
 	 * Metrics
 	 * 메트릭 비교
 	 */
-	metrics?: Array<AppModelsEvaluationMetricComparison>;
+	metrics?: Array<AppModelsMlPlatformEvaluationMetricComparison>;
 	/**
 	 * 컴플라이언스 결과
 	 */
@@ -4036,7 +4036,7 @@ export type ModelComparisonResponse = {
 	/**
 	 * Comparisons
 	 */
-	comparisons: Array<AppSchemasModelLifecycleMetricComparison>;
+	comparisons: Array<AppSchemasMlPlatformModelLifecycleMetricComparison>;
 };
 
 /**
@@ -7824,7 +7824,7 @@ export type WatchlistUpdate = {
  * MetricComparison
  * Comparison between candidate and baseline.
  */
-export type AppModelsEvaluationMetricComparison = {
+export type AppModelsMlPlatformEvaluationMetricComparison = {
 	/**
 	 * Metric Name
 	 * 메트릭 이름
@@ -7850,7 +7850,7 @@ export type AppModelsEvaluationMetricComparison = {
 /**
  * MetricComparison
  */
-export type AppSchemasModelLifecycleMetricComparison = {
+export type AppSchemasMlPlatformModelLifecycleMetricComparison = {
 	/**
 	 * Metric Name
 	 */

@@ -7,7 +7,7 @@ from typing import Optional
 
 from fastapi import APIRouter, BackgroundTasks, HTTPException, Query
 
-from app.schemas.optimization import (
+from app.schemas.trading.optimization import (
     OptimizationRequest,
     OptimizationResponse,
     StudyListResponse,

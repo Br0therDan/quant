@@ -7,8 +7,8 @@ from datetime import datetime, timezone
 from typing import Any
 
 from app.core.config import get_settings
-from app.models.performance import StrategyPerformance
-from app.models.strategy import (
+from app.models.trading.performance import StrategyPerformance
+from app.models.trading.strategy import (
     SignalType,
     Strategy,
     StrategyExecution,

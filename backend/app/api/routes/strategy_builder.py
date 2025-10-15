@@ -9,7 +9,7 @@ import logging
 
 from fastapi import APIRouter, HTTPException
 
-from app.schemas.strategy_builder import (
+from app.schemas.gen_ai.strategy_builder import (
     IndicatorSearchRequest,
     IndicatorSearchResponse,
     StrategyApprovalRequest,
@@ -221,7 +221,7 @@ async def search_indicators(
         # 4. filters 적용 (type, category 등)
 
         # 임시 응답 (실제 구현 필요)
-        from app.schemas.strategy_builder import IndicatorRecommendation
+        from app.schemas.gen_ai.strategy_builder import IndicatorRecommendation
 
         indicators = [
             IndicatorRecommendation(

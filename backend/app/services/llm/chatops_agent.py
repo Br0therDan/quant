@@ -8,11 +8,11 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime, time
 from typing import Dict, Iterable, List, Optional, Sequence
 
-from app.models.backtest import Backtest
-from app.models.data_quality import DataQualityEvent
+from app.models.trading.backtest import Backtest
+from app.models.ml_platform.data_quality import DataQualityEvent
 from app.schemas.enums import BacktestStatus, SeverityLevel
-from app.schemas.chatops import CacheStatusSnapshot, FailureInsight
-from app.schemas.dashboard import (
+from app.schemas.gen_ai.chatops import CacheStatusSnapshot, FailureInsight
+from app.schemas.user.dashboard import (
     DataQualityAlert,
     DataQualitySeverity,
     DataQualitySummary,

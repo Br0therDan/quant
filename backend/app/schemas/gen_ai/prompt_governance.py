@@ -7,7 +7,7 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.models.prompt_governance import (
+from app.models.gen_ai.prompt_governance import (
     PromptEvaluationSummary,
     PromptRiskLevel,
     PromptStatus,

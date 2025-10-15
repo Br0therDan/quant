@@ -10,8 +10,8 @@ from uuid import uuid4
 import optuna
 from optuna.samplers import TPESampler, RandomSampler, CmaEsSampler
 
-from app.models.optimization import OptimizationStudy, OptimizationTrial
-from app.schemas.optimization import (
+from app.models.trading.optimization import OptimizationStudy, OptimizationTrial
+from app.schemas.trading.optimization import (
     OptimizationRequest,
     OptimizationProgress,
     OptimizationResult,

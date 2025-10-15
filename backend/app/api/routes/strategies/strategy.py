@@ -9,7 +9,7 @@ from pydantic import ValidationError
 
 from mysingle_quant.auth import get_current_active_verified_user, User
 from app.schemas.enums import StrategyType
-from app.schemas.strategy import (
+from app.schemas.trading.strategy import (
     ExecutionListResponse,
     ExecutionResponse,
     PerformanceResponse,

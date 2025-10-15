@@ -7,7 +7,7 @@ import uuid
 from datetime import datetime
 from typing import Optional
 
-from app.models.backtest import (
+from app.models.trading.backtest import (
     BacktestConfig,
     Trade,
     TradeType,

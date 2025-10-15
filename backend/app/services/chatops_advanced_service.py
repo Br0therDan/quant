@@ -13,8 +13,8 @@ from typing import Optional
 from openai import AsyncOpenAI
 
 from app.core.config import settings
-from app.models.chatops import ChatSessionDocument
-from app.schemas.chatops import (
+from app.models.gen_ai.chatops.session import ChatSessionDocument
+from app.schemas.gen_ai.chatops import (
     AutoBacktestRequest,
     AutoBacktestResponse,
     ChatSession,
@@ -181,8 +181,8 @@ class ChatOpsAdvancedService:
             raise Exception("OpenAI client not initialized. Check OPENAI_API_KEY.")
 
         # 1. 전략 데이터 수집 (실제 MongoDB 조회)
-        from app.models.strategy import Strategy
-        from app.models.backtest import Backtest, BacktestResult
+        from app.models.trading.strategy import Strategy
+        from app.models.trading.backtest import Backtest, BacktestResult
 
         strategies_data = []
         for strategy_id in request.strategy_ids:
@@ -302,7 +302,7 @@ class ChatOpsAdvancedService:
         """
         try:
             # 1. 백테스트 설정 생성
-            from app.models.backtest import BacktestConfig
+            from app.models.trading.backtest import BacktestConfig
             from datetime import datetime, timedelta
 
             # strategy_config에서 필요한 정보 추출

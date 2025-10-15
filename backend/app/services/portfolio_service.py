@@ -3,7 +3,7 @@
 from datetime import datetime, timedelta
 from typing import List, Optional, TYPE_CHECKING
 from app.services.database_manager import DatabaseManager
-from app.schemas.dashboard import (
+from app.schemas.user.dashboard import (
     PortfolioSummary,
     PortfolioPerformance,
     PortfolioDataPoint,
@@ -11,7 +11,7 @@ from app.schemas.dashboard import (
     TradeItem,
     TradeSide,
 )
-from app.schemas.predictive import PortfolioForecastDistribution
+from app.schemas.ml_platform.predictive import PortfolioForecastDistribution
 import random
 
 

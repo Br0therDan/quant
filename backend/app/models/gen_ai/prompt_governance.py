@@ -10,7 +10,7 @@ from pymongo import IndexModel
 
 from app.schemas.enums import PromptRiskLevel, PromptStatus
 
-from .base_model import BaseDocument
+from app.models.base_model import BaseDocument
 
 
 class PromptEvaluationSummary(BaseModel):

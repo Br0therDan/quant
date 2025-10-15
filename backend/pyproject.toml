@@ -60,6 +60,9 @@ target-version = ['py312']
 target-version = "py312"
 line-length = 88
 
+[tool.ruff.lint]
+ignore = ["F403"] # wildcard imports (schemas/__init__.py에서 사용)
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]

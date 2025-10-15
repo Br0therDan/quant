@@ -13,7 +13,7 @@ from mysingle_quant.auth import (
     User,
 )
 from app.schemas.enums import StrategyType
-from app.schemas.strategy import (
+from app.schemas.trading.strategy import (
     StrategyCreateFromTemplate,
     StrategyResponse,
     TemplateCreate,

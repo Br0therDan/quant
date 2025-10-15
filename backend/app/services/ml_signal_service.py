@@ -20,7 +20,7 @@ from typing import Dict, Iterable, List
 
 import pandas as pd
 
-from app.schemas.predictive import (
+from app.schemas.ml_platform.predictive import (
     FeatureContribution,
     MLSignalInsight,
     SignalRecommendation,

@@ -13,7 +13,7 @@ from typing import Optional
 
 from beanie import PydanticObjectId
 
-from app.models.backtest import (
+from app.models.trading.backtest import (
     Backtest,
     BacktestConfig,
     BacktestExecution,
@@ -21,7 +21,7 @@ from app.models.backtest import (
     BacktestStatus,
     PerformanceMetrics,
 )
-from app.models.strategy import Strategy
+from app.models.trading.strategy import Strategy
 from app.schemas.enums import StrategyType
 from app.strategies.configs import BuyAndHoldConfig
 

@@ -9,7 +9,7 @@ from typing import Any
 
 from fastapi import APIRouter, HTTPException, status, BackgroundTasks
 
-from app.schemas.chatops import (
+from app.schemas.gen_ai.chatops import (
     ChatOpsRequest,
     StrategyComparisonRequest,
     StrategyComparisonResult,
@@ -198,8 +198,8 @@ async def debug_compare_strategies(
         조회된 전략 데이터 목록
     """
     try:
-        from app.models.strategy import Strategy
-        from app.models.backtest import Backtest, BacktestResult
+        from app.models.trading.strategy import Strategy
+        from app.models.trading.backtest import Backtest, BacktestResult
 
         strategies_data = []
         for strategy_id in request.strategy_ids:

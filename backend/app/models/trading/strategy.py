@@ -5,7 +5,7 @@ Strategy Models using Beanie (MongoDB ODM)
 from datetime import datetime, UTC
 from typing import Union, Any
 
-from .base_model import BaseDocument
+from app.models.base_model import BaseDocument
 from pydantic import Field
 from app.schemas.enums import StrategyType, SignalType
 from app.strategies.configs import (

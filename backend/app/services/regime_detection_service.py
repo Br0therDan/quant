@@ -12,7 +12,7 @@ import pandas as pd
 from app.models.market_data.regime import MarketRegime
 from app.schemas.enums import MarketRegimeType
 from app.services.database_manager import DatabaseManager
-from app.schemas.predictive import MarketRegimeSnapshot, RegimeMetrics
+from app.schemas.ml_platform.predictive import MarketRegimeSnapshot, RegimeMetrics
 
 logger = logging.getLogger(__name__)
 

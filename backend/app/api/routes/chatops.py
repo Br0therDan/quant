@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter
 
-from app.schemas.chatops import ChatOpsRequest, ChatOpsResponse
+from app.schemas.gen_ai.chatops import ChatOpsRequest, ChatOpsResponse
 from app.services.service_factory import service_factory
 
 router = APIRouter(tags=["ChatOps"])

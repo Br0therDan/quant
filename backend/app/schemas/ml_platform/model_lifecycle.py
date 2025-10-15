@@ -7,7 +7,7 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.models.model_lifecycle import (
+from app.models.ml_platform.model_lifecycle import (
     ArtifactReference,
     DeploymentChecklistItem,
     DeploymentEnvironment,

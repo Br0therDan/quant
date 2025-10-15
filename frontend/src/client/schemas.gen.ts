@@ -3599,7 +3599,7 @@ export const EvaluationReportSchema = {
 		},
 		metrics: {
 			items: {
-				$ref: "#/components/schemas/app__models__evaluation__MetricComparison",
+				$ref: "#/components/schemas/app__models__ml_platform__evaluation__MetricComparison",
 			},
 			type: "array",
 			title: "Metrics",
@@ -3772,7 +3772,7 @@ export const EvaluationSummarySchema = {
 	properties: {
 		metrics: {
 			items: {
-				$ref: "#/components/schemas/app__models__evaluation__MetricComparison",
+				$ref: "#/components/schemas/app__models__ml_platform__evaluation__MetricComparison",
 			},
 			type: "array",
 			title: "Metrics",
@@ -6640,7 +6640,7 @@ export const ModelComparisonResponseSchema = {
 		},
 		comparisons: {
 			items: {
-				$ref: "#/components/schemas/app__schemas__model_lifecycle__MetricComparison",
+				$ref: "#/components/schemas/app__schemas__ml_platform__model_lifecycle__MetricComparison",
 			},
 			type: "array",
 			title: "Comparisons",
@@ -12723,7 +12723,7 @@ export const WatchlistUpdateSchema = {
 	description: "워치리스트 업데이트 모델",
 } as const;
 
-export const app__models__evaluation__MetricComparisonSchema = {
+export const app__models__ml_platform__evaluation__MetricComparisonSchema = {
 	properties: {
 		metric_name: {
 			type: "string",
@@ -12766,21 +12766,22 @@ export const app__models__evaluation__MetricComparisonSchema = {
 	description: "Comparison between candidate and baseline.",
 } as const;
 
-export const app__schemas__model_lifecycle__MetricComparisonSchema = {
-	properties: {
-		metric_name: {
-			type: "string",
-			title: "Metric Name",
-		},
-		values: {
-			additionalProperties: {
-				type: "number",
+export const app__schemas__ml_platform__model_lifecycle__MetricComparisonSchema =
+	{
+		properties: {
+			metric_name: {
+				type: "string",
+				title: "Metric Name",
 			},
-			type: "object",
-			title: "Values",
+			values: {
+				additionalProperties: {
+					type: "number",
+				},
+				type: "object",
+				title: "Values",
+			},
 		},
-	},
-	type: "object",
-	required: ["metric_name", "values"],
-	title: "MetricComparison",
-} as const;
+		type: "object",
+		required: ["metric_name", "values"],
+		title: "MetricComparison",
+	} as const;

@@ -5,7 +5,7 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, Query
 from mysingle_quant.auth import get_current_active_verified_user, User
 from app.services.service_factory import service_factory
-from app.schemas.dashboard import (
+from app.schemas.user.dashboard import (
     DashboardSummaryResponse,
     PortfolioPerformanceResponse,
     StrategyComparisonResponse,
@@ -14,7 +14,7 @@ from app.schemas.dashboard import (
     NewsFeedResponse,
     EconomicCalendarResponse,
 )
-from app.schemas.predictive import (
+from app.schemas.ml_platform.predictive import (
     PredictiveInsightsResponse,
     PortfolioForecastResponse,
 )

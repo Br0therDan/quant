@@ -8,7 +8,7 @@ from fastapi import APIRouter, Depends, Query
 from mysingle_quant.auth import get_current_active_verified_user, User
 
 from app.schemas.market_data.base import CacheInfo, DataQualityInfo, MetadataInfo
-from app.schemas.predictive import MarketRegimeResponse
+from app.schemas.ml_platform.predictive import MarketRegimeResponse
 from app.services.service_factory import service_factory
 
 

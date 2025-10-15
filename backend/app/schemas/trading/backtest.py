@@ -6,14 +6,15 @@ from datetime import datetime
 from typing import Any
 
 from pydantic import ConfigDict, Field
-from .base_schema import BaseSchema
-from app.models.backtest import (
+
+from app.models.trading.backtest import (
     BacktestConfig,
-    BacktestStatus,
     PerformanceMetrics,
     Position,
     Trade,
 )
+from app.schemas.base_schema import BaseSchema
+from app.schemas.enums import BacktestStatus
 
 
 # Request Schemas

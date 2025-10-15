@@ -7,7 +7,7 @@ from fastapi import APIRouter, HTTPException, Depends, Path
 
 from mysingle_quant.auth import get_current_active_verified_user, User
 from app.services.service_factory import service_factory
-from app.schemas.watchlist import (
+from app.schemas.user.watchlist import (
     WatchlistCreate,
     WatchlistListResponse,
     WatchlistResponse,

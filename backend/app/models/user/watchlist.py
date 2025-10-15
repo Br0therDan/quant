@@ -4,7 +4,7 @@ Watchlist Models
 
 from datetime import datetime, UTC
 from typing import List, Optional
-from .base_model import BaseDocument
+from app.models.base_model import BaseDocument
 from pydantic import Field
 
 

@@ -8,8 +8,7 @@ from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field
 
 from app.schemas.enums import ConversationRole
-
-from .dashboard import DataQualitySeverity, DataQualitySummary
+from app.schemas.user.dashboard import DataQualitySeverity, DataQualitySummary
 
 
 # Phase 3 D3: Multi-turn conversation schemas

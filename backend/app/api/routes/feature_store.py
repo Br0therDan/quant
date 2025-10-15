@@ -10,7 +10,7 @@ from typing import Optional
 from fastapi import APIRouter, HTTPException, Query
 
 from app.schemas.enums import FeatureStatus, FeatureType
-from app.schemas.feature_store import (
+from app.schemas.ml_platform.feature_store import (
     FeatureCreate,
     FeatureLineageResponse,
     FeatureListResponse,

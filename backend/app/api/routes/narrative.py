@@ -9,7 +9,7 @@ from typing import Optional
 
 from fastapi import APIRouter, HTTPException, Query
 
-from app.schemas.narrative import NarrativeReportResponse
+from app.schemas.gen_ai.narrative import NarrativeReportResponse
 from app.services.service_factory import service_factory
 
 logger = logging.getLogger(__name__)

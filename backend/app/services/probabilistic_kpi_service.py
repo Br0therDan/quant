@@ -9,8 +9,8 @@ from datetime import UTC, datetime
 from statistics import NormalDist, fmean, pstdev
 from typing import Iterable, List
 
-from app.schemas.dashboard import PortfolioDataPoint
-from app.schemas.predictive import (
+from app.schemas.user.dashboard import PortfolioDataPoint
+from app.schemas.ml_platform.predictive import (
     ForecastPercentileBand,
     PortfolioForecastDistribution,
 )

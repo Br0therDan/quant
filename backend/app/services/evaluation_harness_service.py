@@ -9,10 +9,10 @@ from typing import Any
 
 from beanie import PydanticObjectId, SortDirection
 
-from app.models.abtest import ABTest
-from app.models.backtest import Backtest
-from app.models.benchmark import Benchmark, BenchmarkRun
-from app.models.evaluation import (
+from app.models.ml_platform.abtest import ABTest
+from app.models.trading.backtest import Backtest
+from app.models.ml_platform.benchmark import Benchmark, BenchmarkRun
+from app.models.ml_platform.evaluation import (
     BenchmarkMetric,
     ComplianceStatus,
     EvaluationRun,
@@ -22,7 +22,7 @@ from app.models.evaluation import (
     ExplainabilityArtifact,
     MetricComparison,
 )
-from app.models.fairness import FairnessReport
+from app.models.ml_platform.fairness import FairnessReport
 
 logger = logging.getLogger(__name__)
 

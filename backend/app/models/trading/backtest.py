@@ -4,7 +4,7 @@ Backtest Service Models
 
 from datetime import datetime
 
-from .base_model import BaseDocument
+from app.models.base_model import BaseDocument
 from pydantic import BaseModel, Field
 from app.schemas.enums import BacktestStatus, TradeType, OrderType
 

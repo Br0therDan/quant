@@ -7,7 +7,7 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.models.evaluation import (
+from app.models.ml_platform.evaluation import (
     BenchmarkMetric,
     ComplianceStatus,
     DetailedMetrics,

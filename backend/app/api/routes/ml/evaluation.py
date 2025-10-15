@@ -6,7 +6,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 
-from app.schemas.evaluation_harness import (
+from app.schemas.ml_platform.evaluation_harness import (
     ABTestCreate,
     ABTestResponse,
     BenchmarkCreate,

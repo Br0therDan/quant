@@ -11,13 +11,13 @@ from typing import Optional
 from beanie import SortDirection
 from beanie.operators import In
 
-from app.models.feature_store import (
+from app.models.ml_platform.feature_store import (
     FeatureDefinition,
     FeatureStatus,
     FeatureUsage,
     FeatureVersion,
 )
-from app.schemas.feature_store import (
+from app.schemas.ml_platform.feature_store import (
     FeatureCreate,
     FeatureUpdate,
     FeatureUsageCreate,
@@ -471,7 +471,7 @@ class FeatureStoreService:
         Returns:
             List of Dataset documents
         """
-        from app.models.feature_store import Dataset
+        from app.models.ml_platform.feature_store import Dataset
 
         datasets = (
             await Dataset.find_all()
@@ -491,7 +491,7 @@ class FeatureStoreService:
         Returns:
             Dataset document or None
         """
-        from app.models.feature_store import Dataset
+        from app.models.ml_platform.feature_store import Dataset
         from bson import ObjectId
 
         try:

@@ -5,7 +5,7 @@ import random
 from datetime import UTC, datetime, timedelta
 from typing import List, Optional, TYPE_CHECKING
 
-from app.schemas.dashboard import (
+from app.schemas.user.dashboard import (
     DashboardSummary,
     StrategySummary,
     RecentActivity,
@@ -27,7 +27,7 @@ from app.schemas.dashboard import (
     DataQualityAlert,
     DataQualitySeverity,
 )
-from app.schemas.predictive import PredictiveDashboardInsights
+from app.schemas.ml_platform.predictive import PredictiveDashboardInsights
 from app.services.database_manager import DatabaseManager
 from app.services.portfolio_service import PortfolioService
 from app.services.strategy_service import StrategyService

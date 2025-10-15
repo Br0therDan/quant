@@ -8,7 +8,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field
 
-from app.models.feature_store import (
+from app.models.ml_platform.feature_store import (
     FeatureType,
     FeatureStatus,
     DataType,

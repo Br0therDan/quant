@@ -1,0 +1,3 @@
+"""
+Gen AI domain models
+"""

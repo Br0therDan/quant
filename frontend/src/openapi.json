@@ -16578,7 +16578,7 @@
           },
           "metrics": {
             "items": {
-              "$ref": "#/components/schemas/app__models__evaluation__MetricComparison"
+              "$ref": "#/components/schemas/app__models__ml_platform__evaluation__MetricComparison"
             },
             "type": "array",
             "title": "Metrics"
@@ -16756,7 +16756,7 @@
         "properties": {
           "metrics": {
             "items": {
-              "$ref": "#/components/schemas/app__models__evaluation__MetricComparison"
+              "$ref": "#/components/schemas/app__models__ml_platform__evaluation__MetricComparison"
             },
             "type": "array",
             "title": "Metrics",
@@ -19687,7 +19687,7 @@
           },
           "comparisons": {
             "items": {
-              "$ref": "#/components/schemas/app__schemas__model_lifecycle__MetricComparison"
+              "$ref": "#/components/schemas/app__schemas__ml_platform__model_lifecycle__MetricComparison"
             },
             "type": "array",
             "title": "Comparisons"
@@ -25927,7 +25927,7 @@
         "title": "WatchlistUpdate",
         "description": "워치리스트 업데이트 모델"
       },
-      "app__models__evaluation__MetricComparison": {
+      "app__models__ml_platform__evaluation__MetricComparison": {
         "properties": {
           "metric_name": {
             "type": "string",
@@ -25972,7 +25972,7 @@
         "title": "MetricComparison",
         "description": "Comparison between candidate and baseline."
       },
-      "app__schemas__model_lifecycle__MetricComparison": {
+      "app__schemas__ml_platform__model_lifecycle__MetricComparison": {
         "properties": {
           "metric_name": {
             "type": "string",
