@@ -288,7 +288,26 @@ NEXT_PUBLIC_API_BASE_URL=http://localhost:8500
   - 문서 작성 규칙 (CRITICAL)
   - 빠른 시작 가이드
 
-**문서 작성 규칙** (GenAI Enhancement 프로젝트):
+### Backend Test Implementation (진행 중)
+
+- **README**: `docs/backend/test_implementation/README.md`
+  - 작업 흐름 및 테스트 작성 가이드
+  - Sprint 체크리스트 및 문서 작성 규칙
+  - 공통 Fixture 사용법
+- **Current Status**: `docs/backend/test_implementation/CURRENT_STATUS.md`
+  - 현황 분석 (39 파일, 230 테스트)
+  - 도메인별 커버리지 현황
+  - 주요 문제점 및 누락 영역
+- **Master Plan**: `docs/backend/test_implementation/MASTER_PLAN.md`
+  - Phase/Sprint 계획 (8주, 5 Phase)
+  - Task 상세 및 일정
+  - 리스크 관리 및 KPI 추적
+- **Dashboard**: `docs/backend/test_implementation/DASHBOARD.md`
+  - 프로젝트 진행 현황
+  - Phase별 진행률 추적
+  - 다음 단계 (Next Actions)
+
+**문서 작성 규칙** (모든 프로젝트 공통):
 
 - ✅ **Phase 완료 시만 문서 작성** (`PHASE{N}_COMPLETION_REPORT.md`)
 - ❌ **Sprint/Task 완료 시 문서 작성 안 함**

@@ -279,6 +279,7 @@ quant/
 
 - **GenAI Enhancement**:
   [docs/backend/gen_ai_enhancement/](./docs/backend/gen_ai_enhancement/)
+
   - [Master Plan](./docs/backend/gen_ai_enhancement/MASTER_PLAN.md) -
     Phase/Sprint 전체 계획
   - [Dashboard](./docs/backend/gen_ai_enhancement/DASHBOARD.md) - 프로젝트 진행
@@ -286,7 +287,16 @@ quant/
   - [README](./docs/backend/gen_ai_enhancement/README.md) - 작업 지침 및 문서
     규칙
 
-**문서 작성 규칙** (GenAI Enhancement 프로젝트):
+- **Backend Test Implementation**:
+  [docs/backend/test_implementation/](./docs/backend/test_implementation/)
+  - [README](./docs/backend/test_implementation/README.md) - 작업 흐름 및 가이드
+  - [Current Status](./docs/backend/test_implementation/CURRENT_STATUS.md) -
+    현황 분석
+  - [Master Plan](./docs/backend/test_implementation/MASTER_PLAN.md) -
+    Phase/Sprint 계획
+  - [Dashboard](./docs/backend/test_implementation/DASHBOARD.md) - 진행 현황
+
+**문서 작성 규칙** (모든 프로젝트 공통):
 
 - ✅ **Phase 완료 시만 문서 작성** (`PHASE{N}_COMPLETION_REPORT.md`)
 - ❌ **Sprint/Task 완료 시 문서 작성 안 함**

@@ -522,12 +522,16 @@ import type {
 	StrategyUpdateTemplateErrors,
 	StrategyUpdateTemplateResponses,
 	SystemGetStockUpdateStatusData,
+	SystemGetStockUpdateStatusErrors,
 	SystemGetStockUpdateStatusResponses,
 	SystemRunStockDeltaUpdateData,
+	SystemRunStockDeltaUpdateErrors,
 	SystemRunStockDeltaUpdateResponses,
 	SystemRunStockForceUpdateData,
+	SystemRunStockForceUpdateErrors,
 	SystemRunStockForceUpdateResponses,
 	SystemServiceHealthCheckData,
+	SystemServiceHealthCheckErrors,
 	SystemServiceHealthCheckResponses,
 	UserDeleteUserData,
 	UserDeleteUserErrors,
@@ -6613,9 +6617,15 @@ export class SystemService {
 	) {
 		return (options?.client ?? client).get<
 			SystemServiceHealthCheckResponses,
-			unknown,
+			SystemServiceHealthCheckErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/system/health/",
 			...options,
 		});
@@ -6630,9 +6640,15 @@ export class SystemService {
 	) {
 		return (options?.client ?? client).post<
 			SystemRunStockDeltaUpdateResponses,
-			unknown,
+			SystemRunStockDeltaUpdateErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/system/tasks/stock-update/delta",
 			...options,
 		});
@@ -6647,9 +6663,15 @@ export class SystemService {
 	) {
 		return (options?.client ?? client).post<
 			SystemRunStockForceUpdateResponses,
-			unknown,
+			SystemRunStockForceUpdateErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/system/tasks/stock-update/force-all",
 			...options,
 		});
@@ -6664,9 +6686,15 @@ export class SystemService {
 	) {
 		return (options?.client ?? client).get<
 			SystemGetStockUpdateStatusResponses,
-			unknown,
+			SystemGetStockUpdateStatusErrors,
 			ThrowOnError
 		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
 			url: "/api/v1/system/tasks/stock-update/status",
 			...options,
 		});

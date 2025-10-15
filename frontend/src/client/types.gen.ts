@@ -14526,6 +14526,16 @@ export type SystemServiceHealthCheckData = {
 	url: "/api/v1/system/health/";
 };
 
+export type SystemServiceHealthCheckErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type SystemServiceHealthCheckError =
+	SystemServiceHealthCheckErrors[keyof SystemServiceHealthCheckErrors];
+
 export type SystemServiceHealthCheckResponses = {
 	/**
 	 * Successful Response
@@ -14542,6 +14552,16 @@ export type SystemRunStockDeltaUpdateData = {
 	query?: never;
 	url: "/api/v1/system/tasks/stock-update/delta";
 };
+
+export type SystemRunStockDeltaUpdateErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type SystemRunStockDeltaUpdateError =
+	SystemRunStockDeltaUpdateErrors[keyof SystemRunStockDeltaUpdateErrors];
 
 export type SystemRunStockDeltaUpdateResponses = {
 	/**
@@ -14560,6 +14580,16 @@ export type SystemRunStockForceUpdateData = {
 	url: "/api/v1/system/tasks/stock-update/force-all";
 };
 
+export type SystemRunStockForceUpdateErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type SystemRunStockForceUpdateError =
+	SystemRunStockForceUpdateErrors[keyof SystemRunStockForceUpdateErrors];
+
 export type SystemRunStockForceUpdateResponses = {
 	/**
 	 * Successful Response
@@ -14576,6 +14606,16 @@ export type SystemGetStockUpdateStatusData = {
 	query?: never;
 	url: "/api/v1/system/tasks/stock-update/status";
 };
+
+export type SystemGetStockUpdateStatusErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type SystemGetStockUpdateStatusError =
+	SystemGetStockUpdateStatusErrors[keyof SystemGetStockUpdateStatusErrors];
 
 export type SystemGetStockUpdateStatusResponses = {
 	/**
