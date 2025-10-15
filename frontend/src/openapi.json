@@ -1102,11 +1102,11 @@
     "/api/v1/market-data/stock/daily/{symbol}": {
       "get": {
         "tags": [
-          "Stock"
+          "MarketDataStock"
         ],
         "summary": "Get Daily Prices",
         "description": "지정된 종목의 일일 주가 데이터(OHLCV)를 조회합니다.",
-        "operationId": "Stock-get_daily_prices",
+        "operationId": "MarketDataStock-get_daily_prices",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1230,11 +1230,11 @@
     "/api/v1/market-data/stock/weekly/{symbol}": {
       "get": {
         "tags": [
-          "Stock"
+          "MarketDataStock"
         ],
         "summary": "Get Weekly Prices",
         "description": "지정된 종목의 주간 주가 데이터(OHLCV)를 조회합니다.",
-        "operationId": "Stock-get_weekly_prices",
+        "operationId": "MarketDataStock-get_weekly_prices",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1358,11 +1358,11 @@
     "/api/v1/market-data/stock/monthly/{symbol}": {
       "get": {
         "tags": [
-          "Stock"
+          "MarketDataStock"
         ],
         "summary": "Get Monthly Prices",
         "description": "지정된 종목의 월간 주가 데이터(OHLCV)를 조회합니다.",
-        "operationId": "Stock-get_monthly_prices",
+        "operationId": "MarketDataStock-get_monthly_prices",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1486,11 +1486,11 @@
     "/api/v1/market-data/stock/quote/{symbol}": {
       "get": {
         "tags": [
-          "Stock"
+          "MarketDataStock"
         ],
         "summary": "Get Quote",
         "description": "지정된 종목의 실시간 호가 정보를 조회합니다.",
-        "operationId": "Stock-get_quote",
+        "operationId": "MarketDataStock-get_quote",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1552,11 +1552,11 @@
     "/api/v1/market-data/stock/intraday/{symbol}": {
       "get": {
         "tags": [
-          "Stock"
+          "MarketDataStock"
         ],
         "summary": "Get Intraday Data",
         "description": "지정된 종목의 실시간 또는 분봉 데이터를 조회합니다.",
-        "operationId": "Stock-get_intraday_data",
+        "operationId": "MarketDataStock-get_intraday_data",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1734,11 +1734,11 @@
     "/api/v1/market-data/stock/search": {
       "get": {
         "tags": [
-          "Stock"
+          "MarketDataStock"
         ],
         "summary": "Search Stock Symbols",
         "description": "주식 심볼 검색 (Alpha Vantage의 심볼 서치 기능 활용)",
-        "operationId": "Stock-search_stock_symbols",
+        "operationId": "MarketDataStock-search_stock_symbols",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1800,11 +1800,11 @@
     "/api/v1/market-data/crypto/exchange-rate/{from_currency}/{to_currency}": {
       "get": {
         "tags": [
-          "Crypto"
+          "MarketDataCrypto"
         ],
         "summary": "Get Exchange Rate",
         "description": "암호화폐/법정화폐 간의 실시간 환율을 조회합니다.",
-        "operationId": "Crypto-get_exchange_rate",
+        "operationId": "MarketDataCrypto-get_exchange_rate",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1858,7 +1858,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Crypto-Get Exchange Rate"
+                  "title": "Response Marketdatacrypto-Get Exchange Rate"
                 }
               }
             }
@@ -1879,11 +1879,11 @@
     "/api/v1/market-data/crypto/exchange-rates/bulk": {
       "post": {
         "tags": [
-          "Crypto"
+          "MarketDataCrypto"
         ],
         "summary": "Get Bulk Exchange Rates",
         "description": "여러 암호화폐의 환율을 일괄 조회합니다.",
-        "operationId": "Crypto-get_bulk_exchange_rates",
+        "operationId": "MarketDataCrypto-get_bulk_exchange_rates",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -1941,7 +1941,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Crypto-Get Bulk Exchange Rates"
+                  "title": "Response Marketdatacrypto-Get Bulk Exchange Rates"
                 }
               }
             }
@@ -1962,11 +1962,11 @@
     "/api/v1/market-data/crypto/daily/{symbol}": {
       "get": {
         "tags": [
-          "Crypto"
+          "MarketDataCrypto"
         ],
         "summary": "Get Daily Prices",
         "description": "암호화폐의 일일 가격 데이터(OHLCV)를 조회합니다.",
-        "operationId": "Crypto-get_daily_prices",
+        "operationId": "MarketDataCrypto-get_daily_prices",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2078,11 +2078,11 @@
     "/api/v1/market-data/crypto/weekly/{symbol}": {
       "get": {
         "tags": [
-          "Crypto"
+          "MarketDataCrypto"
         ],
         "summary": "Get Weekly Prices",
         "description": "암호화폐의 주간 가격 데이터(OHLCV)를 조회합니다.",
-        "operationId": "Crypto-get_weekly_prices",
+        "operationId": "MarketDataCrypto-get_weekly_prices",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2194,11 +2194,11 @@
     "/api/v1/market-data/crypto/monthly/{symbol}": {
       "get": {
         "tags": [
-          "Crypto"
+          "MarketDataCrypto"
         ],
         "summary": "Get Monthly Prices",
         "description": "암호화폐의 월간 가격 데이터(OHLCV)를 조회합니다.",
-        "operationId": "Crypto-get_monthly_prices",
+        "operationId": "MarketDataCrypto-get_monthly_prices",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2310,11 +2310,11 @@
     "/api/v1/market-data/crypto/bitcoin/{period}": {
       "get": {
         "tags": [
-          "Crypto"
+          "MarketDataCrypto"
         ],
         "summary": "Get Bitcoin Price",
         "description": "비트코인 가격 데이터를 조회합니다.",
-        "operationId": "Crypto-get_bitcoin_price",
+        "operationId": "MarketDataCrypto-get_bitcoin_price",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2431,11 +2431,11 @@
     "/api/v1/market-data/crypto/ethereum/{period}": {
       "get": {
         "tags": [
-          "Crypto"
+          "MarketDataCrypto"
         ],
         "summary": "Get Ethereum Price",
         "description": "이더리움 가격 데이터를 조회합니다.",
-        "operationId": "Crypto-get_ethereum_price",
+        "operationId": "MarketDataCrypto-get_ethereum_price",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2552,11 +2552,11 @@
     "/api/v1/market-data/fundamental/overview/{symbol}": {
       "get": {
         "tags": [
-          "Fundamental"
+          "MarketDataFundamental"
         ],
         "summary": "Get Company Overview",
         "description": "지정된 종목의 기업 개요 정보를 조회합니다.",
-        "operationId": "Fundamental-get_company_overview",
+        "operationId": "MarketDataFundamental-get_company_overview",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2618,11 +2618,11 @@
     "/api/v1/market-data/fundamental/income-statement/{symbol}": {
       "get": {
         "tags": [
-          "Fundamental"
+          "MarketDataFundamental"
         ],
         "summary": "Get Income Statement",
         "description": "지정된 종목의 손익계산서를 조회합니다.",
-        "operationId": "Fundamental-get_income_statement",
+        "operationId": "MarketDataFundamental-get_income_statement",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2696,11 +2696,11 @@
     "/api/v1/market-data/fundamental/balance-sheet/{symbol}": {
       "get": {
         "tags": [
-          "Fundamental"
+          "MarketDataFundamental"
         ],
         "summary": "Get Balance Sheet",
         "description": "지정된 종목의 재무상태표를 조회합니다.",
-        "operationId": "Fundamental-get_balance_sheet",
+        "operationId": "MarketDataFundamental-get_balance_sheet",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2774,11 +2774,11 @@
     "/api/v1/market-data/fundamental/cash-flow/{symbol}": {
       "get": {
         "tags": [
-          "Fundamental"
+          "MarketDataFundamental"
         ],
         "summary": "Get Cash Flow",
         "description": "지정된 종목의 현금흐름표를 조회합니다.",
-        "operationId": "Fundamental-get_cash_flow",
+        "operationId": "MarketDataFundamental-get_cash_flow",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2852,11 +2852,11 @@
     "/api/v1/market-data/fundamental/earnings/{symbol}": {
       "get": {
         "tags": [
-          "Fundamental"
+          "MarketDataFundamental"
         ],
         "summary": "Get Earnings",
         "description": "지정된 종목의 실적 데이터를 조회합니다.",
-        "operationId": "Fundamental-get_earnings",
+        "operationId": "MarketDataFundamental-get_earnings",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2915,14 +2915,14 @@
         }
       }
     },
-    "/api/v1/market-data/economic/gdp": {
+    "/api/v1/market-data/economic_indicators/gdp": {
       "get": {
         "tags": [
-          "Economic"
+          "MarketDataEconomicIndicator"
         ],
         "summary": "Get Gdp Data",
         "description": "미국 GDP 데이터를 조회합니다.",
-        "operationId": "Economic-get_gdp_data",
+        "operationId": "MarketDataEconomicIndicator-get_gdp_data",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -2966,7 +2966,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Economic-Get Gdp Data"
+                  "title": "Response Marketdataeconomicindicator-Get Gdp Data"
                 }
               }
             }
@@ -2984,14 +2984,14 @@
         }
       }
     },
-    "/api/v1/market-data/economic/inflation": {
+    "/api/v1/market-data/economic_indicators/inflation": {
       "get": {
         "tags": [
-          "Economic"
+          "MarketDataEconomicIndicator"
         ],
         "summary": "Get Inflation Data",
         "description": "미국 인플레이션 지표 데이터를 조회합니다.",
-        "operationId": "Economic-get_inflation_data",
+        "operationId": "MarketDataEconomicIndicator-get_inflation_data",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -3035,7 +3035,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Economic-Get Inflation Data"
+                  "title": "Response Marketdataeconomicindicator-Get Inflation Data"
                 }
               }
             }
@@ -3053,14 +3053,14 @@
         }
       }
     },
-    "/api/v1/market-data/economic/interest-rates": {
+    "/api/v1/market-data/economic_indicators/interest-rates": {
       "get": {
         "tags": [
-          "Economic"
+          "MarketDataEconomicIndicator"
         ],
         "summary": "Get Interest Rates",
         "description": "미국 기준금리 및 채권 수익률 데이터를 조회합니다.",
-        "operationId": "Economic-get_interest_rates",
+        "operationId": "MarketDataEconomicIndicator-get_interest_rates",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -3104,7 +3104,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Economic-Get Interest Rates"
+                  "title": "Response Marketdataeconomicindicator-Get Interest Rates"
                 }
               }
             }
@@ -3122,14 +3122,14 @@
         }
       }
     },
-    "/api/v1/market-data/economic/employment": {
+    "/api/v1/market-data/economic_indicators/employment": {
       "get": {
         "tags": [
-          "Economic"
+          "MarketDataEconomicIndicator"
         ],
         "summary": "Get Employment Data",
         "description": "미국 실업률 및 고용 관련 지표를 조회합니다.",
-        "operationId": "Economic-get_employment_data",
+        "operationId": "MarketDataEconomicIndicator-get_employment_data",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -3161,7 +3161,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Economic-Get Employment Data"
+                  "title": "Response Marketdataeconomicindicator-Get Employment Data"
                 }
               }
             }
@@ -3182,11 +3182,11 @@
     "/api/v1/market-data/intelligence/news/{symbol}": {
       "get": {
         "tags": [
-          "Intelligence"
+          "MarketDataIntelligence"
         ],
         "summary": "Get News",
         "description": "지정된 종목 관련 뉴스를 조회합니다.",
-        "operationId": "Intelligence-get_news",
+        "operationId": "MarketDataIntelligence-get_news",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -3299,7 +3299,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Intelligence-Get News"
+                  "title": "Response Marketdataintelligence-Get News"
                 }
               }
             }
@@ -3320,11 +3320,11 @@
     "/api/v1/market-data/intelligence/sentiment/{symbol}": {
       "get": {
         "tags": [
-          "Intelligence"
+          "MarketDataIntelligence"
         ],
         "summary": "Get Sentiment Analysis",
         "description": "지정된 종목의 감정 분석 결과를 조회합니다.",
-        "operationId": "Intelligence-get_sentiment_analysis",
+        "operationId": "MarketDataIntelligence-get_sentiment_analysis",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -3397,7 +3397,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Intelligence-Get Sentiment Analysis"
+                  "title": "Response Marketdataintelligence-Get Sentiment Analysis"
                 }
               }
             }
@@ -3418,11 +3418,11 @@
     "/api/v1/market-data/intelligence/analyst-recommendations/{symbol}": {
       "get": {
         "tags": [
-          "Intelligence"
+          "MarketDataIntelligence"
         ],
         "summary": "Get Analyst Recommendations",
         "description": "지정된 종목의 분석가 추천 정보를 조회합니다.",
-        "operationId": "Intelligence-get_analyst_recommendations",
+        "operationId": "MarketDataIntelligence-get_analyst_recommendations",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -3495,7 +3495,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Intelligence-Get Analyst Recommendations"
+                  "title": "Response Marketdataintelligence-Get Analyst Recommendations"
                 }
               }
             }
@@ -3516,11 +3516,11 @@
     "/api/v1/market-data/intelligence/social-sentiment/{symbol}": {
       "get": {
         "tags": [
-          "Intelligence"
+          "MarketDataIntelligence"
         ],
         "summary": "Get Social Sentiment",
         "description": "지정된 종목의 소셜 미디어 감정 분석을 조회합니다.",
-        "operationId": "Intelligence-get_social_sentiment",
+        "operationId": "MarketDataIntelligence-get_social_sentiment",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -3593,7 +3593,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Intelligence-Get Social Sentiment"
+                  "title": "Response Marketdataintelligence-Get Social Sentiment"
                 }
               }
             }
@@ -3614,11 +3614,11 @@
     "/api/v1/market-data/management/collect/company-info/{symbol}": {
       "post": {
         "tags": [
-          "Market Data"
+          "MarketDataManagement"
         ],
         "summary": "Collect Company Info",
         "description": "지정된 심볼의 기업 정보를 수집하여 저장\n\nAlpha Vantage API를 통해 기업의 기본 정보, 재무 지표,\n업종 분류 등을 수집하고 데이터베이스에 저장합니다.",
-        "operationId": "Market Data-collect_company_info",
+        "operationId": "MarketDataManagement-collect_company_info",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -3678,11 +3678,11 @@
     "/api/v1/market-data/management/collect/market-data/{symbol}": {
       "post": {
         "tags": [
-          "Market Data"
+          "MarketDataManagement"
         ],
         "summary": "Collect Market Data",
         "description": "지정된 심볼의 주가 데이터를 수집하여 저장\n\nAlpha Vantage API를 통해 일일 OHLCV 데이터를 수집하고\nDuckDB 캐시 및 MongoDB에 저장합니다.",
-        "operationId": "Market Data-collect_market_data",
+        "operationId": "MarketDataManagement-collect_market_data",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -3792,11 +3792,11 @@
     "/api/v1/market-data/management/collect/bulk": {
       "post": {
         "tags": [
-          "Market Data"
+          "MarketDataManagement"
         ],
         "summary": "Collect Bulk Data",
         "description": "여러 심볼의 데이터를 일괄 수집\n\n백그라운드 작업으로 처리되며, 대량의 심볼에 대해\n기업 정보와 주가 데이터를 순차적으로 수집합니다.",
-        "operationId": "Market Data-collect_bulk_data",
+        "operationId": "MarketDataManagement-collect_bulk_data",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -3883,11 +3883,11 @@
     "/api/v1/market-data/management/coverage/{symbol}": {
       "get": {
         "tags": [
-          "Market Data"
+          "MarketDataManagement"
         ],
         "summary": "Get Data Coverage",
         "description": "지정된 심볼의 데이터 커버리지 정보 조회\n\n기업 정보, 주가 데이터의 수집 상태와 품질을 확인합니다.",
-        "operationId": "Market Data-get_data_coverage",
+        "operationId": "MarketDataManagement-get_data_coverage",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -3947,11 +3947,11 @@
     "/api/v1/market-data/management/status": {
       "get": {
         "tags": [
-          "Market Data"
+          "MarketDataManagement"
         ],
         "summary": "Get System Status",
         "description": "시장 데이터 시스템의 전반적인 상태 조회\n\nAPI 연결 상태, 캐시 성능, 수집 통계 등을 확인합니다.",
-        "operationId": "Market Data-get_system_status",
+        "operationId": "MarketDataManagement-get_system_status",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -3997,14 +3997,14 @@
         }
       }
     },
-    "/api/v1/market-data/technical-indicators/indicators": {
+    "/api/v1/market-data/tech_indicators/indicators": {
       "get": {
         "tags": [
-          "Technical Indicator"
+          "MarketDataTechnicalIndicator"
         ],
         "summary": "Get Indicator List",
         "description": "지원하는 기술적 지표 목록을 조회합니다.",
-        "operationId": "Technical Indicator-get_indicator_list",
+        "operationId": "MarketDataTechnicalIndicator-get_indicator_list",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -4052,14 +4052,14 @@
         }
       }
     },
-    "/api/v1/market-data/technical-indicators/{symbol}/sma": {
+    "/api/v1/market-data/tech_indicators/{symbol}/sma": {
       "get": {
         "tags": [
-          "Technical Indicator"
+          "MarketDataTechnicalIndicator"
         ],
         "summary": "Get Sma",
         "description": "단순이동평균(SMA)을 조회합니다.",
-        "operationId": "Technical Indicator-get_sma",
+        "operationId": "MarketDataTechnicalIndicator-get_sma",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -4172,14 +4172,14 @@
         }
       }
     },
-    "/api/v1/market-data/technical-indicators/{symbol}/wma": {
+    "/api/v1/market-data/tech_indicators/{symbol}/wma": {
       "get": {
         "tags": [
-          "Technical Indicator"
+          "MarketDataTechnicalIndicator"
         ],
         "summary": "Get Wma",
         "description": "가중이동평균(WMA)을 조회합니다.",
-        "operationId": "Technical Indicator-get_wma",
+        "operationId": "MarketDataTechnicalIndicator-get_wma",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -4292,14 +4292,14 @@
         }
       }
     },
-    "/api/v1/market-data/technical-indicators/{symbol}/dema": {
+    "/api/v1/market-data/tech_indicators/{symbol}/dema": {
       "get": {
         "tags": [
-          "Technical Indicator"
+          "MarketDataTechnicalIndicator"
         ],
         "summary": "Get Dema",
         "description": "이중지수이동평균(DEMA)을 조회합니다.",
-        "operationId": "Technical Indicator-get_dema",
+        "operationId": "MarketDataTechnicalIndicator-get_dema",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -4412,14 +4412,14 @@
         }
       }
     },
-    "/api/v1/market-data/technical-indicators/{symbol}/tema": {
+    "/api/v1/market-data/tech_indicators/{symbol}/tema": {
       "get": {
         "tags": [
-          "Technical Indicator"
+          "MarketDataTechnicalIndicator"
         ],
         "summary": "Get Tema",
         "description": "삼중지수이동평균(TEMA)을 조회합니다.",
-        "operationId": "Technical Indicator-get_tema",
+        "operationId": "MarketDataTechnicalIndicator-get_tema",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -4532,14 +4532,14 @@
         }
       }
     },
-    "/api/v1/market-data/technical-indicators/{symbol}/ema": {
+    "/api/v1/market-data/tech_indicators/{symbol}/ema": {
       "get": {
         "tags": [
-          "Technical Indicator"
+          "MarketDataTechnicalIndicator"
         ],
         "summary": "Get Ema",
         "description": "지수이동평균(EMA)을 조회합니다.",
-        "operationId": "Technical Indicator-get_ema",
+        "operationId": "MarketDataTechnicalIndicator-get_ema",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -4652,14 +4652,14 @@
         }
       }
     },
-    "/api/v1/market-data/technical-indicators/{symbol}/rsi": {
+    "/api/v1/market-data/tech_indicators/{symbol}/rsi": {
       "get": {
         "tags": [
-          "Technical Indicator"
+          "MarketDataTechnicalIndicator"
         ],
         "summary": "Get Rsi",
         "description": "상대강도지수(RSI)를 조회합니다.",
-        "operationId": "Technical Indicator-get_rsi",
+        "operationId": "MarketDataTechnicalIndicator-get_rsi",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -4772,14 +4772,14 @@
         }
       }
     },
-    "/api/v1/market-data/technical-indicators/{symbol}/macd": {
+    "/api/v1/market-data/tech_indicators/{symbol}/macd": {
       "get": {
         "tags": [
-          "Technical Indicator"
+          "MarketDataTechnicalIndicator"
         ],
         "summary": "Get Macd",
         "description": "MACD를 조회합니다.",
-        "operationId": "Technical Indicator-get_macd",
+        "operationId": "MarketDataTechnicalIndicator-get_macd",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -4920,14 +4920,14 @@
         }
       }
     },
-    "/api/v1/market-data/technical-indicators/{symbol}/bbands": {
+    "/api/v1/market-data/tech_indicators/{symbol}/bbands": {
       "get": {
         "tags": [
-          "Technical Indicator"
+          "MarketDataTechnicalIndicator"
         ],
         "summary": "Get Bbands",
         "description": "볼린저밴드(BBANDS)를 조회합니다.",
-        "operationId": "Technical Indicator-get_bbands",
+        "operationId": "MarketDataTechnicalIndicator-get_bbands",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -5068,14 +5068,14 @@
         }
       }
     },
-    "/api/v1/market-data/technical-indicators/{symbol}/adx": {
+    "/api/v1/market-data/tech_indicators/{symbol}/adx": {
       "get": {
         "tags": [
-          "Technical Indicator"
+          "MarketDataTechnicalIndicator"
         ],
         "summary": "Get Adx",
         "description": "평균방향지수(ADX)를 조회합니다.",
-        "operationId": "Technical Indicator-get_adx",
+        "operationId": "MarketDataTechnicalIndicator-get_adx",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -5170,14 +5170,14 @@
         }
       }
     },
-    "/api/v1/market-data/technical-indicators/{symbol}/atr": {
+    "/api/v1/market-data/tech_indicators/{symbol}/atr": {
       "get": {
         "tags": [
-          "Technical Indicator"
+          "MarketDataTechnicalIndicator"
         ],
         "summary": "Get Atr",
         "description": "평균진폭(ATR)을 조회합니다.",
-        "operationId": "Technical Indicator-get_atr",
+        "operationId": "MarketDataTechnicalIndicator-get_atr",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -5272,14 +5272,14 @@
         }
       }
     },
-    "/api/v1/market-data/technical-indicators/{symbol}/stoch": {
+    "/api/v1/market-data/tech_indicators/{symbol}/stoch": {
       "get": {
         "tags": [
-          "Technical Indicator"
+          "MarketDataTechnicalIndicator"
         ],
         "summary": "Get Stoch",
         "description": "스토캐스틱 오실레이터(STOCH)를 조회합니다.",
-        "operationId": "Technical Indicator-get_stoch",
+        "operationId": "MarketDataTechnicalIndicator-get_stoch",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -5433,12 +5433,12 @@
     "/api/v1/market-data/regime/": {
       "get": {
         "tags": [
-          "Market Regime",
+          "MarketDataRegime",
           "Market Regime"
         ],
         "summary": "Get Market Regime",
         "description": "Return the latest market regime snapshot.",
-        "operationId": "Market Regime-get_market_regime",
+        "operationId": "MarketDataRegime-get_market_regime",
         "security": [
           {
             "OAuth2PasswordBearer": []

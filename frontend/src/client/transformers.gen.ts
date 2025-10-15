@@ -9,11 +9,6 @@ import type {
 	BacktestListOptimizationStudiesResponse,
 	BacktestUpdateBacktestResponse,
 	ChatOpsExecuteChatopsResponse,
-	CryptoGetBitcoinPriceResponse,
-	CryptoGetDailyPricesResponse,
-	CryptoGetEthereumPriceResponse,
-	CryptoGetMonthlyPricesResponse,
-	CryptoGetWeeklyPricesResponse,
 	DashboardGetDashboardSummaryResponse,
 	DashboardGetEconomicCalendarResponse,
 	DashboardGetNewsFeedResponse,
@@ -34,13 +29,35 @@ import type {
 	FeatureStoreRecordFeatureUsageResponse,
 	FeatureStoreRollbackVersionResponse,
 	FeatureStoreUpdateFeatureResponse,
-	FundamentalGetBalanceSheetResponse,
-	FundamentalGetCashFlowResponse,
-	FundamentalGetCompanyOverviewResponse,
-	FundamentalGetEarningsResponse,
-	FundamentalGetIncomeStatementResponse,
 	HealthHealthCheckResponse,
-	MarketRegimeGetMarketRegimeResponse,
+	MarketDataCryptoGetBitcoinPriceResponse,
+	MarketDataCryptoGetDailyPricesResponse,
+	MarketDataCryptoGetEthereumPriceResponse,
+	MarketDataCryptoGetMonthlyPricesResponse,
+	MarketDataCryptoGetWeeklyPricesResponse,
+	MarketDataFundamentalGetBalanceSheetResponse,
+	MarketDataFundamentalGetCashFlowResponse,
+	MarketDataFundamentalGetCompanyOverviewResponse,
+	MarketDataFundamentalGetEarningsResponse,
+	MarketDataFundamentalGetIncomeStatementResponse,
+	MarketDataRegimeGetMarketRegimeResponse,
+	MarketDataStockGetDailyPricesResponse,
+	MarketDataStockGetIntradayDataResponse,
+	MarketDataStockGetMonthlyPricesResponse,
+	MarketDataStockGetQuoteResponse,
+	MarketDataStockGetWeeklyPricesResponse,
+	MarketDataTechnicalIndicatorGetAdxResponse,
+	MarketDataTechnicalIndicatorGetAtrResponse,
+	MarketDataTechnicalIndicatorGetBbandsResponse,
+	MarketDataTechnicalIndicatorGetDemaResponse,
+	MarketDataTechnicalIndicatorGetEmaResponse,
+	MarketDataTechnicalIndicatorGetIndicatorListResponse,
+	MarketDataTechnicalIndicatorGetMacdResponse,
+	MarketDataTechnicalIndicatorGetRsiResponse,
+	MarketDataTechnicalIndicatorGetSmaResponse,
+	MarketDataTechnicalIndicatorGetStochResponse,
+	MarketDataTechnicalIndicatorGetTemaResponse,
+	MarketDataTechnicalIndicatorGetWmaResponse,
 	MlCreateAbTestResponse,
 	MlCreateBenchmarkResponse,
 	MlCreateDeploymentResponse,
@@ -84,11 +101,6 @@ import type {
 	PromptGovernanceSubmitPromptForReviewResponse,
 	PromptGovernanceUpdatePromptTemplateResponse,
 	SignalsGetMlSignalResponse,
-	StockGetDailyPricesResponse,
-	StockGetIntradayDataResponse,
-	StockGetMonthlyPricesResponse,
-	StockGetQuoteResponse,
-	StockGetWeeklyPricesResponse,
 	StrategyBuilderApproveStrategyResponse,
 	StrategyBuilderGenerateStrategyResponse,
 	StrategyCreateStrategyResponse,
@@ -98,18 +110,6 @@ import type {
 	StrategyGetStrategyPerformanceResponse,
 	StrategyGetStrategyResponse,
 	StrategyUpdateStrategyResponse,
-	TechnicalIndicatorGetAdxResponse,
-	TechnicalIndicatorGetAtrResponse,
-	TechnicalIndicatorGetBbandsResponse,
-	TechnicalIndicatorGetDemaResponse,
-	TechnicalIndicatorGetEmaResponse,
-	TechnicalIndicatorGetIndicatorListResponse,
-	TechnicalIndicatorGetMacdResponse,
-	TechnicalIndicatorGetRsiResponse,
-	TechnicalIndicatorGetSmaResponse,
-	TechnicalIndicatorGetStochResponse,
-	TechnicalIndicatorGetTemaResponse,
-	TechnicalIndicatorGetWmaResponse,
 	TemplateCreateStrategyFromTemplateResponse,
 	TemplateCreateTemplateResponse,
 	TemplateGetTemplateResponse,
@@ -134,9 +134,9 @@ const healthResponseSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const stockGetDailyPricesResponseTransformer = async (
+export const marketDataStockGetDailyPricesResponseTransformer = async (
 	data: any,
-): Promise<StockGetDailyPricesResponse> => {
+): Promise<MarketDataStockGetDailyPricesResponse> => {
 	data = historicalDataResponseSchemaResponseTransformer(data);
 	return data;
 };
@@ -151,23 +151,23 @@ const historicalDataResponseSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const stockGetWeeklyPricesResponseTransformer = async (
+export const marketDataStockGetWeeklyPricesResponseTransformer = async (
 	data: any,
-): Promise<StockGetWeeklyPricesResponse> => {
+): Promise<MarketDataStockGetWeeklyPricesResponse> => {
 	data = historicalDataResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const stockGetMonthlyPricesResponseTransformer = async (
+export const marketDataStockGetMonthlyPricesResponseTransformer = async (
 	data: any,
-): Promise<StockGetMonthlyPricesResponse> => {
+): Promise<MarketDataStockGetMonthlyPricesResponse> => {
 	data = historicalDataResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const stockGetQuoteResponseTransformer = async (
+export const marketDataStockGetQuoteResponseTransformer = async (
 	data: any,
-): Promise<StockGetQuoteResponse> => {
+): Promise<MarketDataStockGetQuoteResponse> => {
 	data = quoteResponseSchemaResponseTransformer(data);
 	return data;
 };
@@ -206,16 +206,16 @@ const cacheInfoSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const stockGetIntradayDataResponseTransformer = async (
+export const marketDataStockGetIntradayDataResponseTransformer = async (
 	data: any,
-): Promise<StockGetIntradayDataResponse> => {
+): Promise<MarketDataStockGetIntradayDataResponse> => {
 	data = historicalDataResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const cryptoGetDailyPricesResponseTransformer = async (
+export const marketDataCryptoGetDailyPricesResponseTransformer = async (
 	data: any,
-): Promise<CryptoGetDailyPricesResponse> => {
+): Promise<MarketDataCryptoGetDailyPricesResponse> => {
 	data = cryptoHistoricalDataResponseSchemaResponseTransformer(data);
 	return data;
 };
@@ -230,40 +230,41 @@ const cryptoHistoricalDataResponseSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const cryptoGetWeeklyPricesResponseTransformer = async (
+export const marketDataCryptoGetWeeklyPricesResponseTransformer = async (
 	data: any,
-): Promise<CryptoGetWeeklyPricesResponse> => {
+): Promise<MarketDataCryptoGetWeeklyPricesResponse> => {
 	data = cryptoHistoricalDataResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const cryptoGetMonthlyPricesResponseTransformer = async (
+export const marketDataCryptoGetMonthlyPricesResponseTransformer = async (
 	data: any,
-): Promise<CryptoGetMonthlyPricesResponse> => {
+): Promise<MarketDataCryptoGetMonthlyPricesResponse> => {
 	data = cryptoHistoricalDataResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const cryptoGetBitcoinPriceResponseTransformer = async (
+export const marketDataCryptoGetBitcoinPriceResponseTransformer = async (
 	data: any,
-): Promise<CryptoGetBitcoinPriceResponse> => {
+): Promise<MarketDataCryptoGetBitcoinPriceResponse> => {
 	data = cryptoHistoricalDataResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const cryptoGetEthereumPriceResponseTransformer = async (
+export const marketDataCryptoGetEthereumPriceResponseTransformer = async (
 	data: any,
-): Promise<CryptoGetEthereumPriceResponse> => {
+): Promise<MarketDataCryptoGetEthereumPriceResponse> => {
 	data = cryptoHistoricalDataResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const fundamentalGetCompanyOverviewResponseTransformer = async (
-	data: any,
-): Promise<FundamentalGetCompanyOverviewResponse> => {
-	data = companyOverviewResponseSchemaResponseTransformer(data);
-	return data;
-};
+export const marketDataFundamentalGetCompanyOverviewResponseTransformer =
+	async (
+		data: any,
+	): Promise<MarketDataFundamentalGetCompanyOverviewResponse> => {
+		data = companyOverviewResponseSchemaResponseTransformer(data);
+		return data;
+	};
 
 const companyOverviewResponseSchemaResponseTransformer = (data: any) => {
 	if (data.timestamp) {
@@ -281,12 +282,13 @@ const companyOverviewDataSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const fundamentalGetIncomeStatementResponseTransformer = async (
-	data: any,
-): Promise<FundamentalGetIncomeStatementResponse> => {
-	data = incomeStatementResponseSchemaResponseTransformer(data);
-	return data;
-};
+export const marketDataFundamentalGetIncomeStatementResponseTransformer =
+	async (
+		data: any,
+	): Promise<MarketDataFundamentalGetIncomeStatementResponse> => {
+		data = incomeStatementResponseSchemaResponseTransformer(data);
+		return data;
+	};
 
 const incomeStatementResponseSchemaResponseTransformer = (data: any) => {
 	if (data.timestamp) {
@@ -304,9 +306,9 @@ const incomeStatementDataSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const fundamentalGetBalanceSheetResponseTransformer = async (
+export const marketDataFundamentalGetBalanceSheetResponseTransformer = async (
 	data: any,
-): Promise<FundamentalGetBalanceSheetResponse> => {
+): Promise<MarketDataFundamentalGetBalanceSheetResponse> => {
 	data = balanceSheetResponseSchemaResponseTransformer(data);
 	return data;
 };
@@ -327,9 +329,9 @@ const balanceSheetDataSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const fundamentalGetCashFlowResponseTransformer = async (
+export const marketDataFundamentalGetCashFlowResponseTransformer = async (
 	data: any,
-): Promise<FundamentalGetCashFlowResponse> => {
+): Promise<MarketDataFundamentalGetCashFlowResponse> => {
 	data = cashFlowResponseSchemaResponseTransformer(data);
 	return data;
 };
@@ -350,9 +352,9 @@ const cashFlowDataSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const fundamentalGetEarningsResponseTransformer = async (
+export const marketDataFundamentalGetEarningsResponseTransformer = async (
 	data: any,
-): Promise<FundamentalGetEarningsResponse> => {
+): Promise<MarketDataFundamentalGetEarningsResponse> => {
 	data = earningsResponseSchemaResponseTransformer(data);
 	return data;
 };
@@ -374,12 +376,13 @@ const earningsDataSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const technicalIndicatorGetIndicatorListResponseTransformer = async (
-	data: any,
-): Promise<TechnicalIndicatorGetIndicatorListResponse> => {
-	data = indicatorListResponseSchemaResponseTransformer(data);
-	return data;
-};
+export const marketDataTechnicalIndicatorGetIndicatorListResponseTransformer =
+	async (
+		data: any,
+	): Promise<MarketDataTechnicalIndicatorGetIndicatorListResponse> => {
+		data = indicatorListResponseSchemaResponseTransformer(data);
+		return data;
+	};
 
 const indicatorListResponseSchemaResponseTransformer = (data: any) => {
 	if (data.timestamp) {
@@ -389,9 +392,9 @@ const indicatorListResponseSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const technicalIndicatorGetSmaResponseTransformer = async (
+export const marketDataTechnicalIndicatorGetSmaResponseTransformer = async (
 	data: any,
-): Promise<TechnicalIndicatorGetSmaResponse> => {
+): Promise<MarketDataTechnicalIndicatorGetSmaResponse> => {
 	data = technicalIndicatorResponseSchemaResponseTransformer(data);
 	return data;
 };
@@ -429,79 +432,79 @@ const indicatorDataPointSchemaResponseTransformer = (data: any) => {
 	return data;
 };
 
-export const technicalIndicatorGetWmaResponseTransformer = async (
+export const marketDataTechnicalIndicatorGetWmaResponseTransformer = async (
 	data: any,
-): Promise<TechnicalIndicatorGetWmaResponse> => {
+): Promise<MarketDataTechnicalIndicatorGetWmaResponse> => {
 	data = technicalIndicatorResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const technicalIndicatorGetDemaResponseTransformer = async (
+export const marketDataTechnicalIndicatorGetDemaResponseTransformer = async (
 	data: any,
-): Promise<TechnicalIndicatorGetDemaResponse> => {
+): Promise<MarketDataTechnicalIndicatorGetDemaResponse> => {
 	data = technicalIndicatorResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const technicalIndicatorGetTemaResponseTransformer = async (
+export const marketDataTechnicalIndicatorGetTemaResponseTransformer = async (
 	data: any,
-): Promise<TechnicalIndicatorGetTemaResponse> => {
+): Promise<MarketDataTechnicalIndicatorGetTemaResponse> => {
 	data = technicalIndicatorResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const technicalIndicatorGetEmaResponseTransformer = async (
+export const marketDataTechnicalIndicatorGetEmaResponseTransformer = async (
 	data: any,
-): Promise<TechnicalIndicatorGetEmaResponse> => {
+): Promise<MarketDataTechnicalIndicatorGetEmaResponse> => {
 	data = technicalIndicatorResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const technicalIndicatorGetRsiResponseTransformer = async (
+export const marketDataTechnicalIndicatorGetRsiResponseTransformer = async (
 	data: any,
-): Promise<TechnicalIndicatorGetRsiResponse> => {
+): Promise<MarketDataTechnicalIndicatorGetRsiResponse> => {
 	data = technicalIndicatorResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const technicalIndicatorGetMacdResponseTransformer = async (
+export const marketDataTechnicalIndicatorGetMacdResponseTransformer = async (
 	data: any,
-): Promise<TechnicalIndicatorGetMacdResponse> => {
+): Promise<MarketDataTechnicalIndicatorGetMacdResponse> => {
 	data = technicalIndicatorResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const technicalIndicatorGetBbandsResponseTransformer = async (
+export const marketDataTechnicalIndicatorGetBbandsResponseTransformer = async (
 	data: any,
-): Promise<TechnicalIndicatorGetBbandsResponse> => {
+): Promise<MarketDataTechnicalIndicatorGetBbandsResponse> => {
 	data = technicalIndicatorResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const technicalIndicatorGetAdxResponseTransformer = async (
+export const marketDataTechnicalIndicatorGetAdxResponseTransformer = async (
 	data: any,
-): Promise<TechnicalIndicatorGetAdxResponse> => {
+): Promise<MarketDataTechnicalIndicatorGetAdxResponse> => {
 	data = technicalIndicatorResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const technicalIndicatorGetAtrResponseTransformer = async (
+export const marketDataTechnicalIndicatorGetAtrResponseTransformer = async (
 	data: any,
-): Promise<TechnicalIndicatorGetAtrResponse> => {
+): Promise<MarketDataTechnicalIndicatorGetAtrResponse> => {
 	data = technicalIndicatorResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const technicalIndicatorGetStochResponseTransformer = async (
+export const marketDataTechnicalIndicatorGetStochResponseTransformer = async (
 	data: any,
-): Promise<TechnicalIndicatorGetStochResponse> => {
+): Promise<MarketDataTechnicalIndicatorGetStochResponse> => {
 	data = technicalIndicatorResponseSchemaResponseTransformer(data);
 	return data;
 };
 
-export const marketRegimeGetMarketRegimeResponseTransformer = async (
+export const marketDataRegimeGetMarketRegimeResponseTransformer = async (
 	data: any,
-): Promise<MarketRegimeGetMarketRegimeResponse> => {
+): Promise<MarketDataRegimeGetMarketRegimeResponse> => {
 	data = marketRegimeResponseSchemaResponseTransformer(data);
 	return data;
 };

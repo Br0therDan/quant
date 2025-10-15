@@ -19,12 +19,7 @@ from .ml_platform.feature_store import router as feature_store_router
 from .ml_platform.ml import router as ml_router
 
 # Gen AI routes
-from .gen_ai.chatops import router as chatops_router
-from .gen_ai.narrative import router as narrative_router
-from .gen_ai.strategy_builder import router as strategy_builder_router
-from .gen_ai.chatops_advanced import router as chatops_advanced_router
-
-from .gen_ai.prompt_governance import router as prompt_governance_router
+from .gen_ai import router as gen_ai_router
 
 # User routes
 from .user.watchlists import router as watchlists_router
@@ -45,11 +40,7 @@ __all__ = [
     "feature_store_router",
     "ml_router",
     # Gen AI
-    "chatops_router",
-    "narrative_router",
-    "strategy_builder_router",
-    "chatops_advanced_router",
-    "prompt_governance_router",
+    "gen_ai_router",
     # User
     "watchlists_router",
     "dashboard_router",

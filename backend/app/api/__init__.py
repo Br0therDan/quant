@@ -12,12 +12,8 @@ from .routes import (
     tasks_router,
     signals_router,
     ml_router,
-    chatops_router,
-    narrative_router,
-    strategy_builder_router,
-    chatops_advanced_router,
+    gen_ai_router,
     feature_store_router,
-    prompt_governance_router,
 )
 
 # Create main API router
@@ -32,19 +28,9 @@ api_router.include_router(dashboard_router, prefix="/dashboard", tags=["Dashboar
 api_router.include_router(tasks_router, prefix="/tasks", tags=["Tasks"])
 api_router.include_router(signals_router, prefix="/signals", tags=["Signals"])
 api_router.include_router(ml_router, prefix="/ml", tags=["ML"])
-api_router.include_router(chatops_router, prefix="/chatops", tags=["ChatOps"])
-api_router.include_router(narrative_router, prefix="/narrative", tags=["Narrative"])
-api_router.include_router(
-    strategy_builder_router, prefix="/strategy-builder", tags=["Strategy Builder"]
-)
-api_router.include_router(
-    chatops_advanced_router, prefix="/chatops-advanced", tags=["ChatOps Advanced"]
-)
+api_router.include_router(gen_ai_router, prefix="/gen-ai", tags=["GenAI"])
 api_router.include_router(
     feature_store_router, prefix="/features", tags=["Feature Store"]
-)
-api_router.include_router(
-    prompt_governance_router, prefix="/prompt-governance", tags=["Prompt Governance"]
 )
 
 

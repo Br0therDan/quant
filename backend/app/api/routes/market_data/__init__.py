@@ -19,20 +19,20 @@ from .regime import router as regime_router
 router = APIRouter(dependencies=[Depends(get_current_active_verified_user)])
 
 # 도메인별 라우터 포함
-router.include_router(stock_router, prefix="/stock", tags=["Stock"])
-router.include_router(crypto_router, prefix="/crypto", tags=["Crypto"])
-router.include_router(fundamental_router, prefix="/fundamental", tags=["Fundamental"])
-router.include_router(economic_indicator_router, prefix="/economic", tags=["Economic"])
+router.include_router(stock_router, prefix="/stock", tags=["MarketDataStock"])
+router.include_router(crypto_router, prefix="/crypto", tags=["MarketDataCrypto"])
+router.include_router(fundamental_router, prefix="/fundamental", tags=["MarketDataFundamental"])
+router.include_router(economic_indicator_router, prefix="/economic_indicators", tags=["MarketDataEconomicIndicator"])
 router.include_router(
-    intelligence_router, prefix="/intelligence", tags=["Intelligence"]
+    intelligence_router, prefix="/intelligence", tags=["MarketDataIntelligence"]
 )
-router.include_router(management_router, prefix="/management", tags=["Market Data"])
+router.include_router(management_router, prefix="/management", tags=["MarketDataManagement"])
 router.include_router(
     technical_indicators_router,
-    prefix="/technical-indicators",
-    tags=["Technical Indicator"],
+    prefix="/tech_indicators",
+    tags=["MarketDataTechnicalIndicator"],
 )
-router.include_router(regime_router, prefix="/regime", tags=["Market Regime"])
+router.include_router(regime_router, prefix="/regime", tags=["MarketDataRegime"])
 
 
 @router.get("/", tags=["Market Data"])

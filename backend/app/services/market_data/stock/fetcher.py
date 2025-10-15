@@ -28,6 +28,11 @@ class StockFetcher(BaseStockService):
         - search_symbols: Symbol 검색
     """
 
+    async def refresh_data_from_source(self, **kwargs) -> List[DailyPrice]:
+        """베이스 클래스 추상 메서드 구현 (deprecated)"""
+        logger.warning("refresh_data_from_source is deprecated in StockFetcher")
+        return []
+
     async def fetch_daily_prices(
         self, symbol: str, outputsize: str = "compact"
     ) -> List[DailyPrice]:
@@ -586,3 +591,76 @@ class StockFetcher(BaseStockService):
         except Exception as e:
             logger.error(f"Failed to search symbols for {keywords}: {e}")
             return {"bestMatches": []}
+
+    async def fetch_historical(
+        self,
+        symbol: str,
+        start_date: Optional[datetime] = None,
+        end_date: Optional[datetime] = None,
+    ) -> dict:
+        """장기 히스토리 데이터 조회 (Alpha Vantage TIME_SERIES_DAILY_ADJUSTED)
+
+        Args:
+            symbol: 주식 심볼
+            start_date: 시작 날짜
+            end_date: 종료 날짜
+
+        Returns:
+            히스토리 데이터 딕셔너리
+        """
+        try:
+            logger.info(f"Fetching historical data for {symbol}")
+
+            # Alpha Vantage daily adjusted 데이터 호출 (full outputsize)
+            response = await self.alpha_vantage.stock.daily_adjusted(
+                symbol=symbol,
+                outputsize="full",  # type: ignore
+            )
+
+            if isinstance(response, list) and len(response) > 0:
+                response = response[0]  # type: ignore
+
+            if not isinstance(response, dict) or "Time Series (Daily)" not in response:
+                logger.warning(f"Invalid historical response for {symbol}")
+                return {}
+
+            meta_data = response.get("Meta Data", {})
+            time_series = response.get("Time Series (Daily)", {})
+
+            # 날짜 필터링 (start_date, end_date가 주어진 경우)
+            filtered_data = {}
+            for date_str, data in time_series.items():
+                try:
+                    date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+
+                    # 날짜 범위 필터링
+                    if start_date and date_obj < start_date:
+                        continue
+                    if end_date and date_obj > end_date:
+                        continue
+
+                    filtered_data[date_str] = data
+
+                except ValueError:
+                    continue
+
+            return {
+                "symbol": symbol,
+                "start_date": start_date.isoformat() if start_date else None,
+                "end_date": end_date.isoformat() if end_date else None,
+                "meta_data": {
+                    "information": meta_data.get("1. Information"),
+                    "symbol": meta_data.get("2. Symbol"),
+                    "last_refreshed": meta_data.get("3. Last Refreshed"),
+                    "output_size": meta_data.get("4. Output Size"),
+                    "time_zone": meta_data.get("5. Time Zone"),
+                },
+                "time_series": filtered_data,
+                "data_points": len(filtered_data),
+                "timestamp": datetime.now().isoformat(),
+                "source": "alpha_vantage",
+            }
+
+        except Exception as e:
+            logger.error(f"Failed to fetch historical data for {symbol}: {e}")
+            return {}

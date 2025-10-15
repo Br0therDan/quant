@@ -101,27 +101,6 @@ import type {
 	ChatOpsExecuteChatopsData,
 	ChatOpsExecuteChatopsErrors,
 	ChatOpsExecuteChatopsResponses,
-	CryptoGetBitcoinPriceData,
-	CryptoGetBitcoinPriceErrors,
-	CryptoGetBitcoinPriceResponses,
-	CryptoGetBulkExchangeRatesData,
-	CryptoGetBulkExchangeRatesErrors,
-	CryptoGetBulkExchangeRatesResponses,
-	CryptoGetDailyPricesData,
-	CryptoGetDailyPricesErrors,
-	CryptoGetDailyPricesResponses,
-	CryptoGetEthereumPriceData,
-	CryptoGetEthereumPriceErrors,
-	CryptoGetEthereumPriceResponses,
-	CryptoGetExchangeRateData,
-	CryptoGetExchangeRateErrors,
-	CryptoGetExchangeRateResponses,
-	CryptoGetMonthlyPricesData,
-	CryptoGetMonthlyPricesErrors,
-	CryptoGetMonthlyPricesResponses,
-	CryptoGetWeeklyPricesData,
-	CryptoGetWeeklyPricesErrors,
-	CryptoGetWeeklyPricesResponses,
 	DashboardGetDashboardSummaryData,
 	DashboardGetDashboardSummaryErrors,
 	DashboardGetDashboardSummaryResponses,
@@ -149,18 +128,6 @@ import type {
 	DashboardGetWatchlistQuotesData,
 	DashboardGetWatchlistQuotesErrors,
 	DashboardGetWatchlistQuotesResponses,
-	EconomicGetEmploymentDataData,
-	EconomicGetEmploymentDataErrors,
-	EconomicGetEmploymentDataResponses,
-	EconomicGetGdpDataData,
-	EconomicGetGdpDataErrors,
-	EconomicGetGdpDataResponses,
-	EconomicGetInflationDataData,
-	EconomicGetInflationDataErrors,
-	EconomicGetInflationDataResponses,
-	EconomicGetInterestRatesData,
-	EconomicGetInterestRatesErrors,
-	EconomicGetInterestRatesResponses,
 	FeatureStoreActivateFeatureData,
 	FeatureStoreActivateFeatureErrors,
 	FeatureStoreActivateFeatureResponses,
@@ -205,63 +172,150 @@ import type {
 	FeatureStoreUpdateFeatureData,
 	FeatureStoreUpdateFeatureErrors,
 	FeatureStoreUpdateFeatureResponses,
-	FundamentalGetBalanceSheetData,
-	FundamentalGetBalanceSheetErrors,
-	FundamentalGetBalanceSheetResponses,
-	FundamentalGetCashFlowData,
-	FundamentalGetCashFlowErrors,
-	FundamentalGetCashFlowResponses,
-	FundamentalGetCompanyOverviewData,
-	FundamentalGetCompanyOverviewErrors,
-	FundamentalGetCompanyOverviewResponses,
-	FundamentalGetEarningsData,
-	FundamentalGetEarningsErrors,
-	FundamentalGetEarningsResponses,
-	FundamentalGetIncomeStatementData,
-	FundamentalGetIncomeStatementErrors,
-	FundamentalGetIncomeStatementResponses,
 	HealthHealthCheckData,
 	HealthHealthCheckResponses,
 	HealthLivenessProbeData,
 	HealthLivenessProbeResponses,
 	HealthReadinessProbeData,
 	HealthReadinessProbeResponses,
-	IntelligenceGetAnalystRecommendationsData,
-	IntelligenceGetAnalystRecommendationsErrors,
-	IntelligenceGetAnalystRecommendationsResponses,
-	IntelligenceGetNewsData,
-	IntelligenceGetNewsErrors,
-	IntelligenceGetNewsResponses,
-	IntelligenceGetSentimentAnalysisData,
-	IntelligenceGetSentimentAnalysisErrors,
-	IntelligenceGetSentimentAnalysisResponses,
-	IntelligenceGetSocialSentimentData,
-	IntelligenceGetSocialSentimentErrors,
-	IntelligenceGetSocialSentimentResponses,
-	MarketDataCollectBulkDataData,
-	MarketDataCollectBulkDataErrors,
-	MarketDataCollectBulkDataResponses,
-	MarketDataCollectCompanyInfoData,
-	MarketDataCollectCompanyInfoErrors,
-	MarketDataCollectCompanyInfoResponses,
-	MarketDataCollectMarketDataData,
-	MarketDataCollectMarketDataErrors,
-	MarketDataCollectMarketDataResponses,
-	MarketDataGetDataCoverageData,
-	MarketDataGetDataCoverageErrors,
-	MarketDataGetDataCoverageResponses,
+	MarketDataCryptoGetBitcoinPriceData,
+	MarketDataCryptoGetBitcoinPriceErrors,
+	MarketDataCryptoGetBitcoinPriceResponses,
+	MarketDataCryptoGetBulkExchangeRatesData,
+	MarketDataCryptoGetBulkExchangeRatesErrors,
+	MarketDataCryptoGetBulkExchangeRatesResponses,
+	MarketDataCryptoGetDailyPricesData,
+	MarketDataCryptoGetDailyPricesErrors,
+	MarketDataCryptoGetDailyPricesResponses,
+	MarketDataCryptoGetEthereumPriceData,
+	MarketDataCryptoGetEthereumPriceErrors,
+	MarketDataCryptoGetEthereumPriceResponses,
+	MarketDataCryptoGetExchangeRateData,
+	MarketDataCryptoGetExchangeRateErrors,
+	MarketDataCryptoGetExchangeRateResponses,
+	MarketDataCryptoGetMonthlyPricesData,
+	MarketDataCryptoGetMonthlyPricesErrors,
+	MarketDataCryptoGetMonthlyPricesResponses,
+	MarketDataCryptoGetWeeklyPricesData,
+	MarketDataCryptoGetWeeklyPricesErrors,
+	MarketDataCryptoGetWeeklyPricesResponses,
+	MarketDataEconomicIndicatorGetEmploymentDataData,
+	MarketDataEconomicIndicatorGetEmploymentDataErrors,
+	MarketDataEconomicIndicatorGetEmploymentDataResponses,
+	MarketDataEconomicIndicatorGetGdpDataData,
+	MarketDataEconomicIndicatorGetGdpDataErrors,
+	MarketDataEconomicIndicatorGetGdpDataResponses,
+	MarketDataEconomicIndicatorGetInflationDataData,
+	MarketDataEconomicIndicatorGetInflationDataErrors,
+	MarketDataEconomicIndicatorGetInflationDataResponses,
+	MarketDataEconomicIndicatorGetInterestRatesData,
+	MarketDataEconomicIndicatorGetInterestRatesErrors,
+	MarketDataEconomicIndicatorGetInterestRatesResponses,
+	MarketDataFundamentalGetBalanceSheetData,
+	MarketDataFundamentalGetBalanceSheetErrors,
+	MarketDataFundamentalGetBalanceSheetResponses,
+	MarketDataFundamentalGetCashFlowData,
+	MarketDataFundamentalGetCashFlowErrors,
+	MarketDataFundamentalGetCashFlowResponses,
+	MarketDataFundamentalGetCompanyOverviewData,
+	MarketDataFundamentalGetCompanyOverviewErrors,
+	MarketDataFundamentalGetCompanyOverviewResponses,
+	MarketDataFundamentalGetEarningsData,
+	MarketDataFundamentalGetEarningsErrors,
+	MarketDataFundamentalGetEarningsResponses,
+	MarketDataFundamentalGetIncomeStatementData,
+	MarketDataFundamentalGetIncomeStatementErrors,
+	MarketDataFundamentalGetIncomeStatementResponses,
 	MarketDataGetMarketDataInfoData,
 	MarketDataGetMarketDataInfoErrors,
 	MarketDataGetMarketDataInfoResponses,
-	MarketDataGetSystemStatusData,
-	MarketDataGetSystemStatusErrors,
-	MarketDataGetSystemStatusResponses,
 	MarketDataHealthCheckData,
 	MarketDataHealthCheckErrors,
 	MarketDataHealthCheckResponses,
-	MarketRegimeGetMarketRegimeData,
-	MarketRegimeGetMarketRegimeErrors,
-	MarketRegimeGetMarketRegimeResponses,
+	MarketDataIntelligenceGetAnalystRecommendationsData,
+	MarketDataIntelligenceGetAnalystRecommendationsErrors,
+	MarketDataIntelligenceGetAnalystRecommendationsResponses,
+	MarketDataIntelligenceGetNewsData,
+	MarketDataIntelligenceGetNewsErrors,
+	MarketDataIntelligenceGetNewsResponses,
+	MarketDataIntelligenceGetSentimentAnalysisData,
+	MarketDataIntelligenceGetSentimentAnalysisErrors,
+	MarketDataIntelligenceGetSentimentAnalysisResponses,
+	MarketDataIntelligenceGetSocialSentimentData,
+	MarketDataIntelligenceGetSocialSentimentErrors,
+	MarketDataIntelligenceGetSocialSentimentResponses,
+	MarketDataManagementCollectBulkDataData,
+	MarketDataManagementCollectBulkDataErrors,
+	MarketDataManagementCollectBulkDataResponses,
+	MarketDataManagementCollectCompanyInfoData,
+	MarketDataManagementCollectCompanyInfoErrors,
+	MarketDataManagementCollectCompanyInfoResponses,
+	MarketDataManagementCollectMarketDataData,
+	MarketDataManagementCollectMarketDataErrors,
+	MarketDataManagementCollectMarketDataResponses,
+	MarketDataManagementGetDataCoverageData,
+	MarketDataManagementGetDataCoverageErrors,
+	MarketDataManagementGetDataCoverageResponses,
+	MarketDataManagementGetSystemStatusData,
+	MarketDataManagementGetSystemStatusErrors,
+	MarketDataManagementGetSystemStatusResponses,
+	MarketDataRegimeGetMarketRegimeData,
+	MarketDataRegimeGetMarketRegimeErrors,
+	MarketDataRegimeGetMarketRegimeResponses,
+	MarketDataStockGetDailyPricesData,
+	MarketDataStockGetDailyPricesErrors,
+	MarketDataStockGetDailyPricesResponses,
+	MarketDataStockGetIntradayDataData,
+	MarketDataStockGetIntradayDataErrors,
+	MarketDataStockGetIntradayDataResponses,
+	MarketDataStockGetMonthlyPricesData,
+	MarketDataStockGetMonthlyPricesErrors,
+	MarketDataStockGetMonthlyPricesResponses,
+	MarketDataStockGetQuoteData,
+	MarketDataStockGetQuoteErrors,
+	MarketDataStockGetQuoteResponses,
+	MarketDataStockGetWeeklyPricesData,
+	MarketDataStockGetWeeklyPricesErrors,
+	MarketDataStockGetWeeklyPricesResponses,
+	MarketDataStockSearchStockSymbolsData,
+	MarketDataStockSearchStockSymbolsErrors,
+	MarketDataStockSearchStockSymbolsResponses,
+	MarketDataTechnicalIndicatorGetAdxData,
+	MarketDataTechnicalIndicatorGetAdxErrors,
+	MarketDataTechnicalIndicatorGetAdxResponses,
+	MarketDataTechnicalIndicatorGetAtrData,
+	MarketDataTechnicalIndicatorGetAtrErrors,
+	MarketDataTechnicalIndicatorGetAtrResponses,
+	MarketDataTechnicalIndicatorGetBbandsData,
+	MarketDataTechnicalIndicatorGetBbandsErrors,
+	MarketDataTechnicalIndicatorGetBbandsResponses,
+	MarketDataTechnicalIndicatorGetDemaData,
+	MarketDataTechnicalIndicatorGetDemaErrors,
+	MarketDataTechnicalIndicatorGetDemaResponses,
+	MarketDataTechnicalIndicatorGetEmaData,
+	MarketDataTechnicalIndicatorGetEmaErrors,
+	MarketDataTechnicalIndicatorGetEmaResponses,
+	MarketDataTechnicalIndicatorGetIndicatorListData,
+	MarketDataTechnicalIndicatorGetIndicatorListErrors,
+	MarketDataTechnicalIndicatorGetIndicatorListResponses,
+	MarketDataTechnicalIndicatorGetMacdData,
+	MarketDataTechnicalIndicatorGetMacdErrors,
+	MarketDataTechnicalIndicatorGetMacdResponses,
+	MarketDataTechnicalIndicatorGetRsiData,
+	MarketDataTechnicalIndicatorGetRsiErrors,
+	MarketDataTechnicalIndicatorGetRsiResponses,
+	MarketDataTechnicalIndicatorGetSmaData,
+	MarketDataTechnicalIndicatorGetSmaErrors,
+	MarketDataTechnicalIndicatorGetSmaResponses,
+	MarketDataTechnicalIndicatorGetStochData,
+	MarketDataTechnicalIndicatorGetStochErrors,
+	MarketDataTechnicalIndicatorGetStochResponses,
+	MarketDataTechnicalIndicatorGetTemaData,
+	MarketDataTechnicalIndicatorGetTemaErrors,
+	MarketDataTechnicalIndicatorGetTemaResponses,
+	MarketDataTechnicalIndicatorGetWmaData,
+	MarketDataTechnicalIndicatorGetWmaErrors,
+	MarketDataTechnicalIndicatorGetWmaResponses,
 	MlCompareModelsData,
 	MlCompareModelsErrors,
 	MlCompareModelsResponses,
@@ -418,24 +472,6 @@ import type {
 	SignalsGetMlSignalData,
 	SignalsGetMlSignalErrors,
 	SignalsGetMlSignalResponses,
-	StockGetDailyPricesData,
-	StockGetDailyPricesErrors,
-	StockGetDailyPricesResponses,
-	StockGetIntradayDataData,
-	StockGetIntradayDataErrors,
-	StockGetIntradayDataResponses,
-	StockGetMonthlyPricesData,
-	StockGetMonthlyPricesErrors,
-	StockGetMonthlyPricesResponses,
-	StockGetQuoteData,
-	StockGetQuoteErrors,
-	StockGetQuoteResponses,
-	StockGetWeeklyPricesData,
-	StockGetWeeklyPricesErrors,
-	StockGetWeeklyPricesResponses,
-	StockSearchStockSymbolsData,
-	StockSearchStockSymbolsErrors,
-	StockSearchStockSymbolsResponses,
 	StrategyBuilderApproveStrategyData,
 	StrategyBuilderApproveStrategyErrors,
 	StrategyBuilderApproveStrategyResponses,
@@ -475,42 +511,6 @@ import type {
 	TasksRunStockDeltaUpdateResponses,
 	TasksRunStockForceUpdateData,
 	TasksRunStockForceUpdateResponses,
-	TechnicalIndicatorGetAdxData,
-	TechnicalIndicatorGetAdxErrors,
-	TechnicalIndicatorGetAdxResponses,
-	TechnicalIndicatorGetAtrData,
-	TechnicalIndicatorGetAtrErrors,
-	TechnicalIndicatorGetAtrResponses,
-	TechnicalIndicatorGetBbandsData,
-	TechnicalIndicatorGetBbandsErrors,
-	TechnicalIndicatorGetBbandsResponses,
-	TechnicalIndicatorGetDemaData,
-	TechnicalIndicatorGetDemaErrors,
-	TechnicalIndicatorGetDemaResponses,
-	TechnicalIndicatorGetEmaData,
-	TechnicalIndicatorGetEmaErrors,
-	TechnicalIndicatorGetEmaResponses,
-	TechnicalIndicatorGetIndicatorListData,
-	TechnicalIndicatorGetIndicatorListErrors,
-	TechnicalIndicatorGetIndicatorListResponses,
-	TechnicalIndicatorGetMacdData,
-	TechnicalIndicatorGetMacdErrors,
-	TechnicalIndicatorGetMacdResponses,
-	TechnicalIndicatorGetRsiData,
-	TechnicalIndicatorGetRsiErrors,
-	TechnicalIndicatorGetRsiResponses,
-	TechnicalIndicatorGetSmaData,
-	TechnicalIndicatorGetSmaErrors,
-	TechnicalIndicatorGetSmaResponses,
-	TechnicalIndicatorGetStochData,
-	TechnicalIndicatorGetStochErrors,
-	TechnicalIndicatorGetStochResponses,
-	TechnicalIndicatorGetTemaData,
-	TechnicalIndicatorGetTemaErrors,
-	TechnicalIndicatorGetTemaResponses,
-	TechnicalIndicatorGetWmaData,
-	TechnicalIndicatorGetWmaErrors,
-	TechnicalIndicatorGetWmaResponses,
 	TemplateCreateStrategyFromTemplateData,
 	TemplateCreateStrategyFromTemplateErrors,
 	TemplateCreateStrategyFromTemplateResponses,
@@ -1066,17 +1066,17 @@ export class OAuth2Service {
 	}
 }
 
-export class StockService {
+export class MarketDataStockService {
 	/**
 	 * Get Daily Prices
 	 * 지정된 종목의 일일 주가 데이터(OHLCV)를 조회합니다.
 	 */
 	public static getDailyPrices<ThrowOnError extends boolean = false>(
-		options: Options<StockGetDailyPricesData, ThrowOnError>,
+		options: Options<MarketDataStockGetDailyPricesData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			StockGetDailyPricesResponses,
-			StockGetDailyPricesErrors,
+			MarketDataStockGetDailyPricesResponses,
+			MarketDataStockGetDailyPricesErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1095,11 +1095,11 @@ export class StockService {
 	 * 지정된 종목의 주간 주가 데이터(OHLCV)를 조회합니다.
 	 */
 	public static getWeeklyPrices<ThrowOnError extends boolean = false>(
-		options: Options<StockGetWeeklyPricesData, ThrowOnError>,
+		options: Options<MarketDataStockGetWeeklyPricesData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			StockGetWeeklyPricesResponses,
-			StockGetWeeklyPricesErrors,
+			MarketDataStockGetWeeklyPricesResponses,
+			MarketDataStockGetWeeklyPricesErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1118,11 +1118,11 @@ export class StockService {
 	 * 지정된 종목의 월간 주가 데이터(OHLCV)를 조회합니다.
 	 */
 	public static getMonthlyPrices<ThrowOnError extends boolean = false>(
-		options: Options<StockGetMonthlyPricesData, ThrowOnError>,
+		options: Options<MarketDataStockGetMonthlyPricesData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			StockGetMonthlyPricesResponses,
-			StockGetMonthlyPricesErrors,
+			MarketDataStockGetMonthlyPricesResponses,
+			MarketDataStockGetMonthlyPricesErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1141,11 +1141,11 @@ export class StockService {
 	 * 지정된 종목의 실시간 호가 정보를 조회합니다.
 	 */
 	public static getQuote<ThrowOnError extends boolean = false>(
-		options: Options<StockGetQuoteData, ThrowOnError>,
+		options: Options<MarketDataStockGetQuoteData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			StockGetQuoteResponses,
-			StockGetQuoteErrors,
+			MarketDataStockGetQuoteResponses,
+			MarketDataStockGetQuoteErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1164,11 +1164,11 @@ export class StockService {
 	 * 지정된 종목의 실시간 또는 분봉 데이터를 조회합니다.
 	 */
 	public static getIntradayData<ThrowOnError extends boolean = false>(
-		options: Options<StockGetIntradayDataData, ThrowOnError>,
+		options: Options<MarketDataStockGetIntradayDataData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			StockGetIntradayDataResponses,
-			StockGetIntradayDataErrors,
+			MarketDataStockGetIntradayDataResponses,
+			MarketDataStockGetIntradayDataErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1187,11 +1187,11 @@ export class StockService {
 	 * 주식 심볼 검색 (Alpha Vantage의 심볼 서치 기능 활용)
 	 */
 	public static searchStockSymbols<ThrowOnError extends boolean = false>(
-		options: Options<StockSearchStockSymbolsData, ThrowOnError>,
+		options: Options<MarketDataStockSearchStockSymbolsData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			StockSearchStockSymbolsResponses,
-			StockSearchStockSymbolsErrors,
+			MarketDataStockSearchStockSymbolsResponses,
+			MarketDataStockSearchStockSymbolsErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1206,17 +1206,17 @@ export class StockService {
 	}
 }
 
-export class CryptoService {
+export class MarketDataCryptoService {
 	/**
 	 * Get Exchange Rate
 	 * 암호화폐/법정화폐 간의 실시간 환율을 조회합니다.
 	 */
 	public static getExchangeRate<ThrowOnError extends boolean = false>(
-		options: Options<CryptoGetExchangeRateData, ThrowOnError>,
+		options: Options<MarketDataCryptoGetExchangeRateData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			CryptoGetExchangeRateResponses,
-			CryptoGetExchangeRateErrors,
+			MarketDataCryptoGetExchangeRateResponses,
+			MarketDataCryptoGetExchangeRateErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1235,11 +1235,11 @@ export class CryptoService {
 	 * 여러 암호화폐의 환율을 일괄 조회합니다.
 	 */
 	public static getBulkExchangeRates<ThrowOnError extends boolean = false>(
-		options: Options<CryptoGetBulkExchangeRatesData, ThrowOnError>,
+		options: Options<MarketDataCryptoGetBulkExchangeRatesData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			CryptoGetBulkExchangeRatesResponses,
-			CryptoGetBulkExchangeRatesErrors,
+			MarketDataCryptoGetBulkExchangeRatesResponses,
+			MarketDataCryptoGetBulkExchangeRatesErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1258,11 +1258,11 @@ export class CryptoService {
 	 * 암호화폐의 일일 가격 데이터(OHLCV)를 조회합니다.
 	 */
 	public static getDailyPrices<ThrowOnError extends boolean = false>(
-		options: Options<CryptoGetDailyPricesData, ThrowOnError>,
+		options: Options<MarketDataCryptoGetDailyPricesData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			CryptoGetDailyPricesResponses,
-			CryptoGetDailyPricesErrors,
+			MarketDataCryptoGetDailyPricesResponses,
+			MarketDataCryptoGetDailyPricesErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1281,11 +1281,11 @@ export class CryptoService {
 	 * 암호화폐의 주간 가격 데이터(OHLCV)를 조회합니다.
 	 */
 	public static getWeeklyPrices<ThrowOnError extends boolean = false>(
-		options: Options<CryptoGetWeeklyPricesData, ThrowOnError>,
+		options: Options<MarketDataCryptoGetWeeklyPricesData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			CryptoGetWeeklyPricesResponses,
-			CryptoGetWeeklyPricesErrors,
+			MarketDataCryptoGetWeeklyPricesResponses,
+			MarketDataCryptoGetWeeklyPricesErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1304,11 +1304,11 @@ export class CryptoService {
 	 * 암호화폐의 월간 가격 데이터(OHLCV)를 조회합니다.
 	 */
 	public static getMonthlyPrices<ThrowOnError extends boolean = false>(
-		options: Options<CryptoGetMonthlyPricesData, ThrowOnError>,
+		options: Options<MarketDataCryptoGetMonthlyPricesData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			CryptoGetMonthlyPricesResponses,
-			CryptoGetMonthlyPricesErrors,
+			MarketDataCryptoGetMonthlyPricesResponses,
+			MarketDataCryptoGetMonthlyPricesErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1327,11 +1327,11 @@ export class CryptoService {
 	 * 비트코인 가격 데이터를 조회합니다.
 	 */
 	public static getBitcoinPrice<ThrowOnError extends boolean = false>(
-		options: Options<CryptoGetBitcoinPriceData, ThrowOnError>,
+		options: Options<MarketDataCryptoGetBitcoinPriceData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			CryptoGetBitcoinPriceResponses,
-			CryptoGetBitcoinPriceErrors,
+			MarketDataCryptoGetBitcoinPriceResponses,
+			MarketDataCryptoGetBitcoinPriceErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1350,11 +1350,11 @@ export class CryptoService {
 	 * 이더리움 가격 데이터를 조회합니다.
 	 */
 	public static getEthereumPrice<ThrowOnError extends boolean = false>(
-		options: Options<CryptoGetEthereumPriceData, ThrowOnError>,
+		options: Options<MarketDataCryptoGetEthereumPriceData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			CryptoGetEthereumPriceResponses,
-			CryptoGetEthereumPriceErrors,
+			MarketDataCryptoGetEthereumPriceResponses,
+			MarketDataCryptoGetEthereumPriceErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1369,17 +1369,17 @@ export class CryptoService {
 	}
 }
 
-export class FundamentalService {
+export class MarketDataFundamentalService {
 	/**
 	 * Get Company Overview
 	 * 지정된 종목의 기업 개요 정보를 조회합니다.
 	 */
 	public static getCompanyOverview<ThrowOnError extends boolean = false>(
-		options: Options<FundamentalGetCompanyOverviewData, ThrowOnError>,
+		options: Options<MarketDataFundamentalGetCompanyOverviewData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			FundamentalGetCompanyOverviewResponses,
-			FundamentalGetCompanyOverviewErrors,
+			MarketDataFundamentalGetCompanyOverviewResponses,
+			MarketDataFundamentalGetCompanyOverviewErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1398,11 +1398,11 @@ export class FundamentalService {
 	 * 지정된 종목의 손익계산서를 조회합니다.
 	 */
 	public static getIncomeStatement<ThrowOnError extends boolean = false>(
-		options: Options<FundamentalGetIncomeStatementData, ThrowOnError>,
+		options: Options<MarketDataFundamentalGetIncomeStatementData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			FundamentalGetIncomeStatementResponses,
-			FundamentalGetIncomeStatementErrors,
+			MarketDataFundamentalGetIncomeStatementResponses,
+			MarketDataFundamentalGetIncomeStatementErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1421,11 +1421,11 @@ export class FundamentalService {
 	 * 지정된 종목의 재무상태표를 조회합니다.
 	 */
 	public static getBalanceSheet<ThrowOnError extends boolean = false>(
-		options: Options<FundamentalGetBalanceSheetData, ThrowOnError>,
+		options: Options<MarketDataFundamentalGetBalanceSheetData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			FundamentalGetBalanceSheetResponses,
-			FundamentalGetBalanceSheetErrors,
+			MarketDataFundamentalGetBalanceSheetResponses,
+			MarketDataFundamentalGetBalanceSheetErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1444,11 +1444,11 @@ export class FundamentalService {
 	 * 지정된 종목의 현금흐름표를 조회합니다.
 	 */
 	public static getCashFlow<ThrowOnError extends boolean = false>(
-		options: Options<FundamentalGetCashFlowData, ThrowOnError>,
+		options: Options<MarketDataFundamentalGetCashFlowData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			FundamentalGetCashFlowResponses,
-			FundamentalGetCashFlowErrors,
+			MarketDataFundamentalGetCashFlowResponses,
+			MarketDataFundamentalGetCashFlowErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1467,11 +1467,11 @@ export class FundamentalService {
 	 * 지정된 종목의 실적 데이터를 조회합니다.
 	 */
 	public static getEarnings<ThrowOnError extends boolean = false>(
-		options: Options<FundamentalGetEarningsData, ThrowOnError>,
+		options: Options<MarketDataFundamentalGetEarningsData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			FundamentalGetEarningsResponses,
-			FundamentalGetEarningsErrors,
+			MarketDataFundamentalGetEarningsResponses,
+			MarketDataFundamentalGetEarningsErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1486,17 +1486,17 @@ export class FundamentalService {
 	}
 }
 
-export class EconomicService {
+export class MarketDataEconomicIndicatorService {
 	/**
 	 * Get Gdp Data
 	 * 미국 GDP 데이터를 조회합니다.
 	 */
 	public static getGdpData<ThrowOnError extends boolean = false>(
-		options?: Options<EconomicGetGdpDataData, ThrowOnError>,
+		options?: Options<MarketDataEconomicIndicatorGetGdpDataData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
-			EconomicGetGdpDataResponses,
-			EconomicGetGdpDataErrors,
+			MarketDataEconomicIndicatorGetGdpDataResponses,
+			MarketDataEconomicIndicatorGetGdpDataErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1505,7 +1505,7 @@ export class EconomicService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/market-data/economic/gdp",
+			url: "/api/v1/market-data/economic_indicators/gdp",
 			...options,
 		});
 	}
@@ -1515,11 +1515,14 @@ export class EconomicService {
 	 * 미국 인플레이션 지표 데이터를 조회합니다.
 	 */
 	public static getInflationData<ThrowOnError extends boolean = false>(
-		options?: Options<EconomicGetInflationDataData, ThrowOnError>,
+		options?: Options<
+			MarketDataEconomicIndicatorGetInflationDataData,
+			ThrowOnError
+		>,
 	) {
 		return (options?.client ?? client).get<
-			EconomicGetInflationDataResponses,
-			EconomicGetInflationDataErrors,
+			MarketDataEconomicIndicatorGetInflationDataResponses,
+			MarketDataEconomicIndicatorGetInflationDataErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1528,7 +1531,7 @@ export class EconomicService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/market-data/economic/inflation",
+			url: "/api/v1/market-data/economic_indicators/inflation",
 			...options,
 		});
 	}
@@ -1538,11 +1541,14 @@ export class EconomicService {
 	 * 미국 기준금리 및 채권 수익률 데이터를 조회합니다.
 	 */
 	public static getInterestRates<ThrowOnError extends boolean = false>(
-		options?: Options<EconomicGetInterestRatesData, ThrowOnError>,
+		options?: Options<
+			MarketDataEconomicIndicatorGetInterestRatesData,
+			ThrowOnError
+		>,
 	) {
 		return (options?.client ?? client).get<
-			EconomicGetInterestRatesResponses,
-			EconomicGetInterestRatesErrors,
+			MarketDataEconomicIndicatorGetInterestRatesResponses,
+			MarketDataEconomicIndicatorGetInterestRatesErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1551,7 +1557,7 @@ export class EconomicService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/market-data/economic/interest-rates",
+			url: "/api/v1/market-data/economic_indicators/interest-rates",
 			...options,
 		});
 	}
@@ -1561,11 +1567,14 @@ export class EconomicService {
 	 * 미국 실업률 및 고용 관련 지표를 조회합니다.
 	 */
 	public static getEmploymentData<ThrowOnError extends boolean = false>(
-		options?: Options<EconomicGetEmploymentDataData, ThrowOnError>,
+		options?: Options<
+			MarketDataEconomicIndicatorGetEmploymentDataData,
+			ThrowOnError
+		>,
 	) {
 		return (options?.client ?? client).get<
-			EconomicGetEmploymentDataResponses,
-			EconomicGetEmploymentDataErrors,
+			MarketDataEconomicIndicatorGetEmploymentDataResponses,
+			MarketDataEconomicIndicatorGetEmploymentDataErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1574,23 +1583,23 @@ export class EconomicService {
 					type: "http",
 				},
 			],
-			url: "/api/v1/market-data/economic/employment",
+			url: "/api/v1/market-data/economic_indicators/employment",
 			...options,
 		});
 	}
 }
 
-export class IntelligenceService {
+export class MarketDataIntelligenceService {
 	/**
 	 * Get News
 	 * 지정된 종목 관련 뉴스를 조회합니다.
 	 */
 	public static getNews<ThrowOnError extends boolean = false>(
-		options: Options<IntelligenceGetNewsData, ThrowOnError>,
+		options: Options<MarketDataIntelligenceGetNewsData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			IntelligenceGetNewsResponses,
-			IntelligenceGetNewsErrors,
+			MarketDataIntelligenceGetNewsResponses,
+			MarketDataIntelligenceGetNewsErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1609,11 +1618,14 @@ export class IntelligenceService {
 	 * 지정된 종목의 감정 분석 결과를 조회합니다.
 	 */
 	public static getSentimentAnalysis<ThrowOnError extends boolean = false>(
-		options: Options<IntelligenceGetSentimentAnalysisData, ThrowOnError>,
+		options: Options<
+			MarketDataIntelligenceGetSentimentAnalysisData,
+			ThrowOnError
+		>,
 	) {
 		return (options.client ?? client).get<
-			IntelligenceGetSentimentAnalysisResponses,
-			IntelligenceGetSentimentAnalysisErrors,
+			MarketDataIntelligenceGetSentimentAnalysisResponses,
+			MarketDataIntelligenceGetSentimentAnalysisErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1632,11 +1644,14 @@ export class IntelligenceService {
 	 * 지정된 종목의 분석가 추천 정보를 조회합니다.
 	 */
 	public static getAnalystRecommendations<ThrowOnError extends boolean = false>(
-		options: Options<IntelligenceGetAnalystRecommendationsData, ThrowOnError>,
+		options: Options<
+			MarketDataIntelligenceGetAnalystRecommendationsData,
+			ThrowOnError
+		>,
 	) {
 		return (options.client ?? client).get<
-			IntelligenceGetAnalystRecommendationsResponses,
-			IntelligenceGetAnalystRecommendationsErrors,
+			MarketDataIntelligenceGetAnalystRecommendationsResponses,
+			MarketDataIntelligenceGetAnalystRecommendationsErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1655,11 +1670,14 @@ export class IntelligenceService {
 	 * 지정된 종목의 소셜 미디어 감정 분석을 조회합니다.
 	 */
 	public static getSocialSentiment<ThrowOnError extends boolean = false>(
-		options: Options<IntelligenceGetSocialSentimentData, ThrowOnError>,
+		options: Options<
+			MarketDataIntelligenceGetSocialSentimentData,
+			ThrowOnError
+		>,
 	) {
 		return (options.client ?? client).get<
-			IntelligenceGetSocialSentimentResponses,
-			IntelligenceGetSocialSentimentErrors,
+			MarketDataIntelligenceGetSocialSentimentResponses,
+			MarketDataIntelligenceGetSocialSentimentErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1674,7 +1692,7 @@ export class IntelligenceService {
 	}
 }
 
-export class MarketDataService {
+export class MarketDataManagementService {
 	/**
 	 * Collect Company Info
 	 * 지정된 심볼의 기업 정보를 수집하여 저장
@@ -1683,11 +1701,11 @@ export class MarketDataService {
 	 * 업종 분류 등을 수집하고 데이터베이스에 저장합니다.
 	 */
 	public static collectCompanyInfo<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataCollectCompanyInfoData, ThrowOnError>,
+		options: Options<MarketDataManagementCollectCompanyInfoData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			MarketDataCollectCompanyInfoResponses,
-			MarketDataCollectCompanyInfoErrors,
+			MarketDataManagementCollectCompanyInfoResponses,
+			MarketDataManagementCollectCompanyInfoErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1709,11 +1727,11 @@ export class MarketDataService {
 	 * DuckDB 캐시 및 MongoDB에 저장합니다.
 	 */
 	public static collectMarketData<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataCollectMarketDataData, ThrowOnError>,
+		options: Options<MarketDataManagementCollectMarketDataData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			MarketDataCollectMarketDataResponses,
-			MarketDataCollectMarketDataErrors,
+			MarketDataManagementCollectMarketDataResponses,
+			MarketDataManagementCollectMarketDataErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1735,11 +1753,11 @@ export class MarketDataService {
 	 * 기업 정보와 주가 데이터를 순차적으로 수집합니다.
 	 */
 	public static collectBulkData<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataCollectBulkDataData, ThrowOnError>,
+		options: Options<MarketDataManagementCollectBulkDataData, ThrowOnError>,
 	) {
 		return (options.client ?? client).post<
-			MarketDataCollectBulkDataResponses,
-			MarketDataCollectBulkDataErrors,
+			MarketDataManagementCollectBulkDataResponses,
+			MarketDataManagementCollectBulkDataErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1760,11 +1778,11 @@ export class MarketDataService {
 	 * 기업 정보, 주가 데이터의 수집 상태와 품질을 확인합니다.
 	 */
 	public static getDataCoverage<ThrowOnError extends boolean = false>(
-		options: Options<MarketDataGetDataCoverageData, ThrowOnError>,
+		options: Options<MarketDataManagementGetDataCoverageData, ThrowOnError>,
 	) {
 		return (options.client ?? client).get<
-			MarketDataGetDataCoverageResponses,
-			MarketDataGetDataCoverageErrors,
+			MarketDataManagementGetDataCoverageResponses,
+			MarketDataManagementGetDataCoverageErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1785,11 +1803,11 @@ export class MarketDataService {
 	 * API 연결 상태, 캐시 성능, 수집 통계 등을 확인합니다.
 	 */
 	public static getSystemStatus<ThrowOnError extends boolean = false>(
-		options?: Options<MarketDataGetSystemStatusData, ThrowOnError>,
+		options?: Options<MarketDataManagementGetSystemStatusData, ThrowOnError>,
 	) {
 		return (options?.client ?? client).get<
-			MarketDataGetSystemStatusResponses,
-			MarketDataGetSystemStatusErrors,
+			MarketDataManagementGetSystemStatusResponses,
+			MarketDataManagementGetSystemStatusErrors,
 			ThrowOnError
 		>({
 			security: [
@@ -1802,7 +1820,340 @@ export class MarketDataService {
 			...options,
 		});
 	}
+}
 
+export class MarketDataTechnicalIndicatorService {
+	/**
+	 * Get Indicator List
+	 * 지원하는 기술적 지표 목록을 조회합니다.
+	 */
+	public static getIndicatorList<ThrowOnError extends boolean = false>(
+		options?: Options<
+			MarketDataTechnicalIndicatorGetIndicatorListData,
+			ThrowOnError
+		>,
+	) {
+		return (options?.client ?? client).get<
+			MarketDataTechnicalIndicatorGetIndicatorListResponses,
+			MarketDataTechnicalIndicatorGetIndicatorListErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/tech_indicators/indicators",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Sma
+	 * 단순이동평균(SMA)을 조회합니다.
+	 */
+	public static getSma<ThrowOnError extends boolean = false>(
+		options: Options<MarketDataTechnicalIndicatorGetSmaData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MarketDataTechnicalIndicatorGetSmaResponses,
+			MarketDataTechnicalIndicatorGetSmaErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/tech_indicators/{symbol}/sma",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Wma
+	 * 가중이동평균(WMA)을 조회합니다.
+	 */
+	public static getWma<ThrowOnError extends boolean = false>(
+		options: Options<MarketDataTechnicalIndicatorGetWmaData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MarketDataTechnicalIndicatorGetWmaResponses,
+			MarketDataTechnicalIndicatorGetWmaErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/tech_indicators/{symbol}/wma",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Dema
+	 * 이중지수이동평균(DEMA)을 조회합니다.
+	 */
+	public static getDema<ThrowOnError extends boolean = false>(
+		options: Options<MarketDataTechnicalIndicatorGetDemaData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MarketDataTechnicalIndicatorGetDemaResponses,
+			MarketDataTechnicalIndicatorGetDemaErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/tech_indicators/{symbol}/dema",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Tema
+	 * 삼중지수이동평균(TEMA)을 조회합니다.
+	 */
+	public static getTema<ThrowOnError extends boolean = false>(
+		options: Options<MarketDataTechnicalIndicatorGetTemaData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MarketDataTechnicalIndicatorGetTemaResponses,
+			MarketDataTechnicalIndicatorGetTemaErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/tech_indicators/{symbol}/tema",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Ema
+	 * 지수이동평균(EMA)을 조회합니다.
+	 */
+	public static getEma<ThrowOnError extends boolean = false>(
+		options: Options<MarketDataTechnicalIndicatorGetEmaData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MarketDataTechnicalIndicatorGetEmaResponses,
+			MarketDataTechnicalIndicatorGetEmaErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/tech_indicators/{symbol}/ema",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Rsi
+	 * 상대강도지수(RSI)를 조회합니다.
+	 */
+	public static getRsi<ThrowOnError extends boolean = false>(
+		options: Options<MarketDataTechnicalIndicatorGetRsiData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MarketDataTechnicalIndicatorGetRsiResponses,
+			MarketDataTechnicalIndicatorGetRsiErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/tech_indicators/{symbol}/rsi",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Macd
+	 * MACD를 조회합니다.
+	 */
+	public static getMacd<ThrowOnError extends boolean = false>(
+		options: Options<MarketDataTechnicalIndicatorGetMacdData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MarketDataTechnicalIndicatorGetMacdResponses,
+			MarketDataTechnicalIndicatorGetMacdErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/tech_indicators/{symbol}/macd",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Bbands
+	 * 볼린저밴드(BBANDS)를 조회합니다.
+	 */
+	public static getBbands<ThrowOnError extends boolean = false>(
+		options: Options<MarketDataTechnicalIndicatorGetBbandsData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MarketDataTechnicalIndicatorGetBbandsResponses,
+			MarketDataTechnicalIndicatorGetBbandsErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/tech_indicators/{symbol}/bbands",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Adx
+	 * 평균방향지수(ADX)를 조회합니다.
+	 */
+	public static getAdx<ThrowOnError extends boolean = false>(
+		options: Options<MarketDataTechnicalIndicatorGetAdxData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MarketDataTechnicalIndicatorGetAdxResponses,
+			MarketDataTechnicalIndicatorGetAdxErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/tech_indicators/{symbol}/adx",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Atr
+	 * 평균진폭(ATR)을 조회합니다.
+	 */
+	public static getAtr<ThrowOnError extends boolean = false>(
+		options: Options<MarketDataTechnicalIndicatorGetAtrData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MarketDataTechnicalIndicatorGetAtrResponses,
+			MarketDataTechnicalIndicatorGetAtrErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/tech_indicators/{symbol}/atr",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Stoch
+	 * 스토캐스틱 오실레이터(STOCH)를 조회합니다.
+	 */
+	public static getStoch<ThrowOnError extends boolean = false>(
+		options: Options<MarketDataTechnicalIndicatorGetStochData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MarketDataTechnicalIndicatorGetStochResponses,
+			MarketDataTechnicalIndicatorGetStochErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/tech_indicators/{symbol}/stoch",
+			...options,
+		});
+	}
+}
+
+export class MarketDataRegimeService {
+	/**
+	 * Get Market Regime
+	 * Return the latest market regime snapshot.
+	 */
+	public static getMarketRegime<ThrowOnError extends boolean = false>(
+		options: Options<MarketDataRegimeGetMarketRegimeData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MarketDataRegimeGetMarketRegimeResponses,
+			MarketDataRegimeGetMarketRegimeErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/regime/",
+			...options,
+		});
+	}
+}
+
+export class MarketRegimeService {
+	/**
+	 * Get Market Regime
+	 * Return the latest market regime snapshot.
+	 */
+	public static getMarketRegime<ThrowOnError extends boolean = false>(
+		options: Options<MarketDataRegimeGetMarketRegimeData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MarketDataRegimeGetMarketRegimeResponses,
+			MarketDataRegimeGetMarketRegimeErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/market-data/regime/",
+			...options,
+		});
+	}
+}
+
+export class MarketDataService {
 	/**
 	 * Get Market Data Info
 	 * 마켓 데이터 API 정보 및 사용 가능한 엔드포인트 목록
@@ -1845,309 +2196,6 @@ export class MarketDataService {
 				},
 			],
 			url: "/api/v1/market-data/health",
-			...options,
-		});
-	}
-}
-
-export class TechnicalIndicatorService {
-	/**
-	 * Get Indicator List
-	 * 지원하는 기술적 지표 목록을 조회합니다.
-	 */
-	public static getIndicatorList<ThrowOnError extends boolean = false>(
-		options?: Options<TechnicalIndicatorGetIndicatorListData, ThrowOnError>,
-	) {
-		return (options?.client ?? client).get<
-			TechnicalIndicatorGetIndicatorListResponses,
-			TechnicalIndicatorGetIndicatorListErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/market-data/technical-indicators/indicators",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Sma
-	 * 단순이동평균(SMA)을 조회합니다.
-	 */
-	public static getSma<ThrowOnError extends boolean = false>(
-		options: Options<TechnicalIndicatorGetSmaData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			TechnicalIndicatorGetSmaResponses,
-			TechnicalIndicatorGetSmaErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/market-data/technical-indicators/{symbol}/sma",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Wma
-	 * 가중이동평균(WMA)을 조회합니다.
-	 */
-	public static getWma<ThrowOnError extends boolean = false>(
-		options: Options<TechnicalIndicatorGetWmaData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			TechnicalIndicatorGetWmaResponses,
-			TechnicalIndicatorGetWmaErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/market-data/technical-indicators/{symbol}/wma",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Dema
-	 * 이중지수이동평균(DEMA)을 조회합니다.
-	 */
-	public static getDema<ThrowOnError extends boolean = false>(
-		options: Options<TechnicalIndicatorGetDemaData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			TechnicalIndicatorGetDemaResponses,
-			TechnicalIndicatorGetDemaErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/market-data/technical-indicators/{symbol}/dema",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Tema
-	 * 삼중지수이동평균(TEMA)을 조회합니다.
-	 */
-	public static getTema<ThrowOnError extends boolean = false>(
-		options: Options<TechnicalIndicatorGetTemaData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			TechnicalIndicatorGetTemaResponses,
-			TechnicalIndicatorGetTemaErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/market-data/technical-indicators/{symbol}/tema",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Ema
-	 * 지수이동평균(EMA)을 조회합니다.
-	 */
-	public static getEma<ThrowOnError extends boolean = false>(
-		options: Options<TechnicalIndicatorGetEmaData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			TechnicalIndicatorGetEmaResponses,
-			TechnicalIndicatorGetEmaErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/market-data/technical-indicators/{symbol}/ema",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Rsi
-	 * 상대강도지수(RSI)를 조회합니다.
-	 */
-	public static getRsi<ThrowOnError extends boolean = false>(
-		options: Options<TechnicalIndicatorGetRsiData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			TechnicalIndicatorGetRsiResponses,
-			TechnicalIndicatorGetRsiErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/market-data/technical-indicators/{symbol}/rsi",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Macd
-	 * MACD를 조회합니다.
-	 */
-	public static getMacd<ThrowOnError extends boolean = false>(
-		options: Options<TechnicalIndicatorGetMacdData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			TechnicalIndicatorGetMacdResponses,
-			TechnicalIndicatorGetMacdErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/market-data/technical-indicators/{symbol}/macd",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Bbands
-	 * 볼린저밴드(BBANDS)를 조회합니다.
-	 */
-	public static getBbands<ThrowOnError extends boolean = false>(
-		options: Options<TechnicalIndicatorGetBbandsData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			TechnicalIndicatorGetBbandsResponses,
-			TechnicalIndicatorGetBbandsErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/market-data/technical-indicators/{symbol}/bbands",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Adx
-	 * 평균방향지수(ADX)를 조회합니다.
-	 */
-	public static getAdx<ThrowOnError extends boolean = false>(
-		options: Options<TechnicalIndicatorGetAdxData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			TechnicalIndicatorGetAdxResponses,
-			TechnicalIndicatorGetAdxErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/market-data/technical-indicators/{symbol}/adx",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Atr
-	 * 평균진폭(ATR)을 조회합니다.
-	 */
-	public static getAtr<ThrowOnError extends boolean = false>(
-		options: Options<TechnicalIndicatorGetAtrData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			TechnicalIndicatorGetAtrResponses,
-			TechnicalIndicatorGetAtrErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/market-data/technical-indicators/{symbol}/atr",
-			...options,
-		});
-	}
-
-	/**
-	 * Get Stoch
-	 * 스토캐스틱 오실레이터(STOCH)를 조회합니다.
-	 */
-	public static getStoch<ThrowOnError extends boolean = false>(
-		options: Options<TechnicalIndicatorGetStochData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			TechnicalIndicatorGetStochResponses,
-			TechnicalIndicatorGetStochErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/market-data/technical-indicators/{symbol}/stoch",
-			...options,
-		});
-	}
-}
-
-export class MarketRegimeService {
-	/**
-	 * Get Market Regime
-	 * Return the latest market regime snapshot.
-	 */
-	public static getMarketRegime<ThrowOnError extends boolean = false>(
-		options: Options<MarketRegimeGetMarketRegimeData, ThrowOnError>,
-	) {
-		return (options.client ?? client).get<
-			MarketRegimeGetMarketRegimeResponses,
-			MarketRegimeGetMarketRegimeErrors,
-			ThrowOnError
-		>({
-			security: [
-				{
-					scheme: "bearer",
-					type: "http",
-				},
-			],
-			url: "/api/v1/market-data/regime/",
 			...options,
 		});
 	}
