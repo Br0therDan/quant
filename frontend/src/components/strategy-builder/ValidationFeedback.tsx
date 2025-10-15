@@ -61,8 +61,8 @@ export const ValidationFeedback: React.FC<ValidationFeedbackProps> = ({
                 <Stack direction="row" spacing={0.5}>
                   {success.map((v) => (
                     <Chip
-                      key={v.parameter_name}
-                      label={v.parameter_name}
+                      key={String(v.parameter_name)}
+                      label={String(v.parameter_name)}
                       size="small"
                       color="success"
                       variant="outlined"
@@ -76,20 +76,20 @@ export const ValidationFeedback: React.FC<ValidationFeedbackProps> = ({
           {/* 경고 */}
           {warnings.map((v) => (
             <Alert
-              key={v.parameter_name}
+              key={String(v.parameter_name)}
               severity="warning"
               icon={<WarningIcon />}
               sx={{ py: 0.5 }}
             >
               <Typography variant="body2" fontWeight="bold">
-                {v.parameter_name}
+                {String(v.parameter_name)}
               </Typography>
               {v.message && (
                 <Typography variant="caption" display="block">
                   • {v.message}
                 </Typography>
               )}
-              {v.suggested_value && (
+              {v.suggested_value ? (
                 <Typography
                   variant="caption"
                   color="success.main"
@@ -98,27 +98,27 @@ export const ValidationFeedback: React.FC<ValidationFeedbackProps> = ({
                 >
                   💡 제안값: {String(JSON.stringify(v.suggested_value))}
                 </Typography>
-              )}
+              ) : null}
             </Alert>
           ))}
 
           {/* 오류 */}
           {errors.map((v) => (
             <Alert
-              key={v.parameter_name}
+              key={String(v.parameter_name)}
               severity="error"
               icon={<ErrorIcon />}
               sx={{ py: 0.5 }}
             >
               <Typography variant="body2" fontWeight="bold">
-                {v.parameter_name}
+                {String(v.parameter_name)}
               </Typography>
               {v.message && (
                 <Typography variant="caption" display="block">
                   • {v.message}
                 </Typography>
               )}
-              {v.suggested_value && (
+              {v.suggested_value ? (
                 <Typography
                   variant="caption"
                   color="info.main"
@@ -127,17 +127,17 @@ export const ValidationFeedback: React.FC<ValidationFeedbackProps> = ({
                 >
                   💡 제안값: {String(JSON.stringify(v.suggested_value))}
                 </Typography>
-              )}
-              {v.value_range && (
+              ) : null}
+              {v.value_range ? (
                 <Typography
                   variant="caption"
                   color="text.secondary"
                   display="block"
                   sx={{ mt: 0.5 }}
                 >
-                  허용 범위: {JSON.stringify(v.value_range)}
+                  허용 범위: {String(JSON.stringify(v.value_range))}
                 </Typography>
-              )}
+              ) : null}
             </Alert>
           ))}
         </Stack>

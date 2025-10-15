@@ -27,11 +27,11 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import type React from "react";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 const steps = ["기본 정보", "파라미터 설정", "백테스트 실행"];
 
-export default function CreateStrategyPage() {
+function CreateStrategyContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
@@ -266,5 +266,29 @@ export default function CreateStrategyPage() {
         )}
       </Paper>
     </PageContainer>
+  );
+}
+
+export default function CreateStrategyPage() {
+  return (
+    <Suspense
+      fallback={
+        <PageContainer
+          title="전략 생성"
+          breadcrumbs={[{ title: "Strategy Center" }]}
+        >
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            minHeight="400px"
+          >
+            <CircularProgress />
+          </Box>
+        </PageContainer>
+      }
+    >
+      <CreateStrategyContent />
+    </Suspense>
   );
 }
