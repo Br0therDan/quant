@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+if [[ -z ${BASH_VERSINFO:-} || ${BASH_VERSINFO[0]} -lt 4 ]]; then
+  echo "Requires bash >= 4" >&2
+  exit 1
+fi
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
