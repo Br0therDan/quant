@@ -12,6 +12,7 @@ from app.services.market_data.base_service import BaseMarketDataService
 from app.services.database_manager import DatabaseManager
 from app.services.monitoring.data_quality_sentinel import DataQualitySentinel
 from app.schemas.market_data.stock import QuoteData
+from app.utils.validators.market_data import MarketDataValidator
 
 logger = logging.getLogger(__name__)
 
@@ -116,7 +117,4 @@ class BaseStockService(BaseMarketDataService):
         Raises:
             ValueError: 심볼이 비어있거나 유효하지 않은 경우
         """
-        if not symbol or not symbol.strip():
-            raise ValueError("유효한 심볼이 필요합니다")
-
-        return symbol.upper().strip()
+        return MarketDataValidator.validate_symbol(symbol)

@@ -13,6 +13,7 @@ from app.models.trading.strategy import (
     StrategyType,
     StrategyConfigUnion,
 )
+from app.utils.validators.strategy import StrategyValidator
 
 try:
     from app.strategies.buy_and_hold import BuyAndHoldStrategy
@@ -96,6 +97,11 @@ class StrategyExecutor:
             # Mock signal generation (would use real market data in production)
             signal_type = SignalType.HOLD  # Default
             signal_strength = 0.5
+
+            # 신호 강도 검증
+            signal_strength = StrategyValidator.validate_signal_strength(
+                signal_strength
+            )
 
             execution = StrategyExecution(
                 strategy_id=strategy_id,

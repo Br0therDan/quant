@@ -9,7 +9,6 @@ Phase 2 변경사항:
 
 import logging
 from datetime import datetime
-from typing import Optional
 
 from beanie import PydanticObjectId
 
@@ -24,6 +23,7 @@ from app.models.trading.backtest import (
 from app.models.trading.strategy import Strategy
 from app.schemas.enums import StrategyType
 from app.strategies.configs import BuyAndHoldConfig
+from app.utils.validators.backtest import BacktestValidator
 
 logger = logging.getLogger(__name__)
 
@@ -39,10 +39,23 @@ class BacktestService:
         self,
         name: str,
         description: str = "",
-        config: Optional[BacktestConfig] = None,
-        user_id: Optional[str] = None,
+        config: BacktestConfig | None = None,
+        user_id: str | None = None,
     ) -> Backtest:
-        """백테스트 생성 (Phase 2: 기본 전략 자동 생성)"""
+        """백테스트 생성 (Phase 2: 기본 전략 자동 생성)
+
+        Args:
+            name: 백테스트 이름
+            description: 설명
+            config: 백테스트 설정 (None이면 기본값 사용)
+            user_id: 사용자 ID
+
+        Returns:
+            생성된 Backtest 객체
+
+        Raises:
+            ValueError: 설정값이 유효하지 않을 때
+        """
         if config is None:
             config = BacktestConfig(
                 name=name,
@@ -53,6 +66,13 @@ class BacktestService:
                 commission_rate=0.001,
                 rebalance_frequency=None,
             )
+
+        # BacktestValidator를 사용한 설정 검증
+        BacktestValidator.validate_initial_capital(config.initial_cash)
+        BacktestValidator.validate_commission(config.commission_rate)
+
+        if hasattr(config, "slippage_rate") and config.slippage_rate is not None:
+            BacktestValidator.validate_slippage(config.slippage_rate)
 
         # Phase 2: 기본 Buy & Hold 전략 자동 생성
         default_strategy = Strategy(
@@ -97,10 +117,10 @@ class BacktestService:
 
     async def get_backtests(
         self,
-        status: Optional[BacktestStatus] = None,
+        status: BacktestStatus | None = None,
         skip: int = 0,
         limit: int = 100,
-        user_id: Optional[str] = None,
+        user_id: str | None = None,
     ) -> list[Backtest]:
         """백테스트 목록 조회"""
         query = {}
@@ -111,7 +131,7 @@ class BacktestService:
 
         return await Backtest.find(query).skip(skip).limit(limit).to_list()
 
-    async def get_backtest(self, backtest_id: str) -> Optional[Backtest]:
+    async def get_backtest(self, backtest_id: str) -> Backtest | None:
         """백테스트 상세 조회"""
         try:
             return await Backtest.get(PydanticObjectId(backtest_id))
@@ -122,11 +142,24 @@ class BacktestService:
     async def update_backtest(
         self,
         backtest_id: str,
-        name: Optional[str] = None,
-        description: Optional[str] = None,
-        config: Optional[BacktestConfig] = None,
-    ) -> Optional[Backtest]:
-        """백테스트 수정"""
+        name: str | None = None,
+        description: str | None = None,
+        config: BacktestConfig | None = None,
+    ) -> Backtest | None:
+        """백테스트 수정
+
+        Args:
+            backtest_id: 백테스트 ID
+            name: 새 이름 (선택)
+            description: 새 설명 (선택)
+            config: 새 설정 (선택)
+
+        Returns:
+            수정된 Backtest 객체 또는 None
+
+        Raises:
+            ValueError: 설정값이 유효하지 않을 때
+        """
         backtest = await self.get_backtest(backtest_id)
         if not backtest:
             return None
@@ -136,6 +169,11 @@ class BacktestService:
         if description is not None:
             backtest.description = description
         if config is not None:
+            # 설정 검증
+            BacktestValidator.validate_initial_capital(config.initial_cash)
+            BacktestValidator.validate_commission(config.commission_rate)
+            if hasattr(config, "slippage_rate") and config.slippage_rate is not None:
+                BacktestValidator.validate_slippage(config.slippage_rate)
             backtest.config = config
 
         backtest.updated_at = datetime.now()
@@ -168,21 +206,25 @@ class BacktestService:
             .to_list()
         )
 
-    async def get_backtest_results(
+    async def get_result_summary(
         self,
-        backtest_id: Optional[str] = None,
-        execution_id: Optional[str] = None,
-        skip: int = 0,
-        limit: int = 100,
-    ) -> list[BacktestResult]:
-        """백테스트 결과 조회"""
-        query = {}
-        if backtest_id:
-            query["backtest_id"] = backtest_id
-        if execution_id:
-            query["execution_id"] = execution_id
+        backtest_id: str | None = None,
+        execution_id: str | None = None,
+    ) -> BacktestResult | None:
+        """백테스트 결과 요약 조회.
 
-        return await BacktestResult.find(query).skip(skip).limit(limit).to_list()
+        Args:
+            backtest_id: 백테스트 ID (backtest_id 또는 execution_id 중 하나 필수)
+            execution_id: 실행 ID
+
+        Returns:
+            BacktestResult: 백테스트 결과 (없으면 None)
+
+        Raises:
+            ValueError: backtest_id와 execution_id 모두 None인 경우
+        """
+        if backtest_id is None and execution_id is None:
+            raise ValueError("backtest_id 또는 execution_id 중 하나는 필수입니다")
 
     async def create_backtest_result(
         self,
