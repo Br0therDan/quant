@@ -1,19 +1,20 @@
 """Portfolio service for managing user portfolios and performance tracking."""
 
+import random
 from datetime import datetime, timedelta
-from typing import List, Optional, TYPE_CHECKING
-from app.services.database_manager import DatabaseManager
+from typing import TYPE_CHECKING
+
+from app.schemas.ml_platform.predictive import PortfolioForecastDistribution
 from app.schemas.user.dashboard import (
-    PortfolioSummary,
-    PortfolioPerformance,
     PortfolioDataPoint,
+    PortfolioPerformance,
     PortfolioPerformanceSummary,
+    PortfolioSummary,
     TradeItem,
     TradeSide,
 )
-from app.schemas.ml_platform.predictive import PortfolioForecastDistribution
-import random
-
+from app.services.database_manager import DatabaseManager
+from app.utils.calculators.performance import PerformanceCalculator
 
 if TYPE_CHECKING:
     from app.services.ml_platform.services.probabilistic_kpi_service import (
@@ -27,7 +28,7 @@ class PortfolioService:
     def __init__(
         self,
         database_manager: DatabaseManager,
-        probabilistic_service: Optional["ProbabilisticKPIService"] = None,
+        probabilistic_service: "ProbabilisticKPIService | None" = None,
     ):
         """포트폴리오 서비스 초기화.
 
@@ -87,7 +88,7 @@ class PortfolioService:
 
     async def get_recent_trades(
         self, user_id: str, limit: int = 20, days: int = 7
-    ) -> List[TradeItem]:
+    ) -> list[TradeItem]:
         """최근 거래 내역을 조회합니다.
 
         Args:
@@ -141,7 +142,7 @@ class PortfolioService:
 
     async def _generate_performance_data(
         self, period: str, granularity: str
-    ) -> List[PortfolioDataPoint]:
+    ) -> list[PortfolioDataPoint]:
         """성과 데이터 생성 (모의 데이터).
 
         Args:
@@ -196,7 +197,7 @@ class PortfolioService:
         return data_points
 
     def _calculate_performance_summary(
-        self, data_points: List[PortfolioDataPoint]
+        self, data_points: list[PortfolioDataPoint]
     ) -> PortfolioPerformanceSummary:
         """성과 요약 계산.
 
@@ -211,44 +212,42 @@ class PortfolioService:
                 total_return=0.0, volatility=0.0, sharpe_ratio=0.0, max_drawdown=0.0
             )
 
+        # 포트폴리오 가치 시계열 추출
+        portfolio_values = [point.portfolio_value for point in data_points]
+
         # 총 수익률 계산
-        initial_value = data_points[0].portfolio_value
-        final_value = data_points[-1].portfolio_value
+        initial_value = portfolio_values[0]
+        final_value = portfolio_values[-1]
         total_return = ((final_value - initial_value) / initial_value) * 100
 
-        # 변동성 계산 (일간 수익률의 표준편차)
+        # 일별 수익률 계산
         daily_returns = []
-        for i in range(1, len(data_points)):
-            prev_value = data_points[i - 1].portfolio_value
-            curr_value = data_points[i].portfolio_value
+        for i in range(1, len(portfolio_values)):
+            prev_value = portfolio_values[i - 1]
+            curr_value = portfolio_values[i]
             daily_return = (curr_value - prev_value) / prev_value
             daily_returns.append(daily_return)
 
+        # PerformanceCalculator를 사용한 지표 계산
         if daily_returns:
-            avg_return = sum(daily_returns) / len(daily_returns)
-            variance = sum((r - avg_return) ** 2 for r in daily_returns) / len(
-                daily_returns
+            # 변동성 (연율화)
+            volatility = (
+                PerformanceCalculator.annualized_volatility(daily_returns) * 100
             )
-            volatility = (variance**0.5) * 100  # 백분율로 변환
+
+            # 샤프 비율
+            sharpe_ratio = PerformanceCalculator.sharpe_ratio(
+                daily_returns, risk_free_rate=0.02
+            )
+
+            # 최대 낙폭 (절대값으로 변환, 백분율)
+            max_drawdown = (
+                abs(PerformanceCalculator.max_drawdown(portfolio_values)) * 100
+            )
         else:
             volatility = 0.0
-
-        # 샤프 비율 (간단한 계산)
-        risk_free_rate = 0.02  # 2% 가정
-        sharpe_ratio = (
-            (total_return - risk_free_rate) / volatility if volatility > 0 else 0.0
-        )
-
-        # 최대 낙폭 계산
-        max_value = initial_value
-        max_drawdown = 0.0
-
-        for point in data_points:
-            if point.portfolio_value > max_value:
-                max_value = point.portfolio_value
-            else:
-                drawdown = ((max_value - point.portfolio_value) / max_value) * 100
-                max_drawdown = max(max_drawdown, drawdown)
+            sharpe_ratio = 0.0
+            max_drawdown = 0.0
 
         return PortfolioPerformanceSummary(
             total_return=round(total_return, 2),

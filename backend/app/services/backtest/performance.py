@@ -8,6 +8,7 @@ from typing import Any
 import numpy as np
 
 from app.models.trading.backtest import PerformanceMetrics, Trade
+from app.utils.calculators.performance import PerformanceCalculator
 
 logger = logging.getLogger(__name__)
 
@@ -45,12 +46,14 @@ class PerformanceAnalyzer:
 
         # 기본 지표
         total_return = (portfolio_values[-1] - initial_capital) / initial_capital
-        annualized_return = self._annualize_return(total_return, len(portfolio_values))
 
-        # 리스크 지표
-        volatility = float(np.std(returns) * np.sqrt(252)) if len(returns) > 0 else 0.0
-        sharpe_ratio = self._calculate_sharpe_ratio(returns)
-        max_drawdown = self._calculate_max_drawdown(portfolio_values)
+        # PerformanceCalculator를 사용한 지표 계산
+        annualized_return = PerformanceCalculator.annualized_return(
+            total_return, len(portfolio_values)
+        )
+        volatility = PerformanceCalculator.annualized_volatility(returns)
+        sharpe_ratio = PerformanceCalculator.sharpe_ratio(returns)
+        max_drawdown = PerformanceCalculator.max_drawdown(portfolio_values)
 
         # 거래 통계
         trade_stats = self._analyze_trades(trades)
@@ -68,49 +71,17 @@ class PerformanceAnalyzer:
         )
 
     def _calculate_returns(self, portfolio_values: list[float]) -> np.ndarray:
-        """수익률 계산"""
+        """수익률 계산
+
+        Note: PerformanceCalculator는 pandas Series/numpy array를 받지만,
+        여기서는 백테스트 특화 로직으로 유지합니다.
+        """
         if len(portfolio_values) < 2:
             return np.array([])
 
         values = np.array(portfolio_values)
         returns = np.diff(values) / values[:-1]
         return returns
-
-    def _annualize_return(self, total_return: float, periods: int) -> float:
-        """연율화 수익률 계산"""
-        if periods <= 0:
-            return 0.0
-
-        years = periods / 252  # 거래일 기준
-        if years <= 0:
-            return 0.0
-
-        return (1 + total_return) ** (1 / years) - 1
-
-    def _calculate_sharpe_ratio(
-        self, returns: np.ndarray, risk_free_rate: float = 0.02
-    ) -> float:
-        """샤프 비율 계산"""
-        if len(returns) == 0:
-            return 0.0
-
-        excess_returns = returns - (risk_free_rate / 252)
-
-        if np.std(excess_returns) == 0:
-            return 0.0
-
-        return float(np.mean(excess_returns) / np.std(excess_returns) * np.sqrt(252))
-
-    def _calculate_max_drawdown(self, portfolio_values: list[float]) -> float:
-        """최대 낙폭 계산"""
-        if not portfolio_values:
-            return 0.0
-
-        values = np.array(portfolio_values)
-        cummax = np.maximum.accumulate(values)
-        drawdowns = (values - cummax) / cummax
-
-        return float(np.min(drawdowns))
 
     def _analyze_trades(self, trades: list[Trade]) -> dict[str, Any]:
         """거래 통계 분석"""
