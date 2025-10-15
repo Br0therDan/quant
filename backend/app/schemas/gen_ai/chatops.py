@@ -56,6 +56,16 @@ class ChatOpsRequest(BaseModel):
         default=None,
         description="사용할 OpenAI 모델 ID (지정하지 않으면 기본 정책 사용)",
     )
+    use_rag: bool = Field(
+        default=True,
+        description="사용자 컨텍스트(RAG)를 활용할지 여부",
+    )
+    rag_top_k: int = Field(
+        default=3,
+        ge=1,
+        le=10,
+        description="검색할 유사 백테스트 최대 개수",
+    )
 
 
 class CacheStatusSnapshot(BaseModel):

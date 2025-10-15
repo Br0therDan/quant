@@ -12,6 +12,7 @@ from fastapi import APIRouter, HTTPException
 from app.schemas.gen_ai.strategy_builder import (
     IndicatorSearchRequest,
     IndicatorSearchResponse,
+    StrategyBuilderRAGRequest,
     StrategyApprovalRequest,
     StrategyApprovalResponse,
     StrategyBuilderRequest,
@@ -85,6 +86,40 @@ async def generate_strategy(
             status_code=500,
             detail=f"전략 생성 실패: {str(e)}",
         ) from e
+
+
+@router.post("/generate-with-rag", response_model=StrategyBuilderResponse)
+async def generate_strategy_with_rag_endpoint(
+    request: StrategyBuilderRAGRequest,
+):
+    """RAG 컨텍스트를 활용한 전략 생성."""
+
+    try:
+        strategy_builder_service = service_factory.get_strategy_builder_service()
+        response = await strategy_builder_service.build_strategy_with_rag(request)
+
+        logger.info(
+            "Strategy generation with RAG completed",
+            extra={
+                "query": request.query[:100],
+                "rag_applied": response.rag_applied,
+                "rag_contexts": len(response.rag_contexts or []),
+                "model_id": response.llm_model,
+            },
+        )
+        return response
+    except ValueError as exc:
+        logger.error(f"Validation error: {exc}", exc_info=True)
+        raise HTTPException(
+            status_code=400,
+            detail=f"입력 검증 실패: {str(exc)}",
+        )
+    except Exception as exc:  # pragma: no cover - network interaction
+        logger.error(f"Strategy generation with RAG failed: {exc}", exc_info=True)
+        raise HTTPException(
+            status_code=500,
+            detail=f"전략 생성 실패: {str(exc)}",
+        ) from exc
 
 
 @router.post("/approve", response_model=StrategyApprovalResponse)

@@ -29,6 +29,7 @@ from .gen_ai.applications.narrative_report_service import NarrativeReportService
 from .gen_ai.applications.strategy_builder_service import StrategyBuilderService
 from .gen_ai.applications.chatops_advanced_service import ChatOpsAdvancedService
 from .gen_ai.core.openai_client_manager import OpenAIClientManager
+from .gen_ai.core.rag_service import RAGService
 from .ml_platform.services.feature_store_service import FeatureStoreService
 from .ml_platform.services.model_lifecycle_service import ModelLifecycleService
 from .ml_platform.services.evaluation_harness_service import EvaluationHarnessService
@@ -65,6 +66,7 @@ class ServiceFactory:
     _strategy_builder_service: Optional[StrategyBuilderService] = None
     _chatops_advanced_service: Optional[ChatOpsAdvancedService] = None
     _openai_client_manager: Optional[OpenAIClientManager] = None
+    _rag_service: Optional[RAGService] = None
     _feature_store_service: Optional[FeatureStoreService] = None
     _model_lifecycle_service: Optional[ModelLifecycleService] = None
     _evaluation_harness_service: Optional[EvaluationHarnessService] = None
@@ -160,12 +162,14 @@ class ServiceFactory:
             strategy_service = self.get_strategy_service()
             database_manager = self.get_database_manager()
             ml_signal_service = self.get_ml_signal_service()
+            rag_service = self.get_rag_service()
 
             self._backtest_orchestrator = BacktestOrchestrator(
                 market_data_service=market_data_service,
                 strategy_service=strategy_service,
                 database_manager=database_manager,
                 ml_signal_service=ml_signal_service,
+                rag_service=rag_service,
             )
             logger.info("Created BacktestOrchestrator instance (Phase 2)")
         return self._backtest_orchestrator
@@ -316,9 +320,11 @@ class ServiceFactory:
         if self._strategy_builder_service is None:
             strategy_service = self.get_strategy_service()
             openai_manager = self.get_openai_client_manager()
+            rag_service = self.get_rag_service()
             self._strategy_builder_service = StrategyBuilderService(
                 strategy_service=strategy_service,
                 openai_manager=openai_manager,
+                rag_service=rag_service,
             )
             logger.info("StrategyBuilderService initialized (Phase 3 D2)")
         return self._strategy_builder_service
@@ -328,12 +334,22 @@ class ServiceFactory:
         if self._chatops_advanced_service is None:
             backtest_service = self.get_backtest_service()
             openai_manager = self.get_openai_client_manager()
+            rag_service = self.get_rag_service()
             self._chatops_advanced_service = ChatOpsAdvancedService(
                 backtest_service=backtest_service,
                 openai_manager=openai_manager,
+                rag_service=rag_service,
             )
             logger.info("ChatOpsAdvancedService initialized (Phase 3 D3)")
         return self._chatops_advanced_service
+
+    def get_rag_service(self) -> RAGService:
+        """RAGService 인스턴스 반환 (Phase 2)."""
+        if self._rag_service is None:
+            openai_manager = self.get_openai_client_manager()
+            self._rag_service = RAGService(openai_manager=openai_manager)
+            logger.info("RAGService initialized (Phase 2)")
+        return self._rag_service
 
     def get_feature_store_service(self) -> FeatureStoreService:
         """FeatureStoreService 인스턴스 반환 (Phase 4 D1)"""

@@ -25,7 +25,13 @@ class Settings(CommonSettings):
     DUCKDB_PATH: str = getenv("DUCKDB_PATH", "./app/data/quant.duckdb")
     DATA_QUALITY_WEBHOOK_URL: str | None = getenv("DATA_QUALITY_WEBHOOK_URL", None)
 
+    # GenAI / RAG configuration
     OPENAI_API_KEY: str | None = getenv("OPENAI_API_KEY", "your-openai-api-key")
+    OPENAI_EMBEDDING_MODEL: str = getenv(
+        "OPENAI_EMBEDDING_MODEL",
+        "text-embedding-3-small",
+    )
+    CHROMADB_PATH: str = getenv("CHROMADB_PATH", "./data/chromadb")
 
 
 settings = Settings()

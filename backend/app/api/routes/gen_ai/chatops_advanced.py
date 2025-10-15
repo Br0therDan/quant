@@ -5,7 +5,7 @@ Phase 3 D3: Multi-turn conversation, strategy comparison, auto backtest
 """
 
 import logging
-from typing import Any
+from typing import Any, Dict
 
 from fastapi import APIRouter, HTTPException, status, BackgroundTasks
 
@@ -42,12 +42,14 @@ async def run_backtest_in_background(backtest_id: str, notify: bool = True):
         strategy_service = service_factory.get_strategy_service()
         database_manager = service_factory.get_database_manager()
         ml_signal_service = service_factory.get_ml_signal_service()
+        rag_service = service_factory.get_rag_service()
 
         orchestrator = BacktestOrchestrator(
             market_data_service=market_data_service,
             strategy_service=strategy_service,
             database_manager=database_manager,
             ml_signal_service=ml_signal_service,
+            rag_service=rag_service,
         )
 
         # 백테스트 실행
@@ -122,16 +124,22 @@ async def chat_with_session(session_id: str, request: ChatOpsRequest) -> dict[st
             request.question,
             include_history=request.include_history,
             model_id=request.model_id,
+            use_rag=request.use_rag,
+            rag_top_k=request.rag_top_k,
         )
 
         session = await service.get_session(session_id)
         conversation_turn = len(session.conversation_history) if session else 0
+        rag_metadata: Dict[str, Any] = {}
+        if session and session.conversation_history:
+            rag_metadata = session.conversation_history[-1].metadata or {}
 
         return {
             "session_id": session_id,
             "query": request.question,
             "answer": answer,
             "conversation_turn": conversation_turn,
+            "rag": rag_metadata,
         }
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
