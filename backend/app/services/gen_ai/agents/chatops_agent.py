@@ -18,7 +18,7 @@ from app.schemas.user.dashboard import (
     DataQualitySummary,
 )
 from app.services.database_manager import DatabaseManager
-from app.services.market_data_service import MarketDataService
+from app.services.market_data import MarketDataService
 from app.services.monitoring.data_quality_sentinel import (
     AlertPayload,
     DataQualitySentinel,

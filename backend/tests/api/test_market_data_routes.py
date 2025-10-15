@@ -11,7 +11,7 @@ from fastapi.testclient import TestClient
 from unittest.mock import AsyncMock, patch
 
 from app.main import app
-from app.services.market_data_service import MarketDataService
+from app.services.market_data import MarketDataService
 
 pytestmark = pytest.mark.skip(reason="Legacy API tests - 새 API 구조로 마이그레이션 필요")
 

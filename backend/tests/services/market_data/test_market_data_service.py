@@ -5,7 +5,7 @@ Test for Market Data Service
 import pytest
 from unittest.mock import MagicMock
 
-from app.services.market_data_service import MarketDataService
+from app.services.market_data import MarketDataService
 from app.services.database_manager import DatabaseManager
 
 

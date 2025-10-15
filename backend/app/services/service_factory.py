@@ -5,12 +5,12 @@
 import logging
 from typing import Optional
 
-from .market_data_service import MarketDataService
-from .market_data_service.stock import StockService
-from .market_data_service.fundamental import FundamentalService
-from .market_data_service.economic_indicator import EconomicIndicatorService
-from .market_data_service.intelligence import IntelligenceService
-from .market_data_service.technical_indicator import TechnicalIndicatorService
+from .market_data import MarketDataService
+from .market_data.stock import StockService
+from .market_data.fundamental import FundamentalService
+from .market_data.economic_indicator import EconomicIndicatorService
+from .market_data.intelligence import IntelligenceService
+from .market_data.indicators import TechnicalIndicatorService
 from .trading.strategy_service import StrategyService
 from .trading.backtest_service import BacktestService
 from .backtest.orchestrator import BacktestOrchestrator

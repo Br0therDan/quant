@@ -2,7 +2,7 @@
 Initialize services package
 """
 
-from .market_data_service import MarketDataService
+from .market_data import MarketDataService
 from .trading.strategy_service import StrategyService
 from .trading.backtest_service import BacktestService
 from .service_factory import ServiceFactory, service_factory

@@ -106,7 +106,9 @@ class MarketDataService:
             try:
                 # Intelligence 서비스를 통해 간단한 API 호출 테스트
                 intelligence_service = self.intelligence
-                test_response = await intelligence_service.alpha_vantage.intelligence.top_gainers_losers()
+                test_response = (
+                    await intelligence_service.alpha_vantage.intelligence.top_gainers_losers()
+                )
                 if not test_response:
                     alpha_vantage_status = "error"
             except Exception:

@@ -8,7 +8,7 @@ from datetime import datetime
 from decimal import Decimal
 import logging
 
-from app.services.market_data_service.base_service import BaseMarketDataService
+from app.services.market_data.base_service import BaseMarketDataService
 from app.models.market_data.crypto import (
     CryptoExchangeRate,
     CryptoIntradayPrice,

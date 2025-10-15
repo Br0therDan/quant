@@ -32,7 +32,7 @@ from app.services.database_manager import DatabaseManager
 from app.services.trading.portfolio_service import PortfolioService
 from app.services.trading.strategy_service import StrategyService
 from app.services.trading.backtest_service import BacktestService
-from app.services.market_data_service import MarketDataService
+from app.services.market_data import MarketDataService
 from app.services.user.watchlist_service import WatchlistService
 from app.services.monitoring.data_quality_sentinel import DataQualitySentinel
 
