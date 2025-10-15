@@ -11,32 +11,32 @@
  * @module components/mlops/feature-store/VersionHistory
  */
 
-import { useState } from "react";
-import {
-  Card,
-  CardContent,
-  Typography,
-  Box,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Chip,
-  CircularProgress,
-  Alert,
-} from "@mui/material";
+import { useFeatureVersions } from "@/hooks/useFeatureStore";
+import CodeIcon from "@mui/icons-material/Code";
+import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
+import RestoreIcon from "@mui/icons-material/Restore";
 import Timeline from "@mui/lab/Timeline";
-import TimelineItem from "@mui/lab/TimelineItem";
-import TimelineSeparator from "@mui/lab/TimelineSeparator";
 import TimelineConnector from "@mui/lab/TimelineConnector";
 import TimelineContent from "@mui/lab/TimelineContent";
 import TimelineDot from "@mui/lab/TimelineDot";
+import TimelineItem from "@mui/lab/TimelineItem";
 import TimelineOppositeContent from "@mui/lab/TimelineOppositeContent";
-import RestoreIcon from "@mui/icons-material/Restore";
-import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
-import CodeIcon from "@mui/icons-material/Code";
-import { useFeatureVersions } from "@/hooks/useFeatureStore";
+import TimelineSeparator from "@mui/lab/TimelineSeparator";
+import {
+  Alert,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Typography,
+} from "@mui/material";
+import { useState } from "react";
 
 // ============================================================================
 // Component Props
@@ -69,7 +69,9 @@ export const VersionHistory: React.FC<VersionHistoryProps> = ({
   const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
   const [compareDialogOpen, setCompareDialogOpen] = useState(false);
   const [rollbackDialogOpen, setRollbackDialogOpen] = useState(false);
-  const [selectedRollbackVersion, setSelectedRollbackVersion] = useState<string | null>(null);
+  const [selectedRollbackVersion, setSelectedRollbackVersion] = useState<
+    string | null
+  >(null);
 
   // ============================================================================
   // Hooks
@@ -82,9 +84,9 @@ export const VersionHistory: React.FC<VersionHistoryProps> = ({
   // ============================================================================
 
   const handleVersionSelect = (versionId: string) => {
-    setSelectedVersions(prev => {
+    setSelectedVersions((prev) => {
       if (prev.includes(versionId)) {
-        return prev.filter(id => id !== versionId);
+        return prev.filter((id) => id !== versionId);
       }
       if (prev.length >= 2) {
         return [prev[1], versionId];
@@ -120,7 +122,14 @@ export const VersionHistory: React.FC<VersionHistoryProps> = ({
     return (
       <Card>
         <CardContent>
-          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: 300 }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              minHeight: 300,
+            }}
+          >
             <CircularProgress />
           </Box>
         </CardContent>
@@ -170,8 +179,8 @@ export const VersionHistory: React.FC<VersionHistoryProps> = ({
   // Get selected versions for comparison
   // ============================================================================
 
-  const version1 = versions.find(v => v.id === selectedVersions[0]);
-  const version2 = versions.find(v => v.id === selectedVersions[1]);
+  const version1 = versions.find((v) => v.id === selectedVersions[0]);
+  const version2 = versions.find((v) => v.id === selectedVersions[1]);
 
   // ============================================================================
   // Render
@@ -182,7 +191,14 @@ export const VersionHistory: React.FC<VersionHistoryProps> = ({
       <Card>
         <CardContent>
           {/* Header */}
-          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              mb: 3,
+            }}
+          >
             <Typography variant="h6" component="h3">
               버전 히스토리
             </Typography>
@@ -204,7 +220,10 @@ export const VersionHistory: React.FC<VersionHistoryProps> = ({
 
               return (
                 <TimelineItem key={version.id}>
-                  <TimelineOppositeContent color="text.secondary" sx={{ flex: 0.3 }}>
+                  <TimelineOppositeContent
+                    color="text.secondary"
+                    sx={{ flex: 0.3 }}
+                  >
                     <Typography variant="body2">
                       {new Date(version.created_at).toLocaleString("ko-KR", {
                         year: "numeric",
@@ -218,11 +237,19 @@ export const VersionHistory: React.FC<VersionHistoryProps> = ({
 
                   <TimelineSeparator>
                     <TimelineDot
-                      color={isLatest ? "primary" : isSelected ? "secondary" : "grey"}
+                      color={
+                        isLatest ? "primary" : isSelected ? "secondary" : "grey"
+                      }
                       sx={{ cursor: "pointer" }}
                       onClick={() => handleVersionSelect(version.id)}
                     >
-                      {isLatest && <Chip label="최신" size="small" sx={{ position: "absolute", top: -8 }} />}
+                      {isLatest && (
+                        <Chip
+                          label="최신"
+                          size="small"
+                          sx={{ position: "absolute", top: -8 }}
+                        />
+                      )}
                     </TimelineDot>
                     {index < versions.length - 1 && <TimelineConnector />}
                   </TimelineSeparator>
@@ -234,7 +261,9 @@ export const VersionHistory: React.FC<VersionHistoryProps> = ({
                         border: 1,
                         borderColor: isSelected ? "secondary.main" : "divider",
                         borderRadius: 1,
-                        bgcolor: isSelected ? "action.selected" : "background.paper",
+                        bgcolor: isSelected
+                          ? "action.selected"
+                          : "background.paper",
                         cursor: "pointer",
                         transition: "all 0.2s",
                         "&:hover": {
@@ -244,7 +273,14 @@ export const VersionHistory: React.FC<VersionHistoryProps> = ({
                       }}
                       onClick={() => handleVersionSelect(version.id)}
                     >
-                      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 1 }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "flex-start",
+                          mb: 1,
+                        }}
+                      >
                         <Typography variant="subtitle2">
                           버전 {version.version}
                         </Typography>
@@ -275,16 +311,31 @@ export const VersionHistory: React.FC<VersionHistoryProps> = ({
                             fontSize: "0.75rem",
                           }}
                         >
-                          <Typography variant="caption" sx={{ fontWeight: "bold", display: "block", mb: 0.5 }}>
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              fontWeight: "bold",
+                              display: "block",
+                              mb: 0.5,
+                            }}
+                          >
                             변경 사항:
                           </Typography>
-                          <Typography variant="caption" component="pre" sx={{ margin: 0, whiteSpace: "pre-wrap" }}>
+                          <Typography
+                            variant="caption"
+                            component="pre"
+                            sx={{ margin: 0, whiteSpace: "pre-wrap" }}
+                          >
                             {version.changes}
                           </Typography>
                         </Box>
                       )}
 
-                      <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 1 }}>
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{ display: "block", mt: 1 }}
+                      >
                         작성자: {version.created_by}
                       </Typography>
                     </Box>
@@ -361,19 +412,24 @@ export const VersionHistory: React.FC<VersionHistoryProps> = ({
       </Dialog>
 
       {/* Rollback Confirmation Dialog */}
-      <Dialog open={rollbackDialogOpen} onClose={() => setRollbackDialogOpen(false)}>
+      <Dialog
+        open={rollbackDialogOpen}
+        onClose={() => setRollbackDialogOpen(false)}
+      >
         <DialogTitle>버전 롤백</DialogTitle>
         <DialogContent>
-          <Typography>
-            정말로 이 버전으로 롤백하시겠습니까?
-          </Typography>
+          <Typography>정말로 이 버전으로 롤백하시겠습니까?</Typography>
           <Typography variant="body2" color="warning.main" sx={{ mt: 2 }}>
             현재 버전의 변경 사항이 손실될 수 있습니다.
           </Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setRollbackDialogOpen(false)}>취소</Button>
-          <Button color="warning" variant="contained" onClick={handleRollbackConfirm}>
+          <Button
+            color="warning"
+            variant="contained"
+            onClick={handleRollbackConfirm}
+          >
             롤백
           </Button>
         </DialogActions>
