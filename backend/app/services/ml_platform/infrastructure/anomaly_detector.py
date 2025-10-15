@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List, Mapping, MutableMapping, Optional, Sequence
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -23,12 +23,12 @@ class AnomalyResult:
 
     timestamp: datetime
     iso_score: float
-    prophet_score: Optional[float]
+    prophet_score: float | None
     price_change_pct: float
     volume_z_score: float
     severity: SeverityLevel
     anomaly_type: str
-    reasons: List[str]
+    reasons: list[str]
 
 
 class AnomalyDetectionService:
@@ -48,8 +48,8 @@ class AnomalyDetectionService:
     def score_daily_prices(
         self,
         symbol: str,
-        prices: Sequence[Mapping[str, object]] | Sequence[object],
-    ) -> MutableMapping[datetime, AnomalyResult]:
+        prices: list[dict[str, Any]] | list[Any],
+    ) -> dict[datetime, AnomalyResult]:
         """Score a collection of daily prices for anomaly signals."""
 
         frame = self._to_dataframe(prices)
@@ -65,8 +65,10 @@ class AnomalyDetectionService:
         iso_scores = self._compute_isolation_forest(frame, features)
         prophet_scores = self._compute_prophet_scores(frame)
 
-        results: MutableMapping[datetime, AnomalyResult] = {}
+        results: dict[datetime, AnomalyResult] = {}
         for idx, row in frame.iterrows():
+            if not isinstance(idx, datetime):
+                continue
             iso_score = iso_scores.get(idx, 0.0)
             prophet_score = prophet_scores.get(idx)
             price_change_pct = float(row.get("price_change_pct", 0.0))
@@ -92,17 +94,15 @@ class AnomalyDetectionService:
 
         return results
 
-    def _to_dataframe(
-        self, data: Sequence[Mapping[str, object]] | Sequence[object]
-    ) -> pd.DataFrame:
-        records: List[dict[str, object]] = []
+    def _to_dataframe(self, data: list[dict[str, Any]] | list[Any]) -> pd.DataFrame:
+        records: list[dict[str, Any]] = []
         for item in data:
             if hasattr(item, "model_dump"):
-                payload = item.model_dump()
+                payload = item.model_dump()  # type: ignore
             elif hasattr(item, "dict"):
-                payload = item.dict()
-            elif isinstance(item, Mapping):
-                payload = dict(item)
+                payload = item.dict()  # type: ignore
+            elif isinstance(item, dict):
+                payload = item
             else:
                 continue
 
@@ -110,8 +110,10 @@ class AnomalyDetectionService:
                 continue
 
             try:
-                close = float(payload.get("close") or payload.get("close_price"))
-                volume = float(payload.get("volume", 0) or 0)
+                close_val = payload.get("close") or payload.get("close_price")
+                close = float(close_val) if close_val is not None else 0.0
+                volume_val = payload.get("volume", 0) or 0
+                volume = float(volume_val) if volume_val is not None else 0.0
             except (TypeError, ValueError):
                 continue
 
@@ -154,7 +156,7 @@ class AnomalyDetectionService:
 
     def _compute_isolation_forest(
         self, frame: pd.DataFrame, features: np.ndarray
-    ) -> Mapping[datetime, float]:
+    ) -> dict[datetime, float]:
         if len(features) == 0:
             return {}
 
@@ -175,7 +177,7 @@ class AnomalyDetectionService:
 
     def _compute_prophet_scores(
         self, frame: pd.DataFrame
-    ) -> Mapping[datetime, Optional[float]]:
+    ) -> dict[datetime, float | None]:
         residuals: pd.Series
         if self._prophet_available and len(frame) >= self.min_history:
             try:
@@ -220,10 +222,10 @@ class AnomalyDetectionService:
         self,
         *,
         iso_score: float,
-        prophet_score: Optional[float],
+        prophet_score: float | None,
         price_change_pct: float,
         volume_z: float,
-    ) -> tuple[SeverityLevel, str, List[str]]:
+    ) -> tuple[SeverityLevel, str, list[str]]:
         prophet_norm = min(abs(prophet_score or 0.0) / 3.0, 1.0)
         price_norm = min(abs(price_change_pct) / 5.0, 1.0)
         volume_norm = min(abs(volume_z) / 5.0, 1.0)
@@ -235,7 +237,7 @@ class AnomalyDetectionService:
             "isolation": iso_score,
         }
 
-        primary_issue = max(severity_candidates, key=severity_candidates.get)
+        primary_issue = max(severity_candidates, key=lambda k: severity_candidates[k])
         severity_value = max(severity_candidates.values())
 
         if severity_value >= 0.85:
@@ -249,7 +251,7 @@ class AnomalyDetectionService:
         else:
             severity = SeverityLevel.NORMAL
 
-        reasons: List[str] = [
+        reasons: list[str] = [
             name
             for name, value in severity_candidates.items()
             if value >= 0.4 and name != "isolation"
