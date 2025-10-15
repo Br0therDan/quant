@@ -4,6 +4,7 @@
 		"@emotion/react": "latest",
 		"@emotion/styled": "latest",
 		"@fontsource/roboto": "^5.2.8",
+		"@monaco-editor/react": "^4.7.0",
 		"@mui/icons-material": "latest",
 		"@mui/lab": "7.0.1-beta.18",
 		"@mui/material": "^7.3.4",
@@ -38,6 +39,7 @@
 		"date-fns": "^4.1.0",
 		"dayjs": "^1.11.18",
 		"js-cookie": "^3.0.5",
+		"jspdf": "^3.0.3",
 		"lightweight-charts": "^5.0.8",
 		"lodash": "^4.17.21",
 		"next": "^15.0.0",
@@ -46,8 +48,10 @@
 		"react-dom": "^18.0.0",
 		"react-financial-charts": "^2.0.1",
 		"react-hook-form": "^7.65.0",
+		"react-markdown": "^10.1.0",
 		"react-router": "^7.9.3",
-		"recharts": "^3.2.1"
+		"recharts": "^3.2.1",
+		"socket.io-client": "^4.8.1"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.2.0",

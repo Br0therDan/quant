@@ -72,13 +72,11 @@ export default function RunBacktestPage() {
       await createBacktest({
         name: formState.name,
         description: formState.description || undefined,
-		config: {
-			name: formState.name,
-			description: formState.description || undefined,
-			symbols,
-			start_date: formState.startDate,
-			end_date: formState.endDate,
-		},
+        symbols,
+        strategy_type: formState.strategyType || "custom",
+        start_date: formState.startDate,
+        end_date: formState.endDate,
+        initial_capital: formState.initialCapital,
       });
       router.push("/backtests");
     } catch (err) {
