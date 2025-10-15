@@ -39,7 +39,7 @@ class NarrativeReportService:
         ml_signal_service: Optional[Any] = None,
         regime_service: Optional[Any] = None,
         probabilistic_service: Optional[Any] = None,
-        openai_manager: OpenAIClientManager = None,
+        openai_manager: OpenAIClientManager = None,  # type: ignore TODO: 개선후 제거
     ):
         """서비스 초기화.
 
@@ -62,9 +62,9 @@ class NarrativeReportService:
         except RuntimeError as exc:
             logger.warning("OpenAI client initialization failed: %s", exc)
 
-        self.default_model = (
-            self.openai_manager.get_service_policy(self.service_name).default_model
-        )
+        self.default_model = self.openai_manager.get_service_policy(
+            self.service_name
+        ).default_model
         logger.info(
             "NarrativeReportService initialized",
             extra={"default_model": self.default_model},
@@ -114,7 +114,9 @@ class NarrativeReportService:
         try:
             self._get_client()
         except RuntimeError as exc:
-            raise Exception("OpenAI client not initialized. Check OPENAI_API_KEY.") from exc
+            raise Exception(
+                "OpenAI client not initialized. Check OPENAI_API_KEY."
+            ) from exc
 
         # 1. 백테스트 데이터 조회
         backtest = await self.backtest_service.get_backtest(backtest_id)

@@ -294,7 +294,7 @@ class StrategyBuilderService:
             context_payload["rag_references"] = self.rag_service.serialise_contexts(
                 contexts
             )
-            context_payload["rag_prompt"] = augmented_prompt.prompt
+            context_payload["rag_prompt"] = augmented_prompt.prompt  # type: ignore TODO: 개선후 제거
         base_payload["context"] = context_payload or None
 
         if contexts and base_payload.get("model_id"):
@@ -655,9 +655,7 @@ JSON 형식으로 응답하세요:
 
         # 검증 오류가 있는 경우
         if validation_errors:
-            approval_reasons.append(
-                f"{len(validation_errors)}개 파라미터 검증 오류 발견"
-            )
+            approval_reasons.append(f"{len(validation_errors)}개 파라미터 검증 오류 발견")
             suggested_modifications.extend(
                 [f"파라미터 수정: {err}" for err in validation_errors]
             )
