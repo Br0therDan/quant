@@ -341,5 +341,5 @@ export type {
 	MarketRegimeResponse,
 	MarketRegimeSnapshot,
 	MarketRegimeType,
-	RegimeMetrics
+	RegimeMetrics,
 };
