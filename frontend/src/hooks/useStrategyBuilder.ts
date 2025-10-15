@@ -20,7 +20,7 @@ import type {
 	StrategyBuilderRequest,
 	StrategyBuilderResponse,
 } from "@/client";
-import { StrategyBuilderService } from "@/client";
+import { GenAiService } from "@/client";
 import { useSnackbar } from "@/contexts/SnackbarContext";
 import { useMutation } from "@tanstack/react-query";
 import { useCallback, useState } from "react";
@@ -84,7 +84,7 @@ export const useStrategyBuilder = () => {
 				},
 			};
 
-			const response = await StrategyBuilderService.generateStrategy({
+			const response = await GenAiService.generateStrategy({
 				body: request,
 			});
 			return response.data;
@@ -145,7 +145,7 @@ export const useStrategyBuilder = () => {
 				top_k: 5,
 			};
 
-			const response = await StrategyBuilderService.searchIndicators({
+			const response = await GenAiService.searchIndicators({
 				body: request,
 			});
 			return response.data;
@@ -170,7 +170,7 @@ export const useStrategyBuilder = () => {
 
 	const approveStrategyMutation = useMutation({
 		mutationFn: async (request: StrategyApprovalRequest) => {
-			const response = await StrategyBuilderService.approveStrategy({
+			const response = await GenAiService.approveStrategy({
 				body: request,
 			});
 			return response.data;

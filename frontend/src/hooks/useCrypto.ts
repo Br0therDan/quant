@@ -4,7 +4,7 @@
 // Hook은 useCrypto 단일/통합 사용 (별도의 추가 훅 생성 불필요)
 // Hey-API 기반: @/client/sdk.gen.ts 의 각 엔드포인트별 서비스클래스 및 @/client/types.gen.ts 의 타입정의 활용(엔드포인트의 스키마명칭과 호환)
 
-import { CryptoService } from "@/client";
+import { MarketDataService } from "@/client";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 
@@ -90,7 +90,7 @@ export const useCryptoExchangeRate = (
 				toCurrency,
 				queryKey,
 			});
-			const response = await CryptoService.getExchangeRate({
+			const response = await MarketDataService.getExchangeRate({
 				path: { from_currency: fromCurrency, to_currency: toCurrency },
 			});
 			console.log("✅ API Response - Crypto Exchange Rate:", {
@@ -128,7 +128,7 @@ export const useCryptoBulkExchangeRates = (
 				toCurrencies,
 				queryKey,
 			});
-			const response = await CryptoService.getBulkExchangeRates({
+			const response = await MarketDataService.getBulkExchangeRates({
 				query: {
 					crypto_symbols: toCurrencies,
 					target_currency: fromCurrency,
@@ -175,7 +175,7 @@ export const useCryptoDailyPrices = (
 				end_date: options?.endDate,
 				queryKey,
 			});
-			const response = await CryptoService.getDailyPrices({
+			const response = await MarketDataService.getDailyPrices({
 				path: { symbol },
 				query: {
 					market,
@@ -224,7 +224,7 @@ export const useCryptoWeeklyPrices = (
 				end_date: options?.endDate,
 				queryKey,
 			});
-			const response = await CryptoService.getWeeklyPrices({
+			const response = await MarketDataService.getWeeklyPrices({
 				path: { symbol },
 				query: {
 					market,
@@ -273,7 +273,7 @@ export const useCryptoMonthlyPrices = (
 				end_date: options?.endDate,
 				queryKey,
 			});
-			const response = await CryptoService.getMonthlyPrices({
+			const response = await MarketDataService.getMonthlyPrices({
 				path: { symbol },
 				query: {
 					market,
@@ -319,7 +319,7 @@ export const useBitcoinPrice = (
 				end_date: options?.endDate,
 				queryKey,
 			});
-			const response = await CryptoService.getBitcoinPrice({
+			const response = await MarketDataService.getBitcoinPrice({
 				path: { period },
 				query: {
 					market,
@@ -362,7 +362,7 @@ export const useEthereumPrice = (
 				end_date: options?.endDate,
 				queryKey,
 			});
-			const response = await CryptoService.getEthereumPrice({
+			const response = await MarketDataService.getEthereumPrice({
 				path: { period },
 				query: {
 					market,

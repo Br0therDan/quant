@@ -4,7 +4,7 @@
 // Hook은 useFundamental 단일/통합 사용 (별도의 추가 훅 생성 불필요)
 // Hey-API 기반: @/client/sdk.gen.ts 의 각 엔드포인트별 서비스클래스 및 @/client/types.gen.ts 의 타입정의 활용(엔드포인트의 스키마명칭과 호환)
 
-import { FundamentalService } from "@/client";
+import { MarketDataService } from "@/client";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 
@@ -43,7 +43,7 @@ export const useFundamentalCompanyOverview = (symbol: string) => {
 	return useQuery({
 		queryKey: fundamentalQueryKeys.companyOverviewSymbol(symbol),
 		queryFn: async () => {
-			const response = await FundamentalService.getCompanyOverview({
+			const response = await MarketDataService.getCompanyOverview({
 				path: { symbol },
 			});
 			return response.data;
@@ -58,7 +58,7 @@ export const useFundamentalIncomeStatement = (symbol: string) => {
 	return useQuery({
 		queryKey: fundamentalQueryKeys.incomeStatementSymbol(symbol),
 		queryFn: async () => {
-			const response = await FundamentalService.getIncomeStatement({
+			const response = await MarketDataService.getIncomeStatement({
 				path: { symbol },
 			});
 			return response.data;
@@ -73,7 +73,7 @@ export const useFundamentalBalanceSheet = (symbol: string) => {
 	return useQuery({
 		queryKey: fundamentalQueryKeys.balanceSheetSymbol(symbol),
 		queryFn: async () => {
-			const response = await FundamentalService.getBalanceSheet({
+			const response = await MarketDataService.getBalanceSheet({
 				path: { symbol },
 			});
 			return response.data;
@@ -88,7 +88,7 @@ export const useFundamentalCashFlow = (symbol: string) => {
 	return useQuery({
 		queryKey: fundamentalQueryKeys.cashFlowSymbol(symbol),
 		queryFn: async () => {
-			const response = await FundamentalService.getCashFlow({
+			const response = await MarketDataService.getCashFlow({
 				path: { symbol },
 			});
 			return response.data;
@@ -103,7 +103,7 @@ export const useFundamentalEarnings = (symbol: string) => {
 	return useQuery({
 		queryKey: fundamentalQueryKeys.earningsSymbol(symbol),
 		queryFn: async () => {
-			const response = await FundamentalService.getEarnings({
+			const response = await MarketDataService.getEarnings({
 				path: { symbol },
 			});
 			return response.data;

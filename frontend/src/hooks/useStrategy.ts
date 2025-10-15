@@ -1,4 +1,4 @@
-import { MarketRegimeService, StrategyService } from "@/client";
+import { MarketDataService, StrategyService } from "@/client";
 import type { StrategyCreate, StrategyExecute } from "@/client/types.gen";
 import { useSnackbar } from "@/contexts/SnackbarContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -197,7 +197,7 @@ export const useStrategyDetail = (
 	const regimeQuery = useQuery({
 		queryKey: ["market-data", "regime", id],
 		queryFn: async () => {
-			const response = await MarketRegimeService.getMarketRegime({
+			const response = await MarketDataService.getMarketRegime({
 				query: {
 					symbol: strategyQuery.data?.name || "AAPL", // 전략명 또는 기본값
 					lookback_days: 60,

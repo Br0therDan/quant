@@ -4,7 +4,7 @@
 // Hook은 useTemplate 단일/통합 사용 (별도의 추가 훅 생성 불필요)
 // Hey-API 기반: @/client/sdk.gen.ts 의 각 엔드포인트별 서비스클래스 및 @/client/types.gen.ts 의 타입정의 활용(엔드포인트의 스키마명칭과 호환)
 
-import { TemplateService, type TemplateUpdate } from "@/client";
+import { StrategyService, type TemplateUpdate } from "@/client";
 import { useSnackbar } from "@/contexts/SnackbarContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
@@ -26,7 +26,7 @@ export function useTemplates() {
 	const templateListQuery = useQuery({
 		queryKey: templateQueryKeys.lists(),
 		queryFn: async () => {
-			const response = await TemplateService.getTemplates();
+			const response = await StrategyService.getTemplates();
 			return response.data;
 		},
 		staleTime: 1000 * 60 * 30, // 30 minutes (templates don't change frequently)
@@ -36,7 +36,7 @@ export function useTemplates() {
 	const templateUsageStatsQuery = useQuery({
 		queryKey: templateQueryKeys.usageStats(),
 		queryFn: async () => {
-			const response = await TemplateService.getTemplateUsageStats();
+			const response = await StrategyService.getTemplateUsageStats();
 			return response.data;
 		},
 		staleTime: 1000 * 60 * 15, // 15 minutes
@@ -46,7 +46,7 @@ export function useTemplates() {
 	// Mutations
 	const createTemplateMutation = useMutation({
 		mutationFn: async (data: any) => {
-			const response = await TemplateService.createTemplate({
+			const response = await StrategyService.createTemplate({
 				body: data,
 			});
 			return response.data;
@@ -70,7 +70,7 @@ export function useTemplates() {
 
 	const updateTemplateMutation = useMutation({
 		mutationFn: async ({ id, data }: { id: string; data: TemplateUpdate }) => {
-			const response = await TemplateService.updateTemplate({
+			const response = await StrategyService.updateTemplate({
 				path: { template_id: id },
 				body: data,
 			});
@@ -97,7 +97,7 @@ export function useTemplates() {
 
 	const deleteTemplateMutation = useMutation({
 		mutationFn: async (id: string) => {
-			const response = await TemplateService.deleteTemplate({
+			const response = await StrategyService.deleteTemplate({
 				path: { template_id: id },
 			});
 			return response.data;
@@ -119,7 +119,7 @@ export function useTemplates() {
 
 	const createStrategyFromTemplateMutation = useMutation({
 		mutationFn: async (data: { templateId: string; strategyData: any }) => {
-			const response = await TemplateService.createStrategyFromTemplate({
+			const response = await StrategyService.createStrategyFromTemplate({
 				path: { template_id: data.templateId },
 				body: data.strategyData,
 			});
@@ -202,7 +202,7 @@ export const useTemplateDetail = (id: string) => {
 	return useQuery({
 		queryKey: templateQueryKeys.detail(id),
 		queryFn: async () => {
-			const response = await TemplateService.getTemplate({
+			const response = await StrategyService.getTemplate({
 				path: { template_id: id },
 			});
 			return response.data;

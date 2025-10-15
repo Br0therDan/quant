@@ -4,7 +4,7 @@
 // Hook은 useEconomic 단일/통합 사용 (별도의 추가 훅 생성 불필요)
 // Hey-API 기반: @/client/sdk.gen.ts 의 각 엔드포인트별 서비스클래스 및 @/client/types.gen.ts 의 타입정의 활용(엔드포인트의 스키마명칭과 호환)
 
-import { EconomicService } from "@/client";
+import { MarketDataService } from "@/client";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 
@@ -23,7 +23,7 @@ export function useEconomic() {
 	const gdpDataQuery = useQuery({
 		queryKey: economicQueryKeys.gdp(),
 		queryFn: async () => {
-			const response = await EconomicService.getGdpData();
+			const response = await MarketDataService.getGdpData();
 			return response.data;
 		},
 		staleTime: 1000 * 60 * 60, // 1 hour (economic data updates infrequently)
@@ -33,7 +33,7 @@ export function useEconomic() {
 	const inflationDataQuery = useQuery({
 		queryKey: economicQueryKeys.inflation(),
 		queryFn: async () => {
-			const response = await EconomicService.getInflationData();
+			const response = await MarketDataService.getInflationData();
 			return response.data;
 		},
 		staleTime: 1000 * 60 * 60, // 1 hour
@@ -43,7 +43,7 @@ export function useEconomic() {
 	const interestRatesQuery = useQuery({
 		queryKey: economicQueryKeys.interestRates(),
 		queryFn: async () => {
-			const response = await EconomicService.getInterestRates();
+			const response = await MarketDataService.getInterestRates();
 			return response.data;
 		},
 		staleTime: 1000 * 60 * 30, // 30 minutes (interest rates can change more frequently)
@@ -53,7 +53,7 @@ export function useEconomic() {
 	const employmentDataQuery = useQuery({
 		queryKey: economicQueryKeys.employment(),
 		queryFn: async () => {
-			const response = await EconomicService.getEmploymentData();
+			const response = await MarketDataService.getEmploymentData();
 			return response.data;
 		},
 		staleTime: 1000 * 60 * 60, // 1 hour

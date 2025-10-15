@@ -13,7 +13,7 @@
  * 작성일: 2025-10-14
  */
 
-import { NarrativeService } from "@/client";
+import { GenAiService } from "@/client";
 import { useSnackbar } from "@/contexts/SnackbarContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import jsPDF from "jspdf";
@@ -68,7 +68,7 @@ export const useNarrativeReport = (backtestId: string) => {
 	const reportQuery = useQuery({
 		queryKey: narrativeReportQueryKeys.byBacktest(backtestId),
 		queryFn: async () => {
-			const response = await NarrativeService.generateNarrativeReport({
+			const response = await GenAiService.generateNarrativeReport({
 				path: { backtest_id: backtestId },
 			});
 			return response.data;
@@ -83,7 +83,7 @@ export const useNarrativeReport = (backtestId: string) => {
 
 	const generateReportMutation = useMutation({
 		mutationFn: async (options: NarrativeReportOptions = {}) => {
-			const response = await NarrativeService.generateNarrativeReport({
+			const response = await GenAiService.generateNarrativeReport({
 				path: { backtest_id: backtestId },
 				query: {
 					include_phase1_insights: options.includePhase1Insights ?? true,
@@ -113,7 +113,7 @@ export const useNarrativeReport = (backtestId: string) => {
 
 	const regenerateReportMutation = useMutation({
 		mutationFn: async (options: NarrativeReportOptions = {}) => {
-			const response = await NarrativeService.generateNarrativeReport({
+			const response = await GenAiService.generateNarrativeReport({
 				path: { backtest_id: backtestId },
 				query: {
 					include_phase1_insights: options.includePhase1Insights ?? true,

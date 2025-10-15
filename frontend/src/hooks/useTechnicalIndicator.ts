@@ -4,7 +4,7 @@
 // Hook은 useTechnicalIndicator 단일/통합 사용 (별도의 추가 훅 생성 불필요)
 // Hey-API 기반: @/client/sdk.gen.ts 의 각 엔드포인트별 서비스클래스 및 @/client/types.gen.ts 의 타입정의 활용(엔드포인트의 스키마명칭과 호환)
 
-import { TechnicalIndicatorService } from "@/client";
+import { MarketDataService } from "@/client";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 
@@ -215,7 +215,7 @@ export const useIndicatorList = (options?: { enabled?: boolean }) => {
 		queryKey: technicalIndicatorQueryKeys.indicatorList(),
 		queryFn: async () => {
 			console.log("🌐 API Call - Indicator List");
-			const response = await TechnicalIndicatorService.getIndicatorList();
+			const response = await MarketDataService.getIndicatorList();
 			console.log("✅ API Response - Indicator List:", {
 				response: response.data,
 			});
@@ -253,7 +253,7 @@ export const useSMA = (
 				seriesType: options?.seriesType,
 				queryKey,
 			});
-			const response = await TechnicalIndicatorService.getSma({
+			const response = await MarketDataService.getSma({
 				path: { symbol },
 				query: {
 					interval: options?.interval,
@@ -300,7 +300,7 @@ export const useWMA = (
 				seriesType: options?.seriesType,
 				queryKey,
 			});
-			const response = await TechnicalIndicatorService.getWma({
+			const response = await MarketDataService.getWma({
 				path: { symbol },
 				query: {
 					interval: options?.interval,
@@ -347,7 +347,7 @@ export const useDEMA = (
 				seriesType: options?.seriesType,
 				queryKey,
 			});
-			const response = await TechnicalIndicatorService.getDema({
+			const response = await MarketDataService.getDema({
 				path: { symbol },
 				query: {
 					interval: options?.interval,
@@ -394,7 +394,7 @@ export const useTEMA = (
 				seriesType: options?.seriesType,
 				queryKey,
 			});
-			const response = await TechnicalIndicatorService.getTema({
+			const response = await MarketDataService.getTema({
 				path: { symbol },
 				query: {
 					interval: options?.interval,
@@ -441,7 +441,7 @@ export const useEMA = (
 				seriesType: options?.seriesType,
 				queryKey,
 			});
-			const response = await TechnicalIndicatorService.getEma({
+			const response = await MarketDataService.getEma({
 				path: { symbol },
 				query: {
 					interval: options?.interval,
@@ -488,7 +488,7 @@ export const useRSI = (
 				seriesType: options?.seriesType,
 				queryKey,
 			});
-			const response = await TechnicalIndicatorService.getRsi({
+			const response = await MarketDataService.getRsi({
 				path: { symbol },
 				query: {
 					interval: options?.interval,
@@ -541,7 +541,7 @@ export const useMACD = (
 				signalPeriod: options?.signalPeriod,
 				queryKey,
 			});
-			const response = await TechnicalIndicatorService.getMacd({
+			const response = await MarketDataService.getMacd({
 				path: { symbol },
 				query: {
 					interval: options?.interval,
@@ -596,7 +596,7 @@ export const useBBANDS = (
 				nbdevdn: options?.nbdevdn,
 				queryKey,
 			});
-			const response = await TechnicalIndicatorService.getBbands({
+			const response = await MarketDataService.getBbands({
 				path: { symbol },
 				query: {
 					interval: options?.interval,
@@ -642,7 +642,7 @@ export const useADX = (
 				timePeriod: options?.timePeriod,
 				queryKey,
 			});
-			const response = await TechnicalIndicatorService.getAdx({
+			const response = await MarketDataService.getAdx({
 				path: { symbol },
 				query: {
 					interval: options?.interval,
@@ -685,7 +685,7 @@ export const useATR = (
 				timePeriod: options?.timePeriod,
 				queryKey,
 			});
-			const response = await TechnicalIndicatorService.getAtr({
+			const response = await MarketDataService.getAtr({
 				path: { symbol },
 				query: {
 					interval: options?.interval,
@@ -740,7 +740,7 @@ export const useSTOCH = (
 				slowdMaType: options?.slowdMaType,
 				queryKey,
 			});
-			const response = await TechnicalIndicatorService.getStoch({
+			const response = await MarketDataService.getStoch({
 				path: { symbol },
 				query: {
 					interval: options?.interval,

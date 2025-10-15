@@ -32,7 +32,7 @@ import type {
 	MarketRegimeType,
 	RegimeMetrics,
 } from "@/client";
-import { MarketRegimeService } from "@/client";
+import { MarketDataService } from "@/client";
 import { useSnackbar } from "@/contexts/SnackbarContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -99,7 +99,7 @@ export const useCurrentRegime = ({
 	const query = useQuery({
 		queryKey: regimeQueryKeys.currentWithLookback(symbol, lookbackDays),
 		queryFn: async () => {
-			const response = await MarketRegimeService.getMarketRegime({
+			const response = await MarketDataService.getMarketRegime({
 				query: { symbol, lookback_days: lookbackDays },
 			});
 			return response.data as MarketRegimeResponse;
@@ -165,7 +165,7 @@ export const useRefreshRegime = ({
 
 	return useMutation({
 		mutationFn: async () => {
-			const response = await MarketRegimeService.getMarketRegime({
+			const response = await MarketDataService.getMarketRegime({
 				query: { symbol, refresh: true, lookback_days: lookbackDays },
 			});
 			return response.data as MarketRegimeResponse;
@@ -341,5 +341,5 @@ export type {
 	MarketRegimeResponse,
 	MarketRegimeSnapshot,
 	MarketRegimeType,
-	RegimeMetrics,
+	RegimeMetrics
 };

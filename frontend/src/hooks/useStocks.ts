@@ -4,7 +4,7 @@
 // Hook은 useStock 단일/통합 사용 (별도의 추가 훅 생성 불필요)
 // Hey-API 기반: @/client/sdk.gen.ts 의 각 엔드포인트별 서비스클래스 및 @/client/types.gen.ts 의 타입정의 활용(엔드포인트의 스키마명칭과 호환)
 
-import { StockService } from "@/client";
+import { MarketDataService } from "@/client";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 
@@ -101,7 +101,7 @@ export const useStockDailyPrices = (
 				end_date: options?.endDate,
 				queryKey,
 			});
-			const response = await StockService.getDailyPrices({
+			const response = await MarketDataService.getDailyPrices({
 				path: { symbol },
 				query: {
 					outputsize: options?.outputsize || "full",
@@ -152,7 +152,7 @@ export const useStockWeeklyPrices = (
 				end_date: options?.endDate,
 				queryKey,
 			});
-			const response = await StockService.getWeeklyPrices({
+			const response = await MarketDataService.getWeeklyPrices({
 				path: { symbol },
 				query: {
 					outputsize: options?.outputsize || "full",
@@ -203,7 +203,7 @@ export const useStockMonthlyPrices = (
 				end_date: options?.endDate,
 				queryKey,
 			});
-			const response = await StockService.getMonthlyPrices({
+			const response = await MarketDataService.getMonthlyPrices({
 				path: { symbol },
 				query: {
 					outputsize: options?.outputsize || "full",
@@ -231,7 +231,7 @@ export const useStockQuote = (symbol: string) => {
 	return useQuery({
 		queryKey: stockQueryKeys.quoteSymbol(symbol),
 		queryFn: async () => {
-			const response = await StockService.getQuote({
+			const response = await MarketDataService.getQuote({
 				path: { symbol },
 			});
 			return response.data?.data;
@@ -260,7 +260,7 @@ export const useStockIntraday = (
 				interval: options?.interval,
 				queryKey,
 			});
-			const response = await StockService.getIntradayData({
+			const response = await MarketDataService.getIntradayData({
 				path: { symbol },
 				query: options?.interval ? { interval: options.interval } : undefined,
 			});
@@ -290,7 +290,7 @@ export const useStockHistorical = (
 		queryKey: stockQueryKeys.historicalSymbol(symbol, options?.frequency),
 		queryFn: async () => {
 			// 임시로 dailyPrices를 사용 (실제 historical API가 없는 경우)
-			const response = await StockService.getDailyPrices({
+			const response = await MarketDataService.getDailyPrices({
 				path: { symbol },
 			});
 			return response.data;
@@ -305,7 +305,7 @@ export const useStockSearchSymbols = (keywords: string) => {
 	return useQuery({
 		queryKey: stockQueryKeys.searchSymbols(keywords),
 		queryFn: async () => {
-			const response = await StockService.searchStockSymbols({
+			const response = await MarketDataService.searchStockSymbols({
 				query: { keywords },
 			});
 			return response.data;

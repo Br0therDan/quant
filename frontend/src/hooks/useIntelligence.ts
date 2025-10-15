@@ -4,7 +4,7 @@
 // Hook은 useIntelligence 단일/통합 사용 (별도의 추가 훅 생성 불필요)
 // Hey-API 기반: @/client/sdk.gen.ts 의 각 엔드포인트별 서비스클래스 및 @/client/types.gen.ts 의 타입정의 활용(엔드포인트의 스키마명칭과 호환)
 
-import { IntelligenceService } from "@/client";
+import { MarketDataService } from "@/client";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 
@@ -38,7 +38,7 @@ export const useIntelligenceNews = (symbol: string) => {
 	return useQuery({
 		queryKey: intelligenceQueryKeys.newsSymbol(symbol),
 		queryFn: async () => {
-			const response = await IntelligenceService.getNews({
+			const response = await MarketDataService.getNews({
 				path: { symbol },
 			});
 			return response.data;
@@ -53,7 +53,7 @@ export const useIntelligenceSentiment = (symbol: string) => {
 	return useQuery({
 		queryKey: intelligenceQueryKeys.sentimentSymbol(symbol),
 		queryFn: async () => {
-			const response = await IntelligenceService.getSentimentAnalysis({
+			const response = await MarketDataService.getSentimentAnalysis({
 				path: { symbol },
 			});
 			return response.data;
@@ -68,7 +68,7 @@ export const useIntelligenceAnalyst = (symbol: string) => {
 	return useQuery({
 		queryKey: intelligenceQueryKeys.analystRecommendations(symbol),
 		queryFn: async () => {
-			const response = await IntelligenceService.getAnalystRecommendations({
+			const response = await MarketDataService.getAnalystRecommendations({
 				path: { symbol },
 			});
 			return response.data;
@@ -83,7 +83,7 @@ export const useIntelligenceSocial = (symbol: string) => {
 	return useQuery({
 		queryKey: intelligenceQueryKeys.socialSentiment(symbol),
 		queryFn: async () => {
-			const response = await IntelligenceService.getSocialSentiment({
+			const response = await MarketDataService.getSocialSentiment({
 				path: { symbol },
 			});
 			return response.data;
