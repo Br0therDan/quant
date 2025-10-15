@@ -272,4 +272,27 @@ NEXT_PUBLIC_API_BASE_URL=http://localhost:8500
   - 데이터 마이그레이션 스크립트
   - 롤백 절차
 
+### GenAI Enhancement (진행 중)
+
+- **Master Plan**: `docs/backend/gen_ai_enhancement/MASTER_PLAN.md`
+  - Phase/Sprint 전체 계획 (Phase 1: OpenAI Client Manager, Phase 2: RAG
+    Integration)
+  - 업계 표준 구조 (4주, 8 sprints)
+  - 리스크 관리 및 완화 전략
+- **Dashboard**: `docs/backend/gen_ai_enhancement/DASHBOARD.md`
+  - 프로젝트 진행 현황 (진행률, 주요 이슈, 성과 지표)
+  - Sprint 상태 추적 (대기중/진행중/완료/보류)
+  - 다음 단계 (Next Actions)
+- **README**: `docs/backend/gen_ai_enhancement/README.md`
+  - 작업 지침 및 워크플로우
+  - 문서 작성 규칙 (CRITICAL)
+  - 빠른 시작 가이드
+
+**문서 작성 규칙** (GenAI Enhancement 프로젝트):
+
+- ✅ **Phase 완료 시만 문서 작성** (`PHASE{N}_COMPLETION_REPORT.md`)
+- ❌ **Sprint/Task 완료 시 문서 작성 안 함**
+- ✅ **DASHBOARD.md만 업데이트** (체크박스, 진행률, 주요 이슈만)
+- ❌ **개별 Task 상세 업데이트 금지** (문서 과다 방지)
+
 상세 가이드: `AGENTS.md`, `backend/AGENTS.md`, `frontend/AGENTS.md`

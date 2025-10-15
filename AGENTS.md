@@ -277,6 +277,22 @@ quant/
   - Component architecture
   - Material-UI patterns
 
+- **GenAI Enhancement**:
+  [docs/backend/gen_ai_enhancement/](./docs/backend/gen_ai_enhancement/)
+  - [Master Plan](./docs/backend/gen_ai_enhancement/MASTER_PLAN.md) -
+    Phase/Sprint 전체 계획
+  - [Dashboard](./docs/backend/gen_ai_enhancement/DASHBOARD.md) - 프로젝트 진행
+    현황
+  - [README](./docs/backend/gen_ai_enhancement/README.md) - 작업 지침 및 문서
+    규칙
+
+**문서 작성 규칙** (GenAI Enhancement 프로젝트):
+
+- ✅ **Phase 완료 시만 문서 작성** (`PHASE{N}_COMPLETION_REPORT.md`)
+- ❌ **Sprint/Task 완료 시 문서 작성 안 함**
+- ✅ **DASHBOARD.md만 업데이트** (체크박스, 진행률, 주요 이슈만)
+- ❌ **개별 Task 상세 업데이트 금지** (문서 과다 방지)
+
 - **API Documentation**: `http://localhost:8500/docs` (when backend running)
 
 - **Authentication Flow**: [AUTH_FLOW.md](./AUTH_FLOW.md)
