@@ -1,10 +1,11 @@
-"""
-TradeEngine 테스트
-"""
+"""TradeEngine 테스트.
+
+Unit tests for the backtest trade engine utilities."""
 
 from datetime import datetime
-from app.services.backtest.trade_engine import TradeEngine, Portfolio, TradeCosts
-from app.models.backtest import BacktestConfig, TradeType, OrderType
+
+from app.models.trading.backtest import BacktestConfig, OrderType, TradeType
+from app.services.backtest.trade_engine import Portfolio, TradeCosts, TradeEngine
 
 
 def test_portfolio_initialization():

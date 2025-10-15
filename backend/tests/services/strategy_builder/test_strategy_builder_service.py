@@ -1,25 +1,23 @@
-"""
-Unit Tests for StrategyBuilderService
-
-Phase 3 D2: Interactive Strategy Builder
-자연어 → 전략 파라미터 변환 서비스 테스트
-"""
+"""Unit tests for the GenAI StrategyBuilderService."""
 
 import json
+import os
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from app.schemas.strategy_builder import (
+from app.schemas.enums import IntentType
+from app.schemas.gen_ai.strategy_builder import (
     ConfidenceLevel,
     GeneratedStrategyConfig,
     # HumanApprovalNeeds,
     IndicatorRecommendation,
-    IntentType,
     StrategyBuilderRequest,
     ValidationStatus,
 )
-from app.services.strategy_builder_service import StrategyBuilderService
+from app.services.gen_ai.applications.strategy_builder_service import (
+    StrategyBuilderService,
+)
 
 
 @pytest.fixture
@@ -33,7 +31,7 @@ def mock_strategy_service():
 @pytest.fixture
 def strategy_builder_service(mock_strategy_service):
     """StrategyBuilderService 인스턴스 (OpenAI 없이)"""
-    with patch.dict("os.environ", {"OPENAI_API_KEY": "test-api-key"}):
+    with patch.dict(os.environ, {"OPENAI_API_KEY": "test-api-key"}):
         service = StrategyBuilderService(strategy_service=mock_strategy_service)
         return service
 

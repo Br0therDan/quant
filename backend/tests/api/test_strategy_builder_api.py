@@ -13,12 +13,12 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 from fastapi import status
 
-from app.schemas.strategy_builder import (
+from app.schemas.enums import IntentType
+from app.schemas.gen_ai.strategy_builder import (
     ConfidenceLevel,
     GeneratedStrategyConfig,
     HumanApprovalRequest,
     IndicatorRecommendation,
-    IntentType,
     ParsedIntent,
     StrategyBuilderResponse,
 )

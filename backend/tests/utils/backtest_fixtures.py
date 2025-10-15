@@ -10,8 +10,8 @@ from typing import Dict, List, Any
 import pandas as pd
 import numpy as np
 
-from app.models.backtest import Backtest, BacktestConfig, BacktestStatus
-from app.models.strategy import Strategy, StrategyType
+from app.models.trading.backtest import Backtest, BacktestConfig, BacktestStatus
+from app.models.trading.strategy import Strategy, StrategyType
 
 
 def create_mock_backtest(
@@ -275,7 +275,7 @@ def assert_performance_metrics(
 # import pandas as pd
 # import numpy as np
 
-# from app.models.backtest import Backtest, BacktestConfig, BacktestStatus
+# from app.models.trading.backtest import Backtest, BacktestConfig, BacktestStatus
 # from app.models.strategy import Strategy
 
 
