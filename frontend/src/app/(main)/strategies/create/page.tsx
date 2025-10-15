@@ -69,16 +69,16 @@ export default function CreateStrategyPage() {
   // 소스 전략 데이터로 초기화 (복제 모드)
   useEffect(() => {
     if (sourceStrategy && isClone) {
+      const { config_type: _, ...configParams } = sourceStrategy.config as any;
       setStrategyData({
         name: `${sourceStrategy.name} (복사본)`,
         description: sourceStrategy.description || "",
         strategy_type: sourceStrategy.strategy_type,
-        parameters: sourceStrategy.parameters || {},
+        parameters: configParams || {},
         tags: sourceStrategy.tags || [],
       });
     }
   }, [sourceStrategy, isClone]);
-
   const handleNext = () => {
     setActiveStep((prevStep) => prevStep + 1);
   };

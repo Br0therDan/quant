@@ -20,7 +20,7 @@ import type {
 	FeatureVersionCreate,
 	FeatureVersionResponse,
 } from "@/client";
-import { FeatureStoreService } from "@/client";
+import { MlService } from "@/client";
 import { useSnackbar } from "@/contexts/SnackbarContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -110,7 +110,7 @@ export const useFeatureStore = (params?: FeaturesQueryParams) => {
 	const featuresQuery = useQuery({
 		queryKey: featureStoreQueryKeys.featuresList(params),
 		queryFn: async (): Promise<{ features: Feature[]; total: number }> => {
-			const response = await FeatureStoreService.listFeatures({
+			const response = await MlService.listFeatures({
 				query: {
 					owner: params?.owner,
 					feature_type: params?.feature_type,
@@ -139,7 +139,7 @@ export const useFeatureStore = (params?: FeaturesQueryParams) => {
 	const datasetsQuery = useQuery({
 		queryKey: featureStoreQueryKeys.datasets(),
 		queryFn: async (): Promise<Dataset[]> => {
-			const response = await FeatureStoreService.listDatasets();
+			const response = await MlService.listDatasets();
 			// Backend returns { datasets: [...], total: number }
 			return (response.data?.datasets as Dataset[]) || [];
 		},
@@ -156,7 +156,7 @@ export const useFeatureStore = (params?: FeaturesQueryParams) => {
 	 */
 	const createFeatureMutation = useMutation({
 		mutationFn: async (data: FeatureCreate): Promise<Feature> => {
-			const response = await FeatureStoreService.createFeature({
+			const response = await MlService.createFeature({
 				body: data,
 			});
 			if (!response.data) {
@@ -187,7 +187,7 @@ export const useFeatureStore = (params?: FeaturesQueryParams) => {
 			feature_name: string;
 			data: FeatureUpdate;
 		}): Promise<Feature> => {
-			const response = await FeatureStoreService.updateFeature({
+			const response = await MlService.updateFeature({
 				path: { feature_name },
 				body: data,
 			});
@@ -216,7 +216,7 @@ export const useFeatureStore = (params?: FeaturesQueryParams) => {
 	 */
 	const deleteFeatureMutation = useMutation({
 		mutationFn: async (feature_name: string): Promise<void> => {
-			await FeatureStoreService.deleteFeature({
+			await MlService.deleteFeature({
 				path: { feature_name },
 			});
 		},
@@ -279,7 +279,7 @@ export const useFeatureDetail = (feature_name: string | null) => {
 			if (!feature_name) {
 				throw new Error("Feature name is required");
 			}
-			const response = await FeatureStoreService.getFeature({
+			const response = await MlService.getFeature({
 				path: { feature_name },
 			});
 			if (!response.data) {
@@ -310,7 +310,7 @@ export const useFeatureVersions = (feature_name: string | null) => {
 			if (!feature_name) {
 				return [];
 			}
-			const response = await FeatureStoreService.getFeatureVersions({
+			const response = await MlService.getFeatureVersions({
 				path: { feature_name },
 			});
 			return response.data?.versions ?? [];
@@ -338,7 +338,7 @@ export const useDatasetDetail = (datasetId: string | null) => {
 			if (!datasetId) {
 				throw new Error("Dataset ID is required");
 			}
-			const response = await FeatureStoreService.getDataset({
+			const response = await MlService.getDataset({
 				path: { dataset_id: datasetId },
 			});
 			if (!response.data) {
