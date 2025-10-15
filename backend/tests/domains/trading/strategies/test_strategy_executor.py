@@ -8,7 +8,7 @@ from unittest.mock import MagicMock, AsyncMock
 from datetime import datetime, timedelta
 
 from app.services.backtest.executor import StrategyExecutor
-from app.models.trading.backtest import BacktestConfig
+from app.models.backtest import BacktestConfig
 
 
 @pytest.fixture

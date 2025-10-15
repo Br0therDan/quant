@@ -1,6 +1,6 @@
 # Backend Test Implementation - Dashboard
 
-**마지막 업데이트**: 2025-10-17
+**마지막 업데이트**: 2025-10-16  
 **프로젝트 기간**: 2025-10-15 ~ 2025-12-10 (8주)
 
 ---
@@ -49,7 +49,7 @@
 - [x] 중복 제거 (5개)
 - [x] 공통 Fixture 구축 (3개)
 - [ ] 모든 기존 테스트 통과
-  - ⚠️ watchlists 라우트 및 ML Signal 서비스 미구현으로 수집 실패 (trading/strategy builder 테스트는 신규 경로 정리 완료)
+  - ⚠️ `app.models.backtest`, `app.schemas.strategy_builder` 미구현으로 수집 실패
 - [ ] 커버리지 유지 (29%)
 
 ---

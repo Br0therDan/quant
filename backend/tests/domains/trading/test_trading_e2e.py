@@ -2,13 +2,15 @@
 
 from __future__ import annotations
 
+import time
 from datetime import datetime, timedelta
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from app.schemas.enums import BacktestStatus
+from app.models.backtest import BacktestStatus
 from app.services.backtest.orchestrator import BacktestOrchestrator
+from app.services.service_factory import service_factory
 
 @pytest.fixture
 def mock_services():

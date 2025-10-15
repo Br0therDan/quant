@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 import numpy as np
 
-from app.schemas.enums import SeverityLevel
+from app.models.data_quality import SeverityLevel
 from app.services.ml_platform.infrastructure.anomaly_detector import (
     AnomalyDetectionService,
 )
