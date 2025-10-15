@@ -22,7 +22,7 @@ from app.schemas.trading.strategy import (
     TemplateUpdate,
 )
 from app.services.service_factory import service_factory
-from app.services.strategy_service import StrategyService
+from app.services.trading.strategy_service import StrategyService
 
 router = APIRouter(dependencies=[Depends(get_current_active_verified_user)])
 

@@ -23,7 +23,7 @@ from app.schemas.gen_ai.chatops import (
     StrategyComparisonRequest,
     StrategyComparisonResult,
 )
-from app.services.backtest_service import BacktestService
+from app.services.trading.backtest_service import BacktestService
 
 logger = logging.getLogger(__name__)
 

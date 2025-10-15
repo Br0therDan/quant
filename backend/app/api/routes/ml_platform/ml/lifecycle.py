@@ -25,7 +25,7 @@ from app.schemas.ml_platform.model_lifecycle import (
     RunResponse,
     RunUpdate,
 )
-from app.services.model_lifecycle_service import ModelLifecycleService
+from app.services.ml_platform.model_lifecycle_service import ModelLifecycleService
 from app.services.service_factory import service_factory
 
 router = APIRouter(prefix="/lifecycle", tags=["Model Lifecycle"])

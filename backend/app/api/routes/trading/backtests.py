@@ -20,7 +20,7 @@ from app.schemas.trading.backtest import (
     # IntegratedBacktestResponse,  # ❌ Removed in P3.0
 )
 from app.services.service_factory import service_factory
-from app.services.backtest_service import BacktestService
+from app.services.trading.backtest_service import BacktestService
 from app.services.backtest import BacktestOrchestrator
 from .optimize_backtests import router as optimize_router
 

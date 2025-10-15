@@ -3,11 +3,11 @@ Initialize services package
 """
 
 from .market_data_service import MarketDataService
-from .strategy_service import StrategyService
-from .backtest_service import BacktestService
+from .trading.strategy_service import StrategyService
+from .trading.backtest_service import BacktestService
 from .service_factory import ServiceFactory, service_factory
-from .model_lifecycle_service import ModelLifecycleService
-from .evaluation_harness_service import EvaluationHarnessService
+from .ml_platform.model_lifecycle_service import ModelLifecycleService
+from .ml_platform.evaluation_harness_service import EvaluationHarnessService
 from .llm.prompt_governance_service import PromptGovernanceService
 
 __all__ = [

@@ -16,7 +16,9 @@ import random
 
 
 if TYPE_CHECKING:
-    from app.services.probabilistic_kpi_service import ProbabilisticKPIService
+    from app.services.ml_platform.probabilistic_kpi_service import (
+        ProbabilisticKPIService,
+    )
 
 
 class PortfolioService:

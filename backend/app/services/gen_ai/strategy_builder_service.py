@@ -27,7 +27,7 @@ from app.schemas.gen_ai.strategy_builder import (
     StrategyBuilderResponse,
     ValidationStatus,
 )
-from app.services.strategy_service import StrategyService
+from app.services.trading.strategy_service import StrategyService
 
 logger = logging.getLogger(__name__)
 

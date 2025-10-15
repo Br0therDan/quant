@@ -6,7 +6,7 @@ import logging
 from typing import Any, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from app.services.strategy_service import StrategyService
+    from app.services.trading.strategy_service import StrategyService
 
 from app.strategies.base_strategy import BaseStrategy
 

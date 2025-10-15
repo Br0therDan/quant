@@ -23,7 +23,7 @@ from app.schemas.ml_platform.evaluation_harness import (
     ScenarioResponse,
     ScenarioUpdate,
 )
-from app.services.evaluation_harness_service import EvaluationHarnessService
+from app.services.ml_platform.evaluation_harness_service import EvaluationHarnessService
 from app.services.service_factory import service_factory
 
 router = APIRouter(prefix="/evaluation", tags=["Evaluation Harness"])

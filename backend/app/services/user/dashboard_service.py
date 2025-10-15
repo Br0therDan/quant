@@ -29,18 +29,20 @@ from app.schemas.user.dashboard import (
 )
 from app.schemas.ml_platform.predictive import PredictiveDashboardInsights
 from app.services.database_manager import DatabaseManager
-from app.services.portfolio_service import PortfolioService
-from app.services.strategy_service import StrategyService
-from app.services.backtest_service import BacktestService
+from app.services.trading.portfolio_service import PortfolioService
+from app.services.trading.strategy_service import StrategyService
+from app.services.trading.backtest_service import BacktestService
 from app.services.market_data_service import MarketDataService
-from app.services.watchlist_service import WatchlistService
+from app.services.user.watchlist_service import WatchlistService
 from app.services.monitoring.data_quality_sentinel import DataQualitySentinel
 
 
 if TYPE_CHECKING:
-    from app.services.ml_signal_service import MLSignalService
-    from app.services.regime_detection_service import RegimeDetectionService
-    from app.services.probabilistic_kpi_service import ProbabilisticKPIService
+    from app.services.ml_platform.ml_signal_service import MLSignalService
+    from app.services.ml_platform.regime_detection_service import RegimeDetectionService
+    from app.services.ml_platform.probabilistic_kpi_service import (
+        ProbabilisticKPIService,
+    )
 
 
 logger = logging.getLogger(__name__)

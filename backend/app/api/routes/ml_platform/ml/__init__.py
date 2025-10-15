@@ -2,8 +2,8 @@
 
 from fastapi import APIRouter
 
-from app.api.routes.ml import lifecycle, train
-from app.api.routes.ml import evaluation
+from app.api.routes.ml_platform.ml import lifecycle, train
+from app.api.routes.ml_platform.ml import evaluation
 
 router = APIRouter()
 router.include_router(train.router)
