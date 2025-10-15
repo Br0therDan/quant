@@ -1118,6 +1118,21 @@ export type ChatOpsRequest = {
 	 * 대화 히스토리 포함 여부
 	 */
 	include_history?: boolean;
+	/**
+	 * Model Id
+	 * 사용할 OpenAI 모델 ID (지정하지 않으면 기본 정책 사용)
+	 */
+	model_id?: string | null;
+	/**
+	 * Use Rag
+	 * 사용자 컨텍스트(RAG)를 활용할지 여부
+	 */
+	use_rag?: boolean;
+	/**
+	 * Rag Top K
+	 * 검색할 유사 백테스트 최대 개수
+	 */
+	rag_top_k?: number;
 };
 
 /**
@@ -4030,6 +4045,18 @@ export type MetricSnapshot = {
 };
 
 /**
+ * ModelCapability
+ * Capabilities supported by an OpenAI model.
+ */
+export type ModelCapability =
+	| "chat"
+	| "code_generation"
+	| "analysis"
+	| "reasoning"
+	| "vision"
+	| "function_calling";
+
+/**
  * ModelComparisonRequest
  */
 export type ModelComparisonRequest = {
@@ -4051,6 +4078,52 @@ export type ModelComparisonResponse = {
 	 * Comparisons
 	 */
 	comparisons: Array<AppSchemasMlPlatformModelLifecycleMetricComparison>;
+};
+
+/**
+ * ModelConfigResponse
+ * Public representation of a model configuration.
+ */
+export type ModelConfigResponse = {
+	/**
+	 * Model Id
+	 * OpenAI 모델 ID
+	 */
+	model_id: string;
+	/**
+	 * 모델 가격 티어
+	 */
+	tier: ModelTier;
+	/**
+	 * Capabilities
+	 * 지원되는 기능 (chat, analysis 등)
+	 */
+	capabilities: Array<ModelCapability>;
+	/**
+	 * Input Price Per 1M
+	 * 입력 토큰 100만개당 비용 (USD)
+	 */
+	input_price_per_1m: number;
+	/**
+	 * Output Price Per 1M
+	 * 출력 토큰 100만개당 비용 (USD)
+	 */
+	output_price_per_1m: number;
+	/**
+	 * Max Tokens
+	 * 지원되는 최대 토큰 수
+	 */
+	max_tokens: number;
+	/**
+	 * Supports Rag
+	 * RAG 최적화 여부
+	 */
+	supports_rag: boolean;
+	/**
+	 * Description
+	 * 모델 설명
+	 */
+	description: string;
 };
 
 /**
@@ -4091,29 +4164,16 @@ export type ModelInfoResponse = {
 };
 
 /**
- * ModelListResponse
- * Response schema for model list.
- */
-export type ModelListResponse = {
-	/**
-	 * Models
-	 */
-	models: Array<ModelInfoResponse>;
-	/**
-	 * Total
-	 */
-	total: number;
-	/**
-	 * Latest Version
-	 */
-	latest_version: string | null;
-};
-
-/**
  * ModelStage
  * 모델 배포 단계
  */
 export type ModelStage = "experimental" | "staging" | "production" | "archived";
+
+/**
+ * ModelTier
+ * Pricing/quality tier of an OpenAI model.
+ */
+export type ModelTier = "mini" | "standard" | "advanced" | "premium";
 
 /**
  * ModelVersionCreate
@@ -5687,6 +5747,40 @@ export type QuoteResponse = {
 };
 
 /**
+ * RAGContext
+ * Context snippet retrieved from the vector store.
+ */
+export type RagContext = {
+	/**
+	 * Document Id
+	 * Vector store document identifier
+	 */
+	document_id: string;
+	/**
+	 * Content
+	 * Stored human readable summary text
+	 */
+	content: string;
+	/**
+	 * Similarity Score
+	 * Distance or similarity metric returned by the retriever
+	 */
+	similarity_score: number;
+	/**
+	 * Metadata
+	 * Additional metadata captured during indexing
+	 */
+	metadata?: {
+		[key: string]: unknown;
+	};
+	/**
+	 * Indexed At
+	 * Timestamp when the document was indexed
+	 */
+	indexed_at?: Date | null;
+};
+
+/**
  * RSIMeanReversionConfig
  * RSI 평균회귀 전략 설정
  */
@@ -6223,6 +6317,38 @@ export type ScenarioUpdate = {
 export type SentimentType = "positive" | "neutral" | "negative";
 
 /**
+ * ServiceModelPolicyResponse
+ * Response describing service-specific policy and available models.
+ */
+export type ServiceModelPolicyResponse = {
+	/**
+	 * Service Name
+	 * 서비스 이름
+	 */
+	service_name: string;
+	/**
+	 * Default Model
+	 * 기본 모델 ID
+	 */
+	default_model: string;
+	/**
+	 * Allowed Tiers
+	 * 허용된 모델 티어
+	 */
+	allowed_tiers: Array<ModelTier>;
+	/**
+	 * Required Capabilities
+	 * 필수 기능
+	 */
+	required_capabilities: Array<ModelCapability>;
+	/**
+	 * Models
+	 * 사용 가능한 모델 목록
+	 */
+	models: Array<ModelConfigResponse>;
+};
+
+/**
  * SignalRecommendation
  * Recommendation derived from model probability.
  */
@@ -6314,6 +6440,62 @@ export type StrategyApprovalResponse = {
 };
 
 /**
+ * StrategyBuilderRAGRequest
+ * RAG가 적용된 전략 생성 요청.
+ */
+export type StrategyBuilderRagRequest = {
+	/**
+	 * Query
+	 * 자연어 전략 설명 또는 요청
+	 */
+	query: string;
+	/**
+	 * Context
+	 * 추가 컨텍스트 (심볼, 기간, 제약조건 등)
+	 */
+	context?: {
+		[key: string]: unknown;
+	} | null;
+	/**
+	 * User Preferences
+	 * 사용자 선호도 (위험 선호도, 거래 빈도 등)
+	 */
+	user_preferences?: {
+		[key: string]: unknown;
+	} | null;
+	/**
+	 * Existing Strategy Id
+	 * 수정할 기존 전략 ID (modify intent)
+	 */
+	existing_strategy_id?: string | null;
+	/**
+	 * Require Human Approval
+	 * 사람 승인 필요 여부 (휴먼 인 더 루프)
+	 */
+	require_human_approval?: boolean;
+	/**
+	 * Model Id
+	 * 사용할 OpenAI 모델 ID (미지정 시 서비스 기본값 사용)
+	 */
+	model_id?: string | null;
+	/**
+	 * User Id
+	 * 개인화 컨텍스트를 조회할 사용자 ID
+	 */
+	user_id: string;
+	/**
+	 * Use Rag
+	 * RAG 컨텍스트를 사용할지 여부 (기본값: 사용)
+	 */
+	use_rag?: boolean;
+	/**
+	 * Top K
+	 * 검색할 유사 백테스트 최대 개수
+	 */
+	top_k?: number;
+};
+
+/**
  * StrategyBuilderRequest
  * 대화형 전략 빌더 요청
  */
@@ -6347,6 +6529,11 @@ export type StrategyBuilderRequest = {
 	 * 사람 승인 필요 여부 (휴먼 인 더 루프)
 	 */
 	require_human_approval?: boolean;
+	/**
+	 * Model Id
+	 * 사용할 OpenAI 모델 ID (미지정 시 서비스 기본값 사용)
+	 */
+	model_id?: string | null;
 };
 
 /**
@@ -6403,6 +6590,21 @@ export type StrategyBuilderResponse = {
 	 * 전체 신뢰도 (의도 + 전략 생성)
 	 */
 	overall_confidence: number;
+	/**
+	 * Rag Applied
+	 * RAG 컨텍스트가 적용되었는지 여부
+	 */
+	rag_applied?: boolean;
+	/**
+	 * Rag Contexts
+	 * 전략 생성 시 사용된 RAG 컨텍스트 목록
+	 */
+	rag_contexts?: Array<RagContext> | null;
+	/**
+	 * Rag Prompt Preview
+	 * LLM에 전달된 RAG 프롬프트 미리보기
+	 */
+	rag_prompt_preview?: string | null;
 };
 
 /**
@@ -7835,6 +8037,25 @@ export type WatchlistUpdate = {
 };
 
 /**
+ * ModelListResponse
+ * Response schema for model list.
+ */
+export type AppApiRoutesMlPlatformTrainModelListResponse = {
+	/**
+	 * Models
+	 */
+	models: Array<ModelInfoResponse>;
+	/**
+	 * Total
+	 */
+	total: number;
+	/**
+	 * Latest Version
+	 */
+	latest_version: string | null;
+};
+
+/**
  * MetricComparison
  * Comparison between candidate and baseline.
  */
@@ -7859,6 +8080,23 @@ export type AppModelsMlPlatformEvaluationMetricComparison = {
 	 * 차이
 	 */
 	delta?: number | null;
+};
+
+/**
+ * ModelListResponse
+ * Response payload for available models.
+ */
+export type AppSchemasGenAiModelsModelListResponse = {
+	/**
+	 * Models
+	 * 모델 목록
+	 */
+	models: Array<ModelConfigResponse>;
+	/**
+	 * Total
+	 * 총 모델 수
+	 */
+	total: number;
 };
 
 /**
@@ -13282,7 +13520,7 @@ export type MlListModelsResponses = {
 	/**
 	 * Successful Response
 	 */
-	200: ModelListResponse;
+	200: AppApiRoutesMlPlatformTrainModelListResponse;
 };
 
 export type MlListModelsResponse =
@@ -14106,6 +14344,11 @@ export type GenAiGenerateNarrativeReportData = {
 		 * 상세도 수준 (brief/standard/detailed)
 		 */
 		detail_level?: string | null;
+		/**
+		 * Model Id
+		 * 사용할 OpenAI 모델 ID (지정하지 않으면 기본값)
+		 */
+		model_id?: string | null;
 	};
 	url: "/api/v1/gen-ai/narrative/backtests/{backtest_id}/report";
 };
@@ -14465,6 +14708,33 @@ export type GenAiGenerateStrategyResponses = {
 export type GenAiGenerateStrategyResponse =
 	GenAiGenerateStrategyResponses[keyof GenAiGenerateStrategyResponses];
 
+export type GenAiGenerateStrategyWithRagEndpointData = {
+	body: StrategyBuilderRagRequest;
+	path?: never;
+	query?: never;
+	url: "/api/v1/gen-ai/strategy-builder/generate-with-rag";
+};
+
+export type GenAiGenerateStrategyWithRagEndpointErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type GenAiGenerateStrategyWithRagEndpointError =
+	GenAiGenerateStrategyWithRagEndpointErrors[keyof GenAiGenerateStrategyWithRagEndpointErrors];
+
+export type GenAiGenerateStrategyWithRagEndpointResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: StrategyBuilderResponse;
+};
+
+export type GenAiGenerateStrategyWithRagEndpointResponse =
+	GenAiGenerateStrategyWithRagEndpointResponses[keyof GenAiGenerateStrategyWithRagEndpointResponses];
+
 export type GenAiApproveStrategyData = {
 	body: StrategyApprovalRequest;
 	path?: never;
@@ -14518,6 +14788,71 @@ export type GenAiSearchIndicatorsResponses = {
 
 export type GenAiSearchIndicatorsResponse =
 	GenAiSearchIndicatorsResponses[keyof GenAiSearchIndicatorsResponses];
+
+export type GenAiListModelsData = {
+	body?: never;
+	path?: never;
+	query?: {
+		/**
+		 * Tier
+		 * 필터할 모델 티어
+		 */
+		tier?: ModelTier | null;
+	};
+	url: "/api/v1/gen-ai/models";
+};
+
+export type GenAiListModelsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type GenAiListModelsError =
+	GenAiListModelsErrors[keyof GenAiListModelsErrors];
+
+export type GenAiListModelsResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: AppSchemasGenAiModelsModelListResponse;
+};
+
+export type GenAiListModelsResponse =
+	GenAiListModelsResponses[keyof GenAiListModelsResponses];
+
+export type GenAiGetServiceModelsData = {
+	body?: never;
+	path: {
+		/**
+		 * Service Name
+		 */
+		service_name: string;
+	};
+	query?: never;
+	url: "/api/v1/gen-ai/models/{service_name}";
+};
+
+export type GenAiGetServiceModelsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type GenAiGetServiceModelsError =
+	GenAiGetServiceModelsErrors[keyof GenAiGetServiceModelsErrors];
+
+export type GenAiGetServiceModelsResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: ServiceModelPolicyResponse;
+};
+
+export type GenAiGetServiceModelsResponse =
+	GenAiGetServiceModelsResponses[keyof GenAiGetServiceModelsResponses];
 
 export type SystemServiceHealthCheckData = {
 	body?: never;

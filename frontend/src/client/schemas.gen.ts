@@ -1807,6 +1807,32 @@ export const ChatOpsRequestSchema = {
 			description: "대화 히스토리 포함 여부",
 			default: true,
 		},
+		model_id: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Model Id",
+			description: "사용할 OpenAI 모델 ID (지정하지 않으면 기본 정책 사용)",
+		},
+		use_rag: {
+			type: "boolean",
+			title: "Use Rag",
+			description: "사용자 컨텍스트(RAG)를 활용할지 여부",
+			default: true,
+		},
+		rag_top_k: {
+			type: "integer",
+			maximum: 10,
+			minimum: 1,
+			title: "Rag Top K",
+			description: "검색할 유사 백테스트 최대 개수",
+			default: 3,
+		},
 	},
 	type: "object",
 	required: ["question"],
@@ -6633,6 +6659,20 @@ export const MetricSnapshotSchema = {
 	description: "Metric snapshot stored alongside runs/versions.",
 } as const;
 
+export const ModelCapabilitySchema = {
+	type: "string",
+	enum: [
+		"chat",
+		"code_generation",
+		"analysis",
+		"reasoning",
+		"vision",
+		"function_calling",
+	],
+	title: "ModelCapability",
+	description: "Capabilities supported by an OpenAI model.",
+} as const;
+
 export const ModelComparisonRequestSchema = {
 	properties: {
 		versions: {
@@ -6666,6 +6706,66 @@ export const ModelComparisonResponseSchema = {
 	type: "object",
 	required: ["model_name", "comparisons"],
 	title: "ModelComparisonResponse",
+} as const;
+
+export const ModelConfigResponseSchema = {
+	properties: {
+		model_id: {
+			type: "string",
+			title: "Model Id",
+			description: "OpenAI 모델 ID",
+		},
+		tier: {
+			$ref: "#/components/schemas/ModelTier",
+			description: "모델 가격 티어",
+		},
+		capabilities: {
+			items: {
+				$ref: "#/components/schemas/ModelCapability",
+			},
+			type: "array",
+			title: "Capabilities",
+			description: "지원되는 기능 (chat, analysis 등)",
+		},
+		input_price_per_1m: {
+			type: "number",
+			title: "Input Price Per 1M",
+			description: "입력 토큰 100만개당 비용 (USD)",
+		},
+		output_price_per_1m: {
+			type: "number",
+			title: "Output Price Per 1M",
+			description: "출력 토큰 100만개당 비용 (USD)",
+		},
+		max_tokens: {
+			type: "integer",
+			title: "Max Tokens",
+			description: "지원되는 최대 토큰 수",
+		},
+		supports_rag: {
+			type: "boolean",
+			title: "Supports Rag",
+			description: "RAG 최적화 여부",
+		},
+		description: {
+			type: "string",
+			title: "Description",
+			description: "모델 설명",
+		},
+	},
+	type: "object",
+	required: [
+		"model_id",
+		"tier",
+		"capabilities",
+		"input_price_per_1m",
+		"output_price_per_1m",
+		"max_tokens",
+		"supports_rag",
+		"description",
+	],
+	title: "ModelConfigResponse",
+	description: "Public representation of a model configuration.",
 } as const;
 
 export const ModelInfoResponseSchema = {
@@ -6719,42 +6819,18 @@ export const ModelInfoResponseSchema = {
 	description: "Response schema for model info.",
 } as const;
 
-export const ModelListResponseSchema = {
-	properties: {
-		models: {
-			items: {
-				$ref: "#/components/schemas/ModelInfoResponse",
-			},
-			type: "array",
-			title: "Models",
-		},
-		total: {
-			type: "integer",
-			title: "Total",
-		},
-		latest_version: {
-			anyOf: [
-				{
-					type: "string",
-				},
-				{
-					type: "null",
-				},
-			],
-			title: "Latest Version",
-		},
-	},
-	type: "object",
-	required: ["models", "total", "latest_version"],
-	title: "ModelListResponse",
-	description: "Response schema for model list.",
-} as const;
-
 export const ModelStageSchema = {
 	type: "string",
 	enum: ["experimental", "staging", "production", "archived"],
 	title: "ModelStage",
 	description: "모델 배포 단계",
+} as const;
+
+export const ModelTierSchema = {
+	type: "string",
+	enum: ["mini", "standard", "advanced", "premium"],
+	title: "ModelTier",
+	description: "Pricing/quality tier of an OpenAI model.",
 } as const;
 
 export const ModelVersionCreateSchema = {
@@ -9168,6 +9244,51 @@ export const QuoteResponseSchema = {
 	description: "실시간 호가 응답 스키마",
 } as const;
 
+export const RAGContextSchema = {
+	properties: {
+		document_id: {
+			type: "string",
+			title: "Document Id",
+			description: "Vector store document identifier",
+		},
+		content: {
+			type: "string",
+			minLength: 1,
+			title: "Content",
+			description: "Stored human readable summary text",
+		},
+		similarity_score: {
+			type: "number",
+			minimum: 0,
+			title: "Similarity Score",
+			description: "Distance or similarity metric returned by the retriever",
+		},
+		metadata: {
+			additionalProperties: true,
+			type: "object",
+			title: "Metadata",
+			description: "Additional metadata captured during indexing",
+		},
+		indexed_at: {
+			anyOf: [
+				{
+					type: "string",
+					format: "date-time",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Indexed At",
+			description: "Timestamp when the document was indexed",
+		},
+	},
+	type: "object",
+	required: ["document_id", "content", "similarity_score"],
+	title: "RAGContext",
+	description: "Context snippet retrieved from the vector store.",
+} as const;
+
 export const RSIMeanReversionConfigSchema = {
 	properties: {
 		config_type: {
@@ -10129,6 +10250,56 @@ export const SentimentTypeSchema = {
 	description: "감정 분석 유형.",
 } as const;
 
+export const ServiceModelPolicyResponseSchema = {
+	properties: {
+		service_name: {
+			type: "string",
+			title: "Service Name",
+			description: "서비스 이름",
+		},
+		default_model: {
+			type: "string",
+			title: "Default Model",
+			description: "기본 모델 ID",
+		},
+		allowed_tiers: {
+			items: {
+				$ref: "#/components/schemas/ModelTier",
+			},
+			type: "array",
+			title: "Allowed Tiers",
+			description: "허용된 모델 티어",
+		},
+		required_capabilities: {
+			items: {
+				$ref: "#/components/schemas/ModelCapability",
+			},
+			type: "array",
+			title: "Required Capabilities",
+			description: "필수 기능",
+		},
+		models: {
+			items: {
+				$ref: "#/components/schemas/ModelConfigResponse",
+			},
+			type: "array",
+			title: "Models",
+			description: "사용 가능한 모델 목록",
+		},
+	},
+	type: "object",
+	required: [
+		"service_name",
+		"default_model",
+		"allowed_tiers",
+		"required_capabilities",
+		"models",
+	],
+	title: "ServiceModelPolicyResponse",
+	description:
+		"Response describing service-specific policy and available models.",
+} as const;
+
 export const SignalRecommendationSchema = {
 	type: "string",
 	enum: ["strong_buy", "buy", "hold", "sell", "strong_sell"],
@@ -10254,6 +10425,97 @@ export const StrategyApprovalResponseSchema = {
 	description: "전략 승인 응답",
 } as const;
 
+export const StrategyBuilderRAGRequestSchema = {
+	properties: {
+		query: {
+			type: "string",
+			maxLength: 1000,
+			minLength: 10,
+			title: "Query",
+			description: "자연어 전략 설명 또는 요청",
+		},
+		context: {
+			anyOf: [
+				{
+					additionalProperties: true,
+					type: "object",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Context",
+			description: "추가 컨텍스트 (심볼, 기간, 제약조건 등)",
+		},
+		user_preferences: {
+			anyOf: [
+				{
+					additionalProperties: true,
+					type: "object",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "User Preferences",
+			description: "사용자 선호도 (위험 선호도, 거래 빈도 등)",
+		},
+		existing_strategy_id: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Existing Strategy Id",
+			description: "수정할 기존 전략 ID (modify intent)",
+		},
+		require_human_approval: {
+			type: "boolean",
+			title: "Require Human Approval",
+			description: "사람 승인 필요 여부 (휴먼 인 더 루프)",
+			default: true,
+		},
+		model_id: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Model Id",
+			description: "사용할 OpenAI 모델 ID (미지정 시 서비스 기본값 사용)",
+		},
+		user_id: {
+			type: "string",
+			title: "User Id",
+			description: "개인화 컨텍스트를 조회할 사용자 ID",
+		},
+		use_rag: {
+			type: "boolean",
+			title: "Use Rag",
+			description: "RAG 컨텍스트를 사용할지 여부 (기본값: 사용)",
+			default: true,
+		},
+		top_k: {
+			type: "integer",
+			maximum: 10,
+			minimum: 1,
+			title: "Top K",
+			description: "검색할 유사 백테스트 최대 개수",
+			default: 3,
+		},
+	},
+	type: "object",
+	required: ["query", "user_id"],
+	title: "StrategyBuilderRAGRequest",
+	description: "RAG가 적용된 전략 생성 요청.",
+} as const;
+
 export const StrategyBuilderRequestSchema = {
 	properties: {
 		query: {
@@ -10306,6 +10568,18 @@ export const StrategyBuilderRequestSchema = {
 			title: "Require Human Approval",
 			description: "사람 승인 필요 여부 (휴먼 인 더 루프)",
 			default: true,
+		},
+		model_id: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Model Id",
+			description: "사용할 OpenAI 모델 ID (미지정 시 서비스 기본값 사용)",
 		},
 	},
 	type: "object",
@@ -10396,6 +10670,39 @@ export const StrategyBuilderResponseSchema = {
 			minimum: 0,
 			title: "Overall Confidence",
 			description: "전체 신뢰도 (의도 + 전략 생성)",
+		},
+		rag_applied: {
+			type: "boolean",
+			title: "Rag Applied",
+			description: "RAG 컨텍스트가 적용되었는지 여부",
+			default: false,
+		},
+		rag_contexts: {
+			anyOf: [
+				{
+					items: {
+						$ref: "#/components/schemas/RAGContext",
+					},
+					type: "array",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Rag Contexts",
+			description: "전략 생성 시 사용된 RAG 컨텍스트 목록",
+		},
+		rag_prompt_preview: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Rag Prompt Preview",
+			description: "LLM에 전달된 RAG 프롬프트 미리보기",
 		},
 	},
 	type: "object",
@@ -12740,6 +13047,37 @@ export const WatchlistUpdateSchema = {
 	description: "워치리스트 업데이트 모델",
 } as const;
 
+export const app__api__routes__ml_platform__train__ModelListResponseSchema = {
+	properties: {
+		models: {
+			items: {
+				$ref: "#/components/schemas/ModelInfoResponse",
+			},
+			type: "array",
+			title: "Models",
+		},
+		total: {
+			type: "integer",
+			title: "Total",
+		},
+		latest_version: {
+			anyOf: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			title: "Latest Version",
+		},
+	},
+	type: "object",
+	required: ["models", "total", "latest_version"],
+	title: "ModelListResponse",
+	description: "Response schema for model list.",
+} as const;
+
 export const app__models__ml_platform__evaluation__MetricComparisonSchema = {
 	properties: {
 		metric_name: {
@@ -12781,6 +13119,28 @@ export const app__models__ml_platform__evaluation__MetricComparisonSchema = {
 	required: ["metric_name", "candidate"],
 	title: "MetricComparison",
 	description: "Comparison between candidate and baseline.",
+} as const;
+
+export const app__schemas__gen_ai__models__ModelListResponseSchema = {
+	properties: {
+		models: {
+			items: {
+				$ref: "#/components/schemas/ModelConfigResponse",
+			},
+			type: "array",
+			title: "Models",
+			description: "모델 목록",
+		},
+		total: {
+			type: "integer",
+			title: "Total",
+			description: "총 모델 수",
+		},
+	},
+	type: "object",
+	required: ["models", "total"],
+	title: "ModelListResponse",
+	description: "Response payload for available models.",
 } as const;
 
 export const app__schemas__ml_platform__model_lifecycle__MetricComparisonSchema =

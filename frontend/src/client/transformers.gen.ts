@@ -24,6 +24,7 @@ import type {
 	GenAiExecuteChatopsResponse,
 	GenAiGenerateNarrativeReportResponse,
 	GenAiGenerateStrategyResponse,
+	GenAiGenerateStrategyWithRagEndpointResponse,
 	GenAiListPromptAuditLogsResponse,
 	GenAiListPromptTemplatesResponse,
 	GenAiLogPromptUsageResponse,
@@ -1748,6 +1749,11 @@ const strategyBuilderResponseSchemaResponseTransformer = (data: any) => {
 	if (data.generated_at) {
 		data.generated_at = new Date(data.generated_at);
 	}
+	if (data.rag_contexts) {
+		data.rag_contexts = data.rag_contexts.map((item: any) => {
+			return ragContextSchemaResponseTransformer(item);
+		});
+	}
 	return data;
 };
 
@@ -1755,6 +1761,20 @@ const humanApprovalRequestSchemaResponseTransformer = (data: any) => {
 	if (data.approval_deadline) {
 		data.approval_deadline = new Date(data.approval_deadline);
 	}
+	return data;
+};
+
+const ragContextSchemaResponseTransformer = (data: any) => {
+	if (data.indexed_at) {
+		data.indexed_at = new Date(data.indexed_at);
+	}
+	return data;
+};
+
+export const genAiGenerateStrategyWithRagEndpointResponseTransformer = async (
+	data: any,
+): Promise<GenAiGenerateStrategyWithRagEndpointResponse> => {
+	data = strategyBuilderResponseSchemaResponseTransformer(data);
 	return data;
 };
 

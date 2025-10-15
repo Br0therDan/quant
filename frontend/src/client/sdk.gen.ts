@@ -143,6 +143,15 @@ import type {
 	GenAiGenerateStrategyData,
 	GenAiGenerateStrategyErrors,
 	GenAiGenerateStrategyResponses,
+	GenAiGenerateStrategyWithRagEndpointData,
+	GenAiGenerateStrategyWithRagEndpointErrors,
+	GenAiGenerateStrategyWithRagEndpointResponses,
+	GenAiGetServiceModelsData,
+	GenAiGetServiceModelsErrors,
+	GenAiGetServiceModelsResponses,
+	GenAiListModelsData,
+	GenAiListModelsErrors,
+	GenAiListModelsResponses,
 	GenAiListPromptAuditLogsData,
 	GenAiListPromptAuditLogsErrors,
 	GenAiListPromptAuditLogsResponses,
@@ -6240,6 +6249,33 @@ export class GenAiService {
 	}
 
 	/**
+	 * Generate Strategy With Rag Endpoint
+	 * RAG 컨텍스트를 활용한 전략 생성.
+	 */
+	public static generateStrategyWithRagEndpoint<
+		ThrowOnError extends boolean = false,
+	>(options: Options<GenAiGenerateStrategyWithRagEndpointData, ThrowOnError>) {
+		return (options.client ?? client).post<
+			GenAiGenerateStrategyWithRagEndpointResponses,
+			GenAiGenerateStrategyWithRagEndpointErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/gen-ai/strategy-builder/generate-with-rag",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
 	 * Approve Strategy
 	 * 생성된 전략 승인 처리 (Human-in-the-Loop)
 	 *
@@ -6346,6 +6382,52 @@ export class GenAiService {
 				"Content-Type": "application/json",
 				...options.headers,
 			},
+		});
+	}
+
+	/**
+	 * List Models
+	 * Return all configured OpenAI models, optionally filtered by tier.
+	 */
+	public static listModels<ThrowOnError extends boolean = false>(
+		options?: Options<GenAiListModelsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			GenAiListModelsResponses,
+			GenAiListModelsErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/gen-ai/models",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Service Models
+	 * Return policy and allowed models for a given GenAI service.
+	 */
+	public static getServiceModels<ThrowOnError extends boolean = false>(
+		options: Options<GenAiGetServiceModelsData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			GenAiGetServiceModelsResponses,
+			GenAiGetServiceModelsErrors,
+			ThrowOnError
+		>({
+			security: [
+				{
+					scheme: "bearer",
+					type: "http",
+				},
+			],
+			url: "/api/v1/gen-ai/models/{service_name}",
+			...options,
 		});
 	}
 }
