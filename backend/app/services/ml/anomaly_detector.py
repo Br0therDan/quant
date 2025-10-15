@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 from sklearn.ensemble import IsolationForest
 
-from app.models.data_quality import SeverityLevel
+from app.schemas.enums import SeverityLevel
 
 
 logger = logging.getLogger(__name__)

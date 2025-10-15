@@ -21,7 +21,8 @@ from app.models.backtest import (
     BacktestStatus,
     PerformanceMetrics,
 )
-from app.models.strategy import Strategy, StrategyType
+from app.models.strategy import Strategy
+from app.schemas.enums import StrategyType
 from app.strategies.configs import BuyAndHoldConfig
 
 logger = logging.getLogger(__name__)

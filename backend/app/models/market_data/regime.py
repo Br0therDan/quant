@@ -3,21 +3,12 @@
 from __future__ import annotations
 
 from datetime import datetime, UTC
-from enum import Enum
 from typing import Dict, List, Optional
 
 from pydantic import Field
+from app.schemas.enums import MarketRegimeType
 
 from .base import BaseMarketDataDocument
-
-
-class MarketRegimeType(str, Enum):
-    """Supported market regimes for classification."""
-
-    BULLISH = "bullish"
-    BEARISH = "bearish"
-    VOLATILE = "volatile"
-    SIDEWAYS = "sideways"
 
 
 class MarketRegime(BaseMarketDataDocument):

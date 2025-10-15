@@ -9,7 +9,8 @@ from datetime import UTC
 from typing import Dict, List, Optional
 
 import pandas as pd
-from app.models.market_data.regime import MarketRegime, MarketRegimeType
+from app.models.market_data.regime import MarketRegime
+from app.schemas.enums import MarketRegimeType
 from app.services.database_manager import DatabaseManager
 from app.schemas.predictive import MarketRegimeSnapshot, RegimeMetrics
 

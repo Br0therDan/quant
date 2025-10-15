@@ -7,7 +7,7 @@ from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
-from app.models.backtest import BacktestStatus
+from app.schemas.enums import BacktestStatus
 from app.schemas.backtest import (
     BacktestCreate,
     BacktestExecutionListResponse,

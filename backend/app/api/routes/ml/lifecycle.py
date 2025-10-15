@@ -56,7 +56,7 @@ async def list_experiments(
 ) -> list[ExperimentResponse]:
     status_enum = None
     if status_filter:
-        from app.models.model_lifecycle import ExperimentStatus
+        from app.schemas.enums import ExperimentStatus
 
         try:
             status_enum = ExperimentStatus(status_filter)
@@ -124,7 +124,7 @@ async def list_runs(
 ) -> list[RunResponse]:
     status_enums = None
     if statuses:
-        from app.models.model_lifecycle import RunStatus
+        from app.schemas.enums import RunStatus
 
         try:
             status_enums = [RunStatus(status) for status in statuses]
@@ -307,7 +307,7 @@ async def list_deployments(
     status_filter: str | None = Query(default=None, alias="status"),
 ) -> list[DeploymentResponse]:
     """List deployments with optional filters."""
-    from app.models.model_lifecycle import DeploymentEnvironment, DeploymentStatus
+    from app.schemas.enums import DeploymentEnvironment, DeploymentStatus
 
     env_enum = None
     if environment:

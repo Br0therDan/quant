@@ -3,23 +3,16 @@
 from __future__ import annotations
 
 from datetime import datetime
-from enum import Enum
 from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field
+
+from app.schemas.enums import ConversationRole
 
 from .dashboard import DataQualitySeverity, DataQualitySummary
 
 
 # Phase 3 D3: Multi-turn conversation schemas
-class ConversationRole(str, Enum):
-    """대화 역할"""
-
-    USER = "user"
-    ASSISTANT = "assistant"
-    SYSTEM = "system"
-
-
 class ConversationTurn(BaseModel):
     """대화 턴"""
 

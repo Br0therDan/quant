@@ -1884,7 +1884,7 @@ export const ChecklistStatusSchema = {
 	type: "string",
 	enum: ["pending", "passed", "failed"],
 	title: "ChecklistStatus",
-	description: "Approval checklist states.",
+	description: "체크리스트 상태",
 } as const;
 
 export const ChecklistUpdateRequestSchema = {
@@ -2346,7 +2346,7 @@ export const ComplianceStatusSchema = {
 	type: "string",
 	enum: ["passed", "warning", "failed"],
 	title: "ComplianceStatus",
-	description: "Compliance outcome for evaluation.",
+	description: "컴플라이언스 상태",
 } as const;
 
 export const ConfidenceLevelSchema = {
@@ -2740,7 +2740,7 @@ export const DeploymentEnvironmentSchema = {
 	type: "string",
 	enum: ["development", "staging", "production"],
 	title: "DeploymentEnvironment",
-	description: "Deployment environment enumeration.",
+	description: "배포 환경",
 } as const;
 
 export const DeploymentMetricsSchema = {
@@ -2954,7 +2954,7 @@ export const DeploymentStatusSchema = {
 		"terminated",
 	],
 	title: "DeploymentStatus",
-	description: "Deployment status enumeration.",
+	description: "모델 배포 상태",
 } as const;
 
 export const DeploymentUpdateSchema = {
@@ -3285,9 +3285,9 @@ export const DriftEventResponseSchema = {
 
 export const DriftSeveritySchema = {
 	type: "string",
-	enum: ["low", "medium", "high"],
+	enum: ["low", "medium", "high", "critical"],
 	title: "DriftSeverity",
-	description: "Severity flag for drift events.",
+	description: "드리프트 심각도",
 } as const;
 
 export const EarningsDataSchema = {
@@ -3765,7 +3765,7 @@ export const EvaluationStatusSchema = {
 	type: "string",
 	enum: ["pending", "running", "completed", "failed"],
 	title: "EvaluationStatus",
-	description: "Status flag for evaluation runs.",
+	description: "평가 상태",
 } as const;
 
 export const EvaluationSummarySchema = {
@@ -3880,6 +3880,7 @@ export const ExecutionResponseSchema = {
 		},
 		signal_type: {
 			$ref: "#/components/schemas/SignalType",
+			description: "신호 타입",
 		},
 		signal_strength: {
 			type: "number",
@@ -4103,7 +4104,7 @@ export const ExperimentStatusSchema = {
 	type: "string",
 	enum: ["active", "archived"],
 	title: "ExperimentStatus",
-	description: "Lifecycle state for an experiment.",
+	description: "실험 상태",
 } as const;
 
 export const ExperimentUpdateSchema = {
@@ -4914,7 +4915,7 @@ export const FeatureStatisticsResponseSchema = {
 
 export const FeatureStatusSchema = {
 	type: "string",
-	enum: ["active", "deprecated", "archived", "draft"],
+	enum: ["draft", "active", "deprecated", "archived"],
 	title: "FeatureStatus",
 	description: "피처 상태",
 } as const;
@@ -4946,14 +4947,7 @@ export const FeatureTransformationSchema = {
 
 export const FeatureTypeSchema = {
 	type: "string",
-	enum: [
-		"technical_indicator",
-		"fundamental",
-		"sentiment",
-		"macro_economic",
-		"derived",
-		"raw",
-	],
+	enum: ["numerical", "categorical", "boolean", "datetime", "text"],
 	title: "FeatureType",
 	description: "피처 타입",
 } as const;
@@ -6561,7 +6555,7 @@ export const MarketRegimeTypeSchema = {
 	type: "string",
 	enum: ["bullish", "bearish", "volatile", "sideways"],
 	title: "MarketRegimeType",
-	description: "Supported market regimes for classification.",
+	description: "시장 국면 타입",
 } as const;
 
 export const MetadataInfoSchema = {
@@ -6743,7 +6737,7 @@ export const ModelStageSchema = {
 	type: "string",
 	enum: ["experimental", "staging", "production", "archived"],
 	title: "ModelStage",
-	description: "Deployment stage for a model version.",
+	description: "모델 배포 단계",
 } as const;
 
 export const ModelVersionCreateSchema = {
@@ -8574,14 +8568,14 @@ export const PromptRiskLevelSchema = {
 	type: "string",
 	enum: ["low", "medium", "high"],
 	title: "PromptRiskLevel",
-	description: "Risk tier for prompts.",
+	description: "프롬프트 위험도",
 } as const;
 
 export const PromptStatusSchema = {
 	type: "string",
 	enum: ["draft", "in_review", "approved", "rejected", "archived"],
 	title: "PromptStatus",
-	description: "Lifecycle status for prompts.",
+	description: "프롬프트 템플릿 상태",
 } as const;
 
 export const PromptTemplateCreateSchema = {
@@ -9670,7 +9664,7 @@ export const RunStatusSchema = {
 	type: "string",
 	enum: ["running", "completed", "failed", "cancelled"],
 	title: "RunStatus",
-	description: "Execution status for a model run.",
+	description: "실행 상태",
 } as const;
 
 export const RunUpdateSchema = {
@@ -10129,7 +10123,7 @@ export const SignalTypeSchema = {
 	type: "string",
 	enum: ["BUY", "SELL", "HOLD"],
 	title: "SignalType",
-	description: "신호 타입",
+	description: "전략 신호 타입",
 } as const;
 
 export const StockSymbolsResponseSchema = {

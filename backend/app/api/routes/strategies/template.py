@@ -12,7 +12,7 @@ from mysingle_quant.auth import (
     get_current_active_superuser,
     User,
 )
-from app.models.strategy import StrategyType
+from app.schemas.enums import StrategyType
 from app.schemas.strategy import (
     StrategyCreateFromTemplate,
     StrategyResponse,

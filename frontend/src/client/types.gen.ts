@@ -1164,7 +1164,7 @@ export type ChatOpsResponse = {
 
 /**
  * ChecklistStatus
- * Approval checklist states.
+ * 체크리스트 상태
  */
 export type ChecklistStatus = "pending" | "passed" | "failed";
 
@@ -1386,7 +1386,7 @@ export type CompanyOverviewResponse = {
 
 /**
  * ComplianceStatus
- * Compliance outcome for evaluation.
+ * 컴플라이언스 상태
  */
 export type ComplianceStatus = "passed" | "warning" | "failed";
 
@@ -1662,7 +1662,7 @@ export type DeploymentCreate = {
 
 /**
  * DeploymentEnvironment
- * Deployment environment enumeration.
+ * 배포 환경
  */
 export type DeploymentEnvironment = "development" | "staging" | "production";
 
@@ -1764,7 +1764,7 @@ export type DeploymentResponse = {
 
 /**
  * DeploymentStatus
- * Deployment status enumeration.
+ * 모델 배포 상태
  */
 export type DeploymentStatus =
 	| "pending"
@@ -1929,9 +1929,9 @@ export type DriftEventResponse = {
 
 /**
  * DriftSeverity
- * Severity flag for drift events.
+ * 드리프트 심각도
  */
-export type DriftSeverity = "low" | "medium" | "high";
+export type DriftSeverity = "low" | "medium" | "high" | "critical";
 
 /**
  * EarningsData
@@ -2226,7 +2226,7 @@ export type EvaluationRunResponse = {
 
 /**
  * EvaluationStatus
- * Status flag for evaluation runs.
+ * 평가 상태
  */
 export type EvaluationStatus = "pending" | "running" | "completed" | "failed";
 
@@ -2305,6 +2305,9 @@ export type ExecutionResponse = {
 	 * 심볼
 	 */
 	symbol: string;
+	/**
+	 * 신호 타입
+	 */
 	signal_type: SignalType;
 	/**
 	 * Signal Strength
@@ -2455,7 +2458,7 @@ export type ExperimentResponse = {
 
 /**
  * ExperimentStatus
- * Lifecycle state for an experiment.
+ * 실험 상태
  */
 export type ExperimentStatus = "active" | "archived";
 
@@ -2953,7 +2956,7 @@ export type FeatureStatisticsResponse = {
  * FeatureStatus
  * 피처 상태
  */
-export type FeatureStatus = "active" | "deprecated" | "archived" | "draft";
+export type FeatureStatus = "draft" | "active" | "deprecated" | "archived";
 
 /**
  * FeatureTransformation
@@ -2984,12 +2987,11 @@ export type FeatureTransformation = {
  * 피처 타입
  */
 export type FeatureType =
-	| "technical_indicator"
-	| "fundamental"
-	| "sentiment"
-	| "macro_economic"
-	| "derived"
-	| "raw";
+	| "numerical"
+	| "categorical"
+	| "boolean"
+	| "datetime"
+	| "text";
 
 /**
  * FeatureUpdate
@@ -3973,7 +3975,7 @@ export type MarketRegimeSnapshot = {
 
 /**
  * MarketRegimeType
- * Supported market regimes for classification.
+ * 시장 국면 타입
  */
 export type MarketRegimeType = "bullish" | "bearish" | "volatile" | "sideways";
 
@@ -4095,7 +4097,7 @@ export type ModelListResponse = {
 
 /**
  * ModelStage
- * Deployment stage for a model version.
+ * 모델 배포 단계
  */
 export type ModelStage = "experimental" | "staging" | "production" | "archived";
 
@@ -5344,13 +5346,13 @@ export type PromptEvaluationSummary = {
 
 /**
  * PromptRiskLevel
- * Risk tier for prompts.
+ * 프롬프트 위험도
  */
 export type PromptRiskLevel = "low" | "medium" | "high";
 
 /**
  * PromptStatus
- * Lifecycle status for prompts.
+ * 프롬프트 템플릿 상태
  */
 export type PromptStatus =
 	| "draft"
@@ -5981,7 +5983,7 @@ export type RunResponse = {
 
 /**
  * RunStatus
- * Execution status for a model run.
+ * 실행 상태
  */
 export type RunStatus = "running" | "completed" | "failed" | "cancelled";
 
@@ -6219,7 +6221,7 @@ export type SignalRecommendation =
 
 /**
  * SignalType
- * 신호 타입
+ * 전략 신호 타입
  */
 export type SignalType = "BUY" | "SELL" | "HOLD";
 

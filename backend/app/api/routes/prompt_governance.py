@@ -68,7 +68,7 @@ async def list_prompt_templates(
 ) -> list[PromptTemplateResponse]:
     status_enum = None
     if status_filter:
-        from app.models.prompt_governance import PromptStatus
+        from app.schemas.enums import PromptStatus
 
         try:
             status_enum = PromptStatus(status_filter)

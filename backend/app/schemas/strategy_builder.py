@@ -10,15 +10,7 @@ from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
-
-class IntentType(str, Enum):
-    """사용자 의도 유형"""
-
-    CREATE_STRATEGY = "create_strategy"  # 새 전략 생성
-    MODIFY_STRATEGY = "modify_strategy"  # 기존 전략 수정
-    EXPLAIN_STRATEGY = "explain_strategy"  # 전략 설명 요청
-    RECOMMEND_PARAMETERS = "recommend_parameters"  # 파라미터 추천
-    OPTIMIZE_STRATEGY = "optimize_strategy"  # 전략 최적화 제안
+from app.schemas.enums import IntentType
 
 
 class ConfidenceLevel(str, Enum):

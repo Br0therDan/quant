@@ -8,10 +8,15 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime, time
 from typing import Dict, Iterable, List, Optional, Sequence
 
-from app.models.backtest import Backtest, BacktestStatus
-from app.models.data_quality import DataQualityEvent, SeverityLevel
+from app.models.backtest import Backtest
+from app.models.data_quality import DataQualityEvent
+from app.schemas.enums import BacktestStatus, SeverityLevel
 from app.schemas.chatops import CacheStatusSnapshot, FailureInsight
-from app.schemas.dashboard import DataQualityAlert, DataQualitySeverity, DataQualitySummary
+from app.schemas.dashboard import (
+    DataQualityAlert,
+    DataQualitySeverity,
+    DataQualitySummary,
+)
 from app.services.database_manager import DatabaseManager
 from app.services.market_data_service import MarketDataService
 from app.services.monitoring.data_quality_sentinel import (
@@ -41,7 +46,13 @@ class ChatOpsAgent:
 
     _TOOL_PERMISSIONS: Dict[str, set[str]] = {
         "get_cache_status": {"admin", "devops", "engineer", "viewer"},
-        "get_data_quality_summary": {"admin", "devops", "engineer", "analyst", "viewer"},
+        "get_data_quality_summary": {
+            "admin",
+            "devops",
+            "engineer",
+            "analyst",
+            "viewer",
+        },
         "list_recent_failures": {"admin", "devops", "engineer"},
         "check_alpha_vantage": {"admin", "devops", "engineer", "analyst"},
     }
@@ -72,7 +83,9 @@ class ChatOpsAgent:
 
         for tool in tools:
             if not self._is_authorised(tool, roles):
-                logger.warning("ChatOps tool denied", extra={"tool": tool, "roles": roles})
+                logger.warning(
+                    "ChatOps tool denied", extra={"tool": tool, "roles": roles}
+                )
                 result.denied_tools.append(tool)
                 continue
 
@@ -80,9 +93,7 @@ class ChatOpsAgent:
                 cache_status = await self._gather_cache_status()
                 result.cache_status = cache_status
                 result.used_tools.append(tool)
-                answer_lines.append(
-                    self._format_cache_status(cache_status)
-                )
+                answer_lines.append(self._format_cache_status(cache_status))
             elif tool == "get_data_quality_summary":
                 data_quality = await self._gather_data_quality_summary()
                 result.data_quality = data_quality
@@ -103,14 +114,11 @@ class ChatOpsAgent:
                 answer_lines.append(self._format_external_services(external_status))
 
         if not answer_lines:
-            answer_lines.append(
-                "요청하신 항목에 대해 실행 가능한 ChatOps 툴이 없거나 모두 권한에 의해 차단되었습니다."
-            )
+            answer_lines.append("요청하신 항목에 대해 실행 가능한 ChatOps 툴이 없거나 모두 권한에 의해 차단되었습니다.")
 
         if result.denied_tools:
             answer_lines.append(
-                "권한 부족으로 실행되지 않은 툴: "
-                + ", ".join(sorted(result.denied_tools))
+                "권한 부족으로 실행되지 않은 툴: " + ", ".join(sorted(result.denied_tools))
             )
 
         result.answer = "\n".join(answer_lines)
@@ -121,16 +129,28 @@ class ChatOpsAgent:
 
         tools: List[str] = []
 
-        if any(keyword in normalized_question for keyword in ["캐시", "cache", "duckdb", "mongodb"]):
+        if any(
+            keyword in normalized_question
+            for keyword in ["캐시", "cache", "duckdb", "mongodb"]
+        ):
             tools.append("get_cache_status")
 
-        if any(keyword in normalized_question for keyword in ["데이터 품질", "data quality", "sentinel", "센티널"]):
+        if any(
+            keyword in normalized_question
+            for keyword in ["데이터 품질", "data quality", "sentinel", "센티널"]
+        ):
             tools.append("get_data_quality_summary")
 
-        if any(keyword in normalized_question for keyword in ["실패", "에러", "오류", "failure", "incident"]):
+        if any(
+            keyword in normalized_question
+            for keyword in ["실패", "에러", "오류", "failure", "incident"]
+        ):
             tools.append("list_recent_failures")
 
-        if any(keyword in normalized_question for keyword in ["alpha vantage", "외부 api", "api 상태", "alpha"]):
+        if any(
+            keyword in normalized_question
+            for keyword in ["alpha vantage", "외부 api", "api 상태", "alpha"]
+        ):
             tools.append("check_alpha_vantage")
 
         if not tools:
@@ -167,7 +187,9 @@ class ChatOpsAgent:
                     last_dt = None
                 return int(total_count or 0), last_dt
 
-            duckdb_row_count, duckdb_last_updated = await asyncio.to_thread(_query_duckdb)
+            duckdb_row_count, duckdb_last_updated = await asyncio.to_thread(
+                _query_duckdb
+            )
         except Exception as exc:  # pragma: no cover - database connectivity
             duckdb_status = "error"
             notes.append(f"DuckDB 조회 중 오류: {exc}")
@@ -176,10 +198,7 @@ class ChatOpsAgent:
         mongodb_last_event_at: Optional[datetime] = None
         try:
             latest_events = (
-                await DataQualityEvent.find({})
-                .sort("-occurred_at")
-                .limit(1)
-                .to_list()
+                await DataQualityEvent.find({}).sort("-occurred_at").limit(1).to_list()
             )
             if latest_events:
                 mongodb_status = "connected"
@@ -249,7 +268,9 @@ class ChatOpsAgent:
                 .to_list()
             )
             for backtest in backtest_failures:
-                occurred_at = backtest.updated_at or backtest.created_at or datetime.now(UTC)
+                occurred_at = (
+                    backtest.updated_at or backtest.created_at or datetime.now(UTC)
+                )
                 message = backtest.error_message or "백테스트 실패 (상세 메시지 없음)"
                 failures.append(
                     FailureInsight(
@@ -260,7 +281,9 @@ class ChatOpsAgent:
                         message=message,
                         metadata={
                             "name": backtest.name,
-                            "symbols": backtest.config.symbols if backtest.config else [],
+                            "symbols": (
+                                backtest.config.symbols if backtest.config else []
+                            ),
                         },
                     )
                 )
@@ -275,7 +298,9 @@ class ChatOpsAgent:
         external = health.get("external_apis") or {}
         return {"external_apis": external, "cache": health.get("cache", {})}
 
-    def _convert_summary(self, payload: DataQualitySummaryPayload) -> DataQualitySummary:
+    def _convert_summary(
+        self, payload: DataQualitySummaryPayload
+    ) -> DataQualitySummary:
         severity_breakdown = {
             DataQualitySeverity(level.value): count
             for level, count in payload.severity_breakdown.items()

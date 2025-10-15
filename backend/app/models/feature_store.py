@@ -4,43 +4,14 @@ Feature Store Models using Beanie (MongoDB ODM)
 Phase 4 D1: Feature Store Launch
 """
 
-from datetime import datetime, UTC
-from enum import Enum
+from datetime import UTC, datetime
 from typing import Any
 
 from beanie import Document
 from pydantic import BaseModel, Field
 from pymongo import IndexModel
 
-
-class FeatureType(str, Enum):
-    """피처 타입"""
-
-    TECHNICAL_INDICATOR = "technical_indicator"
-    FUNDAMENTAL = "fundamental"
-    SENTIMENT = "sentiment"
-    MACRO_ECONOMIC = "macro_economic"
-    DERIVED = "derived"
-    RAW = "raw"
-
-
-class FeatureStatus(str, Enum):
-    """피처 상태"""
-
-    ACTIVE = "active"
-    DEPRECATED = "deprecated"
-    ARCHIVED = "archived"
-    DRAFT = "draft"
-
-
-class DataType(str, Enum):
-    """데이터 타입"""
-
-    FLOAT = "float"
-    INTEGER = "integer"
-    STRING = "string"
-    BOOLEAN = "boolean"
-    TIMESTAMP = "timestamp"
+from app.schemas.enums import DatasetSourceType, DataType, FeatureStatus, FeatureType
 
 
 # Embedded Models (내장 모델)
@@ -233,16 +204,6 @@ class FeatureUsage(Document):
             IndexModel([("usage_timestamp", -1)]),
             IndexModel([("feature_name", 1), ("usage_timestamp", -1)]),  # 복합 인덱스
         ]
-
-
-class DatasetSourceType(str, Enum):
-    """데이터셋 소스 타입"""
-
-    DUCKDB = "duckdb"
-    CSV = "csv"
-    PARQUET = "parquet"
-    MONGODB = "mongodb"
-    API = "api"
 
 
 class Dataset(Document):

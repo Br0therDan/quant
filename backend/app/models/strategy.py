@@ -3,11 +3,11 @@ Strategy Models using Beanie (MongoDB ODM)
 """
 
 from datetime import datetime, UTC
-from enum import Enum
 from typing import Union, Any
 
 from .base_model import BaseDocument
 from pydantic import Field
+from app.schemas.enums import StrategyType, SignalType
 from app.strategies.configs import (
     SMACrossoverConfig,
     RSIMeanReversionConfig,
@@ -23,23 +23,6 @@ StrategyConfigUnion = Union[
     MomentumConfig,
     BuyAndHoldConfig,
 ]
-
-
-class StrategyType(str, Enum):
-    """지원되는 전략 타입"""
-
-    SMA_CROSSOVER = "sma_crossover"
-    RSI_MEAN_REVERSION = "rsi_mean_reversion"
-    MOMENTUM = "momentum"
-    BUY_AND_HOLD = "buy_and_hold"
-
-
-class SignalType(str, Enum):
-    """신호 타입"""
-
-    BUY = "BUY"
-    SELL = "SELL"
-    HOLD = "HOLD"
 
 
 class Strategy(BaseDocument):

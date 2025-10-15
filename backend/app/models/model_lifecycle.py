@@ -3,55 +3,23 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime
-from enum import Enum
 from typing import Any
 
 from beanie import Document
 from pydantic import BaseModel, Field
 from pymongo import IndexModel
 
+from app.schemas.enums import (
+    ChecklistStatus,
+    DeploymentEnvironment,
+    DeploymentStatus,
+    DriftSeverity,
+    ExperimentStatus,
+    ModelStage,
+    RunStatus,
+)
+
 from .base_model import BaseDocument
-
-
-class ExperimentStatus(str, Enum):
-    """Lifecycle state for an experiment."""
-
-    ACTIVE = "active"
-    ARCHIVED = "archived"
-
-
-class RunStatus(str, Enum):
-    """Execution status for a model run."""
-
-    RUNNING = "running"
-    COMPLETED = "completed"
-    FAILED = "failed"
-    CANCELLED = "cancelled"
-
-
-class ModelStage(str, Enum):
-    """Deployment stage for a model version."""
-
-    EXPERIMENTAL = "experimental"
-    STAGING = "staging"
-    PRODUCTION = "production"
-    ARCHIVED = "archived"
-
-
-class ChecklistStatus(str, Enum):
-    """Approval checklist states."""
-
-    PENDING = "pending"
-    PASSED = "passed"
-    FAILED = "failed"
-
-
-class DriftSeverity(str, Enum):
-    """Severity flag for drift events."""
-
-    LOW = "low"
-    MEDIUM = "medium"
-    HIGH = "high"
 
 
 class DeploymentChecklistItem(BaseModel):
@@ -207,26 +175,6 @@ class DriftEvent(Document):
             IndexModel([("model_name", 1), ("severity", 1)]),
             IndexModel([("detected_at", -1)]),
         ]
-
-
-class DeploymentStatus(str, Enum):
-    """Deployment status enumeration."""
-
-    PENDING = "pending"
-    VALIDATING = "validating"
-    DEPLOYING = "deploying"
-    ACTIVE = "active"
-    FAILED = "failed"
-    ROLLBACK = "rollback"
-    TERMINATED = "terminated"
-
-
-class DeploymentEnvironment(str, Enum):
-    """Deployment environment enumeration."""
-
-    DEVELOPMENT = "development"
-    STAGING = "staging"
-    PRODUCTION = "production"
 
 
 class EndpointConfig(BaseModel):

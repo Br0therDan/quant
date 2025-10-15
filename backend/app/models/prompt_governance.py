@@ -3,31 +3,14 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime
-from enum import Enum
 from typing import Any
 
 from pydantic import BaseModel, Field
 from pymongo import IndexModel
 
+from app.schemas.enums import PromptRiskLevel, PromptStatus
+
 from .base_model import BaseDocument
-
-
-class PromptStatus(str, Enum):
-    """Lifecycle status for prompts."""
-
-    DRAFT = "draft"
-    IN_REVIEW = "in_review"
-    APPROVED = "approved"
-    REJECTED = "rejected"
-    ARCHIVED = "archived"
-
-
-class PromptRiskLevel(str, Enum):
-    """Risk tier for prompts."""
-
-    LOW = "low"
-    MEDIUM = "medium"
-    HIGH = "high"
 
 
 class PromptEvaluationSummary(BaseModel):
@@ -57,12 +40,8 @@ class PromptTemplate(BaseDocument):
     risk_level: PromptRiskLevel = Field(
         default=PromptRiskLevel.MEDIUM, description="위험도"
     )
-    policies: list[str] = Field(
-        default_factory=list, description="적용 정책 ID 또는 설명"
-    )
-    evaluation: PromptEvaluationSummary | None = Field(
-        None, description="평가 요약"
-    )
+    policies: list[str] = Field(default_factory=list, description="적용 정책 ID 또는 설명")
+    evaluation: PromptEvaluationSummary | None = Field(None, description="평가 요약")
     approval_notes: str | None = Field(None, description="검토 메모")
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(UTC), description="생성 시간"
@@ -107,9 +86,7 @@ class PromptUsageLog(BaseDocument):
     session_id: str = Field(..., description="세션 ID")
     outcome: str = Field(..., description="결과")
     toxicity_score: float | None = Field(None, description="실행 중 감지된 독성")
-    hallucination_flags: list[str] = Field(
-        default_factory=list, description="환각 플래그"
-    )
+    hallucination_flags: list[str] = Field(default_factory=list, description="환각 플래그")
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(UTC), description="생성 시간"
     )

@@ -3,21 +3,12 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime
-from enum import Enum
 from typing import Any, Dict, Optional
 
 from beanie import Document
 from pydantic import Field
 
-
-class SeverityLevel(str, Enum):
-    """Severity level used by the data quality sentinel."""
-
-    NORMAL = "normal"
-    LOW = "low"
-    MEDIUM = "medium"
-    HIGH = "high"
-    CRITICAL = "critical"
+from app.schemas.enums import SeverityLevel
 
 
 class DataQualityEvent(Document):

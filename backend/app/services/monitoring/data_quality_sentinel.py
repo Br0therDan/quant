@@ -11,7 +11,8 @@ from typing import Dict, Iterable, List, MutableMapping, Optional
 import httpx
 
 from app.core.config import settings
-from app.models.data_quality import DataQualityEvent, SeverityLevel
+from app.models.data_quality import DataQualityEvent
+from app.schemas.enums import SeverityLevel
 from app.models.market_data.stock import DailyPrice
 from app.services.ml.anomaly_detector import AnomalyDetectionService, AnomalyResult
 

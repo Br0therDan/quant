@@ -3,30 +3,14 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime
-from enum import Enum
 from typing import Any
 
-from pymongo import IndexModel
 from pydantic import BaseModel, Field
+from pymongo import IndexModel
+
+from app.schemas.enums import ComplianceStatus, EvaluationStatus
 
 from .base_model import BaseDocument
-
-
-class EvaluationStatus(str, Enum):
-    """Status flag for evaluation runs."""
-
-    PENDING = "pending"
-    RUNNING = "running"
-    COMPLETED = "completed"
-    FAILED = "failed"
-
-
-class ComplianceStatus(str, Enum):
-    """Compliance outcome for evaluation."""
-
-    PASSED = "passed"
-    WARNING = "warning"
-    FAILED = "failed"
 
 
 class BenchmarkMetric(BaseModel):

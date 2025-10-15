@@ -5,19 +5,11 @@
 
 from abc import ABC, abstractmethod
 from datetime import datetime
-from enum import Enum
 from typing import Any
 
 import pandas as pd
 from pydantic import BaseModel, Field
-
-
-class SignalType(str, Enum):
-    """신호 타입"""
-
-    BUY = "BUY"
-    SELL = "SELL"
-    HOLD = "HOLD"
+from app.schemas.enums import SignalType
 
 
 class StrategyConfig(BaseModel):

@@ -5,30 +5,11 @@ Phase 3 D1: Narrative Report Generator
 """
 
 from datetime import datetime
-from enum import Enum
 from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
-
-class ReportSectionType(str, Enum):
-    """리포트 섹션 유형"""
-
-    EXECUTIVE_SUMMARY = "executive_summary"
-    PERFORMANCE_ANALYSIS = "performance_analysis"
-    STRATEGY_INSIGHTS = "strategy_insights"
-    RISK_ASSESSMENT = "risk_assessment"
-    MARKET_CONTEXT = "market_context"
-    RECOMMENDATIONS = "recommendations"
-
-
-class ReportRecommendation(str, Enum):
-    """리포트 추천 액션"""
-
-    PROCEED = "proceed"  # 전략 승인 및 프로덕션 배포 고려
-    OPTIMIZE = "optimize"  # 파라미터 최적화 필요
-    REJECT = "reject"  # 전략 기각
-    RESEARCH = "research"  # 추가 연구 필요
+from app.schemas.enums import ReportRecommendation
 
 
 class ExecutiveSummary(BaseModel):

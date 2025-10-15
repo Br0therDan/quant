@@ -3,36 +3,10 @@ Backtest Service Models
 """
 
 from datetime import datetime
-from enum import Enum
 
 from .base_model import BaseDocument
 from pydantic import BaseModel, Field
-
-
-class BacktestStatus(str, Enum):
-    """백테스트 상태"""
-
-    PENDING = "pending"
-    RUNNING = "running"
-    COMPLETED = "completed"
-    FAILED = "failed"
-    CANCELLED = "cancelled"
-
-
-class TradeType(str, Enum):
-    """거래 타입"""
-
-    BUY = "BUY"
-    SELL = "SELL"
-
-
-class OrderType(str, Enum):
-    """주문 타입"""
-
-    MARKET = "MARKET"
-    LIMIT = "LIMIT"
-    STOP = "STOP"
-    STOP_LIMIT = "STOP_LIMIT"
+from app.schemas.enums import BacktestStatus, TradeType, OrderType
 
 
 class BacktestConfig(BaseModel):
