@@ -32,6 +32,9 @@ async def generate_narrative_report(
     detail_level: Optional[str] = Query(
         "standard", description="상세도 수준 (brief/standard/detailed)"
     ),
+    model_id: Optional[str] = Query(
+        None, description="사용할 OpenAI 모델 ID (지정하지 않으면 기본값)"
+    ),
 ) -> NarrativeReportResponse:
     """
     백테스트 결과를 분석하여 전문 퀀트 애널리스트 수준의 내러티브 리포트를 생성합니다.
@@ -103,6 +106,7 @@ async def generate_narrative_report(
             include_phase1_insights=include_phase1_insights,
             language=language or "ko",
             detail_level=detail_level or "standard",
+            model_id=model_id,
         )
 
         # 처리 시간 계산

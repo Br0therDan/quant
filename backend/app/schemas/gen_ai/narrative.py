@@ -134,6 +134,10 @@ class NarrativeReportRequest(BaseModel):
     detail_level: str = Field(
         default="standard", description="상세 수준 (brief/standard/detailed)"
     )
+    model_id: Optional[str] = Field(
+        default=None,
+        description="사용할 OpenAI 모델 ID (지정하지 않으면 서비스 기본값)",
+    )
 
 
 class NarrativeReportResponse(BaseModel):

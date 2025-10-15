@@ -118,7 +118,10 @@ async def chat_with_session(session_id: str, request: ChatOpsRequest) -> dict[st
     try:
         service = service_factory.get_chatops_advanced_service()
         answer = await service.chat(
-            session_id, request.question, include_history=request.include_history
+            session_id,
+            request.question,
+            include_history=request.include_history,
+            model_id=request.model_id,
         )
 
         session = await service.get_session(session_id)

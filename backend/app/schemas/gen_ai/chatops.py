@@ -52,6 +52,10 @@ class ChatOpsRequest(BaseModel):
     # Phase 3 D3: Multi-turn support
     session_id: Optional[str] = Field(None, description="세션 ID (멀티턴 대화)")
     include_history: bool = Field(default=True, description="대화 히스토리 포함 여부")
+    model_id: Optional[str] = Field(
+        default=None,
+        description="사용할 OpenAI 모델 ID (지정하지 않으면 기본 정책 사용)",
+    )
 
 
 class CacheStatusSnapshot(BaseModel):

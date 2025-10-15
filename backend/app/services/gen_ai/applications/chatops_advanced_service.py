@@ -8,11 +8,8 @@ import json
 import logging
 import uuid
 from datetime import datetime, timezone
-from typing import Optional
+from typing import Any, Optional
 
-from openai import AsyncOpenAI
-
-from app.core.config import settings
 from app.models.gen_ai.chatops.session import ChatSessionDocument
 from app.schemas.gen_ai.chatops import (
     AutoBacktestRequest,
@@ -24,6 +21,11 @@ from app.schemas.gen_ai.chatops import (
     StrategyComparisonResult,
 )
 from app.services.trading.backtest_service import BacktestService
+from app.services.gen_ai.core.openai_client_manager import (
+    InvalidModelError,
+    ModelConfig,
+    OpenAIClientManager,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +33,11 @@ logger = logging.getLogger(__name__)
 class ChatOpsAdvancedService:
     """ChatOps 고급 기능 서비스"""
 
-    def __init__(self, backtest_service: BacktestService):
+    def __init__(
+        self,
+        backtest_service: BacktestService,
+        openai_manager: OpenAIClientManager,
+    ):
         """
         Initialize ChatOps Advanced Service
 
@@ -39,18 +45,35 @@ class ChatOpsAdvancedService:
             backtest_service: 백테스트 서비스
         """
         self.backtest_service = backtest_service
+        self.openai_manager = openai_manager
+        self.service_name = "chatops_advanced"
 
-        # OpenAI 클라이언트 초기화
-        api_key = settings.OPENAI_API_KEY
-        if not api_key:
-            logger.warning(
-                "OPENAI_API_KEY not set. ChatOps Advanced will not function."
+        self._client: Optional[Any] = None
+        try:
+            self._client = self.openai_manager.get_client()
+        except RuntimeError as exc:
+            logger.warning("OpenAI client initialization failed: %s", exc)
+
+        self.default_model = (
+            self.openai_manager.get_service_policy(self.service_name).default_model
+        )
+
+    def _get_client(self) -> Any:
+        """Return the shared OpenAI client."""
+
+        if self._client is None:
+            self._client = self.openai_manager.get_client()
+        return self._client
+
+    def _resolve_model_config(self, requested_model_id: Optional[str]) -> ModelConfig:
+        """Resolve and validate the model for ChatOps interactions."""
+
+        try:
+            return self.openai_manager.validate_model_for_service(
+                self.service_name, requested_model_id
             )
-            self.client = None
-        else:
-            self.client = AsyncOpenAI(api_key=api_key)
-
-        self.model = "gpt-4o"  # 최신 모델 사용
+        except InvalidModelError as exc:
+            raise ValueError(str(exc)) from exc
 
     async def create_session(self, user_id: str) -> ChatSession:
         """새 채팅 세션 생성 (MongoDB 저장)"""
@@ -103,7 +126,11 @@ class ChatOpsAdvancedService:
         )
 
     async def chat(
-        self, session_id: str, user_query: str, include_history: bool = True
+        self,
+        session_id: str,
+        user_query: str,
+        include_history: bool = True,
+        model_id: Optional[str] = None,
     ) -> str:
         """
         멀티턴 대화 처리 (MongoDB 저장)
@@ -124,8 +151,11 @@ class ChatOpsAdvancedService:
         if not session_doc:
             raise ValueError(f"Session {session_id} not found")
 
-        if not self.client:
-            raise Exception("OpenAI client not initialized. Check OPENAI_API_KEY.")
+        model_config = self._resolve_model_config(model_id)
+        try:
+            client = self._get_client()
+        except RuntimeError as exc:
+            raise Exception("OpenAI client not initialized. Check OPENAI_API_KEY.") from exc
 
         # 사용자 턴 추가
         user_turn = ConversationTurn(
@@ -144,11 +174,20 @@ class ChatOpsAdvancedService:
             messages.append({"role": "user", "content": user_query})
 
         # LLM 호출
-        response = await self.client.chat.completions.create(
-            model=self.model, messages=messages, temperature=0.7, max_tokens=1000
+        response = await client.chat.completions.create(
+            model=model_config.model_id,
+            messages=messages,
+            temperature=0.7,
+            max_tokens=1000,
         )
 
         answer = response.choices[0].message.content or ""
+
+        self.openai_manager.track_usage(
+            service_name=self.service_name,
+            model_id=model_config.model_id,
+            usage=response.usage,
+        )
 
         # 어시스턴트 턴 추가
         assistant_turn = ConversationTurn(
@@ -161,7 +200,12 @@ class ChatOpsAdvancedService:
         await session_doc.save()
 
         logger.info(
-            f"Chat session {session_id}: turn {len(session_doc.conversation_history)}"
+            "Chat session updated",
+            extra={
+                "session_id": session_id,
+                "turns": len(session_doc.conversation_history),
+                "model_id": model_config.model_id,
+            },
         )
         return answer
 
@@ -177,9 +221,6 @@ class ChatOpsAdvancedService:
         Returns:
             StrategyComparisonResult: 비교 결과
         """
-        if not self.client:
-            raise Exception("OpenAI client not initialized. Check OPENAI_API_KEY.")
-
         # 1. 전략 데이터 수집 (실제 MongoDB 조회)
         from app.models.trading.strategy import Strategy
         from app.models.trading.backtest import Backtest, BacktestResult
@@ -262,14 +303,23 @@ class ChatOpsAdvancedService:
 3. 추천 전략 및 근거 (50-200자)
 """
 
-        response = await self.client.chat.completions.create(
-            model=self.model,
+        model_config = self._resolve_model_config(None)
+        client = self._get_client()
+
+        response = await client.chat.completions.create(
+            model=model_config.model_id,
             messages=[{"role": "user", "content": prompt}],
             temperature=0.5,
             max_tokens=1500,
         )
 
         summary = response.choices[0].message.content or "전략 비교 결과를 생성할 수 없습니다."
+
+        self.openai_manager.track_usage(
+            service_name=self.service_name,
+            model_id=model_config.model_id,
+            usage=response.usage,
+        )
 
         # 3. 순위 계산 (간단한 로직: total_return 기준)
         sorted_strategies = sorted(
