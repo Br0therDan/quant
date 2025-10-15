@@ -1,6 +1,7 @@
-"""ChromaDB-backed Retrieval-Augmented Generation helper service."""
+"""ChromaDB-backed Retrieval-Augmented Generation helper service.
 
-"""Retrieval-Augmented Generation helper utilities."""
+Retrieval-Augmented Generation helper utilities.
+"""
 
 from __future__ import annotations
 
@@ -12,7 +13,6 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence
 
 import chromadb
-from chromadb.api.models import Collection
 from chromadb.config import Settings
 
 from app.core.config import settings
@@ -174,13 +174,29 @@ class RAGService:
         contexts: List[RAGContext] = []
         for idx, document_id in enumerate(ids[0]):
             content = documents[0][idx] if documents and documents[0] else ""
-            metadata = metadatas[0][idx] if metadatas and metadatas[0] else {}
+            raw_metadata = metadatas[0][idx] if metadatas and metadatas[0] else {}
+            # Ensure metadata is a plain Dict[str, Any] for pydantic/typing compatibility
+            try:
+                if isinstance(raw_metadata, dict):
+                    metadata: Dict[str, Any] = raw_metadata
+                else:
+                    metadata = dict(raw_metadata)
+            except Exception:
+                # Fallback to empty dict if conversion fails
+                metadata = {}
+
             distance = distances[0][idx] if distances and distances[0] else 0.0
             indexed_at = metadata.get("indexed_at")
             parsed_indexed_at: Optional[datetime] = None
             if indexed_at:
                 try:
-                    parsed_indexed_at = datetime.fromisoformat(indexed_at)
+                    if isinstance(indexed_at, datetime):
+                        parsed_indexed_at = indexed_at
+                    elif isinstance(indexed_at, str):
+                        parsed_indexed_at = datetime.fromisoformat(indexed_at)
+                    else:
+                        # Unsupported type for parsing; skip
+                        parsed_indexed_at = None
                 except ValueError:
                     parsed_indexed_at = None
 
@@ -296,7 +312,7 @@ class RAGService:
 
     async def _upsert(
         self,
-        collection: Collection,
+        collection: Any,
         document_id: str,
         document: str,
         embedding: Sequence[float],
@@ -314,7 +330,7 @@ class RAGService:
 
     @staticmethod
     def _upsert_sync(
-        collection: Collection,
+        collection: Any,
         document_id: str,
         document: str,
         embedding: Sequence[float],
