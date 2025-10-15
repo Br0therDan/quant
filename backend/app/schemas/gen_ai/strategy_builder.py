@@ -47,6 +47,10 @@ class StrategyBuilderRequest(BaseModel):
     require_human_approval: bool = Field(
         default=True, description="사람 승인 필요 여부 (휴먼 인 더 루프)"
     )
+    model_id: Optional[str] = Field(
+        default=None,
+        description="사용할 OpenAI 모델 ID (미지정 시 서비스 기본값 사용)",
+    )
 
 
 class ParsedIntent(BaseModel):

@@ -11,9 +11,11 @@ import os
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
-from openai import AsyncOpenAI
-
-from app.core.config import settings
+from app.services.gen_ai.core.openai_client_manager import (
+    InvalidModelError,
+    ModelConfig,
+    OpenAIClientManager,
+)
 
 from app.schemas.gen_ai.strategy_builder import (
     ConfidenceLevel,
@@ -49,7 +51,7 @@ class StrategyBuilderService:
     def __init__(
         self,
         strategy_service: StrategyService,
-        openai_api_key: Optional[str] = None,
+        openai_manager: OpenAIClientManager,
     ):
         """
         Initialize Strategy Builder Service
@@ -59,24 +61,41 @@ class StrategyBuilderService:
             openai_api_key: OpenAI API 키 (환경변수에서 기본 로드)
         """
         self.strategy_service = strategy_service
+        self.openai_manager = openai_manager
+        self.service_name = "strategy_builder"
 
-        # OpenAI 클라이언트 초기화
-        api_key = settings.OPENAI_API_KEY
-        if not api_key:
-            logger.warning(
-                "OPENAI_API_KEY not found. StrategyBuilderService will not function."
-            )
-            self.client = None
-        else:
-            self.client = AsyncOpenAI(api_key=api_key)
+        self._client: Optional[Any] = None
+        try:
+            self._client = self.openai_manager.get_client()
+        except RuntimeError as exc:
+            logger.warning("OpenAI client initialization failed: %s", exc)
 
-        self.model = os.getenv("OPENAI_MODEL", "gpt-4-turbo-preview")
+        self.default_model = (
+            self.openai_manager.get_service_policy(self.service_name).default_model
+        )
         self.temperature = float(os.getenv("OPENAI_TEMPERATURE", "0.5"))
         self.max_tokens = int(os.getenv("OPENAI_MAX_TOKENS", "3000"))
 
         # 지표 임베딩 캐시 (향후 벡터 DB로 확장 가능)
         self._indicator_embeddings: Dict[str, List[float]] = {}
         self._initialize_indicator_knowledge()
+
+    def _get_client(self) -> Any:
+        """Return a ready-to-use OpenAI client."""
+
+        if self._client is None:
+            self._client = self.openai_manager.get_client()
+        return self._client
+
+    def _resolve_model_config(self, requested_model_id: Optional[str]) -> ModelConfig:
+        """Resolve and validate the requested model for the service."""
+
+        try:
+            return self.openai_manager.validate_model_for_service(
+                self.service_name, requested_model_id
+            )
+        except InvalidModelError as exc:
+            raise ValueError(str(exc)) from exc
 
     def _initialize_indicator_knowledge(self):
         """지표 지식 베이스 초기화 (간소화 버전)"""
@@ -139,13 +158,16 @@ class StrategyBuilderService:
             ValueError: LLM 응답 파싱 실패
             Exception: LLM API 호출 실패
         """
-        if not self.client:
-            raise Exception("OpenAI client not initialized. Check OPENAI_API_KEY.")
+        model_config = self._resolve_model_config(request.model_id)
+        try:
+            self._get_client()
+        except RuntimeError as exc:
+            raise Exception("OpenAI client not initialized. Check OPENAI_API_KEY.") from exc
 
         start_time = datetime.now(timezone.utc)
 
         # 1. 의도 파싱 (IntentType 분류)
-        parsed_intent = await self._parse_intent(request)
+        parsed_intent = await self._parse_intent(request, model_config)
 
         # 2. 전략 생성 (의도에 따라 분기)
         generated_strategy = None
@@ -159,7 +181,7 @@ class StrategyBuilderService:
 
         if parsed_intent.intent_type == IntentType.CREATE_STRATEGY:
             generated_strategy, validation_errors = await self._generate_strategy(
-                request, parsed_intent
+                request, parsed_intent, model_config
             )
             if generated_strategy:
                 human_approval = self._evaluate_approval_needs(
@@ -202,7 +224,7 @@ class StrategyBuilderService:
                 else None
             ),
             processing_time_ms=processing_time_ms,
-            llm_model=self.model,
+            llm_model=model_config.model_id,
             validation_errors=validation_errors if validation_errors else None,
             overall_confidence=overall_confidence,
         )
@@ -213,12 +235,15 @@ class StrategyBuilderService:
                 "intent": parsed_intent.intent_type,
                 "confidence": overall_confidence,
                 "validation_errors": len(validation_errors),
+                "model_id": model_config.model_id,
             },
         )
 
         return response
 
-    async def _parse_intent(self, request: StrategyBuilderRequest) -> ParsedIntent:
+    async def _parse_intent(
+        self, request: StrategyBuilderRequest, model_config: ModelConfig
+    ) -> ParsedIntent:
         """
         자연어 쿼리에서 사용자 의도 파싱
 
@@ -263,9 +288,9 @@ JSON 형식으로 응답하세요:
 """
 
         try:
-            assert self.client is not None, "OpenAI client must be initialized"
-            response = await self.client.chat.completions.create(
-                model=self.model,
+            client = self._get_client()
+            response = await client.chat.completions.create(
+                model=model_config.model_id,
                 messages=[
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt},
@@ -280,6 +305,12 @@ JSON 형식으로 응답하세요:
                 raise ValueError("LLM 응답이 비어있습니다.")
 
             llm_output = json.loads(content)
+
+            self.openai_manager.track_usage(
+                service_name=self.service_name,
+                model_id=model_config.model_id,
+                usage=response.usage,
+            )
 
             # IntentType 검증
             intent_type_str = llm_output.get("intent_type", "create_strategy")
@@ -320,7 +351,10 @@ JSON 형식으로 응답하세요:
             )
 
     async def _generate_strategy(
-        self, request: StrategyBuilderRequest, parsed_intent: ParsedIntent
+        self,
+        request: StrategyBuilderRequest,
+        parsed_intent: ParsedIntent,
+        model_config: ModelConfig,
     ) -> tuple[Optional[GeneratedStrategyConfig], List[str]]:
         """
         파싱된 의도로부터 전략 설정 생성
@@ -379,9 +413,9 @@ JSON 형식으로 응답하세요:
 """
 
         try:
-            assert self.client is not None, "OpenAI client must be initialized"
-            response = await self.client.chat.completions.create(
-                model=self.model,
+            client = self._get_client()
+            response = await client.chat.completions.create(
+                model=model_config.model_id,
                 messages=[
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt},
@@ -396,6 +430,12 @@ JSON 형식으로 응답하세요:
                 raise ValueError("LLM 응답이 비어있습니다.")
 
             llm_output = json.loads(content)
+
+            self.openai_manager.track_usage(
+                service_name=self.service_name,
+                model_id=model_config.model_id,
+                usage=response.usage,
+            )
 
             # Indicators 변환
             indicators = [

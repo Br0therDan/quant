@@ -28,6 +28,7 @@ from .trading.optimization_service import OptimizationService
 from .gen_ai.applications.narrative_report_service import NarrativeReportService
 from .gen_ai.applications.strategy_builder_service import StrategyBuilderService
 from .gen_ai.applications.chatops_advanced_service import ChatOpsAdvancedService
+from .gen_ai.core.openai_client_manager import OpenAIClientManager
 from .ml_platform.services.feature_store_service import FeatureStoreService
 from .ml_platform.services.model_lifecycle_service import ModelLifecycleService
 from .ml_platform.services.evaluation_harness_service import EvaluationHarnessService
@@ -63,6 +64,7 @@ class ServiceFactory:
     _narrative_report_service: Optional[NarrativeReportService] = None
     _strategy_builder_service: Optional[StrategyBuilderService] = None
     _chatops_advanced_service: Optional[ChatOpsAdvancedService] = None
+    _openai_client_manager: Optional[OpenAIClientManager] = None
     _feature_store_service: Optional[FeatureStoreService] = None
     _model_lifecycle_service: Optional[ModelLifecycleService] = None
     _evaluation_harness_service: Optional[EvaluationHarnessService] = None
@@ -268,6 +270,14 @@ class ServiceFactory:
             logger.info("Created ChatOpsAgent instance")
         return self._chatops_agent
 
+    def get_openai_client_manager(self) -> OpenAIClientManager:
+        """OpenAIClientManager singleton accessor."""
+
+        if self._openai_client_manager is None:
+            self._openai_client_manager = OpenAIClientManager()
+            logger.info("OpenAIClientManager initialized")
+        return self._openai_client_manager
+
     def get_optimization_service(self) -> OptimizationService:
         """최적화 서비스 (Phase 2 D1: Optuna 기반 하이퍼파라미터 최적화)"""
         if self._optimization_service is None:
@@ -289,12 +299,14 @@ class ServiceFactory:
             ml_signal_service = self.get_ml_signal_service()
             regime_service = self.get_regime_detection_service()
             probabilistic_service = self.get_probabilistic_kpi_service()
+            openai_manager = self.get_openai_client_manager()
 
             self._narrative_report_service = NarrativeReportService(
                 backtest_service=backtest_service,
                 ml_signal_service=ml_signal_service,
                 regime_service=regime_service,
                 probabilistic_service=probabilistic_service,
+                openai_manager=openai_manager,
             )
             logger.info("NarrativeReportService initialized (Phase 3 D1)")
         return self._narrative_report_service
@@ -303,8 +315,10 @@ class ServiceFactory:
         """StrategyBuilderService 인스턴스 반환 (Phase 3 D2)"""
         if self._strategy_builder_service is None:
             strategy_service = self.get_strategy_service()
+            openai_manager = self.get_openai_client_manager()
             self._strategy_builder_service = StrategyBuilderService(
-                strategy_service=strategy_service
+                strategy_service=strategy_service,
+                openai_manager=openai_manager,
             )
             logger.info("StrategyBuilderService initialized (Phase 3 D2)")
         return self._strategy_builder_service
@@ -313,8 +327,10 @@ class ServiceFactory:
         """ChatOpsAdvancedService 인스턴스 반환 (Phase 3 D3)"""
         if self._chatops_advanced_service is None:
             backtest_service = self.get_backtest_service()
+            openai_manager = self.get_openai_client_manager()
             self._chatops_advanced_service = ChatOpsAdvancedService(
-                backtest_service=backtest_service
+                backtest_service=backtest_service,
+                openai_manager=openai_manager,
             )
             logger.info("ChatOpsAdvancedService initialized (Phase 3 D3)")
         return self._chatops_advanced_service
