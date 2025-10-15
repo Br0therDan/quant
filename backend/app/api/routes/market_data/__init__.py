@@ -19,23 +19,17 @@ from .regime import router as regime_router
 router = APIRouter(dependencies=[Depends(get_current_active_verified_user)])
 
 # 도메인별 라우터 포함
-router.include_router(stock_router, prefix="/stock", tags=["MarketDataStock"])
-router.include_router(crypto_router, prefix="/crypto", tags=["MarketDataCrypto"])
-router.include_router(fundamental_router, prefix="/fundamental", tags=["MarketDataFundamental"])
-router.include_router(economic_indicator_router, prefix="/economic_indicators", tags=["MarketDataEconomicIndicator"])
-router.include_router(
-    intelligence_router, prefix="/intelligence", tags=["MarketDataIntelligence"]
-)
-router.include_router(management_router, prefix="/management", tags=["MarketDataManagement"])
-router.include_router(
-    technical_indicators_router,
-    prefix="/tech_indicators",
-    tags=["MarketDataTechnicalIndicator"],
-)
-router.include_router(regime_router, prefix="/regime", tags=["MarketDataRegime"])
+router.include_router(stock_router, prefix="/stock")
+router.include_router(crypto_router, prefix="/crypto")
+router.include_router(fundamental_router, prefix="/fundamental")
+router.include_router(economic_indicator_router, prefix="/economic_indicators")
+router.include_router(intelligence_router, prefix="/intelligence")
+router.include_router(management_router, prefix="/management")
+router.include_router(technical_indicators_router, prefix="/tech_indicators")
+router.include_router(regime_router, prefix="/regime")
 
 
-@router.get("/", tags=["Market Data"])
+@router.get("/")
 async def get_market_data_info():
     """마켓 데이터 API 정보 및 사용 가능한 엔드포인트 목록"""
     return {

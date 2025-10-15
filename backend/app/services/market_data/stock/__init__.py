@@ -35,7 +35,7 @@ logger = logging.getLogger(__name__)
 
 class StockService(BaseStockService):
     """주식 데이터 서비스 (Modular Architecture)
-    
+
     Delegation Pattern으로 각 모듈에 책임 분리:
     - fetcher: Alpha Vantage API 호출
     - storage: MongoDB 저장
@@ -55,7 +55,7 @@ class StockService(BaseStockService):
             data_quality_sentinel: 데이터 품질 센티널
         """
         super().__init__(database_manager, data_quality_sentinel)
-        
+
         # 모듈 초기화 (delegation)
         self._fetcher = StockFetcher(database_manager, data_quality_sentinel)
         self._storage = StockStorage(self._fetcher, data_quality_sentinel)
@@ -100,7 +100,7 @@ class StockService(BaseStockService):
                 f"🔄 Performing full update for {symbol} daily prices "
                 f"(existing: {len(existing_prices)}, needs_full: {needs_full_update})"
             )
-            
+
             # Storage 모듈로 fetch & store
             prices = await self._storage.store_daily_prices(
                 symbol, adjusted=adjusted, is_full=True
@@ -146,7 +146,7 @@ class StockService(BaseStockService):
 
         if needs_full_update:
             logger.info(f"🔄 Performing full update for {symbol} weekly prices")
-            
+
             # Storage 모듈로 fetch & store
             prices = await self._storage.store_weekly_prices(symbol, adjusted=adjusted)
 
@@ -189,7 +189,7 @@ class StockService(BaseStockService):
 
         if needs_full_update:
             logger.info(f"🔄 Performing full update for {symbol} monthly prices")
-            
+
             # Storage 모듈로 fetch & store
             prices = await self._storage.store_monthly_prices(symbol, adjusted=adjusted)
 

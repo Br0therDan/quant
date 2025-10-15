@@ -4,5 +4,5 @@ from fastapi import APIRouter
 
 router = APIRouter()
 
-router.include_router(strategies_router, tags=["Strategy"])
-router.include_router(templates_router, prefix="/templates", tags=["Template"])
+router.include_router(strategies_router)
+router.include_router(templates_router, prefix="/templates")

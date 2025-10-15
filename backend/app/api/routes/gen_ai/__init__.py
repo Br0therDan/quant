@@ -11,8 +11,8 @@ from .strategy_builder import router as strategy_builder_router
 
 router = APIRouter()
 
-router.include_router(chatops_router, prefix="/chatops", tags=["GenAIChatOps"])
-router.include_router(chatops_advanced_router, prefix="/chatops-advanced", tags=["GenAIChatOpsAdvanced"])
-router.include_router(narrative_router, prefix="/narrative", tags=["GenAINarrative"])
-router.include_router(prompt_governance_router, prefix="/prompt-governance", tags=["GenAIPromptGovernance"])
-router.include_router(strategy_builder_router, prefix="/strategy-builder", tags=["GenAIStrategyBuilder"])
+router.include_router(chatops_router, prefix="/chatops")
+router.include_router(chatops_advanced_router, prefix="/chatops-advanced")
+router.include_router(narrative_router, prefix="/narrative")
+router.include_router(prompt_governance_router, prefix="/prompt-governance")
+router.include_router(strategy_builder_router, prefix="/strategy-builder")
