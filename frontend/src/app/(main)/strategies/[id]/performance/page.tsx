@@ -73,7 +73,7 @@ export default function StrategyPerformancePage() {
 
 	// 전략 데이터 조회
 	const {
-		data: strategy,
+		strategy,
 		isLoading: strategyLoading,
 		error: strategyError,
 	} = useStrategyDetail(strategyId);
