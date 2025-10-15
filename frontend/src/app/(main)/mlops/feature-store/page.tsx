@@ -24,9 +24,7 @@ export default function FeatureStorePage() {
   const {
     featuresList: features,
   } = useFeatureStore();
-  const [selectedDataset, setSelectedDataset] = useState<string | null>(null);
-
-  // 통계 계산
+  const [, setSelectedDataset] = useState<string | null>(null);  // 통계 계산
   const totalFeatures = features?.length || 0;
   const activeFeatures = features?.filter((f) => f.status === "active").length || 0;
   const totalVersions = features?.length || 0; // 버전 수는 Feature 모델에 versions 필드가 없으므로 단순화
