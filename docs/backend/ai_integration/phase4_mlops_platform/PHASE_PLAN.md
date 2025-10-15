@@ -85,3 +85,34 @@
 - 피처 스토어, 수명주기 도구, 거버넌스 파이프라인이 프로덕션에서 운영.
 - 문서와 런북을 플랫폼 운영팀에 인계.
 - KPI 대시보드를 플랫폼 건강 지표와 채택 통계로 업데이트.
+
+---
+
+## 11. 남은 작업 현황 (2024-12-22 업데이트)
+
+### 완료된 산출물
+
+- ✅ **D1: 피처 스토어** - Feature CRUD, 버전 관리, 메타데이터 완료
+  - 누락: Dataset APIs (목록/상세)
+- ✅ **D2: 모델 수명주기** - Experiment, Run, Model Version, Drift 완료
+  - 누락: Detail APIs (Experiment/Model), Deployment APIs (전체)
+- ✅ **D3: 평가 하니스** - Scenario, Evaluation Run, Report 완료
+- ✅ **D4: 프롬프트 거버넌스** - Template CRUD, 평가, 승인 완료
+
+### 누락된 API (총 7개 엔드포인트)
+
+**최우선** (4시간):
+
+1. `GET /api/v1/ml/lifecycle/experiments/{name}` - Experiment 상세
+2. `GET /api/v1/ml/lifecycle/models/{model_name}/{version}` - Model 상세
+
+**고우선** (4시간): 3. `GET /api/v1/features/datasets` - Dataset 목록 4.
+`GET /api/v1/features/datasets/{id}` - Dataset 상세
+
+**중우선** (10시간): 5. `GET /api/v1/ml/lifecycle/deployments` - 배포 목록 6.
+`POST /api/v1/ml/lifecycle/deployments` - 모델 배포 7.
+`GET /api/v1/ml/lifecycle/deployments/{id}` - 배포 상세
+
+**예상 총 소요**: 18시간
+
+**상세 문서**: `PHASE4_REMAINING_WORK.md` 참조

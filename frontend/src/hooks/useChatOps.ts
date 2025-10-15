@@ -13,7 +13,13 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { io, type Socket } from "socket.io-client";
 
-// 임시 타입 정의 (Backend API 스키마 대기)
+// Re-export REST API types from backend schema
+export type { ChatOpsRequest, ChatOpsResponse } from "@/client";
+
+// ============================================================================
+// WebSocket-specific Types (not in REST API schema)
+// ============================================================================
+
 interface ChatMessage {
 	id: string;
 	sessionId: string;

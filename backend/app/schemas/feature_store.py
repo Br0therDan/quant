@@ -211,18 +211,104 @@ class FeatureLineageResponse(BaseModel):
 class FeatureStatisticsResponse(BaseModel):
     """피처 통계 응답"""
 
-    feature_name: str = Field(..., description="피처 이름")
-    total_usage_count: int = Field(..., description="총 사용 횟수")
-    unique_models_count: int = Field(..., description="사용한 고유 모델 수")
-    environments: dict[str, int] = Field(..., description="환경별 사용 횟수")
+    feature_name: str
+    feature_version: str
+    statistics: dict[str, float | int]
+    generated_at: datetime
 
-    # 성능 메트릭 (평균)
-    avg_feature_importance: float | None = Field(None, description="평균 피처 중요도")
-    avg_correlation: float | None = Field(None, description="평균 타겟 상관계수")
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "feature_name": "rsi_14",
+                "feature_version": "2.1.0",
+                "statistics": {
+                    "count": 1000,
+                    "mean": 52.3,
+                    "std": 15.2,
+                    "min": 10.0,
+                    "max": 95.0,
+                },
+                "generated_at": "2025-01-15T10:00:00Z",
+            }
+        }
 
-    # 시간 정보
-    first_used_at: datetime | None = Field(None, description="최초 사용 시간")
-    last_used_at: datetime | None = Field(None, description="마지막 사용 시간")
+
+# ============================================================
+# Dataset Schemas
+# ============================================================
+
+
+class DatasetResponse(BaseModel):
+    """데이터셋 응답"""
+
+    id: str
+    name: str
+    description: str | None = None
+    source_type: str
+    table_name: str | None = None
+    schema_: dict[str, str] | None = Field(default=None, alias="schema")
+    row_count: int | None = None
+    size_bytes: int | None = None
+    column_count: int | None = None
+    tags: list[str] = Field(default_factory=list)
+    owner: str | None = None
+    created_at: datetime
+    updated_at: datetime
+    last_accessed_at: datetime | None = None
+
+    class Config:
+        populate_by_name = True
+        json_schema_extra = {
+            "example": {
+                "id": "dataset_123",
+                "name": "stock_prices_daily",
+                "description": "Daily stock prices from Alpha Vantage",
+                "source_type": "duckdb",
+                "table_name": "daily_prices",
+                "schema": {
+                    "symbol": "VARCHAR",
+                    "date": "DATE",
+                    "open": "DOUBLE",
+                    "high": "DOUBLE",
+                    "low": "DOUBLE",
+                    "close": "DOUBLE",
+                    "volume": "BIGINT",
+                },
+                "row_count": 50000,
+                "size_bytes": 2048576,
+                "column_count": 7,
+                "tags": ["stock", "daily", "ohlcv"],
+                "owner": "data_team",
+                "created_at": "2025-01-01T00:00:00Z",
+                "updated_at": "2025-01-15T00:00:00Z",
+                "last_accessed_at": "2025-01-15T10:00:00Z",
+            }
+        }
+
+
+class DatasetListResponse(BaseModel):
+    """데이터셋 목록 응답"""
+
+    datasets: list[DatasetResponse]
+    total: int
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "datasets": [
+                    {
+                        "id": "dataset_123",
+                        "name": "stock_prices_daily",
+                        "description": "Daily stock prices",
+                        "source_type": "duckdb",
+                        "row_count": 50000,
+                        "created_at": "2025-01-01T00:00:00Z",
+                        "updated_at": "2025-01-15T00:00:00Z",
+                    }
+                ],
+                "total": 1,
+            }
+        }
 
 
 class FeatureValidationResult(BaseModel):

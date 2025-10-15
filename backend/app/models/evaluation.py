@@ -34,9 +34,7 @@ class BenchmarkMetric(BaseModel):
 
     name: str = Field(..., description="메트릭 이름")
     threshold: float | None = Field(None, description="임계값")
-    higher_is_better: bool = Field(
-        default=True, description="높을수록 좋은 메트릭 여부"
-    )
+    higher_is_better: bool = Field(default=True, description="높을수록 좋은 메트릭 여부")
 
 
 class ScenarioEvent(BaseModel):
@@ -96,16 +94,33 @@ class MetricComparison(BaseModel):
     delta: float | None = Field(None, description="차이")
 
 
+class DetailedMetrics(BaseModel):
+    """Detailed evaluation metrics for single job."""
+
+    confusion_matrix: list[list[int]] = Field(default_factory=list, description="혼동 행렬")
+    class_labels: list[str] = Field(default_factory=list, description="클래스 라벨")
+    roc_curve: dict[str, list[float]] | None = Field(
+        None, description="ROC 커브 (fpr, tpr, thresholds)"
+    )
+    precision_recall_curve: dict[str, list[float]] | None = Field(
+        None, description="PR 커브 (precision, recall, thresholds)"
+    )
+    accuracy: float | None = Field(None, description="정확도")
+    precision: float | None = Field(None, description="정밀도")
+    recall: float | None = Field(None, description="재현율")
+    f1_score: float | None = Field(None, description="F1 점수")
+    auc_roc: float | None = Field(None, description="AUC-ROC")
+
+
 class EvaluationSummary(BaseModel):
     """Summary of evaluation outputs."""
 
-    metrics: list[MetricComparison] = Field(
-        default_factory=list, description="메트릭 비교"
-    )
+    metrics: list[MetricComparison] = Field(default_factory=list, description="메트릭 비교")
     compliance: ComplianceStatus = Field(
         default=ComplianceStatus.PASSED, description="컴플라이언스 결과"
     )
     notes: str | None = Field(None, description="메모")
+    detailed_metrics: DetailedMetrics | None = Field(None, description="상세 평가 메트릭")
 
 
 class EvaluationRun(BaseDocument):

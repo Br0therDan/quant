@@ -15,10 +15,7 @@ import {
 	useFairnessReport,
 	type FairnessAuditRequest,
 } from "@/hooks/useEvaluationHarness";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import ErrorIcon from "@mui/icons-material/Error";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import WarningIcon from "@mui/icons-material/Warning";
 import {
 	Alert,
 	Box,
@@ -134,7 +131,8 @@ export const FairnessAuditor: React.FC<FairnessAuditorProps> = ({
 	const handleRequestSubmit = async () => {
 		try {
 			const report = await requestFairnessAudit(auditRequest);
-			setSelectedReportId(report.id);
+			// FairnessReportResponse doesn't have id field, use model_id + created_at as identifier
+			setSelectedReportId(report.model_id);
 			setRequestDialogOpen(false);
 		} catch (error) {
 			console.error("Request fairness audit error:", error);
@@ -149,50 +147,28 @@ export const FairnessAuditor: React.FC<FairnessAuditorProps> = ({
 	// Helper Functions
 	// ============================================================================
 
-	const getBiasSeverityColor = (
-		severity: "low" | "medium" | "high" | "critical",
-	): "success" | "warning" | "error" => {
-		const colorMap = {
-			low: "success" as const,
-			medium: "warning" as const,
-			high: "error" as const,
-			critical: "error" as const,
-		};
-		return colorMap[severity];
-	};
-
-	const getBiasSeverityIcon = (
-		severity: "low" | "medium" | "high" | "critical",
-	) => {
-		const iconMap = {
-			low: <CheckCircleIcon />,
-			medium: <WarningIcon />,
-			high: <ErrorIcon />,
-			critical: <ErrorIcon />,
-		};
-		return iconMap[severity];
-	};
-
-	const formatFairnessMetricName = (metric: string): string => {
-		const nameMap: Record<string, string> = {
-			demographic_parity: "인구통계학적 동등성",
-			equal_opportunity: "동등한 기회",
-			equalized_odds: "균등화된 확률",
-			disparate_impact: "차별적 영향",
-		};
-		return nameMap[metric] || metric.replace(/_/g, " ").toUpperCase();
-	};
-
 	const getRadarChartData = () => {
-		if (!fairnessReport?.fairness_metrics) return [];
+		if (!fairnessReport?.group_metrics) return [];
 
-		return Object.entries(fairnessReport.fairness_metrics).map(
-			([metric, value]) => ({
-				metric: formatFairnessMetricName(metric),
-				value: value,
-				fullMark: 1.0,
-			}),
-		);
+		// group_metrics is dict[str, dict[str, float]]
+		// Flatten to extract some metrics
+		const allMetrics: Array<{ metric: string; value: number }> = [];
+		Object.entries(fairnessReport.group_metrics).forEach(([group, metrics]) => {
+			Object.entries(metrics as Record<string, number>).forEach(
+				([key, val]) => {
+					allMetrics.push({
+						metric: `${group}_${key}`,
+						value: val,
+					});
+				},
+			);
+		});
+
+		return allMetrics.slice(0, 6).map((item) => ({
+			metric: item.metric,
+			value: item.value,
+			fullMark: 1.0,
+		}));
 	};
 
 	// ============================================================================
@@ -252,7 +228,7 @@ export const FairnessAuditor: React.FC<FairnessAuditorProps> = ({
 										label="리포트 선택"
 										onChange={handleReportSelect}
 									>
-										{fairnessList.map((report) => (
+										{fairnessList.map((report: any) => (
 											<MenuItem key={report.id} value={report.id}>
 												{report.model_name} - {report.created_at}
 											</MenuItem>
@@ -273,27 +249,17 @@ export const FairnessAuditor: React.FC<FairnessAuditorProps> = ({
 					{/* Fairness Report */}
 					{selectedReportId && fairnessReport ? (
 						<Box>
-							{/* Bias Status */}
+							{/* Overall Fairness Status */}
 							<Box sx={{ mb: 3 }}>
-								<Alert
-									severity={getBiasSeverityColor(
-										fairnessReport.bias_detected.severity,
-									)}
-									icon={getBiasSeverityIcon(
-										fairnessReport.bias_detected.severity,
-									)}
-								>
+								<Alert severity={fairnessReport.passed ? "success" : "warning"}>
 									<Typography variant="body2">
 										<strong>
-											편향 감지:{" "}
-											{fairnessReport.bias_detected.detected ? "예" : "아니오"}
+											공정성 평가: {fairnessReport.passed ? "통과" : "실패"}
 										</strong>
 									</Typography>
 									<Typography variant="caption">
-										심각도:{" "}
-										{fairnessReport.bias_detected.severity.toUpperCase()} |
-										영향받은 그룹:{" "}
-										{fairnessReport.bias_detected.affected_groups.join(", ")}
+										전체 공정성 점수:{" "}
+										{(fairnessReport.overall_fairness_score * 100).toFixed(1)}%
 									</Typography>
 								</Alert>
 							</Box>
@@ -321,8 +287,7 @@ export const FairnessAuditor: React.FC<FairnessAuditorProps> = ({
 									</ResponsiveContainer>
 								</Box>
 								<Typography variant="caption" color="text.secondary">
-									* 1.0에 가까울수록 공정함 (임계값:{" "}
-									{fairnessReport.fairness_threshold})
+									* 1.0에 가까울수록 공정함
 								</Typography>
 							</Box>
 
@@ -345,28 +310,37 @@ export const FairnessAuditor: React.FC<FairnessAuditorProps> = ({
 										</TableHead>
 										<TableBody>
 											{Object.entries(fairnessReport.group_metrics).map(
-												([group, metrics]) => (
-													<TableRow key={group}>
-														<TableCell>
-															<strong>{group}</strong>
-														</TableCell>
-														<TableCell align="right">
-															{metrics.accuracy.toFixed(4)}
-														</TableCell>
-														<TableCell align="right">
-															{metrics.precision.toFixed(4)}
-														</TableCell>
-														<TableCell align="right">
-															{metrics.recall.toFixed(4)}
-														</TableCell>
-														<TableCell align="right">
-															{metrics.fpr.toFixed(4)}
-														</TableCell>
-														<TableCell align="right">
-															{metrics.fnr.toFixed(4)}
-														</TableCell>
-													</TableRow>
-												),
+												([group, metrics]: [string, unknown]) => {
+													const groupMetrics = metrics as {
+														accuracy: number;
+														precision: number;
+														recall: number;
+														fpr: number;
+														fnr: number;
+													};
+													return (
+														<TableRow key={group}>
+															<TableCell>
+																<strong>{group}</strong>
+															</TableCell>
+															<TableCell align="right">
+																{groupMetrics.accuracy.toFixed(4)}
+															</TableCell>
+															<TableCell align="right">
+																{groupMetrics.precision.toFixed(4)}
+															</TableCell>
+															<TableCell align="right">
+																{groupMetrics.recall.toFixed(4)}
+															</TableCell>
+															<TableCell align="right">
+																{groupMetrics.fpr.toFixed(4)}
+															</TableCell>
+															<TableCell align="right">
+																{groupMetrics.fnr.toFixed(4)}
+															</TableCell>
+														</TableRow>
+													);
+												},
 											)}
 										</TableBody>
 									</Table>
@@ -383,15 +357,17 @@ export const FairnessAuditor: React.FC<FairnessAuditorProps> = ({
 										<Box
 											sx={{ display: "flex", flexDirection: "column", gap: 1 }}
 										>
-											{fairnessReport.recommendations.map((rec, index) => (
-												<Alert
-													key={`rec-${index.toString()}`}
-													severity="info"
-													variant="outlined"
-												>
-													{rec}
-												</Alert>
-											))}
+											{fairnessReport.recommendations.map(
+												(rec: string, index: number) => (
+													<Alert
+														key={`rec-${index.toString()}`}
+														severity="info"
+														variant="outlined"
+													>
+														{rec}
+													</Alert>
+												),
+											)}
 										</Box>
 									</Box>
 								)}
@@ -409,19 +385,22 @@ export const FairnessAuditor: React.FC<FairnessAuditorProps> = ({
 											보호 속성
 										</Typography>
 										<Box sx={{ display: "flex", gap: 0.5 }}>
-											{fairnessReport.protected_attributes.map((attr) => (
-												<Chip key={attr} label={attr} size="small" />
-											))}
+											{fairnessReport.protected_attributes.map(
+												(attr: string) => (
+													<Chip key={attr} label={attr} size="small" />
+												),
+											)}
 										</Box>
 									</Box>
 									<Box
 										sx={{ display: "flex", justifyContent: "space-between" }}
 									>
 										<Typography variant="body2" color="text.secondary">
-											공정성 임계값
+											전체 공정성 점수
 										</Typography>
 										<Typography variant="body2">
-											{fairnessReport.fairness_threshold}
+											{(fairnessReport.overall_fairness_score * 100).toFixed(1)}
+											%
 										</Typography>
 									</Box>
 									<Box
@@ -489,9 +468,9 @@ export const FairnessAuditor: React.FC<FairnessAuditorProps> = ({
 												: e.target.value,
 									})
 								}
-								renderValue={(selected) => (
+								renderValue={(selected: string[]) => (
 									<Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-										{selected.map((value) => (
+										{selected.map((value: string) => (
 											<Chip key={value} label={value} size="small" />
 										))}
 									</Box>

@@ -47,8 +47,9 @@ from .strategy import Strategy, StrategyTemplate, StrategyExecution
 from .data_quality import DataQualityEvent
 from .optimization import OptimizationStudy, OptimizationTrial
 from .chatops import ChatSessionDocument
-from .feature_store import FeatureDefinition, FeatureVersion, FeatureUsage
+from .feature_store import FeatureDefinition, FeatureVersion, FeatureUsage, Dataset
 from .model_lifecycle import (
+    Deployment,
     DriftEvent,
     ModelExperiment,
     ModelRun,
@@ -56,6 +57,9 @@ from .model_lifecycle import (
     ModelVersion,
 )
 from .evaluation import EvaluationRun, EvaluationScenario
+from .benchmark import Benchmark, BenchmarkRun
+from .abtest import ABTest
+from .fairness import FairnessReport
 from .prompt_governance import (
     PromptAuditLog,
     PromptEvaluationSummary,
@@ -122,7 +126,9 @@ collections = [
     FeatureDefinition,
     FeatureVersion,
     FeatureUsage,
+    Dataset,
     # Model lifecycle & MLOps
+    Deployment,
     ModelExperiment,
     ModelRun,
     ModelVersion,
@@ -130,6 +136,11 @@ collections = [
     # Evaluation harness
     EvaluationScenario,
     EvaluationRun,
+    # Benchmark, A/B Testing, Fairness
+    Benchmark,
+    BenchmarkRun,
+    ABTest,
+    FairnessReport,
     # Prompt governance
     PromptTemplate,
     PromptAuditLog,
@@ -166,9 +177,11 @@ __all__ = [
     "FeatureDefinition",
     "FeatureVersion",
     "FeatureUsage",
+    "Dataset",
     # Model lifecycle enums
     "ModelStage",
     # Model lifecycle & MLOps
+    "Deployment",
     "ModelExperiment",
     "ModelRun",
     "ModelVersion",

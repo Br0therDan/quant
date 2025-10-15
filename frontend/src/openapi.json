@@ -9208,6 +9208,45 @@
 			}
 		},
 		"/api/v1/ml/lifecycle/experiments/{name}": {
+			"get": {
+				"tags": ["ML", "Model Lifecycle"],
+				"summary": "Get Experiment",
+				"description": "Get experiment by name.",
+				"operationId": "ML-get_experiment",
+				"parameters": [
+					{
+						"name": "name",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"title": "Name"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ExperimentResponse"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
 			"patch": {
 				"tags": ["ML", "Model Lifecycle"],
 				"summary": "Update Experiment",
@@ -9613,6 +9652,54 @@
 						}
 					}
 				}
+			},
+			"get": {
+				"tags": ["ML", "Model Lifecycle"],
+				"summary": "Get Model Version",
+				"description": "Get model version by name and version.",
+				"operationId": "ML-get_model_version",
+				"parameters": [
+					{
+						"name": "model_name",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"title": "Model Name"
+						}
+					},
+					{
+						"name": "version",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"title": "Version"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ModelVersionResponse"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
 			}
 		},
 		"/api/v1/ml/lifecycle/models/{model_name}/compare": {
@@ -9752,6 +9839,218 @@
 										"$ref": "#/components/schemas/DriftEventResponse"
 									},
 									"title": "Response Ml-List Drift Events"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/ml/lifecycle/deployments": {
+			"post": {
+				"tags": ["ML", "Model Lifecycle"],
+				"summary": "Create Deployment",
+				"description": "Create a new deployment.",
+				"operationId": "ML-create_deployment",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/DeploymentCreate"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DeploymentResponse"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"tags": ["ML", "Model Lifecycle"],
+				"summary": "List Deployments",
+				"description": "List deployments with optional filters.",
+				"operationId": "ML-list_deployments",
+				"parameters": [
+					{
+						"name": "model_name",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"anyOf": [
+								{
+									"type": "string"
+								},
+								{
+									"type": "null"
+								}
+							],
+							"title": "Model Name"
+						}
+					},
+					{
+						"name": "environment",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"anyOf": [
+								{
+									"type": "string"
+								},
+								{
+									"type": "null"
+								}
+							],
+							"title": "Environment"
+						}
+					},
+					{
+						"name": "status",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"anyOf": [
+								{
+									"type": "string"
+								},
+								{
+									"type": "null"
+								}
+							],
+							"title": "Status"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/DeploymentResponse"
+									},
+									"title": "Response Ml-List Deployments"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/ml/lifecycle/deployments/{deployment_id}": {
+			"get": {
+				"tags": ["ML", "Model Lifecycle"],
+				"summary": "Get Deployment",
+				"description": "Get deployment details.",
+				"operationId": "ML-get_deployment",
+				"parameters": [
+					{
+						"name": "deployment_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"title": "Deployment Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DeploymentResponse"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"patch": {
+				"tags": ["ML", "Model Lifecycle"],
+				"summary": "Update Deployment",
+				"description": "Update deployment status and metrics.",
+				"operationId": "ML-update_deployment",
+				"parameters": [
+					{
+						"name": "deployment_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"title": "Deployment Id"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/DeploymentUpdate"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DeploymentResponse"
 								}
 							}
 						}
@@ -9990,6 +10289,385 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/EvaluationReport"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/ml/evaluation/runs/{run_id}/metrics": {
+			"get": {
+				"tags": ["ML", "Evaluation Harness"],
+				"summary": "Get Detailed Metrics",
+				"description": "상세 평가 메트릭 조회 (confusion matrix, ROC curve 등)",
+				"operationId": "ML-get_detailed_metrics",
+				"parameters": [
+					{
+						"name": "run_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"title": "Run Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DetailedMetrics"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/ml/evaluation/benchmarks": {
+			"get": {
+				"tags": ["ML", "Evaluation Harness"],
+				"summary": "List Benchmarks",
+				"description": "벤치마크 스위트 목록 조회",
+				"operationId": "ML-list_benchmarks",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/BenchmarkResponse"
+									},
+									"type": "array",
+									"title": "Response Ml-List Benchmarks"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": ["ML", "Evaluation Harness"],
+				"summary": "Create Benchmark",
+				"description": "벤치마크 스위트 생성",
+				"operationId": "ML-create_benchmark",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/BenchmarkCreate"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"201": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BenchmarkResponse"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/ml/evaluation/benchmarks/run": {
+			"post": {
+				"tags": ["ML", "Evaluation Harness"],
+				"summary": "Run Benchmark",
+				"description": "벤치마크 실행",
+				"operationId": "ML-run_benchmark",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/BenchmarkRunRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BenchmarkRunResponse"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/ml/evaluation/ab-tests": {
+			"get": {
+				"tags": ["ML", "Evaluation Harness"],
+				"summary": "List Ab Tests",
+				"description": "A/B 테스트 목록 조회",
+				"operationId": "ML-list_ab_tests",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/ABTestResponse"
+									},
+									"type": "array",
+									"title": "Response Ml-List Ab Tests"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": ["ML", "Evaluation Harness"],
+				"summary": "Create Ab Test",
+				"description": "A/B 테스트 생성",
+				"operationId": "ML-create_ab_test",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ABTestCreate"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"201": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ABTestResponse"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/ml/evaluation/ab-tests/{test_id}": {
+			"get": {
+				"tags": ["ML", "Evaluation Harness"],
+				"summary": "Get Ab Test",
+				"description": "A/B 테스트 상세 조회",
+				"operationId": "ML-get_ab_test",
+				"parameters": [
+					{
+						"name": "test_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"title": "Test Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ABTestResponse"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/ml/evaluation/fairness/audit": {
+			"post": {
+				"tags": ["ML", "Evaluation Harness"],
+				"summary": "Request Fairness Audit",
+				"description": "공정성 감사 요청",
+				"operationId": "ML-request_fairness_audit",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/FairnessAuditRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"201": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/FairnessReportResponse"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/ml/evaluation/fairness/reports": {
+			"get": {
+				"tags": ["ML", "Evaluation Harness"],
+				"summary": "List Fairness Reports",
+				"description": "공정성 감사 보고서 목록 조회",
+				"operationId": "ML-list_fairness_reports",
+				"parameters": [
+					{
+						"name": "model_id",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"anyOf": [
+								{
+									"type": "string"
+								},
+								{
+									"type": "null"
+								}
+							],
+							"title": "Model Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/FairnessReportResponse"
+									},
+									"title": "Response Ml-List Fairness Reports"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/ml/evaluation/fairness/reports/{report_id}": {
+			"get": {
+				"tags": ["ML", "Evaluation Harness"],
+				"summary": "Get Fairness Report",
+				"description": "공정성 감사 보고서 상세 조회",
+				"operationId": "ML-get_fairness_report",
+				"parameters": [
+					{
+						"name": "report_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"title": "Report Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/FairnessReportResponse"
 								}
 							}
 						}
@@ -10492,7 +11170,7 @@
 		},
 		"/api/v1/features": {
 			"post": {
-				"tags": ["Feature Store", "feature-store"],
+				"tags": ["Feature Store"],
 				"summary": "Create Feature",
 				"description": "새 피처 생성\n\n- **feature_name**: 피처 고유 식별자 (중복 불가)\n- **feature_type**: RAW, DERIVED, AGGREGATED\n- **data_type**: numeric, categorical, text, datetime, boolean\n- **transformation**: 변환 로직 (SQL, Python 등)\n- **validation_rules**: 검증 규칙 (타입, 범위, 제약조건)\n- **upstream_features**: 의존하는 상위 피처 목록",
 				"operationId": "Feature Store-create_feature",
@@ -10530,7 +11208,7 @@
 				}
 			},
 			"get": {
-				"tags": ["Feature Store", "feature-store"],
+				"tags": ["Feature Store"],
 				"summary": "List Features",
 				"description": "피처 목록 조회 (필터링/페이지네이션)\n\n- **owner**: 소유자 필터\n- **feature_type**: 피처 타입 필터 (RAW, DERIVED, AGGREGATED)\n- **status**: 상태 필터 (DRAFT, ACTIVE, DEPRECATED)\n- **tags**: 태그 필터 (comma-separated: \"financial,risk\")\n- **skip/limit**: 페이지네이션",
 				"operationId": "Feature Store-list_features",
@@ -10651,7 +11329,7 @@
 		},
 		"/api/v1/features/{feature_name}": {
 			"get": {
-				"tags": ["Feature Store", "feature-store"],
+				"tags": ["Feature Store"],
 				"summary": "Get Feature",
 				"description": "피처 상세 조회",
 				"operationId": "Feature Store-get_feature",
@@ -10690,7 +11368,7 @@
 				}
 			},
 			"put": {
-				"tags": ["Feature Store", "feature-store"],
+				"tags": ["Feature Store"],
 				"summary": "Update Feature",
 				"description": "피처 업데이트\n\n- 변환 로직이나 검증 규칙 변경 시 새 버전 생성 권장\n- 메타데이터(description, tags)만 업데이트 시 버전 증가 없음",
 				"operationId": "Feature Store-update_feature",
@@ -10739,7 +11417,7 @@
 				}
 			},
 			"delete": {
-				"tags": ["Feature Store", "feature-store"],
+				"tags": ["Feature Store"],
 				"summary": "Delete Feature",
 				"description": "피처 삭제 (소프트 삭제)\n\n- 실제 데이터는 유지되며 상태만 DEPRECATED로 변경\n- 하위 피처(downstream_features)가 있으면 삭제 불가",
 				"operationId": "Feature Store-delete_feature",
@@ -10773,7 +11451,7 @@
 		},
 		"/api/v1/features/{feature_name}/activate": {
 			"post": {
-				"tags": ["Feature Store", "feature-store"],
+				"tags": ["Feature Store"],
 				"summary": "Activate Feature",
 				"description": "피처 활성화 (DRAFT → ACTIVE)\n\n- 검증 규칙을 통과해야 활성화 가능\n- 활성화 후 프로덕션 환경에서 사용 가능",
 				"operationId": "Feature Store-activate_feature",
@@ -10814,7 +11492,7 @@
 		},
 		"/api/v1/features/{feature_name}/deprecate": {
 			"post": {
-				"tags": ["Feature Store", "feature-store"],
+				"tags": ["Feature Store"],
 				"summary": "Deprecate Feature",
 				"description": "피처 폐기 (ACTIVE → DEPRECATED)\n\n- 더 이상 사용하지 않는 피처 표시\n- 하위 피처(downstream_features)가 있으면 폐기 불가\n- 기존 사용처는 계속 작동하지만 신규 사용 불가",
 				"operationId": "Feature Store-deprecate_feature",
@@ -10855,7 +11533,7 @@
 		},
 		"/api/v1/features/{feature_name}/versions": {
 			"post": {
-				"tags": ["Feature Store", "feature-store"],
+				"tags": ["Feature Store"],
 				"summary": "Create Version",
 				"description": "새 버전 생성\n\n- 변환 로직이나 검증 규칙 변경 시 필수\n- Semantic Versioning 권장 (1.0.0 → 1.1.0 → 2.0.0)\n- breaking_changes=True면 Major 버전 증가 (1.x.x → 2.0.0)",
 				"operationId": "Feature Store-create_version",
@@ -10904,7 +11582,7 @@
 				}
 			},
 			"get": {
-				"tags": ["Feature Store", "feature-store"],
+				"tags": ["Feature Store"],
 				"summary": "Get Feature Versions",
 				"description": "피처의 모든 버전 조회 (최신순)",
 				"operationId": "Feature Store-get_feature_versions",
@@ -10945,7 +11623,7 @@
 		},
 		"/api/v1/features/{feature_name}/rollback": {
 			"post": {
-				"tags": ["Feature Store", "feature-store"],
+				"tags": ["Feature Store"],
 				"summary": "Rollback Version",
 				"description": "버전 롤백\n\n- 이전 버전으로 복원 (변환 로직, 검증 규칙 스냅샷 복원)\n- 현재 버전에 `is_rolled_back=True` 표시\n- 새 버전이 생성되며 current_version 업데이트",
 				"operationId": "Feature Store-rollback_version",
@@ -10997,7 +11675,7 @@
 		},
 		"/api/v1/features/{feature_name}/lineage": {
 			"get": {
-				"tags": ["Feature Store", "feature-store"],
+				"tags": ["Feature Store"],
 				"summary": "Get Feature Lineage",
 				"description": "피처 계보 추적\n\n- upstream_features: 이 피처가 의존하는 상위 피처들\n- downstream_features: 이 피처를 사용하는 하위 피처들\n- recursive=True: 재귀적으로 전체 의존성 트리 추적",
 				"operationId": "Feature Store-get_feature_lineage",
@@ -11050,7 +11728,7 @@
 		},
 		"/api/v1/features/usage": {
 			"post": {
-				"tags": ["Feature Store", "feature-store"],
+				"tags": ["Feature Store"],
 				"summary": "Record Feature Usage",
 				"description": "피처 사용 기록\n\n- 모델이 피처를 사용할 때마다 호출\n- feature_importance: 모델에서의 중요도 (0.0 ~ 1.0)\n- correlation_with_target: 타겟과의 상관관계 (-1.0 ~ 1.0)",
 				"operationId": "Feature Store-record_feature_usage",
@@ -11090,7 +11768,7 @@
 		},
 		"/api/v1/features/{feature_name}/statistics": {
 			"get": {
-				"tags": ["Feature Store", "feature-store"],
+				"tags": ["Feature Store"],
 				"summary": "Get Feature Statistics",
 				"description": "피처 사용 통계 조회\n\n- total_usage: 총 사용 횟수\n- unique_models: 사용한 고유 모델 수\n- environments: 사용 환경 분포 (dev, staging, production)\n- avg_importance: 평균 feature importance\n- avg_correlation: 평균 상관관계\n- last_used_at: 마지막 사용 시각",
 				"operationId": "Feature Store-get_feature_statistics",
@@ -11112,6 +11790,71 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/FeatureStatisticsResponse"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/features/datasets": {
+			"get": {
+				"tags": ["Feature Store"],
+				"summary": "List Datasets",
+				"description": "데이터셋 목록 조회\n\nMongoDB에 저장된 데이터셋 메타데이터 목록 반환",
+				"operationId": "Feature Store-list_datasets",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"additionalProperties": true,
+									"type": "object",
+									"title": "Response Feature Store-List Datasets"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/features/datasets/{dataset_id}": {
+			"get": {
+				"tags": ["Feature Store"],
+				"summary": "Get Dataset",
+				"description": "데이터셋 상세 조회\n\nArgs:\n    dataset_id: Dataset ID (MongoDB ObjectId)\n\nReturns:\n    Dataset 상세 정보 (마지막 접근 시간 자동 업데이트)",
+				"operationId": "Feature Store-get_dataset",
+				"parameters": [
+					{
+						"name": "dataset_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"title": "Dataset Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"additionalProperties": true,
+									"title": "Response Feature Store-Get Dataset"
 								}
 							}
 						}
@@ -11623,6 +12366,132 @@
 	},
 	"components": {
 		"schemas": {
+			"ABTestCreate": {
+				"properties": {
+					"name": {
+						"type": "string",
+						"minLength": 3,
+						"title": "Name"
+					},
+					"description": {
+						"type": "string",
+						"title": "Description"
+					},
+					"model_a_id": {
+						"type": "string",
+						"title": "Model A Id"
+					},
+					"model_b_id": {
+						"type": "string",
+						"title": "Model B Id"
+					},
+					"traffic_split_a": {
+						"type": "number",
+						"maximum": 100.0,
+						"minimum": 0.0,
+						"title": "Traffic Split A",
+						"default": 50.0
+					},
+					"sample_size": {
+						"type": "integer",
+						"exclusiveMinimum": 0.0,
+						"title": "Sample Size",
+						"default": 1000
+					},
+					"confidence_level": {
+						"type": "number",
+						"exclusiveMaximum": 1.0,
+						"exclusiveMinimum": 0.0,
+						"title": "Confidence Level",
+						"default": 0.95
+					}
+				},
+				"type": "object",
+				"required": ["name", "description", "model_a_id", "model_b_id"],
+				"title": "ABTestCreate",
+				"description": "A/B 테스트 생성"
+			},
+			"ABTestResponse": {
+				"properties": {
+					"name": {
+						"type": "string",
+						"title": "Name"
+					},
+					"description": {
+						"type": "string",
+						"title": "Description"
+					},
+					"model_a_id": {
+						"type": "string",
+						"title": "Model A Id"
+					},
+					"model_b_id": {
+						"type": "string",
+						"title": "Model B Id"
+					},
+					"traffic_split_a": {
+						"type": "number",
+						"title": "Traffic Split A"
+					},
+					"sample_size": {
+						"type": "integer",
+						"title": "Sample Size"
+					},
+					"confidence_level": {
+						"type": "number",
+						"title": "Confidence Level"
+					},
+					"status": {
+						"type": "string",
+						"title": "Status"
+					},
+					"results": {
+						"anyOf": [
+							{
+								"additionalProperties": true,
+								"type": "object"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Results"
+					},
+					"created_at": {
+						"type": "string",
+						"format": "date-time",
+						"title": "Created At"
+					},
+					"completed_at": {
+						"anyOf": [
+							{
+								"type": "string",
+								"format": "date-time"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Completed At"
+					}
+				},
+				"type": "object",
+				"required": [
+					"name",
+					"description",
+					"model_a_id",
+					"model_b_id",
+					"traffic_split_a",
+					"sample_size",
+					"confidence_level",
+					"status",
+					"results",
+					"created_at",
+					"completed_at"
+				],
+				"title": "ABTestResponse",
+				"description": "A/B 테스트 응답"
+			},
 			"ArtifactReference": {
 				"properties": {
 					"name": {
@@ -12591,6 +13460,30 @@
 				"title": "BalanceSheetResponse",
 				"description": "재무상태표 조회 응답 스키마"
 			},
+			"BenchmarkCreate": {
+				"properties": {
+					"name": {
+						"type": "string",
+						"minLength": 3,
+						"title": "Name"
+					},
+					"description": {
+						"type": "string",
+						"title": "Description"
+					},
+					"test_cases": {
+						"items": {
+							"$ref": "#/components/schemas/TestCaseCreate"
+						},
+						"type": "array",
+						"title": "Test Cases"
+					}
+				},
+				"type": "object",
+				"required": ["name", "description"],
+				"title": "BenchmarkCreate",
+				"description": "벤치마크 스위트 생성"
+			},
 			"BenchmarkMetric": {
 				"properties": {
 					"name": {
@@ -12621,6 +13514,134 @@
 				"required": ["name"],
 				"title": "BenchmarkMetric",
 				"description": "Benchmark metric definition used by evaluation scenarios."
+			},
+			"BenchmarkResponse": {
+				"properties": {
+					"name": {
+						"type": "string",
+						"title": "Name"
+					},
+					"description": {
+						"type": "string",
+						"title": "Description"
+					},
+					"test_cases": {
+						"items": {
+							"additionalProperties": true,
+							"type": "object"
+						},
+						"type": "array",
+						"title": "Test Cases"
+					},
+					"created_at": {
+						"type": "string",
+						"format": "date-time",
+						"title": "Created At"
+					},
+					"updated_at": {
+						"type": "string",
+						"format": "date-time",
+						"title": "Updated At"
+					}
+				},
+				"type": "object",
+				"required": [
+					"name",
+					"description",
+					"test_cases",
+					"created_at",
+					"updated_at"
+				],
+				"title": "BenchmarkResponse",
+				"description": "벤치마크 스위트 응답"
+			},
+			"BenchmarkRunRequest": {
+				"properties": {
+					"benchmark_name": {
+						"type": "string",
+						"title": "Benchmark Name"
+					},
+					"model_id": {
+						"type": "string",
+						"title": "Model Id"
+					},
+					"model_version": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Model Version"
+					}
+				},
+				"type": "object",
+				"required": ["benchmark_name", "model_id"],
+				"title": "BenchmarkRunRequest",
+				"description": "벤치마크 실행 요청"
+			},
+			"BenchmarkRunResponse": {
+				"properties": {
+					"benchmark_name": {
+						"type": "string",
+						"title": "Benchmark Name"
+					},
+					"model_id": {
+						"type": "string",
+						"title": "Model Id"
+					},
+					"model_version": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Model Version"
+					},
+					"results": {
+						"additionalProperties": true,
+						"type": "object",
+						"title": "Results"
+					},
+					"passed": {
+						"type": "boolean",
+						"title": "Passed"
+					},
+					"started_at": {
+						"type": "string",
+						"format": "date-time",
+						"title": "Started At"
+					},
+					"completed_at": {
+						"anyOf": [
+							{
+								"type": "string",
+								"format": "date-time"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Completed At"
+					}
+				},
+				"type": "object",
+				"required": [
+					"benchmark_name",
+					"model_id",
+					"model_version",
+					"results",
+					"passed",
+					"started_at",
+					"completed_at"
+				],
+				"title": "BenchmarkRunResponse",
+				"description": "벤치마크 실행 결과"
 			},
 			"Body_Auth-forgot_password": {
 				"properties": {
@@ -13981,6 +15002,469 @@
 				"title": "DeploymentChecklistItem",
 				"description": "Individual checklist item used during approvals."
 			},
+			"DeploymentCreate": {
+				"properties": {
+					"model_name": {
+						"type": "string",
+						"minLength": 1,
+						"title": "Model Name"
+					},
+					"model_version": {
+						"type": "string",
+						"minLength": 1,
+						"title": "Model Version"
+					},
+					"experiment_name": {
+						"type": "string",
+						"title": "Experiment Name"
+					},
+					"environment": {
+						"$ref": "#/components/schemas/DeploymentEnvironment"
+					},
+					"endpoint": {
+						"type": "string",
+						"minLength": 1,
+						"title": "Endpoint",
+						"description": "Deployment endpoint URL"
+					},
+					"endpoint_config": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/EndpointConfig"
+							},
+							{
+								"type": "null"
+							}
+						]
+					},
+					"created_by": {
+						"type": "string",
+						"title": "Created By"
+					},
+					"deployment_notes": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Deployment Notes"
+					}
+				},
+				"type": "object",
+				"required": [
+					"model_name",
+					"model_version",
+					"experiment_name",
+					"environment",
+					"endpoint",
+					"created_by"
+				],
+				"title": "DeploymentCreate",
+				"description": "Create a new model deployment."
+			},
+			"DeploymentEnvironment": {
+				"type": "string",
+				"enum": ["development", "staging", "production"],
+				"title": "DeploymentEnvironment",
+				"description": "Deployment environment enumeration."
+			},
+			"DeploymentMetrics": {
+				"properties": {
+					"request_count": {
+						"type": "integer",
+						"title": "Request Count",
+						"description": "총 요청 수",
+						"default": 0
+					},
+					"error_count": {
+						"type": "integer",
+						"title": "Error Count",
+						"description": "에러 수",
+						"default": 0
+					},
+					"avg_latency_ms": {
+						"anyOf": [
+							{
+								"type": "number"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Avg Latency Ms",
+						"description": "평균 응답 시간 (ms)"
+					},
+					"p95_latency_ms": {
+						"anyOf": [
+							{
+								"type": "number"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "P95 Latency Ms",
+						"description": "P95 응답 시간 (ms)"
+					},
+					"p99_latency_ms": {
+						"anyOf": [
+							{
+								"type": "number"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "P99 Latency Ms",
+						"description": "P99 응답 시간 (ms)"
+					},
+					"last_updated": {
+						"type": "string",
+						"format": "date-time",
+						"title": "Last Updated",
+						"description": "마지막 업데이트 시간"
+					}
+				},
+				"type": "object",
+				"title": "DeploymentMetrics",
+				"description": "Deployment monitoring metrics."
+			},
+			"DeploymentResponse": {
+				"properties": {
+					"_id": {
+						"type": "string",
+						"title": "Id"
+					},
+					"model_name": {
+						"type": "string",
+						"title": "Model Name"
+					},
+					"model_version": {
+						"type": "string",
+						"title": "Model Version"
+					},
+					"experiment_name": {
+						"type": "string",
+						"title": "Experiment Name"
+					},
+					"status": {
+						"$ref": "#/components/schemas/DeploymentStatus"
+					},
+					"environment": {
+						"$ref": "#/components/schemas/DeploymentEnvironment"
+					},
+					"endpoint": {
+						"type": "string",
+						"title": "Endpoint"
+					},
+					"endpoint_config": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/EndpointConfig"
+							},
+							{
+								"type": "null"
+							}
+						]
+					},
+					"health_status": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Health Status"
+					},
+					"metrics": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/DeploymentMetrics"
+							},
+							{
+								"type": "null"
+							}
+						]
+					},
+					"created_by": {
+						"type": "string",
+						"title": "Created By"
+					},
+					"deployed_at": {
+						"type": "string",
+						"format": "date-time",
+						"title": "Deployed At"
+					},
+					"terminated_at": {
+						"anyOf": [
+							{
+								"type": "string",
+								"format": "date-time"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Terminated At"
+					},
+					"rollback_from": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Rollback From"
+					},
+					"deployment_notes": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Deployment Notes"
+					},
+					"error_message": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Error Message"
+					}
+				},
+				"type": "object",
+				"required": [
+					"_id",
+					"model_name",
+					"model_version",
+					"experiment_name",
+					"status",
+					"environment",
+					"endpoint",
+					"endpoint_config",
+					"health_status",
+					"metrics",
+					"created_by",
+					"deployed_at",
+					"terminated_at",
+					"rollback_from",
+					"deployment_notes",
+					"error_message"
+				],
+				"title": "DeploymentResponse",
+				"description": "Deployment response schema."
+			},
+			"DeploymentStatus": {
+				"type": "string",
+				"enum": [
+					"pending",
+					"validating",
+					"deploying",
+					"active",
+					"failed",
+					"rollback",
+					"terminated"
+				],
+				"title": "DeploymentStatus",
+				"description": "Deployment status enumeration."
+			},
+			"DeploymentUpdate": {
+				"properties": {
+					"status": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/DeploymentStatus"
+							},
+							{
+								"type": "null"
+							}
+						]
+					},
+					"health_status": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Health Status",
+						"description": "Health check status (healthy, degraded, unhealthy)"
+					},
+					"metrics": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/DeploymentMetrics"
+							},
+							{
+								"type": "null"
+							}
+						]
+					},
+					"endpoint": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Endpoint"
+					},
+					"error_message": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Error Message"
+					}
+				},
+				"type": "object",
+				"title": "DeploymentUpdate",
+				"description": "Update deployment status and metrics."
+			},
+			"DetailedMetrics": {
+				"properties": {
+					"confusion_matrix": {
+						"items": {
+							"items": {
+								"type": "integer"
+							},
+							"type": "array"
+						},
+						"type": "array",
+						"title": "Confusion Matrix",
+						"description": "혼동 행렬"
+					},
+					"class_labels": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"title": "Class Labels",
+						"description": "클래스 라벨"
+					},
+					"roc_curve": {
+						"anyOf": [
+							{
+								"additionalProperties": {
+									"items": {
+										"type": "number"
+									},
+									"type": "array"
+								},
+								"type": "object"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Roc Curve",
+						"description": "ROC 커브 (fpr, tpr, thresholds)"
+					},
+					"precision_recall_curve": {
+						"anyOf": [
+							{
+								"additionalProperties": {
+									"items": {
+										"type": "number"
+									},
+									"type": "array"
+								},
+								"type": "object"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Precision Recall Curve",
+						"description": "PR 커브 (precision, recall, thresholds)"
+					},
+					"accuracy": {
+						"anyOf": [
+							{
+								"type": "number"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Accuracy",
+						"description": "정확도"
+					},
+					"precision": {
+						"anyOf": [
+							{
+								"type": "number"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Precision",
+						"description": "정밀도"
+					},
+					"recall": {
+						"anyOf": [
+							{
+								"type": "number"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Recall",
+						"description": "재현율"
+					},
+					"f1_score": {
+						"anyOf": [
+							{
+								"type": "number"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "F1 Score",
+						"description": "F1 점수"
+					},
+					"auc_roc": {
+						"anyOf": [
+							{
+								"type": "number"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Auc Roc",
+						"description": "AUC-ROC"
+					}
+				},
+				"type": "object",
+				"title": "DetailedMetrics",
+				"description": "Detailed evaluation metrics for single job."
+			},
 			"DriftEventCreate": {
 				"properties": {
 					"model_name": {
@@ -14357,6 +15841,58 @@
 				"title": "EconomicEvent",
 				"description": "경제 이벤트."
 			},
+			"EndpointConfig": {
+				"properties": {
+					"instances": {
+						"type": "integer",
+						"minimum": 1.0,
+						"title": "Instances",
+						"description": "인스턴스 수",
+						"default": 1
+					},
+					"instance_type": {
+						"type": "string",
+						"title": "Instance Type",
+						"description": "인스턴스 타입",
+						"default": "standard"
+					},
+					"auto_scaling": {
+						"type": "boolean",
+						"title": "Auto Scaling",
+						"description": "자동 스케일링 여부",
+						"default": false
+					},
+					"min_instances": {
+						"anyOf": [
+							{
+								"type": "integer",
+								"minimum": 1.0
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Min Instances",
+						"description": "최소 인스턴스 수"
+					},
+					"max_instances": {
+						"anyOf": [
+							{
+								"type": "integer",
+								"minimum": 1.0
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Max Instances",
+						"description": "최대 인스턴스 수"
+					}
+				},
+				"type": "object",
+				"title": "EndpointConfig",
+				"description": "Deployment endpoint configuration."
+			},
 			"EvaluationReport": {
 				"properties": {
 					"scenario_name": {
@@ -14578,6 +16114,17 @@
 						],
 						"title": "Notes",
 						"description": "메모"
+					},
+					"detailed_metrics": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/DetailedMetrics"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"description": "상세 평가 메트릭"
 					}
 				},
 				"type": "object",
@@ -14985,6 +16532,91 @@
 				"required": ["source", "identifier", "occurred_at", "message"],
 				"title": "FailureInsight",
 				"description": "Represents a recent operational failure surfaced to the operator."
+			},
+			"FairnessAuditRequest": {
+				"properties": {
+					"model_id": {
+						"type": "string",
+						"title": "Model Id"
+					},
+					"protected_attributes": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"minItems": 1,
+						"title": "Protected Attributes",
+						"description": "보호 속성 (예: gender, race, age)"
+					},
+					"fairness_threshold": {
+						"type": "number",
+						"maximum": 1.0,
+						"exclusiveMinimum": 0.0,
+						"title": "Fairness Threshold",
+						"default": 0.8
+					}
+				},
+				"type": "object",
+				"required": ["model_id", "protected_attributes"],
+				"title": "FairnessAuditRequest",
+				"description": "공정성 감사 요청"
+			},
+			"FairnessReportResponse": {
+				"properties": {
+					"model_id": {
+						"type": "string",
+						"title": "Model Id"
+					},
+					"protected_attributes": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"title": "Protected Attributes"
+					},
+					"group_metrics": {
+						"additionalProperties": {
+							"additionalProperties": {
+								"type": "number"
+							},
+							"type": "object"
+						},
+						"type": "object",
+						"title": "Group Metrics"
+					},
+					"overall_fairness_score": {
+						"type": "number",
+						"title": "Overall Fairness Score"
+					},
+					"passed": {
+						"type": "boolean",
+						"title": "Passed"
+					},
+					"recommendations": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"title": "Recommendations"
+					},
+					"created_at": {
+						"type": "string",
+						"format": "date-time",
+						"title": "Created At"
+					}
+				},
+				"type": "object",
+				"required": [
+					"model_id",
+					"protected_attributes",
+					"group_metrics",
+					"overall_fairness_score",
+					"passed",
+					"recommendations",
+					"created_at"
+				],
+				"title": "FairnessReportResponse",
+				"description": "공정성 감사 보고서"
 			},
 			"FeatureContribution": {
 				"properties": {
@@ -15410,87 +17042,53 @@
 				"properties": {
 					"feature_name": {
 						"type": "string",
-						"title": "Feature Name",
-						"description": "피처 이름"
+						"title": "Feature Name"
 					},
-					"total_usage_count": {
-						"type": "integer",
-						"title": "Total Usage Count",
-						"description": "총 사용 횟수"
+					"feature_version": {
+						"type": "string",
+						"title": "Feature Version"
 					},
-					"unique_models_count": {
-						"type": "integer",
-						"title": "Unique Models Count",
-						"description": "사용한 고유 모델 수"
-					},
-					"environments": {
+					"statistics": {
 						"additionalProperties": {
-							"type": "integer"
+							"anyOf": [
+								{
+									"type": "number"
+								},
+								{
+									"type": "integer"
+								}
+							]
 						},
 						"type": "object",
-						"title": "Environments",
-						"description": "환경별 사용 횟수"
+						"title": "Statistics"
 					},
-					"avg_feature_importance": {
-						"anyOf": [
-							{
-								"type": "number"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Avg Feature Importance",
-						"description": "평균 피처 중요도"
-					},
-					"avg_correlation": {
-						"anyOf": [
-							{
-								"type": "number"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Avg Correlation",
-						"description": "평균 타겟 상관계수"
-					},
-					"first_used_at": {
-						"anyOf": [
-							{
-								"type": "string",
-								"format": "date-time"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "First Used At",
-						"description": "최초 사용 시간"
-					},
-					"last_used_at": {
-						"anyOf": [
-							{
-								"type": "string",
-								"format": "date-time"
-							},
-							{
-								"type": "null"
-							}
-						],
-						"title": "Last Used At",
-						"description": "마지막 사용 시간"
+					"generated_at": {
+						"type": "string",
+						"format": "date-time",
+						"title": "Generated At"
 					}
 				},
 				"type": "object",
 				"required": [
 					"feature_name",
-					"total_usage_count",
-					"unique_models_count",
-					"environments"
+					"feature_version",
+					"statistics",
+					"generated_at"
 				],
 				"title": "FeatureStatisticsResponse",
-				"description": "피처 통계 응답"
+				"description": "피처 통계 응답",
+				"example": {
+					"feature_name": "rsi_14",
+					"feature_version": "2.1.0",
+					"generated_at": "2025-01-15T10:00:00Z",
+					"statistics": {
+						"count": 1000,
+						"max": 95.0,
+						"mean": 52.3,
+						"min": 10.0,
+						"std": 15.2
+					}
+				}
 			},
 			"FeatureStatus": {
 				"type": "string",
@@ -22266,6 +23864,30 @@
 				"type": "object",
 				"title": "TemplateUpdate",
 				"description": "Template update request"
+			},
+			"TestCaseCreate": {
+				"properties": {
+					"name": {
+						"type": "string",
+						"minLength": 1,
+						"title": "Name"
+					},
+					"description": {
+						"type": "string",
+						"title": "Description"
+					},
+					"expected_metrics": {
+						"additionalProperties": {
+							"type": "number"
+						},
+						"type": "object",
+						"title": "Expected Metrics"
+					}
+				},
+				"type": "object",
+				"required": ["name", "description"],
+				"title": "TestCaseCreate",
+				"description": "벤치마크 테스트 케이스"
 			},
 			"Trade": {
 				"properties": {

@@ -62,31 +62,29 @@ interface ModelRegistryProps {
 // Helper Functions
 // ============================================================================
 
-const getStatusColor = (
-	status: Model["status"],
+const getStageColor = (
+	stage: Model["stage"],
 ): "default" | "primary" | "secondary" | "success" | "warning" => {
 	const colorMap: Record<
-		Model["status"],
+		Model["stage"],
 		"default" | "primary" | "secondary" | "success" | "warning"
 	> = {
-		draft: "default",
-		registered: "primary",
+		experimental: "default",
 		staging: "secondary",
 		production: "success",
 		archived: "warning",
 	};
-	return colorMap[status] || "default";
+	return colorMap[stage] || "default";
 };
 
-const getStatusLabel = (status: Model["status"]): string => {
-	const labelMap: Record<Model["status"], string> = {
-		draft: "초안",
-		registered: "등록됨",
+const getStageLabel = (stage: Model["stage"]): string => {
+	const labelMap: Record<Model["stage"], string> = {
+		experimental: "실험",
 		staging: "스테이징",
 		production: "프로덕션",
 		archived: "아카이브",
 	};
-	return labelMap[status] || status;
+	return labelMap[stage] || stage;
 };
 
 // ============================================================================
@@ -108,7 +106,10 @@ export const ModelRegistry: React.FC<ModelRegistryProps> = ({
 		sort_order: "desc",
 	});
 
-	const [selectedModelId, setSelectedModelId] = useState<string | null>(null);
+	const [selectedModel, setSelectedModel] = useState<{
+		model_name: string;
+		version: string;
+	} | null>(null);
 	const [detailDialogOpen, setDetailDialogOpen] = useState(false);
 
 	// ============================================================================
@@ -120,17 +121,20 @@ export const ModelRegistry: React.FC<ModelRegistryProps> = ({
 		modelDetail,
 		isLoading: isLoadingDetail,
 		error: detailError,
-	} = useModelDetail(selectedModelId);
+	} = useModelDetail(
+		selectedModel?.model_name || null,
+		selectedModel?.version || null,
+	);
 
 	// ============================================================================
 	// Event Handlers
 	// ============================================================================
 
-	const handleStatusFilterChange = (event: SelectChangeEvent<string>) => {
-		const value = event.target.value as Model["status"] | "";
+	const handleStageFilterChange = (event: SelectChangeEvent<string>) => {
+		const value = event.target.value as Model["stage"] | "";
 		setQueryParams((prev) => ({
 			...prev,
-			status: value || undefined,
+			stage: value || undefined,
 			page: 1,
 		}));
 	};
@@ -144,24 +148,14 @@ export const ModelRegistry: React.FC<ModelRegistryProps> = ({
 		}));
 	};
 
-	const handleModelClick = (modelId: string) => {
-		setSelectedModelId(modelId);
+	const handleModelClick = (model_name: string, version: string) => {
+		setSelectedModel({ model_name, version });
 		setDetailDialogOpen(true);
 	};
 
 	const handleCloseDialog = () => {
 		setDetailDialogOpen(false);
-		setSelectedModelId(null);
-	};
-
-	const handleDeployClick = (modelId: string, event: React.MouseEvent) => {
-		event.stopPropagation();
-		onDeployClick?.(modelId);
-	};
-
-	const handleArchiveClick = (modelId: string, event: React.MouseEvent) => {
-		event.stopPropagation();
-		onArchiveClick?.(modelId);
+		setSelectedModel(null);
 	};
 
 	// ============================================================================
@@ -216,17 +210,16 @@ export const ModelRegistry: React.FC<ModelRegistryProps> = ({
 
 					{/* Filters */}
 					<Box sx={{ display: "flex", gap: 2, mb: 3 }}>
-						{/* Status Filter */}
+						{/* Stage Filter */}
 						<FormControl size="small" sx={{ minWidth: 150 }}>
-							<InputLabel>상태</InputLabel>
+							<InputLabel>단계</InputLabel>
 							<Select
-								value={queryParams.status || ""}
-								label="상태"
-								onChange={handleStatusFilterChange}
+								value={queryParams.stage || ""}
+								label="단계"
+								onChange={handleStageFilterChange}
 							>
 								<MenuItem value="">전체</MenuItem>
-								<MenuItem value="draft">초안</MenuItem>
-								<MenuItem value="registered">등록됨</MenuItem>
+								<MenuItem value="experimental">실험</MenuItem>
 								<MenuItem value="staging">스테이징</MenuItem>
 								<MenuItem value="production">프로덕션</MenuItem>
 								<MenuItem value="archived">아카이브</MenuItem>
@@ -257,7 +250,10 @@ export const ModelRegistry: React.FC<ModelRegistryProps> = ({
 					) : (
 						<Grid container spacing={2}>
 							{modelsList.map((model) => (
-								<Grid size={{ xs: 12, sm: 6, md: 4 }} key={model.id}>
+								<Grid
+									size={{ xs: 12, sm: 6, md: 4 }}
+									key={`${model.model_name}-${model.version}`}
+								>
 									<Card
 										variant="outlined"
 										sx={{
@@ -268,7 +264,9 @@ export const ModelRegistry: React.FC<ModelRegistryProps> = ({
 												boxShadow: 2,
 											},
 										}}
-										onClick={() => handleModelClick(model.id)}
+										onClick={() =>
+											handleModelClick(model.model_name, model.version)
+										}
 									>
 										<CardContent>
 											<Box
@@ -280,11 +278,11 @@ export const ModelRegistry: React.FC<ModelRegistryProps> = ({
 												}}
 											>
 												<Typography variant="h6" component="h3">
-													{model.name}
+													{model.model_name}
 												</Typography>
 												<Chip
-													label={getStatusLabel(model.status)}
-													color={getStatusColor(model.status)}
+													label={getStageLabel(model.stage)}
+													color={getStageColor(model.stage)}
 													size="small"
 												/>
 											</Box>
@@ -294,7 +292,7 @@ export const ModelRegistry: React.FC<ModelRegistryProps> = ({
 												color="text.secondary"
 												gutterBottom
 											>
-												{model.version}
+												버전 {model.version}
 											</Typography>
 
 											<Box sx={{ my: 2 }}>
@@ -305,53 +303,44 @@ export const ModelRegistry: React.FC<ModelRegistryProps> = ({
 														mb: 1,
 													}}
 												>
-													<Typography variant="body2">정확도</Typography>
+													<Typography variant="body2">메트릭</Typography>
 													<Typography variant="body2" fontWeight="bold">
-														{(model.accuracy * 100).toFixed(2)}%
+														{model.metrics.length}개
+													</Typography>
+												</Box>
+												<Box
+													sx={{
+														display: "flex",
+														justifyContent: "space-between",
+														mb: 1,
+													}}
+												>
+													<Typography variant="body2">승인자</Typography>
+													<Typography variant="body2" fontWeight="bold">
+														{model.approved_by || "미승인"}
 													</Typography>
 												</Box>
 											</Box>
 
-											<Box
-												sx={{
-													display: "flex",
-													gap: 0.5,
-													flexWrap: "wrap",
-													mb: 1,
-												}}
-											>
-												{model.tags.slice(0, 3).map((tag) => (
-													<Chip
-														key={tag}
-														label={tag}
-														size="small"
-														variant="outlined"
-													/>
-												))}
-												{model.tags.length > 3 && (
-													<Chip
-														label={`+${model.tags.length - 3}`}
-														size="small"
-														variant="outlined"
-													/>
-												)}
-											</Box>
-
 											<Typography variant="caption" color="text.secondary">
-												{new Date(model.created_at).toLocaleDateString("ko-KR")}{" "}
-												• {model.created_by}
+												{new Date(model.created_at).toLocaleDateString("ko-KR")}
 											</Typography>
 										</CardContent>
 
 										<CardActions
 											sx={{ justifyContent: "flex-end", px: 2, pb: 2 }}
 										>
-											{model.status !== "archived" && (
+											{model.stage !== "archived" && (
 												<>
 													<Button
 														size="small"
 														startIcon={<ArchiveIcon />}
-														onClick={(e) => handleArchiveClick(model.id, e)}
+														onClick={(e) => {
+															e.stopPropagation();
+															onArchiveClick?.(
+																`${model.model_name}/${model.version}`,
+															);
+														}}
 													>
 														아카이브
 													</Button>
@@ -359,7 +348,12 @@ export const ModelRegistry: React.FC<ModelRegistryProps> = ({
 														size="small"
 														variant="contained"
 														startIcon={<RocketLaunchIcon />}
-														onClick={(e) => handleDeployClick(model.id, e)}
+														onClick={(e) => {
+															e.stopPropagation();
+															onDeployClick?.(
+																`${model.model_name}/${model.version}`,
+															);
+														}}
 													>
 														배포
 													</Button>
@@ -410,47 +404,43 @@ export const ModelRegistry: React.FC<ModelRegistryProps> = ({
 										mb: 1,
 									}}
 								>
-									<Typography variant="h6">{modelDetail.name}</Typography>
+									<Typography variant="h6">{modelDetail.model_name}</Typography>
 									<Chip
-										label={getStatusLabel(modelDetail.status)}
-										color={getStatusColor(modelDetail.status)}
+										label={getStageLabel(modelDetail.stage)}
+										color={getStageColor(modelDetail.stage)}
 									/>
 								</Box>
 								<Typography variant="body2" color="text.secondary">
-									{modelDetail.version}
+									버전 {modelDetail.version}
 								</Typography>
 							</Box>
 
 							<Divider sx={{ my: 2 }} />
 
-							{/* Description */}
-							<Box sx={{ mb: 3 }}>
-								<Typography variant="subtitle2" gutterBottom>
-									설명
-								</Typography>
-								<Typography variant="body2">
-									{modelDetail.description}
-								</Typography>
-							</Box>
-
 							{/* Metrics */}
 							<Box sx={{ mb: 3 }}>
 								<Typography variant="subtitle2" gutterBottom>
-									메트릭
+									메트릭 ({modelDetail.metrics.length}개)
 								</Typography>
 								<Grid container spacing={2}>
-									{Object.entries(modelDetail.metrics).map(([key, value]) => (
-										<Grid size={{ xs: 6, md: 3 }} key={key}>
+									{modelDetail.metrics.map((metric, index) => (
+										<Grid size={{ xs: 12, md: 6 }} key={index}>
 											<Card variant="outlined">
 												<CardContent>
 													<Typography variant="body2" color="text.secondary">
-														{key}
+														{metric.metric_name}
 													</Typography>
 													<Typography variant="h6">
-														{typeof value === "number"
-															? (value * 100).toFixed(2) + "%"
-															: value}
+														{metric.value.toFixed(4)}
 													</Typography>
+													{metric.dataset && (
+														<Typography
+															variant="caption"
+															color="text.secondary"
+														>
+															Dataset: {metric.dataset}
+														</Typography>
+													)}
 												</CardContent>
 											</Card>
 										</Grid>
@@ -468,62 +458,91 @@ export const ModelRegistry: React.FC<ModelRegistryProps> = ({
 										sx={{ display: "flex", justifyContent: "space-between" }}
 									>
 										<Typography variant="body2" color="text.secondary">
-											프레임워크
+											Run ID
 										</Typography>
 										<Typography variant="body2">
-											{modelDetail.framework}
+											{modelDetail.run_id}
 										</Typography>
 									</Box>
 									<Box
 										sx={{ display: "flex", justifyContent: "space-between" }}
 									>
 										<Typography variant="body2" color="text.secondary">
-											크기
+											승인자
 										</Typography>
 										<Typography variant="body2">
-											{modelDetail.size_mb.toFixed(2)} MB
+											{modelDetail.approved_by || "미승인"}
 										</Typography>
 									</Box>
 									<Box
 										sx={{ display: "flex", justifyContent: "space-between" }}
 									>
 										<Typography variant="body2" color="text.secondary">
-											배포 횟수
+											승인일
 										</Typography>
 										<Typography variant="body2">
-											{modelDetail.deployment_count}회
+											{modelDetail.approved_at
+												? new Date(modelDetail.approved_at).toLocaleDateString(
+														"ko-KR",
+													)
+												: "미승인"}
+										</Typography>
+									</Box>
+									<Box
+										sx={{ display: "flex", justifyContent: "space-between" }}
+									>
+										<Typography variant="body2" color="text.secondary">
+											생성일
+										</Typography>
+										<Typography variant="body2">
+											{new Date(modelDetail.created_at).toLocaleDateString(
+												"ko-KR",
+											)}
 										</Typography>
 									</Box>
 								</Box>
 							</Box>
 
-							{/* Tags */}
-							<Box>
-								<Typography variant="subtitle2" gutterBottom>
-									태그
-								</Typography>
-								<Box sx={{ display: "flex", gap: 0.5, flexWrap: "wrap" }}>
-									{modelDetail.tags.map((tag) => (
-										<Chip
-											key={tag}
-											label={tag}
-											size="small"
-											variant="outlined"
-										/>
-									))}
+							{/* Approval Checklist */}
+							{modelDetail.approval_checklist.length > 0 && (
+								<Box>
+									<Typography variant="subtitle2" gutterBottom>
+										승인 체크리스트
+									</Typography>
+									<Box
+										sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}
+									>
+										{modelDetail.approval_checklist.map((item, index) => (
+											<Chip
+												key={index}
+												label={item.name}
+												size="small"
+												variant="outlined"
+												color={
+													item.status === "passed"
+														? "success"
+														: item.status === "failed"
+															? "error"
+															: "default"
+												}
+											/>
+										))}
+									</Box>
 								</Box>
-							</Box>
+							)}
 						</Box>
 					) : null}
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={handleCloseDialog}>닫기</Button>
-					{modelDetail && modelDetail.status !== "archived" && (
+					{modelDetail && modelDetail.stage !== "archived" && (
 						<>
 							<Button
 								startIcon={<ArchiveIcon />}
 								onClick={() => {
-									onArchiveClick?.(modelDetail.id);
+									onArchiveClick?.(
+										`${modelDetail.model_name}/${modelDetail.version}`,
+									);
 									handleCloseDialog();
 								}}
 							>
@@ -533,7 +552,9 @@ export const ModelRegistry: React.FC<ModelRegistryProps> = ({
 								variant="contained"
 								startIcon={<RocketLaunchIcon />}
 								onClick={() => {
-									onDeployClick?.(modelDetail.id);
+									onDeployClick?.(
+										`${modelDetail.model_name}/${modelDetail.version}`,
+									);
 									handleCloseDialog();
 								}}
 							>

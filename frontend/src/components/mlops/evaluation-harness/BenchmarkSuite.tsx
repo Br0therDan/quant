@@ -12,7 +12,6 @@
 
 import {
 	useBenchmarkDetail,
-	useBenchmarkRun,
 	useEvaluationHarness,
 	type BenchmarkCreate,
 } from "@/hooks/useEvaluationHarness";
@@ -33,7 +32,6 @@ import {
 	DialogContent,
 	DialogTitle,
 	IconButton,
-	LinearProgress,
 	Paper,
 	Table,
 	TableBody,
@@ -110,7 +108,8 @@ export const BenchmarkSuite: React.FC<BenchmarkSuiteProps> = ({
 
 	const { benchmarkDetail } = useBenchmarkDetail(selectedBenchmarkId);
 
-	const { benchmarkRun } = useBenchmarkRun(activeRunId);
+	// useBenchmarkRun is not implemented yet (backend doesn't have endpoint)
+	// const { benchmarkRun } = useBenchmarkRun(activeRunId);
 
 	// ============================================================================
 	// Event Handlers
@@ -139,7 +138,7 @@ export const BenchmarkSuite: React.FC<BenchmarkSuiteProps> = ({
 		if (newTestCase.name) {
 			setNewBenchmark({
 				...newBenchmark,
-				test_cases: [...newBenchmark.test_cases, { ...newTestCase }],
+				test_cases: [...(newBenchmark.test_cases || []), { ...newTestCase }],
 			});
 			setNewTestCase({
 				name: "",
@@ -152,7 +151,9 @@ export const BenchmarkSuite: React.FC<BenchmarkSuiteProps> = ({
 	const handleRemoveTestCase = (index: number) => {
 		setNewBenchmark({
 			...newBenchmark,
-			test_cases: newBenchmark.test_cases.filter((_, i) => i !== index),
+			test_cases: (newBenchmark.test_cases || []).filter(
+				(_: unknown, i: number) => i !== index,
+			),
 		});
 	};
 
@@ -166,10 +167,12 @@ export const BenchmarkSuite: React.FC<BenchmarkSuiteProps> = ({
 
 		try {
 			const run = await runBenchmark({
-				benchmark_id: selectedBenchmarkId,
+				benchmark_name: selectedBenchmarkId,
 				model_id: modelId,
+				model_version: undefined,
 			});
-			setActiveRunId(run.id);
+			// BenchmarkRunResponse doesn't have id field, use benchmark_name + model_id
+			setActiveRunId(`${run.benchmark_name}-${run.model_id}`);
 			setRunDialogOpen(false);
 		} catch (error) {
 			console.error("Run benchmark error:", error);
@@ -179,42 +182,6 @@ export const BenchmarkSuite: React.FC<BenchmarkSuiteProps> = ({
 	const handleBenchmarkClick = (benchmarkId: string) => {
 		setSelectedBenchmarkId(benchmarkId);
 		onBenchmarkSelect?.(benchmarkId);
-	};
-
-	// ============================================================================
-	// Helper Functions
-	// ============================================================================
-
-	const getStatusColor = (
-		status: "draft" | "active" | "archived",
-	): "default" | "success" | "warning" => {
-		const colorMap = {
-			draft: "default" as const,
-			active: "success" as const,
-			archived: "warning" as const,
-		};
-		return colorMap[status] || "default";
-	};
-
-	const getStatusLabel = (status: "draft" | "active" | "archived"): string => {
-		const labelMap = {
-			draft: "초안",
-			active: "활성",
-			archived: "아카이브",
-		};
-		return labelMap[status] || status;
-	};
-
-	const getLastRunStatusColor = (
-		status?: "success" | "failed" | "partial",
-	): "success" | "error" | "warning" | "default" => {
-		if (!status) return "default";
-		const colorMap = {
-			success: "success" as const,
-			failed: "error" as const,
-			partial: "warning" as const,
-		};
-		return colorMap[status] || "default";
 	};
 
 	// ============================================================================
@@ -274,22 +241,18 @@ export const BenchmarkSuite: React.FC<BenchmarkSuiteProps> = ({
 						</Button>
 					</Box>
 
-					{/* Active Benchmark Run Progress */}
-					{benchmarkRun && benchmarkRun.status !== "completed" && (
-						<Alert
-							severity="info"
-							sx={{ mb: 2 }}
-							icon={<CircularProgress size={20} />}
-						>
-							<Typography variant="body2" gutterBottom>
-								벤치마크 실행 중: {benchmarkRun.progress}% 완료
-							</Typography>
-							<LinearProgress
-								variant="determinate"
-								value={benchmarkRun.progress}
-							/>
-						</Alert>
-					)}
+					{/* Active Benchmark Run Progress - Disabled (endpoint not implemented) */}
+					{/* {benchmarkRun && benchmarkRun.completed_at === null && (
+            <Alert
+              severity="info"
+              sx={{ mb: 2 }}
+              icon={<CircularProgress size={20} />}
+            >
+              <Typography variant="body2">
+                벤치마크 실행 중... ({benchmarkRun.benchmark_name})
+              </Typography>
+            </Alert>
+          )} */}
 
 					{/* Benchmarks Table */}
 					{benchmarksList.length > 0 ? (
@@ -298,70 +261,43 @@ export const BenchmarkSuite: React.FC<BenchmarkSuiteProps> = ({
 								<TableHead>
 									<TableRow>
 										<TableCell>이름</TableCell>
+										<TableCell>설명</TableCell>
 										<TableCell>테스트 수</TableCell>
-										<TableCell>상태</TableCell>
-										<TableCell>마지막 실행</TableCell>
-										<TableCell>실행 결과</TableCell>
+										<TableCell>생성일</TableCell>
 										<TableCell align="right">액션</TableCell>
 									</TableRow>
 								</TableHead>
 								<TableBody>
 									{benchmarksList.map((benchmark) => (
 										<TableRow
-											key={benchmark.id}
+											key={benchmark.name}
 											hover
-											onClick={() => handleBenchmarkClick(benchmark.id)}
+											onClick={() => handleBenchmarkClick(benchmark.name)}
 											sx={{ cursor: "pointer" }}
 										>
 											<TableCell>
 												<Typography variant="body2" fontWeight="medium">
 													{benchmark.name}
 												</Typography>
+											</TableCell>
+											<TableCell>
 												<Typography variant="caption" color="text.secondary">
 													{benchmark.description}
 												</Typography>
 											</TableCell>
 											<TableCell>
 												<Chip
-													label={benchmark.test_count}
+													label={benchmark.test_cases?.length || 0}
 													size="small"
 													variant="outlined"
 												/>
 											</TableCell>
 											<TableCell>
-												<Chip
-													label={getStatusLabel(benchmark.status)}
-													color={getStatusColor(benchmark.status)}
-													size="small"
-												/>
-											</TableCell>
-											<TableCell>
-												{benchmark.last_run_at ? (
-													<Typography variant="caption">
-														{new Date(benchmark.last_run_at).toLocaleString(
-															"ko-KR",
-														)}
-													</Typography>
-												) : (
-													<Typography variant="caption" color="text.secondary">
-														실행 기록 없음
-													</Typography>
-												)}
-											</TableCell>
-											<TableCell>
-												{benchmark.last_run_status ? (
-													<Chip
-														label={benchmark.last_run_status.toUpperCase()}
-														color={getLastRunStatusColor(
-															benchmark.last_run_status,
-														)}
-														size="small"
-													/>
-												) : (
-													<Typography variant="caption" color="text.secondary">
-														-
-													</Typography>
-												)}
+												<Typography variant="caption">
+													{new Date(benchmark.created_at).toLocaleString(
+														"ko-KR",
+													)}
+												</Typography>
 											</TableCell>
 											<TableCell align="right">
 												<Tooltip title="벤치마크 실행">
@@ -370,7 +306,7 @@ export const BenchmarkSuite: React.FC<BenchmarkSuiteProps> = ({
 														color="primary"
 														onClick={(e) => {
 															e.stopPropagation();
-															handleRunClick(benchmark.id);
+															handleRunClick(benchmark.name);
 														}}
 														disabled={!modelId}
 													>
@@ -382,7 +318,7 @@ export const BenchmarkSuite: React.FC<BenchmarkSuiteProps> = ({
 														size="small"
 														onClick={(e) => {
 															e.stopPropagation();
-															handleBenchmarkClick(benchmark.id);
+															handleBenchmarkClick(benchmark.name);
 														}}
 													>
 														<InfoIcon />
@@ -404,29 +340,39 @@ export const BenchmarkSuite: React.FC<BenchmarkSuiteProps> = ({
 					{selectedBenchmarkId && benchmarkDetail && (
 						<Box sx={{ mt: 3 }}>
 							<Typography variant="h6" gutterBottom>
-								벤치마크 상세
+								벤치마크 상세: {benchmarkDetail.name}
 							</Typography>
 							<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
 								<Card variant="outlined" sx={{ flex: 1, minWidth: 200 }}>
 									<CardContent>
 										<Typography variant="body2" color="text.secondary">
-											테스트된 모델 수
+											테스트 케이스 수
 										</Typography>
 										<Typography variant="h5">
-											{benchmarkDetail.models_tested}
+											{benchmarkDetail.test_cases?.length || 0}
 										</Typography>
 									</CardContent>
 								</Card>
 								<Card variant="outlined" sx={{ flex: 1, minWidth: 200 }}>
 									<CardContent>
 										<Typography variant="body2" color="text.secondary">
-											평균 점수
+											생성일
 										</Typography>
-										<Typography variant="h5">
-											{(benchmarkDetail.average_score * 100).toFixed(1)}%
+										<Typography variant="body1">
+											{new Date(benchmarkDetail.created_at).toLocaleDateString(
+												"ko-KR",
+											)}
 										</Typography>
 									</CardContent>
 								</Card>
+							</Box>
+							<Box sx={{ mt: 2 }}>
+								<Typography variant="body2" color="text.secondary" gutterBottom>
+									설명
+								</Typography>
+								<Typography variant="body1">
+									{benchmarkDetail.description}
+								</Typography>
 							</Box>
 						</Box>
 					)}
@@ -467,35 +413,37 @@ export const BenchmarkSuite: React.FC<BenchmarkSuiteProps> = ({
 						/>
 
 						<Typography variant="subtitle2" sx={{ mt: 2 }}>
-							테스트 케이스 ({newBenchmark.test_cases.length})
+							테스트 케이스 ({(newBenchmark.test_cases || []).length})
 						</Typography>
 
-						{newBenchmark.test_cases.map((testCase, index) => (
-							<Box
-								key={index}
-								sx={{
-									display: "flex",
-									alignItems: "center",
-									gap: 1,
-									p: 1,
-									bgcolor: "grey.100",
-									borderRadius: 1,
-								}}
-							>
-								<Box sx={{ flex: 1 }}>
-									<Typography variant="body2">{testCase.name}</Typography>
-									<Typography variant="caption" color="text.secondary">
-										{testCase.description}
-									</Typography>
-								</Box>
-								<IconButton
-									size="small"
-									onClick={() => handleRemoveTestCase(index)}
+						{(newBenchmark.test_cases || []).map(
+							(testCase: any, index: number) => (
+								<Box
+									key={index}
+									sx={{
+										display: "flex",
+										alignItems: "center",
+										gap: 1,
+										p: 1,
+										bgcolor: "grey.100",
+										borderRadius: 1,
+									}}
 								>
-									<DeleteIcon fontSize="small" />
-								</IconButton>
-							</Box>
-						))}
+									<Box sx={{ flex: 1 }}>
+										<Typography variant="body2">{testCase.name}</Typography>
+										<Typography variant="caption" color="text.secondary">
+											{testCase.description}
+										</Typography>
+									</Box>
+									<IconButton
+										size="small"
+										onClick={() => handleRemoveTestCase(index)}
+									>
+										<DeleteIcon fontSize="small" />
+									</IconButton>
+								</Box>
+							),
+						)}
 
 						<Box
 							sx={{
@@ -544,7 +492,7 @@ export const BenchmarkSuite: React.FC<BenchmarkSuiteProps> = ({
 						disabled={
 							isCreatingBenchmark ||
 							!newBenchmark.name ||
-							newBenchmark.test_cases.length === 0
+							(newBenchmark.test_cases || []).length === 0
 						}
 					>
 						{isCreatingBenchmark ? "생성 중..." : "생성"}

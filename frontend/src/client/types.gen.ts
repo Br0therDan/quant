@@ -5,6 +5,94 @@ export type ClientOptions = {
 };
 
 /**
+ * ABTestCreate
+ * A/B 테스트 생성
+ */
+export type AbTestCreate = {
+	/**
+	 * Name
+	 */
+	name: string;
+	/**
+	 * Description
+	 */
+	description: string;
+	/**
+	 * Model A Id
+	 */
+	model_a_id: string;
+	/**
+	 * Model B Id
+	 */
+	model_b_id: string;
+	/**
+	 * Traffic Split A
+	 */
+	traffic_split_a?: number;
+	/**
+	 * Sample Size
+	 */
+	sample_size?: number;
+	/**
+	 * Confidence Level
+	 */
+	confidence_level?: number;
+};
+
+/**
+ * ABTestResponse
+ * A/B 테스트 응답
+ */
+export type AbTestResponse = {
+	/**
+	 * Name
+	 */
+	name: string;
+	/**
+	 * Description
+	 */
+	description: string;
+	/**
+	 * Model A Id
+	 */
+	model_a_id: string;
+	/**
+	 * Model B Id
+	 */
+	model_b_id: string;
+	/**
+	 * Traffic Split A
+	 */
+	traffic_split_a: number;
+	/**
+	 * Sample Size
+	 */
+	sample_size: number;
+	/**
+	 * Confidence Level
+	 */
+	confidence_level: number;
+	/**
+	 * Status
+	 */
+	status: string;
+	/**
+	 * Results
+	 */
+	results: {
+		[key: string]: unknown;
+	} | null;
+	/**
+	 * Created At
+	 */
+	created_at: Date;
+	/**
+	 * Completed At
+	 */
+	completed_at: Date | null;
+};
+
+/**
  * ArtifactReference
  * Reference to persisted artifacts (MLflow/W&B).
  */
@@ -590,6 +678,25 @@ export type BalanceSheetResponse = {
 };
 
 /**
+ * BenchmarkCreate
+ * 벤치마크 스위트 생성
+ */
+export type BenchmarkCreate = {
+	/**
+	 * Name
+	 */
+	name: string;
+	/**
+	 * Description
+	 */
+	description: string;
+	/**
+	 * Test Cases
+	 */
+	test_cases?: Array<TestCaseCreate>;
+};
+
+/**
  * BenchmarkMetric
  * Benchmark metric definition used by evaluation scenarios.
  */
@@ -609,6 +716,91 @@ export type BenchmarkMetric = {
 	 * 높을수록 좋은 메트릭 여부
 	 */
 	higher_is_better?: boolean;
+};
+
+/**
+ * BenchmarkResponse
+ * 벤치마크 스위트 응답
+ */
+export type BenchmarkResponse = {
+	/**
+	 * Name
+	 */
+	name: string;
+	/**
+	 * Description
+	 */
+	description: string;
+	/**
+	 * Test Cases
+	 */
+	test_cases: Array<{
+		[key: string]: unknown;
+	}>;
+	/**
+	 * Created At
+	 */
+	created_at: Date;
+	/**
+	 * Updated At
+	 */
+	updated_at: Date;
+};
+
+/**
+ * BenchmarkRunRequest
+ * 벤치마크 실행 요청
+ */
+export type BenchmarkRunRequest = {
+	/**
+	 * Benchmark Name
+	 */
+	benchmark_name: string;
+	/**
+	 * Model Id
+	 */
+	model_id: string;
+	/**
+	 * Model Version
+	 */
+	model_version?: string | null;
+};
+
+/**
+ * BenchmarkRunResponse
+ * 벤치마크 실행 결과
+ */
+export type BenchmarkRunResponse = {
+	/**
+	 * Benchmark Name
+	 */
+	benchmark_name: string;
+	/**
+	 * Model Id
+	 */
+	model_id: string;
+	/**
+	 * Model Version
+	 */
+	model_version: string | null;
+	/**
+	 * Results
+	 */
+	results: {
+		[key: string]: unknown;
+	};
+	/**
+	 * Passed
+	 */
+	passed: boolean;
+	/**
+	 * Started At
+	 */
+	started_at: Date;
+	/**
+	 * Completed At
+	 */
+	completed_at: Date | null;
 };
 
 /**
@@ -1435,6 +1627,233 @@ export type DeploymentChecklistItem = {
 };
 
 /**
+ * DeploymentCreate
+ * Create a new model deployment.
+ */
+export type DeploymentCreate = {
+	/**
+	 * Model Name
+	 */
+	model_name: string;
+	/**
+	 * Model Version
+	 */
+	model_version: string;
+	/**
+	 * Experiment Name
+	 */
+	experiment_name: string;
+	environment: DeploymentEnvironment;
+	/**
+	 * Endpoint
+	 * Deployment endpoint URL
+	 */
+	endpoint: string;
+	endpoint_config?: EndpointConfig | null;
+	/**
+	 * Created By
+	 */
+	created_by: string;
+	/**
+	 * Deployment Notes
+	 */
+	deployment_notes?: string | null;
+};
+
+/**
+ * DeploymentEnvironment
+ * Deployment environment enumeration.
+ */
+export type DeploymentEnvironment = "development" | "staging" | "production";
+
+/**
+ * DeploymentMetrics
+ * Deployment monitoring metrics.
+ */
+export type DeploymentMetrics = {
+	/**
+	 * Request Count
+	 * 총 요청 수
+	 */
+	request_count?: number;
+	/**
+	 * Error Count
+	 * 에러 수
+	 */
+	error_count?: number;
+	/**
+	 * Avg Latency Ms
+	 * 평균 응답 시간 (ms)
+	 */
+	avg_latency_ms?: number | null;
+	/**
+	 * P95 Latency Ms
+	 * P95 응답 시간 (ms)
+	 */
+	p95_latency_ms?: number | null;
+	/**
+	 * P99 Latency Ms
+	 * P99 응답 시간 (ms)
+	 */
+	p99_latency_ms?: number | null;
+	/**
+	 * Last Updated
+	 * 마지막 업데이트 시간
+	 */
+	last_updated?: Date;
+};
+
+/**
+ * DeploymentResponse
+ * Deployment response schema.
+ */
+export type DeploymentResponse = {
+	/**
+	 * Id
+	 */
+	_id: string;
+	/**
+	 * Model Name
+	 */
+	model_name: string;
+	/**
+	 * Model Version
+	 */
+	model_version: string;
+	/**
+	 * Experiment Name
+	 */
+	experiment_name: string;
+	status: DeploymentStatus;
+	environment: DeploymentEnvironment;
+	/**
+	 * Endpoint
+	 */
+	endpoint: string;
+	endpoint_config: EndpointConfig | null;
+	/**
+	 * Health Status
+	 */
+	health_status: string | null;
+	metrics: DeploymentMetrics | null;
+	/**
+	 * Created By
+	 */
+	created_by: string;
+	/**
+	 * Deployed At
+	 */
+	deployed_at: Date;
+	/**
+	 * Terminated At
+	 */
+	terminated_at: Date | null;
+	/**
+	 * Rollback From
+	 */
+	rollback_from: string | null;
+	/**
+	 * Deployment Notes
+	 */
+	deployment_notes: string | null;
+	/**
+	 * Error Message
+	 */
+	error_message: string | null;
+};
+
+/**
+ * DeploymentStatus
+ * Deployment status enumeration.
+ */
+export type DeploymentStatus =
+	| "pending"
+	| "validating"
+	| "deploying"
+	| "active"
+	| "failed"
+	| "rollback"
+	| "terminated";
+
+/**
+ * DeploymentUpdate
+ * Update deployment status and metrics.
+ */
+export type DeploymentUpdate = {
+	status?: DeploymentStatus | null;
+	/**
+	 * Health Status
+	 * Health check status (healthy, degraded, unhealthy)
+	 */
+	health_status?: string | null;
+	metrics?: DeploymentMetrics | null;
+	/**
+	 * Endpoint
+	 */
+	endpoint?: string | null;
+	/**
+	 * Error Message
+	 */
+	error_message?: string | null;
+};
+
+/**
+ * DetailedMetrics
+ * Detailed evaluation metrics for single job.
+ */
+export type DetailedMetrics = {
+	/**
+	 * Confusion Matrix
+	 * 혼동 행렬
+	 */
+	confusion_matrix?: Array<Array<number>>;
+	/**
+	 * Class Labels
+	 * 클래스 라벨
+	 */
+	class_labels?: Array<string>;
+	/**
+	 * Roc Curve
+	 * ROC 커브 (fpr, tpr, thresholds)
+	 */
+	roc_curve?: {
+		[key: string]: Array<number>;
+	} | null;
+	/**
+	 * Precision Recall Curve
+	 * PR 커브 (precision, recall, thresholds)
+	 */
+	precision_recall_curve?: {
+		[key: string]: Array<number>;
+	} | null;
+	/**
+	 * Accuracy
+	 * 정확도
+	 */
+	accuracy?: number | null;
+	/**
+	 * Precision
+	 * 정밀도
+	 */
+	precision?: number | null;
+	/**
+	 * Recall
+	 * 재현율
+	 */
+	recall?: number | null;
+	/**
+	 * F1 Score
+	 * F1 점수
+	 */
+	f1_score?: number | null;
+	/**
+	 * Auc Roc
+	 * AUC-ROC
+	 */
+	auc_roc?: number | null;
+};
+
+/**
  * DriftEventCreate
  */
 export type DriftEventCreate = {
@@ -1667,6 +2086,38 @@ export type EconomicEvent = {
 };
 
 /**
+ * EndpointConfig
+ * Deployment endpoint configuration.
+ */
+export type EndpointConfig = {
+	/**
+	 * Instances
+	 * 인스턴스 수
+	 */
+	instances?: number;
+	/**
+	 * Instance Type
+	 * 인스턴스 타입
+	 */
+	instance_type?: string;
+	/**
+	 * Auto Scaling
+	 * 자동 스케일링 여부
+	 */
+	auto_scaling?: boolean;
+	/**
+	 * Min Instances
+	 * 최소 인스턴스 수
+	 */
+	min_instances?: number | null;
+	/**
+	 * Max Instances
+	 * 최대 인스턴스 수
+	 */
+	max_instances?: number | null;
+};
+
+/**
  * EvaluationReport
  */
 export type EvaluationReport = {
@@ -1798,6 +2249,10 @@ export type EvaluationSummary = {
 	 * 메모
 	 */
 	notes?: string | null;
+	/**
+	 * 상세 평가 메트릭
+	 */
+	detailed_metrics?: DetailedMetrics | null;
 };
 
 /**
@@ -2070,6 +2525,65 @@ export type FailureInsight = {
 	metadata?: {
 		[key: string]: unknown;
 	};
+};
+
+/**
+ * FairnessAuditRequest
+ * 공정성 감사 요청
+ */
+export type FairnessAuditRequest = {
+	/**
+	 * Model Id
+	 */
+	model_id: string;
+	/**
+	 * Protected Attributes
+	 * 보호 속성 (예: gender, race, age)
+	 */
+	protected_attributes: Array<string>;
+	/**
+	 * Fairness Threshold
+	 */
+	fairness_threshold?: number;
+};
+
+/**
+ * FairnessReportResponse
+ * 공정성 감사 보고서
+ */
+export type FairnessReportResponse = {
+	/**
+	 * Model Id
+	 */
+	model_id: string;
+	/**
+	 * Protected Attributes
+	 */
+	protected_attributes: Array<string>;
+	/**
+	 * Group Metrics
+	 */
+	group_metrics: {
+		[key: string]: {
+			[key: string]: number;
+		};
+	};
+	/**
+	 * Overall Fairness Score
+	 */
+	overall_fairness_score: number;
+	/**
+	 * Passed
+	 */
+	passed: boolean;
+	/**
+	 * Recommendations
+	 */
+	recommendations: Array<string>;
+	/**
+	 * Created At
+	 */
+	created_at: Date;
 };
 
 /**
@@ -2347,46 +2861,22 @@ export type FeatureResponse = {
 export type FeatureStatisticsResponse = {
 	/**
 	 * Feature Name
-	 * 피처 이름
 	 */
 	feature_name: string;
 	/**
-	 * Total Usage Count
-	 * 총 사용 횟수
+	 * Feature Version
 	 */
-	total_usage_count: number;
+	feature_version: string;
 	/**
-	 * Unique Models Count
-	 * 사용한 고유 모델 수
+	 * Statistics
 	 */
-	unique_models_count: number;
-	/**
-	 * Environments
-	 * 환경별 사용 횟수
-	 */
-	environments: {
-		[key: string]: number;
+	statistics: {
+		[key: string]: number | number;
 	};
 	/**
-	 * Avg Feature Importance
-	 * 평균 피처 중요도
+	 * Generated At
 	 */
-	avg_feature_importance?: number | null;
-	/**
-	 * Avg Correlation
-	 * 평균 타겟 상관계수
-	 */
-	avg_correlation?: number | null;
-	/**
-	 * First Used At
-	 * 최초 사용 시간
-	 */
-	first_used_at?: Date | null;
-	/**
-	 * Last Used At
-	 * 마지막 사용 시간
-	 */
-	last_used_at?: Date | null;
+	generated_at: Date;
 };
 
 /**
@@ -6703,6 +7193,27 @@ export type TemplateUpdate = {
 	 * 태그
 	 */
 	tags?: Array<string> | null;
+};
+
+/**
+ * TestCaseCreate
+ * 벤치마크 테스트 케이스
+ */
+export type TestCaseCreate = {
+	/**
+	 * Name
+	 */
+	name: string;
+	/**
+	 * Description
+	 */
+	description: string;
+	/**
+	 * Expected Metrics
+	 */
+	expected_metrics?: {
+		[key: string]: number;
+	};
 };
 
 /**
@@ -11825,6 +12336,38 @@ export type MlCreateExperimentResponses = {
 export type MlCreateExperimentResponse =
 	MlCreateExperimentResponses[keyof MlCreateExperimentResponses];
 
+export type MlGetExperimentData = {
+	body?: never;
+	path: {
+		/**
+		 * Name
+		 */
+		name: string;
+	};
+	query?: never;
+	url: "/api/v1/ml/lifecycle/experiments/{name}";
+};
+
+export type MlGetExperimentErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlGetExperimentError =
+	MlGetExperimentErrors[keyof MlGetExperimentErrors];
+
+export type MlGetExperimentResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: ExperimentResponse;
+};
+
+export type MlGetExperimentResponse =
+	MlGetExperimentResponses[keyof MlGetExperimentResponses];
+
 export type MlUpdateExperimentData = {
 	body: ExperimentUpdate;
 	path: {
@@ -12042,6 +12585,42 @@ export type MlRegisterModelVersionResponses = {
 export type MlRegisterModelVersionResponse =
 	MlRegisterModelVersionResponses[keyof MlRegisterModelVersionResponses];
 
+export type MlGetModelVersionData = {
+	body?: never;
+	path: {
+		/**
+		 * Model Name
+		 */
+		model_name: string;
+		/**
+		 * Version
+		 */
+		version: string;
+	};
+	query?: never;
+	url: "/api/v1/ml/lifecycle/models/{model_name}/{version}";
+};
+
+export type MlGetModelVersionErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlGetModelVersionError =
+	MlGetModelVersionErrors[keyof MlGetModelVersionErrors];
+
+export type MlGetModelVersionResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: ModelVersionResponse;
+};
+
+export type MlGetModelVersionResponse =
+	MlGetModelVersionResponses[keyof MlGetModelVersionResponses];
+
 export type MlUpdateModelVersionData = {
 	body: ChecklistUpdateRequest;
 	path: {
@@ -12173,6 +12752,138 @@ export type MlRecordDriftEventResponses = {
 
 export type MlRecordDriftEventResponse =
 	MlRecordDriftEventResponses[keyof MlRecordDriftEventResponses];
+
+export type MlListDeploymentsData = {
+	body?: never;
+	path?: never;
+	query?: {
+		/**
+		 * Model Name
+		 */
+		model_name?: string | null;
+		/**
+		 * Environment
+		 */
+		environment?: string | null;
+		/**
+		 * Status
+		 */
+		status?: string | null;
+	};
+	url: "/api/v1/ml/lifecycle/deployments";
+};
+
+export type MlListDeploymentsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlListDeploymentsError =
+	MlListDeploymentsErrors[keyof MlListDeploymentsErrors];
+
+export type MlListDeploymentsResponses = {
+	/**
+	 * Response Ml-List Deployments
+	 * Successful Response
+	 */
+	200: Array<DeploymentResponse>;
+};
+
+export type MlListDeploymentsResponse =
+	MlListDeploymentsResponses[keyof MlListDeploymentsResponses];
+
+export type MlCreateDeploymentData = {
+	body: DeploymentCreate;
+	path?: never;
+	query?: never;
+	url: "/api/v1/ml/lifecycle/deployments";
+};
+
+export type MlCreateDeploymentErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlCreateDeploymentError =
+	MlCreateDeploymentErrors[keyof MlCreateDeploymentErrors];
+
+export type MlCreateDeploymentResponses = {
+	/**
+	 * Successful Response
+	 */
+	201: DeploymentResponse;
+};
+
+export type MlCreateDeploymentResponse =
+	MlCreateDeploymentResponses[keyof MlCreateDeploymentResponses];
+
+export type MlGetDeploymentData = {
+	body?: never;
+	path: {
+		/**
+		 * Deployment Id
+		 */
+		deployment_id: string;
+	};
+	query?: never;
+	url: "/api/v1/ml/lifecycle/deployments/{deployment_id}";
+};
+
+export type MlGetDeploymentErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlGetDeploymentError =
+	MlGetDeploymentErrors[keyof MlGetDeploymentErrors];
+
+export type MlGetDeploymentResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: DeploymentResponse;
+};
+
+export type MlGetDeploymentResponse =
+	MlGetDeploymentResponses[keyof MlGetDeploymentResponses];
+
+export type MlUpdateDeploymentData = {
+	body: DeploymentUpdate;
+	path: {
+		/**
+		 * Deployment Id
+		 */
+		deployment_id: string;
+	};
+	query?: never;
+	url: "/api/v1/ml/lifecycle/deployments/{deployment_id}";
+};
+
+export type MlUpdateDeploymentErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlUpdateDeploymentError =
+	MlUpdateDeploymentErrors[keyof MlUpdateDeploymentErrors];
+
+export type MlUpdateDeploymentResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: DeploymentResponse;
+};
+
+export type MlUpdateDeploymentResponse =
+	MlUpdateDeploymentResponses[keyof MlUpdateDeploymentResponses];
 
 export type MlListScenariosData = {
 	body?: never;
@@ -12342,6 +13053,278 @@ export type MlGetEvaluationReportResponses = {
 
 export type MlGetEvaluationReportResponse =
 	MlGetEvaluationReportResponses[keyof MlGetEvaluationReportResponses];
+
+export type MlGetDetailedMetricsData = {
+	body?: never;
+	path: {
+		/**
+		 * Run Id
+		 */
+		run_id: string;
+	};
+	query?: never;
+	url: "/api/v1/ml/evaluation/runs/{run_id}/metrics";
+};
+
+export type MlGetDetailedMetricsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlGetDetailedMetricsError =
+	MlGetDetailedMetricsErrors[keyof MlGetDetailedMetricsErrors];
+
+export type MlGetDetailedMetricsResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: DetailedMetrics;
+};
+
+export type MlGetDetailedMetricsResponse =
+	MlGetDetailedMetricsResponses[keyof MlGetDetailedMetricsResponses];
+
+export type MlListBenchmarksData = {
+	body?: never;
+	path?: never;
+	query?: never;
+	url: "/api/v1/ml/evaluation/benchmarks";
+};
+
+export type MlListBenchmarksResponses = {
+	/**
+	 * Response Ml-List Benchmarks
+	 * Successful Response
+	 */
+	200: Array<BenchmarkResponse>;
+};
+
+export type MlListBenchmarksResponse =
+	MlListBenchmarksResponses[keyof MlListBenchmarksResponses];
+
+export type MlCreateBenchmarkData = {
+	body: BenchmarkCreate;
+	path?: never;
+	query?: never;
+	url: "/api/v1/ml/evaluation/benchmarks";
+};
+
+export type MlCreateBenchmarkErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlCreateBenchmarkError =
+	MlCreateBenchmarkErrors[keyof MlCreateBenchmarkErrors];
+
+export type MlCreateBenchmarkResponses = {
+	/**
+	 * Successful Response
+	 */
+	201: BenchmarkResponse;
+};
+
+export type MlCreateBenchmarkResponse =
+	MlCreateBenchmarkResponses[keyof MlCreateBenchmarkResponses];
+
+export type MlRunBenchmarkData = {
+	body: BenchmarkRunRequest;
+	path?: never;
+	query?: never;
+	url: "/api/v1/ml/evaluation/benchmarks/run";
+};
+
+export type MlRunBenchmarkErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlRunBenchmarkError =
+	MlRunBenchmarkErrors[keyof MlRunBenchmarkErrors];
+
+export type MlRunBenchmarkResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: BenchmarkRunResponse;
+};
+
+export type MlRunBenchmarkResponse =
+	MlRunBenchmarkResponses[keyof MlRunBenchmarkResponses];
+
+export type MlListAbTestsData = {
+	body?: never;
+	path?: never;
+	query?: never;
+	url: "/api/v1/ml/evaluation/ab-tests";
+};
+
+export type MlListAbTestsResponses = {
+	/**
+	 * Response Ml-List Ab Tests
+	 * Successful Response
+	 */
+	200: Array<AbTestResponse>;
+};
+
+export type MlListAbTestsResponse =
+	MlListAbTestsResponses[keyof MlListAbTestsResponses];
+
+export type MlCreateAbTestData = {
+	body: AbTestCreate;
+	path?: never;
+	query?: never;
+	url: "/api/v1/ml/evaluation/ab-tests";
+};
+
+export type MlCreateAbTestErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlCreateAbTestError =
+	MlCreateAbTestErrors[keyof MlCreateAbTestErrors];
+
+export type MlCreateAbTestResponses = {
+	/**
+	 * Successful Response
+	 */
+	201: AbTestResponse;
+};
+
+export type MlCreateAbTestResponse =
+	MlCreateAbTestResponses[keyof MlCreateAbTestResponses];
+
+export type MlGetAbTestData = {
+	body?: never;
+	path: {
+		/**
+		 * Test Id
+		 */
+		test_id: string;
+	};
+	query?: never;
+	url: "/api/v1/ml/evaluation/ab-tests/{test_id}";
+};
+
+export type MlGetAbTestErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlGetAbTestError = MlGetAbTestErrors[keyof MlGetAbTestErrors];
+
+export type MlGetAbTestResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: AbTestResponse;
+};
+
+export type MlGetAbTestResponse =
+	MlGetAbTestResponses[keyof MlGetAbTestResponses];
+
+export type MlRequestFairnessAuditData = {
+	body: FairnessAuditRequest;
+	path?: never;
+	query?: never;
+	url: "/api/v1/ml/evaluation/fairness/audit";
+};
+
+export type MlRequestFairnessAuditErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlRequestFairnessAuditError =
+	MlRequestFairnessAuditErrors[keyof MlRequestFairnessAuditErrors];
+
+export type MlRequestFairnessAuditResponses = {
+	/**
+	 * Successful Response
+	 */
+	201: FairnessReportResponse;
+};
+
+export type MlRequestFairnessAuditResponse =
+	MlRequestFairnessAuditResponses[keyof MlRequestFairnessAuditResponses];
+
+export type MlListFairnessReportsData = {
+	body?: never;
+	path?: never;
+	query?: {
+		/**
+		 * Model Id
+		 */
+		model_id?: string | null;
+	};
+	url: "/api/v1/ml/evaluation/fairness/reports";
+};
+
+export type MlListFairnessReportsErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlListFairnessReportsError =
+	MlListFairnessReportsErrors[keyof MlListFairnessReportsErrors];
+
+export type MlListFairnessReportsResponses = {
+	/**
+	 * Response Ml-List Fairness Reports
+	 * Successful Response
+	 */
+	200: Array<FairnessReportResponse>;
+};
+
+export type MlListFairnessReportsResponse =
+	MlListFairnessReportsResponses[keyof MlListFairnessReportsResponses];
+
+export type MlGetFairnessReportData = {
+	body?: never;
+	path: {
+		/**
+		 * Report Id
+		 */
+		report_id: string;
+	};
+	query?: never;
+	url: "/api/v1/ml/evaluation/fairness/reports/{report_id}";
+};
+
+export type MlGetFairnessReportErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type MlGetFairnessReportError =
+	MlGetFairnessReportErrors[keyof MlGetFairnessReportErrors];
+
+export type MlGetFairnessReportResponses = {
+	/**
+	 * Successful Response
+	 */
+	200: FairnessReportResponse;
+};
+
+export type MlGetFairnessReportResponse =
+	MlGetFairnessReportResponses[keyof MlGetFairnessReportResponses];
 
 export type ChatOpsExecuteChatopsData = {
 	body: ChatOpsRequest;
@@ -13096,6 +14079,61 @@ export type FeatureStoreGetFeatureStatisticsResponses = {
 
 export type FeatureStoreGetFeatureStatisticsResponse =
 	FeatureStoreGetFeatureStatisticsResponses[keyof FeatureStoreGetFeatureStatisticsResponses];
+
+export type FeatureStoreListDatasetsData = {
+	body?: never;
+	path?: never;
+	query?: never;
+	url: "/api/v1/features/datasets";
+};
+
+export type FeatureStoreListDatasetsResponses = {
+	/**
+	 * Response Feature Store-List Datasets
+	 * Successful Response
+	 */
+	200: {
+		[key: string]: unknown;
+	};
+};
+
+export type FeatureStoreListDatasetsResponse =
+	FeatureStoreListDatasetsResponses[keyof FeatureStoreListDatasetsResponses];
+
+export type FeatureStoreGetDatasetData = {
+	body?: never;
+	path: {
+		/**
+		 * Dataset Id
+		 */
+		dataset_id: string;
+	};
+	query?: never;
+	url: "/api/v1/features/datasets/{dataset_id}";
+};
+
+export type FeatureStoreGetDatasetErrors = {
+	/**
+	 * Validation Error
+	 */
+	422: HttpValidationError;
+};
+
+export type FeatureStoreGetDatasetError =
+	FeatureStoreGetDatasetErrors[keyof FeatureStoreGetDatasetErrors];
+
+export type FeatureStoreGetDatasetResponses = {
+	/**
+	 * Response Feature Store-Get Dataset
+	 * Successful Response
+	 */
+	200: {
+		[key: string]: unknown;
+	};
+};
+
+export type FeatureStoreGetDatasetResponse =
+	FeatureStoreGetDatasetResponses[keyof FeatureStoreGetDatasetResponses];
 
 export type PromptGovernanceListPromptTemplatesData = {
 	body?: never;

@@ -190,13 +190,98 @@ class DriftEvent(Document):
     metric_value: float = Field(..., description="메트릭 값")
     threshold: float | None = Field(None, description="임계값")
     message: str | None = Field(None, description="추가 메시지")
-    remediation_action: str | None = Field(
-        None, description="대응 계획 (재학습, 롤백 등)"
-    )
+    remediation_action: str | None = Field(None, description="대응 계획 (재학습, 롤백 등)")
 
     class Settings:
         name = "model_drift_events"
         indexes = [
             IndexModel([("model_name", 1), ("version", 1), ("detected_at", -1)]),
             IndexModel([("severity", 1)]),
+            IndexModel([("model_name", 1), ("severity", 1)]),
+            IndexModel([("detected_at", -1)]),
+        ]
+
+
+class DeploymentStatus(str, Enum):
+    """Deployment status enumeration."""
+
+    PENDING = "pending"
+    VALIDATING = "validating"
+    DEPLOYING = "deploying"
+    ACTIVE = "active"
+    FAILED = "failed"
+    ROLLBACK = "rollback"
+    TERMINATED = "terminated"
+
+
+class DeploymentEnvironment(str, Enum):
+    """Deployment environment enumeration."""
+
+    DEVELOPMENT = "development"
+    STAGING = "staging"
+    PRODUCTION = "production"
+
+
+class EndpointConfig(BaseModel):
+    """Deployment endpoint configuration."""
+
+    instances: int = Field(default=1, ge=1, description="인스턴스 수")
+    instance_type: str = Field(default="standard", description="인스턴스 타입")
+    auto_scaling: bool = Field(default=False, description="자동 스케일링 여부")
+    min_instances: int | None = Field(None, ge=1, description="최소 인스턴스 수")
+    max_instances: int | None = Field(None, ge=1, description="최대 인스턴스 수")
+
+
+class DeploymentMetrics(BaseModel):
+    """Deployment monitoring metrics."""
+
+    request_count: int = Field(default=0, description="총 요청 수")
+    error_count: int = Field(default=0, description="에러 수")
+    avg_latency_ms: float | None = Field(None, description="평균 응답 시간 (ms)")
+    p95_latency_ms: float | None = Field(None, description="P95 응답 시간 (ms)")
+    p99_latency_ms: float | None = Field(None, description="P99 응답 시간 (ms)")
+    last_updated: datetime = Field(
+        default_factory=lambda: datetime.now(UTC), description="마지막 업데이트 시간"
+    )
+
+
+class Deployment(BaseDocument):
+    """Model deployment tracking document."""
+
+    # Model information
+    model_name: str = Field(..., description="모델 이름")
+    model_version: str = Field(..., description="모델 버전")
+    experiment_name: str | None = Field(None, description="실험 이름")
+
+    # Deployment configuration
+    status: DeploymentStatus = Field(
+        default=DeploymentStatus.PENDING, description="배포 상태"
+    )
+    environment: DeploymentEnvironment = Field(..., description="배포 환경")
+    endpoint: str | None = Field(None, description="엔드포인트 URL")
+    endpoint_config: EndpointConfig | None = Field(default=None, description="엔드포인트 설정")
+
+    # Health and monitoring
+    health_status: str | None = Field(None, description="헬스 상태")
+    metrics: DeploymentMetrics | None = Field(default=None, description="모니터링 메트릭")
+
+    # Metadata
+    created_by: str = Field(..., description="배포자")
+    deployed_at: datetime | None = Field(None, description="배포 완료 시간")
+    terminated_at: datetime | None = Field(None, description="종료 시간")
+    rollback_from: str | None = Field(None, description="롤백 이전 배포 ID")
+
+    # Logs and notes
+    deployment_notes: str | None = Field(None, description="배포 노트")
+    error_message: str | None = Field(None, description="에러 메시지")
+
+    class Settings:
+        name = "deployments"
+        indexes = [
+            IndexModel([("model_name", 1)]),
+            IndexModel([("model_version", 1)]),
+            IndexModel([("environment", 1)]),
+            IndexModel([("status", 1)]),
+            IndexModel([("created_at", -1)]),
+            IndexModel([("model_name", 1), ("environment", 1)]),
         ]

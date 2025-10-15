@@ -94,7 +94,7 @@ export const DatasetExplorer: React.FC<DatasetExplorerProps> = ({
 	// ============================================================================
 
 	const { datasetsList, isLoadingDatasets, datasetsError } = useFeatureStore();
-	const { dataset: selectedDataset, isLoading: isLoadingDetail } =
+	const { datasetDetail, isLoading: isLoadingDetail } =
 		useDatasetDetail(selectedDatasetId);
 
 	// ============================================================================
@@ -108,7 +108,7 @@ export const DatasetExplorer: React.FC<DatasetExplorerProps> = ({
 	};
 
 	const handleDownloadClick = (datasetId: string, datasetName: string) => {
-		// TODO: Implement actual download
+		// Placeholder: Backend download API pending
 		console.log(`Downloading dataset: ${datasetId}`);
 
 		// Mock download
@@ -191,7 +191,7 @@ export const DatasetExplorer: React.FC<DatasetExplorerProps> = ({
 	// ============================================================================
 
 	const correlationData =
-		selectedDataset?.correlation_matrix?.map((item) => ({
+		datasetDetail?.correlation_matrix?.map((item) => ({
 			x: item.feature1,
 			y: item.feature2,
 			correlation: item.correlation,
@@ -300,23 +300,23 @@ export const DatasetExplorer: React.FC<DatasetExplorerProps> = ({
 						<Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
 							<CircularProgress />
 						</Box>
-					) : selectedDataset ? (
+					) : datasetDetail ? (
 						<Box>
 							{/* Dataset Info */}
 							<Box sx={{ mb: 3 }}>
 								<Typography variant="h6" gutterBottom>
-									{selectedDataset.name}
+									{datasetDetail.name}
 								</Typography>
 								<Typography variant="body2" color="text.secondary" paragraph>
-									{selectedDataset.description}
+									{datasetDetail.description}
 								</Typography>
 								<Box sx={{ display: "flex", gap: 1 }}>
 									<Chip
-										label={`${selectedDataset.features.length} 피처`}
+										label={`${datasetDetail.features.length} 피처`}
 										size="small"
 									/>
 									<Chip
-										label={`${selectedDataset.row_count.toLocaleString()} 행`}
+										label={`${datasetDetail.row_count.toLocaleString()} 행`}
 										size="small"
 									/>
 								</Box>
@@ -328,7 +328,7 @@ export const DatasetExplorer: React.FC<DatasetExplorerProps> = ({
 									포함된 피처
 								</Typography>
 								<Box sx={{ display: "flex", gap: 0.5, flexWrap: "wrap" }}>
-									{selectedDataset.features.map((feature) => (
+									{datasetDetail.features.map((feature) => (
 										<Chip
 											key={feature}
 											label={feature}
@@ -340,8 +340,8 @@ export const DatasetExplorer: React.FC<DatasetExplorerProps> = ({
 							</Box>
 
 							{/* Sample Data Table */}
-							{selectedDataset.sample_data &&
-								selectedDataset.sample_data.length > 0 && (
+							{datasetDetail.sample_data &&
+								datasetDetail.sample_data.length > 0 && (
 									<Box sx={{ mb: 3 }}>
 										<Typography variant="subtitle2" gutterBottom>
 											샘플 데이터 (최대 10행)
@@ -354,7 +354,7 @@ export const DatasetExplorer: React.FC<DatasetExplorerProps> = ({
 											<Table size="small" stickyHeader>
 												<TableHead>
 													<TableRow>
-														{Object.keys(selectedDataset.sample_data[0]).map(
+														{Object.keys(datasetDetail.sample_data[0]).map(
 															(key) => (
 																<TableCell key={key}>{key}</TableCell>
 															),
@@ -362,7 +362,7 @@ export const DatasetExplorer: React.FC<DatasetExplorerProps> = ({
 													</TableRow>
 												</TableHead>
 												<TableBody>
-													{selectedDataset.sample_data
+													{datasetDetail.sample_data
 														.slice(0, 10)
 														.map((row, index) => (
 															<TableRow key={index}>
@@ -488,11 +488,11 @@ export const DatasetExplorer: React.FC<DatasetExplorerProps> = ({
 					)}
 				</DialogContent>
 				<DialogActions>
-					{selectedDataset && (
+					{datasetDetail && (
 						<Button
 							startIcon={<DownloadIcon />}
 							onClick={() =>
-								handleDownloadClick(selectedDataset.id, selectedDataset.name)
+								handleDownloadClick(datasetDetail.id, datasetDetail.name)
 							}
 						>
 							다운로드

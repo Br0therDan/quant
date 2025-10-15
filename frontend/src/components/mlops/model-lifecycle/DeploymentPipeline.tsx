@@ -16,12 +16,8 @@ import {
 } from "@/hooks/useModelLifecycle";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import UndoIcon from "@mui/icons-material/Undo";
 import {
-	Accordion,
-	AccordionDetails,
-	AccordionSummary,
 	Alert,
 	Box,
 	Button,
@@ -120,6 +116,7 @@ const getStatusColor = (
 		active: "success",
 		failed: "error",
 		rollback: "warning",
+		terminated: "default",
 	};
 	return colorMap[status] || "default";
 };
@@ -132,6 +129,7 @@ const getStatusLabel = (status: Deployment["status"]): string => {
 		active: "활성",
 		failed: "실패",
 		rollback: "롤백 중",
+		terminated: "종료됨",
 	};
 	return labelMap[status] || status;
 };
@@ -358,91 +356,85 @@ export const DeploymentPipeline: React.FC<DeploymentPipelineProps> = ({
 						</Box>
 					</Box>
 
-					{/* Deployment Logs */}
-					<Box>
-						<Typography variant="subtitle2" gutterBottom>
-							배포 로그
-						</Typography>
-						{deploymentDetail.logs && deploymentDetail.logs.length > 0 ? (
-							<Accordion>
-								<AccordionSummary expandIcon={<ExpandMoreIcon />}>
-									<Typography variant="body2">
-										로그 보기 ({deploymentDetail.logs.length}개 항목)
-									</Typography>
-								</AccordionSummary>
-								<AccordionDetails>
-									<Box
-										sx={{
-											maxHeight: 300,
-											overflow: "auto",
-											bgcolor: "grey.100",
-											p: 2,
-											borderRadius: 1,
-											fontFamily: "monospace",
-											fontSize: "0.875rem",
-										}}
-									>
-										{deploymentDetail.logs.map((log, index) => (
-											<Box key={index} sx={{ mb: 0.5 }}>
-												<Typography
-													variant="caption"
-													component="pre"
-													sx={{ margin: 0, whiteSpace: "pre-wrap" }}
-												>
-													[{new Date().toLocaleTimeString("ko-KR")}] {log}
-												</Typography>
-											</Box>
-										))}
-									</Box>
-								</AccordionDetails>
-							</Accordion>
-						) : (
-							<Alert severity="info">로그가 없습니다</Alert>
-						)}
-					</Box>
+					{/* Deployment Notes */}
+					{deploymentDetail.deployment_notes && (
+						<Box>
+							<Typography variant="subtitle2" gutterBottom>
+								배포 노트
+							</Typography>
+							<Alert severity="info">{deploymentDetail.deployment_notes}</Alert>
+						</Box>
+					)}
+
+					{/* Error Message */}
+					{deploymentDetail.error_message && (
+						<Box>
+							<Typography variant="subtitle2" gutterBottom>
+								에러 메시지
+							</Typography>
+							<Alert severity="error">{deploymentDetail.error_message}</Alert>
+						</Box>
+					)}
 
 					{/* Health Metrics (for active deployments) */}
-					{deploymentDetail.status === "active" && (
+					{deploymentDetail.status === "active" && deploymentDetail.metrics && (
 						<Box sx={{ mt: 3 }}>
 							<Typography variant="subtitle2" gutterBottom>
 								헬스 메트릭
 							</Typography>
 							<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-								<Card variant="outlined" sx={{ flex: 1, minWidth: 150 }}>
-									<CardContent>
-										<Typography variant="body2" color="text.secondary">
-											요청 수
-										</Typography>
-										<Typography variant="h6">
-											{deploymentDetail.request_count.toLocaleString()}
-										</Typography>
-									</CardContent>
-								</Card>
-								<Card variant="outlined" sx={{ flex: 1, minWidth: 150 }}>
-									<CardContent>
-										<Typography variant="body2" color="text.secondary">
-											에러율
-										</Typography>
-										<Typography
-											variant="h6"
-											color={
-												deploymentDetail.error_rate > 0.05 ? "error" : "success"
-											}
-										>
-											{(deploymentDetail.error_rate * 100).toFixed(2)}%
-										</Typography>
-									</CardContent>
-								</Card>
-								<Card variant="outlined" sx={{ flex: 1, minWidth: 150 }}>
-									<CardContent>
-										<Typography variant="body2" color="text.secondary">
-											평균 지연시간
-										</Typography>
-										<Typography variant="h6">
-											{deploymentDetail.avg_latency_ms}ms
-										</Typography>
-									</CardContent>
-								</Card>
+								{deploymentDetail.metrics.request_count !== undefined && (
+									<Card variant="outlined" sx={{ flex: 1, minWidth: 150 }}>
+										<CardContent>
+											<Typography variant="body2" color="text.secondary">
+												요청 수
+											</Typography>
+											<Typography variant="h6">
+												{deploymentDetail.metrics.request_count.toLocaleString()}
+											</Typography>
+										</CardContent>
+									</Card>
+								)}
+								{deploymentDetail.metrics.error_count !== undefined &&
+									deploymentDetail.metrics.request_count !== undefined && (
+										<Card variant="outlined" sx={{ flex: 1, minWidth: 150 }}>
+											<CardContent>
+												<Typography variant="body2" color="text.secondary">
+													에러율
+												</Typography>
+												<Typography
+													variant="h6"
+													color={
+														deploymentDetail.metrics.error_count /
+															deploymentDetail.metrics.request_count >
+														0.05
+															? "error"
+															: "success"
+													}
+												>
+													{(
+														(deploymentDetail.metrics.error_count /
+															deploymentDetail.metrics.request_count) *
+														100
+													).toFixed(2)}
+													%
+												</Typography>
+											</CardContent>
+										</Card>
+									)}
+								{deploymentDetail.metrics.avg_latency_ms !== undefined &&
+									deploymentDetail.metrics.avg_latency_ms !== null && (
+										<Card variant="outlined" sx={{ flex: 1, minWidth: 150 }}>
+											<CardContent>
+												<Typography variant="body2" color="text.secondary">
+													평균 지연시간
+												</Typography>
+												<Typography variant="h6">
+													{deploymentDetail.metrics.avg_latency_ms}ms
+												</Typography>
+											</CardContent>
+										</Card>
+									)}
 							</Box>
 						</Box>
 					)}

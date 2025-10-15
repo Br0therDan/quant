@@ -176,6 +176,9 @@ import type {
 	FeatureStoreDeprecateFeatureData,
 	FeatureStoreDeprecateFeatureErrors,
 	FeatureStoreDeprecateFeatureResponses,
+	FeatureStoreGetDatasetData,
+	FeatureStoreGetDatasetErrors,
+	FeatureStoreGetDatasetResponses,
 	FeatureStoreGetFeatureData,
 	FeatureStoreGetFeatureErrors,
 	FeatureStoreGetFeatureLineageData,
@@ -188,6 +191,8 @@ import type {
 	FeatureStoreGetFeatureVersionsData,
 	FeatureStoreGetFeatureVersionsErrors,
 	FeatureStoreGetFeatureVersionsResponses,
+	FeatureStoreListDatasetsData,
+	FeatureStoreListDatasetsResponses,
 	FeatureStoreListFeaturesData,
 	FeatureStoreListFeaturesErrors,
 	FeatureStoreListFeaturesResponses,
@@ -263,21 +268,55 @@ import type {
 	MlCompareModelVersionsData,
 	MlCompareModelVersionsErrors,
 	MlCompareModelVersionsResponses,
+	MlCreateAbTestData,
+	MlCreateAbTestErrors,
+	MlCreateAbTestResponses,
+	MlCreateBenchmarkData,
+	MlCreateBenchmarkErrors,
+	MlCreateBenchmarkResponses,
+	MlCreateDeploymentData,
+	MlCreateDeploymentErrors,
+	MlCreateDeploymentResponses,
 	MlCreateExperimentData,
 	MlCreateExperimentErrors,
 	MlCreateExperimentResponses,
 	MlDeleteModelData,
 	MlDeleteModelErrors,
 	MlDeleteModelResponses,
+	MlGetAbTestData,
+	MlGetAbTestErrors,
+	MlGetAbTestResponses,
+	MlGetDeploymentData,
+	MlGetDeploymentErrors,
+	MlGetDeploymentResponses,
+	MlGetDetailedMetricsData,
+	MlGetDetailedMetricsErrors,
+	MlGetDetailedMetricsResponses,
 	MlGetEvaluationReportData,
 	MlGetEvaluationReportErrors,
 	MlGetEvaluationReportResponses,
+	MlGetExperimentData,
+	MlGetExperimentErrors,
+	MlGetExperimentResponses,
+	MlGetFairnessReportData,
+	MlGetFairnessReportErrors,
+	MlGetFairnessReportResponses,
 	MlGetModelInfoData,
 	MlGetModelInfoErrors,
 	MlGetModelInfoResponses,
+	MlGetModelVersionData,
+	MlGetModelVersionErrors,
+	MlGetModelVersionResponses,
 	MlGetRunData,
 	MlGetRunErrors,
 	MlGetRunResponses,
+	MlListAbTestsData,
+	MlListAbTestsResponses,
+	MlListBenchmarksData,
+	MlListBenchmarksResponses,
+	MlListDeploymentsData,
+	MlListDeploymentsErrors,
+	MlListDeploymentsResponses,
 	MlListDriftEventsData,
 	MlListDriftEventsErrors,
 	MlListDriftEventsResponses,
@@ -287,6 +326,9 @@ import type {
 	MlListExperimentsData,
 	MlListExperimentsErrors,
 	MlListExperimentsResponses,
+	MlListFairnessReportsData,
+	MlListFairnessReportsErrors,
+	MlListFairnessReportsResponses,
 	MlListModelsData,
 	MlListModelsErrors,
 	MlListModelsResponses,
@@ -310,12 +352,21 @@ import type {
 	MlRegisterScenarioData,
 	MlRegisterScenarioErrors,
 	MlRegisterScenarioResponses,
+	MlRequestFairnessAuditData,
+	MlRequestFairnessAuditErrors,
+	MlRequestFairnessAuditResponses,
+	MlRunBenchmarkData,
+	MlRunBenchmarkErrors,
+	MlRunBenchmarkResponses,
 	MlRunEvaluationData,
 	MlRunEvaluationErrors,
 	MlRunEvaluationResponses,
 	MlTrainModelData,
 	MlTrainModelErrors,
 	MlTrainModelResponses,
+	MlUpdateDeploymentData,
+	MlUpdateDeploymentErrors,
+	MlUpdateDeploymentResponses,
 	MlUpdateExperimentData,
 	MlUpdateExperimentErrors,
 	MlUpdateExperimentResponses,
@@ -3713,6 +3764,23 @@ export class MlService {
 	}
 
 	/**
+	 * Get Experiment
+	 * Get experiment by name.
+	 */
+	public static getExperiment<ThrowOnError extends boolean = false>(
+		options: Options<MlGetExperimentData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MlGetExperimentResponses,
+			MlGetExperimentErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/experiments/{name}",
+			...options,
+		});
+	}
+
+	/**
 	 * Update Experiment
 	 */
 	public static updateExperiment<ThrowOnError extends boolean = false>(
@@ -3841,6 +3909,23 @@ export class MlService {
 	}
 
 	/**
+	 * Get Model Version
+	 * Get model version by name and version.
+	 */
+	public static getModelVersion<ThrowOnError extends boolean = false>(
+		options: Options<MlGetModelVersionData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MlGetModelVersionResponses,
+			MlGetModelVersionErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/models/{model_name}/{version}",
+			...options,
+		});
+	}
+
+	/**
 	 * Update Model Version
 	 */
 	public static updateModelVersion<ThrowOnError extends boolean = false>(
@@ -3908,6 +3993,82 @@ export class MlService {
 			ThrowOnError
 		>({
 			url: "/api/v1/ml/lifecycle/drift-events",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * List Deployments
+	 * List deployments with optional filters.
+	 */
+	public static listDeployments<ThrowOnError extends boolean = false>(
+		options?: Options<MlListDeploymentsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListDeploymentsResponses,
+			MlListDeploymentsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/deployments",
+			...options,
+		});
+	}
+
+	/**
+	 * Create Deployment
+	 * Create a new deployment.
+	 */
+	public static createDeployment<ThrowOnError extends boolean = false>(
+		options: Options<MlCreateDeploymentData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlCreateDeploymentResponses,
+			MlCreateDeploymentErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/deployments",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Get Deployment
+	 * Get deployment details.
+	 */
+	public static getDeployment<ThrowOnError extends boolean = false>(
+		options: Options<MlGetDeploymentData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MlGetDeploymentResponses,
+			MlGetDeploymentErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/deployments/{deployment_id}",
+			...options,
+		});
+	}
+
+	/**
+	 * Update Deployment
+	 * Update deployment status and metrics.
+	 */
+	public static updateDeployment<ThrowOnError extends boolean = false>(
+		options: Options<MlUpdateDeploymentData, ThrowOnError>,
+	) {
+		return (options.client ?? client).patch<
+			MlUpdateDeploymentResponses,
+			MlUpdateDeploymentErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/deployments/{deployment_id}",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -4023,6 +4184,192 @@ export class MlService {
 			...options,
 		});
 	}
+
+	/**
+	 * Get Detailed Metrics
+	 * 상세 평가 메트릭 조회 (confusion matrix, ROC curve 등)
+	 */
+	public static getDetailedMetrics<ThrowOnError extends boolean = false>(
+		options: Options<MlGetDetailedMetricsData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MlGetDetailedMetricsResponses,
+			MlGetDetailedMetricsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/runs/{run_id}/metrics",
+			...options,
+		});
+	}
+
+	/**
+	 * List Benchmarks
+	 * 벤치마크 스위트 목록 조회
+	 */
+	public static listBenchmarks<ThrowOnError extends boolean = false>(
+		options?: Options<MlListBenchmarksData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListBenchmarksResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/benchmarks",
+			...options,
+		});
+	}
+
+	/**
+	 * Create Benchmark
+	 * 벤치마크 스위트 생성
+	 */
+	public static createBenchmark<ThrowOnError extends boolean = false>(
+		options: Options<MlCreateBenchmarkData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlCreateBenchmarkResponses,
+			MlCreateBenchmarkErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/benchmarks",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Run Benchmark
+	 * 벤치마크 실행
+	 */
+	public static runBenchmark<ThrowOnError extends boolean = false>(
+		options: Options<MlRunBenchmarkData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlRunBenchmarkResponses,
+			MlRunBenchmarkErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/benchmarks/run",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * List Ab Tests
+	 * A/B 테스트 목록 조회
+	 */
+	public static listAbTests<ThrowOnError extends boolean = false>(
+		options?: Options<MlListAbTestsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListAbTestsResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/ab-tests",
+			...options,
+		});
+	}
+
+	/**
+	 * Create Ab Test
+	 * A/B 테스트 생성
+	 */
+	public static createAbTest<ThrowOnError extends boolean = false>(
+		options: Options<MlCreateAbTestData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlCreateAbTestResponses,
+			MlCreateAbTestErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/ab-tests",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Get Ab Test
+	 * A/B 테스트 상세 조회
+	 */
+	public static getAbTest<ThrowOnError extends boolean = false>(
+		options: Options<MlGetAbTestData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MlGetAbTestResponses,
+			MlGetAbTestErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/ab-tests/{test_id}",
+			...options,
+		});
+	}
+
+	/**
+	 * Request Fairness Audit
+	 * 공정성 감사 요청
+	 */
+	public static requestFairnessAudit<ThrowOnError extends boolean = false>(
+		options: Options<MlRequestFairnessAuditData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlRequestFairnessAuditResponses,
+			MlRequestFairnessAuditErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/fairness/audit",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * List Fairness Reports
+	 * 공정성 감사 보고서 목록 조회
+	 */
+	public static listFairnessReports<ThrowOnError extends boolean = false>(
+		options?: Options<MlListFairnessReportsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListFairnessReportsResponses,
+			MlListFairnessReportsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/fairness/reports",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Fairness Report
+	 * 공정성 감사 보고서 상세 조회
+	 */
+	public static getFairnessReport<ThrowOnError extends boolean = false>(
+		options: Options<MlGetFairnessReportData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MlGetFairnessReportResponses,
+			MlGetFairnessReportErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/fairness/reports/{report_id}",
+			...options,
+		});
+	}
 }
 
 export class ModelLifecycleService {
@@ -4059,6 +4406,23 @@ export class ModelLifecycleService {
 				"Content-Type": "application/json",
 				...options.headers,
 			},
+		});
+	}
+
+	/**
+	 * Get Experiment
+	 * Get experiment by name.
+	 */
+	public static getExperiment<ThrowOnError extends boolean = false>(
+		options: Options<MlGetExperimentData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MlGetExperimentResponses,
+			MlGetExperimentErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/experiments/{name}",
+			...options,
 		});
 	}
 
@@ -4191,6 +4555,23 @@ export class ModelLifecycleService {
 	}
 
 	/**
+	 * Get Model Version
+	 * Get model version by name and version.
+	 */
+	public static getModelVersion<ThrowOnError extends boolean = false>(
+		options: Options<MlGetModelVersionData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MlGetModelVersionResponses,
+			MlGetModelVersionErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/models/{model_name}/{version}",
+			...options,
+		});
+	}
+
+	/**
 	 * Update Model Version
 	 */
 	public static updateModelVersion<ThrowOnError extends boolean = false>(
@@ -4258,6 +4639,82 @@ export class ModelLifecycleService {
 			ThrowOnError
 		>({
 			url: "/api/v1/ml/lifecycle/drift-events",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * List Deployments
+	 * List deployments with optional filters.
+	 */
+	public static listDeployments<ThrowOnError extends boolean = false>(
+		options?: Options<MlListDeploymentsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListDeploymentsResponses,
+			MlListDeploymentsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/deployments",
+			...options,
+		});
+	}
+
+	/**
+	 * Create Deployment
+	 * Create a new deployment.
+	 */
+	public static createDeployment<ThrowOnError extends boolean = false>(
+		options: Options<MlCreateDeploymentData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlCreateDeploymentResponses,
+			MlCreateDeploymentErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/deployments",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Get Deployment
+	 * Get deployment details.
+	 */
+	public static getDeployment<ThrowOnError extends boolean = false>(
+		options: Options<MlGetDeploymentData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MlGetDeploymentResponses,
+			MlGetDeploymentErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/deployments/{deployment_id}",
+			...options,
+		});
+	}
+
+	/**
+	 * Update Deployment
+	 * Update deployment status and metrics.
+	 */
+	public static updateDeployment<ThrowOnError extends boolean = false>(
+		options: Options<MlUpdateDeploymentData, ThrowOnError>,
+	) {
+		return (options.client ?? client).patch<
+			MlUpdateDeploymentResponses,
+			MlUpdateDeploymentErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/lifecycle/deployments/{deployment_id}",
 			...options,
 			headers: {
 				"Content-Type": "application/json",
@@ -4372,6 +4829,192 @@ export class EvaluationHarnessService {
 			ThrowOnError
 		>({
 			url: "/api/v1/ml/evaluation/runs/{run_id}/report",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Detailed Metrics
+	 * 상세 평가 메트릭 조회 (confusion matrix, ROC curve 등)
+	 */
+	public static getDetailedMetrics<ThrowOnError extends boolean = false>(
+		options: Options<MlGetDetailedMetricsData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MlGetDetailedMetricsResponses,
+			MlGetDetailedMetricsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/runs/{run_id}/metrics",
+			...options,
+		});
+	}
+
+	/**
+	 * List Benchmarks
+	 * 벤치마크 스위트 목록 조회
+	 */
+	public static listBenchmarks<ThrowOnError extends boolean = false>(
+		options?: Options<MlListBenchmarksData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListBenchmarksResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/benchmarks",
+			...options,
+		});
+	}
+
+	/**
+	 * Create Benchmark
+	 * 벤치마크 스위트 생성
+	 */
+	public static createBenchmark<ThrowOnError extends boolean = false>(
+		options: Options<MlCreateBenchmarkData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlCreateBenchmarkResponses,
+			MlCreateBenchmarkErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/benchmarks",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Run Benchmark
+	 * 벤치마크 실행
+	 */
+	public static runBenchmark<ThrowOnError extends boolean = false>(
+		options: Options<MlRunBenchmarkData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlRunBenchmarkResponses,
+			MlRunBenchmarkErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/benchmarks/run",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * List Ab Tests
+	 * A/B 테스트 목록 조회
+	 */
+	public static listAbTests<ThrowOnError extends boolean = false>(
+		options?: Options<MlListAbTestsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListAbTestsResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/ab-tests",
+			...options,
+		});
+	}
+
+	/**
+	 * Create Ab Test
+	 * A/B 테스트 생성
+	 */
+	public static createAbTest<ThrowOnError extends boolean = false>(
+		options: Options<MlCreateAbTestData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlCreateAbTestResponses,
+			MlCreateAbTestErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/ab-tests",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * Get Ab Test
+	 * A/B 테스트 상세 조회
+	 */
+	public static getAbTest<ThrowOnError extends boolean = false>(
+		options: Options<MlGetAbTestData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MlGetAbTestResponses,
+			MlGetAbTestErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/ab-tests/{test_id}",
+			...options,
+		});
+	}
+
+	/**
+	 * Request Fairness Audit
+	 * 공정성 감사 요청
+	 */
+	public static requestFairnessAudit<ThrowOnError extends boolean = false>(
+		options: Options<MlRequestFairnessAuditData, ThrowOnError>,
+	) {
+		return (options.client ?? client).post<
+			MlRequestFairnessAuditResponses,
+			MlRequestFairnessAuditErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/fairness/audit",
+			...options,
+			headers: {
+				"Content-Type": "application/json",
+				...options.headers,
+			},
+		});
+	}
+
+	/**
+	 * List Fairness Reports
+	 * 공정성 감사 보고서 목록 조회
+	 */
+	public static listFairnessReports<ThrowOnError extends boolean = false>(
+		options?: Options<MlListFairnessReportsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			MlListFairnessReportsResponses,
+			MlListFairnessReportsErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/fairness/reports",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Fairness Report
+	 * 공정성 감사 보고서 상세 조회
+	 */
+	public static getFairnessReport<ThrowOnError extends boolean = false>(
+		options: Options<MlGetFairnessReportData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			MlGetFairnessReportResponses,
+			MlGetFairnessReportErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/ml/evaluation/fairness/reports/{report_id}",
 			...options,
 		});
 	}
@@ -5027,6 +5670,48 @@ export class FeatureStoreService {
 			ThrowOnError
 		>({
 			url: "/api/v1/features/{feature_name}/statistics",
+			...options,
+		});
+	}
+
+	/**
+	 * List Datasets
+	 * 데이터셋 목록 조회
+	 *
+	 * MongoDB에 저장된 데이터셋 메타데이터 목록 반환
+	 */
+	public static listDatasets<ThrowOnError extends boolean = false>(
+		options?: Options<FeatureStoreListDatasetsData, ThrowOnError>,
+	) {
+		return (options?.client ?? client).get<
+			FeatureStoreListDatasetsResponses,
+			unknown,
+			ThrowOnError
+		>({
+			url: "/api/v1/features/datasets",
+			...options,
+		});
+	}
+
+	/**
+	 * Get Dataset
+	 * 데이터셋 상세 조회
+	 *
+	 * Args:
+	 * dataset_id: Dataset ID (MongoDB ObjectId)
+	 *
+	 * Returns:
+	 * Dataset 상세 정보 (마지막 접근 시간 자동 업데이트)
+	 */
+	public static getDataset<ThrowOnError extends boolean = false>(
+		options: Options<FeatureStoreGetDatasetData, ThrowOnError>,
+	) {
+		return (options.client ?? client).get<
+			FeatureStoreGetDatasetResponses,
+			FeatureStoreGetDatasetErrors,
+			ThrowOnError
+		>({
+			url: "/api/v1/features/datasets/{dataset_id}",
 			...options,
 		});
 	}

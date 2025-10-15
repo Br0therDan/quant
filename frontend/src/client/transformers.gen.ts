@@ -41,11 +41,23 @@ import type {
 	FundamentalGetIncomeStatementResponse,
 	HealthHealthCheckResponse,
 	MarketRegimeGetMarketRegimeResponse,
+	MlCreateAbTestResponse,
+	MlCreateBenchmarkResponse,
+	MlCreateDeploymentResponse,
 	MlCreateExperimentResponse,
+	MlGetAbTestResponse,
+	MlGetDeploymentResponse,
+	MlGetExperimentResponse,
+	MlGetFairnessReportResponse,
+	MlGetModelVersionResponse,
 	MlGetRunResponse,
+	MlListAbTestsResponse,
+	MlListBenchmarksResponse,
+	MlListDeploymentsResponse,
 	MlListDriftEventsResponse,
 	MlListEvaluationRunsResponse,
 	MlListExperimentsResponse,
+	MlListFairnessReportsResponse,
 	MlListModelVersionsResponse,
 	MlListRunsResponse,
 	MlListScenariosResponse,
@@ -53,7 +65,10 @@ import type {
 	MlRecordDriftEventResponse,
 	MlRegisterModelVersionResponse,
 	MlRegisterScenarioResponse,
+	MlRequestFairnessAuditResponse,
+	MlRunBenchmarkResponse,
 	MlRunEvaluationResponse,
+	MlUpdateDeploymentResponse,
 	MlUpdateExperimentResponse,
 	MlUpdateModelVersionResponse,
 	MlUpdateRunResponse,
@@ -1086,6 +1101,13 @@ export const mlCreateExperimentResponseTransformer = async (
 	return data;
 };
 
+export const mlGetExperimentResponseTransformer = async (
+	data: any,
+): Promise<MlGetExperimentResponse> => {
+	data = experimentResponseSchemaResponseTransformer(data);
+	return data;
+};
+
 export const mlUpdateExperimentResponseTransformer = async (
 	data: any,
 ): Promise<MlUpdateExperimentResponse> => {
@@ -1166,6 +1188,13 @@ export const mlRegisterModelVersionResponseTransformer = async (
 	return data;
 };
 
+export const mlGetModelVersionResponseTransformer = async (
+	data: any,
+): Promise<MlGetModelVersionResponse> => {
+	data = modelVersionResponseSchemaResponseTransformer(data);
+	return data;
+};
+
 export const mlUpdateModelVersionResponseTransformer = async (
 	data: any,
 ): Promise<MlUpdateModelVersionResponse> => {
@@ -1191,6 +1220,54 @@ export const mlRecordDriftEventResponseTransformer = async (
 	data: any,
 ): Promise<MlRecordDriftEventResponse> => {
 	data = driftEventResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const mlListDeploymentsResponseTransformer = async (
+	data: any,
+): Promise<MlListDeploymentsResponse> => {
+	data = data.map((item: any) => {
+		return deploymentResponseSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+const deploymentResponseSchemaResponseTransformer = (data: any) => {
+	if (data.metrics) {
+		data.metrics = deploymentMetricsSchemaResponseTransformer(data.metrics);
+	}
+	data.deployed_at = new Date(data.deployed_at);
+	if (data.terminated_at) {
+		data.terminated_at = new Date(data.terminated_at);
+	}
+	return data;
+};
+
+const deploymentMetricsSchemaResponseTransformer = (data: any) => {
+	if (data.last_updated) {
+		data.last_updated = new Date(data.last_updated);
+	}
+	return data;
+};
+
+export const mlCreateDeploymentResponseTransformer = async (
+	data: any,
+): Promise<MlCreateDeploymentResponse> => {
+	data = deploymentResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const mlGetDeploymentResponseTransformer = async (
+	data: any,
+): Promise<MlGetDeploymentResponse> => {
+	data = deploymentResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const mlUpdateDeploymentResponseTransformer = async (
+	data: any,
+): Promise<MlUpdateDeploymentResponse> => {
+	data = deploymentResponseSchemaResponseTransformer(data);
 	return data;
 };
 
@@ -1259,6 +1336,102 @@ export const mlRunEvaluationResponseTransformer = async (
 	data: any,
 ): Promise<MlRunEvaluationResponse> => {
 	data = evaluationRunResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const mlListBenchmarksResponseTransformer = async (
+	data: any,
+): Promise<MlListBenchmarksResponse> => {
+	data = data.map((item: any) => {
+		return benchmarkResponseSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+const benchmarkResponseSchemaResponseTransformer = (data: any) => {
+	data.created_at = new Date(data.created_at);
+	data.updated_at = new Date(data.updated_at);
+	return data;
+};
+
+export const mlCreateBenchmarkResponseTransformer = async (
+	data: any,
+): Promise<MlCreateBenchmarkResponse> => {
+	data = benchmarkResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const mlRunBenchmarkResponseTransformer = async (
+	data: any,
+): Promise<MlRunBenchmarkResponse> => {
+	data = benchmarkRunResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const benchmarkRunResponseSchemaResponseTransformer = (data: any) => {
+	data.started_at = new Date(data.started_at);
+	if (data.completed_at) {
+		data.completed_at = new Date(data.completed_at);
+	}
+	return data;
+};
+
+export const mlListAbTestsResponseTransformer = async (
+	data: any,
+): Promise<MlListAbTestsResponse> => {
+	data = data.map((item: any) => {
+		return abTestResponseSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+const abTestResponseSchemaResponseTransformer = (data: any) => {
+	data.created_at = new Date(data.created_at);
+	if (data.completed_at) {
+		data.completed_at = new Date(data.completed_at);
+	}
+	return data;
+};
+
+export const mlCreateAbTestResponseTransformer = async (
+	data: any,
+): Promise<MlCreateAbTestResponse> => {
+	data = abTestResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const mlGetAbTestResponseTransformer = async (
+	data: any,
+): Promise<MlGetAbTestResponse> => {
+	data = abTestResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+export const mlRequestFairnessAuditResponseTransformer = async (
+	data: any,
+): Promise<MlRequestFairnessAuditResponse> => {
+	data = fairnessReportResponseSchemaResponseTransformer(data);
+	return data;
+};
+
+const fairnessReportResponseSchemaResponseTransformer = (data: any) => {
+	data.created_at = new Date(data.created_at);
+	return data;
+};
+
+export const mlListFairnessReportsResponseTransformer = async (
+	data: any,
+): Promise<MlListFairnessReportsResponse> => {
+	data = data.map((item: any) => {
+		return fairnessReportResponseSchemaResponseTransformer(item);
+	});
+	return data;
+};
+
+export const mlGetFairnessReportResponseTransformer = async (
+	data: any,
+): Promise<MlGetFairnessReportResponse> => {
+	data = fairnessReportResponseSchemaResponseTransformer(data);
 	return data;
 };
 
@@ -1480,12 +1653,7 @@ export const featureStoreGetFeatureStatisticsResponseTransformer = async (
 };
 
 const featureStatisticsResponseSchemaResponseTransformer = (data: any) => {
-	if (data.first_used_at) {
-		data.first_used_at = new Date(data.first_used_at);
-	}
-	if (data.last_used_at) {
-		data.last_used_at = new Date(data.last_used_at);
-	}
+	data.generated_at = new Date(data.generated_at);
 	return data;
 };
 

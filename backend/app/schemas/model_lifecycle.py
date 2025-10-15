@@ -10,7 +10,11 @@ from pydantic import BaseModel, ConfigDict, Field
 from app.models.model_lifecycle import (
     ArtifactReference,
     DeploymentChecklistItem,
+    DeploymentEnvironment,
+    DeploymentMetrics,
+    DeploymentStatus,
     DriftSeverity,
+    EndpointConfig,
     ExperimentStatus,
     MetricSnapshot,
     ModelStage,
@@ -154,3 +158,56 @@ class DriftEventResponse(BaseModel):
     threshold: float | None
     message: str | None
     remediation_action: str | None
+
+
+# ============================================================================
+# Deployment Schemas (Phase 4 D4)
+# ============================================================================
+
+
+class DeploymentCreate(BaseModel):
+    """Create a new model deployment."""
+
+    model_name: str = Field(..., min_length=1)
+    model_version: str = Field(..., min_length=1)
+    experiment_name: str
+    environment: DeploymentEnvironment
+    endpoint: str = Field(..., min_length=1, description="Deployment endpoint URL")
+    endpoint_config: EndpointConfig | None = None
+    created_by: str
+    deployment_notes: str | None = None
+
+
+class DeploymentUpdate(BaseModel):
+    """Update deployment status and metrics."""
+
+    status: DeploymentStatus | None = None
+    health_status: str | None = Field(
+        None, description="Health check status (healthy, degraded, unhealthy)"
+    )
+    metrics: DeploymentMetrics | None = None
+    endpoint: str | None = None
+    error_message: str | None = None
+
+
+class DeploymentResponse(BaseModel):
+    """Deployment response schema."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    id: str = Field(..., alias="_id")
+    model_name: str
+    model_version: str
+    experiment_name: str
+    status: DeploymentStatus
+    environment: DeploymentEnvironment
+    endpoint: str
+    endpoint_config: EndpointConfig | None
+    health_status: str | None
+    metrics: DeploymentMetrics | None
+    created_by: str
+    deployed_at: datetime
+    terminated_at: datetime | None
+    rollback_from: str | None
+    deployment_notes: str | None
+    error_message: str | None

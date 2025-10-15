@@ -461,3 +461,47 @@ class FeatureStoreService:
             "first_used_at": min(u.usage_timestamp for u in usages) if usages else None,
             "last_used_at": max(u.usage_timestamp for u in usages) if usages else None,
         }
+
+    # ==================== 데이터셋 관리 ====================
+
+    async def list_datasets(self) -> list:
+        """
+        데이터셋 목록 조회 (MongoDB 기반)
+
+        Returns:
+            List of Dataset documents
+        """
+        from app.models.feature_store import Dataset
+
+        datasets = (
+            await Dataset.find_all()
+            .sort(("created_at", SortDirection.DESCENDING))
+            .to_list()
+        )
+        logger.info(f"Retrieved {len(datasets)} datasets")
+        return datasets
+
+    async def get_dataset(self, dataset_id: str):
+        """
+        데이터셋 상세 조회
+
+        Args:
+            dataset_id: Dataset ID
+
+        Returns:
+            Dataset document or None
+        """
+        from app.models.feature_store import Dataset
+        from bson import ObjectId
+
+        try:
+            dataset = await Dataset.get(ObjectId(dataset_id))
+            if dataset:
+                logger.info(f"Retrieved dataset: {dataset.name}")
+                # 마지막 접근 시간 업데이트
+                dataset.last_accessed_at = datetime.now(UTC)
+                await dataset.save()
+            return dataset
+        except Exception as e:
+            logger.error(f"Error retrieving dataset {dataset_id}: {e}")
+            return None

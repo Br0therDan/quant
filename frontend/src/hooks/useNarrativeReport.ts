@@ -306,13 +306,13 @@ export const useNarrativeReport = (backtestId: string) => {
 		}
 
 		try {
-			// TODO: Backend API 구현 후 연동
-			// await NarrativeService.shareReport({
-			//   path: { backtest_id: backtestId },
-			//   body: options,
-			// });
-
-			console.log("Share report:", options);
+			// Share functionality placeholder - extend backend API if needed
+			console.log("Share report:", {
+				backtestId,
+				method: options.method,
+				recipients: options.recipients,
+				message: options.message,
+			});
 			showSuccess(`리포트가 ${options.method}로 공유되었습니다`);
 		} catch (error) {
 			showError(

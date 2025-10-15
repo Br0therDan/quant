@@ -8,14 +8,17 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 
 from app.schemas.model_lifecycle import (
     ChecklistUpdateRequest,
+    DeploymentCreate,
+    DeploymentResponse,
+    DeploymentUpdate,
     DriftEventCreate,
     DriftEventResponse,
     ExperimentCreate,
     ExperimentResponse,
     ExperimentUpdate,
+    MetricComparison,
     ModelComparisonRequest,
     ModelComparisonResponse,
-    MetricComparison,
     ModelVersionCreate,
     ModelVersionResponse,
     RunCreate,
@@ -61,6 +64,18 @@ async def list_experiments(
             raise HTTPException(status_code=400, detail="Invalid status filter")
     experiments = await service.list_experiments(owner=owner, status=status_enum)
     return [ExperimentResponse.model_validate(exp) for exp in experiments]
+
+
+@router.get("/experiments/{name}", response_model=ExperimentResponse)
+async def get_experiment(
+    name: str,
+    service: Annotated[ModelLifecycleService, Depends(get_service)],
+) -> ExperimentResponse:
+    """Get experiment by name."""
+    experiment = await service.get_experiment(name)
+    if experiment is None:
+        raise HTTPException(status_code=404, detail="Experiment not found")
+    return ExperimentResponse.model_validate(experiment)
 
 
 @router.patch("/experiments/{name}", response_model=ExperimentResponse)
@@ -203,6 +218,19 @@ async def list_model_versions(
     return [ModelVersionResponse.model_validate(item) for item in versions]
 
 
+@router.get("/models/{model_name}/{version}", response_model=ModelVersionResponse)
+async def get_model_version(
+    model_name: str,
+    version: str,
+    service: Annotated[ModelLifecycleService, Depends(get_service)],
+) -> ModelVersionResponse:
+    """Get model version by name and version."""
+    model = await service.get_model_version(model_name, version)
+    if model is None:
+        raise HTTPException(status_code=404, detail="Model version not found")
+    return ModelVersionResponse.model_validate(model)
+
+
 @router.post(
     "/models/{model_name}/compare",
     response_model=ModelComparisonResponse,
@@ -247,3 +275,82 @@ async def list_drift_events(
         model_name=model_name, severity=severity_enum
     )
     return [DriftEventResponse.model_validate(event) for event in events]
+
+
+# ==============================================================================
+# Deployment Endpoints (Phase 4 D4)
+# ==============================================================================
+
+
+@router.post(
+    "/deployments",
+    response_model=DeploymentResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+async def create_deployment(
+    payload: DeploymentCreate,
+    service: Annotated[ModelLifecycleService, Depends(get_service)],
+) -> DeploymentResponse:
+    """Create a new deployment."""
+    try:
+        deployment = await service.create_deployment(payload.model_dump())
+        return DeploymentResponse.model_validate(deployment)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+
+@router.get("/deployments", response_model=list[DeploymentResponse])
+async def list_deployments(
+    service: Annotated[ModelLifecycleService, Depends(get_service)],
+    model_name: str | None = Query(default=None),
+    environment: str | None = Query(default=None),
+    status_filter: str | None = Query(default=None, alias="status"),
+) -> list[DeploymentResponse]:
+    """List deployments with optional filters."""
+    from app.models.model_lifecycle import DeploymentEnvironment, DeploymentStatus
+
+    env_enum = None
+    if environment:
+        try:
+            env_enum = DeploymentEnvironment(environment)
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid environment value")
+
+    status_enum = None
+    if status_filter:
+        try:
+            status_enum = DeploymentStatus(status_filter)
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid status value")
+
+    deployments = await service.list_deployments(
+        model_name=model_name, environment=env_enum, status=status_enum
+    )
+    return [DeploymentResponse.model_validate(d) for d in deployments]
+
+
+@router.get("/deployments/{deployment_id}", response_model=DeploymentResponse)
+async def get_deployment(
+    deployment_id: str,
+    service: Annotated[ModelLifecycleService, Depends(get_service)],
+) -> DeploymentResponse:
+    """Get deployment details."""
+    deployment = await service.get_deployment(deployment_id)
+    if not deployment:
+        raise HTTPException(status_code=404, detail="Deployment not found")
+    return DeploymentResponse.model_validate(deployment)
+
+
+@router.patch("/deployments/{deployment_id}", response_model=DeploymentResponse)
+async def update_deployment(
+    deployment_id: str,
+    payload: DeploymentUpdate,
+    service: Annotated[ModelLifecycleService, Depends(get_service)],
+) -> DeploymentResponse:
+    """Update deployment status and metrics."""
+    deployment = await service.update_deployment(
+        deployment_id, payload.model_dump(exclude_unset=True)
+    )
+    if not deployment:
+        raise HTTPException(status_code=404, detail="Deployment not found")
+    return DeploymentResponse.model_validate(deployment)

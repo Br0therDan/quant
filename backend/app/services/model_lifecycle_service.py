@@ -12,7 +12,10 @@ from beanie.operators import In
 
 from app.models.model_lifecycle import (
     ChecklistStatus,
+    Deployment,
     DeploymentChecklistItem,
+    DeploymentEnvironment,
+    DeploymentStatus,
     DriftEvent,
     DriftSeverity,
     ExperimentStatus,
@@ -91,6 +94,11 @@ class ModelLifecycleService:
             ("created_at", SortDirection.DESCENDING)
         ).to_list()
         return experiments
+
+    async def get_experiment(self, name: str) -> ModelExperiment | None:
+        """Get experiment by name."""
+        experiment = await ModelExperiment.find_one(ModelExperiment.name == name)
+        return experiment
 
     # ------------------------------------------------------------------
     # Runs
@@ -221,6 +229,16 @@ class ModelLifecycleService:
         versions = await cursor.sort(("created_at", SortDirection.DESCENDING)).to_list()
         return versions
 
+    async def get_model_version(
+        self, model_name: str, version: str
+    ) -> ModelVersion | None:
+        """Get model version by name and version."""
+        model = await ModelVersion.find_one(
+            ModelVersion.model_name == model_name,
+            ModelVersion.version == version,
+        )
+        return model
+
     # ------------------------------------------------------------------
     # Drift monitoring
     # ------------------------------------------------------------------
@@ -347,6 +365,94 @@ class ModelLifecycleService:
         await entry.save()
         logger.info("Model %s moved to stage %s", model_name, stage)
         return entry
+
+    # ------------------------------------------------------------------
+    # Deployments (Phase 4 D4)
+    # ------------------------------------------------------------------
+
+    async def list_deployments(
+        self,
+        model_name: str | None = None,
+        environment: DeploymentEnvironment | None = None,
+        status: DeploymentStatus | None = None,
+    ) -> list[Deployment]:
+        """List deployments with optional filters."""
+        query = {}
+        if model_name:
+            query["model_name"] = model_name
+        if environment:
+            query["environment"] = environment
+        if status:
+            query["status"] = status
+
+        deployments = await Deployment.find(query).to_list()
+        return deployments
+
+    async def create_deployment(self, payload: dict[str, Any]) -> Deployment:
+        """Create a new deployment."""
+        # Validate model exists
+        model = await ModelVersion.find_one(
+            ModelVersion.model_name == payload["model_name"],
+            ModelVersion.version == payload["model_version"],
+        )
+        if not model:
+            msg = f"Model {payload['model_name']}:{payload['model_version']} not found"
+            raise ValueError(msg)
+
+        deployment = Deployment(
+            model_name=payload["model_name"],
+            model_version=payload["model_version"],
+            experiment_name=payload["experiment_name"],
+            environment=payload["environment"],
+            endpoint=payload["endpoint"],
+            endpoint_config=payload.get("endpoint_config"),
+            status=DeploymentStatus.PENDING,
+            health_status="pending",
+            created_by=payload["created_by"],
+            deployed_at=datetime.now(UTC),
+            deployment_notes=payload.get("deployment_notes"),
+            terminated_at=None,
+            rollback_from=None,
+            error_message=None,
+        )
+        await deployment.insert()
+        logger.info(
+            "Deployment created: %s (%s) to %s",
+            deployment.model_name,
+            deployment.model_version,
+            deployment.environment.value,
+        )
+        return deployment
+
+    async def get_deployment(self, deployment_id: str) -> Deployment | None:
+        """Get deployment by ID."""
+        return await Deployment.get(deployment_id)
+
+    async def update_deployment(
+        self, deployment_id: str, payload: dict[str, Any]
+    ) -> Deployment | None:
+        """Update deployment status and metrics."""
+        deployment = await Deployment.get(deployment_id)
+        if not deployment:
+            return None
+
+        if "status" in payload:
+            deployment.status = payload["status"]
+        if "health_status" in payload:
+            deployment.health_status = payload["health_status"]
+        if "metrics" in payload:
+            deployment.metrics = payload["metrics"]
+        if "endpoint" in payload:
+            deployment.endpoint = payload["endpoint"]
+        if "error_message" in payload:
+            deployment.error_message = payload["error_message"]
+
+        if payload.get("status") == DeploymentStatus.TERMINATED:
+            deployment.terminated_at = datetime.now(UTC)
+
+        await deployment.save()
+        logger.info("Deployment %s updated: %s", deployment_id, deployment.status.value)
+        return deployment
 
 
 def build_checklist(

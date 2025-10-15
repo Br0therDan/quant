@@ -135,17 +135,15 @@ export const useFeatureStore = (params?: FeaturesQueryParams) => {
 	 * Query: Datasets List
 	 * Fetches list of available datasets
 	 */
+	// Datasets Query
 	const datasetsQuery = useQuery({
 		queryKey: featureStoreQueryKeys.datasets(),
 		queryFn: async (): Promise<Dataset[]> => {
-			// TODO: Replace with actual API call
-			// const response = await FeatureStoreService.getDatasets();
-			// return response.data;
-
-			await new Promise((resolve) => setTimeout(resolve, 500));
-			return [];
+			const response = await FeatureStoreService.listDatasets();
+			// Backend returns { datasets: [...], total: number }
+			return (response.data?.datasets as Dataset[]) || [];
 		},
-		staleTime: 1000 * 60 * 10, // 10 minutes
+		staleTime: 1000 * 60 * 5, // 5 minutes
 	});
 
 	// ============================================================================
@@ -337,33 +335,27 @@ export const useDatasetDetail = (datasetId: string | null) => {
 	const datasetDetailQuery = useQuery({
 		queryKey: featureStoreQueryKeys.datasetDetail(datasetId || ""),
 		queryFn: async (): Promise<Dataset> => {
-			// TODO: Replace with actual API call
-			// const response = await FeatureStoreService.getDataset({
-			//   path: { dataset_id: datasetId! }
-			// });
-			// return response.data;
-
-			await new Promise((resolve) => setTimeout(resolve, 500));
-			return {
-				id: datasetId || "",
-				name: "Sample Dataset",
-				description: "Sample dataset description",
-				features: ["feature1", "feature2", "feature3"],
-				row_count: 10000,
-				created_at: new Date().toISOString(),
-				updated_at: new Date().toISOString(),
-				sample_data: [],
-				correlation_matrix: [],
-			};
+			if (!datasetId) {
+				throw new Error("Dataset ID is required");
+			}
+			const response = await FeatureStoreService.getDataset({
+				path: { dataset_id: datasetId },
+			});
+			if (!response.data) {
+				throw new Error("Dataset not found");
+			}
+			// Backend returns dict with all dataset fields
+			const data = response.data as unknown as Dataset;
+			return data;
 		},
 		enabled: !!datasetId,
-		staleTime: 1000 * 60 * 10,
+		staleTime: 1000 * 60 * 5, // 5 minutes
 	});
 
 	return {
-		dataset: datasetDetailQuery.data,
+		datasetDetail: datasetDetailQuery.data,
 		isLoading: datasetDetailQuery.isLoading,
+		isError: datasetDetailQuery.isError,
 		error: datasetDetailQuery.error,
-		refetch: datasetDetailQuery.refetch,
 	};
 };

@@ -213,3 +213,55 @@ class FeatureUsage(Document):
             IndexModel([("usage_timestamp", -1)]),
             IndexModel([("feature_name", 1), ("usage_timestamp", -1)]),  # 복합 인덱스
         ]
+
+
+class DatasetSourceType(str, Enum):
+    """데이터셋 소스 타입"""
+
+    DUCKDB = "duckdb"
+    CSV = "csv"
+    PARQUET = "parquet"
+    MONGODB = "mongodb"
+    API = "api"
+
+
+class Dataset(Document):
+    """데이터셋 메타데이터 (Feature Store용)"""
+
+    # 기본 정보
+    name: str = Field(..., description="데이터셋 이름")
+    description: str | None = Field(None, description="데이터셋 설명")
+    source_type: DatasetSourceType = Field(..., description="소스 타입")
+
+    # DuckDB 정보
+    table_name: str | None = Field(None, description="DuckDB 테이블 이름")
+    schema_: dict[str, str] | None = Field(
+        default=None, alias="schema", description="스키마 (컬럼명: 데이터타입)"
+    )
+
+    # 통계
+    row_count: int | None = Field(None, description="행 개수")
+    size_bytes: int | None = Field(None, description="크기 (바이트)")
+    column_count: int | None = Field(None, description="컬럼 개수")
+
+    # 메타데이터
+    tags: list[str] = Field(default_factory=list, description="태그")
+    owner: str | None = Field(None, description="소유자")
+
+    # 시간 정보
+    created_at: datetime = Field(
+        default_factory=lambda: datetime.now(UTC), description="생성 시간"
+    )
+    updated_at: datetime = Field(
+        default_factory=lambda: datetime.now(UTC), description="업데이트 시간"
+    )
+    last_accessed_at: datetime | None = Field(None, description="마지막 접근 시간")
+
+    class Settings:
+        name = "datasets"
+        indexes = [
+            IndexModel([("name", 1)], unique=True),
+            IndexModel([("source_type", 1)]),
+            IndexModel([("created_at", -1)]),
+            IndexModel([("tags", 1)]),
+        ]

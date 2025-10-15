@@ -25,7 +25,7 @@ from app.schemas.feature_store import (
 )
 from app.services.service_factory import service_factory
 
-router = APIRouter(tags=["feature-store"])
+router = APIRouter()
 logger = logging.getLogger(__name__)
 
 
@@ -301,3 +301,50 @@ async def get_feature_statistics(feature_name: str):
         return stats
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e)) from e
+
+
+# ============================================================
+# 데이터셋 관리
+# ============================================================
+
+
+@router.get("/datasets", response_model=dict)
+async def list_datasets():
+    """
+    데이터셋 목록 조회
+
+    MongoDB에 저장된 데이터셋 메타데이터 목록 반환
+    """
+    service = service_factory.get_feature_store_service()
+    datasets = await service.list_datasets()
+
+    # Beanie Document를 dict로 변환
+    dataset_list = []
+    for ds in datasets:
+        data = ds.model_dump()
+        data["id"] = str(ds.id)
+        dataset_list.append(data)
+
+    return {"datasets": dataset_list, "total": len(dataset_list)}
+
+
+@router.get("/datasets/{dataset_id}", response_model=dict)
+async def get_dataset(dataset_id: str):
+    """
+    데이터셋 상세 조회
+
+    Args:
+        dataset_id: Dataset ID (MongoDB ObjectId)
+
+    Returns:
+        Dataset 상세 정보 (마지막 접근 시간 자동 업데이트)
+    """
+    service = service_factory.get_feature_store_service()
+    dataset = await service.get_dataset(dataset_id)
+
+    if dataset is None:
+        raise HTTPException(status_code=404, detail="Dataset not found")
+
+    data = dataset.model_dump()
+    data["id"] = str(dataset.id)
+    return data

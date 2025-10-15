@@ -10,7 +10,7 @@
  * @module components/mlops/evaluation-harness/EvaluationResults
  */
 
-import { useEvaluationJob } from "@/hooks/useEvaluationHarness";
+import { useDetailedMetrics } from "@/hooks/useEvaluationHarness";
 import {
 	Alert,
 	Box,
@@ -103,7 +103,7 @@ export const EvaluationResults: React.FC<EvaluationResultsProps> = ({
 	// Hooks
 	// ============================================================================
 
-	const { evaluationJob, isLoading, error } = useEvaluationJob(jobId);
+	const { detailedMetrics, isLoading, error } = useDetailedMetrics(jobId);
 
 	// ============================================================================
 	// Event Handlers
@@ -140,7 +140,7 @@ export const EvaluationResults: React.FC<EvaluationResultsProps> = ({
 	// Render Error State
 	// ============================================================================
 
-	if (error || !evaluationJob || !evaluationJob.metrics) {
+	if (error || !detailedMetrics) {
 		return (
 			<Card>
 				<CardContent>
@@ -158,29 +158,30 @@ export const EvaluationResults: React.FC<EvaluationResultsProps> = ({
 	// Prepare Data
 	// ============================================================================
 
-	const metrics = evaluationJob.metrics;
+	const confusionMatrix = detailedMetrics.confusion_matrix || [];
+	const classLabels = detailedMetrics.class_labels || [];
 	const confusionMatrixData = getConfusionMatrixHeatmapData(
-		metrics.confusion_matrix,
-		metrics.class_labels,
+		confusionMatrix,
+		classLabels,
 	);
-	const maxValue = Math.max(
-		...metrics.confusion_matrix.flat().map((v) => v || 0),
-	);
+	const maxValue = Math.max(...confusionMatrix.flat());
 
 	// ROC Curve data
 	const rocCurveData =
-		metrics.roc_curve?.fpr.map((fpr, index) => ({
+		detailedMetrics.roc_curve?.fpr?.map((fpr, index) => ({
 			fpr,
-			tpr: metrics.roc_curve?.tpr[index] || 0,
-			threshold: metrics.roc_curve?.thresholds[index] || 0,
+			tpr: detailedMetrics.roc_curve?.tpr?.[index] || 0,
+			threshold: detailedMetrics.roc_curve?.thresholds?.[index] || 0,
 		})) || [];
 
 	// PR Curve data
 	const prCurveData =
-		metrics.precision_recall_curve?.recall.map((recall, index) => ({
+		detailedMetrics.precision_recall_curve?.recall?.map((recall, index) => ({
 			recall,
-			precision: metrics.precision_recall_curve?.precision[index] || 0,
-			threshold: metrics.precision_recall_curve?.thresholds[index] || 0,
+			precision:
+				detailedMetrics.precision_recall_curve?.precision?.[index] || 0,
+			threshold:
+				detailedMetrics.precision_recall_curve?.thresholds?.[index] || 0,
 		})) || [];
 
 	// ============================================================================
@@ -196,7 +197,7 @@ export const EvaluationResults: React.FC<EvaluationResultsProps> = ({
 						평가 결과
 					</Typography>
 					<Typography variant="body2" color="text.secondary">
-						{evaluationJob.model_name} - Dataset: {evaluationJob.dataset_id}
+						상세 메트릭 분석
 					</Typography>
 				</Box>
 
@@ -210,7 +211,9 @@ export const EvaluationResults: React.FC<EvaluationResultsProps> = ({
 										Accuracy
 									</Typography>
 									<Typography variant="h5">
-										{(metrics.accuracy * 100).toFixed(2)}%
+										{detailedMetrics.accuracy
+											? `${(detailedMetrics.accuracy * 100).toFixed(2)}%`
+											: "N/A"}
 									</Typography>
 								</CardContent>
 							</Card>
@@ -222,7 +225,9 @@ export const EvaluationResults: React.FC<EvaluationResultsProps> = ({
 										Precision
 									</Typography>
 									<Typography variant="h5">
-										{(metrics.precision * 100).toFixed(2)}%
+										{detailedMetrics.precision
+											? `${(detailedMetrics.precision * 100).toFixed(2)}%`
+											: "N/A"}
 									</Typography>
 								</CardContent>
 							</Card>
@@ -234,7 +239,9 @@ export const EvaluationResults: React.FC<EvaluationResultsProps> = ({
 										Recall
 									</Typography>
 									<Typography variant="h5">
-										{(metrics.recall * 100).toFixed(2)}%
+										{detailedMetrics.recall
+											? `${(detailedMetrics.recall * 100).toFixed(2)}%`
+											: "N/A"}
 									</Typography>
 								</CardContent>
 							</Card>
@@ -246,7 +253,9 @@ export const EvaluationResults: React.FC<EvaluationResultsProps> = ({
 										F1 Score
 									</Typography>
 									<Typography variant="h5">
-										{metrics.f1_score.toFixed(4)}
+										{detailedMetrics.f1_score
+											? detailedMetrics.f1_score.toFixed(4)
+											: "N/A"}
 									</Typography>
 								</CardContent>
 							</Card>
@@ -258,7 +267,9 @@ export const EvaluationResults: React.FC<EvaluationResultsProps> = ({
 										AUC-ROC
 									</Typography>
 									<Typography variant="h5">
-										{metrics.auc_roc.toFixed(4)}
+										{detailedMetrics.auc_roc
+											? detailedMetrics.auc_roc.toFixed(4)
+											: "N/A"}
 									</Typography>
 								</CardContent>
 							</Card>
@@ -291,11 +302,9 @@ export const EvaluationResults: React.FC<EvaluationResultsProps> = ({
 										type="number"
 										dataKey="x"
 										name="Predicted"
-										domain={[-0.5, metrics.class_labels.length - 0.5]}
-										ticks={metrics.class_labels.map((_, i) => i)}
-										tickFormatter={(value) =>
-											metrics.class_labels[value] || `${value}`
-										}
+										domain={[-0.5, classLabels.length - 0.5]}
+										ticks={classLabels.map((_, i) => i)}
+										tickFormatter={(value) => classLabels[value] || `${value}`}
 										label={{
 											value: "Predicted Class",
 											position: "insideBottom",
@@ -306,11 +315,9 @@ export const EvaluationResults: React.FC<EvaluationResultsProps> = ({
 										type="number"
 										dataKey="y"
 										name="Actual"
-										domain={[-0.5, metrics.class_labels.length - 0.5]}
-										ticks={metrics.class_labels.map((_, i) => i)}
-										tickFormatter={(value) =>
-											metrics.class_labels[value] || `${value}`
-										}
+										domain={[-0.5, classLabels.length - 0.5]}
+										ticks={classLabels.map((_, i) => i)}
+										tickFormatter={(value) => classLabels[value] || `${value}`}
 										reversed
 										label={{
 											value: "Actual Class",
@@ -349,7 +356,11 @@ export const EvaluationResults: React.FC<EvaluationResultsProps> = ({
 				{selectedTab === 1 && (
 					<Box>
 						<Typography variant="h6" gutterBottom>
-							ROC Curve (AUC = {metrics.auc_roc.toFixed(4)})
+							ROC Curve (AUC ={" "}
+							{detailedMetrics.auc_roc
+								? detailedMetrics.auc_roc.toFixed(4)
+								: "N/A"}
+							)
 						</Typography>
 						<Box sx={{ width: "100%", height: 400 }}>
 							<ResponsiveContainer width="100%" height="100%">
@@ -457,28 +468,16 @@ export const EvaluationResults: React.FC<EvaluationResultsProps> = ({
 					<Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
 						<Box sx={{ display: "flex", justifyContent: "space-between" }}>
 							<Typography variant="body2" color="text.secondary">
-								평가 완료 시간
-							</Typography>
-							<Typography variant="body2">
-								{evaluationJob.completed_at
-									? new Date(evaluationJob.completed_at).toLocaleString("ko-KR")
-									: "진행 중"}
-							</Typography>
-						</Box>
-						<Box sx={{ display: "flex", justifyContent: "space-between" }}>
-							<Typography variant="body2" color="text.secondary">
 								클래스 수
 							</Typography>
-							<Typography variant="body2">
-								{metrics.class_labels.length}
-							</Typography>
+							<Typography variant="body2">{classLabels.length}</Typography>
 						</Box>
 						<Box sx={{ display: "flex", justifyContent: "space-between" }}>
 							<Typography variant="body2" color="text.secondary">
 								총 샘플 수
 							</Typography>
 							<Typography variant="body2">
-								{metrics.confusion_matrix.flat().reduce((a, b) => a + b, 0)}
+								{confusionMatrix.flat().reduce((a, b) => a + b, 0)}
 							</Typography>
 						</Box>
 					</Box>
