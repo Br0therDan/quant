@@ -115,7 +115,10 @@ class StrategyExecutor:
             end_date_str = market_data.get("end_date")
 
             if not start_date_str or not end_date_str:
-                logger.error("Missing start_date or end_date in market_data")
+                logger.error(
+                    f"Missing start_date or end_date in market_data. "
+                    f"Received: {market_data}"
+                )
                 return None
 
             # Parse dates (ensure timezone-naive by extracting date part only)
@@ -144,54 +147,65 @@ class StrategyExecutor:
                 logger.error(f"No market data available for {symbol}")
                 return None
 
-            # Convert to DataFrame and filter by date range
-            # Force all dates to be timezone-naive by converting to string first
+            # Convert to DataFrame - normalize ALL datetimes to strings immediately
+            # This completely avoids any timezone issues
             records = []
             for d in stock_data:
-                # Convert date to string, then parse as naive datetime
-                date_value = d.date
-                if isinstance(date_value, str):
-                    # Already a string, parse it
-                    date_str = date_value[:10]  # Get YYYY-MM-DD
-                else:
-                    # Convert datetime to string, strip timezone
-                    date_str = date_value.strftime("%Y-%m-%d")
+                try:
+                    # Extract date as YYYY-MM-DD string (no datetime objects at all)
+                    if isinstance(d.date, str):
+                        date_str = d.date[:10]
+                    else:
+                        # Handle both timezone-aware and naive datetimes
+                        # by converting to date() first, then string
+                        if hasattr(d.date, "date"):
+                            date_str = d.date.date().isoformat()  # YYYY-MM-DD
+                        else:
+                            date_str = str(d.date)[:10]
 
-                records.append(
-                    {
-                        "date_str": date_str,  # Store as string temporarily
-                        "open": d.open,
-                        "high": d.high,
-                        "low": d.low,
-                        "close": d.close,
-                        "volume": d.volume,
-                        "symbol": symbol,
-                    }
-                )
+                    records.append(
+                        {
+                            "date": date_str,  # Keep as string
+                            "open": float(d.open),
+                            "high": float(d.high),
+                            "low": float(d.low),
+                            "close": float(d.close),
+                            "volume": int(d.volume),
+                            "symbol": symbol,
+                        }
+                    )
+                except Exception as e:
+                    logger.error(
+                        f"Failed to convert data point: {d}, "
+                        f"date type: {type(d.date)}, "
+                        f"error: {e}"
+                    )
+                    continue  # Skip this data point
 
+            # Create DataFrame with date as string
             df = pd.DataFrame(records)
 
-            # Convert string dates to timezone-naive datetime
-            if not df.empty:
-                df["timestamp"] = pd.to_datetime(df["date_str"], format="%Y-%m-%d")
-                df = df.drop(columns=["date_str"])
+            if df.empty:
+                logger.error(f"Failed to create DataFrame for {symbol}")
+                return None
 
-            logger.info(f"DataFrame created with {len(df)} records for {symbol}")
-            logger.info(f"Date range filter: {start_date_only} to {end_date_only}")
-
-            # Filter by date range (use string comparison to avoid timezone issues)
-            df["date_str_temp"] = df["timestamp"].dt.strftime("%Y-%m-%d")
-            df = df[
-                (df["date_str_temp"] >= start_date_only)
-                & (df["date_str_temp"] <= end_date_only)
-            ]
-            df = df.drop(columns=["date_str_temp"])
+            # Filter by date range using STRING comparison (completely timezone-safe)
+            df = df[(df["date"] >= start_date_only) & (df["date"] <= end_date_only)]
 
             if df.empty:
-                logger.error(
-                    f"No data in date range for {symbol}: {start_date} to {end_date}"
+                logger.warning(
+                    f"No data in date range for {symbol}: {start_date_only} to {end_date_only}"
                 )
-                return None
+                # Don't return None, use available data
+                df = pd.DataFrame(records)  # Use all data
+
+            # Convert to datetime for strategy (after filtering)
+            try:
+                df["timestamp"] = pd.to_datetime(df["date"], format="%Y-%m-%d")
+                df = df.drop(columns=["date"])
+            except Exception as e:
+                logger.error(f"Failed to convert dates to timestamp: {e}")
+                raise
 
             # Set timestamp as index
             df.set_index("timestamp", inplace=True)
@@ -435,8 +449,6 @@ class StrategyExecutor:
 
             # Create strategy instance
             instance = strategy_class(config=config)
-
-            logger.info(f"Created strategy instance: {strategy_type}")
             return instance
 
         except Exception as e:

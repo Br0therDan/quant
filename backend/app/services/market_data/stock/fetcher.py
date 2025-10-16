@@ -617,21 +617,29 @@ class StockFetcher(BaseStockService):
                 outputsize="full",  # type: ignore
             )
 
-            if isinstance(response, list) and len(response) > 0:
-                response = response[0]  # type: ignore
+            # mysingle_quant 클라이언트가 이미 파싱된 리스트를 반환하는 경우
+            if isinstance(response, list):
+                logger.info(
+                    f"Received {len(response)} parsed records from Alpha Vantage"
+                )
 
-            if not isinstance(response, dict) or "Time Series (Daily)" not in response:
-                logger.warning(f"Invalid historical response for {symbol}")
-                return {}
+                # 날짜 범위 필터링
+                filtered_records = []
+                for item in response:
+                    if not isinstance(item, dict):
+                        continue
 
-            meta_data = response.get("Meta Data", {})
-            time_series = response.get("Time Series (Daily)", {})
-
-            # 날짜 필터링 (start_date, end_date가 주어진 경우)
-            filtered_data = {}
-            for date_str, data in time_series.items():
-                try:
-                    date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+                    # 날짜 파싱
+                    date_value = item.get("date")
+                    if isinstance(date_value, str):
+                        try:
+                            date_obj = datetime.strptime(date_value, "%Y-%m-%d")
+                        except ValueError:
+                            continue
+                    elif isinstance(date_value, datetime):
+                        date_obj = date_value
+                    else:
+                        continue
 
                     # 날짜 범위 필터링
                     if start_date and date_obj < start_date:
@@ -639,27 +647,65 @@ class StockFetcher(BaseStockService):
                     if end_date and date_obj > end_date:
                         continue
 
-                    filtered_data[date_str] = data
+                    filtered_records.append(item)
 
-                except ValueError:
-                    continue
+                logger.info(
+                    f"Filtered to {len(filtered_records)} records for date range"
+                )
 
-            return {
-                "symbol": symbol,
-                "start_date": start_date.isoformat() if start_date else None,
-                "end_date": end_date.isoformat() if end_date else None,
-                "meta_data": {
-                    "information": meta_data.get("1. Information"),
-                    "symbol": meta_data.get("2. Symbol"),
-                    "last_refreshed": meta_data.get("3. Last Refreshed"),
-                    "output_size": meta_data.get("4. Output Size"),
-                    "time_zone": meta_data.get("5. Time Zone"),
-                },
-                "time_series": filtered_data,
-                "data_points": len(filtered_data),
-                "timestamp": datetime.now().isoformat(),
-                "source": "alpha_vantage",
-            }
+                # DataProcessor가 기대하는 형태로 반환
+                return {
+                    "symbol": symbol,
+                    "records": filtered_records,  # 리스트 형태
+                    "data_points": len(filtered_records),
+                    "timestamp": datetime.now().isoformat(),
+                    "source": "alpha_vantage",
+                }
+
+            # 기존 딕셔너리 구조 처리 (fallback)
+            elif isinstance(response, dict) and "Time Series (Daily)" in response:
+                meta_data = response.get("Meta Data", {})
+                time_series = response.get("Time Series (Daily)", {})
+
+                # 날짜 필터링 (start_date, end_date가 주어진 경우)
+                filtered_data = {}
+                for date_str, data in time_series.items():
+                    try:
+                        date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+
+                        # 날짜 범위 필터링
+                        if start_date and date_obj < start_date:
+                            continue
+                        if end_date and date_obj > end_date:
+                            continue
+
+                        filtered_data[date_str] = data
+
+                    except ValueError:
+                        continue
+
+                return {
+                    "symbol": symbol,
+                    "start_date": start_date.isoformat() if start_date else None,
+                    "end_date": end_date.isoformat() if end_date else None,
+                    "meta_data": {
+                        "information": meta_data.get("1. Information"),
+                        "symbol": meta_data.get("2. Symbol"),
+                        "last_refreshed": meta_data.get("3. Last Refreshed"),
+                        "output_size": meta_data.get("4. Output Size"),
+                        "time_zone": meta_data.get("5. Time Zone"),
+                    },
+                    "time_series": filtered_data,
+                    "data_points": len(filtered_data),
+                    "timestamp": datetime.now().isoformat(),
+                    "source": "alpha_vantage",
+                }
+
+            else:
+                logger.warning(
+                    f"Unexpected response format for {symbol}: {type(response)}"
+                )
+                return {}
 
         except Exception as e:
             logger.error(f"Failed to fetch historical data for {symbol}: {e}")

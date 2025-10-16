@@ -84,10 +84,17 @@ class StockService(BaseStockService):
         coverage = await self._coverage.get_or_create_coverage(symbol, "daily")
 
         # Full update가 필요한지 확인 (최초 또는 7일 이상 경과)
-        needs_full_update = (
-            coverage.last_full_update is None
-            or (datetime.now(timezone.utc) - coverage.last_full_update).days >= 7
-        )
+        needs_full_update = coverage.last_full_update is None
+        if not needs_full_update and coverage.last_full_update is not None:
+            # Ensure both datetimes are timezone-aware for comparison
+            now_utc = datetime.now(timezone.utc)
+            last_update = coverage.last_full_update
+
+            # If last_update is naive, make it aware (assume UTC)
+            if last_update.tzinfo is None:
+                last_update = last_update.replace(tzinfo=timezone.utc)
+
+            needs_full_update = (now_utc - last_update).days >= 7
 
         # MongoDB에서 기존 데이터 조회
         existing_prices = (
@@ -139,10 +146,13 @@ class StockService(BaseStockService):
         coverage = await self._coverage.get_or_create_coverage(symbol, "weekly")
 
         # Full update가 필요한지 확인 (최초 또는 30일 이상 경과)
-        needs_full_update = (
-            coverage.last_full_update is None
-            or (datetime.now(timezone.utc) - coverage.last_full_update).days >= 30
-        )
+        needs_full_update = coverage.last_full_update is None
+        if not needs_full_update and coverage.last_full_update is not None:
+            now_utc = datetime.now(timezone.utc)
+            last_update = coverage.last_full_update
+            if last_update.tzinfo is None:
+                last_update = last_update.replace(tzinfo=timezone.utc)
+            needs_full_update = (now_utc - last_update).days >= 30
 
         if needs_full_update:
             logger.info(f"🔄 Performing full update for {symbol} weekly prices")
@@ -182,10 +192,13 @@ class StockService(BaseStockService):
         coverage = await self._coverage.get_or_create_coverage(symbol, "monthly")
 
         # Full update가 필요한지 확인 (최초 또는 60일 이상 경과)
-        needs_full_update = (
-            coverage.last_full_update is None
-            or (datetime.now(timezone.utc) - coverage.last_full_update).days >= 60
-        )
+        needs_full_update = coverage.last_full_update is None
+        if not needs_full_update and coverage.last_full_update is not None:
+            now_utc = datetime.now(timezone.utc)
+            last_update = coverage.last_full_update
+            if last_update.tzinfo is None:
+                last_update = last_update.replace(tzinfo=timezone.utc)
+            needs_full_update = (now_utc - last_update).days >= 60
 
         if needs_full_update:
             logger.info(f"🔄 Performing full update for {symbol} monthly prices")

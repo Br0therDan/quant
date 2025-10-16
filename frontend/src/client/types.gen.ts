@@ -6723,7 +6723,7 @@ export type StrategyCreate = {
 	 * Config
 	 * 전략 설정 (타입 안전)
 	 */
-	config:
+	config?:
 		| ({
 				config_type: "sma_crossover";
 		  } & SmaCrossoverConfig)
@@ -6735,7 +6735,15 @@ export type StrategyCreate = {
 		  } & MomentumConfig)
 		| ({
 				config_type: "buy_and_hold";
-		  } & BuyAndHoldConfig);
+		  } & BuyAndHoldConfig)
+		| null;
+	/**
+	 * Parameters
+	 * 전략 파라미터 (레거시, config로 자동 변환됨)
+	 */
+	parameters?: {
+		[key: string]: unknown;
+	} | null;
 	/**
 	 * Tags
 	 * 태그
@@ -6943,7 +6951,7 @@ export type StrategyResponse = {
 	 * Config
 	 * 전략 설정 (타입 안전)
 	 */
-	config:
+	config?:
 		| ({
 				config_type: "sma_crossover";
 		  } & SmaCrossoverConfig)
@@ -6955,7 +6963,8 @@ export type StrategyResponse = {
 		  } & MomentumConfig)
 		| ({
 				config_type: "buy_and_hold";
-		  } & BuyAndHoldConfig);
+		  } & BuyAndHoldConfig)
+		| null;
 	/**
 	 * Is Active
 	 * 활성화 상태

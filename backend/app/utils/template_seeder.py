@@ -33,7 +33,6 @@ class TemplateSeeder:
 
     async def seed_templates(self) -> None:
         """Seed strategy templates from JSON files"""
-        logger.info("Starting template seeding...")
 
         if not self.templates_dir.exists():
             logger.warning(f"Templates directory not found: {self.templates_dir}")
@@ -41,8 +40,7 @@ class TemplateSeeder:
 
         # 기존 템플릿들 삭제 (스키마 변경으로 인한 호환성 문제 해결)
         try:
-            deleted_count = await StrategyTemplate.delete_all()
-            logger.info(f"Deleted {deleted_count} existing templates for fresh seeding")
+            await StrategyTemplate.delete_all()
         except Exception as e:
             logger.warning(f"Failed to delete existing templates: {e}")
 
@@ -53,10 +51,6 @@ class TemplateSeeder:
                 seeded_count += 1
             except Exception as e:
                 logger.error(f"Failed to seed template {template_file}: {e}")
-
-        logger.info(
-            f"✅ Template seeding completed. {seeded_count}/{len(self.template_files)} templates processed"
-        )
 
     async def _seed_single_template(
         self, filename: str, strategy_type: StrategyType
@@ -71,13 +65,6 @@ class TemplateSeeder:
         try:
             with open(template_path, "r", encoding="utf-8") as f:
                 template_data = json.load(f)
-
-            # 디버깅: JSON 데이터 구조 확인
-            logger.info(f"Template data keys: {list(template_data.keys())}")
-            logger.info(f"Category value: {template_data.get('category', 'NOT_FOUND')}")
-            logger.info(
-                f"Difficulty value: {template_data.get('difficulty', 'NOT_FOUND')}"
-            )
 
             # parameters를 config_type을 포함한 default_config로 변환
             parameters = template_data.get("parameters", {})
@@ -95,7 +82,6 @@ class TemplateSeeder:
             )
 
             await template.insert()
-            logger.info(f"✅ Seeded template: {template_data['name']} ({strategy_type})")
 
         except json.JSONDecodeError as e:
             logger.error(f"Invalid JSON in template file {filename}: {e}")

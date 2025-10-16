@@ -13,7 +13,6 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence
 
 import chromadb
-from chromadb.config import Settings
 
 from app.core.config import settings
 from app.models.trading.backtest import Backtest, BacktestResult
@@ -45,12 +44,22 @@ class RAGService:
         persist_dir = Path(settings.CHROMADB_PATH)
         persist_dir.mkdir(parents=True, exist_ok=True)
 
-        self._client = chromadb.Client(
-            Settings(
-                chroma_db_impl="duckdb+parquet",
-                persist_directory=str(persist_dir),
+        try:
+            # Try new ChromaDB API first (recommended)
+            self._client = chromadb.PersistentClient(path=str(persist_dir))
+        except Exception as e:
+            logger.warning(
+                f"Failed to initialize ChromaDB with new API: {e}. "
+                "RAGService will be disabled."
             )
-        )
+            self._client = None
+            self._backtests_collection = None
+            self._strategies_collection = None
+            self._embedding_cache: Dict[str, List[float]] = {}
+            self._lock = asyncio.Lock()
+            self._initialised = True
+            return
+
         self._backtests_collection = self._client.get_or_create_collection(
             name="user_backtests",
             metadata={"description": "User backtest summaries for GenAI RAG"},
@@ -78,6 +87,14 @@ class RAGService:
         result: BacktestResult,
     ) -> None:
         """Index a freshly completed backtest into the vector store."""
+
+        # Skip if ChromaDB is not available
+        if self._client is None or self._backtests_collection is None:
+            logger.debug(
+                "Skipping RAG indexing because ChromaDB is not available",
+                extra={"backtest_id": str(backtest.id)},
+            )
+            return
 
         user_id = backtest.user_id or backtest.created_by
         if not user_id:
@@ -136,6 +153,11 @@ class RAGService:
         top_k: int = 5,
     ) -> List[RAGContext]:
         """Retrieve similar backtests for the user based on the query."""
+
+        # Skip if ChromaDB is not available
+        if self._client is None or self._backtests_collection is None:
+            logger.debug("Skipping RAG search because ChromaDB is not available")
+            return []
 
         if not query.strip():
             return []
@@ -271,9 +293,9 @@ class RAGService:
                     "content": context.content,
                     "similarity_score": context.similarity_score,
                     "metadata": context.metadata,
-                    "indexed_at": context.indexed_at.isoformat()
-                    if context.indexed_at
-                    else None,
+                    "indexed_at": (
+                        context.indexed_at.isoformat() if context.indexed_at else None
+                    ),
                 }
             )
         return serialised

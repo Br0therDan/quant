@@ -300,6 +300,7 @@ class StrategyService:
 
         return await self._performance_analyzer.calculate_metrics(
             strategy_id=strategy_id,
+            user_id=strategy.user_id if strategy.user_id else "system",
             strategy_name=strategy.name,
             executions=executions,
         )

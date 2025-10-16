@@ -32,6 +32,7 @@ dependencies = [
     "openai>=2.3.0",
     "mlflow>=3.4.0",
     "chromadb>=0.5.3",
+    "colorlog>=6.9.0",
 ]
 
 [project.optional-dependencies]

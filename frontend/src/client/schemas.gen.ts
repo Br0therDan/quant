@@ -10886,31 +10886,51 @@ export const StrategyCreateSchema = {
 			description: "전략 설명",
 		},
 		config: {
-			oneOf: [
+			anyOf: [
 				{
-					$ref: "#/components/schemas/SMACrossoverConfig",
+					oneOf: [
+						{
+							$ref: "#/components/schemas/SMACrossoverConfig",
+						},
+						{
+							$ref: "#/components/schemas/RSIMeanReversionConfig",
+						},
+						{
+							$ref: "#/components/schemas/MomentumConfig",
+						},
+						{
+							$ref: "#/components/schemas/BuyAndHoldConfig",
+						},
+					],
+					discriminator: {
+						propertyName: "config_type",
+						mapping: {
+							buy_and_hold: "#/components/schemas/BuyAndHoldConfig",
+							momentum: "#/components/schemas/MomentumConfig",
+							rsi_mean_reversion: "#/components/schemas/RSIMeanReversionConfig",
+							sma_crossover: "#/components/schemas/SMACrossoverConfig",
+						},
+					},
 				},
 				{
-					$ref: "#/components/schemas/RSIMeanReversionConfig",
-				},
-				{
-					$ref: "#/components/schemas/MomentumConfig",
-				},
-				{
-					$ref: "#/components/schemas/BuyAndHoldConfig",
+					type: "null",
 				},
 			],
 			title: "Config",
 			description: "전략 설정 (타입 안전)",
-			discriminator: {
-				propertyName: "config_type",
-				mapping: {
-					buy_and_hold: "#/components/schemas/BuyAndHoldConfig",
-					momentum: "#/components/schemas/MomentumConfig",
-					rsi_mean_reversion: "#/components/schemas/RSIMeanReversionConfig",
-					sma_crossover: "#/components/schemas/SMACrossoverConfig",
+		},
+		parameters: {
+			anyOf: [
+				{
+					additionalProperties: true,
+					type: "object",
 				},
-			},
+				{
+					type: "null",
+				},
+			],
+			title: "Parameters",
+			description: "전략 파라미터 (레거시, config로 자동 변환됨)",
 		},
 		tags: {
 			items: {
@@ -10922,7 +10942,7 @@ export const StrategyCreateSchema = {
 		},
 	},
 	type: "object",
-	required: ["name", "strategy_type", "config"],
+	required: ["name", "strategy_type"],
 	title: "StrategyCreate",
 	description: "Strategy creation request",
 } as const;
@@ -11219,31 +11239,38 @@ export const StrategyResponseSchema = {
 			description: "전략 설명",
 		},
 		config: {
-			oneOf: [
+			anyOf: [
 				{
-					$ref: "#/components/schemas/SMACrossoverConfig",
+					oneOf: [
+						{
+							$ref: "#/components/schemas/SMACrossoverConfig",
+						},
+						{
+							$ref: "#/components/schemas/RSIMeanReversionConfig",
+						},
+						{
+							$ref: "#/components/schemas/MomentumConfig",
+						},
+						{
+							$ref: "#/components/schemas/BuyAndHoldConfig",
+						},
+					],
+					discriminator: {
+						propertyName: "config_type",
+						mapping: {
+							buy_and_hold: "#/components/schemas/BuyAndHoldConfig",
+							momentum: "#/components/schemas/MomentumConfig",
+							rsi_mean_reversion: "#/components/schemas/RSIMeanReversionConfig",
+							sma_crossover: "#/components/schemas/SMACrossoverConfig",
+						},
+					},
 				},
 				{
-					$ref: "#/components/schemas/RSIMeanReversionConfig",
-				},
-				{
-					$ref: "#/components/schemas/MomentumConfig",
-				},
-				{
-					$ref: "#/components/schemas/BuyAndHoldConfig",
+					type: "null",
 				},
 			],
 			title: "Config",
 			description: "전략 설정 (타입 안전)",
-			discriminator: {
-				propertyName: "config_type",
-				mapping: {
-					buy_and_hold: "#/components/schemas/BuyAndHoldConfig",
-					momentum: "#/components/schemas/MomentumConfig",
-					rsi_mean_reversion: "#/components/schemas/RSIMeanReversionConfig",
-					sma_crossover: "#/components/schemas/SMACrossoverConfig",
-				},
-			},
 		},
 		is_active: {
 			type: "boolean",
@@ -11293,7 +11320,6 @@ export const StrategyResponseSchema = {
 		"id",
 		"name",
 		"strategy_type",
-		"config",
 		"is_active",
 		"is_template",
 		"created_at",

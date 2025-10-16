@@ -62,10 +62,6 @@ async def ensure_dev_test_superuser() -> Tuple[Optional[User], Optional[str]]:
     """
 
     if not _is_development_environment():
-        logger.debug(
-            "Skipping dev test superuser creation (environment=%s)",
-            core_settings.ENVIRONMENT,
-        )
         return None, None
 
     email, password, full_name = _get_credentials()
@@ -117,12 +113,9 @@ async def ensure_dev_test_superuser() -> Tuple[Optional[User], Optional[str]]:
             if updated:
                 await user.save()
                 logger.info("Updated development test superuser profile: %s", email)
-            else:
-                logger.debug("Development test superuser already up-to-date: %s", email)
 
         token_payload = _build_token_payload(user)
         token = generate_jwt(token_payload)
-        logger.debug("Generated non-expiring development token for %s", email)
         return user, token
 
     except Exception as exc:  # pragma: no cover - defensive logging

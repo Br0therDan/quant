@@ -12,7 +12,6 @@ from app.core.logging_config import setup_logging
 from mysingle_quant import create_fastapi_app
 from mysingle_quant.core import get_mongodb_url
 from app.utils import seed_strategy_templates
-from app.utils.migrate_strategies import migrate_strategy_documents
 from app.core.init_test_user import ensure_dev_test_superuser
 
 # 로깅 설정 초기화
@@ -29,12 +28,8 @@ async def lifespan(app: FastAPI):
     try:
         from app.services.service_factory import service_factory
 
-        logger.info("📊 Initializing DuckDB...")
-        database_manager = service_factory.get_database_manager()
-        logger.info(f"✅ DuckDB initialized at: {database_manager.db_path}")
-
-        # Pre-initialize services for better performance
-        logger.info("🔧 Pre-initializing services...")
+        # Initialize DuckDB and pre-initialize services
+        service_factory.get_database_manager()
         service_factory.get_market_data_service()
         service_factory.get_strategy_service()
         service_factory.get_backtest_service()
@@ -43,17 +38,9 @@ async def lifespan(app: FastAPI):
         service_factory.get_ml_signal_service()
         service_factory.get_regime_detection_service()
         service_factory.get_probabilistic_kpi_service()
-        logger.info("✅ All services pre-initialized")
-
-        # Migrate existing strategies (if needed)
-        logger.info("🔄 Checking for strategy migrations...")
-        await migrate_strategy_documents()
-        logger.info("✅ Strategy migration completed")
 
         # Seed strategy templates
-        logger.info("🌱 Seeding strategy templates...")
         await seed_strategy_templates()
-        logger.info("✅ Strategy templates seeded")
 
         # Ensure development test superuser exists
         test_user, test_token = await ensure_dev_test_superuser()
@@ -61,25 +48,20 @@ async def lifespan(app: FastAPI):
             app.state.dev_test_superuser = test_user
             app.state.dev_test_superuser_token = test_token
             app.state.dev_test_user_token = test_token
-            logger.info("🧪 Development test superuser ready: %s", test_user.email)
 
     except Exception as e:
         logger.error(f"❌ Startup failed: {e}")
         raise
 
-    logger.info("🎉 Quant Service startup completed successfully")
+    logger.info("✅ Quant Service started successfully")
 
     yield
 
     # Shutdown
-    logger.info("🛑 Shutting down Quant Service...")
-
     try:
-        # Cleanup services
         from app.services.service_factory import service_factory
 
         await service_factory.cleanup()
-        logger.info("✅ Services cleaned up")
     except Exception as e:
         logger.error(f"❌ Shutdown error: {e}")
 

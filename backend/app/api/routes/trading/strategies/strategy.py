@@ -406,6 +406,7 @@ async def get_strategy_performance(
 
         return PerformanceResponse(
             id=str(performance.id),
+            user_id=performance.user_id,
             strategy_id=performance.strategy_id,
             strategy_name=performance.strategy_name,
             total_signals=performance.total_signals,

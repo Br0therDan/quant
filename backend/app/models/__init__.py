@@ -154,6 +154,7 @@ collections = [
     Strategy,
     StrategyTemplate,
     StrategyExecution,
+    StrategyPerformance,
     # 인증
     User,
     OAuthAccount,

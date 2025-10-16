@@ -38,6 +38,7 @@ class PerformanceAnalyzer:
 
     async def calculate_metrics(
         self,
+        user_id: str,
         strategy_id: str,
         strategy_name: str,
         executions: list[StrategyExecution],
@@ -98,6 +99,7 @@ class PerformanceAnalyzer:
             # Create or update performance record
             performance = StrategyPerformance(
                 strategy_id=strategy_id,
+                user_id=user_id,
                 strategy_name=strategy_name,
                 total_signals=total_signals,
                 buy_signals=buy_signals,
