@@ -19,16 +19,20 @@ class StubQuery:
     """Minimal query builder stub that mirrors Beanie's chained API."""
 
     def __init__(self, results: Iterable[Any]) -> None:
-        self._results = results
+        self._results = list(results)
+        self._limit: int | None = None
 
     def sort(self, *_args: Any, **_kwargs: Any) -> "StubQuery":
         return self
 
-    def limit(self, *_args: Any, **_kwargs: Any) -> "StubQuery":
+    def limit(self, count: int, *_args: Any, **_kwargs: Any) -> "StubQuery":
+        self._limit = count
         return self
 
     async def to_list(self) -> List[Any]:
-        return list(self._results)
+        if self._limit is None:
+            return list(self._results)
+        return list(self._results)[: self._limit]
 
 
 class StubDataQualityEvent:
@@ -400,3 +404,385 @@ async def test_dispatch_webhook_noop_when_url_missing(monkeypatch: pytest.Monkey
     await sentinel._dispatch_webhook(event)
 
     assert called is False
+
+
+def test_build_message_includes_metrics() -> None:
+    sentinel = DataQualitySentinel()
+    result = AnomalyResult(
+        timestamp=datetime(2024, 2, 1, tzinfo=UTC),
+        iso_score=0.75,
+        prophet_score=0.33,
+        price_change_pct=1.5,
+        volume_z_score=1.2,
+        severity=SeverityLevel.MEDIUM,
+        anomaly_type="price_spike",
+        reasons=["iso"],
+    )
+
+    message = sentinel._build_message("AAPL", result)
+
+    assert "AAPL" in message
+    assert "price_change=1.50" in message
+    assert "volume_z=1.20" in message
+
+
+@pytest.mark.asyncio
+async def test_persist_event_triggers_webhook_for_high_severity(monkeypatch: pytest.MonkeyPatch) -> None:
+    StubDataQualityEvent.reset()
+    StubDataQualityEvent.find_one_result = None
+    monkeypatch.setattr(data_quality_sentinel, "DataQualityEvent", StubDataQualityEvent)
+
+    sentinel = DataQualitySentinel()
+    dispatch_mock = AsyncMock()
+    monkeypatch.setattr(sentinel, "_dispatch_webhook", dispatch_mock)
+
+    result = AnomalyResult(
+        timestamp=datetime(2024, 2, 2, tzinfo=UTC),
+        iso_score=0.9,
+        prophet_score=None,
+        price_change_pct=2.0,
+        volume_z_score=2.1,
+        severity=SeverityLevel.HIGH,
+        anomaly_type="gap_up",
+        reasons=None,
+    )
+
+    await sentinel._persist_event("TSLA", result, source="ingestion")
+
+    assert len(StubDataQualityEvent.inserted_instances) == 1
+    dispatch_mock.assert_awaited_once()
+    inserted = StubDataQualityEvent.inserted_instances[0]
+    assert inserted.metadata == {"reasons": None}
+
+
+@pytest.mark.asyncio
+async def test_get_recent_summary_handles_no_events(monkeypatch: pytest.MonkeyPatch) -> None:
+    StubDataQualityEvent.reset()
+    monkeypatch.setattr(data_quality_sentinel, "DataQualityEvent", StubDataQualityEvent)
+
+    sentinel = DataQualitySentinel()
+    summary = await sentinel.get_recent_summary(lookback_hours=1, limit=1)
+
+    assert summary.total_alerts == 0
+    assert all(count == 0 for count in summary.severity_breakdown.values())
+    assert summary.recent_alerts == []
+
+
+@pytest.mark.asyncio
+async def test_get_recent_summary_ignores_invalid_severity(monkeypatch: pytest.MonkeyPatch) -> None:
+    StubDataQualityEvent.reset()
+    StubDataQualityEvent.find_results = []
+    StubDataQualityEvent.aggregate_results = [{"_id": "unknown", "count": 5}]
+    monkeypatch.setattr(data_quality_sentinel, "DataQualityEvent", StubDataQualityEvent)
+
+    sentinel = DataQualitySentinel()
+    summary = await sentinel.get_recent_summary(lookback_hours=12, limit=1)
+
+    assert all(count == 0 for count in summary.severity_breakdown.values())
+
+
+@pytest.mark.asyncio
+async def test_dispatch_webhook_swallows_client_errors(monkeypatch: pytest.MonkeyPatch) -> None:
+    sentinel = DataQualitySentinel()
+    monkeypatch.setattr(
+        data_quality_sentinel.settings,
+        "DATA_QUALITY_WEBHOOK_URL",
+        "https://example.com/hook",
+    )
+
+    class FailingClient:
+        async def __aenter__(self) -> "FailingClient":
+            return self
+
+        async def __aexit__(self, *_args: Any) -> None:
+            return None
+
+        async def post(self, *_args: Any, **_kwargs: Any) -> Any:
+            raise httpx.HTTPError("network")
+
+    monkeypatch.setattr(data_quality_sentinel.httpx, "AsyncClient", FailingClient)
+
+    event = SimpleNamespace(
+        symbol="AAPL",
+        severity=SeverityLevel.CRITICAL,
+        occurred_at=datetime(2024, 2, 3, tzinfo=UTC),
+        data_type="daily",
+        message="Failure",
+        iso_score=0.5,
+        prophet_score=None,
+        price_change_pct=0.5,
+        volume_z_score=0.3,
+        metadata={},
+    )
+
+    await sentinel._dispatch_webhook(event)
+
+
+@pytest.mark.asyncio
+async def test_evaluate_daily_prices_leaves_unmatched_prices_intact(monkeypatch: pytest.MonkeyPatch) -> None:
+    dt = datetime(2024, 2, 4, tzinfo=UTC)
+    price = _make_price_point(dt)
+    unmatched = _make_price_point(datetime(2024, 2, 5, tzinfo=UTC))
+
+    result = AnomalyResult(
+        timestamp=dt,
+        iso_score=0.8,
+        prophet_score=None,
+        price_change_pct=1.1,
+        volume_z_score=1.2,
+        severity=SeverityLevel.HIGH,
+        anomaly_type="spike",
+        reasons=["iso"],
+    )
+
+    mock_detector = MagicMock()
+    mock_detector.score_daily_prices.return_value = {dt: result}
+
+    sentinel = DataQualitySentinel(anomaly_detector=mock_detector)
+    persist_mock = AsyncMock()
+    monkeypatch.setattr(sentinel, "_persist_event", persist_mock)
+
+    analysis = await sentinel.evaluate_daily_prices("AAPL", [price, unmatched])
+
+    assert analysis[dt] is result
+    assert unmatched.iso_anomaly_score is None
+    persist_mock.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_evaluate_daily_prices_persists_only_non_normal(monkeypatch: pytest.MonkeyPatch) -> None:
+    dt = datetime(2024, 2, 6, tzinfo=UTC)
+    severe = AnomalyResult(
+        timestamp=dt,
+        iso_score=0.8,
+        prophet_score=None,
+        price_change_pct=2.0,
+        volume_z_score=2.5,
+        severity=SeverityLevel.HIGH,
+        anomaly_type="gap",
+        reasons=[],
+    )
+    normal = AnomalyResult(
+        timestamp=datetime(2024, 2, 7, tzinfo=UTC),
+        iso_score=0.1,
+        prophet_score=None,
+        price_change_pct=0.1,
+        volume_z_score=0.1,
+        severity=SeverityLevel.NORMAL,
+        anomaly_type="stable",
+        reasons=[],
+    )
+
+    mock_detector = MagicMock()
+    mock_detector.score_daily_prices.return_value = {
+        severe.timestamp: severe,
+        normal.timestamp: normal,
+    }
+
+    sentinel = DataQualitySentinel(anomaly_detector=mock_detector)
+    persist_mock = AsyncMock()
+    monkeypatch.setattr(sentinel, "_persist_event", persist_mock)
+
+    await sentinel.evaluate_daily_prices("AAPL", [_make_price_point(dt), _make_price_point(normal.timestamp)])
+
+    persist_mock.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_get_recent_summary_respects_limit(monkeypatch: pytest.MonkeyPatch) -> None:
+    StubDataQualityEvent.reset()
+    StubDataQualityEvent.find_results = [
+        SimpleNamespace(
+            symbol="AAPL",
+            data_type="daily",
+            occurred_at=datetime(2024, 2, 1, tzinfo=UTC),
+            severity=SeverityLevel.HIGH,
+            iso_score=0.9,
+            prophet_score=None,
+            price_change_pct=2.2,
+            volume_z_score=2.1,
+            message="High",
+            metadata={},
+        ),
+        SimpleNamespace(
+            symbol="MSFT",
+            data_type="daily",
+            occurred_at=datetime(2024, 2, 2, tzinfo=UTC),
+            severity=SeverityLevel.MEDIUM,
+            iso_score=0.4,
+            prophet_score=None,
+            price_change_pct=1.1,
+            volume_z_score=0.9,
+            message="Medium",
+            metadata={},
+        ),
+    ]
+    StubDataQualityEvent.aggregate_results = []
+    monkeypatch.setattr(data_quality_sentinel, "DataQualityEvent", StubDataQualityEvent)
+
+    sentinel = DataQualitySentinel()
+    summary = await sentinel.get_recent_summary(lookback_hours=48, limit=1)
+
+    assert len(summary.recent_alerts) == 1
+
+
+@pytest.mark.asyncio
+async def test_persist_event_uses_custom_data_type(monkeypatch: pytest.MonkeyPatch) -> None:
+    StubDataQualityEvent.reset()
+    StubDataQualityEvent.find_one_result = None
+    monkeypatch.setattr(data_quality_sentinel, "DataQualityEvent", StubDataQualityEvent)
+
+    sentinel = DataQualitySentinel(data_type="weekly")
+    dispatch_mock = AsyncMock()
+    monkeypatch.setattr(sentinel, "_dispatch_webhook", dispatch_mock)
+
+    result = AnomalyResult(
+        timestamp=datetime(2024, 2, 8, tzinfo=UTC),
+        iso_score=0.85,
+        prophet_score=0.5,
+        price_change_pct=1.8,
+        volume_z_score=1.4,
+        severity=SeverityLevel.CRITICAL,
+        anomaly_type="swing",
+        reasons=["iso"],
+    )
+
+    await sentinel._persist_event("NFLX", result, source="analysis")
+
+    inserted = StubDataQualityEvent.inserted_instances[0]
+    assert inserted.data_type == "weekly"
+    dispatch_mock.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_persist_event_updates_existing_without_reasons(monkeypatch: pytest.MonkeyPatch) -> None:
+    StubDataQualityEvent.reset()
+
+    class Existing:
+        def __init__(self) -> None:
+            self.symbol = "AAPL"
+            self.data_type = "daily"
+            self.occurred_at = datetime(2024, 2, 9, tzinfo=UTC)
+            self.anomaly_type = "swing"
+            self.severity = SeverityLevel.MEDIUM
+            self.metadata = {"reasons": ["old"]}
+            self._saved = 0
+
+        async def save(self) -> None:
+            self._saved += 1
+
+    StubDataQualityEvent.find_one_result = Existing()
+    monkeypatch.setattr(data_quality_sentinel, "DataQualityEvent", StubDataQualityEvent)
+
+    sentinel = DataQualitySentinel()
+    dispatch_mock = AsyncMock()
+    monkeypatch.setattr(sentinel, "_dispatch_webhook", dispatch_mock)
+
+    result = AnomalyResult(
+        timestamp=datetime(2024, 2, 9, tzinfo=UTC),
+        iso_score=0.6,
+        prophet_score=None,
+        price_change_pct=0.9,
+        volume_z_score=0.7,
+        severity=SeverityLevel.LOW,
+        anomaly_type="swing",
+        reasons=None,
+    )
+
+    await sentinel._persist_event("AAPL", result, source="analysis")
+
+    existing = StubDataQualityEvent.find_one_result
+    assert existing.metadata == {"reasons": None}
+    assert existing._saved == 1
+    dispatch_mock.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_get_recent_summary_constructs_lookback_query(monkeypatch: pytest.MonkeyPatch) -> None:
+    StubDataQualityEvent.reset()
+    StubDataQualityEvent.find_results = []
+    monkeypatch.setattr(data_quality_sentinel, "DataQualityEvent", StubDataQualityEvent)
+
+    sentinel = DataQualitySentinel()
+    await sentinel.get_recent_summary(lookback_hours=6, limit=1)
+
+    query = StubDataQualityEvent.find_calls[0]
+    assert "occurred_at" in query
+    assert "$gte" in query["occurred_at"]
+
+
+@pytest.mark.asyncio
+async def test_evaluate_daily_prices_returns_mapping(monkeypatch: pytest.MonkeyPatch) -> None:
+    dt = datetime(2024, 2, 10, tzinfo=UTC)
+    price = _make_price_point(dt)
+    result = AnomalyResult(
+        timestamp=dt,
+        iso_score=0.7,
+        prophet_score=None,
+        price_change_pct=1.2,
+        volume_z_score=1.1,
+        severity=SeverityLevel.MEDIUM,
+        anomaly_type="spike",
+        reasons=["volume"],
+    )
+
+    mock_detector = MagicMock()
+    mock_detector.score_daily_prices.return_value = {dt: result}
+
+    sentinel = DataQualitySentinel(anomaly_detector=mock_detector)
+    monkeypatch.setattr(sentinel, "_persist_event", AsyncMock())
+
+    mapping = await sentinel.evaluate_daily_prices("AAPL", [price])
+
+    assert mapping is mock_detector.score_daily_prices.return_value
+
+
+@pytest.mark.asyncio
+async def test_dispatch_webhook_includes_data_type(monkeypatch: pytest.MonkeyPatch) -> None:
+    sentinel = DataQualitySentinel()
+    monkeypatch.setattr(
+        data_quality_sentinel.settings,
+        "DATA_QUALITY_WEBHOOK_URL",
+        "https://example.com/alert",
+    )
+
+    captured: Dict[str, Any] = {}
+
+    class DummyResponse:
+        def raise_for_status(self) -> None:
+            return None
+
+    class DummyClient:
+        def __init__(self, *_args: Any, **_kwargs: Any) -> None:
+            return None
+
+        async def __aenter__(self) -> "DummyClient":
+            return self
+
+        async def __aexit__(self, *_args: Any) -> None:
+            return None
+
+        async def post(self, url: str, json: Dict[str, Any]) -> DummyResponse:
+            captured.update(json)
+            captured["url"] = url
+            return DummyResponse()
+
+    monkeypatch.setattr(data_quality_sentinel.httpx, "AsyncClient", DummyClient)
+
+    event = SimpleNamespace(
+        symbol="AAPL",
+        severity=SeverityLevel.LOW,
+        occurred_at=datetime(2024, 2, 11, tzinfo=UTC),
+        data_type="weekly",
+        message="Alert",
+        iso_score=0.3,
+        prophet_score=None,
+        price_change_pct=0.3,
+        volume_z_score=0.2,
+        metadata={},
+    )
+
+    await sentinel._dispatch_webhook(event)
+
+    assert captured["data_type"] == "weekly"
+    assert captured["url"] == "https://example.com/alert"

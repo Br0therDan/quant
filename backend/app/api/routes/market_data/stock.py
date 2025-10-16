@@ -175,7 +175,10 @@ async def get_daily_prices(
             frequency="daily",
         )
 
+    except HTTPException:
+        raise
     except Exception as e:
+        logger.exception("Failed to fetch daily prices")
         raise HTTPException(status_code=500, detail=f"주식 데이터 조회 중 오류 발생: {str(e)}")
 
 
@@ -287,7 +290,10 @@ async def get_weekly_prices(
             frequency="weekly",
         )
 
+    except HTTPException:
+        raise
     except Exception as e:
+        logger.exception("Failed to fetch weekly prices")
         raise HTTPException(status_code=500, detail=f"주간 데이터 조회 중 오류 발생: {str(e)}")
 
 
@@ -399,7 +405,10 @@ async def get_monthly_prices(
             frequency="monthly",
         )
 
+    except HTTPException:
+        raise
     except Exception as e:
+        logger.exception("Failed to fetch monthly prices")
         raise HTTPException(status_code=500, detail=f"월간 데이터 조회 중 오류 발생: {str(e)}")
 
 

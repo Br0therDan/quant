@@ -54,6 +54,8 @@ async def get_company_overview(
             },
         }
 
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"기업 개요 조회 중 오류 발생: {str(e)}")
 
@@ -96,6 +98,8 @@ async def get_income_statement(
             },
         }
 
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"손익계산서 조회 중 오류 발생: {str(e)}")
 
@@ -138,6 +142,8 @@ async def get_balance_sheet(
             },
         }
 
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"재무상태표 조회 중 오류 발생: {str(e)}")
 
@@ -180,6 +186,8 @@ async def get_cash_flow(
             },
         }
 
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"현금흐름표 조회 중 오류 발생: {str(e)}")
 
@@ -195,11 +203,21 @@ async def get_earnings(symbol: str = Path(..., description="종목 심볼 (예: 
         market_service = service_factory.get_market_data_service()
         earnings = await market_service.fundamental.get_earnings(symbol=symbol.upper())
 
+        serialized_earnings = [earning.model_dump() for earning in earnings]
+        quarterly_earnings = [
+            item
+            for item in serialized_earnings
+            if item.get("estimated_eps") is not None
+            or item.get("surprise") is not None
+        ]
+
+        payload = quarterly_earnings or serialized_earnings
+
         return {
             "success": True,
             "message": f"{symbol.upper()}의 실적 발표 데이터를 성공적으로 조회했습니다.",
-            "data": [earning.model_dump() for earning in earnings],
-            "count": len(earnings),
+            "data": payload,
+            "count": len(payload),
             "metadata": {
                 "data_quality": {
                     "quality_score": 95.0,
@@ -217,5 +235,7 @@ async def get_earnings(symbol: str = Path(..., description="종목 심볼 (예: 
             },
         }
 
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"실적 데이터 조회 중 오류 발생: {str(e)}")

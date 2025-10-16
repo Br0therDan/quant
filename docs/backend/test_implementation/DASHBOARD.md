@@ -106,14 +106,14 @@
 
 #### Sprint 2.1: Market Data Services 테스트 (5일)
 
-- [ ] **Task 2.1.1**: StockService 테스트 (1일) - 20 tests
-- [ ] **Task 2.1.2**: FundamentalService 테스트 (1일) - 15 tests
-- [ ] **Task 2.1.3**: EconomicService 테스트 (1일) - 15 tests
-- [ ] **Task 2.1.4**: DataQualitySentinel 테스트 (1일) - 20 tests
-- [ ] **Task 2.1.5**: Market Data API 테스트 보완 (1일) - 25 tests
+- [x] **Task 2.1.1**: StockService 테스트 (1일) - 20 tests
+- [x] **Task 2.1.2**: FundamentalService 테스트 (1일) - 15 tests
+- [x] **Task 2.1.3**: EconomicService 테스트 (1일) - 15 tests
+- [x] **Task 2.1.4**: DataQualitySentinel 테스트 (1일) - 20 tests
+- [x] **Task 2.1.5**: Market Data API 테스트 보완 (1일) - 25 tests
 
-**진행률**: 0/5 Tasks (0%)  
-**예상 테스트**: 95개
+**진행률**: 5/5 Tasks (100%) ✅
+**예상 테스트**: 95개 (완료)
 
 #### Sprint 2.2: Infrastructure 테스트 (5일)
 
