@@ -117,10 +117,55 @@ class StrategyService:
         if not strategy or not strategy.is_active:
             return None
 
+        # config가 None이면 기본값으로 생성
+        config = strategy.config
+        if config is None:
+            from app.strategies.configs import (
+                SMACrossoverConfig,
+                RSIMeanReversionConfig,
+                MomentumConfig,
+                BuyAndHoldConfig,
+            )
+            from app.schemas.enums import StrategyType
+
+            common_defaults = {
+                "lookback_period": 252,
+                "min_data_points": 30,
+                "max_position_size": 1.0,
+            }
+
+            if strategy.strategy_type == StrategyType.SMA_CROSSOVER:
+                config = SMACrossoverConfig(
+                    config_type="sma_crossover",
+                    **common_defaults,
+                    short_window=20,
+                    long_window=50,
+                )
+            elif strategy.strategy_type == StrategyType.RSI_MEAN_REVERSION:
+                config = RSIMeanReversionConfig(
+                    config_type="rsi_mean_reversion",
+                    **common_defaults,
+                    rsi_period=14,
+                    oversold_threshold=30,
+                    overbought_threshold=70,
+                )
+            elif strategy.strategy_type == StrategyType.MOMENTUM:
+                config = MomentumConfig(
+                    config_type="momentum",
+                    **common_defaults,
+                    momentum_period=20,
+                )
+            else:
+                config = BuyAndHoldConfig(
+                    config_type="buy_and_hold",
+                    **common_defaults,
+                )
+
         return await self._executor.execute_strategy(
             strategy_id=strategy_id,
             strategy_name=strategy.name,
             strategy_type=strategy.strategy_type,
+            config=config,
             is_active=strategy.is_active,
             symbol=symbol,
             market_data=market_data,

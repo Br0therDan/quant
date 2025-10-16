@@ -130,7 +130,7 @@ function ReactFinancialChart({
 	const xScaleProvider = useMemo(
 		() =>
 			discontinuousTimeScaleProviderBuilder().inputDateAccessor(
-				(d: ProcessedData) => d.date,
+				(d: ProcessedData) => d?.date || new Date(),
 			),
 		[],
 	);
@@ -155,21 +155,30 @@ function ReactFinancialChart({
 					volume: d.volume || 0,
 				};
 			})
+			.filter((d) => d.date && !Number.isNaN(d.date.getTime())) // null/invalid date 제거
 			.sort((a, b) => a.date.getTime() - b.date.getTime());
 
 		// 차트 타입별 데이터 변환
 		if (chartType === "heikinAshi") {
 			const heikinAshiCalculator = heikinAshi();
-			processed = heikinAshiCalculator(processed);
+			processed = heikinAshiCalculator(processed).filter(
+				(d: ProcessedData | null) => d?.date,
+			);
 		} else if (chartType === "renko") {
 			const renkoCalculator = renko();
-			processed = renkoCalculator(processed);
+			processed = renkoCalculator(processed).filter(
+				(d: ProcessedData | null) => d?.date,
+			);
 		} else if (chartType === "kagi") {
 			const kagiCalculator = kagi();
-			processed = kagiCalculator(processed);
+			processed = kagiCalculator(processed).filter(
+				(d: ProcessedData | null) => d?.date,
+			);
 		} else if (chartType === "pointAndFigure") {
 			const pnfCalculator = pointAndFigure();
-			processed = pnfCalculator(processed);
+			processed = pnfCalculator(processed).filter(
+				(d: ProcessedData | null) => d?.date,
+			);
 		}
 
 		// EMA 지표 (StockChart 패턴 적용)

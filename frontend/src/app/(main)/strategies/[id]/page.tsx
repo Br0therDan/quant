@@ -4,7 +4,11 @@ import type { StrategyExecute } from "@/client";
 import PageContainer from "@/components/layout/PageContainer";
 import StrategyParameters from "@/components/strategies/StrategyParameters";
 import StrategyPerformanceSummary from "@/components/strategies/StrategyPerformanceSummary";
-import { useStrategy, useStrategyDetail } from "@/hooks/useStrategy";
+import {
+	useStrategy,
+	useStrategyDetail,
+	useStrategyPerformance,
+} from "@/hooks/useStrategy";
 import {
 	Delete,
 	Edit,
@@ -48,6 +52,13 @@ export default function StrategyDetailPage() {
 
 	// 전략 데이터 조회
 	const { strategy, isLoading, error } = useStrategyDetail(strategyId);
+
+	// 전략 성과 데이터 조회
+	const {
+		data: performanceData,
+		isLoading: isPerformanceLoading,
+		error: performanceError,
+	} = useStrategyPerformance(strategyId);
 
 	// 전략 관리 액션들
 	const { deleteStrategy, executeStrategy, isMutating } = useStrategy();
@@ -265,23 +276,44 @@ export default function StrategyDetailPage() {
 
 				{/* 성과 요약 */}
 				<Grid size={{ xs: 12, md: 4 }}>
-					<StrategyPerformanceSummary
-						strategyName={strategy.name}
-						strategyType={strategy.strategy_type}
-						performance={{
-							// 실제 성과 데이터가 있다면 여기에 표시
-							total_return: 12.5,
-							annual_return: 8.3,
-							sharpe_ratio: 1.2,
-							max_drawdown: -15.2,
-							volatility: 18.5,
-							win_rate: 65.0,
-							total_trades: 45,
-							profit_factor: 1.8,
-						}}
-						period="1Y"
-					/>
-
+					{isPerformanceLoading ? (
+						<Card>
+							<CardContent>
+								<Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
+									<CircularProgress size={40} />
+								</Box>
+							</CardContent>
+						</Card>
+					) : performanceError ? (
+						<Alert severity="info">
+							성과 데이터를 불러올 수 없습니다. 전략을 먼저 실행해주세요.
+						</Alert>
+					) : performanceData ? (
+						<StrategyPerformanceSummary
+							strategyName={strategy.name}
+							strategyType={strategy.strategy_type}
+							performance={{
+								total_return: performanceData.total_return || 0,
+								annual_return: performanceData.avg_return_per_trade
+									? performanceData.avg_return_per_trade * 252
+									: 0, // 거래당 평균 수익률 * 252 영업일
+								sharpe_ratio: performanceData.sharpe_ratio || 0,
+								max_drawdown: performanceData.max_drawdown || 0,
+								volatility: performanceData.volatility || 0,
+								win_rate: performanceData.win_rate || 0,
+								total_trades: performanceData.total_signals || 0,
+								profit_factor:
+									performanceData.buy_signals && performanceData.sell_signals
+										? performanceData.buy_signals / performanceData.sell_signals
+										: 0,
+							}}
+							period="ALL"
+						/>
+					) : (
+						<Alert severity="info">
+							성과 데이터가 없습니다. 전략을 먼저 실행해주세요.
+						</Alert>
+					)}{" "}
 					<Card sx={{ mt: 3 }}>
 						<CardContent>
 							<Typography variant="h6" sx={{ mb: 2 }}>

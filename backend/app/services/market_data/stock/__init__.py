@@ -240,7 +240,11 @@ class StockService(BaseStockService):
 
             # 첫 번째 요소 반환 (단일 호가 데이터)
             if results and len(results) > 0:
-                return results[0]
+                result = results[0]
+                # dict인 경우 QuoteData로 변환
+                if isinstance(result, dict):
+                    return QuoteData(**result)
+                return result
             else:
                 return await self._fetcher.fetch_quote(symbol)
 

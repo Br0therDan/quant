@@ -6,6 +6,8 @@ import logging
 from datetime import datetime, timezone
 from typing import Any
 
+import pandas as pd
+
 from app.core.config import get_settings
 from app.models.trading.strategy import (
     SignalType,
@@ -13,7 +15,10 @@ from app.models.trading.strategy import (
     StrategyType,
     StrategyConfigUnion,
 )
+from app.models.trading.backtest import BacktestConfig, Trade, TradeType, OrderType
 from app.utils.validators.strategy import StrategyValidator
+from app.services.backtest.trade_engine import TradeEngine
+from app.services.backtest.performance import PerformanceAnalyzer
 
 try:
     from app.strategies.buy_and_hold import BuyAndHoldStrategy
@@ -63,6 +68,7 @@ class StrategyExecutor:
         strategy_id: str,
         strategy_name: str,
         strategy_type: StrategyType,
+        config: StrategyConfigUnion,
         is_active: bool,
         symbol: str,
         market_data: dict[str, Any],
@@ -73,9 +79,10 @@ class StrategyExecutor:
             strategy_id: Strategy ID
             strategy_name: Strategy name
             strategy_type: Strategy type
+            config: Strategy configuration
             is_active: Whether strategy is active
             symbol: Trading symbol
-            market_data: Market data for signal generation
+            market_data: Market data dict with start_date, end_date
 
         Returns:
             StrategyExecution if successful, None otherwise
@@ -88,30 +95,259 @@ class StrategyExecutor:
             return None
 
         try:
-            # Get strategy class
-            strategy_class = self.strategy_classes.get(strategy_type)
-            if not strategy_class:
-                logger.error(f"Strategy class not found for type: {strategy_type}")
+            # Get strategy instance
+            strategy_instance = await self.get_strategy_instance(
+                strategy_type=strategy_type,
+                config=config,
+            )
+
+            if not strategy_instance:
+                logger.error(f"Failed to create strategy instance for {strategy_type}")
                 return None
 
-            # Mock signal generation (would use real market data in production)
-            signal_type = SignalType.HOLD  # Default
-            signal_strength = 0.5
+            # Fetch market data from MarketDataService
+            from app.services.service_factory import service_factory
+
+            market_data_service = service_factory.get_market_data_service()
+            stock_service = market_data_service.stock
+
+            start_date_str = market_data.get("start_date")
+            end_date_str = market_data.get("end_date")
+
+            if not start_date_str or not end_date_str:
+                logger.error("Missing start_date or end_date in market_data")
+                return None
+
+            # Parse dates (ensure timezone-naive by extracting date part only)
+            # Extract YYYY-MM-DD only (ignore time and timezone)
+            start_date_only = (
+                start_date_str.split("T")[0]
+                if "T" in start_date_str
+                else start_date_str[:10]
+            )
+            end_date_only = (
+                end_date_str.split("T")[0] if "T" in end_date_str else end_date_str[:10]
+            )
+
+            # Parse as naive datetime
+            start_date = datetime.strptime(start_date_only, "%Y-%m-%d")
+            end_date = datetime.strptime(end_date_only, "%Y-%m-%d")
+
+            # Fetch stock data
+            stock_data = await stock_service.get_daily_prices(
+                symbol=symbol,
+                outputsize="full",  # Get all available data
+                adjusted=True,
+            )
+
+            if not stock_data or len(stock_data) == 0:
+                logger.error(f"No market data available for {symbol}")
+                return None
+
+            # Convert to DataFrame and filter by date range
+            # Force all dates to be timezone-naive by converting to string first
+            records = []
+            for d in stock_data:
+                # Convert date to string, then parse as naive datetime
+                date_value = d.date
+                if isinstance(date_value, str):
+                    # Already a string, parse it
+                    date_str = date_value[:10]  # Get YYYY-MM-DD
+                else:
+                    # Convert datetime to string, strip timezone
+                    date_str = date_value.strftime("%Y-%m-%d")
+
+                records.append(
+                    {
+                        "date_str": date_str,  # Store as string temporarily
+                        "open": d.open,
+                        "high": d.high,
+                        "low": d.low,
+                        "close": d.close,
+                        "volume": d.volume,
+                        "symbol": symbol,
+                    }
+                )
+
+            df = pd.DataFrame(records)
+
+            # Convert string dates to timezone-naive datetime
+            if not df.empty:
+                df["timestamp"] = pd.to_datetime(df["date_str"], format="%Y-%m-%d")
+                df = df.drop(columns=["date_str"])
+
+            logger.info(f"DataFrame created with {len(df)} records for {symbol}")
+            logger.info(f"Date range filter: {start_date_only} to {end_date_only}")
+
+            # Filter by date range (use string comparison to avoid timezone issues)
+            df["date_str_temp"] = df["timestamp"].dt.strftime("%Y-%m-%d")
+            df = df[
+                (df["date_str_temp"] >= start_date_only)
+                & (df["date_str_temp"] <= end_date_only)
+            ]
+            df = df.drop(columns=["date_str_temp"])
+
+            if df.empty:
+                logger.error(
+                    f"No data in date range for {symbol}: {start_date} to {end_date}"
+                )
+                return None
+
+            # Set timestamp as index
+            df.set_index("timestamp", inplace=True)
+            df.sort_index(inplace=True)
+
+            # ============================================================
+            # STEP 1: Generate signals using strategy
+            # ============================================================
+            signals = strategy_instance.generate_signals(df)
+
+            if not signals or len(signals) == 0:
+                logger.warning(f"No signals generated for {symbol}")
+                # Return HOLD signal
+                signal_type = SignalType.HOLD
+                signal_strength = 0.5
+                price = float(df["close"].iloc[-1]) if not df.empty else 100.0
+            else:
+                # Use the latest signal
+                latest_signal = signals[-1]
+                signal_type = latest_signal.signal_type
+                signal_strength = latest_signal.strength
+                price = float(latest_signal.price)
+
+            # ============================================================
+            # STEP 2: TradeEngine - Simulate trades based on signals
+            # ============================================================
+            trade_engine_config = BacktestConfig(
+                name=f"Strategy Execution - {strategy_name}",
+                start_date=start_date,
+                end_date=end_date,
+                symbols=[symbol],
+                initial_cash=100000.0,  # 기본 초기 자금
+                commission_rate=0.001,  # 0.1% 수수료
+                slippage_rate=0.0005,  # 0.05% 슬리피지
+                rebalance_frequency=None,
+            )
+            trade_engine = TradeEngine(config=trade_engine_config)
+
+            executed_trades: list[Trade] = []
+            portfolio_values: list[float] = [trade_engine_config.initial_cash]
+
+            # 신호 기반 거래 시뮬레이션
+            for idx, signal in enumerate(signals):
+                if signal.signal_type == SignalType.BUY and signal.strength > 0.6:
+                    # 매수 신호 (강도 > 0.6)
+                    # 사용 가능 자금의 일정 비율 투자
+                    investment_ratio = signal.strength  # 신호 강도만큼 투자
+                    max_investment = trade_engine.portfolio.cash * investment_ratio
+                    quantity = max_investment / signal.price * 0.95  # 수수료 고려
+
+                    trade = trade_engine.execute_order(
+                        symbol=symbol,
+                        quantity=quantity,
+                        price=signal.price,
+                        order_type=OrderType.MARKET,
+                        trade_type=TradeType.BUY,
+                        timestamp=signal.timestamp,
+                        signal_id=f"{strategy_id}_{idx}",
+                    )
+                    if trade:
+                        executed_trades.append(trade)
+
+                elif signal.signal_type == SignalType.SELL and signal.strength > 0.6:
+                    # 매도 신호 (강도 > 0.6)
+                    current_position = trade_engine.portfolio.positions.get(symbol, 0.0)
+                    if current_position > 0:
+                        sell_quantity = current_position * signal.strength  # 신호 강도만큼 매도
+
+                        trade = trade_engine.execute_order(
+                            symbol=symbol,
+                            quantity=sell_quantity,
+                            price=signal.price,
+                            order_type=OrderType.MARKET,
+                            trade_type=TradeType.SELL,
+                            timestamp=signal.timestamp,
+                            signal_id=f"{strategy_id}_{idx}",
+                        )
+                        if trade:
+                            executed_trades.append(trade)
+
+                # 포트폴리오 가치 기록
+                current_value = trade_engine.portfolio.cash
+                for (
+                    pos_symbol,
+                    pos_quantity,
+                ) in trade_engine.portfolio.positions.items():
+                    if pos_symbol == symbol:
+                        current_value += pos_quantity * signal.price
+                portfolio_values.append(current_value)
+
+            # ============================================================
+            # STEP 3: PerformanceAnalyzer - Calculate performance metrics
+            # ============================================================
+            performance_analyzer = PerformanceAnalyzer()
+            performance_metrics = await performance_analyzer.calculate_metrics(
+                portfolio_values=portfolio_values,
+                trades=executed_trades,
+                initial_capital=trade_engine_config.initial_cash,
+                benchmark_returns=None,
+            )
+
+            # ============================================================
+            # STEP 4: RiskAnalyzer - Analyze risk (basic implementation)
+            # ============================================================
+            # 간단한 리스크 지표 계산
+            max_drawdown = performance_metrics.max_drawdown
+            volatility = performance_metrics.volatility
+            sharpe_ratio = performance_metrics.sharpe_ratio
+
+            risk_assessment = (
+                "LOW"
+                if max_drawdown < 0.1
+                else "MEDIUM"
+                if max_drawdown < 0.2
+                else "HIGH"
+            )
 
             # 신호 강도 검증
             signal_strength = StrategyValidator.validate_signal_strength(
                 signal_strength
             )
 
+            # ============================================================
+            # STEP 5: Save execution result with performance metrics
+            # ============================================================
             execution = StrategyExecution(
                 strategy_id=strategy_id,
                 strategy_name=strategy_name,
                 symbol=symbol,
                 signal_type=signal_type,
                 signal_strength=signal_strength,
-                price=market_data.get("close", 100.0),  # Mock price
+                price=price,  # Latest signal price
                 timestamp=datetime.now(timezone.utc),
-                metadata=market_data,
+                metadata={
+                    "start_date": start_date_str,
+                    "end_date": end_date_str,
+                    "data_points": len(df),
+                    "signal_count": len(signals) if signals else 0,
+                    # TradeEngine 결과
+                    "trades_executed": len(executed_trades),
+                    "final_portfolio_value": (
+                        portfolio_values[-1] if portfolio_values else 0.0
+                    ),
+                    # PerformanceAnalyzer 결과
+                    "total_return": float(performance_metrics.total_return),
+                    "sharpe_ratio": float(sharpe_ratio) if sharpe_ratio else 0.0,
+                    "max_drawdown": float(max_drawdown) if max_drawdown else 0.0,
+                    "volatility": float(volatility) if volatility else 0.0,
+                    "win_rate": (
+                        float(performance_metrics.win_rate)
+                        if performance_metrics.win_rate
+                        else 0.0
+                    ),
+                    # RiskAnalyzer 결과
+                    "risk_assessment": risk_assessment,
+                },
                 backtest_id=None,  # 단독 실행의 경우 None
             )
 

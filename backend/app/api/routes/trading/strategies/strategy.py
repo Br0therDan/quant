@@ -21,8 +21,48 @@ from app.schemas.trading.strategy import (
 )
 from app.services.service_factory import service_factory
 from app.services.trading.strategy_service import StrategyService
+from app.strategies.configs import (
+    SMACrossoverConfig,
+    RSIMeanReversionConfig,
+    MomentumConfig,
+    BuyAndHoldConfig,
+)
 
 router = APIRouter(dependencies=[Depends(get_current_active_verified_user)])
+
+
+def _build_config_from_parameters(strategy_type: StrategyType, parameters: dict):
+    """parameters dict를 타입별 Config 객체로 변환"""
+    common_defaults = {
+        "lookback_period": 252,
+        "min_data_points": 30,
+        "max_position_size": 1.0,
+    }
+
+    if strategy_type == StrategyType.SMA_CROSSOVER:
+        return SMACrossoverConfig(
+            config_type="sma_crossover",
+            **common_defaults,
+            **parameters,
+        )
+    elif strategy_type == StrategyType.RSI_MEAN_REVERSION:
+        return RSIMeanReversionConfig(
+            config_type="rsi_mean_reversion",
+            **common_defaults,
+            **parameters,
+        )
+    elif strategy_type == StrategyType.MOMENTUM:
+        return MomentumConfig(
+            config_type="momentum",
+            **common_defaults,
+            **parameters,
+        )
+    elif strategy_type == StrategyType.BUY_AND_HOLD:
+        return BuyAndHoldConfig(
+            config_type="buy_and_hold",
+            **common_defaults,
+            **parameters,
+        )
 
 
 async def get_strategy_service() -> AsyncGenerator[StrategyService, None]:
@@ -42,11 +82,21 @@ async def create_strategy(
 ):
     """Create a new strategy"""
     try:
+        # parameters를 config로 변환 (하위 호환성)
+        config = request.config
+        if config is None and request.parameters:
+            config = _build_config_from_parameters(
+                request.strategy_type, request.parameters
+            )
+        elif config is None:
+            # 둘 다 없으면 기본값으로 config 생성
+            config = _build_config_from_parameters(request.strategy_type, {})
+
         strategy = await service.create_strategy(
             name=request.name,
             strategy_type=request.strategy_type,
             description=request.description,
-            parameters=request.parameters,
+            config=config,
             tags=(
                 [tag for tag in request.tags if tag is not None]
                 if request.tags
@@ -60,7 +110,7 @@ async def create_strategy(
             name=strategy.name,
             strategy_type=strategy.strategy_type,
             description=strategy.description,
-            parameters=strategy.parameters,
+            config=strategy.config,
             is_active=strategy.is_active,
             is_template=strategy.is_template,
             created_by=strategy.created_by,
@@ -100,7 +150,7 @@ async def get_strategies(
                 name=strategy.name,
                 strategy_type=strategy.strategy_type,
                 description=strategy.description,
-                parameters=strategy.parameters,
+                config=strategy.config,
                 is_active=strategy.is_active,
                 is_template=strategy.is_template,
                 created_by=strategy.created_by,
@@ -142,7 +192,7 @@ async def get_strategy(
             name=strategy.name,
             strategy_type=strategy.strategy_type,
             description=strategy.description,
-            parameters=strategy.parameters,
+            config=strategy.config,
             is_active=strategy.is_active,
             is_template=strategy.is_template,
             created_by=strategy.created_by,
@@ -180,7 +230,7 @@ async def update_strategy(
             strategy_id=strategy_id,
             name=request.name,
             description=request.description,
-            parameters=request.parameters,
+            config=request.config,
             is_active=request.is_active,
             tags=(
                 [tag for tag in request.tags if tag is not None]
@@ -197,7 +247,7 @@ async def update_strategy(
             name=strategy.name,
             strategy_type=strategy.strategy_type,
             description=strategy.description,
-            parameters=strategy.parameters,
+            config=strategy.config,
             is_active=strategy.is_active,
             is_template=strategy.is_template,
             created_by=strategy.created_by,

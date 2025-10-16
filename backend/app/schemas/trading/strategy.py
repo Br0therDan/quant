@@ -17,9 +17,15 @@ class StrategyCreate(BaseSchema):
     name: str = Field(..., description="전략 이름")
     strategy_type: StrategyType = Field(..., description="전략 타입")
     description: str | None = Field(None, description="전략 설명")
-    config: StrategyConfigUnion = Field(
-        ..., description="전략 설정 (타입 안전)", discriminator="config_type"
+
+    # config 또는 parameters 중 하나 제공 (하위 호환성)
+    config: StrategyConfigUnion | None = Field(
+        None, description="전략 설정 (타입 안전)", discriminator="config_type"
     )
+    parameters: dict[str, Any] | None = Field(
+        None, description="전략 파라미터 (레거시, config로 자동 변환됨)"
+    )
+
     tags: list[str] = Field(default_factory=list, description="태그")
 
 
@@ -83,8 +89,8 @@ class StrategyResponse(BaseSchema):
     name: str = Field(..., description="전략 이름")
     strategy_type: StrategyType = Field(..., description="전략 타입")
     description: str | None = Field(None, description="전략 설명")
-    config: StrategyConfigUnion = Field(
-        ..., description="전략 설정 (타입 안전)", discriminator="config_type"
+    config: StrategyConfigUnion | None = Field(
+        None, description="전략 설정 (타입 안전)", discriminator="config_type"
     )
     is_active: bool = Field(..., description="활성화 상태")
     is_template: bool = Field(..., description="템플릿 여부")

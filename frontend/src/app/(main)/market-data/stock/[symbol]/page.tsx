@@ -1,8 +1,8 @@
 "use client";
 
 import LoadingSpinner from "@/components/common/LoadingSpinner";
-import DataQualityIndicator from "@/components/market-data/DataQualityIndicator";
-import DataStatusCard from "@/components/market-data/DataStatusCard";
+// import DataQualityIndicator from "@/components/market-data/DataQualityIndicator";
+// import DataStatusCard from "@/components/market-data/DataStatusCard";
 import SymbolOverviewHeader from "@/components/market-data/OverviewHeader";
 import ReactFinancialChart from "@/components/market-data/ReactFinancialChart";
 import SymbolTabs from "@/components/market-data/SymbolTabs";
@@ -207,7 +207,7 @@ export default function SymbolOverviewPage() {
 				</Grid>
 
 				{/* 데이터 상태 섹션 */}
-				<Grid size={{ xs: 12, md: 6 }}>
+				{/* <Grid size={{ xs: 12, md: 6 }}>
 					<DataStatusCard
 						symbol={symbol}
 						coverageData={coverageData}
@@ -216,9 +216,9 @@ export default function SymbolOverviewPage() {
 						}}
 						isLoading={coverageLoading || isCollecting}
 					/>
-				</Grid>
+				</Grid> */}
 
-				<Grid size={{ xs: 12, md: 6 }}>
+				{/* <Grid size={{ xs: 12, md: 6 }}>
 					<DataQualityIndicator
 						metrics={
 							coverageData
@@ -267,7 +267,7 @@ export default function SymbolOverviewPage() {
 						}
 						isLoading={coverageLoading}
 					/>
-				</Grid>
+				</Grid> */}
 
 				{/* 예정된 실적 발표 섹션 */}
 				<Grid size={12}>

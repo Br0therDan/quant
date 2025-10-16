@@ -8,6 +8,12 @@ from pathlib import Path
 from typing import Any
 
 from app.models.trading.strategy import StrategyTemplate, StrategyType
+from app.strategies.configs import (
+    SMACrossoverConfig,
+    RSIMeanReversionConfig,
+    MomentumConfig,
+    BuyAndHoldConfig,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -73,18 +79,19 @@ class TemplateSeeder:
                 f"Difficulty value: {template_data.get('difficulty', 'NOT_FOUND')}"
             )
 
+            # parameters를 config_type을 포함한 default_config로 변환
+            parameters = template_data.get("parameters", {})
+            default_config = self._build_default_config(strategy_type, parameters)
+
             # Create new template
             template = StrategyTemplate(
                 name=template_data["name"],
                 strategy_type=strategy_type,
                 description=template_data["description"],
-                default_parameters=template_data["parameters"],
+                default_config=default_config,
                 tags=template_data.get("tags", []),
-                category=template_data.get("category", "trading"),  # 기본 카테고리 추가
-                difficulty=template_data.get("difficulty", "intermediate"),  # 기본 난이도 추가
-                parameter_schema=self._generate_parameter_schema(
-                    strategy_type, template_data["parameters"]
-                ),
+                category=template_data.get("category", "trading"),
+                difficulty=template_data.get("difficulty", "intermediate"),
             )
 
             await template.insert()
@@ -97,75 +104,44 @@ class TemplateSeeder:
         except Exception as e:
             logger.error(f"Unexpected error seeding template {filename}: {e}")
 
-    def _generate_parameter_schema(
+    def _build_default_config(
         self, strategy_type: StrategyType, parameters: dict[str, Any]
-    ) -> dict[str, Any]:
-        """Generate parameter schema for validation"""
-        schema = {"type": "object", "properties": {}, "required": []}
+    ):
+        """Build default_config from parameters based on strategy type"""
+        # 공통 기본값
+        common_defaults = {
+            "lookback_period": 252,
+            "min_data_points": 30,
+            "max_position_size": 1.0,
+        }
 
-        # Generate schema based on strategy type and parameters
-        for param_name, param_value in parameters.items():
-            param_schema = self._infer_parameter_schema(param_name, param_value)
-            schema["properties"][param_name] = param_schema
-
-        # Add strategy-specific schema requirements
+        # 전략별 Config 클래스 인스턴스 생성
         if strategy_type == StrategyType.SMA_CROSSOVER:
-            schema["properties"].update(
-                {
-                    "short_window": {"type": "integer", "minimum": 2, "maximum": 50},
-                    "long_window": {"type": "integer", "minimum": 10, "maximum": 200},
-                }
+            return SMACrossoverConfig(
+                config_type="sma_crossover",
+                **common_defaults,
+                **parameters,
             )
         elif strategy_type == StrategyType.RSI_MEAN_REVERSION:
-            schema["properties"].update(
-                {
-                    "rsi_period": {"type": "integer", "minimum": 2, "maximum": 50},
-                    "oversold_threshold": {
-                        "type": "number",
-                        "minimum": 0,
-                        "maximum": 50,
-                    },
-                    "overbought_threshold": {
-                        "type": "number",
-                        "minimum": 50,
-                        "maximum": 100,
-                    },
-                }
+            return RSIMeanReversionConfig(
+                config_type="rsi_mean_reversion",
+                **common_defaults,
+                **parameters,
             )
         elif strategy_type == StrategyType.MOMENTUM:
-            schema["properties"].update(
-                {
-                    "momentum_period": {
-                        "type": "integer",
-                        "minimum": 5,
-                        "maximum": 100,
-                    },
-                    "price_change_threshold": {
-                        "type": "number",
-                        "minimum": 0.001,
-                        "maximum": 0.1,
-                    },
-                }
+            return MomentumConfig(
+                config_type="momentum",
+                **common_defaults,
+                **parameters,
             )
-
-        return schema
-
-    def _infer_parameter_schema(
-        self, param_name: str, param_value: Any
-    ) -> dict[str, Any]:
-        """Infer schema from parameter value"""
-        if isinstance(param_value, bool):
-            return {"type": "boolean", "default": param_value}
-        elif isinstance(param_value, int):
-            return {"type": "integer", "default": param_value}
-        elif isinstance(param_value, float):
-            return {"type": "number", "default": param_value}
-        elif isinstance(param_value, str):
-            return {"type": "string", "default": param_value}
-        elif param_value is None:
-            return {"type": ["null", "integer", "number", "string"], "default": None}
+        elif strategy_type == StrategyType.BUY_AND_HOLD:
+            return BuyAndHoldConfig(
+                config_type="buy_and_hold",
+                **common_defaults,
+                **parameters,
+            )
         else:
-            return {"type": "object", "default": param_value}
+            raise ValueError(f"Unknown strategy type: {strategy_type}")
 
 
 async def seed_strategy_templates() -> None:

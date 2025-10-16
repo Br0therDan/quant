@@ -33,8 +33,9 @@ class Strategy(BaseDocument):
     description: str | None = Field(None, description="전략 설명")
 
     # ✅ 타입 안전한 설정 (discriminator 필드 사용)
-    config: StrategyConfigUnion = Field(
-        ..., description="전략 설정", discriminator="config_type"
+    # Optional로 변경하여 기존 데이터와의 호환성 유지
+    config: StrategyConfigUnion | None = Field(
+        None, description="전략 설정", discriminator="config_type"
     )
 
     # 상태 정보

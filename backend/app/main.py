@@ -12,6 +12,7 @@ from app.core.logging_config import setup_logging
 from mysingle_quant import create_fastapi_app
 from mysingle_quant.core import get_mongodb_url
 from app.utils import seed_strategy_templates
+from app.utils.migrate_strategies import migrate_strategy_documents
 from app.core.init_test_user import ensure_dev_test_superuser
 
 # 로깅 설정 초기화
@@ -43,6 +44,11 @@ async def lifespan(app: FastAPI):
         service_factory.get_regime_detection_service()
         service_factory.get_probabilistic_kpi_service()
         logger.info("✅ All services pre-initialized")
+
+        # Migrate existing strategies (if needed)
+        logger.info("🔄 Checking for strategy migrations...")
+        await migrate_strategy_documents()
+        logger.info("✅ Strategy migration completed")
 
         # Seed strategy templates
         logger.info("🌱 Seeding strategy templates...")

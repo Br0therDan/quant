@@ -2,6 +2,7 @@
 
 import type { StrategyType } from "@/client/types.gen";
 import PageContainer from "@/components/layout/PageContainer";
+import ExecuteStrategyDialog from '@/components/strategies/ExecuteStrategyDialog';
 import StrategyCard from "@/components/strategies/StrategyCard";
 import StrategyFilters from "@/components/strategies/StrategyFilters";
 import { useStrategy } from "@/hooks/useStrategy";
@@ -33,6 +34,12 @@ export default function MyStrategiesPage() {
 
 	// 삭제 확인 다이얼로그
 	const [deleteDialog, setDeleteDialog] = useState<{
+		open: boolean;
+		strategy?: any;
+	}>({ open: false });
+
+	// 전략 실행 다이얼로그
+	const [executeDialog, setExecuteDialog] = useState<{
 		open: boolean;
 		strategy?: any;
 	}>({ open: false });
@@ -108,21 +115,28 @@ export default function MyStrategiesPage() {
 	};
 
 	const handleExecute = (strategy: any) => {
-		// 기본 설정으로 전략 실행
-		executeStrategy({
-			id: strategy.id,
-			data: {
-				symbol: "AAPL",
-				market_data: {
-					start_date: new Date(
-						Date.now() - 365 * 24 * 60 * 60 * 1000,
-					).toISOString(),
-					end_date: new Date().toISOString(),
-				},
-			},
-		});
+		setExecuteDialog({ open: true, strategy });
 	};
 
+	const confirmExecute = (params: {
+		symbol: string;
+		startDate: string;
+		endDate: string;
+	}) => {
+		if (executeDialog.strategy) {
+			executeStrategy({
+				id: executeDialog.strategy.id,
+				data: {
+					symbol: params.symbol,
+					market_data: {
+						start_date: params.startDate,
+						end_date: params.endDate,
+					},
+				},
+			});
+			setExecuteDialog({ open: false });
+		}
+	};
 	const handleViewPerformance = (strategy: any) => {
 		router.push(`/strategies/${strategy.id}/performance`);
 	};
@@ -172,7 +186,6 @@ export default function MyStrategiesPage() {
 					생성한 전략을 관리하고 백테스트를 실행할 수 있습니다.
 				</Typography>
 			</Box>
-
 			<StrategyFilters
 				searchQuery={searchQuery}
 				onSearchChange={setSearchQuery}
@@ -185,7 +198,6 @@ export default function MyStrategiesPage() {
 				availableTags={allTags}
 				isTemplate={false}
 			/>
-
 			{isLoading ? (
 				<Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
 					<CircularProgress />
@@ -230,7 +242,6 @@ export default function MyStrategiesPage() {
 					)}
 				</>
 			)}
-
 			{/* 삭제 확인 다이얼로그 */}
 			<Dialog
 				open={deleteDialog.open}
@@ -255,7 +266,14 @@ export default function MyStrategiesPage() {
 					</Button>
 				</DialogActions>
 			</Dialog>
-
+			{/* 전략 실행 다이얼로그 */}
+			<ExecuteStrategyDialog
+				open={executeDialog.open}
+				onClose={() => setExecuteDialog({ open: false })}
+				strategy={executeDialog.strategy}
+				onExecute={confirmExecute}
+				isExecuting={isMutating.executeStrategy}
+			/>{" "}
 			{/* 로딩 상태 */}
 			{(isMutating.executeStrategy || isMutating.deleteStrategy) && (
 				<Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
