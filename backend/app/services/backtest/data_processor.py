@@ -71,11 +71,45 @@ class DataProcessor:
         return processed
 
     def _to_dataframe(self, data: Any) -> pd.DataFrame:
-        """데이터를 DataFrame으로 변환"""
+        """데이터를 DataFrame으로 변환
+
+        지원 형식:
+        1. pandas.DataFrame
+        2. dict (records 키를 가진 경우)
+        3. dict (일반 딕셔너리)
+        4. list (레코드 리스트)
+        """
         if isinstance(data, pd.DataFrame):
             return data
+
+        # mysingle_quant 클라이언트가 반환하는 형태: {"records": [...]}
+        if isinstance(data, dict) and "records" in data:
+            records = data["records"]
+            if not records:
+                return pd.DataFrame()
+
+            # 레코드를 DataFrame으로 변환
+            df = pd.DataFrame(records)
+
+            # date 컬럼을 인덱스로 설정
+            if "date" in df.columns:
+                df["date"] = pd.to_datetime(df["date"])
+                df = df.set_index("date")
+
+            return df
+
+        # 일반 딕셔너리 (기존 로직)
         if isinstance(data, dict):
             return pd.DataFrame(data)
+
+        # 직접 리스트로 전달된 경우
+        if isinstance(data, list):
+            df = pd.DataFrame(data)
+            if "date" in df.columns:
+                df["date"] = pd.to_datetime(df["date"])
+                df = df.set_index("date")
+            return df
+
         raise ValueError(f"Unsupported data type: {type(data)}")
 
     def _validate_columns(self, df: pd.DataFrame, required: list[str]) -> bool:
