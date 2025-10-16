@@ -63,7 +63,7 @@ async def test_create_watchlist_inserts_document(
     assert isinstance(created, FakeWatchlist)
     assert created.insert_called is True
     assert created.symbols == ["AAPL", "MSFT"]
-    service._trigger_data_collection.assert_awaited_once_with(["AAPL", "MSFT"])
+    service._trigger_data_collection.assert_awaited_once_with(["AAPL", "MSFT"])  # type: ignore
 
 
 @pytest.mark.asyncio

@@ -1,10 +1,10 @@
 "use client";
 
+import { AuditTrail } from "@/components/gen-ai/compliance/AuditTrail";
+import { ComplianceChecker } from "@/components/gen-ai/compliance/ComplianceChecker";
+import { RegulatoryAlerts } from "@/components/gen-ai/compliance/RegulatoryAlerts";
 import PageContainer from "@/components/layout/PageContainer";
-import { ABTestingPanel } from "@/components/mlops/evaluation/ABTestingPanel";
-import { BenchmarkSuite } from "@/components/mlops/evaluation/BenchmarkSuite";
-import { FairnessAuditor } from "@/components/mlops/evaluation/FairnessAuditor";
-import { Assessment, Science, Speed, VerifiedUser } from "@mui/icons-material";
+import { CheckCircle, Gavel, VerifiedUser, Warning } from "@mui/icons-material";
 import {
 	Box,
 	Card,
@@ -17,20 +17,20 @@ import {
 import { useState } from "react";
 
 /**
- * Evaluation 페이지
+ * Compliance 페이지
  *
- * User Story: US-18 (벤치마크, A/B 테스트, 공정성 감사)
+ * User Story: US-23 (규정 준수 검증)
  * 기능:
- * - 벤치마크 스위트 (성능 비교)
- * - A/B 테스트 패널 (실험 비교)
- * - 공정성 감사 (Bias Detection)
+ * - 전략 규정 준수 검사
+ * - 규제 알림 및 경고
+ * - 감사 추적 (Audit Trail)
  */
-export default function EvaluationPage() {
+export default function CompliancePage() {
 	const [tabValue, setTabValue] = useState(0);
 
 	const breadcrumbs = [
-		{ title: "MLOps Platform", href: "/mlops" },
-		{ title: "Evaluation & Testing" },
+		{ title: "GenAI Platform", href: "/gen-ai" },
+		{ title: "Compliance" },
 	];
 
 	const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -40,25 +40,17 @@ export default function EvaluationPage() {
 	// Mock KPI data
 	const kpiData = [
 		{
-			label: "Active Benchmarks",
-			value: 12,
-			icon: <Science color="primary" />,
+			label: "Compliance Checks",
+			value: 234,
+			icon: <VerifiedUser color="primary" />,
 		},
-		{
-			label: "A/B Tests Running",
-			value: 5,
-			icon: <Assessment color="success" />,
-		},
-		{ label: "Models Evaluated", value: 48, icon: <Speed color="info" /> },
-		{
-			label: "Fairness Score",
-			value: "95%",
-			icon: <VerifiedUser color="warning" />,
-		},
+		{ label: "Active Alerts", value: 3, icon: <Warning color="error" /> },
+		{ label: "Pass Rate", value: "97%", icon: <CheckCircle color="success" /> },
+		{ label: "Audit Events", value: 1256, icon: <Gavel color="info" /> },
 	];
 
 	return (
-		<PageContainer title="Evaluation & Testing" breadcrumbs={breadcrumbs}>
+		<PageContainer title="Compliance & Regulatory" breadcrumbs={breadcrumbs}>
 			<Grid container spacing={3}>
 				{/* KPI 카드 */}
 				{kpiData.map((kpi, index) => (
@@ -87,18 +79,18 @@ export default function EvaluationPage() {
 							onChange={handleTabChange}
 							sx={{ borderBottom: 1, borderColor: "divider" }}
 						>
-							<Tab label="Benchmarks" />
-							<Tab label="A/B Testing" />
-							<Tab label="Fairness Audit" />
+							<Tab label="Compliance Checker" />
+							<Tab label="Regulatory Alerts" />
+							<Tab label="Audit Trail" />
 						</Tabs>
 					</Card>
 				</Grid>
 
 				{/* Tab Content */}
 				<Grid size={12}>
-					{tabValue === 0 && <BenchmarkSuite />}
-					{tabValue === 1 && <ABTestingPanel />}
-					{tabValue === 2 && <FairnessAuditor />}
+					{tabValue === 0 && <ComplianceChecker />}
+					{tabValue === 1 && <RegulatoryAlerts />}
+					{tabValue === 2 && <AuditTrail />}
 				</Grid>
 			</Grid>
 		</PageContainer>

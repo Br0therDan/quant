@@ -1,10 +1,10 @@
 "use client";
 
+import { DependencyMap } from "@/components/data-quality/lineage/DependencyMap";
+import { ImpactAnalysis } from "@/components/data-quality/lineage/ImpactAnalysis";
+import { LineageGraph } from "@/components/data-quality/lineage/LineageGraph";
 import PageContainer from "@/components/layout/PageContainer";
-import { ABTestingPanel } from "@/components/mlops/evaluation/ABTestingPanel";
-import { BenchmarkSuite } from "@/components/mlops/evaluation/BenchmarkSuite";
-import { FairnessAuditor } from "@/components/mlops/evaluation/FairnessAuditor";
-import { Assessment, Science, Speed, VerifiedUser } from "@mui/icons-material";
+import { AccountTree, Schema, Speed, Timeline } from "@mui/icons-material";
 import {
 	Box,
 	Card,
@@ -17,20 +17,20 @@ import {
 import { useState } from "react";
 
 /**
- * Evaluation 페이지
+ * Data Lineage Tracker 페이지
  *
- * User Story: US-18 (벤치마크, A/B 테스트, 공정성 감사)
+ * User Story: US-28 (데이터 계보 추적)
  * 기능:
- * - 벤치마크 스위트 (성능 비교)
- * - A/B 테스트 패널 (실험 비교)
- * - 공정성 감사 (Bias Detection)
+ * - 데이터 계보 시각화
+ * - 영향 분석 (변경 사항 추적)
+ * - 의존성 맵
  */
-export default function EvaluationPage() {
+export default function DataLineageTrackerPage() {
 	const [tabValue, setTabValue] = useState(0);
 
 	const breadcrumbs = [
-		{ title: "MLOps Platform", href: "/mlops" },
-		{ title: "Evaluation & Testing" },
+		{ title: "Data Quality", href: "/data-quality" },
+		{ title: "Lineage Tracker" },
 	];
 
 	const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -39,26 +39,14 @@ export default function EvaluationPage() {
 
 	// Mock KPI data
 	const kpiData = [
-		{
-			label: "Active Benchmarks",
-			value: 12,
-			icon: <Science color="primary" />,
-		},
-		{
-			label: "A/B Tests Running",
-			value: 5,
-			icon: <Assessment color="success" />,
-		},
-		{ label: "Models Evaluated", value: 48, icon: <Speed color="info" /> },
-		{
-			label: "Fairness Score",
-			value: "95%",
-			icon: <VerifiedUser color="warning" />,
-		},
+		{ label: "Data Sources", value: 23, icon: <AccountTree color="primary" /> },
+		{ label: "Lineage Paths", value: 87, icon: <Timeline color="success" /> },
+		{ label: "Tracking Speed", value: "0.9s", icon: <Speed color="info" /> },
+		{ label: "Dependencies", value: 142, icon: <Schema color="warning" /> },
 	];
 
 	return (
-		<PageContainer title="Evaluation & Testing" breadcrumbs={breadcrumbs}>
+		<PageContainer title="Data Lineage Tracker" breadcrumbs={breadcrumbs}>
 			<Grid container spacing={3}>
 				{/* KPI 카드 */}
 				{kpiData.map((kpi, index) => (
@@ -87,18 +75,18 @@ export default function EvaluationPage() {
 							onChange={handleTabChange}
 							sx={{ borderBottom: 1, borderColor: "divider" }}
 						>
-							<Tab label="Benchmarks" />
-							<Tab label="A/B Testing" />
-							<Tab label="Fairness Audit" />
+							<Tab label="Lineage Graph" />
+							<Tab label="Impact Analysis" />
+							<Tab label="Dependency Map" />
 						</Tabs>
 					</Card>
 				</Grid>
 
 				{/* Tab Content */}
 				<Grid size={12}>
-					{tabValue === 0 && <BenchmarkSuite />}
-					{tabValue === 1 && <ABTestingPanel />}
-					{tabValue === 2 && <FairnessAuditor />}
+					{tabValue === 0 && <LineageGraph />}
+					{tabValue === 1 && <ImpactAnalysis />}
+					{tabValue === 2 && <DependencyMap />}
 				</Grid>
 			</Grid>
 		</PageContainer>

@@ -1,10 +1,10 @@
 "use client";
 
+import { AIAssistant } from "@/components/gen-ai/strategy-builder/AIAssistant";
+import { CodeGenerator } from "@/components/gen-ai/strategy-builder/CodeGenerator";
+import { StrategyTemplates } from "@/components/gen-ai/strategy-builder/StrategyTemplates";
 import PageContainer from "@/components/layout/PageContainer";
-import { ABTestingPanel } from "@/components/mlops/evaluation/ABTestingPanel";
-import { BenchmarkSuite } from "@/components/mlops/evaluation/BenchmarkSuite";
-import { FairnessAuditor } from "@/components/mlops/evaluation/FairnessAuditor";
-import { Assessment, Science, Speed, VerifiedUser } from "@mui/icons-material";
+import { AutoAwesome, CheckCircle, Code, Speed } from "@mui/icons-material";
 import {
 	Box,
 	Card,
@@ -17,20 +17,21 @@ import {
 import { useState } from "react";
 
 /**
- * Evaluation 페이지
+ * Strategy Builder 페이지
  *
- * User Story: US-18 (벤치마크, A/B 테스트, 공정성 감사)
+ * User Story: US-21 (AI 기반 전략 생성)
  * 기능:
- * - 벤치마크 스위트 (성능 비교)
- * - A/B 테스트 패널 (실험 비교)
- * - 공정성 감사 (Bias Detection)
+ * - AI 어시스턴트 (자연어 → 전략 코드)
+ * - 코드 생성 및 검증
+ * - 전략 템플릿 라이브러리
+ * - 백테스트 자동 실행
  */
-export default function EvaluationPage() {
+export default function StrategyBuilderPage() {
 	const [tabValue, setTabValue] = useState(0);
 
 	const breadcrumbs = [
-		{ title: "MLOps Platform", href: "/mlops" },
-		{ title: "Evaluation & Testing" },
+		{ title: "GenAI Platform", href: "/gen-ai" },
+		{ title: "Strategy Builder" },
 	];
 
 	const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -40,25 +41,25 @@ export default function EvaluationPage() {
 	// Mock KPI data
 	const kpiData = [
 		{
-			label: "Active Benchmarks",
-			value: 12,
-			icon: <Science color="primary" />,
+			label: "Generated Strategies",
+			value: 23,
+			icon: <Code color="primary" />,
 		},
 		{
-			label: "A/B Tests Running",
-			value: 5,
-			icon: <Assessment color="success" />,
+			label: "AI Suggestions",
+			value: 87,
+			icon: <AutoAwesome color="success" />,
 		},
-		{ label: "Models Evaluated", value: 48, icon: <Speed color="info" /> },
+		{ label: "Avg Gen Time", value: "3.2s", icon: <Speed color="info" /> },
 		{
-			label: "Fairness Score",
-			value: "95%",
-			icon: <VerifiedUser color="warning" />,
+			label: "Success Rate",
+			value: "94%",
+			icon: <CheckCircle color="warning" />,
 		},
 	];
 
 	return (
-		<PageContainer title="Evaluation & Testing" breadcrumbs={breadcrumbs}>
+		<PageContainer title="AI Strategy Builder" breadcrumbs={breadcrumbs}>
 			<Grid container spacing={3}>
 				{/* KPI 카드 */}
 				{kpiData.map((kpi, index) => (
@@ -87,18 +88,18 @@ export default function EvaluationPage() {
 							onChange={handleTabChange}
 							sx={{ borderBottom: 1, borderColor: "divider" }}
 						>
-							<Tab label="Benchmarks" />
-							<Tab label="A/B Testing" />
-							<Tab label="Fairness Audit" />
+							<Tab label="AI Assistant" />
+							<Tab label="Code Generator" />
+							<Tab label="Templates" />
 						</Tabs>
 					</Card>
 				</Grid>
 
 				{/* Tab Content */}
 				<Grid size={12}>
-					{tabValue === 0 && <BenchmarkSuite />}
-					{tabValue === 1 && <ABTestingPanel />}
-					{tabValue === 2 && <FairnessAuditor />}
+					{tabValue === 0 && <AIAssistant />}
+					{tabValue === 1 && <CodeGenerator />}
+					{tabValue === 2 && <StrategyTemplates />}
 				</Grid>
 			</Grid>
 		</PageContainer>
