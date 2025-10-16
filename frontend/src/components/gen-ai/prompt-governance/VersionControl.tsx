@@ -17,7 +17,12 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Divider,
   Grid,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
   Paper,
   Table,
   TableBody,
@@ -55,7 +60,7 @@ export const VersionControl = () => {
   // Audit Logs Query (조건부)
   const auditLogsQuery = usePromptAuditLogs(
     selectedTemplate?.prompt_id || "",
-    Number.parseInt(selectedTemplate?.version || "0")
+    Number.parseInt(selectedTemplate?.version || "0", 10)
   );
 
   const handleWorkflowAction = (
@@ -73,7 +78,7 @@ export const VersionControl = () => {
     if (!selectedTemplate) return;
 
     const promptId = selectedTemplate.prompt_id;
-    const version = Number.parseInt(selectedTemplate.version);
+    const version = Number.parseInt(selectedTemplate.version, 10);
 
     switch (workflowAction) {
       case "submit":
@@ -181,7 +186,7 @@ export const VersionControl = () => {
                               Submit
                             </Button>
                           )}
-                          {template.status === "pending" && (
+                          {template.status === "in_review" && (
                             <>
                               <Button
                                 size="small"
@@ -258,10 +263,9 @@ export const VersionControl = () => {
                     {selectedTemplate.prompt_id} v{selectedTemplate.version}
                   </Typography>
 
-                  {auditLogsQuery.data &&
-                  auditLogsQuery.data.logs?.length > 0 ? (
+                  {auditLogsQuery.data && auditLogsQuery.data.length > 0 ? (
                     <List>
-                      {auditLogsQuery.data.logs.map((log, index) => (
+                      {auditLogsQuery.data.map((log, index) => (
                         <Box key={index}>
                           <ListItem alignItems="flex-start">
                             <ListItemIcon>
@@ -287,21 +291,26 @@ export const VersionControl = () => {
                                     component="span"
                                     display="block"
                                   >
-                                    {log.reviewer} -{" "}
-                                    {new Date(log.timestamp).toLocaleString()}
+                                    {log.actor} -{" "}
+                                    {new Date(log.created_at).toLocaleString()}
                                   </Typography>
-                                  {log.notes && (
-                                    <Typography variant="body2" sx={{ mt: 0.5 }}>
-                                      {log.notes}
-                                    </Typography>
-                                  )}
+                                  {log.details &&
+                                    Object.keys(log.details).length > 0 && (
+                                      <Typography
+                                        variant="body2"
+                                        sx={{ mt: 0.5 }}
+                                      >
+                                        {JSON.stringify(log.details, null, 2)}
+                                      </Typography>
+                                    )}
                                 </>
                               }
                             />
                           </ListItem>
-                          {index < auditLogsQuery.data.logs.length - 1 && (
-                            <Divider variant="inset" component="li" />
-                          )}
+                          {auditLogsQuery.data &&
+                            index < auditLogsQuery.data.length - 1 && (
+                              <Divider variant="inset" component="li" />
+                            )}
                         </Box>
                       ))}
                     </List>

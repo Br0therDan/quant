@@ -1,6 +1,6 @@
 /**
  * PromptTemplateEditor 컴포넌트
- * 프롬프트 템플릿 생성, 수정, 테스트
+ * 프롬프트 템플릿 CRUD 및 평가 기능
  */
 
 import type { PromptTemplateResponse } from "@/client/types.gen";
@@ -18,12 +18,8 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-  FormControl,
   Grid,
-  InputLabel,
-  MenuItem,
   Paper,
-  Select,
   Table,
   TableBody,
   TableCell,
@@ -53,26 +49,24 @@ export const PromptTemplateEditor = () => {
     useState<PromptTemplateResponse | null>(null);
   const [formData, setFormData] = useState({
     prompt_id: "",
-    template: "",
+    content: "",
     version: "1",
-    category: "strategy_generation",
+    name: "",
     description: "",
-    model: "gpt-4",
-    temperature: 0.7,
-    max_tokens: 2000,
+    owner: "system",
+    tags: [] as string[],
   });
 
   const handleCreateNew = () => {
     setEditingTemplate(null);
     setFormData({
       prompt_id: "",
-      template: "",
+      content: "",
       version: "1",
-      category: "strategy_generation",
+      name: "",
       description: "",
-      model: "gpt-4",
-      temperature: 0.7,
-      max_tokens: 2000,
+      owner: "system",
+      tags: [],
     });
     setOpenDialog(true);
   };
@@ -81,13 +75,12 @@ export const PromptTemplateEditor = () => {
     setEditingTemplate(template);
     setFormData({
       prompt_id: template.prompt_id,
-      template: template.template,
+      content: template.content,
       version: template.version,
-      category: template.category || "strategy_generation",
+      name: template.name,
       description: template.description || "",
-      model: template.model || "gpt-4",
-      temperature: template.temperature || 0.7,
-      max_tokens: template.max_tokens || 2000,
+      owner: template.owner,
+      tags: template.tags || [],
     });
     setOpenDialog(true);
   };
@@ -97,27 +90,23 @@ export const PromptTemplateEditor = () => {
       // 업데이트
       updatePromptTemplate({
         promptId: formData.prompt_id,
-        version: Number.parseInt(formData.version),
+        version: Number.parseInt(formData.version, 10),
         data: {
-          template: formData.template,
-          category: formData.category,
+          name: formData.name,
           description: formData.description,
-          model: formData.model,
-          temperature: formData.temperature,
-          max_tokens: formData.max_tokens,
+          content: formData.content,
         },
       });
     } else {
       // 생성
       createPromptTemplate({
         prompt_id: formData.prompt_id,
-        template: formData.template,
+        name: formData.name,
+        content: formData.content,
         version: formData.version,
-        category: formData.category,
         description: formData.description,
-        model: formData.model,
-        temperature: formData.temperature,
-        max_tokens: formData.max_tokens,
+        owner: formData.owner,
+        tags: formData.tags,
       });
     }
     setOpenDialog(false);
@@ -125,10 +114,9 @@ export const PromptTemplateEditor = () => {
 
   const handleEvaluate = () => {
     evaluatePrompt({
-      prompt_text: formData.template,
-      model: formData.model,
-      temperature: formData.temperature,
-      max_tokens: formData.max_tokens,
+      prompt_id: formData.prompt_id,
+      version: formData.version,
+      content: formData.content,
     });
   };
 
@@ -297,23 +285,27 @@ export const PromptTemplateEditor = () => {
               />
             </Grid>
             <Grid size={{ xs: 12, md: 3 }}>
-              <FormControl fullWidth>
-                <InputLabel>Category</InputLabel>
-                <Select
-                  value={formData.category}
-                  label="Category"
-                  onChange={(e) =>
-                    setFormData({ ...formData, category: e.target.value })
-                  }
-                >
-                  <MenuItem value="strategy_generation">
-                    Strategy Generation
-                  </MenuItem>
-                  <MenuItem value="narrative_report">Narrative Report</MenuItem>
-                  <MenuItem value="risk_analysis">Risk Analysis</MenuItem>
-                  <MenuItem value="compliance_check">Compliance Check</MenuItem>
-                </Select>
-              </FormControl>
+              <TextField
+                fullWidth
+                label="Owner"
+                value={formData.owner}
+                onChange={(e) =>
+                  setFormData({ ...formData, owner: e.target.value })
+                }
+                required
+              />
+            </Grid>
+
+            <Grid size={12}>
+              <TextField
+                fullWidth
+                label="Name"
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
+                required
+              />
             </Grid>
 
             <Grid size={12}>
@@ -332,15 +324,15 @@ export const PromptTemplateEditor = () => {
             <Grid size={12}>
               <TextField
                 fullWidth
-                label="Template"
-                value={formData.template}
+                label="Prompt Content"
+                value={formData.content}
                 onChange={(e) =>
-                  setFormData({ ...formData, template: e.target.value })
+                  setFormData({ ...formData, content: e.target.value })
                 }
                 multiline
                 rows={8}
                 required
-                placeholder="Enter your prompt template here..."
+                placeholder="Enter your prompt content here..."
                 InputProps={{
                   startAdornment: (
                     <Code sx={{ mr: 1, color: "text.secondary" }} />
@@ -349,50 +341,21 @@ export const PromptTemplateEditor = () => {
               />
             </Grid>
 
-            <Grid size={{ xs: 12, md: 4 }}>
-              <FormControl fullWidth>
-                <InputLabel>Model</InputLabel>
-                <Select
-                  value={formData.model}
-                  label="Model"
-                  onChange={(e) =>
-                    setFormData({ ...formData, model: e.target.value })
-                  }
-                >
-                  <MenuItem value="gpt-4">GPT-4</MenuItem>
-                  <MenuItem value="gpt-4-turbo">GPT-4 Turbo</MenuItem>
-                  <MenuItem value="gpt-3.5-turbo">GPT-3.5 Turbo</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid size={{ xs: 12, md: 4 }}>
+            <Grid size={12}>
               <TextField
                 fullWidth
-                label="Temperature"
-                type="number"
-                value={formData.temperature}
+                label="Tags (comma-separated)"
+                value={formData.tags.join(", ")}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    temperature: Number.parseFloat(e.target.value),
+                    tags: e.target.value
+                      .split(",")
+                      .map((t) => t.trim())
+                      .filter(Boolean),
                   })
                 }
-                inputProps={{ min: 0, max: 2, step: 0.1 }}
-              />
-            </Grid>
-            <Grid size={{ xs: 12, md: 4 }}>
-              <TextField
-                fullWidth
-                label="Max Tokens"
-                type="number"
-                value={formData.max_tokens}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    max_tokens: Number.parseInt(e.target.value),
-                  })
-                }
-                inputProps={{ min: 100, max: 4000, step: 100 }}
+                placeholder="strategy, trading, risk-management"
               />
             </Grid>
 
@@ -458,7 +421,7 @@ export const PromptTemplateEditor = () => {
           <Button
             startIcon={<PlayArrow />}
             onClick={handleEvaluate}
-            disabled={isEvaluatingPrompt || !formData.template}
+            disabled={isEvaluatingPrompt || !formData.content}
           >
             Evaluate
           </Button>
@@ -471,7 +434,7 @@ export const PromptTemplateEditor = () => {
               isCreatingTemplate ||
               isUpdatingTemplate ||
               !formData.prompt_id ||
-              !formData.template
+              !formData.content
             }
           >
             {editingTemplate ? "Update" : "Create"}

@@ -43,12 +43,12 @@ export const UsageAnalytics = () => {
   // Audit Logs Query (조건부)
   const auditLogsQuery = usePromptAuditLogs(
     selectedTemplate?.prompt_id || "",
-    Number.parseInt(selectedTemplate?.version || "0")
+    Number.parseInt(selectedTemplate?.version || "0", 10)
   );
 
   // 사용 통계 계산
   const usageStats = {
-    totalCalls: auditLogsQuery.data?.logs?.length || 0,
+    totalCalls: auditLogsQuery.data?.length || 0,
     avgTokens: 1234, // TODO: 실제 계산 로직
     avgLatency: 234, // TODO: 실제 계산 로직
     successRate: 94.5, // TODO: 실제 계산 로직
@@ -244,21 +244,21 @@ export const UsageAnalytics = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {auditLogsQuery.data?.logs?.map((log, index) => (
+                    {auditLogsQuery.data?.map((log, index) => (
                       <TableRow key={index}>
                         <TableCell>
                           <Typography variant="caption">
-                            {new Date(log.timestamp).toLocaleString()}
+                            {new Date(log.created_at).toLocaleString()}
                           </Typography>
                         </TableCell>
                         <TableCell>
                           <Chip label={log.action} size="small" />
                         </TableCell>
-                        <TableCell>{log.reviewer}</TableCell>
+                        <TableCell>{log.actor}</TableCell>
                       </TableRow>
                     ))}
-                    {(!auditLogsQuery.data?.logs ||
-                      auditLogsQuery.data.logs.length === 0) && (
+                    {(!auditLogsQuery.data ||
+                      auditLogsQuery.data.length === 0) && (
                       <TableRow>
                         <TableCell colSpan={3} align="center">
                           <Typography variant="body2" color="text.secondary">

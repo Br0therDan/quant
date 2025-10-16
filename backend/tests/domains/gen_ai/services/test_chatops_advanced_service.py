@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from types import SimpleNamespace
-from typing import Any
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
@@ -21,7 +20,9 @@ from app.schemas.gen_ai.rag import RAGContext
 
 
 class _DummyOpenAIManager:
-    def __init__(self, model_config: ModelConfig, *, raise_invalid: bool = False) -> None:
+    def __init__(
+        self, model_config: ModelConfig, *, raise_invalid: bool = False
+    ) -> None:
         self._model_config = model_config
         self._raise_invalid = raise_invalid
         self.get_client = MagicMock(return_value=MagicMock(name="AsyncOpenAI"))
@@ -103,7 +104,9 @@ def test_resolve_model_config_invalid(model_config: ModelConfig) -> None:
 
 
 @pytest.mark.asyncio
-async def test_chat_raises_when_session_missing(chatops_service: ChatOpsAdvancedService, monkeypatch: pytest.MonkeyPatch) -> None:
+async def test_chat_raises_when_session_missing(
+    chatops_service: ChatOpsAdvancedService, monkeypatch: pytest.MonkeyPatch
+) -> None:
     find_one = AsyncMock(return_value=None)
     monkeypatch.setattr(
         "app.services.gen_ai.applications.chatops_advanced_service.ChatSessionDocument.find_one",

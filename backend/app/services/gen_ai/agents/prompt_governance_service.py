@@ -37,8 +37,8 @@ class PromptGovernanceService:
 
     async def create_template(self, payload: dict[str, Any]) -> PromptTemplate:
         existing = await PromptTemplate.find_one(
-            (PromptTemplate.prompt_id == payload["prompt_id"])
-            & (PromptTemplate.version == payload["version"])
+            PromptTemplate.prompt_id == payload["prompt_id"],
+            PromptTemplate.version == payload["version"],
         )
         if existing:
             raise ValueError(
@@ -65,8 +65,8 @@ class PromptGovernanceService:
         self, prompt_id: str, version: str, payload: dict[str, Any]
     ) -> PromptTemplate | None:
         template = await PromptTemplate.find_one(
-            (PromptTemplate.prompt_id == prompt_id)
-            & (PromptTemplate.version == version)
+            PromptTemplate.prompt_id == prompt_id,
+            PromptTemplate.version == version,
         )
         if template is None:
             return None
@@ -111,9 +111,7 @@ class PromptGovernanceService:
             filters.append(In(PromptTemplate.tags, [tag]))
 
         cursor = PromptTemplate.find(*filters) if filters else PromptTemplate.find_all()
-        return await cursor.sort(
-            (PromptTemplate.updated_at, SortDirection.DESCENDING)
-        ).to_list()
+        return await cursor.sort(("updated_at", SortDirection.DESCENDING)).to_list()
 
     async def submit_for_review(
         self, prompt_id: str, version: str, reviewer: str
@@ -198,10 +196,10 @@ class PromptGovernanceService:
     ) -> list[PromptAuditLog]:
         return (
             await PromptAuditLog.find(
-                (PromptAuditLog.prompt_id == prompt_id)
-                & (PromptAuditLog.version == version)
+                PromptAuditLog.prompt_id == prompt_id,
+                PromptAuditLog.version == version,
             )
-            .sort((PromptAuditLog.created_at, SortDirection.DESCENDING))
+            .sort(("created_at", SortDirection.DESCENDING))
             .to_list()
         )
 

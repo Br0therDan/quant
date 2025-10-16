@@ -178,9 +178,12 @@ class ChatOpsAgent:
 
             def _query_duckdb() -> tuple[int, Optional[datetime]]:
                 conn = self.database_manager.duckdb_conn
-                total_count, last_date = conn.execute(
+                result = conn.execute(
                     "SELECT COUNT(*) AS cnt, MAX(date) AS last_date FROM daily_prices"
                 ).fetchone()
+                if result is None:
+                    return 0, None
+                total_count, last_date = result
                 if last_date is not None:
                     last_dt = datetime.combine(last_date, time.min, tzinfo=UTC)
                 else:
@@ -198,7 +201,10 @@ class ChatOpsAgent:
         mongodb_last_event_at: Optional[datetime] = None
         try:
             latest_events = (
-                await DataQualityEvent.find({}).sort("-occurred_at").limit(1).to_list()
+                await DataQualityEvent.find_all()
+                .sort("-occurred_at")
+                .limit(1)
+                .to_list()
             )
             if latest_events:
                 mongodb_status = "connected"
@@ -226,16 +232,14 @@ class ChatOpsAgent:
         failures: List[FailureInsight] = []
 
         try:
+            from beanie.operators import In
+
             dq_events = (
                 await DataQualityEvent.find(
-                    {
-                        "severity": {
-                            "$in": [
-                                SeverityLevel.HIGH.value,
-                                SeverityLevel.CRITICAL.value,
-                            ]
-                        }
-                    }
+                    In(
+                        DataQualityEvent.severity,
+                        [SeverityLevel.HIGH, SeverityLevel.CRITICAL],
+                    )
                 )
                 .sort("-occurred_at")
                 .limit(limit)
@@ -262,7 +266,7 @@ class ChatOpsAgent:
 
         try:
             backtest_failures = (
-                await Backtest.find({"status": BacktestStatus.FAILED.value})
+                await Backtest.find(Backtest.status == BacktestStatus.FAILED)
                 .sort("-updated_at")
                 .limit(limit)
                 .to_list()
