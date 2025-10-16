@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta
 from types import SimpleNamespace
-from unittest.mock import AsyncMock
+from unittest.mock import ANY, AsyncMock
 
 import pytest
 
@@ -111,9 +111,9 @@ def _predictive_snapshot(symbol: str) -> PredictiveDashboardInsights:
         symbol=symbol,
         as_of=now,
         lookback_days=60,
-        regime=MarketRegimeType.BULL,
+        regime=MarketRegimeType.BULLISH,
         confidence=0.8,
-        probabilities={MarketRegimeType.BULL: 0.8},
+        probabilities={MarketRegimeType.BULLISH: 0.8},
         metrics=RegimeMetrics(
             trailing_return_pct=12.0,
             volatility_pct=15.0,
@@ -167,5 +167,5 @@ async def test_predictive_overview_endpoint(async_client, auth_headers, dashboar
     payload = response.json()
     assert payload["data"]["signal"]["symbol"] == "AAPL"
     dashboard_service_stub.get_predictive_snapshot.assert_awaited_once_with(
-        pytest.ANY, "AAPL", horizon_days=30
+        ANY, "AAPL", horizon_days=30
     )

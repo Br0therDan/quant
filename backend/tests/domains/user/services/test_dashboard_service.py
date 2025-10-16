@@ -23,9 +23,13 @@ from app.schemas.user.dashboard import (
     StrategyPerformanceItem,
     StrategyStatus,
     StrategySummary,
+    SentimentType,
+    ImportanceLevel,
     TradeItem,
     TradeSide,
     TradesSummary,
+    NewsFeed,
+    EconomicCalendar,
 )
 from app.schemas.ml_platform.predictive import (
     ForecastPercentileBand,
@@ -477,4 +481,141 @@ async def test_get_strategy_comparison_sorts_by_sharpe(
 
     sharpes = [item.sharpe_ratio for item in comparison.strategies]
     assert sharpes == [1.5, 1.1, 0.8]
+
+
+@pytest.mark.asyncio
+async def test_get_watchlist_quotes_generates_deterministic_payload(
+    service_with_mocks: Tuple[DashboardService, Dict[str, Any]],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Watchlist quotes should expose consistent market data snapshots."""
+
+    service, _ = service_with_mocks
+
+    change_values = iter([5.0, -2.5, 3.0, 0.0, 1.5])
+    volume_values = iter([1_000_000, 2_000_000, 3_000_000, 4_000_000, 5_000_000])
+    market_cap_values = iter([100, 200, 150, 180, 220])
+
+    monkeypatch.setattr(
+        "app.services.user.dashboard_service.random.uniform",
+        lambda a, b: next(change_values),
+    )
+
+    def _deterministic_randint(a: int, b: int) -> int:
+        if b == 50_000_000:
+            return next(volume_values)
+        return next(market_cap_values)
+
+    monkeypatch.setattr(
+        "app.services.user.dashboard_service.random.randint", _deterministic_randint
+    )
+
+    quotes = await service.get_watchlist_quotes("user-1")
+
+    assert isinstance(quotes.symbols, list)
+    assert len(quotes.symbols) == 5
+    first = quotes.symbols[0]
+    assert first.symbol == "AAPL"
+    assert first.change == 5.0
+    assert first.volume == 1_000_000
+    assert first.market_cap == 100 * 1e9
+
+
+@pytest.mark.asyncio
+async def test_get_news_feed_respects_filters(
+    service_with_mocks: Tuple[DashboardService, Dict[str, Any]],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The generated news feed should honour supplied filters and randomness."""
+
+    service, _ = service_with_mocks
+
+    sentiment_cycle = iter(
+        [
+            SentimentType.POSITIVE,
+            SentimentType.NEUTRAL,
+            SentimentType.NEGATIVE,
+            SentimentType.POSITIVE,
+            SentimentType.NEUTRAL,
+        ]
+    )
+    relevance_values = iter([0.9, 0.8, 0.7, 0.6, 0.5])
+
+    monkeypatch.setattr(
+        "app.services.user.dashboard_service.random.choice",
+        lambda seq: next(sentiment_cycle),
+    )
+    monkeypatch.setattr(
+        "app.services.user.dashboard_service.random.uniform",
+        lambda a, b: next(relevance_values),
+    )
+
+    feed = await service.get_news_feed(
+        "user-1", limit=3, symbols=["AAPL"], categories=["tech"]
+    )
+
+    assert len(feed.articles) == 3
+    assert all("AAPL" in article.symbols for article in feed.articles)
+    assert feed.articles[0].sentiment == SentimentType.POSITIVE
+    assert feed.articles[-1].relevance_score == 0.7
+
+
+@pytest.mark.asyncio
+async def test_get_economic_calendar_generates_events(
+    service_with_mocks: Tuple[DashboardService, Dict[str, Any]],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Economic calendar helper should produce mock events with importance values."""
+
+    service, _ = service_with_mocks
+
+    importance_cycle = iter(
+        [
+            ImportanceLevel.HIGH,
+            ImportanceLevel.MEDIUM,
+            ImportanceLevel.LOW,
+            ImportanceLevel.HIGH,
+            ImportanceLevel.MEDIUM,
+        ]
+    )
+
+    def _importance_choice(seq):
+        first = seq[0]
+        if isinstance(first, ImportanceLevel):
+            return next(importance_cycle)
+        return first
+
+    monkeypatch.setattr(
+        "app.services.user.dashboard_service.random.choice",
+        _importance_choice,
+    )
+
+    calendar = await service.get_economic_calendar("user-1", days=3)
+
+    assert len(calendar.events) == 5
+    assert calendar.events[0].importance == ImportanceLevel.HIGH
+    assert calendar.events[2].importance == ImportanceLevel.LOW
+
+
+@pytest.mark.asyncio
+async def test_get_recent_activity_returns_recent_snapshot(
+    service_with_mocks: Tuple[DashboardService, Dict[str, Any]],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The recent activity generator should reference a predictable timestamp."""
+
+    service, _ = service_with_mocks
+
+    class _FixedDateTime(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return datetime(2024, 1, 1, tzinfo=UTC if tz else None)
+
+    monkeypatch.setattr("app.services.user.dashboard_service.datetime", _FixedDateTime)
+
+    activity = await service._get_recent_activity("user-1")
+
+    assert activity.trades_count_today == 15
+    assert activity.backtests_count_week == 3
+    assert activity.last_login.year == 2023
 
