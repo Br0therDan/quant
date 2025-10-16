@@ -742,8 +742,6 @@ class FundamentalService(BaseMarketDataService):
                         "ex_dividend_date": data.get("ExDividendDate", ""),
                     }
 
-                    from app.models.market_data.fundamental import CompanyOverview
-
                     overview = CompanyOverview(**overview_data)
 
                     # DuckDB 캐시에 저장
